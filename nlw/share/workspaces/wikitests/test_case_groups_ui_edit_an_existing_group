@@ -1,0 +1,64 @@
+| *Comment* | Test Case: Groups UI Edit an Existing Group |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Groups UI Edit an Existing Group Setup |  |  |
+| st-setup-a-group | 1 | 1 | 1 |
+| st-logoutin | %%group_user%% | %%password%% |  |
+| set | new_group_name | New Group Name %%start_time%% |  |
+| set | new_group_description | This is testing group New Group Name %%start_time%% |  |
+
+| *Comment* | Test Case: Groups UI Edit an Existing Group - Not Admin - No Edit Link |  |
+| open_ok | /?group/%%group_id%% |  |
+| wait_for_element_not_present_ok | link=Edit Group | 10000 |
+| wait_for_element_not_present_ok | link=Edit Layout | 10000 |
+
+
+| *Comment* | Test Case: Groups UI Edit an Existing Group - Become Admin - Yes Edit Link |  |
+| st-admin | add-group-admin --group %%group_id%% --email %%group_user%% | is now a admin of the %%group_name%% Group |
+| open_ok | /?group/%%group_id%% |  |
+
+| *Comment* | Test Case: Groups UI Edit an Existing Group - edit the group |  |
+| wait_for_element_visible_ok | link=Edit Group | 30000 |
+| wait_for_element_visible_ok | link=Edit Layout | 30000 |
+| click_and_wait | link=Edit Group | 30000 |
+
+| *Comment* | Test Case: Groups UI Edit an Existing Group - PAUSE |  |
+| pause | 5000 |  |
+
+| *Comment* | Test Case: Groups UI Edit an Existing Group Change the Values & Click Save |  |
+
+| st-name-widget | 1 | info_widget |
+| st-widget-title-like | info_widget | Information |
+| st-select-widget-frame | info_widget |  |
+
+| wait_for_element_visible_ok | name | 30000 |
+| wait_for_element_visible_ok | description | 30000 |
+| type_ok | name | %%new_group_name%% |
+| type_ok | description | %%new_group_description%% |
+| verifyValue | name | %%new_group_name%% |
+| verifyValue | description | %%new_group_description%% |
+| select-frame | relative=parent |  |
+
+| wait_for_element_visible_ok | create-group | 30000 |
+| click_and_wait | create-group |  |
+
+| *Comment* | Test Case: Groups UI Edit an Existing Group - PAUSE |  |
+| pause | 5000 |  |
+
+| *Comment* | Test Case: Groups UI Edit an Existing Group See the new values |  |
+| st-name-widget | 1 | info_widget |
+| st-widget-title-like | info_widget | Information |
+| st-select-widget-frame | info_widget |  |
+| wait_for_element_visible_ok | link=%%group_user_short%% | 30000 |
+| text_like | //body | Administrators |
+| text_like | //body | %%new_group_name%% |
+| text_like | //body | %%new_group_description%% |
+
+| *Comment* | Test Case: Groups UI Edit an Existing Group TEARDOWN |
+| st-process-jobs |  |  |
+| delete-group | %%group_id%% |
+| st-admin | delete-workspace --w %%group_ws%% --no-export | has been deleted |
+| delete-account | %%group_acct%% |  |
+
+| *Comment* | Test Case: Groups UI Edit an Existing Group COMPLETED |

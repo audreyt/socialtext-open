@@ -1,0 +1,248 @@
+| *Comment* | STARTING Test Case: Command Line WORKSPACES |  |
+
+| *Comment* | Test Case: Command Line Tests WORKSPACES create workspaces for the tests |  |
+| set | cmdline_workspace | clw_%%start_time%% |
+| set | target_workspace | trgt_%%start_time%% |
+
+| st-admin | create-workspace --empty | qr/Workspace name is a required field.+Workspace title is a required field/ |
+| st-admin | create-workspace --empty --name %%cmdline_workspace%% | qr/title is a required field/ |
+| st-admin | create-workspace --name %%cmdline_workspace%% --title %%cmdline_workspace%% | A new workspace named "%%cmdline_workspace%%" was created |
+| st-admin | create-workspace --name %%target_workspace%% --title %%target_workspace%% | A new workspace named "%%target_workspace%%" was created. |
+
+| *Comment* | Test Case: Command Line Tests WORKSPACES Check all of the set-permissions error conditions... |  |
+
+| st-admin | set-permissions --workspace | qr/The command you called \(set-permissions\) requires a permissions to be specified with the --permissions option/ |
+| st-admin | set-permissions | qr/The command you called \(set-permissions\) requires a permissions to be specified with the --permissions option/ |
+| st-admin | set-permissions --workspace zomg | qr/The command you called \(set-permissions\) requires a permissions to be specified with the --permissions option/ |
+| st-admin | set-permissions --workspace %%cmdline_workspace%% | qr/The command you called \(set-permissions\) requires a permissions to be specified with the --permissions option/ |
+| st-admin | set-permissions --workspace %%cmdline_workspace%% --permission | qr/The command you called \(set-permissions\) requires a permissions to be specified with the --permissions option/ |
+
+| *Comment* | Test Case: Command Line Tests WORKSPACES and then actually change some. Note that the test does not do independent validation that permissions are correct |  |
+| st-admin | set-permissions --workspace %%cmdline_workspace%% --permissions public | qr/The permissions for the %%cmdline_workspace%% workspace have been changed to public/ |
+| st-admin | set-permissions --workspace %%cmdline_workspace%% --permissions member-only | qr/The permissions for the %%cmdline_workspace%% workspace have been changed to member-only/ |
+| st-admin | set-permissions --workspace %%cmdline_workspace%% --permissions authenticated-user-only | qr/The permissions for the %%cmdline_workspace%% workspace have been changed to authenticated-user-only/ |
+| st-admin | set-permissions --workspace %%cmdline_workspace%% --permissions public-read-only | qr/The permissions for the %%cmdline_workspace%% workspace have been changed to public-read-only/ |
+| st-admin | set-permissions --workspace %%cmdline_workspace%% --permissions public-comment-only | qr/The permissions for the %%cmdline_workspace%% workspace have been changed to public-comment-only/ |
+| st-admin | set-permissions --workspace %%cmdline_workspace%% --permissions public-join-to-edit | qr/The permissions for the %%cmdline_workspace%% workspace have been changed to public-join-to-edit/ |
+| st-admin | set-permissions --workspace %%cmdline_workspace%% --permissions intranet | qr/The permissions for the %%cmdline_workspace%% workspace have been changed to intranet/ |
+
+| *Comment* | Test Case: Command Line Tests WORKSPACES check basic error conditions for add-permission |  |
+| st-admin | add-permission | qr/The command you called \(add-permission\) requires a workspace to be specified/ |
+| st-admin | add-permission --workspace | qr/The command you called \(add-permission\) requires a workspace to be specified/ |
+| st-admin | add-permission --workspace %%cmdline_workspace%% | qr/The command you called \(add-permission\) requires a permission to be specified/ |
+
+| *Comment* | Test Case: Command Line Tests WORKSPACES Check error conditions for "role" for all add-permissions statements... |  |
+| st-admin | add-permission --workspace %%cmdline_workspace%% --permission admin_workspace | qr/The command you called \(add-permission\) requires a role to be specified/ |
+| st-admin | add-permission --workspace %%cmdline_workspace%% --permission attachments | qr/The command you called \(add-permission\) requires a role to be specified/ |
+| st-admin | add-permission --workspace %%cmdline_workspace%% --permission comment | qr/The command you called \(add-permission\) requires a role to be specified/ |
+| st-admin | add-permission --workspace %%cmdline_workspace%% --permission delete | qr/The command you called \(add-permission\) requires a role to be specified/ |
+| st-admin | add-permission --workspace %%cmdline_workspace%% --permission edit | qr/The command you called \(add-permission\) requires a role to be specified/ |
+| st-admin | add-permission --workspace %%cmdline_workspace%% --permission edit_controls | qr/The command you called \(add-permission\) requires a role to be specified/ |
+| st-admin | add-permission --workspace %%cmdline_workspace%% --permission email_in | qr/The command you called \(add-permission\) requires a role to be specified/ |
+| st-admin | add-permission --workspace %%cmdline_workspace%% --permission email_out | qr/The command you called \(add-permission\) requires a role to be specified/ |
+| st-admin | add-permission --workspace %%cmdline_workspace%% --permission read | qr/The command you called \(add-permission\) requires a role to be specified/ |
+
+| *Comment* | Test Case: Command Line Tests WORKSPACES but do quasi-all-pairs for success conditions... |  |
+| st-admin | add-permission --workspace %%cmdline_workspace%% --role guest --permission admin_workspace | qr/The admin_workspace permission has been granted to the guest role in the %%cmdline_workspace%% workspace/ |
+| st-admin | add-permission --workspace %%cmdline_workspace%% --role authenticated_user --permission attachments | qr/The attachments permission has been granted to the authenticated user role in the %%cmdline_workspace%% workspace/ |
+| st-admin | add-permission --workspace %%cmdline_workspace%% --role member --permission comment | qr/The comment permission has been granted to the member role in the %%cmdline_workspace%% workspace/ |
+| st-admin | add-permission --workspace %%cmdline_workspace%% --role admin --permission delete | qr/The delete permission has been granted to the admin role in the %%cmdline_workspace%% workspace/ |
+| st-admin | add-permission --workspace %%cmdline_workspace%% --role guest --permission edit | qr/The edit permission has been granted to the guest role in the %%cmdline_workspace%% workspace/ |
+| st-admin | add-permission --workspace %%cmdline_workspace%% --role authenticated_user --permission edit_controls | qr/The edit_controls permission has been granted to the authenticated user role in the %%cmdline_workspace%% workspace/ |
+| st-admin | add-permission --workspace %%cmdline_workspace%% --role member --permission email_in | qr/The email_in permission has been granted to the member role in the %%cmdline_workspace%% workspace/ |
+| st-admin | add-permission --workspace %%cmdline_workspace%% --role admin --permission email_out | qr/The email_out permission has been granted to the admin role in the %%cmdline_workspace%% workspace/ |
+| st-admin | add-permission --workspace %%cmdline_workspace%% --role guest --permission read | qr/The read permission has been granted to the guest role in the %%cmdline_workspace%% workspace/ |
+
+| *Comment* | Test Case: Command Line Tests WORKSPACES ...and stick with the created permissions for remove-permissions w/o checking error conditions |  |
+| st-admin | remove-permission --workspace %%cmdline_workspace%% --role guest --permission admin_workspace | qr/The admin_workspace permission has been revoked from the guest role in the %%cmdline_workspace%% workspace/ |
+| st-admin | remove-permission --workspace %%cmdline_workspace%% --role authenticated_user --permission attachments | qr/The attachments permission has been revoked from the authenticated user role in the %%cmdline_workspace%% workspace/ |
+| st-admin | remove-permission --workspace %%cmdline_workspace%% --role member --permission comment | qr/The comment permission has been revoked from the member role in the %%cmdline_workspace%% workspace/ |
+| st-admin | remove-permission --workspace %%cmdline_workspace%% --role admin --permission delete | qr/The delete permission has been revoked from the admin role in the %%cmdline_workspace%% workspace/ |
+| st-admin | remove-permission --workspace %%cmdline_workspace%% --role guest --permission edit | qr/The edit permission has been revoked from the guest role in the %%cmdline_workspace%% workspace/ |
+| st-admin | remove-permission --workspace %%cmdline_workspace%% --role authenticated_user --permission edit_controls | qr/The edit_controls permission has been revoked from the authenticated user role in the %%cmdline_workspace%% workspace/ |
+| st-admin | remove-permission --workspace %%cmdline_workspace%% --role member --permission email_in | qr/The email_in permission has been revoked from the member role in the %%cmdline_workspace%% workspace/ |
+| st-admin | remove-permission --workspace %%cmdline_workspace%% --role admin --permission email_out | qr/The email_out permission has been revoked from the admin role in the %%cmdline_workspace%% workspace/ |
+| st-admin | remove-permission --workspace %%cmdline_workspace%% --role guest --permission read | qr/The read permission has been revoked from the guest role in the %%cmdline_workspace%% workspace/ |
+
+| *Comment* | Test Case: Command Line Tests WORKSPACES show-acls |  |
+| st-admin | show-acls | qr/The command you called \(show-acls\) requires a workspace to be specified/ |
+
+| *Comment* | Test Case: Command Line Tests this is a pretty powerful test, but it's flaw is that it will not fail when too many permissions are set |  |
+| st-admin | show-acls --workspace %%cmdline_workspace%% | qr/permission set name: custom.+guest.+authenticated user.+member.+admin.+impersonator.+admin_workspace.+X.+attachments.+X.+X.+X.+X.+comment.+X.+X.+X.+X.+delete.+X.+X.+X.+X.+edit.+X.+X.+X.+X.+edit_controls.+email_in.+X.+X.+X.+email_out.+X.+X.+X.+X.+impersonate.+X.+read.+X.+X.+X.+X.+request_invite/ |
+
+| *Comment* | Test Case: Command Line Tests WORKSPACES check acls for public, member-only workspace |  |
+| st-admin | set-permissions --workspace %%cmdline_workspace%% --permissions public | qr/The permissions for the %%cmdline_workspace%% workspace have been changed to public/ |
+| st-admin | show-acls --workspace %%cmdline_workspace%% | qr/permission set name: public.+guest.+authenticated user.+member.+admin.+impersonator.+admin_workspace.+X.+attachments.+X.+X.+X.+comment.+X.+X.+X.+X.+X.+delete.+X.+X.+X.+edit.+X.+X.+X.+X.+X.+edit_controls.+email_in.+X.+X.+X.+X.+email_out.+X.+X.+X.+impersonate.+X.+read.+X.+X.+X.+X.+X.+request_invite/ |
+| st-admin | set-permissions --workspace %%cmdline_workspace%% --permissions member-only | qr/The permissions for the %%cmdline_workspace%% workspace have been changed to member-only/ |
+| st-admin | show-acls --workspace %%cmdline_workspace%% | qr/permission set name: member-only.+guest.+authenticated user.+member.+admin.+impersonator.+admin_workspace.+X.+attachments.+X.+X.+X.+comment.+X.+X.+X.+delete.+X.+X.+X.+edit.+X.+X.+X.+edit_controls.+email_in.+X.+X.+X.+X.+email_out.+X.+X.+X.+impersonate.+X.+read.+X.+X.+X.+request_invite/ |
+
+show-members
+
+| *Comment* | Test Case: Command Line Tests WORKSPACE add-member |  |
+| st-admin | create-user --email foo%%start_time%%@bar.com --password d3vnu11l |  |
+| st-admin | add-member --workspace %%cmdline_workspace%% --email devnull1@socialtext.com |  |
+| st-admin | add-member --workspace %%cmdline_workspace%% --email foo%%start_time%%@bar.com |  |
+| st-admin | show-members | qr/The command you called \(show-members\) requires a workspace, account, or group/ |
+| st-admin | show-members --workspace %%cmdline_workspace%% | qr/Email Address.+First.+Last.+Role.+devnull1\@socialtext.com.+foo%%start_time%%\@bar.com/ |
+
+show-admins
+
+| *Comment* | Test Case: Command Line Tests WORKSPACE show-admins, show-impersonators |  |
+| st-admin | show-admins | qr/The command you called \(show-admins\) requires a workspace to be specified/ |
+| st-admin | add-workspace-admin --email devnull1@socialtext.com --workspace %%cmdline_workspace%% |  |
+| st-admin | show-admins --workspace %%cmdline_workspace%% | qr/Email Address.+First.+Last.+devnull1\@socialtext.com/ |
+
+show-impersonators
+
+| st-admin | show-impersonators | qr/The command you called \(show-impersonators\) requires an account or a workspace to be specified/ |
+| st-admin | add-workspace-impersonator --workspace %%cmdline_workspace%% --email devnull1@socialtext.com | devnull1@socialtext.com already has the role of 'admin' in the %%cmdline_workspace%% |
+| st-admin | remove-workspace-admin --email devnull1@socialtext.com --workspace %%cmdline_workspace%% | no longer has the role of 'admin' |
+| st-admin | add-workspace-impersonator --workspace %%cmdline_workspace%% --email devnull1@socialtext.com | devnull1@socialtext.com now has the role of 'impersonator' in the %%cmdline_workspace%% |
+| st-admin | show-impersonators --workspace %%cmdline_workspace%% | qr/Email Address.+First.+Last.+devnull1\@socialtext.com/ |
+
+| *Comment* | Test Case: Command Line Tests WORKSPACE Add users from a workspace |
+| st-admin | add-users-from | qr/The command you called \(add-users-from\) requires a workspace to be specified.+A workspace is identified by name with the --workspace option/ |
+| st-admin | add-users-from --workspace fake-workspace | No workspace named "fake-workspace" could be found. |
+| st-admin | add-users-from --workspace %%workspace%% | qr/The command you called \(add-users-from\) requires a workspace to be specified.+A workspace is identified by name with the --target option/ |
+| st-admin | add-users-from --workspace %%workspace%% --target fake-target | No workspace named "fake-target" could be found. |
+| st-admin | add-users-from --workspace %%workspace%% --target %%target_workspace%% | The following users from the %%workspace%% workspace were added to the %%target_workspace%% workspace |
+
+| *Comment* | Test Case: Command Line Tests WORKSPACE show-workspace-config |  |
+| st-admin | show-workspace-config --workspace %%cmdline_workspace%% | qr/Config for %%cmdline_workspace%% Workspace.+account_id.+allows_html_wafl.+allows_skin_upload.+basic_search_only.+cascade_css.+comment_by_email.+comment_form_note_bottom.+comment_form_note_top.+comment_form_window_height.+created_by_user_id.+creation_datetime.+custom_title_label.+customjs_uri.+email_addresses_are_hidden.+email_notification_from_address.+email_notify_is_enabled.+email_weblog_dot_address.+enable_unplugged.+external_links_open_new_window .+header_logo_link_uri.+homepage_is_dashboard.+homepage_weblog.+incoming_email_placement.+invitation_filter.+invitation_template.+logo_uri.+no_max_image_size.+page_title_prefix.+prefers_incoming_html_email.+restrict_invitation_to_search.+show_title_below_logo.+show_welcome_message_below_logo.+skin_name.+sort_weblogs_by_create.+title.+unmasked_email_domain.+workspace_id.+ping URIs.+custom comment form fields/ |
+
+| st-admin | set-workspace-config | qr/The command you called \(set-workspace-config\) requires a workspace to be specified/ |
+| *Comment* | Test Case: Command Line Tests set-workspace config accepts no third argument |  |
+| st-admin | set-workspace-config --workspace %%cmdline_workspace%% | qr/The workspace config for %%cmdline_workspace%% has been updated/ |
+
+| *Comment* | Test Case: Command Line Tests checking number, string, boolean set-workspace-config operation |  |
+| *Comment* | Test Case: Command Line Tests these tests actually validates the new conditions, rather than only the return value from st-admin |  |
+
+| st-admin | set-workspace-config --workspace %%cmdline_workspace%% homepage_is_dashboard 0 | qr/The workspace config for %%cmdline_workspace%% has been updated/ |
+| st-admin | show-workspace-config --workspace %%cmdline_workspace%% | qr/homepage_is_dashboard\s+:\s+0/ |
+| st-admin | set-workspace-config --workspace %%cmdline_workspace%% homepage_is_dashboard 1 | qr/The workspace config for %%cmdline_workspace%% has been updated/ |
+| st-admin | show-workspace-config --workspace %%cmdline_workspace%% | qr/homepage_is_dashboard\s+:\s+1/ |
+
+| *Comment* | Test Case: Command Line Tests WORKSPACE Export workspace | Writes to a unique file on /tmp |
+| st-admin | export-workspace | qr/The command you called \(export-workspace\) requires a workspace to be specified.+A workspace is identified by name with the --workspace option/ |
+| st-admin | export-workspace --workspace no-%%start_time%% | No workspace named "no-%%start_time%%" could be found. |
+
+| *Comment* | BZ 406 |  |
+| st-admin | delete-workspace --workspace %%workspace%% --dir /no/such/dir | Export directory /no/such/dir does not exist. |
+| *Comment* | end BZ 406 |  |
+
+| st-admin | export-workspace --workspace %%target_workspace%% | The %%target_workspace%% workspace has been exported to /tmp/%%target_workspace%%.1.tar.gz. |
+| st-admin | create-workspace --empty --name export-name%%start_time%% --title export-name%%start_time%% |  |
+| st-admin | export-workspace --workspace export-name%%start_time%% --name new-name%%start_time%% | The export-name%%start_time%% workspace has been exported to /tmp/new-name%%start_time%%.1.tar.gz. |
+| st-admin | delete-workspace --workspace export-name%%start_time%% |  |
+| st-admin-export-workspace-ok | %%target_workspace%% |  |
+| st-admin | delete-workspace | qr/The command you called \(delete-workspace\) requires a workspace to be specified/ |
+| st-admin | delete-workspace --workspace %%target_workspace%% --no-export | The %%target_workspace%% workspace has been deleted |
+
+| *Comment* | Test Case: Command Line Tests WORKSPACE Import workspace |  |
+| st-admin | import-workspace | qr/--tarball required/ |
+| st-admin | import-workspace --tarball | qr/Tarball file does not exist ()/ |
+| st-admin | import-workspace --tarball /tmp/not-there.tar.gz | Tarball file does not exist (/tmp/not-there.tar.gz) |
+| st-admin | import-workspace --tarball /tmp/%%target_workspace%%.1.tar.gz | Workspace has been imported |
+| st-admin | import-workspace --tarball /tmp/%%target_workspace%%.1.tar.gz | Cannot restore %%target_workspace%% workspace, it already exists. |
+| st-admin | import-workspace --tarball /tmp/%%target_workspace%%.1.tar.gz -name import-name%%start_time%% | Workspace has been imported |
+| st-admin | import-workspace --tarball /tmp/%%target_workspace%%.1.tar.gz --overwrite | Workspace has been imported |
+
+This doesn't work. Why?
+st-admin import-workspace--tarball /tmp/%%target_workspace%%.1.tar.gz --name %%target_workspace%%-2
+
+the `--dir` option is not being tested. Testing it would require specifying a directory (other than /tmp) to save the workspace too. I don't know of another cross-platform area. Another approach would be to create a /tmp/foo directory for the test, through a `mkdir` or `run` command.
+
+| *Comment* | Test Case: Command Line Tests WORKSPACE clone-workspace |  |
+| st-admin | clone-workspace | qr/The command you called \(clone-workspace\) requires a workspace to be specified/ |
+| st-admin | clone-workspace --workspace %%cmdline_workspace%% | qr/--target required/ |
+| st-admin | clone-workspace --target %%cmdline_workspace%%-clone | qr/The command you called \(clone-workspace\) requires a workspace to be specified/ |
+| st-admin | clone-workspace --workspace %%cmdline_workspace%% --target %%cmdline_workspace%%-clone | qr/The %%cmdline_workspace%% workspace has been cloned to %%cmdline_workspace%%-clone/ |
+| st-admin | clone-workspace --workspace %%cmdline_workspace%% --target %%cmdline_workspace%%-clone | qr/Cannot restore %%cmdline_workspace%%-clone workspace, it already exists/ |
+| st-admin | clone-workspace --workspace %%cmdline_workspace%% --target %%cmdline_workspace%%-clone --overwrite | qr/The %%cmdline_workspace%% workspace has been cloned to %%cmdline_workspace%%-clone/ |
+| st-admin | add-member --w %%cmdline_workspace%%-clone --e %%email%% |  |
+| pause | 5000 | open_ok was failing with no notice; matt inserted a modes pause |
+| open_ok | /%%cmdline_workspace%%-clone/index.cgi |  |
+| location_like | /%%cmdline_workspace%%-clone |  |
+
+html-archive --workspace --file
+mass-copy-pages --workspace --target [--prefix]
+
+| *Comment* | Test Case: Command Line Tests WORKSPACE html-archive going to /tmp |  |
+| st-admin | html-archive | qr/The command you called \(html-archive\) requires a workspace to be specified/ |
+| st-admin | html-archive --workspace %%cmdline_workspace%% | qr/The command you called \(html-archive\) requires a file to be specified with the --file option/ |
+| *Comment* | Test Case: Command Line Tests html-archive with a bogus --file causes stack trace |  |
+| st-admin | html-archive --workspace %%cmdline_workspace%% --file /temp/foo | Path to zip file does not exist |
+| st-admin | html-archive --workspace %%cmdline_workspace%% --file /tmp/%%start_time%% | qr/An HTML archive of the %%cmdline_workspace%% workspace has been created in \/tmp\/%%start_time%%\.zip/ |
+
+| *Comment* | Test Case: Command Line Tests WORKSPACE mass-copy-pages going to /tmp |  |
+| st-admin | mass-copy-pages | qr/The command you called \(mass-copy-pages\) requires a workspace to be specified/ |
+| st-admin | mass-copy-pages --workspace %%cmdline_workspace%% | qr/The command you called \(mass-copy-pages\) requires a workspace to be specified.+A workspace is identified by name with the --target option/ |
+| st-admin | mass-copy-pages --workspace %%cmdline_workspace%% --target zomg | qr/No workspace named "zomg" could be found/ |
+| *Comment* | Test Case: Command Line Tests mass-copy-pages FROM target so target can be renamed soon |  |
+| st-admin | mass-copy-pages --workspace %%target_workspace%% --target %%cmdline_workspace%% | qr/All of the pages in the %%target_workspace%% workspace have been copied to the %%cmdline_workspace%% workspace/ |
+
+rename-workspace --workspace --name
+
+| *Comment* | Test Case: Command Line Tests WORKSPACE rename-workspace tests actual conditions by calling the function twice |  |
+| st-admin | rename-workspace --workspace %%target_workspace%% --name zomg_%%start_time%% | qr/The %%target_workspace%% workspace has been renamed to zomg_%%start_time%%/ |
+| st-admin | list-workspaces | qr/zomg_%%start_time%%/ |
+| st-admin | rename-workspace --workspace zomg_%%start_time%% --name %%cmdline_workspace%%_2 | qr/The zomg_%%start_time%% workspace has been renamed to %%cmdline_workspace%%_2/ |
+
+ list-workspaces [--ids]
+
+| st-admin | list-workspaces | qr/%%cmdline_workspace%%/ |
+
+purge page tests
+
+| *Comment* | Test Case: Command Line Tests WORKSPACE purge-page tests validates actual conditions by calling purge-page twice |  |
+| st-admin | purge-page | qr/The command you called \(purge-page\) requires a workspace to be specified/ |
+| st-admin | purge-page --workspace %%cmdline_workspace%% | qr/The command you called \(purge-page\) requires a page to be specified/ |
+| st-admin | purge-page --workspace %%cmdline_workspace%% --page %%cmdline_workspace%% | qr/The %%cmdline_workspace%% page was purged from the %%cmdline_workspace%% workspace/ |
+| st-admin | purge-page --workspace %%cmdline_workspace%% --page %%cmdline_workspace%% | qr/There is no page with the id "%%cmdline_workspace%%" in the %%cmdline_workspace%% workspace/ |
+
+purge-attachment
+
+| st-admin | purge-attachment | qr/The command you called \(purge-attachment\) requires a workspace to be specified/ |
+| st-admin | purge-attachment --workspace %%cmdline_workspace%% | qr/The command you called \(purge-attachment\) requires a page to be specified/ |
+| st-admin | purge-attachment --workspace %%cmdline_workspace%% --page nosuchpage | qr/There is no page with the id "nosuchpage" in the %%cmdline_workspace%% workspace/ |
+| st-admin | purge-attachment --workspace %%cmdline_workspace%% --page example_page_project_tracking | qr/The command you called \(purge-attachment\) requires an attachment id to be specified/ |
+
+TODO: figure out a way to calculate the attachment ID
+st-admin | purge-attachment --workspace %%cmdline_workspace%% --page example_page_project_tracking --attachment 20100401162154-11-29454 | attachment was purged from Example Page: Project Tracking page in the %%cmdline_workspace%% workspace. |
+
+ search-categories --workspace --search
+delete-category --workspace [--category or --search]
+
+| *Comment* | Test Case: Command Line Tests WORKSPACE search-categories and delete-categories have some odd capitalization schemes for "Welcome" tag |  |
+| st-admin | search-categories | qr/The command you called \(search-categories\) requires a workspace to be specified/ |
+| st-admin | search-categories --workspace %%cmdline_workspace%% | qr/The command you called \(search-categories\) requires one or more tags to be specified.+You can specify a tag by name \(--tag\) or by a search string \(--search\)/ |
+| st-admin | search-categories --workspace %%cmdline_workspace%% --search welcome | qr/Matched the following tags.+Welcome/ |
+| st-admin | search-categories --workspace %%cmdline_workspace%% --tag welcome | qr/Matched the following tags.+welcome/ |
+| st-admin | delete-category --workspace %%cmdline_workspace%% --search welcome | qr/The following tags were deleted from the %%cmdline_workspace%% workspace.+Welcome/ |
+| st-admin | delete-category --workspace %%cmdline_workspace%% --search welcome | qr/No tags matching "welcome" were found in the %%cmdline_workspace%% workspace/ |
+
+| *Comment* | Test Case: Command Line Tests WORKSPACE customjs tests |  |
+| st-admin | set-customjs | qr/The command you called \(set-customjs\) requires a workspace to be specified./ |
+| *Comment* | no feedback if set-customjs is missing last argument, see rt27444 |  |
+| st-admin | set-customjs --workspace %%cmdline_workspace%% |  |
+| st-admin | customjs --workspace %%cmdline_workspace%% | qr/The %%cmdline_workspace%% workspace has no custom Javascript set/ |
+| st-admin | set-customjs --workspace %%cmdline_workspace%% --name foobar | Custom JS name for %%cmdline_workspace%% workspace set to foobar. |
+| st-admin | customjs --workspace %%cmdline_workspace%% | Custom JS URI for %%cmdline_workspace%% workspace is foobar. |
+
+| st-admin | set-customjs --workspace %%cmdline_workspace%% --uri barbaz | Custom JS URI for %%cmdline_workspace%% workspace set to barbaz. |
+| st-admin | customjs --workspace %%cmdline_workspace%% | Custom JS URI for %%cmdline_workspace%% workspace is barbaz. |
+| st-admin | clear-customjs | qr/The command you called \(clear-customjs\) requires a workspace to be specified./ |
+| st-admin | clear-customjs --workspace %%cmdline_workspace%% | Custom JS URI cleared for %%cmdline_workspace%% workspace. |
+| st-admin | customjs --workspace %%cmdline_workspace%% | The %%cmdline_workspace%% workspace has no custom Javascript set. |
+
+| st-admin | customjs | qr/The command you called \(customjs\) requires a workspace to be specified./ |
+
+| *Comment* | Test Case: Command Line Tests WORKSPACE Teardown |  |
+| st-process-jobs |  |  |
+| st-admin | delete-workspace --w %%cmdline_workspace%% --no-export |  |
+| st-admin | delete-workspace --w %%target_workspace%% --no-export |  |
+| st-admin | delete-workspace --w import-name%%start_time%% --no-export |  |
+| st-admin | delete-workspace --w %%cmdline_workspace%%-clone --no-export |  |
+| st-admin | delete-workspace --w %%cmdline_workspace%%_2 --no-export |  |
+
+| *Comment* | Test Case: Command Line Tests WORKSPACE COMPLETED |  |

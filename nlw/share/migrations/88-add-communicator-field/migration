@@ -1,0 +1,32 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::Account;
+use Socialtext::People::Fields;
+
+my @accounts = Socialtext::Account->All()->all();
+
+# Get *all* Accounts, and get their fields to make sure there are no accounts
+# that have never had their stock fields auto-vivified. Doing this will create
+# the communicator_sn field for those accounts that have never had their
+# fields accessed
+
+for my $account (@accounts) {
+    my $fields
+        = Socialtext::People::Fields->new(account_id => $account->account_id);
+    # For each, check to see if they don't have the communicator_sn field... if
+    # they do, then we skip them, if not, add it to the account
+    next if ($fields->by_name('communicator_sn'));
+
+    $fields->create_field(
+        name => 'communicator_sn',
+        title => 'Office Communicator™',
+        field_class => 'contact',
+        is_user_editable => 1,
+        is_hidden => 0,
+        _force_reserved_name => 1
+    );
+}
+
+exit 0;

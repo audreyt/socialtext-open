@@ -1,0 +1,83 @@
+| *Comment* | Test Case: Signal From Private Group |  |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Signal From Private Group SETUP |  |
+| set | acct | private-acct-%%start_time%% |
+| set | user1_short | privuser1%%start_time%% |
+| set | user2_short | privuser2%%start_time%% |
+
+| set | user1 | %%user1_short%%@matt.socialtext.net |
+| set | user2 | %%user2_short%%@matt.socialtext.net |
+| set | group_name | group%%start_time%% |
+| set | group_desc | group%%start_time%% |
+
+| st-admin | create-account --name %%acct%% | was created |
+| st-admin | create-user --e %%user1%% --p %%password%% --account %%acct%% | was created |
+| st-admin | create-user --e %%user2%% --p %%password%% --account %%acct%% | was created |
+
+| *Comment* | Test Case: Signal From Private Group. logout explicitly to avoid spurious Basic Authentication pop-up |  |
+| pause | 5000 |  |
+| open_ok | /nlw/submit/logout |  |
+| pause | 5000 |  |
+| st-login | %%user1%% | %%password%% |
+
+| *Comment* | Test Case: Signal From Private Group. %%user1_short%% creates a private group |  |  |
+| st_create_group | %%group_name%% | %%group_desc%% | private-radio |
+
+| wait_for_element_visible_ok | create-group | 30000 |
+| click_and_wait | create-group |  |
+| get_id_from_url | group_id |  |
+
+| *Comment* | Test Case: Signal From Private Group Send a public Signal to the group |  |
+| set | public_1 | Signal 1 %%start_time%% |
+
+| st-name-widget | 3 | activity_widget |
+| st-send-signal-via-activities-widget | activity_widget | %%public_1%% |
+| open_ok | /st/group/%%group_id%% |  |
+| st-name-widget | 3 | activity_widget |
+| st_verify_text_in_activities_widget | activity_widget | %%public_1%% |
+
+| *Comment* | Test Case: Signal From Private Group - Find the Permalink and signal ID |  |
+| http-user-pass | %%user1%% | %%password%% |
+| st_process_jobs | SignalIndex |  |
+| GET-json | /data/events |  |
+| json-parse |  |  |
+| set-from-content | signal_hash | qr/"hash":"(\S+)","topics":/ |
+| set-from-content | signal_id | qr/"signal_id":"(\d+)"\}/ |
+
+| *Comment* | permalink: %%signal_hash%% signal_id: %%signal_id%% |  |
+
+| *Comment* | Test Case: Signal From Private Group - Examine the permalink |  |
+| open_ok | /st/signals/%%signal_hash%% |  |
+| st-name-widget | 1 | outer_widget |
+| st_verify_text_in_activities_widget | outer_widget | %%public_1%% |
+
+| *Comment* | Test Case: Signal From Private Group - navigate away from permalink |  |
+| open_ok | /?action=workspaces_listall |  |
+
+| *Comment* | Test Case: Signal From Private Group - Examine the signal ID |  |
+| open_ok | /st/signals/%%signal_id%% |  |
+| st-name-widget | 1 | outer_widget |
+| st_verify_text_in_activities_widget | outer_widget | %%public_1%% |
+
+| *Comment* | Test Case: Private Group Login as group member %%user2_short%% can not see permalink. Tests {bz: 4086} |  |
+| st-logoutin | %%user2%% | %%password%% |
+
+| st_open_noeval | /st/signals/%%signal_hash%% |  |
+| wait_for_text_present_ok | We're sorry, but that Signal does not exist. You can use the signal search box above to find a particular signal. | 30000 |
+| text_unlike | //body | %%public_1%% |
+
+| *Comment* | Test Case: Signal From Private Group - navigate away from error page |  |
+| open_ok | /?action=workspaces_listall |  |
+
+| *Comment* | Test Case: Private Group Login as group member %%user2_short%% can not see signal by ID. Tests {bz: 4086} |  |
+
+| st_open_noeval | /st/signals/%%signal_id%% |  |
+| wait_for_text_present_ok | We're sorry, but that Signal does not exist. You can use the signal search box above to find a particular signal. | 30000 |
+| text_unlike | //body | %%public_1%% |
+
+| *Comment* | Test Case: Signal From Private Group TEARDOWN |  |
+| delete-group | %%group_id%% |  |
+
+| *Comment* | Test Case: Signal From Private Group COMPLETED |  |

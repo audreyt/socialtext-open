@@ -1,0 +1,40 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+die "Usage: $0 in_file out_file [VAR1=VAL1 VAR2=VAL2 ...]\n" if @ARGV < 2;
+
+my $in_file = shift;
+my $out_file = shift;
+my %SETTINGS;
+
+for my $arg (@ARGV) {
+    my ($key, $value) = split /=/, $arg, 2;
+    $SETTINGS{$key} = $value;
+}
+spew( $out_file, replace_vars( slurp($in_file) ) );
+
+sub replace_vars {
+    my $lines = shift;
+    my $regex = "\@(" . ( join "|", map uc, sort keys %SETTINGS ) . ")\@";
+    map {s/$regex/$SETTINGS{$1}/eg} @$lines;
+    return $lines;
+}
+
+sub slurp {
+    my $file = shift;
+    my @lines;
+    open( my $fh, $file ) or die "Could not open $file for reading: $!\n";
+    @lines = <$fh>;
+    close($fh);
+    return \@lines;
+}
+
+sub spew {
+    my ($file, $lines) = @_;
+    open( my $fh, ">$file" ) or die "Could not open $file for writing: $!\n";
+    print $fh @$lines;
+    close($fh);
+}

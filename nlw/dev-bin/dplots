@@ -1,0 +1,19 @@
+#!/bin/bash -x
+# @COPYRIGHT@
+
+# Use dprofpp to analyze a whole pile of tmon*.out files generated
+# by a fork()d up benchmark like fake-request.t.
+
+for profile in tmon*.out; do
+    pid=$(echo $profile | cut -d. -f2)
+    if [ "$pid" = 'out' ]; then
+        pid='parent'
+    fi
+    dprofpp -O 30 $profile > cpu.$1.$pid.profile &
+    dprofpp -G '::BEGIN$' -O 30 -r $profile > real.$1.$pid.profile &
+    dprofpp -S $profile > merged.$1.$pid.profile &
+    echo $pid
+done
+
+echo 'waiting...'
+wait

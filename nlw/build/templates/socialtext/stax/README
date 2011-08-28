@@ -1,0 +1,39 @@
+This (etc/socialtext/stax) directory is where you configure certain
+hacks to be applied to certain workspaces (on certain pages, under
+certain conditions).
+
+For instance, to apply the hack called "doofle" to the "dumbstruck"
+workspace, for pages tagged "Diesel", make a file called dumbstruck.yaml
+with the following contents:
+
+    ---
+    - hack: doofle
+      tags:
+        - Diesel
+
+This will cause `doofle/stax.js` to be loaded on the appropriate pages.
+
+The YAML file should contain an array of hack configs to be applied to
+that workspace. Each config hash the following parameters:
+
+* hack (required) - Name of hack. Used in path to find js file.
+* action (optional string or array, default is '*') Page action where hack is activated.
+* tag (optional string or array) Page must contain tag to activate hack.
+* tag-match (optional regexp) One tag must match regexp.
+* params (optional string) Information to pass to the hack
+
+Example:
+
+    ---
+    - hack: foo
+      action: display
+      tag:
+        - XXX
+        - YYY
+      params: qwertyuiop
+    - hack: bar
+      tag-match: '^Bar:?\s'
+
+NOTE: tag and tag-match are mutually exclusive per config section. Use
+      one or the other or neither (but not both).
+

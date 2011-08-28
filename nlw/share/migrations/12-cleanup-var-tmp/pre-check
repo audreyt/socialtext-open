@@ -1,0 +1,46 @@
+#!/bin/bash
+set -e
+
+# Common exit codes
+PROCEED_WITH_MIGRATION=0
+NO_MIGRATION_NEEDED=1
+ERROR_STOP_MIGRATION=2
+
+# Vars
+DIR="/var/tmp"
+TEST_PKG="libsocialtext-appliance-perl"
+TEST_FILE="/etc/socialtext/appliance.conf"
+
+# Check to see if the given package is installed.  If the package is missing
+# or dpkg(1) doesn't even exist then the command will give no output, and
+# has_package will be the empty string.  Otherwise has_package will have
+# content.
+has_package=$(dpkg -l "$TEST_PKG" 2>/dev/null | grep '^ii')
+
+# Use the above test, along w/ the existance of a known appliance-specific
+# file to see if we're on an appliance.
+if [ -z "$has_package" ] || [ ! -f "$TEST_FILE" ]; then
+    echo "Not an appliance.  Skipping migration."
+    exit $NO_MIGRATION_NEEDED
+fi
+ 
+# If the directory we're trying to cleanup doesn't exist, then there's nothing
+# to do.
+if [ ! -d "$DIR" ]; then
+    echo "Directory $DIR does not exist.  Migration not required."
+    exit $NO_MIGRATION_NEEDED
+fi
+
+# Ensure we've got root access
+if [ $UID -ne 0 ]; then
+    echo "You must be root to execute this migration" >&2
+    exit $ERROR_STOP_MIGRATION
+fi
+
+# Ensure the directory is readable and executable.
+if [ ! -r "$DIR" ] || [ ! -x "$DIR" ]; then
+    echo "Directory $DIR can not be read or chdir'ed into." >&2
+    exit $ERROR_STOP_MIGRATION
+fi
+
+exit $PROCEED_WITH_MIGRATION

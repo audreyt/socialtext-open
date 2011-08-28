@@ -1,0 +1,10 @@
+[%# @COPYRIGHT@ -%]
+[%# vim: set et sts=2 sw=2: %]
+[% IF public_workspaces AND (public_workspaces.size > 0)%]
+  <ul data-role="listview">
+    <li class="divider" data-role="list-divider">[% loc('wiki.public') %]</li>
+    [% FOREACH ws IN public_workspaces %]
+      <li><a href="/m/page/[% ws.0 | html %]/">[% ws.1 | html %]</a></li>
+    [% END %]
+  </ul>
+[% END %]

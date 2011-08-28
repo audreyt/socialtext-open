@@ -1,0 +1,25 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Getopt::Long;
+use Fatal qw/open close/;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::System qw/shell_run/;
+
+my $num = 100;
+GetOptions(
+    'n|num=s' => \$num,
+);
+
+my $file = "/tmp/mass-add.$$";
+open(my $fh, ">$file");
+for my $i (1 .. $num) {
+    print $fh "user$$-$i,email$$-$i\@example.com,first$$-$i,last$$-$i,"
+        . "password,Position,Company,Location,work phone,mobile phone,"
+        . "home phone\n";
+}
+close $fh;
+
+shell_run("time st-admin mass-add-users --csv $file");

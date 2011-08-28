@@ -1,0 +1,58 @@
+
+| *Comment* | Test Case: Create LDAP Group |  |
+| *Comment* | Test Case: Create LDAP Group Requires LDAP to be enabled |  |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Create LDAP Group - Startup LDAP, should contain list of LDAP Group Factories |  |
+| open-ok | /nlw/control/group/ |  |
+| wait_for_element_visible_ok | //input[@type='button' and @value="Create New Group"] | 30000 |
+| click_ok | //input[@type='button' and @value="Create New Group"] |  |
+| wait_for_text_present_ok | Create a Socialtext Group | 30000 |
+| wait_for_text_present_ok | Load an existing group from LDAP | 5000 |
+| wait_for_element_visible_ok | st-radio-stdgroup | 5000 |
+| wait_for_element_visible_ok | st-radio-ldapgroup | 5000 |
+
+| *Comment* | Test Case: Create LDAP Group. Exercise lightbox |  |
+| click_ok | st-radio-ldapgroup |  |
+| is_checked_ok | st-radio-ldapgroup |  |
+
+| wait_for_element_visible_ok | ldap_driver | 5000 |
+| select_ok | ldap_driver | index=0 |
+| is_selected_ok | ldap_driver | index=0 |
+
+| wait_for_element_visible_ok | st-select-ldap-group | 5000 |
+| pause | 1000 |  |
+| select_ok | st-select-ldap-group | label=Hawkwind |
+| is_selected_ok | st-select-ldap-group | label=Hawkwind |
+| select_ok | st-select-ldap-group | label=Motorhead |
+| is_selected_ok | st-select-ldap-group | label=Motorhead |
+
+| click_ok | st-radio-stdgroup |  |
+| is_checked_ok | st-radio-stdgroup |  |
+| click_ok | st-radio-ldapgroup |  |
+| is_checked_ok | st-radio-ldapgroup |  |
+
+| *Comment* | Test Case: Create LDAP Group. Save and Verify |  |
+| wait_for_element_visible_ok | st-group-create-submit | 30000 |
+| click_ok | st-group-create-submit |  |
+
+| *Comment* | Test Case: Create LDAP Group. Process jobs after Motorhead |  |
+| pause | 10000 | maybe this will work. LDAP group creation is asynchronous |
+| st-process-jobs |  |  |
+| st-ldap-vanilla | refresh --force |  |
+| st-process-jobs |  |  |
+| pause | 15000 |  |
+| get_group_id | Motorhead | created_group_id |
+| open_ok | /nlw/control/group/%%created_group_id%% |  |
+
+| wait_for_element_visible_ok | addToAccountLookahead | 30000 |
+| wait_for_text_present_ok | Motorhead Group | 10000 |
+| wait_for_text_present_ok | Created By: | 10000 |
+| wait_for_text_present_ok | Created On: | 10000 |
+| wait_for_text_present_ok | Source: LDAP: | 10000 |
+| wait_for_text_present_ok | Description: | 10000 |
+| wait_for_text_present_ok | Accounts (1) | 10000 |
+| wait_for_text_present_ok | Users (3) | 10000 |
+
+| *Comment* | Test Case: Create LDAP Group COMPLETED |  |

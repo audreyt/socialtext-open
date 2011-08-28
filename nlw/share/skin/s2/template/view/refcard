@@ -1,0 +1,259 @@
+[%# @COPYRIGHT@ -%]
+[% PROCESS element/doctype %]
+<html>
+  <head>
+    <title>[% loc('Socialtext Workspace Punctuation Help') %]</title>
+    [% PROCESS element/popup_css_links %]
+  </head>
+  <body id="st-refcard">
+    <div id="st-refcard-print-button">
+      [% PROCESS window_button label = loc('Print This'), method = 'print' %]
+    </div>
+
+[% SET bold_words_text = loc('bold words') %]
+[% SET italic_words_text = loc('italic words') %]
+[% SET strikeout_text = loc('strikeout') %]
+[% SET monospace_text = loc('monospace') %]
+[% SET table_text = loc('table') %]
+[% SET value_text = loc('value') %]
+[% SET dinette_text = loc('dinette') %]
+[% SET indented_text = loc('indented') %]
+[% SET lines_text = loc('lines') %]
+[% SET Page_link_text = loc('Page link') %]
+[% SET Page_Link_text = loc('Page Link') %]
+[% SET Link_text_text = loc('Link text') %]
+[% SET different_workspace_text = loc('different-workspace') %]
+[% SET Page_Title_text = loc('Page Title') %]
+[% SET Name_text = loc('Name') %]
+[% SET Section_text = loc('Section') %]
+[% SET headings_are_sections_text = loc('headings are sections too') %]
+[% SET another_workspace_text = loc('another workspace') %]
+[% SET external_link_text = loc('external link') %]
+[% SET email_link_text = loc('email link') %]
+[% SET Socialtext_Home_Page_text = loc('Socialtext Home Page') %]
+[% SET Socialtext_Email_text = loc('Socialtext Email') %]
+[% SET external_image_text = loc('external image') %]
+[% SET item_1_text = loc('item 1') %]
+[% SET item_2_text = loc('item 2') %]
+[% SET subitem_1_text = loc('subitem 1') %]
+[% SET heading_1_text = loc('heading 1') %]
+[% SET heading_2_text = loc('heading 2') %]
+[% SET heading_3_text = loc('heading 3') %]
+[% SET heading_4_text = loc('heading 4') %]
+[% SET heading_5_text = loc('heading 5') %]
+[% SET heading_6_text = loc('heading 6') %]
+[% SET image_attachment_text = loc('image attachment') %]
+[% SET image_attached_to_page_text = loc('image attached to page') %]
+[% SET image_attachment_text = loc('image attachment') %]
+[% SET workspace_text = loc('workspace') %]
+[% SET image_attached_to_a_page_in_another_ws_text = loc('image attached to a page in another workspace') %]
+[% SET page_name_text= loc('page name') %]
+[% SET My_Weblog_text = loc('My Weblog') %]
+[% SET Meeting_Notes_text = loc('Meeting Notes') %]
+[% SET this_text_is_not_bold_text = loc('this text is not bold') %]
+
+[% refcard = [
+    {
+        html = '<b>' _ bold_words_text _ '</b>',
+        text = '*' _  bold_words_text _ '*',
+    },
+
+    {
+        html = '<i>' _ italic_words_text _ '</i>',
+        text = '_' _ italic_words_text _ '_',
+    },
+
+    {
+        html = '<del>' _ strikeout_text _ '</del>',
+        text = '-' _ strikeout_text _ '-',
+    },
+
+    {
+        html = '<tt>' _ monospace_text _ '</tt>',
+        text = '`' _ monospace_text _ '`',
+    },
+
+    {
+        html = '<table class="formatter_table"><tr><td>' _ table_text _ '</td><td>' _ value_text _ '</td></tr><tr><td>' _ dinette_text _ '</td><td>$75</td></tr></table>',
+        text = '|' _ table_text _ '|' _ value_text _ '|<br/>|' _ dinette_text _ '|$75|<br/>',
+    },
+
+    {
+        html = '<blockquote>' _ indented_text _ '<br>'  _ lines_text _ '</blockquote>',
+        text = '&gt;' _ indented_text _ '<br>&gt;' _ lines_text,
+    },
+
+    {
+        html = '<a href="./index.cgi?Page%20Link" title="\['  _ Page_link_text _ '\]" target=_blank>' _ Page_Link_text _ '</a>',
+        text = '[' _ Page_Link_text _ ']',
+    },
+
+    {
+        html = '<a href="./index.cgi?Page%20Link" title="\[' _ Page_link_text _ '\]" target=_blank>' _ Link_text_text _ '</a>',
+        text = '"' _ Link_text_text _ '" [' _ Page_Link_text _ ']',
+    },
+
+    {
+        html = loc('<u>Page Link</u> to different-workspace'),
+        text = '{link: ' _ different_workspace_text _ ' [' _ Page_Title_text _ ']} to ' _ different_workspace_text,
+    },
+
+    {
+        html = loc('Page section name'),
+        text = '{section:'  _ Name_text _ '}',
+    },
+
+    {
+        html = loc('<u>Link to section</u> in the same page'),
+        text = '{link: ' _ Section_text _ '} (note: ' _ headings_are_sections_text _ ')',
+    },
+
+    {
+        html = loc('<u>Link to section</u> of a different page'),
+        text = '{link: [' _ Page_Title_text _ '] ' _ Section_text _ '}',
+    },
+
+    {
+        html = loc('<u>Link to section</u> of a page in another workspace'),
+        text = '{link: ' _ another_workspace_text _ ' [' _ Page_Title_text _ '] ' _ Section_text _ '}',
+    },
+
+    {
+        html = '<a href="http://www.socialtext.com/" title="[' _ external_link_text  _ ']" target=_blank>http://www.socialtext.com/</a>',
+        text = 'http://www.socialtext.com/',
+    },
+
+    {
+        html = '<a href="mailto:info@socialtext.com/" title="[' _ email_link_text _ ']">info@socialtext.com</a>',
+        text = 'info@socialtext.com',
+    },
+
+    {
+        html = '<a href="http://www.socialtext.com/" title="[' _ external_link_text _ ']" target=_blank>' _ Socialtext_Home_Page_text _ '</a>',
+        text = '&quot;' _ Socialtext_Home_Page_text _ '&quot;&lt;http://www.socialtext.com&gt;',
+    },
+
+    {
+        html = '<a href="mailto:info@socialtext.com/" title="[' _ email_link_text _ ']">' _ Socialtext_Email_text _ '</a>',
+        text = '&quot;' _ Socialtext_Email_text _ '&quot;&lt;mailto:info@socialtext.com&gt;',
+    },
+
+    {
+        html = '<img src="/static/skin/s2/images/logo-bar-12.gif" border=0 alt="[' _ external_image_text _  ']">',
+        text = '&lt;http://www.socialtext.com/images/socialtext-140.gif&gt;',
+    },
+
+    {
+        html = '<hr>',
+        text = '----',
+    },
+
+    {
+        html = '<ul><li> ' _ item_1_text _  ' <ul><li> ' _ subitem_1_text _ ' </ul><li> ' _ item_2_text _ ' </ul>',
+        text = '* ' _ item_1_text _ '<br>** ' _ subitem_1_text _ '<br>* '  _ item_2_text,
+    },
+
+    {
+        html = '<ol><li> ' _ item_1_text _ ' <ol><li> ' _ subitem_1_text _ ' </ol><li> ' _ item_2_text _ ' </ol>',
+        text = '# ' _ item_1_text _ '<br>## ' _ subitem_1_text _ '<br># ' _ item_2_text,
+    },
+
+    {
+        html = '<h1>' _ heading_1_text _ '</h1>',
+        text = '^ ' _ heading_1_text,
+    },
+
+    {
+        html = '<h2>' _ heading_2_text _ '</h2>',
+        text = '^^ ' _ heading_2_text,
+    },
+
+    {
+        html = '<h3>' _ heading_3_text _ '</h3>',
+        text = '^^^ ' _ heading_3_text,
+    },
+
+    {
+        html = '<h4>' _ heading_4_text _ '</h4>',
+        text = '^^^^ ' _ heading_4_text,
+    },
+
+    {
+        html = '<h5>' _ heading_5_text _ '</h5>',
+        text = '^^^^^ ' _ heading_5_text,
+    },
+
+    {
+        html = '<h6>' _ heading_6_text _ '</h6>',
+        text = '^^^^^^ ' _ heading_6_text,
+    },
+
+    {
+        html = '<img src="/static/skin/s2/images/logo-bar-12.gif" border=0 alt=" ['  _ image_attachment_text _ ']">',
+        text = '{image: logo-bar-12.gif} (' _ image_attached_to_page_text _ ')',
+    },
+
+    {
+        html = '<img src="/static/skin/s2/images/logo-bar-12.gif" border=0 alt="[' _ image_attachment_text _ ']">',
+        text = '{image: ' _ workspace_text _ ' [' _ page_name_text _ '] logo-bar-12.gif} (' _ image_attached_to_a_page_in_another_ws_text _ ')',
+    },
+
+    {
+        html = loc('<a href="./proposal.pdf">proposal.pdf</a> on this page'),
+        text = loc('{file: proposal.pdf} on this page'),
+    },
+
+    {
+        html = loc('<a href="./proposal.pdf">proposal.pdf</a> on <u>page name</u>'),
+        text = '{file: [' _ page_name_text _ '] proposal.pdf} - [' _ page_name_text _ ']',
+    },
+
+    {
+        html = loc('My Weblog weblog'),
+        text = '{weblog: ' _ My_Weblog_text _ '}',
+    },
+
+    {
+        html = loc('Meeting notes category'),
+        text = '{category: ' _ Meeting_Notes_text _ '}',
+    },
+
+    {
+        html = loc('Yahoo user yahoouser presence'),
+        text = loc('Yahoo user ymsgr:yahoouser presence'),
+    },
+
+    {
+        html = loc('AOL user aimuser presence'),
+        text = loc('AOL user aim:aimuser presence'),
+    },
+
+    {
+        html = loc('Block of HTML'),
+        text = '.html<br/>&lt;img src="http://mysite.com/offsite.jpg"&gt;<br/>.html',
+    },
+
+    {
+        html = loc('Block of text with no *special* punctuation'),
+        text = '.pre<br/>' _ loc('Block of text with no *special* punctuation') _ '<br/>.pre',
+    },
+
+    {
+        html = '<sup>&trade;</sup>',
+        text = '{tm}',
+    },
+
+    {
+        html = '*' _ this_text_is_not_bold_text _ '*',
+        text = '{' _ '{*' _ this_text_is_not_bold_text _ '*}}',
+    },
+] %]
+
+    <table class="st-refcard-table">
+      <tr class="st-refcard-table-row"><th>[% loc('To Get This...') %] </th><th>[% loc('Type This') %]</th></tr>
+      [% FOREACH row = refcard %]
+        <tr class="st-refcard-table-row"><td>[% row.html %]</td><td>[% row.text %]</td></tr>
+      [% END %]
+    </table>
+    </body>
+</html>

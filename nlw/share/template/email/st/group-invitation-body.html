@@ -1,0 +1,51 @@
+[%# @COPYRIGHT@ -%]
+[% SET group_name = group_name | html %]
+
+[% IF extra_text %]
+[% extra_text -%]
+[% UNLESS requires_confirmation %]
+<hr/>
+[% END %]
+[% END %]
+
+[% IF requires_confirmation %]
+<p>
+[% loc('email.hi') %]
+</p>
+<p>
+[% loc("email.inviting-you-to-join=group,host", group_name, host) %]
+</p>
+<p>
+[% SET confirm_uri = confirmation_uri | html %]
+[% loc('email.click-to-confirm-email=uri', confirm_uri) %]
+</p>
+<p>
+[% loc('email.once-confirmed-you-will-receive-second-email-with-login-details') %]
+</p>
+<p>
+[% loc('email.thanks') %]
+</p>
+<p>
+[% inviting_user %]
+</p>
+[% ELSE %]
+<p>
+<a href="[% profile_uri_base %][% user.user_id %]">[% user.guess_real_name %]</a>,
+</p>
+<p>
+<a href="[% profile_uri_base %][% from_user.user_id %]">[% from_user.guess_real_name %]</a> [% loc('email.added-you-to=group', group_name) %] 
+</p>
+<p>
+[% loc("email.as-member-you-can-send-signals-to-group-and-use-any-of-group-wikis") %]
+<p>
+[% loc('email.go-to')%] <a href="[% group_uri | html %]">[% group_name %]</a> [% loc('email.home-page') %]
+</p>
+<p>
+[% group_name %] [% loc('email.is-group-on=host', host) %]
+</p>
+
+[% END %]
+
+
+[% PROCESS 'email/standard-footer.html'
+   support_link = 1 %]

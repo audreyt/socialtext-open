@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# there is *no* post-check condition
+#
+# it *is* entirely possible that even after running the refresh of LDAP users
+# that we have users that have _not_ been refreshed properly.  No harm, no
+# foul, though... we're only running this migration to prime the DB cache; if
+# we couldn't refresh them now then they'll get refreshed automatically as
+# part of the naturl running of the system.
+exit 0

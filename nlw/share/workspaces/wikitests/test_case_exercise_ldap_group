@@ -1,0 +1,81 @@
+| *Comment* | Test Case: Control Panel Exercise LDAP Group |  |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Control Panel Exercise LDAP Group SETUP |  |
+| get-group-id | Motorhead | created_group_id |
+| set | ldapy_ws | ldapy-ws-%%start_time%% |
+| set | ldapy_account | ldapy-acct-%%start_time%% |
+
+| *Comment* | Test Case: Exercise LDAP Group Add a workspace |  |
+| st-admin | create-workspace --empty --name %%ldapy_ws%% --title %%ldapy_ws%% | A new workspace named "%%ldapy_ws%%" was created |
+| open_ok | / |  |
+| st-logoutin | Lemmy Kilmister | ld@pu53r |
+| open_ok | /%%ldapy_ws%%/ |  |
+| text_like | //body | You are not authorized to view this workspace |
+
+| *Comment* | Test Case: Exercise LDAP Group Add an account |  |
+| create-account | %%ldapy_account%% |  |
+| st-admin | add-member --g %%created_group_id%% --account %%ldapy_account%% | Motorhead now has the role of 'member' in the %%ldapy_account%% Account |
+| st-admin | show-members --account ldapy-acct-%%start_time%% | lemmy@socialtext.com |
+| st-admin | show-members --account ldapy-acct-%%start_time%% | Kilmister |
+| st-admin | show-members --account ldapy-acct-%%start_time%% | Phil |
+| st-admin | show-members --account ldapy-acct-%%start_time%% | Eddie |
+| st-logoutin | %%username%% | %%password%% |
+| st-admin | give-accounts-admin --u %%username%% |  |
+| open_ok | /nlw/control/account/%%account_id%% |  |
+| wait_for_element_visible_ok | link=Motorhead | 30000 |
+| text_like | //body | Groups (1) |
+| text_like | //body | Motorhead |
+
+| *Comment* | Test Case: Exercise LDAP Group Login as a member, see the group home page |  |
+| open_ok | / |  |
+| st-logoutin | Lemmy Kilmister | ld@pu53r |
+| st-admin | add-member --workspace %%ldapy_ws%% --g %%created_group_id%% | Motorhead now has the role of 'member' in the |
+| st-process-jobs | GroupIndex |  |
+| open_ok | /%%ldapy_ws%% |  |
+| wait_for_element_visible_ok | st-edit-button-link | 30000 |
+| wait_for_element_present_ok | link=Motorhead | 30000 |
+| click_and_wait | link=Motorhead |  |
+
+| *Comment* | Test Case: Exercise LDAP see the workspace, see the members on the group home page |  |
+| wait_for_text_present_ok | Motorhead | 30000 |
+| text_like | st-editing-tools-edit | Motorhead |
+| st-name-widget | 1 | information_widget |
+| st-widget-title-like | information_widget | Information |
+| st-select-widget-frame | information_widget |  |
+| text_like | //body | Motorhead |
+| select-frame | relative=parent |  |
+| st-name-widget | 2 | workspaces_widget |
+| st-widget-title-like | workspaces_widget | Workspaces |
+| st-select-widget-frame | workspaces_widget |  |
+| wait_for_element_visible_ok | link=%%ldapy_ws%% | 30000 |
+| select-frame | relative=parent |  |
+| st-name-widget | 3 | membership_widget |
+| st-widget-title-like | membership_widget | Membership |
+| st-select-widget-frame | membership_widget |  |
+| wait_for_element_visible_ok | link=Eddie Clarke | 30000 |
+| wait_for_element_visible_ok | link=Lemmy Kilmister | 30000 |
+| wait_for_element_visible_ok | link=Phil Taylor | 30000 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Exercise LDAP Group TODO Signal and Filter Signals |  |
+
+| *Comment* | Test Case: Exercise LDAP Group Remove from Account, Workspace, check removals |  |
+| st-logoutin | %%username%% | %%password%% |
+| st-admin | remove-member --account %%ldapy_account%% --g %%created_group_id%% | Motorhead is no longer a member of %%ldapy_account%% |
+| st-admin | give-accounts-admin --u %%username%% |  |
+| open_ok | /nlw/control/account/%%account_id%% |  |
+| text_like | //body | Groups (0) |
+| text_unlike | //body | Motorhead |
+| open_ok | / |  |
+| st-logoutin | Lemmy Kilmister | ld@pu53r |
+| st-admin | remove-member --g %%created_group_id%% --w %%ldapy_ws%% |  |
+| open_ok | /%%ldapy_ws%%/ |  |
+| text_like | //body | You are not authorized to view this workspace |
+
+| *Comment* | Test Case: Exercise LDAP Group TEARDOWN |  |
+
+| st-admin | delete-workspace --w %%ldapy_ws%% --no-export | has been deleted |
+
+| *Comment* | Test Case: Exercise LDAP Group COMPLETED |  |

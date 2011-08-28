@@ -1,0 +1,601 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use 5.12.0;
+use utf8;
+use autodie;
+use warnings;
+use open qw(:std :utf8);
+use Getopt::Long;
+use FindBin '$RealBin';
+use lib "$RealBin/../lib";
+use Socialtext::l10n::DevUtils;
+use Socialtext::JSON;
+
+chdir "$RealBin/..";
+
+if (!@ARGV) {
+    @ARGV = map {
+        s!^share/l10n/(.+)/lib\.po!$1!; $_
+    } glob("share/l10n/*/lib.po")
+}
+
+no warnings 'redefine';
+my @outs;
+sub outs {
+    push @outs, @_;
+}
+
+sub en {
+    # Sort "en" before everything else
+    ($_[0] eq 'en') ? '' : $_[0];
+}
+
+my %EnglishLexicon;
+for my $lang (sort { en($a) cmp en($b) } @ARGV) {
+    next if $lang eq 'new';
+
+    my %Lexicon;
+    $lang =~ s/-/_/g;
+    $lang =~ s/(_\w+)$/uc $1/e;
+    for my $po (glob("share/l10n/$lang/*.po")) {
+        next if $po =~ qr/(?:lib|reports|template)\.po$/; # Not going to occur in JS
+
+        open my $in, '<:utf8', $po;
+
+        local $/ = "\n\n";
+        scalar <$in>;
+
+        while (<$in>) {
+            my ($comments, $id, $str) = split(/\n(?=msg)/, "\n$_");
+            $id =~ s/\\n/\x{FFFC}/g;
+            $id = gettext_to_maketext(trim($id));
+            $str =~ s/\\n/\x{FFFC}/g;
+            $str = gettext_to_maketext(trim($str));
+            $Lexicon{$id} = $str unless $id eq $str;
+        }
+    }
+    gen_po($lang => \%Lexicon);
+    gen_js($lang => \%Lexicon);
+
+    if ($lang eq 'zh_CN') {
+        # Generate zh_TW from zh_CN
+        require Encode::HanConvert;
+        my %tw = map { ($_ => tw($Lexicon{$_})) } keys %Lexicon;
+        gen_js('zh_TW' => \%tw);
+        gen_derived_po(zh_CN => zh_TW => \&tw);
+    }
+
+    next unless $lang eq 'en';
+
+    %EnglishLexicon = %Lexicon;
+
+    # Generated derived locales
+    my %zz = map { ($_ => zz($Lexicon{$_})) } keys %Lexicon;
+    my %zq = map { ($_ => zq($Lexicon{$_})) } keys %Lexicon;
+    gen_derived_po(en => zz => \&zz);
+    gen_js('zz' => \%zz);
+    gen_derived_po(en => zq => \&zq);
+    gen_js('zq' => \%zq);
+}
+
+system("dev-bin/jsmake 2>/dev/null");
+
+say $_ for sort @outs;
+
+sub zz {
+    my @tokens = split(/(&\w+;|<[^>]*|quant)/, shift);
+    my $result = '';
+    for my $token (@tokens) {
+        unless ($token =~ /^(?:<|&\w+;|quant$)/) {
+            $token =~ s/[[:upper:]]/Z/g;
+            $token =~ s/[[:lower:]]/z/g;
+        }
+
+        $result .= $token;
+    }
+    return $result;
+}
+
+sub zq {
+    my $token = shift;
+    return $token unless $token =~ /\S/;
+    return "«$token»";
+}
+
+sub gen_js {
+    my ($lang, $lexicon) = @_;
+    if ($lang ne 'en') {
+        $lexicon = { %EnglishLexicon, %$lexicon };
+    }
+    my $js_file = "share/skin/s3/javascript/l10n/$lang.js";
+    open my $js, '>:utf8', $js_file;
+    print $js ";var Socialtext = Socialtext || {}; Socialtext.loc_lang = Socialtext.loc_lang || '$lang'; var LocalizedStrings={\"$lang\":{\n";
+    my $json = encode_json $lexicon;
+    utf8::decode($json);
+    $json =~ s/\\ufffc/\\n/g;
+    $json =~ s/^\{//;
+    $json =~ s/","/"\n"/g;
+    $json =~ s/\}$//;
+    print $js join(",\n", sort split /\n/, $json);
+    print $js "\n}};\n";
+    close $js;
+    outs "*** Generated successfully: $js_file";
+}
+
+sub gen_po {
+    my ($lang, $lexicon) = @_;
+    my $po_file = "share/l10n/$lang.po";
+    my $use_first = '--use-first';
+    my $en_po = "share/l10n/en.po";
+    $en_po = $use_first = '' if $lang eq 'en';
+    system("msgcat --width 99999 $use_first -s @{[reverse sort glob(qq[share/l10n/$lang/*.po])]} $en_po > $po_file");
+    if ($lang ne 'en') {
+        system("msgcat --width 99999 $use_first -s @{[reverse sort glob(qq[share/l10n/$lang/*.po])]} > $po_file.orig");
+        system("diff -du $po_file.orig $po_file | grep ^+ > $po_file.diff");
+        if (-s "$po_file.diff") {
+            open my $diff, '<', "$po_file.diff";
+            open my $diff_po, '>', "$po_file.diff.txt";
+            while (<$diff>) {
+                my $out;
+                if (/\+msgid "(.+)"/) {
+                    $out = "[[[$1]]]";
+                }
+                elsif (/\+msgstr "(.+)"/) {
+                    $out = "$1\n";
+                }
+                else {
+                    next;
+                }
+                $out =~ s/\\([\\"])/$1/g;
+                say $diff_po $out;
+            }
+            outs "*** myGengo diff generated successfully: $po_file.diff.txt"
+        }
+    }
+    outs "*** Generated successfully: $po_file";
+}
+
+sub gen_derived_po {
+    my ($from_lang, $to_lang, $gen) = @_;
+    my $in_file = "share/l10n/$from_lang.po";
+    my $out_file = "share/l10n/$to_lang.po";
+    open my $in, '<:utf8', $in_file;
+    open my $out, '>:utf8', $out_file;
+    {
+        local $/ = "\n\n";
+        print $out scalar <$in>;
+    }
+    while (<$in>) {
+        if (/^msgstr/ .. /^$/) {
+            if (s/^(msg\w+\s*)//) {
+                print $out $1;
+            }
+
+            if (/^"(.*)"$/) {
+                print $out '"'.$gen->($1).'"'."\n";
+            }
+            else {
+                print $out $gen->($_);
+            }
+        }
+        else {
+            print $out $_;
+        }
+    }
+    outs "*** Generated successfully: $out_file";
+}
+
+use constant CN2TW => {qw(
+    ‘           「
+    ’           」
+    “           『
+    ”           』
+    並行操作     平行作業
+    並行端口     平行埠
+    並行線       平行線
+    令牌         權杖
+    以太         乙太
+    以太網絡     乙太網路
+    仿真         模擬
+    仿真計算器   模擬計算機
+    休斯敦       休士頓
+    伯明翰       伯明罕
+    低級語言     低階語言
+    來複線       來福線
+    例程         常式
+    便攜式       攜帶型
+    俄克拉荷馬州 奧克拉荷馬州
+    信息         資訊
+    信道         通道
+    倒霉         倒楣
+    候機樓       候機室
+    借機         藉機
+    元音         母音
+    光標         游標
+    光驅         光碟機
+    內存         記憶體
+    全角         全形
+    公元         西元
+    共享         共用
+    其它         其他
+    兼容         相容
+    冬冬         鼕鼕
+    冰淇淋       霜淇淋
+    出租車       計程車
+    分辨率       解析度
+    前綴         字首
+    加載         載入
+    勾股定理     畢氏定理
+    匟床         炕床
+    升序         升冪
+    協議         協定
+    卡片閱讀機   讀卡機
+    卷標         標簽
+    口令         密碼
+    只讀         唯讀
+    台上         檯上
+    台前         檯前
+    台北         臺北
+    台南         臺南
+    台灣         臺灣
+    台燈         檯燈
+    台風         颱風
+    向旋光性     向光性
+    吸旋光性     吸光性
+    咨詢         諮詢
+    嘍囉         嘍羅
+    噪聲         雜訊
+    嚎咷         嚎啕
+    囉哩囉唆     羅哩羅唆
+    囉囉唆唆     羅羅唆唆
+    囉囉嗦嗦     羅羅嗦嗦
+    囓合         嚙合
+    回复         回覆
+    回放         重播
+    因子         因數
+    圖文電視     電傳視訊
+    圖標         圖示
+    地址         位址
+    坐標         座標
+    埃塞俄比亞   衣索比亞
+    堆棧         堆疊
+    塑料         塑膠
+    墨沉沉       墨沈沈
+    墨粉盒       碳粉匣
+    外圍         周邊
+    外層空間     外太空
+    多米尼加     多明尼加
+    多音字       破音字
+    奔馳         賓士
+    奧委會       奧會
+    子程序       副程式
+    字段         欄位
+    字符串       字串
+    字節         位元組
+    存盤         存檔
+    定時器       計時器
+    實時         即時
+    寫保護       防寫
+    對象         物件
+    屈旋光性     屈光性
+    屎蚵蜋       屎蚵螓
+    屏幕         螢幕
+    屏蔽         遮罩
+    左証         佐証
+    巨富         鉅富
+    布什         布希
+    幼兒園       幼稚園
+    康涅狄克     康乃狄格
+    弱旋光性     弱光性
+    征收         徵收
+    循環         迴圈
+    快捷方式     捷徑
+    快餐         速食
+    惇惇         敦敦
+    惇睦         敦睦
+    意大利       義大利
+    感旋光性     感光性
+    慘淡         慘澹
+    戶口簿       戶口名簿
+    扇區         磁區
+    打印         列印
+    打印機       印表機
+    批注         注解
+    折合         摺合
+    拉拉隊       啦啦隊
+    括號         括弧
+    指針         指標
+    挼搓         挪搓
+    掃描儀       掃描器
+    接口         介面
+    搗衣         擣衣
+    搜購         蒐購
+    搥胸         捶胸
+    搧開         扇開
+    搨碑         拓碑
+    摀住         捂住
+    撈面         撈麵
+    撢灰         撣灰
+    操作數       運算元
+    操作系統     作業系統
+    擴展名       副檔名
+    支持         支援
+    收款機       收銀機
+    數據         資料
+    數據塊       資料區塊
+    數組         陣列
+    斯大林       史達林
+    新罕布什爾   新罕布夏
+    斲輪老手     斫輪老手
+    斷點         中斷點
+    旡妄之災     無妄之災
+    日耳曼民族   日爾曼民族
+    映像         映射
+    晶體管       電晶體
+    智能         智慧
+    暗沉沉       暗沈沈
+    曲菌         麴菌
+    服務器       伺服器
+    棒冰         冰棒
+    標識符       識別字
+    模塊         模組
+    模擬         類比
+    模板         範本
+    比塞塔       比薩斜塔
+    水印         浮水印
+    沈陽         瀋陽
+    沉括         沈括
+    沙特阿拉伯   沙烏地阿拉伯
+    沴氣         溯氣
+    注銷         登出
+    洪都拉斯     宏都拉斯
+    活頁夾       文件夾
+    海浬         海里
+    滾動條       卷軸
+    漁塭         漁瘟
+    演示文稿     簡報
+    激光         鐳射
+    激光打印機   雷射印表機
+    激活         啟動
+    灨江         贛江
+    火並         火拼
+    炒面         炒麵
+    烏坵         烏丘
+    烏沉沉       烏沈沈
+    煉鋼         鍊鋼
+    煙毒         菸毒
+    熏天         薰天
+    牆報         壁報
+    牠們         它們
+    犛牛         氂牛
+    狎翫         狎玩
+    畏旋光性     畏光性
+    畢加索       畢卡索
+    番瓜         南瓜
+    畬太君       佘太君
+    痲子         麻子
+    痲痺不了     麻痺不暸
+    盤石         磐石
+    睪丸         睾丸
+    瞭如         暸如
+    知識分子     知識份子
+    硅晶體管     矽電晶體
+    硅石         矽石
+    硅芯片       矽晶片
+    硬件         硬體
+    磁盤         磁片
+    磁盤文件     磁碟檔
+    磁盤驅動器   磁碟機
+    磁道         磁軌
+    福爾馬林     福馬林
+    秘籍         秘笈
+    程序         程式
+    空格鍵       空白鍵
+    窗口         視窗
+    立體聲       身歷聲
+    答複         答覆
+    算法         演算法
+    管鑰         管龠
+    索馬里       索馬利亞
+    組件         元件
+    結伙         結夥
+    網絡         網路
+    網關         閘道
+    緩存器       暫存器
+    總線         匯流排
+    羅布爾卡     羅布林卡
+    羅得島       羅德島
+    聖地亞哥     聖地牙哥
+    聖誕節       耶誕節
+    聯機         連線
+    聯機操作     線上作業
+    肐膊         胳膊
+    背旋光性     背光性
+    胡塗         糊塗
+    胡衕         衚同
+    胡里胡塗     糊里糊塗
+    脺髒         脆髒
+    腳注         注腳
+    膠卷         軟片
+    航天總署     航太總署
+    色拉油       沙拉油
+    芯片         晶片
+    苞谷         包谷
+    英吋         英寸
+    草庵         草菴
+    荳蔻         豆蔻
+    莫扎特       莫札特
+    菜單         功能表
+    菠蘿         鳳梨
+    蒙矓         矇朧
+    蒙蒙矓矓     矇矇朧朧
+    薙刀         剃刀
+    蜑民         蛋民
+    衖堂         弄堂
+    表達式       運算式
+    西紅柿       番茄
+    觔斗         筋斗
+    計算器       計算機
+    計算機       電腦
+    計算機程序   電腦程式
+    詞匯         辭匯
+    詞組         片語
+    調制解調器   數據機
+    諠嘩         喧嘩
+    諾曼底       諾曼第
+    譯碼         解碼
+    賜謚         賜諡
+    贊美         讚美
+    贊詞         讚詞
+    贊頌         讚頌
+    赫魯曉夫     赫魯雪夫
+    超級鏈接     超連結
+    趨旋光性     趨光性
+    踢躂舞       踢踏舞
+    踰年         逾年
+    蹧蹋         糟蹋
+    軟件包       套裝軟體
+    輕量級       羽量級
+    轉折點       轉捩點
+    迪斯科       迪斯可
+    逃課         蹺課
+    通訊簿       通訊錄
+    過程控制     程序控制
+    遠程         遠端
+    適纔         適才
+    遯世         遁世
+    郵政編碼     郵遞區號
+    酒皻鼻       酒齇鼻
+    醉熏熏       醉薰薰
+    醱酵         粕酵
+    里根         雷根
+    釵鐶         釵鈽
+    錄像         錄影
+    錄音機       答錄機
+    鎌倉幕府     鐮倉幕府
+    鎔岩         熔岩
+    鎗口         槍口
+    鏈接         鏈結
+    鐘縣         鍾縣
+    門徑         門逕
+    關鍵詞       關鍵字
+    阿司匹林     阿斯匹靈
+    阿姆斯特朗   阿姆斯壯
+    陰沉沉       陰沈沈
+    隊列         佇列
+    隨機數       亂數
+    集成電路     積體電路
+    電子表格     試算表
+    電飯鍋       電鍋
+    面包         麵包
+    面條         麵條
+    面粉         麵粉
+    靦臉         腆臉
+    響應         回應
+    頂刮刮       頂呱呱
+    餐具         食具
+    馬薩諸塞     麻塞諸塞
+    骻骨         胯骨
+    鬼魊         鬼蜮
+    鴃舌         觖舌
+    鵰悍         雕悍
+    黑沉沉       黑沈沈
+    鼠標         滑鼠
+
+    複制         複製
+    博客         網誌
+    重命名       重新命名
+    導出         匯出
+    標簽         標籤
+    標志         標誌
+    書簽         書籤
+    搜索         搜尋
+    設置         設定
+    登錄         登入
+    注冊         註冊
+    短信         簡訊
+    默認         預設
+    聯系         聯絡
+    輕松         輕鬆
+    點擊         點選
+    創建         建立
+    移動電話     行動電話
+    移動版       行動版
+    添加         新增
+    軟件         軟體
+    硬件         硬體
+    這里         這裡
+    匹配         符合
+    式樣         樣式
+    繁體         正體
+    回复         回覆
+    回複         回覆
+    保存         儲存
+    脫機         離線
+    丟失         遺失
+    自定義       自訂
+    示例         範例
+    恢複         恢復
+    粘貼         貼上
+    存檔         封存
+    文件         檔案
+    必選         必填 
+    可選         非必填
+    可選模塊     選用模組
+    可選擇       可選擇       
+    轉到         前往
+    于           於
+    發帖         貼文
+    里面         裡面
+    訪問         存取
+    視頻         影片
+    模版         範本
+    刷新         更新
+    應用         套用
+    剪切         剪下
+    單元格       儲存格
+    擦除         清除
+    文本         文字
+    代碼         程式碼
+    代碼塊       程式碼區塊
+    移動源       移動來源
+    社區         社群
+    提交         送出
+    支持         支援
+    禁用         停用
+    存儲         存放
+    日志         日誌
+    複原         復原
+    當前         目前
+    微博         微型部落格
+    聯系         聯絡
+    標准         標準
+    特征         特徵
+    硬盤         硬碟
+    空閒         閒置
+    馬甲         分身
+    日歷         日曆
+    卷動         捲動
+    舍棄         捨棄
+
+    里           裡
+    贊           讚
+)};
+
+use constant CN2TW_ExactMatch => {qw(
+    幫助         輔助說明
+)};
+
+sub tw {
+    my $CN2TW = CN2TW();
+    my $CN2TW_ExactMatch = CN2TW_ExactMatch();
+    state $regex ||= join('|', sort { length $b <=> length $a } keys %$CN2TW);
+    my $trad = Encode::HanConvert::simp_to_trad($_[0]);
+    $trad =~ s/($regex)/$CN2TW->{$1}/g;
+
+    for my $key (keys %$CN2TW_ExactMatch) {
+        $trad = $CN2TW_ExactMatch->{$key} if $trad eq $key;
+    }
+
+    return $trad;
+}

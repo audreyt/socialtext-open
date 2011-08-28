@@ -1,0 +1,18 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::AppConfig;
+use Socialtext::File qw/get_contents/;
+
+# This migration renames the db_schema_name field in socialtext.conf
+# to a more accurate db_name field.
+
+my $file = Socialtext::AppConfig->new->{file};
+if (get_contents($file) =~ m/\bdb_schema_name: /) {
+    print "db_schema_name field found - running migration.\n";
+    exit 0;
+}
+
+print "db_schema_name field not found - skipping migration.\n";
+exit 1;

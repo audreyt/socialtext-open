@@ -1,0 +1,244 @@
+.bubbleWrap {
+    position: absolute;
+    display: none;
+    font-size: 90%;
+    z-index: 1000;
+    -width: 300px;
+}
+
+/**
+ * Border and thought bubble triangle
+ */
+.bubble {
+    background: #FFF;
+    padding: 6px;
+    text-align: left;
+    float: left;
+
+    /* Rounded border */
+    border: 2px solid #666;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.mobile .bubble a,
+.mobile .bubble div,
+.mobile .bubble span,
+.mobile .bubble {
+    font-size: 11px;
+}
+
+/**
+ * Thought bubble adapted from:
+ * http://nicolasgallagher.com/pure-css-speech-bubbles/demo/default.css
+ *
+ * Dual licensed under MIT and GNU GPLv2 © Nicolas Gallagher
+ */
+.bubbleWrap .before,
+.bubbleWrap .after {
+    position: absolute; 
+    display: block; 
+    width: 0;
+    height: 0;
+}
+.bubbleWrap .before {
+    bottom:-20px;
+    left:40px;
+    border-width:20px 20px 0;
+    border-style:solid;
+    border-color:#666 transparent;
+}
+.bubbleWrap .after {
+    bottom:-17px;
+    left:41px;
+    border-width:19px 19px 0;
+    border-style:solid;
+    border-color:#fff transparent;
+}
+.bubbleWrap.top .before {
+    top:-20px;
+    bottom:auto;
+    left:40px;
+    border-width:0 20px 20px;
+}
+.bubbleWrap.top .after {
+    top:-17px;
+    bottom:auto;
+    left:41px;
+    border-width:0 19px 19px;
+}
+.bubbleWrap.left .before {
+    left: auto;
+    right: 3px;
+    bottom: -9px;
+    border-width: 10px 10px 0;
+}
+.bubbleWrap.left.top .before {
+    left: auto;
+    right: 3px;
+    border-width: 0 10px 10px;
+    bottom: auto;
+    top: -9px;
+}
+.bubbleWrap.left .after {
+    left: auto;
+    right: 4px;
+    bottom: -6px;
+    border-width: 9px 9px 0;
+}
+.bubbleWrap.left.top .after {
+    left: auto;
+    right: 4px;
+    bottom: auto;
+    border-width: 0 9px 9px;
+    top: -6px;
+}
+
+/* Like Indicator */
+
+.like-indicator {
+    padding: 5px 10px 5px 23px;
+    background: url(../../../plugin/like/share/images/like-nobody.gif) no-repeat center left
+}
+#controlsRight .like-indicator { padding: 0 10px 0 28px }
+.like-indicator.immutable {
+    color: #000;
+    white-space: nowrap;
+}
+.like-indicator.light {
+    background-image: url(../../../plugin/like/share/images/light-like-nobody.gif);
+}
+.like-indicator.me {
+    background-image: url(../../../plugin/like/share/images/like-me.gif);
+}
+.like-indicator.others {
+    background-image: url(../../../plugin/like/share/images/like-others.gif);
+}
+.like-indicator.light.others {
+    background-image: url(../../../plugin/like/share/images/light-like-others.gif);
+}
+.like-indicator.me.others {
+    background-image: url(../../../plugin/like/share/images/like-me-others.gif);
+}
+.like-indicator.loading {
+    background-image: url(../images/ajax-loader.gif);
+}
+
+.mobile .like-bubble a {
+    text-decoration: none;
+}
+.like-bubble.cols-0,
+.like-bubble.cols-1 {
+    width: 200px;
+}
+.like-bubble.cols-2 {
+    width: 330px;
+}
+.like-bubble .liker-column {
+    float: left;
+    padding: 0 5px;
+}
+.like-bubble .liker {
+    padding: 5px 0;
+}
+.like-bubble .photo {
+    white-space: nowrap;
+}
+.like-bubble .photo {
+    width: 27px;
+    height: 27px;
+    vertical-align: middle;
+}
+.like-bubble .name {
+    font-weight: bold;
+    padding: 5px;
+}
+.like-bubble .like-count,
+.like-bubble .likers,
+.like-bubble .like-button {
+    border-top: 1px solid #aaa;
+}
+.like-bubble .like-filter {
+    padding: 5px 0;
+    text-align: center;
+}
+.like-bubble .like-count {
+    font-weight: bold;
+    font-style: italic;
+    color: #666;
+    padding: 5px 10px;
+}
+.like-bubble .like-filter a {
+    font-weight: bold;
+    margin: 10px;
+}
+.like-bubble .like-filter.colleagues a.colleagues,
+.like-bubble .like-filter.all a.all {
+    color: #000;
+    cursor: default;
+    text-decoration: none;
+}
+.like-bubble .likers {
+    padding: 0 10px;
+}
+.like-bubble .like-button {
+    padding: 8px 0 3px 8px;
+}
+.like-bubble .like-button .like-indicator {
+    color: #000;
+    font-weight: bold;
+}
+.like-bubble .paging  {
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+.like-bubble .paging span,
+.like-bubble .paging a {
+    margin: 0 4px;
+}
+
+/* Avatar popup stuff */
+.bubble .fn {
+    font-weight: bold;
+}
+.bubble .vcard {
+    min-height: 62px;
+}
+.bubble img.avatarPhoto {
+    float: left;
+    padding: 5px;
+}
+.bubble .userinfo {
+    margin-left: 72px;
+}
+.bubble .userinfo.web {
+    display: none; /* not a requirement to show web stuff in the popup */
+}
+.bubble .vcard .photo {
+    float: left;
+}
+.bubble .userinfo img {
+    vertical-align: middle !important;
+}
+.bubble ul {
+    list-style-type: none !important;
+    padding-left: 0;
+    margin-left: 0;
+}
+.bubble .follow {
+    text-align: left;
+    border-top: 1px solid #CCCBCC;
+    margin-top: 5px;
+    padding: 5px;
+    height: 13px;
+}
+.bubble .followPersonButton,
+.bubble .followPersonButton:hover {
+    color: #000;
+    text-decoration: none;
+    height: 18px;
+    float: left;
+}
+

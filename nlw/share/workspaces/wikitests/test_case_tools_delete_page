@@ -1,0 +1,73 @@
+| *Comment* | Test Case: Tools: Delete Page |
+
+| *Comment* | Test Case: Tools: Delete Page: Create test page |  |
+| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| type_ok | wikiwyg_wikitext_textarea | Delete Page Content %%start_time%% |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
+| type_ok | st-newpage-pagename-edit | Delete Page %%start_time%% |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| st-page-save |  |  |
+
+| *Comment* | Test Case: Tools: Delete Page: Create backlinking page |  |
+| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| type_ok | wikiwyg_wikitext_textarea | `[Delete Page %%start_time%%]` |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
+| type_ok | st-newpage-pagename-edit | Backlink Page %%start_time%% |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| st-page-save |  |  |
+
+| *Comment* | Test Case: Tools: Delete Page: delete the page |  |
+| open_ok | /%%workspace%%/?Delete Page %%start_time%% |  |
+| click_ok | link=Delete Page |  |
+| wait_for_element_visible_ok | st-delete-deletelink | 20000 |
+| click_and_wait | st-delete-deletelink |  |
+| text_like | contentTitle | Deleted "Delete Page %%start_time%%" |
+| text_like | contentColumns | The page had these Backlinks: |
+| text_like | contentColumns | Backlink Page %%start_time%% |
+
+| *Comment* | Test Case: Tools: Delete Page: restore the page |  |
+| wait_for_element_visible_ok | link=Restore Page |  |
+| click_and_wait | link=Restore Page |  |
+| text_like | contentContainer | Delete Page Content %%start_time%% |
+
+| *Comment* | Test Case: Tools: Delete Page: three revisions, 1, Deleted 2, 1 |  |
+| open_ok | /%%workspace%%/index.cgi?action=revision_list;page_name=delete_page_%%start_time%% |  |
+| text_like | contentContainer | qr/Revision 1.+Deleted.+Revision 2.+Revision 1/ |
+| click_and_wait | link=Compare Revisions |  |
+| text_like | contentContainer | Delete Page Content %%start_time%% |
+| click_and_wait | //a[contains(@href,'index.cgi?delete_page_%%start_time%%')] |  |
+| click_ok | link=Delete Page |  |
+| wait_for_element_visible_ok | st-delete-deletelink | 20000 |
+| click_and_wait | st-delete-deletelink |  |
+
+| *Comment* | Test Case: Tools: Delete Page: recreate Delete Page %%start_time%% |  |
+| open_ok | /%%workspace%%/?Backlink Page %%start_time%% |  |
+| text_like | contentContainer | Delete Page %%start_time%% |
+| click_ok | link=Delete Page %%start_time%% |  |
+| wait_for_element_visible_ok | blank-radio | 20000 |
+| click_ok | blank-radio |  |
+| wait_for_element_visible_ok | st-create-content-savelink | 20000 |
+| click_and_wait | st-create-content-savelink |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| type_ok | wikiwyg_wikitext_textarea | New Content %%start_time%% |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| st-page-save |  |  |
+
+| *Comment* | Test Case: Tools: Delete Page: five revisions, 3/2/1/2/1 |  |
+| open_ok | /%%workspace%%/index.cgi?action=revision_list;page_name=delete_page_%%start_time%% |  |
+| text_like | contentContainer | qr/Revision 3.+Revision 2.+Revision 1.+Revision 2.+Revision 1/ |
+| click_and_wait | link=Compare Revisions |  |
+| text_like | contentContainer | New Content %%start_time%% |
+
+| *Comment* | Test Case: Tools: Delete Page: TEARDOWN |  |
+| st-process-jobs |  |  |
+| st-admin | purge-page --workspace %%workspace%% --page delete_page_%%start_time%% | was purged |
+| st-admin | purge-page --workspace %%workspace%% --page backlink_page_%%start_time%% | was purged |
+
+| *Comment* | Test Case: Tools: Delete Page COMPLETED |

@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+
+# These are now *also* run as part of the libsocialtext-reports-perl post-install.
+st-db sync
+
+# For SocialText Open, there won't be a st-reports-db, so check for existence before we run it.
+if which st-reports-db; then
+    st-reports-db sync
+fi

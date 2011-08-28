@@ -1,0 +1,21 @@
+index_title: Socialtext HTML-to-Wikitext Testing
+import_libs:
+  - ../../s3/javascript/Debug.js
+  - ../../common/javascript/jquery-1.2.6.js
+  - ../../common/submodule/js-class/lib/Class.js
+  - ../../s3/javascript/loc.js 
+  - ../../common/javascript/WebToolkit-base64-2007-09-25.js
+  - ../../common/javascript/Ajax-0.11/lib/Ajax.js
+  - ../common/lib/Test/Wikiwyg.js
+# XXX Need to get rid of these 2 s2 refs.
+  - ../../s2/javascript/main.js
+  - ../../s2/javascript/md5.js
+  - ../../wikiwyg/javascript/lib/Wikiwyg.js
+  - ../../wikiwyg/javascript/Widgets.js 
+  - ../../wikiwyg/javascript/lib/Wikiwyg/Widgets.js
+  - ../../wikiwyg/javascript/lib/Wikiwyg/Toolbar.js
+  - ../../wikiwyg/javascript/lib/Wikiwyg/Wysiwyg.js
+  - ../../wikiwyg/javascript/lib/Wikiwyg/Wikitext.js
+template_include_path:
+  - ../common/template
+  - ./template

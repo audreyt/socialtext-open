@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <script src="/static/javascript/MochiKit/MochiKit.js"></script>
+    <script src="/static/javascript/MochiKit/Signal.js"></script>
+    <script src="./bookmarklet.js"></script>
+  </head>
+  <body>
+    <h1>Search Set Bookmarklet Generator</h1>
+    <p>
+      The upcoming interwiki search will enable searching over one or
+      more workspaces. Initially, we will offer a binary search:
+      either the current workspace, or all the user's workspaces. The
+      user can manually search over a set of workspaces by modifying
+      the query to include multiple workspace names, but this is less
+      than optimal. A GUI tool to build search bookmarklets will make
+      this very easy. Select multiple workspaces from the select list,
+      and watch as the link below updates (both its target and its
+      text). You can drag the link to your bookmark bar and have
+      instant access to a subset of workspaces to search over. [Of
+      course, it doesn't work yet, but that's coming]
+    </p>
+    <form>
+      <select id="workspace-list" multiple="multiple" size="10">
+        <option value="workspace:admin">Admin Wiki</option>
+        <option value="workspace:help">Help Wiki</option>
+        <option value="workspace:stdev">Socialtext Development</option>
+        <option value="workspace:stoss">Socialtext Open Source Wiki</option>
+        <option value="workspace:sales">Sales</option>
+        <option value="workspace:socialtext-jobs">Socialtext Jobs</option>
+      </select>
+    </form>
+
+    <div>
+      <a id="dynamic-link" href="">Seach workspaces</a>
+    </div>
+  </body>
+</html>

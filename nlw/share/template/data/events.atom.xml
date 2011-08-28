@@ -1,0 +1,24 @@
+[%- USE decorate -%]
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:default="http://www.w3.org/1999/xhtml">
+  <title xmlns="http://www.w3.org/2005/Atom"><![CDATA[[% collection_name %]]]></title>
+  <link xmlns="http://www.w3.org/2005/Atom" type="text/html" rel="alternate" href="[% link %]"/>
+
+  [%- FOR event = events %]
+  <entry xmlns="http://www.w3.org/2005/Atom" xmlns:default="http://www.w3.org/1999/xhtml">
+    [%- IF event.event_class == 'person'; uri = event.actor.id | decorate('user_href');
+        ELSIF event.event_class == 'page'; uri = "$base_uri/$event.page.workspace_name?$event.page.id";
+        END
+    %]
+    <title xmlns="http://www.w3.org/2005/Atom">[% INCLUDE data/event event=event out='text' no_ago=1 %]</title>
+    <link xmlns="http://www.w3.org/2005/Atom" type="text/html" rel="alternate" href="[% uri %]"/>
+    <content xmlns="http://www.w3.org/2005/Atom" xmlns:default="http://www.w3.org/1999/xhtml" type="xhtml">
+        <div xmlns="http://www.w3.org/1999/xhtml">
+            [% INCLUDE data/event event=event out='html' no_ago=1 %]
+        </div>
+    </content>
+    <id>[% event.at %]</id>
+    <updated xmlns="http://www.w3.org/2005/Atom">[% event.at %]</updated>
+  </entry>
+  [% END %]
+</feed>

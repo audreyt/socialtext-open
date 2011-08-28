@@ -1,0 +1,197 @@
+| *Comment* | Test Case: Signals Search Pagination |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Signals Search Pagination. Two users, lexicographically orderable |  |
+
+| set | a_username | `a-%%start_time%%@ken.socialtext.net` |
+| set | x_username | `x-%%start_time%%@ken.socialtext.net` |
+| set | z_username | `z-%%start_time%%@ken.socialtext.net` |
+
+| set | a_name | Antiphonal Signaller %%start_time%% |
+| set | z_name | Zany Replier %%start_time%% |
+
+| set | sspacct | ssp-%%start_time%% |
+
+| *Comment* | Test Case: Signals Search Pagination. |  |
+| st-admin | create-account --name %%sspacct%% |  |
+| st-admin | enable-plugin --account %%sspacct%% --p signals |  |
+
+| *Comment* | Test Case: Signals Search Pagination. Create users |  |
+| st-admin | create_user --e %%a_username%% --p %%password%% --account %%sspacct%% --f "%%a_name%%" |  |
+| st-admin | create_user --e %%x_username%% --p %%password%% --account %%sspacct%% |  |
+| st-admin | create_user --e %%z_username%% --p %%password%% --account %%sspacct%% --f "%%z_name%%" |  |
+| st-admin | add-member --e %%username%% --account %%sspacct%% | member |
+
+| *Comment* | This test uses post-signals to rapidly create signals. |  |
+| *Comment* | It creates a set of signals that can be searched and will appear |  |
+| *Comment* | in linear time order in search results. |  |
+| *Comment* | BUT posted signals appear in inverted order in signals display, |  |
+| *Comment* | and more than 30 minutes old. FYI. |  |
+
+| *Comment* | Test Case: Signals Search Pagination. Send 22 signals %%a_username%% |  |  |
+| http-user-pass | %%a_username%% | %%password%% |  |
+| post-signals | 22 | Pagination %%start_time%% | 1 |
+
+| *Comment* | Test Case: Signals Search Pagination. Send 22 signals %%z_username%% |  |  |
+| http-user-pass | %%z_username%% | %%password%% |  |
+| post-signals | 22 | Pagination %%start_time%% | 41 |
+
+| *Comment* | Test Case: Signals Search Pagination. Process Jobs to index Signals |  |
+| st_process_jobs | SignalIndex |  |
+
+| *Comment* | Test Case: Signals Search Pagination. Search for 44 Pagination %%start_time%% signals |  |
+| open_ok | /?signals |  |
+| wait_for_element_visible_ok | st-search-action | 30000 |
+| wait_for_element_visible_ok | st-search-term | 30000 |
+| is_selected_ok | st-search-action | id=st-search-signals |
+| type_ok | st-search-term | "Pagination %%start_time%%" |
+| wait_for_element_visible_ok | st-search-submit | 30000 |
+| click_and_wait | st-search-submit |  |
+
+| wait_for_element_visible_ok | sort-picker | 30000 |
+| select_and_wait | sort-picker | label=Sender |
+| wait_for_text_present_ok | Signals matching '"Pagination %%start_time%%"' | 60000 |
+| select_and_wait | sort-picker | label=Newest |
+
+| *Comment* | Test Case: Signals Search Pagination. Verify found Pagination %%start_time%% signals |  |
+| wait_for_text_present_ok | Pagination %%start_time%% 43 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 44 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 45 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 46 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 47 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 48 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 49 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 50 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 51 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 52 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 53 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 54 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 55 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 56 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 57 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 58 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 59 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 60 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 61 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 62 | 30000 |
+| text_like | qr/Pagination %%start_time%% 62.+Pagination %%start_time%% 43/ism |  |
+| text_unlike | //body | Pagination %%start_time%% 42 |
+
+| *Comment* | Test Case: Signals Search Pagination. Page 2 |  |
+| click_and_wait | link=2 |  |
+| wait_for_text_present_ok | Pagination %%start_time%% 5 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 42 | 30000 |
+| text_like | qr/Pagination %%start_time%% 42.+Pagination %%start_time%% 5/ism |  |
+| text_unlike | //body | Pagination %%start_time%% 43 |
+
+| *Comment* | Test Case: Signals Search Pagination. Page 3 |  |
+| click_and_wait | link=3 |  |
+| wait_for_text_present_ok | Pagination %%start_time%% 1 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 4 | 30000 |
+| text_like | qr/Pagination %%start_time%% 4.+Pagination %%start_time%% 1/ism |  |
+
+| *Comment* | Test Case: Signals Search Pagination. Previous |  |
+| click_and_wait | link=Previous |  |
+| wait_for_text_present_ok | Pagination %%start_time%% 5 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 42 | 30000 |
+| text_like | qr/Pagination %%start_time%% 42.+Pagination %%start_time%% 5/ism |  |
+
+| *Comment* | Test Case: Signals Search Pagination. Next |  |
+| click_and_wait | link=Next |  |
+| wait_for_text_present_ok | Pagination %%start_time%% 1 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 4 | 30000 |
+| text_like | qr/Pagination %%start_time%% 4.+Pagination %%start_time%% 1/ism |  |
+
+| *Comment* | Test Case: Signals Search Pagination. First |  |
+| click_and_wait | link=First |  |
+| wait_for_text_present_ok | Pagination %%start_time%% 43 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 62 | 30000 |
+| text_like | qr/Pagination %%start_time%% 62.+Pagination %%start_time%% 43/ism |  |
+
+| *Comment* | Test Case: Signals Search Pagination. Sort. |  |
+| wait_for_element_visible_ok | sort-picker | 30000 |
+| select_and_wait | sort-picker | label=Sender |
+
+ wait_for_text_present_ok | Pagination %%start_time%% 22 | 30000 |
+wait_for_text_present_ok | Pagination %%start_time%% 3 | 30000 |
+
+ text-like | qr/%%a_name%%.+%%start_time%% 22.+%%a_name%%.+%%start_time%% 3/ism | |
+
+| select_and_wait | sort-picker | label=Newest |
+| wait_for_text_present_ok | Pagination %%start_time%% 62 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 43 | 30000 |
+
+ text-like | qr/%%z_name%%.+%%start_time%% 62.+%%z_name%%.+%%start_time%% 43/ism | |
+
+| select_and_wait | sort-picker | label=Oldest |
+| wait_for_text_present_ok | Pagination %%start_time%% 1 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 20 | 30000 |
+
+ text-like | qr/%%a_name%%.+%%start_time%% 1.+%%a_name%%.+%%start_time%% 20/ism | |
+
+| *Comment* | Test Case: Signals Search Pagination. Relevance. %%username%% Sends a more relevant signal AND a newer signal |  |  |
+| http-user-pass | %%username%% | %%password%% |  |
+| post-signals | 1 | MoreRelevant %%start_time%% %%start_time%% %%start_time%% | 63 |
+| post-signals | 1 | LessRelevant %%start_time%% | 64 |
+| st_process_jobs | SignalIndex |  |  |
+
+| *Comment* | Test Case: Signals Search Pagination. Relevance. Find a more relevant signal |  |
+| open_ok | /?signals |  |
+| wait_for_element_visible_ok | st-search-action | 10000 |
+| wait_for_element_visible_ok | st-search-term | 10000 |
+| is_selected_ok | st-search-action | id=st-search-signals |
+| type_ok | st-search-term | %%start_time%% |
+| click_and_wait | st-search-submit |  |
+
+| *Comment* | Test Case: Signals Search Pagination. Search will sort by Oldest (sticky). This is good. |  |
+| wait_for_text_present_ok | Signals matching '%%start_time%%' | 30000 |
+| wait_for_element_visible_ok | sort-picker | 10000 |
+| select_and_wait | sort-picker | label=Relevance |
+
+| *Comment* | Test Case: Signals Search Pagination. Verify found more relevant signal |  |
+| wait_for_text_present_ok | MoreRelevant %%start_time%% %%start_time%% %%start_time%% 63 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 62 | 10000 |
+
+| *Comment* | Test Case: Signals Search Pagination. Verify relevant signal not newest signal |  |
+| select_and_wait | sort-picker | label=Newest |
+| wait_for_text_present_ok | MoreRelevant %%start_time%% %%start_time%% %%start_time%% 63 | 30000 |
+| wait_for_text_present_ok | LessRelevant %%start_time%% 64 | 10000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 62 | 10000 |
+| text-like | qr/LessRelevant %%start_time%% 64.+MoreRelevant %%start_time%% %%start_time%% %%start_time%% 63/ism |  |
+
+| *Comment* | Test Case: Signals Search Pagination. Delete irrelevant signal and search again |  |
+| open_ok | /st/signals |  |
+| wait_for_text_present_ok | Showing | 30000 |
+| wait_for_text_present_ok | LessRelevant %%start_time%% 64 | 30000 |
+| wait_for_element_present_ok | //a[@class='hoverLink hideLink'] | 5000 |
+| click_ok | //a[@class='hoverLink hideLink'] |  |
+| verifyConfirmation | Are you sure you want to delete this Signal?\nYou cannot undelete it. |  |
+| wait_for_text_not_present_ok | LessRelevant %%start_time%% 64 | 20000 |
+
+| st-process-jobs | SignalIndex |
+
+| *Comment* | Test Case: Signals Search Pagination. open Signals to verify hidden deleted signal |  |
+| open_ok | /?signals |  |
+| wait_for_element_visible_ok | st-search-action | 10000 |
+| wait_for_element_visible_ok | st-search-term | 10000 |
+| is_selected_ok | st-search-action | id=st-search-signals |
+| type_ok | st-search-term | %%start_time%% |
+| click_and_wait | st-search-submit |  |
+
+| *Comment* | Test Case: Signals Search Pagination. Verify irrelevant signal deleted |  |
+| wait_for_text_present_ok | MoreRelevant %%start_time%% %%start_time%% %%start_time%% 63 | 30000 |
+| wait_for_text_present_ok | Pagination %%start_time%% 62 | 10000 |
+| pause | 10000 | I hate pause |
+| text_unlike | //body | LessRelevant %%start_time%% 64 |
+
+| *Comment* | Test Case: Signals Search Pagination. login as %%z_username%% |  |
+| *Comment* | Test Case: Signals Search Pagination. Verify no delete for non-sender %%z_username%% |  |
+| st-logoutin | %%x_username%% | %%password%% |
+| open_ok | /?signals |  |
+| wait_for_element_not_present_ok | //a[@class='hoverLink hideLink'] | 5000 |
+
+| *Comment* | Test Case: Signals Search Pagination TEARDOWN |
+| st-admin | remove-member --e %%username%% --account %%sspacct%% | no longer |
+
+| *Comment* | Test Case: Signals Search Pagination COMPLETED |

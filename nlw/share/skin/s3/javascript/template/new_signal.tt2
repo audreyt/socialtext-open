@@ -1,0 +1,27 @@
+<li id="signal[% signal.signal_id %]" class="signal">
+    [% IF is_mention %]
+    <img class="mention-icon" src="[% share %]/images/mentionTick.png"/>
+    [% ELSIF is_reply %]
+    <img class="mention-icon" src="[% share %]/images/replyTick.png"/>
+    [% END %]
+    <a class="avatar-link" target="_blank"
+       href="/?profile/[% signal.user_id %]">
+        <img class="avatar"
+             src="/data/people/[% signal.user_id %]/small_photo"/>
+    </a>
+    <a class="text-link" target="_blank" href="/?profile/[% signal.user_id %]">
+        [% signal.best_full_name %]
+    </a>
+    <span class="timestamp-original" style="display:none">
+        [% signal.at %]
+    </span>
+    <span class="timestamp">[% signal.ago %]</span>
+
+    [%# signalAccountsHTML %]
+
+    <span class="replyLink"><a href="#">reply </a></span>
+
+    <br/>
+
+    <div class="signal-text">[% signal.body %]</div>
+</li>

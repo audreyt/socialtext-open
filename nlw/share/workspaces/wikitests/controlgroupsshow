@@ -1,0 +1,106 @@
+| *Comment* | ControlGroupsShow |
+
+| set | workspace1 | ws-groupshow-1-%%start_time%% |
+| set | workspace2 | ws-groupshow-2-%%start_time%% |
+| set | workspace3 | ws-groupshow-3-%%start_time%% |
+| set | samplegroup1 | group-no-acct-2-%%start_time%% |
+| set | samplegroup2 | group-with-acct-1-%%start_time%% |
+
+| set | groupsacct | groups-acct-%%start_time%% |
+| set | gpt | 6000 |
+
+| *Comment* | SEE default groups |  |  |
+| open_ok | /nlw/control/group |  |  |
+| pause | %%gpt%% |  |  |
+| create-account | %%groupsacct%% |  |  |
+| create-group | %%samplegroup1%% |  |  |
+| create-group | %%samplegroup2%% | %%groupsacct%% | %%username%% |
+| create-workspace | %%workspace1%% | %%groupsacct%% |  |
+| create-workspace | %%workspace2%% | %%groupsacct%% |  |
+| create-workspace | %%workspace3%% | %%groupsacct%% |  |
+| st-process-jobs |  |  |
+| pause | %%gpt%% |  |
+
+| *Comment* | SEE Two Groups Added - On a 'vanilla' test build now they will be on page 2 |  |
+| open_ok | /nlw/control/group/ |  |
+| wait_for_element_visible_ok | groupTable-page-2 | 30000 |
+| click_ok | groupTable-page-2 |  |
+| wait_for_element_visible_ok | link=%%samplegroup1%% | 30000 |
+| wait_for_element_visible_ok | link=%%samplegroup2%% | 30000 |
+| pause | %%gpt%% |  |
+
+| *Comment* | SEE Created Date is today |  |
+| click_ok | link=%%samplegroup2%% | 30000 |
+| pause | %%gpt%% |  |
+| *Comment* | SEE account is %%groupsacct%% |  |
+| *Comment* | SEE createdby is %%username%% |  |
+
+| *Comment* | SEE NO workspaces |  |
+| pause | %%gpt%% |  |
+| add-group-to-workspace | %%group_id%% | %%workspace1%% |
+| add-group-to-workspace | %%group_id%% | %%workspace2%% |
+| add-group-to-workspace | %%group_id%% | %%workspace3%% |
+| add-user-to-group | %%username%% | %%group_id%% |
+
+| open_ok | /nlw/control/group/ |  |
+| wait_for_element_visible_ok | groupTable-page-2 | 30000 |
+| click_ok | groupTable-page-2 |  |
+
+| wait_for_element_visible_ok | link=%%samplegroup2%% | 30000 |
+| click_ok | link=%%samplegroup2%% | 30000 |
+
+| *Comment* | See workspaces added |  |
+| pause | %%gpt%% |  |
+
+| *Comment* | SEE DEFAULT Sorted by # of users, desc |
+| open_ok | /nlw/control/group |
+| wait_for_element_visible_ok | groupTable-orderBy-3 |
+| pause | %%gpt%% |
+
+| click_ok | groupTable-orderBy-3 |
+| *Comment* | SEE Sorted by # of users, asc |
+| pause | %%gpt%% |
+
+| click_ok | groupTable-orderBy-0 |
+| *Comment* | SEE Sorted by Groups ID, asc |
+| pause | %%gpt%% |
+
+| click_ok | groupTable-orderBy-0 |
+| *Comment* | See Sorted by Group ID, desc |
+| pause | %%gpt%% |
+
+| click_ok | link=Name |
+| *Comment* | Sort by Group name desc |
+| pause | %%gpt%% |
+
+| click_ok | link=Name |
+| *Comment* | Sort by Group name asc |
+| pause | %%gpt%% |
+
+| *Comment* | Add a lot of groups ... |  |
+| create-multi-groups | biggrouplist | 65 |
+| open_ok | /nlw/control/group/ |  |
+| *Comment* | SEE PAGINATION ... 1-20 of, right? |  |
+| wait_for_element_visible_ok | link=2 | 30000 |
+| pause | %%gpt%% |  |
+| click_ok | link=2 |  |
+| *Comment* | SEE PAGE 2 |  |
+| pause | %%gpt%% |  |
+
+| open_ok | /nlw/control/account |  |
+| wait_for_element_visible_ok | st-search-by-name | 30000 |
+| type_ok | st-search-by-name | %%groupsacct%% |
+| wait_for_element_visible_ok | st-submit-search-by-name |  |
+| click_ok | st-submit-search-by-name |  |
+| wait_for_element_visible_ok | link=%%groupsacct%% |  |
+| click_ok | link=%%groupsacct%% |  |
+
+| *Comment* | SCROLL DOWN; see %%username%% is a member, see %%samplegroup2%% is a group |
+| pause | %%gpt%% |
+
+| *Comment* | Tearing Down Groups |
+| delete-created-groups |  |
+| st-admin | delete-workspace --no-export --w %%workspace1%% | has been deleted |
+| st-admin | delete-workspace --no-export --w %%workspace2%% | has been deleted |
+
+| *Comment* | ControlGroupsShow COMPLETED |

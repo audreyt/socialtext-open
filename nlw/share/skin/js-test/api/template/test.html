@@ -1,0 +1,27 @@
+[% USE date %]
+<!-- @COPYRIGHT@ -->
+<html>
+<head>
+    <script type="text/javascript">
+        var testBaseCurrentScript = '[% test_file %]';
+        function nlw_make_static_path(rest) { return "../../" + rest;}
+    </script>
+    <script type="text/javascript" src="lib/Test/Builder.js?[% date.format(format = '%s') %]"></script>
+    <script type="text/javascript" src="lib/Test/Base.js?[% date.format(format = '%s') %]"></script>
+[% FOR lib = import_libs -%]
+    <script type="text/javascript" src="[% lib %]?[% date.format(format = '%s') %]"></script>
+[% END -%]
+    <script type="text/javascript">
+        var iframe_loaded = false;
+        function iframe_onload() {
+            iframe_loaded = true;
+        }
+    </script>
+</head>
+<body>
+    <div id='display_page_content'></div>
+    <iframe onload="iframe_onload();" id="wikiwyg_iframe" height="0" width="0" frameborder="0"
+                src="/static/1.1.1.1/html/blank.html"></iframe>
+    <script type="text/javascript" src="[% test_file %]"></script>
+</body>
+</html>

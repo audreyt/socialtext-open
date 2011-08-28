@@ -1,0 +1,33 @@
+| *Comment* | Test case: Business Control Panel |  |
+
+| st-admin | give-accounts-admin --email %%email%% | %%username%% now has accounts admin access |
+
+| *Comment* | TC: BCP. CHECK CANCEL AFTER TEARDOWN BECAUSE SAFARI BOMBS OUT ON CANCEL FOR SOME REASON, even though there are no error messages. |  |
+| open_ok | /nlw/control/account |  |
+
+| st-admin | enable-plugin --p dashboard --acc Socialtext |  |
+| st-admin | enable-plugin --p people --acc Socialtext |  |
+| wait_for_element_visible_ok | st-search-by-name | 30000 |
+| type_ok | st-search-by-name | Socialtext |
+| wait_for_element_visible_ok | st-submit-search-by-name | 30000 |
+| click_and_wait | st-submit-search-by-name |  |
+| wait_for_element_visible_ok | //a[@title='view Socialtext'] | 30000 |
+| click_and_wait | //a[@title='view Socialtext'] |  |
+| wait_for_element_visible_ok | link=Profile Fields | 30000 |
+| click_and_wait | link=Profile Fields |  |
+| wait_for_element_visible_ok | link=Edit | 30000 |
+| click_and_wait | link=Edit |  |
+| text_like | qr/Field Title.+Field Name.+Data Source.+Field Type.+Hidden/ |  |
+| wait_for_element_visible_ok | data-source-select | 30000 |
+| wait_for_element_visible_ok | field-type-select | 30000 |
+| select_ok | data-source-select | label=External |
+| select_ok | field-type-select | label=Regular |
+| wait_for_element_visible_ok | //input[@name='is_hidden' and @value='1'] | 30000 |
+| check_ok | //input[@name='is_hidden' and @value='1'] |  |
+| is_checked_ok | //input[@name='is_hidden' and @value='1'] |  |
+
+| click_and_wait | //input[@value='Cancel'] |  |
+| wait_for_text_present_ok | Account Profile Fields | 30000 |
+| wait_for_text_not_present_ok | un-hide | 10000 |
+
+| *Comment* | Test case: Business Control Panel COMPLETED |  |

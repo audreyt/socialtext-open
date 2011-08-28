@@ -1,0 +1,49 @@
+| *Comment* | Test Case: Page Locking |  |
+
+| Comment | Test Case: Page Locking Setup Variables |  |
+| set | admin | %%email%% |
+| set | member | pl-%%start_time%%@ken.socialtext.net |
+| set | password | %%password%% |
+| set | ws | %%workspace%% |
+| set | ppage | PL %%start_time%% |
+
+| Comment | Test Case: Page Locking Setup Working Environment |  |
+| create-user | %%member%% | %%password%% |
+| add-member | %%member%% | %%ws%% |
+| st-admin | update-page --w %%ws%% --e %%admin%% --p "%%ppage%%" < %%wikitest_client_files%%wikitest.txt | has been created |
+
+| Comment | Test Case: Page Locking Setup ws config |
+| open_ok | /%%ws%%/index.cgi?action=workspaces_permissions |
+| wait_for_page_to_load | 30000 |
+| text_like | Page Locking |
+| text_like | Enable page locking. A workspace administrator |
+| text_like | Disable page locking. Any member who can edit |
+| check_ok | settings-lock-pages |
+| click_and_wait | -savelink |
+| text_like | Page locking is enabled. |
+
+| Comment | Test Case: Page Locking Check markup as admin |
+| open_ok | /%%ws%%/?%%ppage%% |
+| is_element_present_ok | st-page-lock-admin |
+| is_element_present_ok | link=Lock Page |
+
+| Comment | Test Case: Page Locking Lock the page, check markup |
+| click_and_wait | st-pagetools-lock |
+| is_element_present_ok | st-page-lock-admin |
+| is_element_present_ok | link=Unlock Page |
+
+| Comment | Test Case: Page Locking Check markup as user |  |
+| st-logoutin | %%member%% | %%password%% |
+| open_ok | /%%ws%%/?%%ppage%% |  |
+| text_like | This page is locked and can only be edited by a workspace administrator |  |
+| wait_for_element_not_present_ok | st-edit-button-link | 5000 |
+| wait_for_element_not_present_ok | st-comment-button-link | 5000 |
+| wait_for_element_not_present_ok | st-edit-button-link-bottom | 5000 |
+| wait_for_element_not_present_ok | st-comment-button-link-bottom | 5000 |
+
+| *Comment* | Test Case: Page Locking TEARDOWN |  |
+| st-admin | purge-page --w %%ws%% --page pl_%%start_time%% | was purged |
+| st-admin | remove-member --e %%member%% --w %%ws%% | no longer has the role of 'member' |
+| st-admin | set-workspace-config --w %%workspace%% allows_page_locking 0 | updated |
+
+| *Comment* | Test Case: Page Locking COMPLETED |  |

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+
+empty=`psql -U $DB_USER -d $DB -t -c '\d "Workspace"' | grep homepage_weblog`
+
+if [ -z "$empty" ]; then
+    echo "homepage_weblog column doesn't yet exist!"
+    exit 0
+fi
+
+echo "homepage_weblog column already exists!"
+exit 1

@@ -1,0 +1,13 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+
+# It is possible that appliances have really crufty old symlinks (or even
+# files) in their ceq queue.  Rather than dying and having a support call, we
+# can ignore any left over files in the queue - they won't do any harm sitting
+# there.
+#
+# For this reason, we choose not to implement a post-check for this migration.
+
+exit 0;

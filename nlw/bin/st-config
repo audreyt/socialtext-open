@@ -1,0 +1,169 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+
+use Getopt::Long qw(:config pass_through);
+use Socialtext::AppConfig;
+use Socialtext::Log 'st_log';
+use Pod::Usage;
+
+my %opts;
+GetOptions(
+    'help' => \$opts{help},
+    'terse|t' => \$opts{terse},
+) or exit 1;
+
+usage() if $opts{help};
+
+my $command = shift @ARGV
+    or usage('Must provide a command');
+
+
+my %Commands = (
+    get  => \&get,
+    echo => \&echo,
+    set  => \&set,
+    cat  => \&cat,
+    file => \&file,
+    edit => \&edit,
+);
+
+usage("Invalid command: $command")
+    unless $Commands{$command};
+
+$Commands{$command}->(@ARGV);
+
+sub get {
+    print "\n" unless $opts{terse};
+    for my $k (@_) {
+        unless ( Socialtext::AppConfig->can($k) ) {
+            print " Config name '$k' does not exist.\n";
+            next;
+        }
+
+        my $value = Socialtext::AppConfig->$k();
+        if ($opts{terse}) {
+            $value ||= '';
+            print $value,"\n";
+        }
+        else {
+            $value ||= 'undef';
+            print " $k: $value\n";
+        }
+    }
+    print "\n" unless $opts{terse};
+}
+
+sub echo {
+    my $k = shift;
+
+    die "\nPlease provide a config name and try again.\n\n"
+        unless defined $k;
+
+    die "\nConfig name '$k' does not exist.\n\n"
+        unless Socialtext::AppConfig->can($k);
+
+    print Socialtext::AppConfig->$k();
+}
+
+sub file {
+    print "\n ", Socialtext::AppConfig->file, "\n\n";
+}
+
+sub cat {
+    exec 'cat', Socialtext::AppConfig->file;
+    die "exec cat: $!";
+}
+
+sub edit {
+    my $editor = $ENV{EDITOR} || 'vi';
+    exec $editor, Socialtext::AppConfig->file;
+    die "exec $editor: $!";
+}
+
+sub set {
+    my @args = @_;
+
+    while (@args) {
+        my $key = shift @args;
+        my $value = shift @args;
+
+        die "\n Config name '$key' does not exist.\n\n"
+            unless Socialtext::AppConfig->can( $key );
+
+        Socialtext::AppConfig->set($key, $value);
+        st_log(info => "st-config: $key to '$value'");
+    }
+
+    Socialtext::AppConfig->write;
+    print "\n Wrote updated config file to ", Socialtext::AppConfig->file, "\n\n";
+}
+
+sub usage {
+    my $msg = shift || '';
+
+    pod2usage(
+        -msg     => $msg,
+        -verbose => 2,
+    );
+}
+
+__END__
+
+=head1 NAME
+
+st-config - Make changes to the global Socialtext configuration
+
+=head1 SYNOPSIS
+
+  st-config get support_address
+  st-config set support_address admin@example.com
+
+=head1 DESCRIPTION
+
+This script allows you to change the global Socialtext configuration,
+which is typically stored in F</etc/socialtext/socialtext.conf>.
+
+=head1 COMMANDS
+
+This program provides the following options:
+
+=head2 get key1 key2
+
+Print the value(s) of the specified key(s).
+
+Specify C<--terse> before C<get> to print out the value(s) without keys or
+decoration.
+
+=head2 echo key
+
+Print one key, suitable for use by shell scripts.
+
+=head2 set key val key val
+
+Allows you to set one or more values in the global Socialtext config
+file. Use "" to set a value to an empty string.
+
+=head2 cat
+
+Print out the entire file.
+
+=head2 file
+
+Print out the file C<Socialtext::AppConfig> is using.
+
+=head2 edit
+
+Edit the file using the editor defined in the C<EDITOR> env
+var. Defaults to vi.
+
+=head2 --help
+
+What you are reading.
+
+=cut
+

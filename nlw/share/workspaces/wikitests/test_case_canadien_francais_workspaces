@@ -1,0 +1,85 @@
+| *Comment* | Test Case: Canadien Francais (Workspaces) |  |
+
+| *Comment* | Test Case: Canadien Francais (Workspaces) - Create Workspaces |  |
+| set | wsAA | aardvark%%start_time%% |
+| set | wsAAname | aardvark%%start_time%% |
+| set | wsA | Ångström%%start_time%% |
+| set | wsAname | wsa%%start_time%% |
+| set | wsB | Banana%%start_time%% |
+| set | wsBname | wsb%%start_time%% |
+| set | wsE | éegashark%%start_time%% |
+| set | wsEname | wse%%start_time%% |
+| set | wsN | numanuma%%start_time%% |
+| set | wsNname | wsn%%start_time%% |
+| set | wsX | Xylophone%%start_time%% |
+| set | wsXname | wsx%%start_time%% |
+| set | acct | acctcfw%%start_time%% |
+| set | user | usercfg%%start_time%%@matt.socialtext.net |
+| st-admin | create-account --name %%acct%% | was created |
+| st-admin | create-user --e %%user%% --p %%password%% --account %%acct%% | was created |
+| st-admin | give-accounts-admin --e %%user%% | now has accounts admin access |
+
+| st-admin | create-workspace --name %%wsAAname%% --title %%wsAA%% | was created |
+| st-admin | add-member --e %%user%% --w %%wsAAname%% | now has the role of |
+
+| st-admin | create-workspace --name %%wsAname%% --title %%wsA%% | was created |
+| st-admin | add-member --e %%user%% --w %%wsAname%% | now has the role of |
+
+| st-admin | create-workspace --name %%wsBname%% --title %%wsB%% | was created |
+| st-admin | add-member --e %%user%% --w %%wsBname%% | now has the role of |
+
+| st-admin | create-workspace --name %%wsEname%% --title %%wsE%% | was created |
+| st-admin | add-member --e %%user%% --w %%wsEname%% | now has the role of |
+
+| st-admin | create-workspace --name %%wsNname%% --title %%wsN%% | was created |
+| st-admin | add-member --e %%user%% --w %%wsNname%% | now has the role of |
+
+| st-admin | create-workspace --name %%wsXname%% --title %%wsX%% | was created |
+| st-admin | add-member --e %%user%% --w %%wsXname%% | now has the role of |
+
+| *Comment* | Test Case: Canadien Francais (Workspaces)- Test Sorting in Global Nav Dropdown |  |
+| st-logoutin | %%user%% | %%password%% |
+| open_ok | /?action=workspace_list |  |
+| wait_for_text_present_ok | %%wsAA%% | 30000 |
+| text_like | //body | qr/All My Workspaces.*%%wsAA%%.+%%wsA%%.+%%wsB%%.+%%wsE%%.+%%wsN%%.+%%wsX%%.*Explore/ |
+
+
+| *Comment* | Test Case: Canadien Francais (Workspaces) - Test Sorting in workspace_list |  |
+| st-logoutin | %%user%% | %%password%% |
+| open_ok | /?action=workspace_list |  |
+| wait_for_text_present_ok | %%wsAA%% | 30000 |
+| text_like | //body | qr/Workspaces you belong to.*%%wsAA%%.+%%wsA%%.+%%wsB%%.+%%wsE%%.+%%wsN%%.+%%wsX%%/ |
+
+
+| *Comment* | Test Case: Canadien Francais (Workspaces) - Test Sorting in workspace_listall |  |
+| open_ok | /?action=workspaces_listall |  |
+| wait_for_text_present_ok | %%wsAA%% | 30000 |
+| text_like | //body | qr/Workspace Title.*%%wsAA%%.+%%wsA%%.+%%wsB%%.+%%wsE%%.+%%wsN%%.+%%wsX%%/ |
+
+| *Comment* | Test Case: Canadien Francais (Workspaces) - Test Sorting in mobile workspace list |  |
+| st-logoutin | %%user%% | %%password%% |
+| open_ok | /m/workspace_list |  |
+| wait_for_text_present_ok | %%wsAA%% | 30000 |
+| text_like | //body | qr/Hello.*%%wsAA%%.*%%wsA%%.*%%wsB%%.*%%wsE%%.+%%wsN%%.+%%wsX%%/ |
+
+| *Comment* | Test Case: Canadien Francais (Workspaces) - Test Display in Workspace Widget in Dashboard |  |
+| open_ok | /st/dashboard |  |
+| wait_for_element_visible_ok | link=Add Widget | 30000 |
+| click_and_wait | link=Add Widget |  |
+| wait_for_element_visible_ok | gallery-widget-Workspaces | 30000 |
+| click_and_wait | gallery-widget-Workspaces |  |
+| text_like | //body | qr/%%wsAA%%.+%%wsA%%.+%%wsB%%.+%%wsE%%.+%%wsN%%.+%%wsX%%(?!Workspace)/ |
+
+
+| *Comment* | Test Case: Canadien Francais (Workspaces) TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%user%% |  |
+| st-admin | delete-workspace --no-export --w %%wsAname%% | has been deleted |
+| st-admin | delete-workspace --no-export --w %%wsAAname%% | has been deleted |
+| st-admin | delete-workspace --no-export --w %%wsBname%% | has been deleted |
+| st-admin | delete-workspace --no-export --w %%wsEname%% | has been deleted |
+| st-admin | delete-workspace --no-export --w %%wsNname%% | has been deleted |
+| st-admin | delete-workspace --no-export --w %%wsXname%% | has been deleted |
+| delete-account | %%acct%% |  |
+
+| *Comment* | Test Case: Canadien Francais (Workspaces) COMPLETED |  |

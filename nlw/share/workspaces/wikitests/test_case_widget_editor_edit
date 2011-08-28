@@ -1,0 +1,25 @@
+IE can't select the iframe and type into it
+
+| *Comment* | Test Case: Widget Editor Edit |  |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Widget Editor Edit type bad code in the editor |  |
+| wait_for_element_visible_ok | `xpath=(//iframe)[1]` | 30000 |
+| select-frame | `xpath=(//iframe)[1]` |  |
+| click_ok | //body |  |
+| type_ok | //body | `mal\nadicta` |
+| pause | 5000 | for buttons to activate |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Widget Editor Edit click preview |  |
+| wait_for_element_visible_ok | widget-preview | 30000 |
+| click_ok | widget-preview |  |
+| wait_for_text_present_ok | The file you provided does not appear to be valid | 30000 |
+
+| *Comment* | Test Case: Widget Editor Edit click cancel |  |
+| click_ok | widget-cancel |  |
+| wait_for_text_present_ok | This is the widget gallery |  |
+| st-logout |  |  |
+
+| *Comment* | Test Case: Widget Editor Edit COMPLETED |  |

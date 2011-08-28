@@ -1,0 +1,48 @@
+Tests for creating a workspace via the REST API
+
+* Fixture: SocialRest
+
+| Comment | Test Setup |
+| set            | username                                 | u%%start_time%%@ken.socialtext.net |
+| create-user    | %%username%%                             | %%password%%                       |
+| http-user-pass | %%username%%                             | %%password%%                       |
+| st-admin       | give-accounts-admin --email %%username%% |                                    |
+| set | workspace | w%%start_time%% |
+
+| Comment | Can't query a Workspace that hasn't been created yet |
+| GET | /data/workspaces/%%workspace%% |
+| code-is | 404 |
+
+| Comment | Add a regular workspace |                               |                                                                     |
+| POST    | /data/workspaces        | Content-Type=application/json | {"name":"%%workspace%%", "title":"%%workspace%%", "account_id":"1"} |
+| code-is    | 201                                                     |                                |
+| has-header | Location                                                | /data/workspaces/%%workspace%% |
+| GET        | /data/workspaces/%%workspace%%                          | application/json               |
+| code-is    | 200                                                     |                                |
+| body-like  | qr/"name":"%%workspace%%"[^\}]+"title":"%%workspace%%"/ |                                |
+
+| set       | page1                                                | monkey              |             |
+| set       | content                                              | Things Monkeys Love |             |
+| edit-page | %%workspace%%                                        | %%page1%%           | %%content%% |
+| code-is   | 201                                                  |                     |             |
+| set       | cloned                                               | c%%start_time%%     |             |
+
+| Comment   | Create a workspace from content in another workspace |                     |             |
+| POST | /data/workspaces | Content-Type=application/json | {"name":"%%cloned%%", "title":"%%cloned%%", "account_id":"1", "clone_pages_from":"%%workspace%%"} |
+| code-is    | 201                                         |            |
+| add-member | %%username%%                                | %%cloned%% |
+| GET        | /data/workspaces/%%cloned%%/pages/%%page1%% |            |
+| code-is    | 200                                         |            |
+| body-like  | %%content%%                                 |            |
+
+| Comment | Workspace already exists |                               |                                                                     |
+| POST    | /data/workspaces        | Content-Type=application/json | {"name":"%%workspace%%", "title":"%%workspace%%", "account_id":"1"} |
+| code-is    | 400                                            |                               |
+
+| Comment | Workspace has a bad params |                               |                                                                     |
+| set | workspace | w%%start_time%%w2 |
+| POST    | /data/workspaces        | Content-Type=application/json | {"title":"%%workspace%%"} |
+| code-is    | 400                                            |                               |
+
+
+

@@ -1,0 +1,14 @@
+Test case to verify that the "Email this page" popup shows the e-mail address for LDAP users.
+
+Bug 1654: Email this page shows ldap usernames instead of email addresses
+
+| *Comment* | Test Case: Email page shows LDAP emails |  |
+
+| *Comment* | Set up the LDAP user info, then run the basic "Email this page" test |  |
+| set | username | devnullx |
+| set | email | devnullx@socialtext.com |
+| set | password | ldapd3v |
+| st-logoutin | %%username%% | %%password%% |
+| include | [Test Case: Email page shows emails] |  |
+
+| *Comment* | Test Case: Email page shows LDAP emails COMPLETED |  |

@@ -1,0 +1,16 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_singlevalue/;
+
+my $num_auws = sql_singlevalue(q{
+    SELECT COUNT(*) FROM "Account" WHERE all_users_workspace IS NOT NULL
+});
+if ($num_auws == 0) {
+    print "There are no all_users_workspaces to migrate.  Skipping.\n";
+    exit 1;
+}
+
+print "Found $num_auws accounts with an all_users_workspace.  Migrating.\n";
+exit 0;

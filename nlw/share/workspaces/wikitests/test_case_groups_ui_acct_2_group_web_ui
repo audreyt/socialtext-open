@@ -1,0 +1,81 @@
+| *Comment* | Test Case: Groups UI UI Acct 2 Group Web UI |
+
+| *Comment* | Test Case: Groups UI Acct 2 Group Web UI SETUP - create a new group, two users |  |  |
+| st-setup-a-group | 1 | 1 | 1 |
+| Comment | Test Case: Groups UI Acct 2 Group Web UI Created %%group_user%% %%group_acct%% %%group_ws%% |  |  |
+
+| set | to_acct | gui-to-acct-%%start_time%% |
+| set | group_acct_two | grps-acct-two-%%start_time%% |
+| set | user_two | grpsusertwo%%start_time%%@matt.socialtext.net |
+| set | short_user_two | grpsusertwo%%start_time%% |
+| set | user_three | grpsuserthree%%start_time%%@matt.socialtext.net |
+| set | short_user_three | grpsuserthree%%start_time%% |
+| create-account | %%group_acct_two%% |  |
+| create-account | %%to_acct%% |  |
+| set | to_acct_id | %%account_id%% |
+| st-admin | create-user --email %%user_two%% --password %%password%% --account %%group_acct_two%% | was created |
+| st-admin | create-user --email %%user_three%% --password %%password%% --account %%group_acct_two%% | was created |
+| st-admin | enable-plugin --plugin groups --account %%to_acct%% |  |
+
+| *Comment* | Test Case: Groups UI Acct 2 Group Web UI Transform two accounts & three members |  |
+| st-admin | give-accounts-admin --u %%username%% |  |
+| open_ok | /nlw/control/accounts/transform |  |
+| wait_for_element_visible_ok | %%group_acct%% | 30000 |
+| wait_for_element_visible_ok | primary_name | 30000 |
+| wait_for_element_visible_ok | st-submit-transform | 30000 |
+| click_ok | %%group_acct%% |  |
+| click_ok | %%group_acct_two%% |  |
+| select_ok | primary_name | %%to_acct%% |
+| click_and_wait | st-submit-transform |  |
+
+| *Comment* | Test Case: Groups UI Acct 2 Group Web UI Verify Correctness |  |
+| wait_for_text_present_ok | Transform Account %%group_acct%% to group succeeded | 30000 |
+| wait_for_text_present_ok | Transform Account %%group_acct_two%% to group succeeded | 30000 |
+
+| *Comment* | Test Case: Groups UI Acct 2 Group Web UI at Groups page. Click ID to get latest groups |  |
+| wait_for_element_visible_ok | link=ID | 10000 |
+| click_ok | link=ID |  |
+| wait_for_element_visible_ok | link=%%group_acct%% | 30000 |
+| wait_for_element_visible_ok | link=%%group_acct%% | 30000 |
+| open_ok | nlw/control/account/%%to_acct_id%% |  |
+| wait_for_element_visible_ok | link=%%short_user_two%% <%%user_two%%> | 30000 |
+| wait_for_element_visible_ok | link=%%short_user_three%% <%%user_three%%> | 30000 |
+| wait_for_element_visible_ok | link=%%group_user_short%% <%%group_user%%> | 30000 |
+| wait_for_text_present_ok | Users (3) | 30000 |
+| wait_for_text_present_ok | Groups (2) | 30000 |
+| wait_for_element_visible_ok | link=%%group_acct%% | 30000 |
+| wait_for_element_visible_ok | link=%%group_acct_two%% | 30000 |
+| wait_for_text_present_ok | Workspaces (1) | 30000 |
+| wait_for_element_visible_ok | link=%%group_ws%% | 30000 |
+| click_and_wait | link=%%group_acct%% |  |
+| wait_for_element_visible_ok | link=%%group_user_short%% <%%group_user%%> | 30000 |
+| wait_for_text_present_ok | Users (1) | 10000 |
+
+| *Comment* | Test Case: Groups UI Acct 2 Group Web UI - Overlapping acct from/to, see error |  |
+| open_ok | /nlw/control/accounts/transform |  |
+| wait_for_element_visible_ok | primary_name | 30000 |
+| wait_for_element_visible_ok | st-submit-transform | 30000 |
+| click_ok | %%to_acct%% |  |
+| select_ok | primary_name | %%to_acct%% |
+| click_and_wait | st-submit-transform |  |
+| wait_for_text_present_ok | Transform Account %%to_acct%% to group failed: Account %%to_acct%% cannot be the same as into account | 30000 |
+
+| *Comment* | Test Case: Groups UI Acct 2 Group Web UI - without accts admin, see error |  |
+| open_ok | / |  |
+| st-logoutin | %%group_user%% | %%password%% |
+| open_ok | /nlw/control/accounts/transform |  |
+| text_like | //body | You must have admin privileges to access this URI. |
+| open_ok | / |  |
+| st-logout |  |  |
+| open_ok | /nlw/control/accounts/transform |  |
+| text_like | //body | Log in to Socialtext |
+
+| *Comment* | Test Case: Groups UI Acct 2 Group Web UI Teardown |
+| st-process-jobs |  |  |
+| deactivate-user | %%user_two%% |  |
+| deactivate-user | %%user_three%% |  |
+| delete-group | %%group_id%% |
+| st-admin | delete-workspace --w %%group_ws%% --no-export |
+| delete-account | %%to_acct%% |  |
+
+| *Comment* | Test Case: Groups UI Send Signal to Group COMPLETED |

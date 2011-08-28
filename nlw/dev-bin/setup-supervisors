@@ -1,0 +1,63 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::Paths;
+use Socialtext::AppConfig;
+use Socialtext::System::TraceTo;
+use POSIX ();
+
+my $cmd = shift || 'start';
+
+my %services = (
+    console => "appliance/libsocialtext-appliance-perl/service",
+    pushd =>   "plugins/push/service",
+    proxy =>   "plugins/widgets/service",
+    userd =>   "nlw/service/st-userd",
+    'nlw-psgi' =>   "nlw",
+);
+
+my $pid_dir = Socialtext::AppConfig->pid_file_dir;
+my $log_dir = Socialtext::Paths::log_directory();
+
+while (my ($name, $sdir) = each %services) {
+    $sdir = "$ENV{ST_CURRENT}/$sdir";
+    unless (-d $sdir) {
+        warn "Can't find service directory for $name: $sdir\n";
+        next;
+    }
+
+    if ($cmd eq 'stop') {
+        if (system("/usr/bin/svok $sdir") == 0) {
+            print "Stopping supervise for $name in $sdir\n";
+            # a supervise process was detected by svok, shut it down nicely
+            system("/usr/bin/svc -x -d $sdir")
+                and warn "Could not kill supervisor $name in $sdir. This may be harmless, but check for extra supervise processes\n";
+        }
+    }
+    elsif ($cmd eq 'start') {
+        unless (-e "$sdir/run" && -x _) {
+            warn "Service directory for $name has no 'run' script: $sdir\n";
+            next;
+        }
+        start_supervise($name,$sdir);
+    }
+}
+
+sub start_supervise {
+    my ($name, $sdir) = @_;
+
+    print "Starting supervise for $name in $sdir\n";
+
+    my $pid = fork;
+    die "can't fork: $!" unless defined $pid;
+    return if $pid;
+
+    POSIX::setsid();
+    Socialtext::System::TraceTo::logfile("$log_dir/supervise-$name.log");
+    close STDIN;
+    chdir '/';
+    exec "/usr/bin/supervise $sdir" or die "can't exec supervise: $!";
+}

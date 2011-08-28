@@ -1,0 +1,16 @@
+WIKITESTS=`$ST_CURRENT/nlw/bin/st-admin list-workspaces | grep wikitests` || true
+
+if [ "$WIKITESTS" == "wikitests" ]; then
+    if [ -e $ST_CURRENT/nlw/share/workspaces/wikitests/wikitests.1.tar.gz ]; then
+        echo DELETING old wikitests.1.tar.gz
+        rm $ST_CURRENT/nlw/share/workspaces/wikitests/wikitests.1.tar.gz
+    fi
+    echo CREATING new wikitests.1.tar.gz
+    $ST_CURRENT/nlw/bin/st-admin export-workspace --w wikitests --dir $ST_CURRENT/nlw/share/workspaces/wikitests/
+    echo "You might want to svn commit it"
+else
+    echo "There is no /wikitests wiki to export.  Run wikitests-to-wiki."
+    echo EXITING
+    exit
+fi
+

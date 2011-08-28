@@ -1,0 +1,8 @@
+[%# Refactored from the old live.yaml %]
+<form id="st-search-form" name="[% mode %]SearchForm" method="get" action="index.cgi">
+    <input id="st-search-term" type="text" name="search_term" value="[% loc('New search') %]" />
+    <input type="hidden" name="action" value="search" />
+    <input type="hidden" name="scope" value="_"/>
+    [% INCLUDE element/button href='#', id='st-search-submit', tooltip=loc('Click this button to perform your search'), label=loc('Search') %]
+</form>
+

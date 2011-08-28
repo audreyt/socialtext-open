@@ -1,0 +1,20 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::Jobs;
+use Socialtext::l10n qw/loc/;
+use Socialtext::DaemonUtil;
+
+# don't run as root
+Socialtext::DaemonUtil->Check_and_drop_privs();
+
+my $cleaned = 0;
+Socialtext::Jobs->cleanup_job_tables(sub {
+    my $job_name = shift;
+    $cleaned++;
+    print loc("job.deprecated=type", $job_name),$/;
+});
+print loc("job.cleaned=count", $cleaned),$/;

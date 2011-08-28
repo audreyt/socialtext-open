@@ -1,0 +1,57 @@
+| *Comment* | Test Case: Control Panel Deactivate Group |  |
+
+| *Comment* | Test Case: Control Panel Deactivate Group Setup |  |
+| set | deac_group | deac-group-%%start_time%% |
+| create-group | %%deac_group%% |  |
+| set | deac_id | %%group_id%% |
+| set | deac_group_two | deac-two-%%start_time%% |
+| create-group | %%deac_group_two%% |  |
+| set | deac_two_id | %%group_id%% |
+| set | other_user | otheruser%%start_time%%@matt.socialtext.net |
+| set | short_other_user | otheruser%%start_time%% |
+| st-admin | create-user --e %%other_user%% --p %%password%% | A new user with the username |
+| st-admin | add-member --e %%other_user%% --g %%deac_id%% | is now a member of |
+| st-admin | add-member --e %%username%% --g %%deac_id%% | is now a member of |
+| st-admin | add-member --e %%other_user%% --g %%deac_two_id%% | is now a member of |
+| st-admin | add-member --e %%username%% --g %%deac_two_id%% | is now a member of |
+| setSpeed | 1000 |  |
+
+| *Comment* | Test Case: Control Panel Deactivate Group Deactivate and click OK |  |
+| open_ok | /nlw/control/group/%%deac_id%% |  |
+| wait_for_element_visible_ok | link=%%short_username%% <%%username%%> | 30000 |
+| wait_for_element_visible_ok | link=%%short_other_user%% <%%other_user%%> | 30000 |
+| wait_for_element_visible_ok | deleteGroup | 30000 |
+| wait_for_text_present_ok | Users (2) | 30000 |
+| click_ok | deleteGroup |  |
+| verifyConfirmation | Are you sure you want to delete this group?\n\nYou will not be able to restore the group once it's deleted. Users will no longer be able to signal to this group and any access to workspaces through this group will be revoked. |  |
+| wait_for_text_present_ok | Groups | 30000 |
+| wait_for_element_not_present_ok | link=%%short_other_user%% <%%other_user%%> | 30000 |
+| wait_for_element_not_present_ok | deleteGroup | 30000 |
+
+| *Comment* | Test Case: Control Panel Deactivate Group Inspect and Confirm |  |
+| open_ok | /nlw/control/group/%%deac_id%% |  |
+| wait_for_text_present_ok | You must provide a valid group_id to this URI | 30000 |
+
+| *Comment* | Test Case: Control Panel Deactivate Group Deactivate but Click Cancel |  |
+| open_ok | /nlw/control/group/%%deac_two_id%% |  |
+| wait_for_element_visible_ok | deleteGroup | 30000 |
+| wait_for_text_present_ok | Users (2) | 30000 |
+| wait_for_element_visible_ok | link=%%short_username%% <%%username%%> | 30000 |
+| wait_for_element_visible_ok | link=%%short_other_user%% <%%other_user%%> | 30000 |
+| choose_cancel_on_next_confirmation |  |  |
+| click_ok | deleteGroup |  |
+| verifyConfirmation | Are you sure you want to delete this group?\n\nYou will not be able to restore the group once it's deleted. Users will no longer be able to signal to this group and any access to workspaces through this group will be revoked. |  |
+| wait_for_element_visible_ok | deleteGroup | 30000 |
+| wait_for_text_present_ok | Users (2) | 30000 |
+| wait_for_element_visible_ok | link=%%short_username%% <%%username%%> | 30000 |
+| wait_for_element_visible_ok | link=%%short_other_user%% <%%other_user%%> | 30000 |
+| open_ok | /nlw/control/group/%%deac_two_id%% |  |
+| wait_for_text_present_ok | Users (2) | 30000 |
+| wait_for_element_visible_ok | link=%%short_username%% <%%username%%> | 30000 |
+| wait_for_element_visible_ok | link=%%short_other_user%% <%%other_user%%> | 30000 |
+
+| *Comment* | Test Case: Control Panel Deactivate Group Teardown |  |
+| setSpeed | 0 |  |
+| delete-group | %%deac_two_id%% |  |
+
+| *Comment* | Test Case: Control Panel Deactivate Group COMPLETED |  |

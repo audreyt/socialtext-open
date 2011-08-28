@@ -1,0 +1,14 @@
+<html>
+<head>
+</head>
+<body>
+    [% IF error %]
+    <div id='error'>[% error %]</div>
+    [% END %]
+    <div id='attachments'>
+    [% FOR file = files %]
+        <input type="hidden" name="[% file.filename %]" value="[% file.id %]"/>
+    [% END %]
+    </div>
+</body>
+</html>

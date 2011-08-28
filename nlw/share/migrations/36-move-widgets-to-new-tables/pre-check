@@ -1,0 +1,15 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+use Socialtext::Migration::Utils qw/ensure_socialtext_schema/;
+
+# If socialcalc is installed, run the migration
+unless (-d '/usr/share/nlw/plugin/widgets') {
+    print "Skipping migration because widgets is not installed\n";
+    exit 1;
+}
+
+ensure_socialtext_schema(42);
+print "Running migration to move widgets to the new db layout";
+exit 0;

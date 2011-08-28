@@ -1,0 +1,64 @@
+INSTALL.dual-apache -- How to use a dual-Apache proxying setup
+
+@COPYRIGHT@
+
+A dual-Apache setup can improve performance of your Socialtext Open
+installation.  By putting an Apache2 server in front of the Apache1
+that is generating content, bottlenecks are reduced and memory is used
+more efficiently.  The work is divided like so:
+
+    apache-perl: Runs on port 8080, and serves all content for the wiki,
+    including any static images.  Most of its memory is spent on creating
+    dynamic pages.
+
+    apache2: Runs on port 80, and forwards requests for content to
+    apache-perl on port 8080.  Caches all static content, such as images,
+    so that they can be quickly served to the user.  The apache-perl
+    processes are only bothered once for static files.
+
+Note that both Apache instances are running on the same server, at the
+same time.
+
+
+=== Apache installation ===
+
+You'll need to install the preforking Apache2 proxy server.  In Debian
+and Ubuntu, this is:
+
+    $ sudo apt-get install apache2-mpm-prefork
+
+
+=== Configuration ===
+
+No additional configuration is required for Socialtext Open in order to
+use a dual-Apache setup.  As of May 2009, a dual-Apache setup is the
+only supported configuration for Socialtext Open.
+
+Do your make and install as in the base INSTALL document.
+
+After you've run the install, you'll have installed the following
+configuration files:
+
+    /etc/apache-perl/st-httpd.conf
+    /etc/apache-perl/auto-generated.d/nlw.conf
+
+    /etc/apache2/st-apache2.conf
+    /etc/apache2/auto-generated.d/nlw.conf
+
+as well as the following startup scripts:
+
+    /etc/init.d/st-apache
+
+If you want to use Apache2 exactly as Socialtext Open has it
+set up, you'll need to rename /etc/apache2/st-apache.conf to
+/etc/apache2/apache.conf.  We do this so we don't step on any other
+apache2 setup you may have in place.
+
+
+=== Starting up the Apache servers ===
+
+Each Apache server has two /etc/init.d/ startup scripts.  For the
+backend server, it's /etc/init.d/st-apache, and for the frontend proxy,
+/etc/init.d/apache2.
+
+

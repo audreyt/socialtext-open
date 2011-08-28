@@ -1,0 +1,501 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use lib "$FindBin::Bin/../../socialtext-reports/lib";
+use Socialtext::Reports::DB qw/connect_params get_dbh/;
+use Socialtext::Workspace;
+use Socialtext::User;
+use Socialtext::Role;
+use Time::localtime;
+
+ 
+use FindBin ();
+use lib "$FindBin::Bin";
+    
+
+require 'reports-functions.pl';
+
+
+my $dbh = get_dbh();
+
+#---Globals
+my $member = Socialtext::Role->Member();
+my $iMonth = 0;  #closure
+my $personal_minutes  = 0;
+my $personal_hours = 10;
+#--------
+require Socialtext::Account;
+my $name = 'test_stub_account';
+my @aWorkspaces = ('a_test_stub_ws','b_test_stub_ws');
+my ($account, $account_id) = get_account($name);
+
+my @wsObjects = create_workspaces($account, \@aWorkspaces, $account_id);
+my @users = ('t_stub01@socialtext.com','t_stub02@socialtext.com','t_stub03@socialtext.com','t_stub04@socialtext.com',
+             't_stub05@socialtext.com', 't_stub06@socialtext.com');
+my $userObjs = create_users(\@users, \@wsObjects, $account_id);
+my $tm = localtime;
+my $stamp = $tm->year . "-" . $tm->mon . "-" . $tm->mday . "-" . $tm->hour . "-" . $tm->min . "-" . $tm->sec;
+
+my $nlw = get_nlw_filename(); 
+
+#Six-month date-switch
+#-------------------------------------------------------------------------------#
+# The month-day switch - every six months the log files will fail to import
+# because the relative-year has shift.
+# 
+# To fix this:
+# 1) Switch the comments immedialetly following this block
+# 2) Search for 'sub get_month_day' -> then switch it's comments
+# 3) Run test_case_control_panel_reports, get to the errors and pause it
+# 4) You'll notice that the rates of hits - but not the amount - have changed.
+# 5) For account-growth report, change the months forward six months
+# 6) For account-usage report, change the quarter ending to Feb 31 or July 31
+#    (Same month ending as @dates last month, below
+#-------------------------------------------------------------------------------#
+my @dates = ('Dec 30','Dec 11','Jan 10','Jan 11','Jan 12', 'Jan 13', 'Feb 01');
+#my @dates = ('Apr 30', 'May 11', 'Jun 10', 'Jun 11', 'Jun 12', 'Jun 13', 'Jul 01');
+#----------------------------------------------------------#
+#  Create the Files and setup for import
+
+print_nlw_log(\@wsObjects, $userObjs, $nlw, $account, $account_id, \@dates);
+print_views_edits_deletes(\@wsObjects, $userObjs, $nlw, \@dates);
+
+#my $sql = 'psql -U nlw NLW_reports -c "delete from actions_by_user where account_id =' . $account_id . '; "';
+#`$sql`; 
+#$sql = 'psql -U nlw NLW_reports -c "delete from nlw_log_actions where account_id =' . $account_id . '; "';
+#`$sql`;
+#$sql = 'psql -U nlw NLW_reports -c "delete from meta_actions_by_user where account_id =' . $account_id . '; "';
+#`$sql`;
+
+#----------------------------------------------------------#
+$dbh->disconnect();
+
+#---END MAIN ROUTINE SUBROUTINES FOLLOW
+
+sub get_account {
+   my $accountname = shift;
+   my $account; 
+   my $id;
+
+   if ($account = Socialtext::Account->new( name => $name ) ) {
+        print "$name account is allready present. \n";
+    }
+    else {
+        $account = eval { Socialtext::Account->create( name => $name ) };
+
+        if ( my $e = Exception::Class->caught('Socialtext::Exception::DataValidation') ) {
+             my $msg  = "The following errors occurred when creating the new account:\n\n";
+             for my $m ( $e->messages ) {
+                 $msg .= "  * $m\n";
+             }
+             print "ERROR -  $msg\n";
+         }
+         elsif ( $e = $@ ) {
+              die $e;
+         }
+   }
+
+   $id = $account->account_id();
+   print "Account ID: $id\n";
+   return ($account, $id);
+}
+
+
+sub create_workspaces {
+    my @wsObjs;
+    my ($account, $workspaces, $account_id) = @_;
+    foreach my $workspace (@$workspaces) {
+        my $ws;
+        eval {
+            $ws = Socialtext::Workspace->new(name => $workspace);
+            if (Socialtext::Workspace->NameIsValid( name => $workspace ) ) {
+                $ws = Socialtext::Workspace->create(name       => $workspace,
+                                                    title      => $workspace,
+                                                    account_id => $account_id);
+                push @wsObjs, $ws;
+            } else {
+               print "Name $workspace is not valid\n";
+            }
+        };
+
+        if (defined($ws)) { 
+            push @wsObjs, $ws;
+        }
+    } 
+    return @wsObjs;
+}
+
+
+sub create_users {
+    my ($rausers, $raworkspaces, $account_id) = @_;
+    my @arrUserObjs;
+
+    my $first_ws = 1;
+    foreach my $ws (@$raworkspaces) {
+        foreach my $username (@$rausers) {
+            my $user = Socialtext::User->new(username=> $username);
+            if ($user && $first_ws) {
+                push @arrUserObjs, $user;
+            }
+            else {
+                eval {
+                    $user = Socialtext::User->create(username=> $username,
+                                                     email_address => $username,
+                                                     password=> 'password',
+                                                     primary_account_id => $account_id);
+                     };
+                next if $@;
+                if ($first_ws) { push @arrUserObjs, $user; }
+            }
+            unless (  $ws->has_user( $user ) ) {
+                $ws->add_user(user => $user,
+                              role => $member); 
+            }
+        }
+        $first_ws = 0;
+    }
+   return (\@arrUserObjs);
+}
+
+
+sub print_nlw_log {
+    #Add all users to workspaces
+    my ($raWorkspaces, $rausers, $nlw, $account, $account_id, $radates) = @_;
+    my $date_count = 0;
+    my @dates = @$radates;
+    my $page = 'a';
+
+    #Open The File
+    open NLWFILE, "> $nlw" or die "Can't open $nlw : $!";
+   
+    #Print Create Workspace for Each Workspace
+    foreach my $workspace (@$raWorkspaces) {
+        my $str = create_workspace_nlw_entry($workspace, $account, $account_id, $dates[0]);
+        print NLWFILE $str;
+        foreach my $user (@$rausers) {
+          my $str = create_user_nlw_entry($user, $workspace, $account);
+            print NLWFILE $str;
+            if (defined($dates[$date_count])) {
+                $str = create_page_nlw_entry($user, $workspace, $dates[$date_count], $page);
+                print NLWFILE $str;
+                $page++;
+                $date_count++;
+            }
+        }
+        
+    }
+
+    my $add_delete = create_and_delete_thirty_pages($rausers, $raWorkspaces, $radates->[4]);
+
+    print NLWFILE $add_delete;
+
+    #Close The File
+    close NLWFILE;
+}
+
+sub create_and_delete_thirty_pages {
+   my ($rausers, $raWorkspaces, $month) = @_;
+    my $idx;
+    my $add_delete = '';
+    for ($idx=1;$idx<31;$idx++) {
+        #Add a page and delete it
+        my $page = 'blue' . $idx;
+        my $month_sub = substr($month,0,3);
+        $add_delete .= create_page_nlw_entry($rausers->[0], $raWorkspaces->[0], $month_sub.' 01',$page);   
+
+        $add_delete .= $month_sub . ' 02 13:00:53 socialtext nlw[9760]: [2204] DELETE,PAGE,workspace:'.$raWorkspaces->[0]->name . '(' .
+                                $raWorkspaces->[0]->workspace_id . '),page:' . $page . ',user:' . $rausers->[0]->email_address . 
+                                '(' . $rausers->[0]->user_id . '),[NA]' . "\n";
+        
+        $add_delete .= $month_sub . ' 02 13:00:53 socialtext nlw[9760]: [2204] WEB,GET,/:WS/INDEX.CGI,UNDEF,ACTOR_ID:' . $rausers->[0]->user_id . ',{"q":{"page_name":"' . $page . 
+                                '","action":"delete_page"},"ws":"' . $raWorkspaces->[0]->name .'",' .
+                                '"timers":"overall:0.478,handler_run:0.470,hub_process:0.443,sql_execute:0.076,drop_workspace_breadcrumb:0.057,' .
+                                'user_new:0.006,web_auth:0.006,get_dbh:0.005,plugin_enabled_for_workspace:0.002,sql_prepare:0.002,sql_selectrow:0.001"}' . "\n";
+        
+        $add_delete .= $month_sub . ' 02 13:00:53 socialtext nlw[9761]: [2204] WEB,GET,/:WS/INDEX.CGI,UNDEF,ACTOR_ID:' . $rausers->[0]->user_id . 
+                                ',{"q":{"page_id":"' . $page . '","action":"delete_epilogue"},"ws":"'. $raWorkspaces->[0]->name . 
+                                '","timers":"overall:0.249,handler_run:0.240,hub_process:0.224,global_tt2_vars:0.154,sql_execute:0.069,tt2_render:0.039,' .
+                                'plugin_enabled_for_user:0.023,drop_workspace_breadcrumb:0.020,plugin_enabled_for_workspace:0.015,get_dbh:0.015,' .
+                                'user_new:0.010,web_auth:0.006,sql_prepare:0.005,sql_selectrow:0.002,ppl_listing:0.001"}' . "\n";
+      
+    }
+    
+    return $add_delete;
+}
+
+sub print_views_edits_deletes {
+    my ($wsObjects, $userObjs, $filename, $radates) = @_;
+    my $accessfile;
+    #open for APPEND
+    open $accessfile, ">> $filename" or die "Can't open $filename : !";
+    #Each User Reads once from the first WS, Twice from the second
+    #The first two users edit pages
+    #Everyone vies
+    my @arrBelongs;
+    $arrBelongs[0] = { 'user' => $userObjs->[0],'pages' => ['a','b','c','d'], 'alt-pages'=>['ab','ba','ca'], function=>'both'};
+    $arrBelongs[1] = { 'user' => $userObjs->[1],'pages' => ['a','b','c'], 'alt-pages'=>['ab','ba'], function=>'viewer'};
+    
+    Process_view_edits($wsObjects, $radates->[0] . ' ', \@arrBelongs, $accessfile);
+    $arrBelongs[2] = { 'user' => $userObjs->[2],'pages' => ['a','b','c','d'], 'alt-pages'=>['ab','ba','ca'], function=>'viewer', 'comments'=>['b','d']};
+    $arrBelongs[3] = { 'user' => $userObjs->[3],'pages' => ['a','c'], 'alt-pages'=>['ab','ca'], function=>'viewer'};
+        
+    Process_view_edits($wsObjects, $radates->[1] . ' ', \@arrBelongs, $accessfile);
+    $arrBelongs[4] = { 'user' => $userObjs->[4],'pages' => ['d','e','f','a'], 'alt-pages'=>['da','ea','fa'], function=>'both'};
+    $arrBelongs[3] = { 'user' => $userObjs->[3],'pages' => ['a','c','d'], 'alt-pages'=>['ab','ca','da'], function=>'viewer'};
+    $arrBelongs[5] = { 'user' => $userObjs->[5],'pages' => ['a','b','f'], 'alt-pages'=>['ab','ba','fa'], function=>'viewer', 'alt-comments'=>['ef']};
+    Process_view_edits($wsObjects, $radates->[2] . ' ', \@arrBelongs, $accessfile);
+           
+    Process_view_edits($wsObjects, $radates->[3] . ' ', \@arrBelongs, $accessfile);
+    #Double Up In March For good measure
+    Process_view_edits($wsObjects, $radates->[4] . ' ', \@arrBelongs, $accessfile);
+       
+    my $str=<<EOQ;
+127.0.0.1 - - [01/Mar/2008:13:33:33 -0700] "GET /nlw/submit/logout HTTP/1.1" 302 286 "http://qa2.socialtext.net:22015/a_test_stub_ws/`/index.cgi?announcements_and_links" "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.12) Gecko/20080201 Firefox/2.0.0.12" 25472 3
+127.0.0.1 - - [01/Mar/2008:13:33:35 -0700] "GET /nlw/login.html HTTP/1.1" 200 3145 "http://qa2.socialtext.net:22015/a_test_stub_ws/index.cgi?announcements_and_links" "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.12) Gecko/20080201 Firefox/2.0.0.12" 25472 1
+127.0.0.1 - - [01/Mar/2008:13:33:42 -0700] "POST /nlw/submit/login HTTP/1.1" 302 277 "http://qa2.socialtext.net:22015/nlw/login.html" "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.12) Gecko/20080201 Firefox/2.0.0.12" 25472 3
+127.0.0.1 - t_stub01\@socialtext.com [25/Mar/2008:13:33:47 -0700] "GET /a_test_stub_ws/index.cgi HTTP/1.1" 200 25055 "http://qa2.socialtext.net:22015/nlw/login.html" "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.12) Gecko/20080201 Firefox/2.0.0.12" 25472 5
+127.0.0.1 - t_stub01\@socialtext.com [25/Mar/2008:13:34:03 -0700] "GET /a_test_stub_ws/index.cgi?action=display;page_name=Announcements%20and%20Links;js=show_edit_div;caller_action=homepage HTTP/1.1" 200 45563 "http://qa2.socialtext.net:22015/a_test_stub_ws/index.cgi" "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.12) Gecko/20080201 Firefox/2.0.0.12" 25472 2
+127.0.0.1 - t_stub01\@socialtext.com [25/Mar/2008:13:34:07 -0700] "GET /data/workspaces/a_test_stub_ws/pages/announcements_and_links?verbose=1;link_dictionary=s2;iecacheworkaround=13:34:11 HTTP/1.1" 200 2119 "http://qa2.socialtext.net:22015/a_test_stub_ws/index.cgi?action=display;page_name=Announcements%20and%20Links;js=show_edit_div;caller_action=homepage" "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.12) Gecko/20080201 Firefox/2.0.0.12" 25473 2
+127.0.0.1 - t_stub01\@socialtext.com [25/Mar/2008:13:34:16 -0700] "POST /data/workspaces/a_test_stub_ws/pages/announcements_and_links/tags/yo HTTP/1.1" 201 5 "http://qa2.socialtext.net:22015/a_test_stub_ws/index.cgi?action=display;page_name=Announcements%20and%20Links;js=show_edit_div;caller_action=homepage" "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.12) Gecko/20080201 Firefox/2.0.0.12" 26266 1
+127.0.0.1 - t_stub01\@socialtext.com [25/Mar/2008:13:34:18 -0700] "GET /data/workspaces/a_test_stub_ws/pages/announcements_and_links/tags?iecacheworkaround=13:34:23 HTTP/1.1" 200 58 "http://qa2.socialtext.net:22015/atest_stub_ws/index.cgi?action=display;page_name=Announcements%20and%20Links;js=show_edit_div;caller_action=homepage" "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.12) Gecko/20080201 Firefox/2.0.0.12" 25472 1
+127.0.0.1 - t_stub01\@socialtext.com [25/Mar/2008:13:34:22 -0700] "GET /data/workspaces/a_test_stub_ws/pages/announcements_and_links?verbose=1;link_dictionary=s2;iecacheworkaround=13:34:23 HTTP/1.1" 200 2127 "http://qa2.socialtext.net:22015/a_test_stub_ws/index.cgi?action=display;page_name=Announcements%20and%20Links;js=show_edit_div;caller_action=homepage" "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.12) Gecko/20080201 Firefox/2.0.0.12" 25473 5
+127.0.0.1 - t_stub01\@socialtext.com [25/Mar/2008:13:34:31 -0700] "POST /data/workspaces/a_test_stub_ws/pages/announcements_and_links/tags/yadda HTTP/1.1" 201 5 "http://qa2.socialtext.net:22015/a_test_stub_ws/index.cgi?action=display;page_name=Announcements%20and%20Links;js=show_edit_div;caller_action=homepage" "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.12) Gecko/20080201 Firefox/2.0.0.12" 7481 4
+127.0.0.1 - t_stub01\@socialtext.com [25/Mar/2008:13:34:32 -0700] "GET /data/workspaces/a_test_stub_ws/pages/announcements_and_links/tags?iecacheworkaround=13:34:37 HTTP/1.1" 200 109 "http://qa2.socialtext.net:22015/a_test_stub_ws/index.cgi?action=display;page_name=Announcements%20and%20Links;js=show_edit_div;caller_action=homepage" "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.12) Gecko/20080201 Firefox/2.0.0.12" 25472 1
+127.0.0.1 - t_stub01\@socialtext.com [25/Mar/2008:13:34:35 -0700] "GET /data/workspaces/a_test_stub_ws/pages/announcements_and_links?verbose=1;link_dictionary=s2;iecacheworkaround=13:34:37 HTTP/1.1" 200 2135 "http://qa2.socialtext.net:22015/a_test_stub_ws/index.cgi?action=display;page_name=Announcements%20and%20Links;js=show_edit_div;caller_action=homepage" "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.12) Gecko/20080201 Firefox/2.0.0.12" 25473 4
+127.0.0.1 - t_stub01\@socialtext.com [25/Mar/2008:13:35:00 -0700] "POST /a_test_stub_ws/index.cgi HTTP/1.1" 200 233 "http://qa2.socialtext.net:22015/a_test_stub_ws/index.cgi?action=display;page_name=Announcements%20and%20Links;js=show_edit_div;caller_action=homepage" "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.12) Gecko/20080201 Firefox/2.0.0.12" 26266 4
+127.0.0.1 - t_stub01\@socialtext.com [25/Mar/2008:13:35:04 -0700] "GET /data/workspaces/a_test_stub_ws/pages/announcements_and_links/attachments?iecacheworkaround=13:35:08 HTTP/1.1" 200 328 "http://qa2.socialtext.net:22015/a_test_stub_ws/index.cgi?action=display;page_name=Announcements%20and%20Links;js=show_edit_div;caller_action=homepage" "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.12) Gecko/20080201 Firefox/2.0.0.12" 26266 2
+127.0.0.1 - t_stub01\@socialtext.com [25/Mar/2008:13:35:06 -0700] "GET /data/workspaces/a_test_stub_ws/pages/announcements_and_links?verbose=1;link_dictionary=s2;iecacheworkaround=13:35:10 HTTP/1.1" 200 2340 "http://qa2.socialtext.net:22015/a_test_stub_ws/index.cgi?action=display;page_name=Announcements%20and%20Links;js=show_edit_div;caller_action=homepage" "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.12) Gecko/20080201 Firefox/2.0.0.12" 25472 2
+127.0.0.1 - t_stub01\@socialtext.com [25/Mar/2008:13:35:13 -0700] "GET /a_test_stub_ws/index.cgi?action=display;page_name=Announcements%20and%20Links;js=show_edit_div;caller_action=homepage HTTP/1.1" 200 47455 "-" "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.12) Gecko/20080201 Firefox/2.0.0.12" 26266 4
+EOQ
+
+my $str2 =<<EOQ;
+127.0.0.1 - t_stub01\@socialtext.com [08/Mar/2008:14:54:59 +0000] "GET /a_test_stub_ws/index.cgi?action=page_info;page_name=blue%206 HTTP/1.1" 200 1142 "http://qa2.socialtext.net/test-data/index.cgi?action=display;page_name=Untitled%20Page" "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13" 21569 0
+127.0.0.1 - t_stub01\@socialtext.com [08/Mar/2008:14:55:00 +0000] "POST /a_test_stub_ws/index.cgi HTTP/1.1" 302 5 "http://qa2.socialtext.net/test-data/index.cgi?action=display;page_name=Untitled%20Page" "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13" 21570 0
+127.0.0.1 - t_stub01\@socialtext.com [08/Mar/2008:14:55:00 +0000] "GET /a_test_stub_ws/index.cgi?blue HTTP/1.1" 200 33410 "http://qa2.socialtext.net/test-data/index.cgi?action=display;page_name=Untitled%20Page" "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13" 21569 0
+EOQ
+
+
+      $str=~s/\n$//g;
+      $str2=~s/\n$//g;
+      $str=~s/\/Mar\//$radates->[6]/g;
+     
+    print $accessfile $str;
+    print $accessfile $str2;
+    close $accessfile;
+}
+
+sub get_current_month {
+  my $date = gmtime;
+  $date = substr($date,4,3);
+  return $date;
+}
+
+
+sub Process_view_edits {
+    my ($wsObjects, $date, $arrBelongs, $file) = @_;
+   
+    my $ws_num = 1;
+    
+    
+    
+    foreach my $ws (@$wsObjects) {
+         my $comments = 'comments';
+         my $key = 'pages';
+         if ($ws_num==2) {
+             $key = 'alt-pages';
+             $comments = 'alt-comments';
+         } 
+
+         foreach my $user (@$arrBelongs) {
+            my $ra = $user->{$key};
+            my $email = $user->{'user'}->email_address;
+            foreach my $page (@$ra) {
+                if ($user->{'function'} eq 'both') {
+                    #Add edit notices 
+                    my $str = $date . '15:58:48 topaz nlw[2483]: [2017] WEB,POST,/:WS/INDEX.CGI,UNDEF,ACTOR_ID:' . $user->{'user'}->user_id . ',{"q":{"page_name":' . 
+                              '"' . $page . '"' . 
+                              ',"append_mode":"","page_type":"wiki","edit_summary":"","revision_id":"20090323234936","action":"edit_content"' .
+                              ',"signal_edit_summary":"0","caller_action":""},"ws":"' . $ws->name . '"' .
+                              ',"timers":"overall:0.089,handler_run:0.078,hub_process:0.067,sql_execute:0.013,web_auth:0.006,user_new:0.005' .
+                              ',drop_workspace_breadcrumb:0.005,get_dbh:0.003,sql_selectrow:0.002,plugin_enabled_for_workspace:0.001,sql_prepare:0.001"}' . "\n";
+                    print $file $str;
+                    print "edited  a page on $date\n";
+                }
+                
+                #Plus Two Views of Said Page
+                my $str = $date . '10:00:09 talc nlw[2483]: [2017] WEB,GET,/:WS/INDEX.CGI,UNDEF,ACTOR_ID:' . $user->{'user'}->user_id . ',{"q":{' . 
+                          '"' . $page . '":null}' .
+                          ',"ws":"' . $ws->name . '"' .
+                          ',"timers":"overall:0.278,handler_run:0.272,hub_process:0.261,global_tt2_vars:0.093,tt2_render:0.090,sql_execute:0.079,' .
+                          'viewer_process:0.019,s2_page_html:0.019,get_dbh:0.017,plugin_enabled_for_user:0.017,user_new:0.012,drop_workspace_breadcrumb:0.010,' .
+                          'plugin_enabled_for_workspace:0.008,web_auth:0.005,sql_prepare:0.004,sql_selectrow:0.003,plugin_enabled_for_users:0.002,ppl_listing:0.001"}' . "\n"; 
+ 
+                print "view $date\nview $date\n";
+                print $file $str; print $file $str;
+                
+         }
+                    
+            my $str = create_dashboard_view($user->{'user'}, $date);
+            print $file $str;
+            
+            my $personal = personalized_dashboards($user->{'user'}, $date);
+            print $file $personal;
+              if (defined($user->{$comments})) {
+                my $ra = $user->{$comments};
+                foreach my $page (@$ra) {
+                    my $email = $user->{'user'}->email_address;
+                    my $str = $date . '0:00:09 talc nlw[2483]: [2017] WEB,POST,/:WS/INDEX.CGI,UNDEF,ACTOR_ID:' . $user->{'user'}->user_id . ',{"q":{"page_name":"' .
+                              $page .
+                              '","comment":"RADICAL","action":"submit_comment"},"ws":"' . $ws->name . 
+                             '","timers":"overall:0.147,handler_run:0.141,hub_process:0.129,sql_execute:0.024,web_auth:0.005,user_new:0.004,' .
+                           'get_dbh:0.004,drop_workspace_breadcrumb:0.002,sql_selectrow:0.001,plugin_enabled_for_workspace:0.001,sql_prepare:0.001,tt2_render:0.001"}' . "\n";
+            
+                    print $file $str;
+                    print "comment $date\n";
+                }
+            }                
+         }   
+        $ws_num++;
+    }   
+}
+
+
+sub create_workspace_nlw_entry {
+    my ($ws, $accoumt, $account_id, $created_date) = @_;
+    my $str = $created_date . ' 13:20:15 socialtext nlw[1355]: [2204] CREATE,WORKSPACE,workspace:' . $ws->name . '(' . $ws->workspace_id . '),[5.45482993125916]' . "\n";
+    $str .= $created_date . ' 13:20:15 socialtext nlw[30088]: [2013] CLI,CREATE-WORKSPACE,ACTOR_ID:1,{"args":"create-workspace --name ' . $ws->name .
+           ' --title ' . $ws->name . 
+           ' --account ' . $account->name . '","timers":"overall:5.566,CLI_create_workspace:5.565,' .
+           'sql_execute:0.599,user_new:0.389,get_dbh:0.165,tt2_render:0.073,sql_prepare:0.033,' .
+           'By_category:0.020,plugin_enabled_for_workspace:0.002,sql_selectrow:0.001,all_ids:0.001"}' . "\n";
+    return $str;
+}
+
+
+
+
+sub create_page_nlw_entry {
+    my ($user, $ws, $date, $page) = @_;
+    my $user_id = $user->user_id;
+
+    my $str;
+    $str = $date . ' 13:42:24 socialtext nlw[9760]: [2204] CREATE,PAGE,workspace:' . $ws->name . '('. $ws->workspace_id . '),page:' . 
+              $page . ',user:' . $user->email_address . '(' . $user->user_id . '),[NA]' . "\n";
+    
+    $str.= $date . ' 13:57:00 talc nlw[7636]: [2204] WEB,POST,/:WS/INDEX.CGI,UNDEF,ACTOR_ID:' . $user->user_id .
+           ',{"q":{"page_name":"' . $page . '","page_body":"All day long\r\n","append_mode":"","page_type":"wiki","edit_summary":""' .
+           ',"revision_id":"","action":"edit_content","signal_edit_summary":"0","caller_action":""},"ws":"' .
+           $ws->name . '"' . 
+           ',"timers":"overall:0.099,handler_run:0.087,hub_process:0.072,sql_execute:0.036,drop_workspace_breadcrumb:0.010,' .
+           'web_auth:0.007,user_new:0.006,get_dbh:0.006,plugin_enabled_for_workspace:0.003,sql_selectrow:0.002,sql_prepare:0.001"}' . "\n";
+    return $str;
+}
+
+
+sub get_month_day {
+   my $iMonth = shift;
+   #my @monthArr = ('Apr 01', 'Apr 01', 'May 01', 'May 01','Jun 01','Jun 01');
+   my @monthArr = ('Dec 01','Dec 01','Jan 01','Jan 01','Feb 01','Feb 01');
+   return $monthArr[$iMonth];
+}
+
+
+sub create_user_nlw_entry {
+   my ($user, $ws, $account) = @_;
+   my $email = $user->email_address;
+   my $user_id = $user->user_id;
+   my $month = get_month_day($iMonth);
+   
+   my $str = $month . ' 12:53:18 talc nlw[2805]: [2204] CLI,CREATE-USER,ACTOR_ID:' . $user->user_id .
+             ',{"args":"create-user --email ' . $user->email_address . '--password itdoesntmatter --account ' . $account->name . '"' .
+             ',"timers":"overall:0.326,CLI_create_user:0.325,sql_execute:0.189,user_new:0.114,get_dbh:0.098,sql_prepare:0.001"}' . "\n";
+   $str.=    $month . ' 12:53:23 socialtext nlw[16701]: [2204] ASSIGN,USER_ROLE,role:member,user: ' . 
+             $email . '(' . $user->user_id . '),workspace:' . $ws->name . '(' . $ws->workspace_id . '),[0.0222740173339844]' . "\n";
+   
+             
+   $iMonth++;
+   if ($iMonth>5) { $iMonth=5; }
+   return $str;
+}
+
+
+sub create_dashboard_view {
+     my ($user, $date) = @_;
+     my @arr;
+     my $month = get_month_day($iMonth);
+    
+    $arr[0] = $date . ' 10:02:23 socialtext nlw[25204]: [2204] WEB,GET,/ST/DASHBOARD,UNDEF,ACTOR_ID:' .
+             $user->user_id . 
+             ',{"timers":"overall:1.117,handler_run:1.106,gadget_expand_hangman:0.954,tt2_render:0.701,global_tt2_vars:0.588,sql_execute:0.167,container_template_vars:0.067,get_dbh:0.049,container_get_gadgets:0.041,plugin_enabled_for_user:0.028,gadget_get_prefs:0.026,sql_prepare:0.022,user_new:0.013,web_auth:0.008,gadget_get_messages:0.007,user_accts:0.004,plugins_enabled_for_account:0.002,sql_selectrow:0.002,container_load_from_type:0.002,ppl_listing:0.001,container_type_load:0.001"}' . "\n";
+
+    $arr[1] = $date . ' 10:02:25 socialtext nlw[25204]: [2204] WEB,GET,/DATA/EVENTS/CONVERSATIONS/:USER,UNDEF,ACTOR_ID:' .
+              $user->user_id . 
+              ',{"q":{"country":"us","synd":"shindig","parent":"http://talc.socialtext.net:22204","lang":"en","time":"1243875742","nocache":null,"libs":"4SEcosOUU2c/lib/libcore.js,irJtX0bmDdM/lib/libdynamic-height.js,MJLTofH-Kpk/lib/libsetprefs.js,_pVqt4t_Qx8/lib/libviews.js","mid":"3","up_count":"5","url":"local:widgets:recent_conversations","up_feed_name":"My Conversations","up_feed_url":"http://talc.socialtext.net:22204/data/events/conversations/devnull1@socialtext.com?"},"user":"devnull1@socialtext.com","timers":"overall:0.404,handler_run:0.393,gadget_expand_hangman:0.377,global_tt2_vars:0.260,GET_text/html:0.217,coll_tt2_prep:0.190,sql_execute:0.102,plugin_enabled_for_user:0.032,tt2_render:0.024,get_dbh:0.022,gadget_load_from_id:0.016,get_resource:0.014,get_convos:0.013,user_new:0.011,sql_prepare:0.009,gadget_get_prefs:0.008,web_auth:0.007,gadget_get_messages:0.001,plugins_enabled_for_account:0.001,sql_selectrow:0.001"}' . "\n";
+
+    $arr[2] = $date . ' 10:02:26 socialtext nlw[23915]: [2204] WEB,GET,/DATA/WORKSPACES/:WS/PAGES/:PNAME,UNDEF,ACTOR_ID:' .
+              $user->user_id . 
+              ',{"q":{"country":"us","synd":"shindig","parent":"http://talc.socialtext.net:22204","up_page_title":"welcome","lang":"en","time":"1243875742","nocache":null,"libs":"4SEcosOUU2c/lib/libcore.js,irJtX0bmDdM/lib/libdynamic-height.js,MJLTofH-Kpk/lib/libsetprefs.js,_pVqt4t_Qx8/lib/libviews.js","mid":"1","up_workspace_name":"help","url":"local:widgets:one_page"},"pname":"welcome","ws":"help","timers":"overall:0.925,handler_run:0.911,gadget_expand_hangman:0.899,viewer_process:0.375,sql_execute:0.296,global_tt2_vars:0.152,user_new:0.036,get_dbh:0.036,plugin_enabled_for_user:0.029,gadget_load_from_id:0.015,user_accts:0.011,web_auth:0.010,sql_prepare:0.009,tt2_render:0.009,gadget_get_prefs:0.005,sql_selectrow:0.005,gadget_get_messages:0.002,plugin_enabled_for_workspace:0.002,plugins_enabled_for_account:0.001"}' . "\n";
+
+    $arr[3] = $date . ' 10:02:26 socialtext nlw[25204]: [2204] WEB,GET,/DATA/WORKSPACES/:WS/PAGES/:PNAME,UNDEF,ACTOR_ID:' . 
+              $user->user_id . 
+              ',{"q":{"country":"us","synd":"shindig","parent":"http://talc.socialtext.net:22204","up_page_title":"learning_resources","lang":"en","time":"1243875742","nocache":null,"libs":"4SEcosOUU2c/lib/libcore.js,irJtX0bmDdM/lib/libdynamic-height.js,MJLTofH-Kpk/lib/libsetprefs.js,_pVqt4t_Qx8/lib/libviews.js","mid":"2","up_workspace_name":"help","url":"local:widgets:one_page"},"pname":"learning_resources","ws":"help","timers":"overall:0.584,handler_run:0.575,gadget_expand_hangman:0.565,global_tt2_vars:0.143,sql_execute:0.097,plugin_enabled_for_user:0.030,user_new:0.027,get_dbh:0.020,gadget_load_from_id:0.013,sql_prepare:0.009,tt2_render:0.009,user_accts:0.007,web_auth:0.006,viewer_process:0.006,gadget_get_prefs:0.005,gadget_get_messages:0.001,plugins_enabled_for_account:0.001,sql_selectrow:0.001,plugin_enabled_for_workspace:0.001"}' . "\n";
+
+    $arr[4] = $date . ' 10:02:26 socialtext nlw[23915]: [2204] WEB,GET,/DATA/WORKSPACES/:WS/TAGS,UNDEF,ACTOR_ID:' .
+              $user->user_id . 
+              ',{"q":{"country":"us","synd":"shindig","parent":"http://talc.socialtext.net:22204","lang":"en","time":"1243875742","nocache":null,"libs":"4SEcosOUU2c/lib/libcore.js,irJtX0bmDdM/lib/libdynamic-height.js,MJLTofH-Kpk/lib/libsetprefs.js,_pVqt4t_Qx8/lib/libviews.js","mid":"6","up_limit":null,"url":"local:widgets:tag_cloud","up_workspace":"help-en"},"ws":"help-en","timers":"overall:0.230,handler_run:0.220,gadget_expand_hangman:0.211,global_tt2_vars:0.145,sql_execute:0.060,plugin_enabled_for_user:0.028,get_dbh:0.015,gadget_load_from_id:0.012,user_new:0.011,tt2_render:0.008,GET_application/json:0.008,web_auth:0.007,sql_prepare:0.006,gadget_get_prefs:0.006,get_resource:0.003,sql_selectrow:0.002,_entities_for_query:0.002,gadget_get_messages:0.001,plugins_enabled_for_account:0.001,_entity_hash_map:0.000"}' . "\n";
+
+    $arr[5] = $date . ' 10:02:26 socialtext nlw[23914]: [2204] WEB,GET,/DATA/USERS/:USERNAME,UNDEF,ACTOR_ID:0,{"q":{"country":"us","synd":"shindig","parent":"http://talc.socialtext.net:22204","lang":"en","time":"1243875742","up_fetch":"6","nocache":null,"libs":"4SEcosOUU2c/lib/libcore.js,irJtX0bmDdM/lib/libdynamic-height.js,MJLTofH-Kpk/lib/libsetprefs.js,_pVqt4t_Qx8/lib/libviews.js","mid":"4","up_signal_count":"5","url":"local:signals:signals","up_selectedNetwork":null,"up_all_signals":"1"},"timers":"overall:0.810,handler_run:0.800,gadget_expand_hangman:0.761,global_tt2_vars:0.153,sql_execute:0.080,plugin_enabled_for_user:0.044,get_dbh:0.017,user_new:0.012,tt2_render:0.010,gadget_get_prefs:0.009,web_auth:0.007,gadget_load_from_id:0.006,sql_prepare:0.006,user_accts:0.004,plugins_enabled_for_account:0.003,sql_selectrow:0.002,gadget_get_messages:0.002","username":"devnull1@socialtext.com"}' . "\n";
+
+     $arr[6] = $date . ' 10:02:30 socialtext nlw[12652]: [2204] WEB,GET,/DATA/REPORT/:NAME/:START/:DURATION,UNDEF,ACTOR_ID:' .
+     $user->user_id . 
+     ',{"q":{"country":"us","synd":"shindig","parent":"http://talc.socialtext.net:22204","lang":"en","time":"1243875742","nocache":null,"libs":"4SEcosOUU2c/lib/libcore.js,irJtX0bmDdM/lib/libdynamic-height.js,MJLTofH-Kpk/lib/libsetprefs.js,_pVqt4t_Qx8/lib/libviews.js","mid":"5","url":"local:widgets:my_workspaces"},"name":"user_workspace_usage","duration":"-1month","timers":"overall:4.844,handler_run:4.660,web_auth:0.173,user_new:0.167,global_tt2_vars:0.161,sql_selectrow:0.151,get_dbh:0.147,sql_execute:0.068,tt2_render:0.033,plugin_enabled_for_user:0.028,gadget_load_from_id:0.017,gadget_expand_hangman:0.010,sql_prepare:0.006,gadget_get_prefs:0.003,plugins_enabled_for_account:0.001,gadget_get_messages:0.001","start":"now"}' . "\n";
+
+    my $line = '';
+    for my $str (@arr) { $line.=$str; }
+    return $line;
+}
+
+
+sub personalized_dashboards {
+    my ($user, $date) = @_;
+    my @arr;
+    my $minutes = sprintf("%02d",$personal_minutes);;
+    
+    $arr[0] = $date . $personal_hours . ':' . $minutes . ':12 socialtext nlw[23677]: [2015] WEB,POST,/DATA/GADGETS/GADGETINSTANCE/:ID/PREFS,UNDEF,ACTOR_ID:' .
+    $user->user_id .
+    ',{"q":{"up_count":"25","up_feed_name":"My Conversations","up_feed_url":"http://talc.socialtext.net:22015/data/events/conversations/devnull1@socialtext.com?"},"id":"15","timers":"overall:0.219,handler_run:0.211,gadget_expand_hangman:0.198,sql_execute:0.180,gadget_set_pref:0.175,gadget_get_prefs:0.021,gadget_load_from_id:0.011,user_new:0.006,web_auth:0.006,get_dbh:0.003,sql_selectrow:0.001,sql_prepare:0.001","meta":{"gadget_title":"Socialtext Dashboard","gadget_id":"2"}}' . "\n";
+    
+    $arr[1] = $date . $personal_hours . ':' . $minutes . ':13 socialtext nlw[25115]: [2015] WEB,GET,/DATA/EVENTS/CONVERSATIONS/:USER,UNDEF,ACTOR_ID:' . 
+    $user->user_id .
+    ',{"q":{"country":"us","synd":"shindig","parent":"http://talc.socialtext.net:22015","lang":"en","time":"1243886712","nocache":null,"libs":"4SEcosOUU2c/lib/libcore.js,irJtX0bmDdM/lib/libdynamic-height.js,MJLTofH-Kpk/lib/libsetprefs.js,_pVqt4t_Qx8/lib/libviews.js","mid":"15","up_count":"25","url":"local:widgets:recent_conversations","up_feed_name":"My Conversations","up_feed_url":' .
+    '"http://talc.socialtext.net:22015/data/events/conversations/' . $user->email_address . '"},"user":"' . $user->email_address . '",' .
+    '"timers":"overall:0.375,handler_run:0.366,gadget_expand_hangman:0.356,global_tt2_vars:0.252,GET_text/html:0.192,coll_tt2_prep:0.169,sql_execute:0.100,plugin_enabled_for_user:0.031,' .
+    'get_dbh:0.022,get_resource:0.018,get_convos:0.017,tt2_render:0.017,user_new:0.011,gadget_load_from_id:0.011,sql_prepare:0.008,web_auth:0.006,gadget_get_prefs:0.005,' .  
+    'gadget_get_messages:0.001,plugins_enabled_for_account:0.001,sql_selectrow:0.001"}' . "\n";
+    
+    $personal_minutes++;
+    if ($personal_minutes>=60) {
+        $personal_minutes = 0;
+        $personal_hours++;
+    }
+    
+    my $line;
+    for my $str (@arr) { $line.=$str; }
+        
+    return $line;
+}
+
+
+sub personalized_profiles { 
+    my $line;
+    return $line;
+}
+
+
+sub signals_sent {
+    my $line;
+    return $line;
+}

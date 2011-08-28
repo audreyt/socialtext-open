@@ -1,0 +1,26 @@
+Test case for all user in `/data/workspaces`; the Workspace list
+
+* Fixture: SocialRest
+
+| standard-test-setup |
+
+| set              | acct2      | acct2-%%start_time%%     |             |   |
+| create-account   | %%acct2%%  |                          |             |   |
+| set              | acct2_id   | %%account_id%%           |             |   |
+| set              | peon       | peon_%%start_time%%@q.q  |             |   |
+| create-user      | %%peon%%   | password                 | %%account%% |   |
+| set              | ws_one     | peon_ws_A_%%start_time%% |             |   |
+| set              | ws_two     | peon_ws_B_%%start_time%% |             |   |
+| create-workspace | %%ws_one%% | %%acct2%%                |             | 0 |
+| create-workspace | %%ws_two%% | %%acct2%%                |             | 1 |
+| add-member       | %%peon%%   | %%ws_one%%               |             |  |
+| add-member       | %%peon%%   | %%ws_two%%               |             |  |
+
+| http-user-pass   | %%peon%%                                          | password                     |             |
+| GET-json        | /data/workspaces |   |
+| code-is         | 200                                   |   |
+| json-parse      |                                       |   |
+| json-array-size | 2                                     |   |
+| json-path-is    | $[0].is_all_users_workspace           | 0 |
+| json-path-is    | $[1].is_all_users_workspace           | 1 |
+

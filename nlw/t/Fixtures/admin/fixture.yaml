@@ -1,0 +1,12 @@
+fixtures:
+  - db
+  - help
+
+workspaces:
+  admin:
+    admin_can_impersonate: 1
+
+conflicts:
+  - admin_no_pages
+  - admin_with_extra_pages
+  - admin_with_ordered_pages

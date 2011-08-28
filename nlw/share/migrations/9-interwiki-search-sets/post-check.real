@@ -1,0 +1,16 @@
+#!/bin/bash -e
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+
+expected_search_sets_sum=9170487f68c2e2f0c9af81012ca90dea
+
+search_sets_sum=`psql -U $DB_USER -d $DB -t -c '\d search_sets' | awk '{print $1}' | md5sum | awk '{print $1}'`
+
+if [ "$search_sets_sum" != "$expected_search_sets_sum" ] ; then
+    echo "Search sets table looks wrong.  Call the police!"
+    exit 1
+fi
+
+# migration succeeded
+exit 0

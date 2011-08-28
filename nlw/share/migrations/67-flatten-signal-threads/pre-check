@@ -1,0 +1,27 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+use Socialtext::SQL 'sql_singlevalue';
+
+# the number of signals that have grandparents
+my $deep_threads = sql_singlevalue(q{
+    SELECT COUNT(1)
+      FROM signal AS child
+     WHERE in_reply_to_id IS NOT NULL
+       AND EXISTS (
+         SELECT 1
+           FROM signal AS parent 
+          WHERE parent.signal_id = child.in_reply_to_id
+            AND parent.in_reply_to_id IS NOT NULL
+       )
+});
+
+if ($deep_threads > 0) {
+    print "Deep signal threads found ($deep_threads). Running migration...\n";
+    exit 0;
+}
+
+print "No deep signal threads found. Skipping.\n";
+exit 1;

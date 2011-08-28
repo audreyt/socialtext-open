@@ -1,0 +1,17 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+use FindBin;
+use Socialtext::Migration::Utils qw/ensure_socialtext_schema/;
+use Socialtext::Schema;
+use Socialtext::System qw/shell_run/;
+
+ensure_socialtext_schema( 12 );
+
+my %params = Socialtext::Schema->connect_params();
+my $migration_script = $FindBin::Bin . '/migration.sql';
+
+# Use '-e' so the queries are written to STDOUT and logged.
+shell_run( "$params{psql} -e -f '$migration_script'" );

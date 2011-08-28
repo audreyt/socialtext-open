@@ -1,0 +1,623 @@
+# @COPYRIGHT@
+msgid ""
+msgstr ""
+"Project-Id-Version: Socialtext i18n\n"
+"PO-Revision-Date: 2011-05-13 07:51-0700\n"
+"Last-Translator: Socialtext i18n team\n"
+"Language-Team: Socialtext i18n team\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "appliance.archiving-system-config-files"
+msgstr "正在存档系统配置文件..."
+
+msgid "appliance.backup-id"
+msgstr "备份ID"
+
+msgid "appliance.backup-time"
+msgstr "备份时间"
+
+msgid "appliance.backups-for-restore:"
+msgstr "可供恢复的备份："
+
+msgid "appliance.cleanup-previous-snapshot"
+msgstr "正在清除前一个快照..."
+
+msgid "appliance.taking-database-snapshot"
+msgstr "生成数据库快照..."
+
+msgid "backup.about-automatic-backup"
+msgstr "当上一次备份达到“备份计划”中所设置的寿命后，即可自动开始进行备份。“周内天数”决定了什么时候可以进行在线备份，因此请选择通讯流量小的天数。如果您正在使用持续存档，则建议定期进行完整备份，以减少还原时间并提升安全性。"
+
+msgid "backup.about-automatic-expiry"
+msgstr "当寿命达到某一期限后，备份可能会自动过期。上一次进行的备份将永不过期。自动过期行为会每天进行。如果同一天还需要进行自动备份，则自动过期机制会在该备份进行完毕后生效。"
+
+msgid "backup.about-destination"
+msgstr "备份文件可保存在 Windows 共享目录（即 SMB/CIFS 共享）中。选择“存档目录”即可将备份保存到该共享下的子目录中。"
+
+msgid "backup.archived-sequence-id"
+msgstr "存档序列ID"
+
+msgid "backup.automatic-backups"
+msgstr "自动备份"
+
+msgid "backup.automatic-cleanup"
+msgstr "自动清理"
+
+msgid "backup.cannot-delete-last-backup"
+msgstr "至少需要有一份备份，因此不能删除最后一份备份。"
+
+msgid "backup.choose-days-of-week-for-full-backup"
+msgstr "完全备份将在每周选定的日子自动进行. 取消所有可以禁用此功能."
+
+msgid "backup.choose-time-of-day-for-maintenance"
+msgstr "备份维护计划任务将在每天的这个时间进行. 选择一天内流量较低的时间."
+
+msgid "backup.continuous-archiving"
+msgstr "继续存档"
+
+msgid "backup.date"
+msgstr "备份日期"
+
+msgid "backup.days-of-week:"
+msgstr "每周："
+
+msgid "backup.delete-expired-files"
+msgstr "删除过期的文件"
+
+msgid "backup.delete=label?"
+msgstr "删除备份“%1”？"
+
+msgid "backup.directory"
+msgstr "目录"
+
+msgid "backup.directory-writable"
+msgstr "目录可写"
+
+msgid "backup.expiry-action:"
+msgstr "过期操作："
+
+msgid "backup.in-progress-sequence-id"
+msgstr "进行中的序列号"
+
+msgid "backup.indefinitely"
+msgstr "无限期"
+
+msgid "backup.information"
+msgstr "备份信息"
+
+msgid "backup.label"
+msgstr "备份标签"
+
+msgid "backup.list"
+msgstr "备份列表"
+
+msgid "backup.logical-dumps"
+msgstr "逻辑转储"
+
+msgid "backup.maintenance-schedule"
+msgstr "备份维护计划"
+
+msgid "backup.maintenance-window"
+msgstr "维护窗口"
+
+msgid "backup.manually"
+msgstr "手动"
+
+msgid "backup.method"
+msgstr "方法"
+
+msgid "backup.mode"
+msgstr "备份模式"
+
+msgid "backup.mode-checkpoint"
+msgstr "检出点"
+
+msgid "backup.mode-full"
+msgstr "已满"
+
+msgid "backup.move-expired-files-to-expired-sub-folder"
+msgstr "将过期的文件移动到“已过期”子文件夹中"
+
+msgid "backup.no"
+msgstr "否"
+
+msgid "backup.paused"
+msgstr "暂停"
+
+msgid "backup.postgresql-running?"
+msgstr "PostgreSQL 是否正在运行？"
+
+msgid "backup.read-this-first=guide-url-1,guide-url-2"
+msgstr "请在进行备份前阅读 Socialtext 的管理指南<a href=\"%1\">备份</a>文档. 该文档可<a href=\"%2\">由此</a>公开获取."
+
+msgid "backup.schedule:"
+msgstr "备份计划："
+
+msgid "backup.see-admin-guide-about-backup-mode"
+msgstr "请参考 <a href=\"%1\">管理指南</a> 关于备份模式的说明。该文档可<a href=\"%2\">由此</a>公开获取。"
+
+msgid "backup.select-backup-to-delete"
+msgstr "请选择要删除的备份。"
+
+msgid "backup.status"
+msgstr "备份状态"
+
+msgid "backup.status-unavailable-check-error-log"
+msgstr "备份状态不可用，请在日志中检查错误"
+
+msgid "backup.unwritable"
+msgstr "不可写入"
+
+msgid "backup.week=count"
+msgstr "%1 周"
+
+msgid "backup.weeks-to-keep-backups:"
+msgstr "备份的保存周数"
+
+msgid "backup.writable"
+msgstr "可写入"
+
+msgid "backup.yes"
+msgstr "是"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:52
+msgid "console.about-authentication-token-timeout"
+msgstr "出于安全的原因，认证标记在预先定义的期间过后将自动失效，即使用户选择了“在本计算机上记住我”。该期间最短为“1天”，最长为“365天”，默认为“14天”。您可以在此更改该期间。"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:51
+msgid "console.about-backup-settings"
+msgstr "本设备可以在另外一台计算机上兼容Windows或SMB的目录或文件夹中存储备份文件。在此设置备份服务器、目录与用户名。"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:12
+msgid "console.about-captcha-setting"
+msgstr "如果您的 Socialtext 设备公开在公共互联网上，垃圾邮件制造者与自动“机器人”会尝试自行注册。“验证码”服务会要求注册者通过辨认一段文本（验证码）来证实其为人类。如果您的设备为公开在公共互联网的话，请使用该设置。"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:100
+msgid "console.about-desktop-nav-setting"
+msgstr "注意：如果该选项被禁用，则<tt>桌面</tt>链接将不再出现在全域导航菜单上。"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:90
+msgid "console.about-disable-automatic-updates"
+msgstr "若要禁止自动更新，您可以选中本选框并点击提交"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:140
+msgid "console.about-initialize-wikis"
+msgstr "该操作将删除本设备上全部现有的工作区与用户，并创建一个管理工作区"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:54
+msgid "console.about-invalid-limit"
+msgstr "一旦达到无效限制，系统将强制用户重新登录"
+
+#: ../appliance/libsocialtext-appliance-perl/template/popup.html:53
+msgid "console.about-login-after-initialize-wikis"
+msgstr "在您点击“初始化工作区”后您将被要求登录控制台"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:37
+msgid "console.about-login-message"
+msgstr "您可以添加一条对方可在其 <a href=\"/challenge\">登录屏幕</a>上看到的信息"
+
+#: ../appliance/libsocialtext-appliance-perl/template/form.tmpl:17
+msgid "console.about-maximum-signal-length"
+msgstr "您可以为讯息设置一个服务器全局的最大长度。每个帐户可以为发送至该帐户或该帐户的组的讯息设定一个更小的限制。"
+
+#: ../appliance/libsocialtext-appliance-perl/template/console_wrapper.tmpl:39
+msgid "console.about-navigation-tabs"
+msgstr "使用导航标签来选择设备管理的不同部分"
+
+#. ('<a href="http://en.wikipedia.org/wiki/Network_Time_Protocol">http://en.wikipedia.org/wiki/Network_Time_Protocol</a>')
+#. ("<a href=\"http://en.wikipedia.org/wiki/Network_Time_Protocol\">http://en.wikipedia.org/wiki/Network_Time_Protocol</a>")
+#: ../appliance/libsocialtext-appliance-perl/template/form.tmpl:9
+msgid "console.about-ntp-server=help-link"
+msgstr "您可以使用 NTP 协议将本设备的时钟与另一台计算机进行同步。设备必须可以通过123端口访问该服务器。更多信息请查看：%1。"
+
+#. (link)
+#: ../appliance/libsocialtext-appliance-perl/template/form.tmpl:14
+msgid "console.about-poxy-server=help-link"
+msgstr "您可以设置一个代理服务器，以允许用户可以访问包括面板小工具与RSS源在内的网络服务。更多信息请查看：%1"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:73
+msgid "console.about-support-contact"
+msgstr "在此设置用户可以通过登录、应用访问或目录访问方式，以获取帮助的电子邮件地址或网址"
+
+#: ../appliance/libsocialtext-appliance-perl/template/popup.html:54
+msgid "console.about-username-password-after-initialize-wikis"
+msgstr "以上您输入的电子邮件地址将作为用户名，密码为<strong>password</strong>。您可以稍后更改密码。"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:130 ../appliance/libsocialtext-appliance-perl/template/setup.html:135
+msgid "console.add-administrator"
+msgstr "添加管理员"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:130 ../appliance/libsocialtext-appliance-perl/template/setup.html:131
+msgid "console.add-appliance-administrators"
+msgstr "添加设备管理员"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:53
+msgid "console.after-renew-limit"
+msgstr "一旦达到更新限制，用户将会立即被要求重新认证，但是如果用户正在工作进行过程，如编辑页面、查看页面或阅读讯息，则用户不会被注销"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:97
+msgid "console.allow-automatic-updating"
+msgstr "允许自动更新"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:174 ../appliance/libsocialtext-appliance-perl/template/setup.html:175
+msgid "console.apache-error-log"
+msgstr "Apache 错误日志"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:173
+msgid "console.apache-logs"
+msgstr "Apache 日志"
+
+#: ../appliance/libsocialtext-appliance-perl/template/console_wrapper.tmpl:63
+msgid "console.appliance"
+msgstr "设备管理"
+
+msgid "console.automatic-backup-schedule"
+msgstr "自动备份计划"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:88
+msgid "console.automatic-updating"
+msgstr "自动更新"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:1 ../appliance/libsocialtext-appliance-perl/template/backup.html:2 ../appliance/libsocialtext-appliance-perl/template/console_wrapper.tmpl:42
+msgid "console.backup"
+msgstr "备份"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:47
+msgid "console.backup-destination"
+msgstr "备份目标"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:13
+msgid "console.backup-now"
+msgstr "立刻备份"
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:67
+msgid "console.building-diagnostic-tarball"
+msgstr "建立诊断压缩档..."
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:124
+msgid "console.contact-socialtext-support"
+msgstr "联系 Socialtext 支持"
+
+#: ../appliance/libsocialtext-appliance-perl/template/overview.html:6
+msgid "console.control-panel"
+msgstr "控制台"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:139 ../appliance/libsocialtext-appliance-perl/template/setup.html:141 ../appliance/libsocialtext-appliance-perl/template/setup.html:142
+msgid "console.create-initial-wiki"
+msgstr "创建初始工作区"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:89
+msgid "console.default-desktop-update-url"
+msgstr "默认状态下，<a _target=\"blank\" href=\"http://www.socialtext.com/products/desktop.php\">Socialtext 桌面</a>会自动从 www.socialtext.com 取得更新"
+
+#: ../appliance/libsocialtext-appliance-perl/template/overview.html:11
+msgid "console.disk-usage"
+msgstr "硬盘使用情况"
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:121
+msgid "console.documentation"
+msgstr "设备文档"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:121 ../appliance/libsocialtext-appliance-perl/template/setup.html:124
+msgid "console.email-for-testing:"
+msgstr "供测试的电子邮件地址："
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:18
+msgid "console.enable-captcha"
+msgstr "允许验证码要求注册用户证实其为人类"
+
+#: ../appliance/libsocialtext-appliance-perl/template/overview.html:13
+msgid "console.free"
+msgstr "空闲"
+
+#: ../appliance/libsocialtext-appliance-perl/template/form.tmpl:12
+msgid "console.how-to-configure-web-proxy"
+msgstr "如何配置网页代理"
+
+#: ../appliance/libsocialtext-appliance-perl/template/popup.html:41
+msgid "console.initial-admin-email"
+msgstr "初始设备管理员电子邮件地址"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:63
+msgid "console.invalid-after-days"
+msgstr "（天）后无效"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:110 ../appliance/libsocialtext-appliance-perl/template/setup.html:115
+msgid "console.leave-blank-to-use-built-in-smtp-server"
+msgstr "（此处留白以使用设备的内置 SMTP 服务器）"
+
+#: ../appliance/libsocialtext-appliance-perl/template/overview.html:8
+msgid "console.link-to-control-panel"
+msgstr "查看与管理系统的工作区、帐户、群组与用户，请转至 <a href=\"/nlw/control/\">控制台</a> 工具。"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:44
+msgid "console.login-message"
+msgstr "登录信息"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:10
+msgid "console.login-screen-setup"
+msgstr "登录屏幕设置"
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:122
+msgid "console.manual-wiki"
+msgstr "设备手册工作区"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:130 ../appliance/libsocialtext-appliance-perl/template/setup.html:133
+msgid "console.new-admin-email-address:"
+msgstr "新的管理员电子邮件地址："
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:42
+msgid "console.no-files-available-to-restore"
+msgstr "没有可供恢复的文件"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:158 ../appliance/libsocialtext-appliance-perl/template/setup.html:162
+msgid "console.ntp-server-rfc-1305"
+msgstr "NTP 服务器（RFC 1305）"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:109
+msgid "console.other-settings"
+msgstr "其他设置"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:110 ../appliance/libsocialtext-appliance-perl/template/setup.html:113
+msgid "console.outgoing-mail-server"
+msgstr "外部邮件服务器"
+
+#: ../appliance/libsocialtext-appliance-perl/template/console_wrapper.tmpl:42 ../appliance/libsocialtext-appliance-perl/template/overview.html:1 ../appliance/libsocialtext-appliance-perl/template/overview.html:2
+msgid "console.overview"
+msgstr "概览"
+
+#: ../appliance/libsocialtext-appliance-perl/template/overview.html:13
+msgid "console.percent-free"
+msgstr "空闲比例"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:8
+msgid "console.perform-backup-now"
+msgstr "立刻执行备份"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:18
+msgid "console.perform-restore"
+msgstr "执行恢复"
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:135
+msgid "console.problem-description:"
+msgstr "问题描述："
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:147 ../appliance/libsocialtext-appliance-perl/template/setup.html:148
+msgid "console.proxy-server-for-web-services"
+msgstr "网页服务的代理服务器"
+
+#: ../appliance/libsocialtext-appliance-perl/template/shutdown.html:12
+msgid "console.reboot-appliance"
+msgstr "重启设备"
+
+#: ../appliance/libsocialtext-appliance-perl/template/shutdown.html:15
+msgid "console.reboot-now"
+msgstr "立刻重启"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:23
+msgid "console.recaptcha-private-key"
+msgstr "reCaptcha 私钥"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:28
+msgid "console.recaptcha-public-key"
+msgstr "reCaptcha 公钥"
+
+#: ../appliance/libsocialtext-appliance-perl/template/form.tmpl:7
+msgid "console.refresh"
+msgstr "刷新"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:26
+msgid "console.refresh-file-list"
+msgstr "刷新文件列表"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:24
+msgid "console.refresh-this-page"
+msgstr "刷新本页"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:59
+msgid "console.renew-after-in-days"
+msgstr "（天）后更新"
+
+#: ../appliance/libsocialtext-appliance-perl/template/console_wrapper.tmpl:42
+msgid "console.report-problem"
+msgstr "报告问题"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:38
+msgid "console.restore-now"
+msgstr "立刻恢复"
+
+msgid "console.save-backup-schedule"
+msgstr "保存备份计划"
+
+#: ../appliance/libsocialtext-appliance-perl/template/form.tmpl:6
+msgid "console.screen-generate-time:"
+msgstr "生成本屏幕时的设备时钟："
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:38
+msgid "console.script-tag-stripped-in-login-message"
+msgstr "您可以随时在信息中使用HTML，但是在消息被保存之前，SCRIPT标签（例如JavaScript）将不会显现"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:121 ../appliance/libsocialtext-appliance-perl/template/setup.html:122 ../appliance/libsocialtext-appliance-perl/template/setup.html:126
+msgid "console.send-test-email"
+msgstr "发送测试电子邮件"
+
+#. ('/nlw/control/settings')
+#. ("/nlw/control/settings")
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:5
+msgid "console.server-wide-settings-moved-to-control-panel=uri"
+msgstr "服务器范围的访问设置，已移至<a href=\"%1\">业务控制面板</a>。"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:51
+msgid "console.set-authentication-token-timeout"
+msgstr "设置认证标记超时"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:62
+msgid "console.set-backup-destination"
+msgstr "设置备份目标"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:36
+msgid "console.set-custom-login-screen-message"
+msgstr "设置自定义登录屏幕信息"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:110 ../appliance/libsocialtext-appliance-perl/template/setup.html:111 ../appliance/libsocialtext-appliance-perl/template/setup.html:116
+msgid "console.set-email-configuration"
+msgstr "设置电子邮件配置"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:158 ../appliance/libsocialtext-appliance-perl/template/setup.html:164
+msgid "console.set-ntp-server"
+msgstr "设置 NTP 服务器"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:180 ../appliance/libsocialtext-appliance-perl/template/setup.html:182
+msgid "console.set-signals-size-limit"
+msgstr "设置讯息大小限制"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:72
+msgid "console.set-support-contact"
+msgstr "设置支持联系"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:147 ../appliance/libsocialtext-appliance-perl/template/setup.html:153
+msgid "console.set-web-proxy-server"
+msgstr "设置网页代理服务器"
+
+#: ../appliance/libsocialtext-appliance-perl/template/console_wrapper.tmpl:42 ../appliance/libsocialtext-appliance-perl/template/setup.html:1 ../appliance/libsocialtext-appliance-perl/template/setup.html:2
+msgid "console.setup"
+msgstr "设置"
+
+#: ../appliance/libsocialtext-appliance-perl/template/shutdown.html:6
+msgid "console.shut-down-appliance"
+msgstr "关闭设备"
+
+#: ../appliance/libsocialtext-appliance-perl/template/shutdown.html:9
+msgid "console.shut-down-now"
+msgstr "立刻关闭"
+
+#: ../appliance/libsocialtext-appliance-perl/template/console_wrapper.tmpl:42 ../appliance/libsocialtext-appliance-perl/template/shutdown.html:1 ../appliance/libsocialtext-appliance-perl/template/shutdown.html:2
+msgid "console.shutdown"
+msgstr "关机"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:179
+msgid "console.signals-size-limit"
+msgstr "讯息大小限制"
+
+#: ../appliance/libsocialtext-appliance-perl/template/console_wrapper.tmpl:27 ../appliance/libsocialtext-appliance-perl/template/console_wrapper.tmpl:7
+msgid "console.socialtext-appliance"
+msgstr "Socialtext 设备"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:87
+msgid "console.socialtext-desktop"
+msgstr "Socialtext 桌面"
+
+msgid "console.socialtext-inc"
+msgstr "Socialtext 公司"
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:63
+msgid "console.socialtext-support"
+msgstr "Socialtext 支持"
+
+msgid "console.socialtext-support-form"
+msgstr "Socialtext 支持论坛"
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:141 ../appliance/libsocialtext-appliance-perl/template/setup.html:103 ../appliance/libsocialtext-appliance-perl/template/setup.html:33 ../appliance/libsocialtext-appliance-perl/template/setup.html:48 ../appliance/libsocialtext-appliance-perl/template/setup.html:69 ../appliance/libsocialtext-appliance-perl/template/setup.html:84
+msgid "console.submit"
+msgstr "提交"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:79
+msgid "console.support-contact"
+msgstr "联系支持"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:168 ../appliance/libsocialtext-appliance-perl/template/setup.html:169
+msgid "console.synchronize-appliance-clock-now"
+msgstr "立刻同步设备时钟"
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:60
+msgid "console.tarball-built"
+msgstr "压缩档已建立"
+
+msgid "console.time-each-day:"
+msgstr "每日时间："
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:158 ../appliance/libsocialtext-appliance-perl/template/setup.html:159
+msgid "console.time-server"
+msgstr "时间服务器"
+
+msgid "console.time-settings"
+msgstr "时间设置"
+
+#: ../appliance/libsocialtext-appliance-perl/template/overview.html:13
+msgid "console.total"
+msgstr "总計"
+
+#. (download_link, mailto_link)
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:73
+msgid "console.upload-complete=download-link,mailto-link"
+msgstr "%1 上传完成。您的信息已提交给 %2。"
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:127
+msgid "console.upload-support-tarball-to-socialtext"
+msgstr "上传支持压缩档至 Socialtext"
+
+#. (download_link)
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:70
+msgid "console.uploading-tarball=download-link"
+msgstr "正在上传压缩档 %1 到 Socialtext..."
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:11
+msgid "console.use-captcha-to-prevent-automated-registration"
+msgstr "使用验证码以防止自动注册"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:147 ../appliance/libsocialtext-appliance-perl/template/setup.html:151
+msgid "console.web-service-proxy-address"
+msgstr "网页服务代理地址"
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:131
+msgid "console.your-email-address:"
+msgstr "您的电子邮件地址："
+
+#: ../appliance/libsocialtext-appliance-perl/template/popup.html:48
+msgid "do.cancel"
+msgstr "取消"
+
+#: ../appliance/libsocialtext-appliance-perl/template/popup.html:32
+msgid "do.close"
+msgstr "关闭"
+
+msgid "error.backup-id-required"
+msgstr "必须提供一个备份ID，或者使用列表查看可用备份"
+
+msgid "error.backup-writability"
+msgstr "写入权限错误"
+
+#: ../appliance/libsocialtext-appliance-perl/sbin/st-appliance-mount-samba:84
+msgid "error.create-test-file-on-samba-share!"
+msgstr "无法在 Samba 共享中创建测试文件!"
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:89
+msgid "error.email-and-description-required!"
+msgstr "电子邮件与描述为必填项!"
+
+#. (email)
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:93
+msgid "error.invalid=email"
+msgstr "“%1”不是有效的电子邮件地址"
+
+msgid "error.socialtext-appliance-backup"
+msgstr "Socialtext 设备备份过程中出错"
+
+#. (status)
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:76
+msgid "error.unknown=status"
+msgstr "未知：%1"
+
+#: ../appliance/libsocialtext-appliance-perl/sbin/st-appliance-mount-samba:89
+msgid "error.unlink-test-file-on-samba-share!"
+msgstr "无法在 Samba 共享中删除测试文件!!"
+
+#: ../appliance/libsocialtext-appliance-perl/sbin/st-appliance-mount-samba:87
+msgid "error.write-test-file-on-samba-share!"
+msgstr "无法在 Samba 共享中写入测试文件!!"
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:1 ../appliance/libsocialtext-appliance-perl/template/help.html:2
+msgid "nav.help"
+msgstr "帮助"

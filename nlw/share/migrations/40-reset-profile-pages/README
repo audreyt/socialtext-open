@@ -1,0 +1,4 @@
+For [Story: Optimize Profile Layout], we will need to reset the
+profiles for all users on the system. We will do so by deleting the
+container for profiles, then let the system lazily rebuild profile
+pages as user's view their profiles again.

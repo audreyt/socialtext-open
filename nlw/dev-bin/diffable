@@ -1,0 +1,63 @@
+#!/usr/bin/env perl -w
+# @COPYRIGHT@
+
+# All of this functionality can get easily folded into File::Next,
+# obviating the need for an external program.
+
+use warnings;
+use strict;
+use File::Next '0.30';
+
+my $dir = shift or die "have to specify a directory";
+
+my @skips = read_skips( 'DIFF.SKIP' );
+
+my $iter =
+    File::Next::files( {
+        descend_filter => \&descend_filter,
+        sort_files => 1,
+    }, $dir );
+
+while ( my $file = $iter->() ) {
+    $file =~ s[^\Q$dir\E/?][];
+
+    my @skip_matches = grep { $file =~ $_ } @skips;
+    if ( !@skip_matches ) {
+        print "$file\n";
+    }
+}
+
+sub descend_filter {
+    return if $_ eq '.svn';
+
+    return 1;
+}
+
+# Returns a list of regexes that we should be skipping
+sub read_skips {
+    my $filename = shift;
+
+    my @skips;
+    open( my $fh, '<', $filename ) or die "Can't open $filename: $!\n";
+    while ( my $line = <$fh> ) {
+        chomp $line;
+        next if $line =~ /^#/;
+        next if $line !~ /./;
+
+        if ( $line =~ /^=(.*)/ ) {
+            push( @skips, qr/^\Q$1\E$/ );
+        }
+        else {
+            my $re = $line;
+            $re =~ s/\./\\./;
+            $re =~ s/\*/.*/;
+
+            push( @skips, qr/$re/ );
+        }
+    }
+    close $fh;
+
+    return @skips;
+}
+
+

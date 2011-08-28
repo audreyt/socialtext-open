@@ -1,0 +1,40 @@
+* Fixture: TopContent
+
+| standard-test-setup  |               |
+| add-report-test-data | %%workspace%% |
+| set | base_uri | /data/report/top_content/now/-1week |
+
+| GET       | %%base_uri%% |
+| code-is   | 400                                             |
+| body-like | Could not find an account! |
+| set | base_uri | %%base_uri%%?workspace=%%workspace%% |
+
+| comment | most viewed (DEFAULT)                     |                  |
+| GET     | %%base_uri%%                              | application/json |
+| code-is | 200                                       |                  |
+| json-parse | ||
+| json-like | {"rows":[{"title":"Awesome","count":"3"},{"title":"Middle","count":"2"},{"title":"Boring","count":"1"}]} |
+
+| comment | most viewed                               |                  |
+| GET     | %%base_uri%%;action=view_page             | application/json |
+| code-is | 200                                       |                  |
+| json-parse | ||
+| json-like | {"rows":[{"title":"Awesome","count":"3"},{"title":"Middle","count":"2"},{"title":"Boring","count":"1"}]} |
+
+| comment | most edited                               |                  |
+| GET     | %%base_uri%%;action=edit_page             | application/json |
+| code-is | 200                                       |                  |
+| json-parse | ||
+| json-like | {"rows":[{"title":"Awesome","count":"6"},{"title":"Middle","count":"4"},{"title":"Boring","count":"2"}]} |
+
+| comment | most watched                              |                  |
+| GET     | %%base_uri%%;action=add_to_watchlist      | application/json |
+| code-is | 200                                       |                  |
+| json-parse | ||
+| json-like | {"rows":[{"title":"Awesome","count":"9"},{"title":"Middle","count":"6"},{"title":"Boring","count":"3"}]} |
+
+| comment | most emailed                              |                  |
+| GET     | %%base_uri%%;action=email_page            | application/json |
+| code-is | 200                                       |                  |
+| json-parse | ||
+| json-like | {"rows":[{"title":"Awesome","count":"12"},{"title":"Middle","count":"8"},{"title":"Boring","count":"4"}]} |

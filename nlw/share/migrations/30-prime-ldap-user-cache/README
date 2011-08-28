@@ -1,0 +1,14 @@
+This migration primes the local DB cache of data on LDAP Users, by going out
+and forcing a refresh of the data from LDAP for all users who have *not* yet
+been cached.
+
+If an LDAP user has previously had their data populated in the cache, they're
+*not* refreshed.  If _all_ LDAP users have at some point had their data
+populated in the cache, the migration is skipped.
+
+NOTE: it *IS* possible that even after this migration has run that there are
+LDAP users in the system that have not been refreshed:
+  * if we have troubles contacting the LDAP server
+  * if a user exists in the DB that came from an LDAP server that has seen been
+    removed from our configuration
+  * if the user no longer exists in the LDAP directory

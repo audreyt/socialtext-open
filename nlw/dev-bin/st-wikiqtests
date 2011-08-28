@@ -1,0 +1,76 @@
+#!/bin/bash -e
+
+# CI script for wikiqtests.
+
+USAGE="USAGE: $0 -c testcase -p port -b browser -o platform -s(etup) -i(ntegrate) -q(uick) -h(elp) -d(ebug)"
+
+BRANCH=`cd $ST_CURRENT; git branch | grep "*" | cut -f 2 -d " "`
+PORT="4444"
+BROWSER="chrome"
+OS=linux
+TESTCASE="firefox_testcases"
+INTEGRATE=''
+DEBUG=''
+SETUP=''
+QUICK=''
+
+while getopts "p:b:o:c:idsqh" optionName; do
+        case "$optionName" in
+          p) PORT="$OPTARG";;
+          b) BROWSER="$OPTARG";;
+          o) OS="$OPTARG";;
+          c) TESTCASE="$OPTARG";;
+          i) INTEGRATE="1";;
+          d) DEBUG="1";;
+          s) SETUP="1";;
+          q) QUICK="quick";;
+          h) echo $USAGE; exit;;
+          [?]) echo $USAGE; exit;;
+        esac
+done
+
+if [ $DEBUG ]; then
+        echo "BRANCH: $BRANCH TESTCASE: $TESTCASE PORT: $PORT BROWSER: $BROWSER OS: $OS INTEGRATE: $INTEGRATE QUICK $QUICK"
+fi
+
+if [ $SETUP ]; then
+    cd $ST_CURRENT
+    set-branch $BRANCH
+    refresh-branch
+    st-setup-wikitests
+fi
+
+if [ $PORT != "4444" ]; then
+    echo Setting up Selenium: $PORT $BROWSER $OS
+    source /home/$USER/personal/qa/setup-selenium $PORT $BROWSER $OS
+fi
+
+cd
+touch $TESTCASE.out
+ln -sf $TESTCASE.out testcases.out
+
+if [ $INTEGRATE ]; then
+    while [ 1 ]; do
+        echo integrating $QUICK run $run with $TESTCASE
+        if [ $QUICK == '' ]; then
+            cd $ST_CURRENT
+            set-branch $BRANCH
+            refresh-branch
+            st-setup-wikitests
+        fi
+        cd
+        run-wiki-tests --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page $TESTCASE 2>&1 | tee  $TESTCASE.out
+        st-tap2html $TESTCASE.out
+        epoch=`date +%s`
+        mv $TESTCASE.html $ST_CURRENT/nlw/share/$TESTCASE.$epoch.html
+        echo Wrote $ST_CURRENT/nlw/share/$TESTCASE.$epoch.html
+    done
+else
+    echo running $TESTCASE
+    run-wiki-tests --no-maximize --test-username wikitester@ken.socialtext.net  --test-email wikitester@ken.socialtext.net --timeout 60000 --plan-page $TESTCASE 2>&1 | tee $TESTCASE.out
+    st-tap2html $TESTCASE.out
+    epoch=`date +%s`
+    mv $TESTCASE.html $ST_CURRENT/nlw/share/$TESTCASE.$epoch.html
+    echo Wrote $ST_CURRENT/nlw/share/$TESTCASE.$epoch.html
+fi
+

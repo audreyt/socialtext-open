@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+my $st_widgets = '/usr/bin/st-widgets';
+if (-x $st_widgets) {
+    print "$st_widgets exists. Upgrading BeTwittered widget";
+    exit 0;
+}
+
+print "$st_widgets is not found - skipping migration.\n";
+exit 1;

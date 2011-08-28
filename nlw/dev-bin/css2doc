@@ -1,0 +1,28 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+
+my $css               = do {local $/;<>};
+my $rm_body           = qr/\{[^}]+\}/m;
+my $selector_per_line = qr/,\s*/;
+my $comment           = qr[/\*.+?\*/]sm;
+
+$css =~ s/$rm_body//g;
+$css =~ s/$selector_per_line/\n/g;
+
+foreach my $portion ( split /($comment)/, $css ) {
+    if ($portion =~ /$comment/) {
+        $portion =~ s[/\*][];
+        $portion =~ s[\*/][];
+        print $portion;
+    } else {
+        foreach my $line ( split /\n+/, $portion ) {
+            chomp($line);
+            $line =~ s/^\s+//;
+            $line =~ s/\s+$//;
+            print "  $line\n";
+        }
+    }
+}
+

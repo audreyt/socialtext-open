@@ -1,0 +1,22 @@
+#!/bin/bash
+
+TABLE=$1
+COLUMN=$2
+TYPE=$3
+DEFAULT=$4
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+
+SQL="ALTER TABLE \"$TABLE\" ADD COLUMN \"$COLUMN\" $TYPE"
+
+echo $SQL;
+psql -U $DB_USER -d $DB -t -c "$SQL"
+
+if [ -n "$DEFAULT" ]; then
+    SQL="ALTER TABLE \"$TABLE\" ALTER COLUMN \"$COLUMN\" SET DEFAULT $DEFAULT"
+fi
+
+echo $SQL;
+psql -U $DB_USER -d $DB -t -c "$SQL"
+

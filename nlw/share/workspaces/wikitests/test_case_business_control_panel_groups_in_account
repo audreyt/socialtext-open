@@ -1,0 +1,123 @@
+
+| *Comment* | Test Case: Business Control Panel Groups In Account SETUP |
+
+| *Comment* | Tagged run.ff because the sorting functions of Account table in Group page are screwy and different on different platforms |  |
+
+| *Comment* | Test Case: Business Control Panel Groups In Account Create an isolated group with 3 users |  |
+| set | isolatedacct | cpisolated-acct-%%start_time%% |
+| create-account | %%isolatedacct%% | Socialtext |
+| set | isouser1 | matt%%start_time%%@ken.socialtext.net |
+| set | e_isouser1 | matt%%start_time%%\@ken.socialtext.net |
+| st-admin | create-user --email %%isouser1%% --password %%password%% --account %%isolatedacct%% | was created |
+| set | isouser2 | joe%%start_time%%@ken.socialtext.net |
+| set | e_isouser2 | joe%%start_time%%\@ken.socialtext.net |
+| st-admin | create-user --email %%isouser2%% --password %%password%% --account %%isolatedacct%% | was created |
+| set | isouser3 | bob%%start_time%%@ken.socialtext.net |
+| set | e_isouser3 | bob%%start_time%%\@ken.socialtext.net |
+| st-admin | create-user --email %%isouser3%% --password %%password%% --account %%isolatedacct%% | was created |
+| set | workspace1 | ws-groupshow-1-%%start_time%% |
+| create-workspace | %%workspace1%% | %%isolatedacct%% |
+| set | workspace2 | ws-groupshow-2-%%start_time%% |
+| create-workspace | %%workspace2%% | %%isolatedacct%% |
+| set | workspace3 | ws-groupshow-3-%%start_time%% |
+| create-workspace | %%workspace3%% | %%isolatedacct%% |
+
+| *Comment* | Test Case: Business Control Panel Groups Create Master Account |  |
+| set | mastergroupsacct | cpgroups-acct-%%start_time%% |
+| create-account | %%mastergroupsacct%% |  |
+
+| *Comment* | Test Case: Business Control Panel Groups In Account Create a group with 3 workspaces, 3 members |  |
+| set | samplegroup1 | groupws-acct-%%start_time%% |
+| create-group | %%samplegroup1%% | %%isolatedacct%% |
+| add-group-to-workspace | %%group_id%% | %%workspace1%% |
+| add-group-to-workspace | %%group_id%% | %%workspace2%% |
+| add-group-to-workspace | %%group_id%% | %%workspace3%% |
+| add-user-to-group | %%isouser1%% | %%group_id%% |
+| add-user-to-group | %%isouser2%% | %%group_id%% |
+| add-user-to-group | %%isouser3%% | %%group_id%% |
+| add-group-to-account | %%group_id%% | %%mastergroupsacct%% |
+
+| *Comment* | Test Case: Business Control Panel Groups In Account Create a group with 1 member |  |  |
+| set | groupwithmember | agroupwithmember%%start_time%% |  |
+| create-group | %%groupwithmember%% |  | %%username%% |
+| set | groupsuser1 | connie%%start_time%%@ken.socialtext.net |  |
+| set | e_groupsuser1 | connie%%start_time%%\@ken.socialtext.net |  |
+| st-admin | create-user --email %%groupsuser1%% --password %%password%% |  |  |
+| add-user-to-group | %%groupsuser1%% | %%group_id%% |  |
+| add-group-to-account | %%group_id%% | %%mastergroupsacct%% |  |
+
+| st-admin | give-accounts-admin --u %%username%% |  |
+| open_ok | /nlw/control/account |  |
+| wait_for_element_visible_ok | st-search-by-name | 30000 |
+| type_ok | st-search-by-name | %%mastergroupsacct%% |
+| wait_for_element_visible_ok | st-submit-search-by-name | 30000 |
+| click_and_wait | st-submit-search-by-name |  |
+| wait_for_element_visible_ok | link=%%mastergroupsacct%% | 30000 |
+| click_and_wait | link=%%mastergroupsacct%% |  |
+| wait_for_text_present_ok | Users (5) | 30000 |
+| wait_for_text_present_ok | Groups (2) | 30000 |
+| text_like | qr/Users \(5\).+%%e_isouser3%%.+%%e_groupsuser1%%.+%%e_isouser2%%.+%%e_isouser1%%.+Groups/ |  |
+| text_like | qr/Groups \(2\).+%%groupwithmember%%.+%%samplegroup1%%/ |  |
+
+| *Comment* | Test Case: Business Control Panel Groups In Account SORT By Number of Workspaces |  |
+| wait_for_element_visible_ok | group-sort-workspaces | 30000 |
+| click_and_wait | group-sort-workspaces |  |
+| wait_for_text_present_ok | Users (5) | 30000 |
+| wait_for_text_present_ok | Groups (2) | 30000 |
+| text_like | qr/Groups \(2\).+%%samplegroup1%%.+%%groupwithmember%%/ |  |
+| wait_for_element_visible_ok | group-sort-workspaces | 3000 |
+| click_and_wait | group-sort-workspaces |  |
+| wait_for_text_present_ok | Users (5) | 30000 |
+| wait_for_text_present_ok | Groups (2) | 30000 |
+| text_like | qr/Groups \(2\).+%%groupwithmember%%.+%%samplegroup1%%/ |  |
+
+| *Comment* | Test Case: Business Control Panel Groups In Account - Click on a group |  |
+| wait_for_element_visible_ok | link=%%samplegroup1%% | 30000 |
+| click_and_wait | link=%%samplegroup1%% |  |
+| wait_for_text_present_ok | Users (3) | 30000 |
+| wait_for_text_present_ok | Accounts (2) | 30000 |
+| text_like | qr/Accounts \(2\).+%%mastergroupsacct%%/ism |  |
+| text_like | qr/Accounts \(2\).+%%isolatedacct%%/ism |  |
+
+| *Comment* | Test Case: Business Control Panel Groups In Account - Group Detail SORT by # of Workspaces |  |
+| wait_for_element_visible_ok | accountTable-orderBy-1 | 30000 |
+| click_ok | accountTable-orderBy-1 |  |
+
+| wait_for_text_present_ok | Users (3) | 30000 |
+| wait_for_text_present_ok | Accounts (2) | 30000 |
+| text_like | qr/Accounts \(2\).+%%mastergroupsacct%%.+%%isolatedacct%%/ |  |
+
+| *Comment* | Test Case: Business Control Panel Groups In Account - Group Detail SORT By # of Users |  |
+| wait_for_element_visible_ok | accountTable-orderBy-2 | 30000 |
+| click_and_pause | accountTable-orderBy-2 |  |
+| wait_for_text_present_ok | Users (3) | 30000 |
+| wait_for_text_present_ok | Accounts (2) | 30000 |
+| text_like | qr/Accounts \(2\).+%%mastergroupsacct%%.+%%isolatedacct%%/ |  |
+
+| *Comment* | Test Case: Business Control Panel Groups In Account - Group Detail SORT by # of Workspaces |  |
+| wait_for_element_visible_ok | accountTable-orderBy-1 | 30000 |
+| click_and_pause | accountTable-orderBy-1 |  |
+| wait_for_text_present_ok | Users (3) | 30000 |
+| wait_for_text_present_ok | Accounts (2) | 30000 |
+| text_like | qr/Accounts \(2\).+%%mastergroupsacct%%.+%%isolatedacct%%/ |  |
+
+| *Comment* | Test Case: Business Control Panel Groups In Account - Group Detail User Info |  |
+| wait_for_element_visible_ok | addToAccountLookahead | 30000 |
+| wait_for_element_visible_ok | link=Workspaces | 30000 |
+| wait_for_element_visible_ok | link=Primary Account | 30000 |
+| text_like | qr/Users \(3\).+%%e_isouser3%%.+%%e_isouser2%%.+%%e_isouser1%%/ |  |
+
+| *Comment* | Test Case: Business Control Panel Groups In Account TEARDOWN |  |
+| st-process-jobs |  |  |
+| delete-created-groups |  |  |
+| st-admin | delete-workspace --no-export --w %%workspace1%% | has been deleted |
+| st-admin | delete-workspace --no-export --w %%workspace2%% | has been deleted |
+| st-admin | delete-workspace --no-export --w %%workspace3%% | has been deleted |
+| st-admin | deactivate-user --e %%isouser1%% | has been deactivated |
+| st-admin | deactivate-user --e %%isouser2%% | has been deactivated |
+| st-admin | deactivate-user --e %%isouser3%% | has been deactivated |
+
+| delete-account | %%isolatedacct%% |  |
+| delete-account | %%mastergroupsacct%% |  |
+
+| *Comment* | Test Case: Business Control Panel Groups In Account COMPLETED |

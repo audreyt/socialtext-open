@@ -1,0 +1,21 @@
+[%# @COPYRIGHT@ -%]
+[% PROCESS lite/header.html %]
+<div data-role="header" data-inline="true" data-position="inline" data-theme="c">
+    <h4>[% loc('nav.search=wiki', ws.title) %]</h4>
+</div>
+    <form name="searchform"
+        method="get"
+        action="/m/search/[% ws.name %]"
+        enctype="application/x-www-form-urlencoded">
+    <div class="search" data-role="fieldcontain">
+        <input id="st-search-text" name="search_term" data-inline="true" type="search" value="[% search_term | html %]" />
+        <input data-inline="true" name="search" id="st-search-submit" value="[% loc('nav.search') %]" type="submit" />
+        <script>window.onload = function(){document.getElementById('st-search-text').focus()}</script>
+[% IF search_error %]
+<div>[% loc("search.error:") %] [% search_error %]</div>
+[% END %]
+[% PROCESS lite/page_list.html %]
+    </div>
+    </form>
+[% PROCESS lite/paging.html %]
+[% PROCESS lite/footer.html %]

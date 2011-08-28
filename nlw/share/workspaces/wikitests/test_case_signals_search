@@ -1,0 +1,182 @@
+| *Comment* | Test Case: Signals Search |
+
+* Fixture: SocialWidgets
+
+| enable-acct-plugin | signals | %%defaultaccount%% |
+
+| *Comment* | Test Case: Signals Search. Two users, lexicographically orderable |  |
+
+| set | a_username | `a-%%start_time%%@ken.socialtext.net` |
+| set | z_username | `z-%%start_time%%@ken.socialtext.net` |
+
+| set | a_name | Antiphonal Signaller %%start_time%% |
+| set | z_name | Zany Replier %%start_time%% |
+
+| create_user | %%a_username%% | %%password%% | %%defaultaccount%% | %%a_name%% |
+| create_user | %%z_username%% | %%password%% | %%defaultaccount%% | %%z_name%% |
+
+| st-logoutin | %%a_username%% | %%password%% |
+
+| *Comment* | Test Case: Signals Search. Send 2 signals %%a_username%% |  |
+| http-user-pass | %%a_username%% | %%password%% |
+| post-signal | NotAStopWord %%start_time%% 01 |  |
+| pause | 3000 |  |
+| post-signal | NotAStopWord %%start_time%% 12 |  |
+| *Comment* | Test Case: Signals Search. Process Jobs |  |
+| st_process_jobs | SignalIndex |  |
+
+| *Comment* | Test Case: Signals Search. Search 2 signals %%a_username%% |  |
+| open_ok | /?signals |  |
+| wait_for_element_visible_ok | st-search-action | 30000 |
+| wait_for_element_visible_ok | st-search-term | 30000 |
+| is_selected_ok | st-search-action | id=st-search-signals |
+| type_ok | st-search-term | %%start_time%% |
+| wait_for_element_visible_ok | st-search-submit | 30000 |
+| click_and_wait | st-search-submit |  |
+
+| *Comment* | Test Case: Signals Search. Process Jobs |  |
+| st_process_jobs | SignalIndex |  |
+
+| *Comment* | Test Case: Signals Search. Verify found 2 signals %%a_username%% |  |
+| text_like | Signals matching '%%start_time%%' |  |
+| text_like | NotAStopWord %%start_time%% 12 |  |
+| text_like | NotAStopWord %%start_time%% 01 |  |
+
+| *Comment* | Test Case: Signals Search. login as %%z_username%% |  |
+| st-logoutin | %%z_username%% | %%password%% |
+
+| *Comment* | Test Case: Signals Search. Send 2 signals %%z_username%% |  |
+| http-user-pass | %%z_username%% | %%password%% |
+| post-signal | NotAStopWord %%start_time%% 21 |  |
+| pause | 3000 |  |
+| post-signal | NotAStopWord %%start_time%% 32 |  |
+
+| *Comment* | Test Case: Signals Search. Process Jobs |  |
+| st_process_jobs | SignalIndex |  |
+
+| *Comment* | Test Case: Signals Search. Search 2 signals %%z_username%% |  |
+| open_ok | /?signals |  |
+| wait_for_element_visible_ok | st-search-action | 30000 |
+| wait_for_element_visible_ok | st-search-term | 30000 |
+| is_selected_ok | st-search-action | id=st-search-signals |
+| type_ok | st-search-term | %%start_time%% |
+| wait_for_element_visible_ok | st-search-submit | 30000 |
+| click_and_wait | st-search-submit |  |
+
+| *Comment* | Test Case: Signals Search. Verify found 4 signals %%z_username%% |  |
+| text_like | Signals matching '%%start_time%%' |  |
+| text_like | NotAStopWord %%start_time%% 32 |  |
+| text_like | NotAStopWord %%start_time%% 21 |  |
+| text_like | NotAStopWord %%start_time%% 12 |  |
+| text_like | NotAStopWord %%start_time%% 01 |  |
+
+| *Comment* | Test Case: Signals Search. Sort. |  |
+| wait_for_element_visible_ok | sort-picker | 30000 |
+| select_and_wait | sort-picker | label=Sender |
+| text-like | qr/%%start_time%% 12.+%%start_time%% 01.+%%start_time%% 32.+%%start_time%% 21/ism |  |
+
+| text-like | qr/%%a_name%%.+%%a_name%%.+%%z_name%%.+%%z_name%%/ism |  |
+
+| select_and_wait | sort-picker | label=Newest |
+| text-like | qr/%%start_time%% 32.+%%start_time%% 21.+%%start_time%% 12.+%%start_time%% 01/ism |  |
+
+| text-like | qr/%%z_name%%.+%%z_name%%.+%%a_name%%.+%%a_name%%/ism |  |
+
+| select_and_wait | sort-picker | label=Oldest |
+| text-like | qr/%%start_time%% 01.+%%start_time%% 12.+%%start_time%% 21.+%%start_time%% 32/ism |  |
+
+| text-like | qr/%%a_name%%.+%%z_name%%/ism |  |
+
+| *Comment* | Test Case: Signals Search. Relevance. Send a more relevant signal AND a newer signal |  |
+| http-user-pass | %%z_username%% | %%password%% |
+| post-signal | MoreRelevant %%start_time%% %%start_time%% %%start_time%% |  |
+| pause | 3000 |  |
+| post-signal | LessRelevant %%start_time%% |  |
+| pause | 5000 |  |
+
+| *Comment* | Test Case: Signals Search. Process Jobs |  |
+| st_process_jobs | SignalIndex |  |
+
+
+
+| *Comment* | Test Case: Signals Search. Relevance. Find a more relevant signal |  |
+| open_ok | /?signals |  |
+| wait_for_element_visible_ok | st-search-action | 30000 |
+| wait_for_element_visible_ok | st-search-term | 30000 |
+| is_selected_ok | st-search-action | id=st-search-signals |
+| type_ok | st-search-term | %%start_time%% |
+| wait_for_element_visible_ok | st-search-submit | 30000 |
+| click_and_wait | st-search-submit |  |
+
+| *Comment* | Test Case: Signals Search. Verify found more relevant signal |  |
+| text_like | Signals matching '%%start_time%%' |  |
+| select_and_wait | sort-picker | label=Relevance |
+| text-like | qr/MoreRelevant %%start_time%% %%start_time%% %%start_time%%.+%%start_time%% 12/ism |  |
+
+| *Comment* | Test Case: Signals Search. Verify relevant signal not newest signal |  |
+| select_and_wait | sort-picker | label=Newest |
+| text-like | qr/LessRelevant %%start_time%%.+MoreRelevant %%start_time%% %%start_time%% %%start_time%%.+%%start_time%% 12/ism |  |
+
+| *Comment* | Test Case: Signals Search. Delete irrelevant signal and search again |  |
+| open_ok | /?signals |  |
+| st-name-widget | 1 | siggy |
+| st-select-widget-frame | siggy |  |
+| wait_for_text_present_ok | LessRelevant %%start_time%% | 30000 |
+| wait_for_element_visible_ok | //a[@class='hoverLink hideLink'] | 10000 |
+| click_ok | //a[@class='hoverLink hideLink'] |  |
+| verifyConfirmation | Are you sure you want to delete this Signal?\nYou cannot undelete it. |  |
+| wait_for_text_not_present_ok | LessRelevant %%start_time%% | 10000 |
+| select_frame | relative=parent |  |
+
+| *Comment* | Test Case: Signals Search. Process Jobs |  |
+| st_process_jobs | SignalIndex |  |
+
+| *Comment* | Test Case: Signals Search. re-open Signals to check hidden deleted signal |  |
+| open_ok | /?signals |  |
+| wait_for_element_visible_ok | st-search-action | 30000 |
+| wait_for_element_visible_ok | st-search-term | 30000 |
+| is_selected_ok | st-search-action | id=st-search-signals |
+| type_ok | st-search-term | %%start_time%% |
+| wait_for_element_visible_ok | st-search-submit | 30000 |
+| click_and_wait | st-search-submit |  |
+
+| *Comment* | Test Case: Signals Search. Verify irrelevant signal deleted |  |
+| wait_for_text_present_ok | Signals matching '%%start_time%%' | 10000 |
+| text_like | qr/MoreRelevant %%start_time%% %%start_time%% %%start_time%%.+%%start_time%% 12/ism |  |
+| wait_for_text_not_present_ok | LessRelevant %%start_time%% | 10000 |
+
+| *Comment* | Test Case: Signals Search. Search for Private Signal to %%z_username%% |
+| http-user-pass | %%a_username%% | %%password%% |
+| post-signal | d {user: %%z_username%%} Private Signal %%start_time%% |
+| st-process-jobs | SignalIndex |  |
+| open_ok | /?signals |  |
+| wait_for_element_visible_ok | st-search-action | 30000 |
+| wait_for_element_visible_ok | st-search-term | 30000 |
+| type_ok | st-search-term | Private Signal |
+| wait_for_element_visible_ok | st-search-submit | 30000 |
+| click_and_wait | st-search-submit |  |
+| text-like | privately to %%z_name%% |  |
+
+| *Comment* | Test Case: Signal Search. Relevance of Tags |  |
+| post-signal | #%%start_time%% MoreRelevanter NotAStopWord 05 |  |
+| post-signal | #%%start_time%% #%%start_time%% #%%start_time%% MostRelevant NotAStopWord 05 |  |
+| post-signal | #%%start_time%% #%%start_time%% MoreererRelevanter NotAStopWord 05 |  |
+| post-signal | Lower Relevance %%start_time%% |  |
+| pause | 3000 |  |
+| st_process_jobs | SignalIndex |  |
+| pause | 4000 |  |
+| open_ok | /?signals |  |
+| wait_for_element_visible_ok | st-search-action | 30000 |
+| wait_for_element_visible_ok | st-search-term | 30000 |
+| is_selected_ok | st-search-action | id=st-search-signals |
+| type_ok | st-search-term | %%start_time%% |
+| wait_for_element_visible_ok | st-search-submit | 30000 |
+| click_and_wait | st-search-submit |  |
+
+| *Comment* | Test Case: Signals Search. Verify tag more relevant than 2x signals in body |  |
+| text_like | Signals matching '%%start_time%%' |  |
+| select_and_wait | sort-picker | label=Relevance |
+| text-like | //body | qr/MostRelevant.+MoreererRelevanter.+MoreRelevanter/ism |
+| text-like | //body | qr/MostRelevant.+MoreererRelevanter.+MoreRelevanter.+MoreRelevant %%start_time%% %%start_time%% %%start_time%%.+Lower Relevance %%start_time%%/ism |
+
+| *Comment* | Test Case: Signals Search COMPLETED |

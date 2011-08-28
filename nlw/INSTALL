@@ -1,0 +1,314 @@
+INSTALL -- How to install Socialtext Open
+
+@COPYRIGHT@
+
+== Overview ==
+
+Thanks for downloading Socialtext Open. 
+
+Currently, you can install Socialtext Open on Ubuntu in under an hour, 
+following the instructions in INSTALL.ubuntu.   
+
+Socialtext Open has a huge number of capabilities. Installation on platforms 
+other than Ubuntu are possible, but can be complicated and may take some time.  
+We trust you'll find it worth the effort.
+
+Here's a high-level overview to installing Socialtext Open, with
+pointers to more detailed information.
+
+* Install development tools
+
+    Due to the number of dependencies, you will likely need to install
+    the basic set of development tools and libraries appropriate for
+    your version/flavor of Unix/Linux.  At a minimum, you will need
+    make and a c compiler.
+
+* Install apache-perl
+
+    apache-perl is the name of the Debian package that contains
+    Apache1 with mod_perl support.  We've kept that nomenclature.
+    See docs/INSTALL.apache-perl for instructions on how to build
+    your own from source if your distribution does not include such
+    a package.
+
+* Install Apache2; needed for the dual-Apache proxy setup.
+
+    In Debian, the package to install is apache2-mpm-prefork.  Other
+    distributions may have others.  It's important that it include
+    the internal Apache proxy server modules built for it.
+
+* Install the Freetype libraries, libfreetype6-dev
+
+    Socialtext generates images on the fly for the Wikiwyg editor.  It
+    uses some provided fonts and the Freetype system to do so.
+
+* Install, configure and start PostgreSQL
+
+    See docs/INSTALL.postgres for details
+
+* Install the CPAN dependencies and optional programs
+
+    See docs/INSTALL.dependencies for details, or you can let the
+    configuration step do it for you.
+
+* Configure, build and install Socialtext
+
+    See "How to: Configure Socialtext" later in this document.
+
+* Upgrade your Socialtext 1.x database to 2.x, if appropriate.
+
+    See UPGRADE if necessary.
+
+* Create your Socialtext users
+
+    See "How to: Create your Socialtext users" later in this document
+
+* Start Socialtext
+
+    See "How to: Start Socialtext" later in this document
+
+* Understand the support programs
+
+    See "Support programs" later in this document
+
+
+== How to: Configure Socialtext ==
+
+Socialtext Open is a Perl web application that makes heavy use of mod_perl
+and CPAN.  Some 150+ CPAN modules are required, some of which don't have
+prebuilt packages for your OS (or the prebuilt packages are too old).
+
+Installation starts with running a simple program, "configure":
+
+    ./configure --socialtext-open=1
+
+These configuration options tell the configuration script that you
+are running an open source installation (which minimizes the rewrite
+rules in your apache configuration file).
+
+When you run it, you're presented with a list of settings that the files
+are built with:
+
+    $ ./configure --socialtext-open=1
+    Configuration Settings:
+             BINDIR = /usr/local/bin
+           CACHEDIR = /var/cache/socialtext
+            CONFDIR = /etc/socialtext
+    etc...
+
+You can modify these settings by using either environment variables or command
+line switches to configure.  For example:
+
+    $ ./configure --webroot=/var/www/myst
+    or
+    $ WEBROOT=/var/www/myst ./configure
+
+Use ./configure --help for help or ./configure --varlist for a list
+of variables you can set.  Please check the configuration variables
+carefully.
+
+Sometimes configure can't determine your fully-qualified hostname.
+If your server is called myserver, and you're in the domain
+mydomain.com, your HOSTNAME may just be HOSTNAME=myserver, which
+may not resolve correctly for others outside of mydomain.com.  You'll
+want to force the hostname to myserver.mydomain.com, like so:
+
+    $ ./configure --hostname=myserver.mydomain.com
+
+Once the Makefile has been created, you can then build, test and
+install.  Run make to build the software:
+
+    $ make
+    ... # much building
+
+Then you can optionally run make test to test the build.  You'll
+need to have a special testing database set up for the tests to
+work with.  See docs/INSTALL.postgres for details.
+
+    $ make test
+    ... # much testing
+
+Finally, install Socialtext Open.
+
+    $ sudo make install
+    ... # much installing
+
+You have now installed the software parts of Socialtext Open,
+although it has not yet started at this point.
+
+
+== How to: Create your Socialtext users ==
+
+After you've installed Socialtext, you'll have to create at least
+one user and one workspace.  From the command line, as the Apache
+user, you use the st-admin command-line tool.
+
+In these examples, we assume the environment variable APACHE_USER
+has the name that Apache 1 will be running under, probably "www-data".
+First, create a user for yourself:
+
+    sudo -u $APACHE_USER \
+        st-admin create-user \
+        --email mymail@example.com \
+        --password secretpublic \
+        --first-name Pete \
+        --last-name Shelley
+
+Then add yourself to the help workspace as a workspace admin.  The
+"help" workspace is the only one that exists at first.
+
+    sudo -u $APACHE_USER \
+        st-admin add-workspace-admin \
+        --email mymail@example.com \
+        --workspace help
+
+== How to: Start Socialtext ==
+
+Now you are ready to start Socialtext.  Make sure that you're not
+running an instance of Apache already.  If you are, your Socialtext
+instance of Apache will quietly fail.
+
+Start the Socialtext Apache and the ceqlotron:
+
+    $ sudo /etc/init.d/st-apache start
+        # Starts Apache 1.3 + mod_perl using the Socialtext configuration.
+    $ sudo /etc/init.d/ceqlotron start
+        # Starts the Change Queue daemon, which processes wiki events.
+
+At this point, you can point your browser to your domain:
+
+    http://myserver.mydomain.com/
+
+Log in with the user and password you set when you created your
+Socialtext user.  You'll have full administrative privileges, and
+can create workspaces at will under the "Settings" menu.
+
+Most likely you will spend most of your time struggling to get Socialtext's
+dependencies installed.  The dependencies come in two flavours: CPAN
+dependencies and external system dependencies, which are both described below.
+
+
+=== Support programs ===
+
+Socialtext Open includes some utility programs for administering
+your Socialtext installation, users and workspaces, as well as the
+ceqlotron.  All Socialtext administration tools start with "st-",
+and all ceqlotron-related tools start with "ceq-".
+
+All programs support the --help command.  You can also say "man
+programname" to get more information.
+
+* st-admin -- The CLI interface to user and administration tasks.
+This is what you can use to create and delete users, workspaces,
+categories and so on.
+
+* st-config -- Allows you to update configuration settings for
+Socialtext without having to manually edit configuration files.
+
+* ceq-stat -- Gives the status of the ceqlotron's queue.
+
+* ceq-read -- Lists all the events in the ceqlotron's queue.
+
+* ceq-rm -- Removes events from the ceqlotron's queue
+
+
+Also included with the Socialtext Open distribution is the dev-bin/
+directory, containing a number of utilities that we use at Socialtext,
+but are not installed with "make install".  You probably won't use
+them during your day-to-day administration of your installation,
+but we thought they might be of interest to open source developers.
+Be careful here, as some utilities may be dangerous to your data,
+or may even be out of date.  They are meant only for developers,
+and are not supported.
+
+
+== Getting help ==
+
+If you have problems installing Socialtext Open, please visit one
+of these online resources.
+
+http://www.socialtext.net/stoss/
+    The home wiki workspace for all open source related to Socialtext,
+    including the Socialtext Open product you've just downloaded.
+
+http://sourceforge.net/projects/socialtext
+    SourceForge is the host of the downloads, bug tracker and (soon)
+    source code repository for Socialtext Open.
+
+http://sourceforge.net/tracker/?group_id=170460
+    The requests/bugs tracking system on SourceForge.
+
+If all else fails, or you have other questions about Socialtext Open,
+you can also contact andy.lester [at] socialtext.com.
+
+
+== Improvements and bug reports ==
+
+We're always looking to improve documentation.  If you've got
+suggestions, problems, frustrations, please make a note of them at
+https://www.socialtext.net/stoss/index.cgi?install_docs_improvements.
+
+
+== Other INSTALL docs you may find useful
+
+This document is the main overview for installing Socialtext Open.
+There is also an entire set of docs/INSTALL.* documents that may
+also be helpful.
+
+* docs/INSTALL.apache-perl
+
+    How to build Apache1 + mod_perl
+
+* docs/INSTALL.apt-get
+
+    Instructions for using the Socialtext apt repository
+
+* docs/INSTALL.ceqlotron
+
+    How to install Socialtext's ceqlotron
+
+* docs/INSTALL.dependencies
+
+    Installing Socialtext's dependencies
+
+* docs/INSTALL.dual-apache
+
+    How to use a dual-Apache proxying setup
+
+* docs/INSTALL.email
+
+    How to install email support for Socialtext Open
+
+* docs/INSTALL.fedora
+
+    Fedora Core-specific notes for Socialtext Open
+
+* docs/INSTALL.freebsd
+
+    FreeBSD-specific notes for Socialtext Open
+
+* docs/INSTALL.postgres
+
+    How to install PostgreSQL for Socialtext
+
+* docs/INSTALL.st-dev
+
+    How to set up a Socialtext development environment
+
+* docs/INSTALL.suse
+
+    SUSE-specific notes for Socialtext Open
+
+* docs/INSTALL.troubleshooting
+
+    Troubleshooting installation
+
+* docs/INSTALL.yum
+
+    Installing dependencies with Yum
+
+
+# END OF DOCUMENT
+# vi: set ts=8 sts=4 sw=4 expandtab
+# -*- text -*-
+

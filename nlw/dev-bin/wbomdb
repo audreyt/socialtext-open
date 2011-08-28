@@ -1,0 +1,29 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+# "Who Be On My DB?"
+
+use strict;
+use warnings;
+use User::pwent;
+use DBI; # XXX remind me not to propagate too many of these
+
+my $user = getpwuid($<)->name;
+
+my $db = shift;
+my $should_kill = shift; # just a boolean
+
+if (not defined $db or not length $db) {
+    $db = "NLW_$user";
+}
+elsif ($db eq 't') {
+    $db = "NLW_${user}_testing";
+}
+
+my $dbh = DBI->connect("dbi:Pg:dbname=$db") or die "$!";
+my $query = "select procpid from pg_stat_activity where datname = '$db'";
+print STDERR "Looking at $db...\n";
+my $sth = $dbh->prepare($query);
+$sth->execute;
+my @pids;
+push @pids, $_->{procpid} while $_ = $sth->fetchrow_hashref();
+print join "\n", @pids;

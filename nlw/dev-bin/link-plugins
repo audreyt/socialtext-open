@@ -1,0 +1,12 @@
+#!/usr/bin/env perl
+
+# XXX: DEPRECATED - Use "link-externals" instead
+
+use strict;
+use warnings;
+use FindBin;
+
+my $plugin = pop @ARGV;
+my $cmd  = "$FindBin::Bin/link-externals";
+my @args = (@ARGV, '--plugin' => $plugin);
+exec($cmd, @args);

@@ -1,0 +1,18 @@
+[%# @COPYRIGHT@ -%]
+[% save_button_value = loc('Create') %]
+[% PROCESS element/settings/start %]
+<tr>
+  <td>
+    <div class="workspace-entry-header">[% loc('Create A Weblog') %]</div>
+    <div class="workspace-entry">
+      <div class="workspace-entry-p">
+        [% loc('Please give your weblog a name. If the name you provide does not end with "Blog" or "Weblog", the system will add "Blog" to the name you provide. After you click "Create", you\'ll be taken right to the new weblog.') %]
+        </div>
+      <div class="settings-help">([% loc('required') %])</div>
+      <input type="text" name="weblog_title" value="[% loc("Sample Weblog") %]" size="50" />
+      <div class="settings-comment">[% loc('Example: Sales Team Weblog') %]</div>
+    </div>
+  </td>
+</tr>
+
+[% PROCESS  element/settings/end %]

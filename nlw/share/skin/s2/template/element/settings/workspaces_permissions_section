@@ -1,0 +1,127 @@
+[%# @COPYRIGHT@ -%]
+[% PROCESS element/settings/start %]
+[% USE fillinform %]
+[% FILTER fillinform fdat => fill_in_data %]
+<form method="post" action="[% script_name %]" enctype="application/x-www-form-urlencoded">
+ <input type="hidden" name="action" value="[% hub.action %]" />
+ <input type="hidden" name="preferences_class_id" value="[% preferences_class_id %]" />
+ <table id="[% settings_table_id %]">
+  <tr>
+   <td>
+    [% loc('You can choose the level of privacy for your workspace. For more information on choosing the level of privacy for your workspace, see') %] 
+    [% SET WS_SUFFIX="-${loc_lang}" %]
+    [% SET WS_SUFFIX="" IF loc_lang == 'en' %]
+    <a href="/help[% WS_SUFFIX %]/index.cgi?[% loc('roles_and_permission_sets#standard_workspace_types') %]">[% loc('Roles and Permission Sets (standard workspace types)') %]</a>.
+   </td>
+  </tr>
+  <tr>
+   <td>
+    [% loc('Do you want to set up this workspace as:') %]
+    </td>
+  </tr>
+  <tr>
+   <td>
+    <table>
+     <tr valign="top">
+      <td>
+       <input type="radio" name="permission_set_name" value="member-only" />
+      </td>
+      <td>
+       <strong>[% loc('Private') %]</strong> - [% loc('only invited users can access the workspace') %]
+       </td>
+     </tr>
+
+     <tr valign="top">
+      <td>
+       <input type="radio" name="permission_set_name" value="public-authenticate-to-edit" />
+      </td>
+      <td>
+       <strong>[% loc('Public login-to-edit') %]</strong> - [% loc('anybody can see the workspace, users can register to be able to edit') %]
+       </td>
+     </tr>
+
+     <tr valign="top">
+      <td>
+       <input type="radio" name="permission_set_name" value="public-read-only" />
+      </td>
+      <td>
+       <strong>[% loc('Public read-only') %]</strong> - [% loc('anybody can see the workspace, only privately invited members can edit') %]
+       </td>
+     </tr>
+
+     <tr valign="top">
+      <td>
+       <input type="radio" name="permission_set_name" value="public-comment-only">
+      </td>
+      <td>
+       <strong>[% loc('Public read-and-comment-only') %]</strong> - [% loc('anybody can see the workspace and make comments, only privately invited members can edit') %]
+       </td>
+     </tr>
+
+     <tr valign="top">
+      <td>
+       <input type="radio" name="permission_set_name" value="public" />
+      </td>
+      <td>
+       <strong>[% loc('Fully public') %]</strong> - [% loc('anybody can see and edit pages') %] [% UNLESS is_appliance %]
+       <br />
+       <strong>[% loc('Warning') %]</strong>: [% loc('if you use this setting, the workspace is likely to be spammed') %]
+     [% END %]
+      </td>
+     </tr>
+
+     [% IF is_appliance %]
+     <tr valign="top">
+      <td>
+       <input type="radio" name="permission_set_name" value="intranet" />
+      </td>
+      <td>
+       <strong>[% loc('Intranet') %]</strong> - [% loc('anybody can see and edit pages, upload files and send email') %]
+       </td>
+     </tr>
+     [% END %]
+
+     [% IF current_permission_set_name == "custom" %]
+     <tr valign="top">
+      <td>
+       <input type="radio" name="permission_set_name" value="custom" />
+      </td>
+      <td>
+       <strong>[% loc('Custom privacy setting') %]</strong>
+      </td>
+     </tr>
+     [% END %]
+    </table>
+   </td>
+  </tr>
+  <tr>
+   <td>
+    [% loc('Who can send email to this workspace?') %]
+    </td>
+  </tr>
+  <tr>
+   <td>
+    <table>
+     <tr valign="top">
+      <td>
+       <input type="radio" name="guest_has_email_in" value="1" />
+      </td>
+      <td>
+       [% loc('Anyone can send email to this workspace.') %]
+       </td>
+     </tr>
+     <tr valign="top">
+      <td>
+       <input type="radio" name="guest_has_email_in" value="0" />
+      </td>
+      <td>
+       [% SET people_role = permission_set_name.match('public-(?:read|comment)-only') ? loc('workspace members') : loc('registered users') %]
+       [% loc('Only [_1] can send email to this workspace.', people_role ) %] 
+      </td>
+     </tr>
+    </table>
+   </td>
+  </tr>
+[% PROCESS element/settings/end %]
+</form>
+[% END %]

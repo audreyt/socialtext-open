@@ -1,0 +1,5 @@
+#!/bin/bash -e
+
+DB_USER=`st-config echo db_user`
+DB_SCHEMA=`st-config echo db_name`
+psql -U $DB_USER -d $DB_SCHEMA -t -c 'CREATE UNIQUE INDEX "UserId___driver_key___driver_key___driver_unique_id" ON "UserId" ( driver_key, driver_unique_id )'

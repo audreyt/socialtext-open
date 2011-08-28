@@ -1,0 +1,14 @@
+#!/bin/bash
+
+DB_USER=`st-config echo db_user`
+DB_SCHEMA=`st-config echo db_name`
+
+COUNT=`psql -U $DB_USER -d $DB_SCHEMA -t -c 'SELECT COUNT(workspace_id) FROM "Workspace" WHERE enable_unplugged = false;' | grep "." | awk "{print $1}"`
+
+if [ $COUNT != '0' ]; then
+  echo "Enable Unplugged on all workspaces failed!"
+  exit -1
+fi
+
+echo "Unplugged Enabled on all workspaces."
+exit 0

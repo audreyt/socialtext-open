@@ -1,0 +1,5 @@
+<p>[% loc('edit.self-join=group?', 
+'<a target="_blank" href="/st/group/' + group.group_id + '">' + group.name + '</a>') %]</p>
+
+<input type="checkbox" name="join-group-[% group.group_id %]"
+       value="[% group.group_id %]" checked="checked" style="visibility:hidden;" />

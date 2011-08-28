@@ -1,0 +1,24 @@
+## Test fix for {bz: 3769}
+
+* Fixture: SocialRest
+
+
+| set | thisacct  | foo%%start_time%%                     |
+| set | thisuser  | user%%start_time%%@ken.socialtext.net |
+| set | thisgroup | group%%start_time%%                   |
+| set | thisws    | ws%%start_time%%                      |
+
+| create-account         | %%thisacct%%  |              |              |
+| create-user            | %%thisuser%%  | password     | %%thisacct%% |
+| create-workspace       | %%thisws%%    | %%thisacct%% |              |
+| create-group           | %%thisgroup%% | %%thisacct%% |              |
+| add-group-to-workspace | %%group_id%%  | %%thisws%%   |              |
+| add-member             | %%thisuser%%  | %%thisws%%   |              |
+| add-user-to-group      | %%thisuser%%  | %%group_id%% |              |
+
+| http-user-pass | %%thisuser%%             | password         |
+| get            | /data/groups/%%group_id%%/users | application/json |
+| code-is        | 200                      |                  |
+| json-parse     |                          |                  |
+| json-path-like | $[0].workspace_count     | 1                |
+

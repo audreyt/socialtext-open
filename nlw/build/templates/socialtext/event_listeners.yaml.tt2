@@ -1,0 +1,24 @@
+# The keys are event types, the value for each is a list of classes which
+# listen for such events.
+#
+# For extremely large installations, it is probably preferable to uncomment
+# the appropriate block
+---
+Attachment:
+    - Socialtext::EventListener::IndexAttachment::IndexAttachment
+    - Socialtext::EventListener::IndexAttachment::RampupIndexAttachment
+IndexAttachment:
+    - Socialtext::EventListener::IndexAttachment::IndexAttachment
+    - Socialtext::EventListener::IndexAttachment::RampupIndexAttachment
+RampupIndexAttachment:
+    - Socialtext::EventListener::IndexAttachment::RampupIndexAttachment
+Page:
+    - Socialtext::EventListener::IndexPage::RampupIndexPage
+    - Socialtext::EventListener::Combined::STAdmin
+IndexPage:
+    - Socialtext::EventListener::IndexPage::IndexPage
+    - Socialtext::EventListener::IndexPage::RampupIndexPage
+RampupIndexPage:
+    - Socialtext::EventListener::IndexPage::RampupIndexPage
+Workspace:
+    - Socialtext::EventListener::Workspace::IndexWorkspace

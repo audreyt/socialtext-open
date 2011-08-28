@@ -1,0 +1,37 @@
+Workspaces should be allowed to begin with the word "challenge" (addresses Bug {bz: 3911})
+
+Bug was that if a WS started with the word "challenge" then it was getting
+caught by a regex meant for the Challenger and wasn't properly redirecting off
+to the WS.
+
+*NOTE:* this test is related to "challenge-redirect-mobile.wiki"; if you add any new scenarios here please keep the other in sync!
+
+* Fixture: SocialRest
+
+| *Comment*        | Create a WS that begins with "challenge" |                          |
+| set              | ws_name                                  | challenge-%%start_time%% |
+| create-workspace | %%ws_name%%                              |                          |
+| http-user-pass   |                                          |                          |
+
+| *Comment*   | WS access doesn't trigger Challenger |                                                        |
+| GET         | /%%ws_name%%                         |                                                        |
+| code-is     | 301                                  |                                                        |
+| header-like | Location                             | /%%ws_name%%/                                          |
+
+| GET         | /%%ws_name%%/                        |                                                        |
+| code-is     | 302                                  |                                                        |
+| header-like | Location                             | /nlw/login.html?redirect_to=%2F%%ws_name%%%2Findex.cgi |
+
+| *Comment*   | Challenger access still OK |                 |
+| GET         | /challenge                 |                 |
+| code-is     | 302                        |                 |
+| header-like | Location                   | /nlw/login.html |
+
+| *Comment*   | Challenger access w/params still OK |                                               |
+| GET         | /challenge?/st/dashboard            |                                               |
+| code-is     | 302                                 |                                               |
+| header-like | Location                            | /nlw/login.html?redirect_to=%2Fst%2Fdashboard |
+
+| GET         | /challenge?/%%ws_name%%             |                                               |
+| code-is     | 302                                 |                                               |
+| header-like | Location                            | /nlw/login.html?redirect_to=%2F%%ws_name%%    |

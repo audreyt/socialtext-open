@@ -1,0 +1,33 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[% SET workspace_address = '<a href="/' _ workspace.name _ '/">' _ workspace.uri _ '</a>' %]
+<dl class="form">
+  <dt>
+    <label>
+      [% loc('wiki.created!') %]
+    </label>
+  </dt>
+  <dd>
+    [% loc('wiki.created=title,uri', workspace.title, workspace_address) %]
+  </dd>
+  <dd>
+    [% loc("wiki.created:") %]
+  </dd>
+  <dd>
+    <ul class="normal">
+      <li>[% loc('wiki.home=name,title', workspace.name, workspace.title) %]</li>
+      <li>[% loc('wiki.invite=name,title', workspace.name, workspace.title) %]</li>
+      <li>
+        [% loc('config.review-settings=wiki:', workspace.title) %]
+        <ul>
+          <li><a href="/[% workspace.name %]/?action=workspaces_settings_appearance">[% loc('wiki.appearance') %]</a></li>
+          <li><a href="/[% workspace.name %]/?action=workspaces_settings_features">[% loc('wiki.feature') %]</a></li>
+          <li><a href="/[% workspace.name %]/?action=workspaces_permissions">[% loc('wiki.privacy') %]</a></li>
+        </ul>
+      </li>
+    </ul>
+  </dd>
+  <dd>
+    [% loc('wiki.visit-later=wiki', workspace.title) %]
+  </dd>
+</dl>

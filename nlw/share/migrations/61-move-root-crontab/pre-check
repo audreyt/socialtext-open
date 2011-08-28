@@ -1,0 +1,9 @@
+#!/bin/bash -e
+
+if [ -e /var/spool/cron/crontabs/root ]; then
+    echo "Moving crontab file..."
+    exit 0
+fi
+
+echo "No crontab, skipping."
+exit 1

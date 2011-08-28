@@ -1,0 +1,35 @@
+[% USE JSON %]
+<link rel="stylesheet" href="[% share %]/css/container.css" type="text/css" media="screen" />
+
+<script src="[% share %]/javascript/shindig/container-default.js.gz"></script>
+<script src="[% share %]/javascript/canvas.js"></script>
+
+[% INCLUDE widget/syndicator %]
+
+[% FOR script = container.features %]
+    <script src="[% script %]"></script>
+[% END %]
+
+<script>
+    var containerID = "[% container.id %]";
+    jQuery(function() {
+        var canvas = new Canvas();
+        canvas.setup(
+            [% container.gadgets.json || [] %],
+            [% profile.gadgets.json || [] %],
+            [% edit_profile.gadgets.json || [] %]
+        );
+    });
+</script>
+
+<style>
+    div#contentColumns div#contentLeft {
+        width: 20%;
+    }
+    div#contentColumns div#contentLeft .widgetContent {
+        padding: 0 20px;
+    }
+    body#dashBoard div#contentColumns div#contentRight {
+        width: 78%;
+    }
+</style>

@@ -1,0 +1,101 @@
+
+* Fixture: SocialRest
+
+| standard-test-setup |
+
+| set              | shiny     | shiny%%start_time%% |
+
+| set-business-admin | %%username%% | 1            |
+| http-user-pass     | %%username%% | %%password%% |
+
+################
+| *Comment* | Set up users |
+
+| set         | user1     | user1%%start_time%%@q.q |
+| set         | user2     | user2%%start_time%%@q.q |
+| set         | user3     | user3%%start_time%%@q.q |
+| create-user | %%user1%% | password                |
+| create-user | %%user2%% | password                |
+| create-user | %%user3%% | password                |
+
+################
+| *Comment* | Set up group |
+
+| create-group      | %%shiny%%       |              |
+| add-user-to-group | %%user3%%       | %%group_id%% |
+
+################
+| *Comment* | Set up workspace |
+
+| create-workspace       | %%shiny%%    |           |
+| add-member             | %%user1%%    | %%shiny%% |
+| add-member             | %%user2%%    | %%shiny%% |
+| add-group-to-workspace | %%group_id%% | %%shiny%% |
+
+################
+| *Comment* | Make one user an admin |
+
+| PUT-json | /data/workspaces/%%shiny%%/users/%%user1%% | {"role_name":"admin"}  |
+| code-is  | 204                                        |                        |
+
+| GET-json     | /data/workspaces/%%shiny%%/users?all=1 |        |
+| code-is      | 200                                    |        |
+| json-parse   |                                        |        |
+| json-path-is | $[0].role_name                         | admin  |
+| json-path-is | $[1].role_name                         | member |
+
+################
+| *Comment* | Removing last admin fails |
+
+| PUT-json | /data/workspaces/%%shiny%%/users/%%user1%% | {"role_name":"member"} |
+| code-is  | 409                                        |                        |
+
+| DELETE  | /data/workspaces/%%shiny%%/users/%%user1%% |
+| code-is | 409                                        |
+
+| GET-json     | /data/workspaces/%%shiny%%/users?all=1 |        |
+| code-is      | 200                                    |        |
+| json-parse   |                                        |        |
+| json-path-is | $[0].role_name                         | admin  |
+| json-path-is | $[1].role_name                         | member |
+
+################
+| *Comment* | Adding another admin first works |
+
+| PUT-json | /data/workspaces/%%shiny%%/users/%%user2%% | {"role_name":"admin"}  |
+| code-is  | 204                                        |                        |
+| PUT-json | /data/workspaces/%%shiny%%/users/%%user1%% | {"role_name":"member"} |
+| code-is  | 204                                        |                        |
+
+| GET-json     | /data/workspaces/%%shiny%%/users?all=1     |                        |
+| code-is      | 200                                        |                        |
+| json-parse   |                                            |                        |
+| json-path-is | $[0].role_name                             | member                 |
+| json-path-is | $[1].role_name                             | admin                  |
+
+################
+| *Comment* | Switch from user to group |
+
+| PUT-json | /data/workspaces/%%shiny%%/users/%%user2%%     | {"role_name":"member"} |
+| code-is  | 409                                            |                        |
+| PUT-json | /data/workspaces/%%shiny%%/groups/%%group_id%% | {"role_name":"admin"}  |
+| code-is  | 204                                            |                        |
+| PUT-json | /data/workspaces/%%shiny%%/users/%%user2%%     | {"role_name":"member"} |
+| code-is  | 204                                            |                        |
+
+################
+| *Comment* | Make the group a regular member without another admin existing |
+
+| PUT-json | /data/workspaces/%%shiny%%/groups/%%group_id%% | {"role_name":"member"} |
+| code-is  | 409                                            |                        |
+
+| DELETE  | /data/workspaces/%%shiny%%/groups/%%group_id%% |
+| code-is | 409                                            |
+
+################
+| *Comment* | Make a user an admin first |
+
+| PUT-json | /data/workspaces/%%shiny%%/users/%%user2%%     | {"role_name":"admin"}  |
+| code-is  | 204                                            |                        |
+| PUT-json | /data/workspaces/%%shiny%%/groups/%%group_id%% | {"role_name":"member"} |
+| code-is  | 204                                            |                        |

@@ -1,0 +1,52 @@
+#!/bin/bash
+# @COPYRIGHT@
+
+# Remove the indexes for one, some or all workspaces in a system.
+# 
+# If --all is provided, all workspaces are handled.
+#
+# If other arguments are provided, they should be a space separated list
+# of workspace names.
+#
+# This script is designed to be used in other shell scripts.
+
+USAGE="usage: ./cleanup-index-files [--all] || [[workspace name] [workspace name]]"
+
+if [ "$USER" == "www-data" ]
+    then
+	ST_CMD=st-admin
+    else
+	ST_CMD=$(dirname $0)/../bin/st-admin
+fi
+
+WORKSPACES="${@}"
+
+# if arg is --all get all the workspaces
+if [ "$WORKSPACES" = "--all" ]
+    then
+        WORKSPACES=$($ST_CMD list-workspaces)
+fi
+
+echo $WORKSPACES | grep '^--' >/dev/null && unset WORKSPACES
+
+# if no args, give usage
+if [ -z "$WORKSPACES" ]
+    then
+        echo $USAGE
+        exit
+fi
+
+echo ST_CMD is $ST_CMD
+
+# process the workspaces
+# even though index_workspace re-indexes, the cleanup  deletes the index first
+# to deal with corrupted indexes
+for WORKSPACE in $WORKSPACES; do \
+    $ST_CMD delete-search-index  --workspace $WORKSPACE
+    $ST_CMD index-workspace  --workspace $WORKSPACE
+done
+
+
+
+
+

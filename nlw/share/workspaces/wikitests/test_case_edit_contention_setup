@@ -1,0 +1,16 @@
+| *Comment* | Test Case: Edit Contention Setup. Must be followed by TC: Edit Contention Execute. |  |
+| *Comment* | value for variable `page` must be same as in TC: Edit Contention Execute. |  |
+| *Comment* | short username is %%short_username%%. atmail is %%atmail%% |  |
+
+| set | page | Special Edit Contention Page |
+| st-admin | update-page --w %%workspace%% --e %%email%% --p "%%page%%" < %%wikitest_client_files%%wikitest.txt |  |
+
+| open_ok | /%%workspace%%/?%%page%% |  |
+| text_unlike | //body | opened this page for editing |
+
+| *Comment* | Test Case: Edit Contention Setup. Open page for editing, then go away |  |
+| click_ok | link=Edit |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+
+| *Comment* | Test Case: Edit Contention. Page %%page%% has been OPENED FOR EDITING. |  |
+| *Comment* | Test Case: Edit Contention Setup COMPLETED |  |

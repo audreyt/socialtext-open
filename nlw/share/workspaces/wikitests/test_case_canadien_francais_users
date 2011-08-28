@@ -1,0 +1,135 @@
+| *Comment* | Test Case: Canadien Francais (Users) |  |
+
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Canadien Francais (Users) Create Raw Account |  |
+| set | acct | Candaeh%%start_time%% |
+| st-admin | create-account --name %%acct%% | was created |
+
+| *Comment* | Test Case: Canadien Francais (Users) Create Users |  |
+
+| set | userAA_short | aardvark%%start_time%% |
+| set | userAA | %%userAA_short%%@matt.socialtext.net |
+| st-admin | create-user --e %%userAA%% --p %%password%% --account %%acct%% | was created |
+| st-admin | give-accounts-admin --e %%userAA%% | now has accounts admin access |
+| st-admin | set-user-profile --email %%userAA%% preferred_name %%userAA_short%% | Profile field 'preferred_name' set to |
+| st-admin | set-user-names --e %%userAA%% --l "Smith%%userAA_short%%" | updated |
+
+| set | userA_short | Ångström%%start_time%% |
+| set | userA | userA%%start_time%%@matt.socialtext.net |
+| st-admin | create-user --e %%userA%% --p %%password%% --account %%acct%% | was created |
+| st-admin | give-accounts-admin --e %%userA%% | now has accounts admin access |
+| st-admin | set-user-profile --email %%userA%% preferred_name %%userA_short%% | Profile field 'preferred_name' set to |
+| st-admin | set-user-names --e %%userA%% --l "Smith%%userA_short%%" | updated |
+
+| set | userB_short | BANANA%%start_time%% |
+| set | userB | %%userB_short%%@matt.socialtext.net |
+| st-admin | create-user --e %%userB%% --p %%password%% --account %%acct%% | was created |
+| st-admin | give-accounts-admin --e %%userB%% | now has accounts admin access |
+| st-admin | set-user-profile --email %%userB%% preferred_name %%userB_short%% | Profile field 'preferred_name' set to |
+| st-admin | set-user-names --e %%userB%% --l "Smith%%userB_short%%" | updated |
+
+| set | userL_short | LOLCat%%start_time%% |
+| set | userL | %%userL_short%%@matt.socialtext.net |
+| st-admin | create-user --e %%userL%% --p %%password%% --account %%acct%% | was created |
+| st-admin | set-user-profile --email %%userL%% preferred_name %%userL_short%% | Profile field 'preferred_name' set to |
+| st-admin | set-user-names --e %%userL%% --l "Smith%%userL_short%%" | updated |
+
+| set | userE_short | éegashark%%start_time%% |
+| set | userE | userE%%start_time%%@matt.socialtext.net |
+| st-admin | create-user --e %%userE%% --p %%password%% --account %%acct%% | was created |
+| st-admin | set-user-profile --email %%userE%% preferred_name %%userE_short%% | Profile field 'preferred_name' set to |
+| st-admin | set-user-names --e %%userE%% --l "Smith%%userE_short%%" | updated |
+
+| set | userP_short | pumapuma%%start_time%% |
+| set | userP | %%userP_short%%@matt.socialtext.net |
+| st-admin | create-user --e %%userP%% --p %%password%% --account %%acct%% | was created |
+| st-admin | set-user-profile --email %%userP%% preferred_name %%userP_short%% | Profile field 'preferred_name' set to |
+| st-admin | set-user-names --e %%userP%% --l "Smith%%userP_short%%" | updated |
+
+| set | userX_short | Xylophone%%start_time%% |
+| set | userX | %%userX_short%%@matt.socialtext.net |
+| st-admin | create-user --e %%userX%% --p %%password%% --account %%acct%% | was created |
+| st-admin | set-user-profile --email %%userX%% preferred_name %%userX_short%% | Profile field 'preferred_name' set to |
+| st-admin | set-user-names --e %%userX%% --l "Smith%%userX_short%%" | updated |
+
+| st-process-jobs |  |  |  |
+
+| *Comment* | Test Case: Canadien Francais (Users) Test Sorting for Users |  |
+| st-logoutin | %%userA%% | %%password%% |
+| wait_for_element_present_ok | link=People Directory |  |
+| click_and_wait | link=People Directory |  |
+| wait_for_element_visible_ok | link=%%userA_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%userE_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%userL_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%userP_short%% | 30000 |
+| text_like | //body | qr/%%userAA_short%%.+%%userA_short%%.+%%userB_short%%.+%%userE_short%%.+%%userL_short%%.+%%userP_short%%.+%%userX_short%%/ |
+
+
+| *Comment* | Test Case: Canadien Francais (Users) Search Results |  |
+| open_ok | /?action=people |  |
+| wait_for_element_visible_ok | st-search-action | 30000 |
+| wait_for_element_visible_ok | st-search-term | 30000 |
+| wait_for_element_visible_ok | st-search-submit | 30000 |
+| type_ok | st-search-term | %%start_time%% |
+| pause | 10000 |  |
+| click_and_wait | st-search-submit |  |
+| wait_for_element_present_ok | link=%%userA_short%% | 30000 |
+| wait_for_element_visible_ok | sort-picker | 30000 |
+| select_and_wait | sort-picker | label=Name |
+| wait_for_element_visible_ok | link=%%userA_short%% | 30000 |
+| text_like | //body | qr/%%userAA_short%%.+%%userA_short%%.+%%userB_short%%.+%%userE_short%%.+%%userL_short%%.+%%userP_short%%.+%%userX_short%%/ |
+
+
+| *Comment* | Test Case: Canadien Francais (Users) In Mobile Search Results |  |
+| open_ok | /m/people |  |
+| wait_for_element_visible_ok | st-search-text | 30000 |
+| wait_for_element_visible_ok | st-search-submit | 30000 |
+| type_ok | st-search-text | %%start_time%% |
+| click_and_wait | st-search-submit |  |
+| wait_for_element_visible_ok | link=%%userA_short%% | 30000 |
+| text_like | //body | qr/%%userAA_short%%.+%%userA_short%%.+%%userB_short%%.+%%userE_short%%.+%%userL_short%%.+%%userP_short%%.+%%userX_short%%/ |
+
+| *Comment* | Test Case: Canadien Francais (Users) - Tag Every Profile, click a tag on a profile, see all users listed ... |  |  |
+| st-process-jobs |  |  |  |
+| set | tagme | tagme%%start_time%% |  |
+| call | [st-tag-user] | find_user_short=%%userAA_short%% | tag_to_apply=%%tagme%% |
+| pause | 2000 |  |  |
+| call | [st-tag-user] | find_user_short=%%userA_short%% | tag_to_apply=%%tagme%% |
+| pause | 2000 |  |  |
+| call | [st-tag-user] | find_user_short=%%userB_short%% | tag_to_apply=%%tagme%% |
+| pause | 2000 |  |  |
+| call | [st-tag-user] | find_user_short=%%userL_short%% | tag_to_apply=%%tagme%% |
+| pause | 2000 |  |  |
+
+| call | [st-tag-user] | find_user_short=%%userE_short%% | tag_to_apply=%%tagme%% |
+| pause | 2000 |  |  |
+
+| call | [st-tag-user] | find_user_short=%%userP_short%% | tag_to_apply=%%tagme%% |
+| pause | 2000 |  |  |
+| call | [st-tag-user] | find_user_short=%%userX_short%% | tag_to_apply=%%tagme%% |
+| pause | 2000 |  |  |
+| st-process-jobs |  |  |  |
+| wait_for_element_visible_ok | link=%%tagme%% | 30000 |  |
+| click_and_wait | link=%%tagme%% |  |  |
+| wait_for_element_visible_ok | link=%%userA_short%% | 30000 |  |
+| text_like | //body | qr/%%userAA_short%%.+%%userA_short%%.+%%userB_short%%.+%%userL_short%%.+%%userP_short%%.+%%userX_short%%/ |  |
+
+
+This is not yet implemented as of 4/21/2011 - taking the check out
+*Comment* | Test Case: Canadien Francais (Users) In Mobile | |
+open_ok | /m/people | |
+wait_for_element_visible_ok | link=B | 30000 |
+click_and_wait | link=B | |
+wait_for_element_visible_ok | link=%%userB_short%% | 30000 |
+wait_for_element_visible_ok | link=A | 30000 |
+click_and_wait | link=A | |
+wait_for_element_visible_ok | link=%%userAA%% | 30000 |
+wait_for_element_visible_ok | link=%%userA%% | 30000 |
+wait_for_element_visible_ok | link=E | 30000 |
+click_and_wait | link=E | |
+wait_for_element_visible_ok | link=%%userE%% | 30000 |
+
+
+| *Comment* | Test Case: Canadien Francais COMPLETED |  |

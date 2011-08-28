@@ -1,0 +1,74 @@
+Test case for the "User Directory" ReST API, when searching *across Accounts*.
+
+`/data/users` searches only visible Users (e.g. Users which the viewer shares an Account)
+
+`/data/users?all=1` searches Users in *any* Account (and requires "Business Admin" privileges)
+
+* Fixture: SocialRest
+
+| Comment        | Set up some Users and Accounts |                     |
+| set            | acct1                          | %%start_time%%acct1 |
+| set            | acct2                          | %%start_time%%acct2 |
+| set            | acct3                          | %%start_time%%acct3 |
+| create-account | %%acct1%%                      |                     |
+| create-account | %%acct2%%                      |                     |
+| create-account | %%acct3%% |
+
+| set | user_admin     | user-%%start_time%%-admin@ken.socialtext.com     |
+| set | fn_admin       | Captain                                          |
+| set | ln_admin       | Zero                                             |
+| set | user_visible   | user-%%start_time%%-visible@ken.socialtext.com   |
+| set | fn_visible     | Lieutenant                                       |
+| set | ln_visible     | Dingbat                                          |
+| set | user_distant   | user-%%start_time%%-distant@ken.socialtext.com   |
+| set | fn_distant     | Lieutenant                                       |
+| set | ln_distant     | Nefarious                                        |
+| set | user_something | user-%%start_time%%-something@ken.socialtext.com |
+| set | fn_something   | Private                                          |
+| set | ln_something   | Something                                        |
+| set | user_awol      | user-%%start_time%%-awol@ken.socialtext.com      |
+| set | fn_awol        | Major                                            |
+| set | ln_awol        | Awol                                             |
+
+| create-user | %%user_admin%%     | password | %%acct1%% | %%fn_admin%% %%ln_admin%%         |
+| create-user | %%user_visible%%   | password | %%acct1%% | %%fn_visible%% %%ln_visible%%     |
+| create-user | %%user_distant%%   | password | %%acct2%% | %%fn_distant%% %%ln_distant%%     |
+| create-user | %%user_something%% | password | %%acct1%% | %%fn_something%% %%ln_something%% |
+| create-user | %%user_awol%%      | password | %%acct3%% | %%fn_awol%% %%ln_awol%%           |
+
+| set-user-id | user_admin_id     | %%user_admin%%     |
+| set-user-id | user_visible_id   | %%user_visible%%   |
+| set-user-id | user_distant_id   | %%user_distant%%   |
+| set-user-id | user_something_id | %%user_something%% |
+| set-user-id | user_awol_id      | %%user_awol%%      |
+
+| set | user_admin_json     | {"user_id":"%%user_admin_id%%","first_name":"%%fn_admin%%","last_name":"%%ln_admin%%","email_address":"%%user_admin%%","username":"%%user_admin%%"}                     |
+| set | user_visible_json   | {"user_id":"%%user_visible_id%%","first_name":"%%fn_visible%%","last_name":"%%ln_visible%%","email_address":"%%user_visible%%","username":"%%user_visible%%"}           |
+| set | user_distant_json   | {"user_id":"%%user_distant_id%%","first_name":"%%fn_distant%%","last_name":"%%ln_distant%%","email_address":"%%user_distant%%","username":"%%user_distant%%"}           |
+| set | user_something_json | {"user_id":"%%user_something_id%%","first_name":"%%fn_something%%","last_name":"%%ln_something%%","email_address":"%%user_something%%","username":"%%user_something%%"} |
+| set | user_awol_json      | {"user_id":"%%user_awol_id%%","first_name":"%%fn_awol%%","last_name":"%%ln_awol%%","email_address":"%%user_awol%%","username":"%%user_awol%%"}                          |
+
+| set-business-admin | %%user_admin%% |
+
+| Comment        | Normal search as "Business Admin" *only* contains visible Users |                  |
+| http-user-pass | %%user_admin%%                                                  | password         |
+| GET            | /data/users?filter=Lieutenant                                   | application/json |
+| code-is        | 200                                                             |                  |
+| json-parse     |                                                                 |                  |
+| json-like      | [%%user_visible_json%%]                                         |                  |
+| body-unlike    | %%user_distant%%                                                |                  |
+| body-unlike    | %%user_awol%%                                                   |                  |
+
+| Comment        | Extended search as "Business Admin" searches across *all* Accounts |                  |
+| http-user-pass | %%user_admin%%                                                     | password         |
+| GET            | /data/users?all=1&filter=Lieutenant                                | application/json |
+| code-is        | 200                                                                |                  |
+| json-parse     |                                                                    |                  |
+| json-like      | [%%user_visible_json%%,%%user_distant_json%%]                      |                  |
+| body-unlike    | %%user_something%%                                                 |                  |
+| body-unlike    | %%user_awol%%                                                      |                  |
+
+| Comment        | Extended search without "Business Admin" privs fails |                  |
+| http-user-pass | %%user_visible%%                                     | password         |
+| GET            | /data/users?all=1&filter=Lieutenant                  | application/json |
+| code-is        | 400                                                  |                  |

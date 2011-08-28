@@ -1,0 +1,26 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+use TAP::Parser;
+
+my $err = "st-parse-test\n USAGE: st-parse-test <infile name>\n\n";
+my $file = shift;
+open INFILE, "$file" or die $err . $! . "\n\n";
+my $output = '';
+
+while (my $data  = <INFILE>) {
+  $output.=$data;
+}
+
+
+my $parser = TAP::Parser->new( { tap => $output } );
+
+while ( my $result = $parser->next ) {
+    # only print failing results
+    my $idx = 0;
+    print $result->as_string . "\n" unless $result->is_ok;
+}
+
+

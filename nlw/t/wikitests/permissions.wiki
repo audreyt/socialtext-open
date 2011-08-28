@@ -1,0 +1,54 @@
+Test permissions - right now, tests the new join-to-edit permission set and self-join permission, along with script to migrate an account to use self-join instead of edit-controls (maybe)
+
+* Fixture: SocialRest
+
+| comment       | set up |
+| set | ws_name  | %%start_time%%-ws                   |
+| set | ws_title | %%start_time%%-Workspace            |
+| set | admin    | %%start_time%%-admin@socialtext.com |
+| st-admin  | create-workspace --name %%ws_name%% --title %%ws_title%%      |
+| st-admin  | create-user --email %%admin%% --password password             |
+| st-admin  | add-workspace-admin --email %%admin%% --workspace %%ws_name%% |
+| st-config | set default_workspace %%ws_name%%                             |
+
+Set up workspace permissions to new join-to-edit and make sure public-join-to-edit and self-join unsets edit-controls 
+
+| comment | Test that setting public-join-to-edit unsets edit_controls| 
+| add-workspace-permission | %%ws_name%% | Guest |  edit_controls |
+| set-ws-permissions | %%ws_name%% | public-join-to-edit |
+| st-admin | show-acls --workspace %%ws_name%% | qr/. edit_controls   .       ./ |
+| st-admin | show-acls --workspace %%ws_name%% | qr/. self_join       .   X   ./ |
+
+| comment | Test that setting self_join unsets edit_controls| 
+| remove-workspace-permission | %%ws_name%% | Guest |  self_join |
+| remove-workspace-permission | %%ws_name%% | AuthenticatedUser |  self_join |
+| remove-workspace-permission | %%ws_name%% | AccountUser |  self_join |
+| remove-workspace-permission | %%ws_name%% | AccountUser | read |
+
+| add-workspace-permission | %%ws_name%% | Guest |  edit_controls |
+| add-workspace-permission | %%ws_name%% | AuthenticatedUser|  edit |
+| add-workspace-permission | %%ws_name%% | AuthenticatedUser|  read |
+| add-workspace-permission | %%ws_name%% | AuthenticatedUser|  attachments |
+| add-workspace-permission | %%ws_name%% | AuthenticatedUser|  comment |
+| add-workspace-permission | %%ws_name%% | AuthenticatedUser|  delete |
+| add-workspace-permission | %%ws_name%% | AuthenticatedUser|  email_in |
+| add-workspace-permission | %%ws_name%% | AuthenticatedUser|  email_out |
+| st-admin | show-acls --workspace %%ws_name%% | qr/public-authenticate-to-edit \(deprecated\)/ |
+
+| st-admin | show-acls --workspace %%ws_name%% | qr/. edit_controls   .   X   ./ |
+| st-admin | show-acls --workspace %%ws_name%% | qr/. self_join       .       ./ |
+| add-workspace-permission | %%ws_name%% | Guest |  self_join |
+| add-workspace-permission | %%ws_name%% | AuthenticatedUser |  self_join |
+| add-workspace-permission | %%ws_name%% | AccountUser |  self_join |
+| add-workspace-permission | %%ws_name%% | AccountUser | read |
+| remove-workspace-permission | %%ws_name%% | AuthenticatedUser|  edit |
+| remove-workspace-permission | %%ws_name%% | AuthenticatedUser|  attachments |
+| remove-workspace-permission | %%ws_name%% | AuthenticatedUser|  comment |
+| remove-workspace-permission | %%ws_name%% | AuthenticatedUser|  delete |
+| remove-workspace-permission | %%ws_name%% | AuthenticatedUser|  email_in |
+| remove-workspace-permission | %%ws_name%% | AuthenticatedUser|  email_out |
+| st-admin | show-acls --workspace %%ws_name%% | qr/public-join-to-edit/ |
+| st-admin | show-acls --workspace %%ws_name%% | qr/. edit_controls   .       ./ |
+| st-admin | show-acls --workspace %%ws_name%% | qr/. self_join       .   X   ./ |
+
+

@@ -1,0 +1,13 @@
+#!/usr/bin/env perl
+#@COPYRIGHT@
+use strict;
+use warnings;
+
+use Socialtext::SQL qw(sql_execute);
+sql_execute(q{DELETE FROM account_plugin WHERE plugin = 'signals'});
+sql_execute(q{
+    INSERT INTO account_plugin (account_id, plugin)
+         SELECT account_id, 'signals'
+           FROM account_plugin
+          WHERE plugin = 'people'
+});

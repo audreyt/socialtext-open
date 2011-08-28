@@ -1,0 +1,15 @@
+<p>[% loc('edit.choose-group') %]</p>
+
+<br />
+
+<ul>
+[% FOR group = groups %]
+  <li class="group-selector">
+    <input type="checkbox" name="join-group-[% group.group_id %]"
+           value="[% group.group_id %]" />
+    <a target="_blank" href="/st/group/[% group.group_id %]">
+      <span class="group-name">[% group.name %]</span>
+    </a>
+  </li>
+[% END %]
+</ul>

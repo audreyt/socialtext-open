@@ -1,0 +1,26 @@
+<div id="st-editing-tools-bar">
+    [% PROCESS message_center %]
+    <div class="st-actions-bar-spacer">&nbsp;</div>
+    <div id="st-editing-tools-transition-message"></div>
+    <div id="st-editing-tools-edit">
+        [% INCLUDE element/colorbutton style='save', label=loc('Save'), tooltip=loc('Click this button to save your page'), id='st-save-button' %]
+        [% INCLUDE element/colorbutton style='preview', label=loc('Preview'), tooltip=loc('Click this button to preview your page before saving it'), id='st-preview-button' %]
+        [% INCLUDE element/colorbutton style='cancel', label=loc('Cancel') tooltip=loc('Click this button to cancel editing and discard your changes'), id='st-cancel-button' %]
+        <a href="#" id="st-mode-wysiwyg-button" onclick="return false;">[% loc('Simple') %]</a>
+        <a href="#" id="st-mode-wikitext-button" onclick="return false;">[% loc('Advanced') %]</a>
+        <a href="#" id="st-edit-tips" onclick="help_popup('index.cgi?action=refcard', 680);return false;">[% loc('Edit Tips') %]</a>
+        <div class="st-actions-bar-spacer-clear">&nbsp;</div>
+    </div>
+</div>
+
+[% BLOCK message_center %]
+  <div id="st-message-center">
+    <div id="st-message-center-controls">
+      <img src="[% wiki.skin_uri('s2') %]/images/arrow-right.gif" id="st-message-center-control-arrow" />
+      <a href="#" id="st-message-center-control-close"><img alt="x" src="[% wiki.skin_uri('s2') %]/images/close-button.gif" id="st-message-center-close-icon" /></a>
+    </div>
+    <div id="st-message-center-title"></div>
+    <div id="st-message-center-body">
+    </div>
+  </div>
+[% END %]

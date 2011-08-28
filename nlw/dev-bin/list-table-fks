@@ -1,0 +1,13 @@
+#!/bin/bash
+# @COPYRIGHT@
+table=${1:-users} # users default
+db=${2:-${PGDATABASE}}
+echo "listing for $table (database: $db)"
+psql $db <<EOSQL
+select t.constraint_name, t.table_name
+  from information_schema.table_constraints t,
+       information_schema.constraint_column_usage c
+ where t.constraint_name = c.constraint_name
+   and t.constraint_type = 'FOREIGN KEY'
+   and c.table_name = '$table';
+EOSQL

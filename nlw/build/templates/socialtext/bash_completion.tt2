@@ -1,0 +1,101 @@
+#!/bin/bash
+# @COPYRIGHT@
+
+_st_admin_list_comp()
+{
+    local tmplist age now mod_time oldmask
+    tmplist="/tmp/.st-${USER}-$1.list"
+
+    # check for freshness
+    if [ -f $tmplist ]; then
+        now=`date +%s`
+        mod_time=`stat $tmplist -c"+%Y" | sed 's,+,,'`
+        age=`expr $now - $mod_time`
+        if [[ $age -gt 20 ]]; then
+            rm -f $tmplist
+        fi
+    fi
+
+    # re-generate the list (using a safe umask)
+    if [ ! -f $tmplist ]; then
+        oldmask=`umask -p`
+        umask 0077
+        st-admin list-$1 > $tmplist
+        eval $oldmask
+    fi
+
+    COMPREPLY=( `egrep "^$2" $tmplist` ) 
+    if [[ ${#COMPREPLY} == 0 ]] ; then
+        COMPREPLY=( `cat $tmplist` )
+    fi
+}
+
+_st_admin_comp()
+{
+    local cur prev cmds opts word
+
+    COMPREPLY=()
+    cur=${COMP_WORDS[COMP_CWORD]}
+    prev=${COMP_WORDS[COMP_CWORD-1]}
+
+    cmds='[% all_cmds %]'
+
+    if [[ $COMP_CWORD -eq 1 ]] ; then
+        COMPREPLY=( $( compgen -W "$cmds" -- $cur ) )
+        return 0
+    fi
+    
+    case $prev in
+        --workspace|--target|--clone-pages-from)
+            _st_admin_list_comp workspaces "$cur"
+            return 0
+            ;;
+
+        --account)
+            _st_admin_list_comp accounts "$cur"
+            return 0
+            ;;
+
+        --plugin)
+            _st_admin_list_comp plugins "$cur"
+            return 0
+            ;;
+
+        --username|--email|--name|--title|--prefix)
+            COMPREPLY=(" ")
+            return 0
+            ;;
+
+        --dir)
+            COMPREPLY=( $( compgen -d -- $cur ) )
+            return 0
+            ;;
+        --file|--csv)
+            COMPREPLY=( $( compgen -f -- $cur ) )
+            return 0
+            ;;
+        *)
+            ;;
+    esac
+
+    case ${COMP_WORDS[1]} in
+[% FOREACH cmd IN cmds %]
+        [% cmd %])
+            opts='[% opts.$cmd %]'
+            ;;
+[%- END %]
+        *)
+            ;;
+    esac
+
+    # remove options that have already been used
+    for (( i=2; i<=$COMP_CWORD-1; ++i )) ; do
+        word=${COMP_WORDS[$i]}
+        opts=" $opts "
+        opts=${opts/${word} /}
+    done
+
+    COMPREPLY=( $( compgen -W "$opts" -- $cur ) )
+}
+
+complete -F _st_admin_comp -o default st-admin

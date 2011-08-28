@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+USAGE="USAGE: run-backup-tests -v VE [-r RELEASE (none)] -d(ebug)"
+
+VE=""
+RELEASE=""
+DEBUG=""
+
+while getopts "v:r:hd" optionName; do
+        case "$optionName" in
+          v) VE="$OPTARG";;
+          r) RELEASE="-r $OPTARG";;
+          d) DEBUG="-d";;
+          h) echo $USAGE; exit;;
+          [?]) echo $USAGE; exit;;
+        esac
+done
+
+for T in {pgpitr,pgpitr-purge}; do
+    run-backup-test -v $VE -t $T $RELEASE $DEBUG;
+done

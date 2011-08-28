@@ -1,0 +1,515 @@
+#!/usr/bin/env perl
+$|=1;
+
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Getopt::Long;
+use Pod::Usage;
+use LWP::Simple qw(get);
+use YAML qw();
+use File::Path qw(rmtree);
+use List::MoreUtils qw(before last_index any all uniq);
+use File::Slurp qw(write_file slurp);
+use Text::ParseWords qw(quotewords);
+use Test::Socialtext::DotProve;
+
+###############################################################################
+# Read in our command line arguments
+my ($help, $man, $verbose);
+my $hudson_url         = 'https://lucite.socialtext.net:9080';
+my $project            = 'Socialtext-master';
+my $build              = 'lastCompletedBuild';
+my $dot_prove          = 'artifacts/.prove';
+my $dryrun             = undef;
+my $unittest           = undef;
+my $count_all_failures = undef;
+my $fdefs;
+my @candidates;
+
+GetOptions(
+    'hudson=s'    => \$hudson_url,
+    'project=s'   => \$project,
+    'build=s'     => \$build,
+    'dot-prove=s' => \$dot_prove,
+    'dryrun'      => \$dryrun,
+    'verbose'     => \$verbose,
+    'candidate=s' => \@candidates,
+    'fdefs'       => \$fdefs,
+    'all'         => \$count_all_failures,
+    'help|?'      => \$help,
+    'man'         => \$man,
+) || pod2usage(1);
+pod2usage(1) if ($help);
+pod2usage(-exitstatus => 0, -verbose => 2) if ($man);
+
+$unittest = shift @ARGV;
+pod2usage(1) unless ($unittest);
+
+$verbose += ( $dryrun ) ? $dryrun : 0;    # --dryrun implies --verbose
+
+###############################################################################
+# Make sure that the failing test exists
+status("Testing: $unittest");
+unless (-e $unittest) {
+    die "Can't find '$unittest'; did you 'cdnlw'?\n";
+}
+
+###############################################################################
+# Build up a set of "candidate tests"; everything that we think ran since the
+# last "clean" or "destructive" fixture, leading up to the failing test.
+unless (@candidates) {
+    # get the YAML file outlining the order in which the tests were run.
+    verbose("Fetching test order for $project...");
+    my $full_url   = "$hudson_url/job/$project/$build/artifact/$dot_prove";
+    my $prove_yaml = get($full_url);
+    die "Unable to get .prove from $project project.\n" unless $prove_yaml;
+
+    # Parse the .prove file, and extract the list of tests run, in order
+    my $fname = ".prove.$$";
+    END { unlink $fname if ($fname && -e $fname) };
+    write_file($fname, $prove_yaml);
+    my $parsed    = Test::Socialtext::DotProve::load($fname);
+    my $tests     = $parsed->{tests};
+    my @all_tests = sort { $tests->{$a}{seq} <=> $tests->{$b}{seq} }
+        keys %{$tests};
+
+    # everything before the failing test
+    @candidates = before { $_ eq $unittest } @all_tests;
+    unless (@candidates) {
+        die "Couldn't find '$unittest' in the YAML; has that test run yet?\n";
+    }
+
+    # remove tests that don't exist; could have leftovers from previous STCI run
+    @candidates = grep { -e $_ } @candidates;
+
+    # remove everything that ran before the most recent 'clean' fixture
+    my $last_clean = last_index { is_fixture_used_by_test('clean', $_) } @candidates;
+    if ($last_clean > -1) {
+        @candidates = splice @candidates, $last_clean;
+    }
+
+    # remove everything that ran before (and including) the most recent
+    # 'destructive' fixture
+    my $last_destructive
+        = last_index { is_fixture_used_by_test('destructive', $_) } @candidates;
+    if (($last_destructive > -1) && ($last_destructive < $#candidates)) {
+        @candidates = splice @candidates, $last_destructive + 1;
+    }
+
+    # remove everything that ran before the last fixture conflict (which would
+    # cause 'clean' to get triggered automatically)
+    my %active_fixtures;
+    my @remaining;
+    foreach my $test (@candidates) {
+        my @fixtures = fixtures_used_by_test($test);
+
+        # if no change in active fixtures, add this test to list and move on.
+        if (all { exists $active_fixtures{$_} } @fixtures) {
+            push @remaining, $test;
+            next;
+        }
+
+        # get the exploded list of all fixtures needed for this test,
+        # including sub-fixtures.
+        my @subfixtures = uniq map { fixture_dependencies($_) } @fixtures;
+
+        # check for fixture conflicts, which would cause us to flush things
+        # out and start off fresh again.
+        foreach my $dep (@subfixtures) {
+            my @conflicts = fixture_conflicts($dep);
+            if (any { exists $active_fixtures{$_} } @conflicts) {
+                %active_fixtures = ();
+                @remaining       = ();
+            }
+        }
+
+        # add this test and its fixtures to the list
+        push @remaining, $test;
+        $active_fixtures{$_}++ foreach (@subfixtures);
+    }
+    @candidates = @remaining;
+}
+
+# spit out information on the selected candidates
+verbose("Candidate Tests:");
+map { verbose("... $_") } @candidates;
+
+###############################################################################
+# If we're just doing a dry-run, STOP!
+if ($dryrun) {
+    exit;
+}
+
+###############################################################################
+# Make sure that the test runs cleanly on its own.
+status("Verifying test passes in clean environment");
+if (run_tests()) {
+    die "FAIL: test fails when run in clean environment.\n";
+}
+
+###############################################################################
+# Run the tests to verify failure and to count up the number of failing tests.
+status("Reproducing test failure");
+
+my $initial_failures = run_tests(@candidates);
+unless ($initial_failures) {
+    die "Selected candidate tests didn't produce failure:\n",
+        map {"\t$_\n"} @candidates;
+}
+verbose("... failures: $initial_failures");
+
+###############################################################################
+# Do a binary search through the tests, removing ones that don't contribute to
+# the initial failure count.
+my %bisect_candidates = map { $_=>1 } @candidates;
+bisect_test_removal( [@candidates] );
+my @shortest_set = grep { exists $bisect_candidates{$_} } @candidates;
+
+###############################################################################
+# Display the set of tests we're left with; that's the minimal set of tests
+# needed to reproduce the failure.
+status("Shortest set of tests needed to reproduce failure:");
+status(map {"\t$_"} @shortest_set, $unittest);
+
+###############################################################################
+# All done; exit peacefully.
+exit;
+
+
+###############################################################################
+# Bisect our way through the list of candidate tests, chucking out whole sets
+# of tests that aren't contributing to the initial failure count.
+#
+# Optimized for...
+# - breadth first traversal, so we can throw away larger chunks of tests as
+#   early as possible
+# - faster LHS/RHS selection; if LHS doesn't contribute to failures it *must*
+#   be in the RHS (so don't run it now, just recurse and bisect further)
+sub bisect_test_removal {
+    my @chunks = @_;
+    return unless @chunks;
+
+    # Bisect each of the provided chunks of tests, breadth-first
+    my @remaining;
+    foreach my $chunk (@chunks) {
+        # skip this chunk if it doesn't contain any viable test candidates
+        next unless (any { exists $bisect_candidates{$_} } @{$chunk});
+
+        # bisect the chunk
+        my @rhs = @{$chunk};
+        my @lhs = splice @rhs, 0, (scalar(@rhs) / 2);
+
+        # run each side, throwing out tests that aren't contributing
+      SIDE:
+        foreach my $side (\@lhs, \@rhs) {
+            # skip side if its empty
+            next unless @{$side};
+
+            # build list of tests to run, *ignoring* the ones on this side.
+            # List is *always* built up directly from the original set of
+            # candidate tests, trimming it down to just the ones we still care
+            # about.
+            my %ignore = map { $_ => 1 } @{$side};
+            my @to_run =
+                grep { !exists $ignore{$_} }
+                grep {  exists $bisect_candidates{$_} }
+                @candidates;
+            verbose("... testing removal of:");
+            verbose("... ... $_") for @{$side};
+
+            # run the tests, throwing this side away if its not contributing
+            my $failures = run_tests(@to_run);
+            if ($failures == $initial_failures) {
+                verbose("... ... failures unchanged; removing tests");
+                delete $bisect_candidates{$_} for @{$side};
+
+                # if the LHS didn't contribute, we *know* its something in the
+                # RHS; add it to the list and move on without running it now.
+                if ($side == \@lhs) {
+                    push @remaining, \@rhs;
+                    last SIDE;
+                }
+            }
+            else {
+                verbose("... ... failures changed ($failures)");
+                push @remaining, $side if (@{$side} > 1);
+            }
+        }
+    }
+
+    # recurse, processing the remaining chunks breadth-first
+    bisect_test_removal(@remaining);
+}
+
+###############################################################################
+# Checks to see if the given fixture is used by the test.  Returns true if it
+# is, false otherwise.
+sub is_fixture_used_by_test {
+    my ($fixture, $test) = @_;
+    my %fixtures = map { $_ => 1 } fixtures_used_by_test($test);
+    return defined $fixtures{$fixture} ? 1 : 0;
+}
+
+###############################################################################
+# Returns a list of the fixtures that are used by the given unit test.
+sub fixtures_used_by_test {
+    my $test = shift;
+    my %fixtures;
+
+    my @lines = grep {/^\s*fixtures\(/} slurp $test;
+    foreach my $line (@lines) {
+        $line =~ s/fixtures\((.+)\)\s*;/$1/;              # remove fixtures()
+        $line =~ s/qw[\(\[\{\|](.+)[\)\]\}\|]\s*$/$1/;    # remove qw()
+        $line =~ s/,//g;                                  # remove commas
+    }
+
+    my @words = quotewords('\s+', 0, @lines);
+    foreach my $word (grep { defined $_ } @words) {
+        $fixtures{$word}++;
+    }
+
+    return keys %fixtures;
+}
+
+###############################################################################
+# Returns an exploded list of the fixtures/sub-fixtures that are set up as
+# part of setting up the given fixture.
+sub fixture_dependencies {
+    my $fixture = shift;
+    my %subfixtures = ( $fixture => 1 );
+
+    # Read in YAML file for this fixture and recursively add dependencies to
+    # the fixture list.
+    my $filename = "t/Fixtures/$fixture/fixture.yaml";
+    if (-e $filename) {
+        my $yaml = YAML::LoadFile($filename);
+
+        if (exists $yaml->{fixtures}) {
+            foreach my $dep (@{$yaml->{fixtures}}) {
+                $subfixtures{$_}++ foreach fixture_dependencies($dep);
+            }
+        }
+    }
+
+    return keys %subfixtures;
+}
+
+###############################################################################
+# Returns a list of the fixtures that a given fixture conflicts with.
+sub fixture_conflicts {
+    my $fixture = shift;
+    my @conflicts;
+
+    my $filename = "t/Fixtures/$fixture/fixture.yaml";
+    if (-e $filename) {
+        my $yaml = YAML::LoadFile($filename);
+        if (exists $yaml->{conflicts}) {
+            @conflicts = @{$yaml->{conflicts}};
+        }
+    }
+
+    return @conflicts;
+}
+
+###############################################################################
+# Runs the tests, and returns the number of failures.
+sub run_tests {
+    my @tests = @_;
+
+    # clean out the test environment
+    clean_test_environment();
+
+    # run the tests
+    my @results =
+        grep {/Tests:.*Failed/} `st-prove --jobs=1 -Q @tests $unittest 2>/dev/null`;
+
+    # find the failures from the unit test that we're running.  If _other_
+    # tests failed along the way we don't care.
+    my $total_failures = 0;
+    foreach my $line (@results) {
+        if ($line =~ /^(\S+).*Tests:\s+\d+\s+Failed:\s+(\d+)/) {
+            my ($short_testname, $failed) = ($1, $2);
+            if ($count_all_failures) {
+                $total_failures += $failed;
+            }
+            elsif ($unittest =~ /$short_testname/) {
+                return $failed;
+            }
+        }
+    }
+
+    return $total_failures;
+}
+
+###############################################################################
+# Cleans out the test environment
+sub clean_test_environment {
+    # Purge test environment tree
+    my $HOME = $ENV{HOME};
+    rmtree("$HOME/src/st/socialtext/nlw/t/tmp");
+
+    # Purge test DBs (if a test needs one, it should list it as a fixture
+    # dependency and it'll get rebuilt automatically)
+    my $USER = $ENV{USER};
+    foreach my $db (`psql -l`) {
+        if ($db =~ /(NLW_${USER}_testing\S*)\s/) {
+            `dropdb $1`;
+        }
+    }
+
+    # Optionally re-run fdefs
+    if ($fdefs) {
+        system('dev-bin/fresh-dev-env-from-scratch >/dev/null 2>/dev/null');
+    }
+}
+
+###############################################################################
+# Spits out status.
+sub status {
+    map { print "$_\n" } @_;
+}
+
+sub verbose {
+    status(@_) if ($verbose);
+}
+
+
+=head1 NAME
+
+why-failing - find out why a unit test is failing
+
+=head1 SYNOPSIS
+
+  why-failing [options] <test>
+
+  Options:
+    --hudson <url>      URL to Hudson
+    --project <project> Hudson Project test is failing on ("Socialtext")
+    --build <build>     Build to get test ordering from ("lastCompletedBuild")
+    --dot-prove <prove> Path to the .prove artifact ("artifacts/.prove")
+    --candidate <test>  Specify candidate tests explicitly
+    --all               Count all failures, not just ones in test
+    --fdefs             Run "fdefs" between tests
+    --dryrun            Dry-run; show candidates, but don't run tests
+    --verbose           Display verbose output
+    --help/-?           Display a brief usage statement
+    --man               Display full man page
+
+  Example:
+    why-failing -v t/Socialtext/HTMLArchive.t
+
+=head1 DESCRIPTION
+
+C<why-failing> aims to help narrow the focus as to why a unit test might be
+failing.
+
+Our test fixtures are cached from one test to the next, so its I<entirely
+possible> that the test isn't failing because of something it is (or isn't)
+doing, but because some other test stomped on the test environment and left a
+mess around which is tripping up the failing test.
+
+C<why-failing> tries to help narrow the focus on finding out why it is that
+the test is failing, by pulling up the list of tests that ran before this one
+and zeroing on the smallest set of tests necessary to reproduce the failure.
+
+With that information in hand, you can then examine those tests in order to
+determine what's going on and why they're causing failure.
+
+B<NOTE>, when run, this script will B<forcably clean out your test
+environment>, including:
+
+=over
+
+=item * dropping your test DB
+
+=item * erasing t/tmp/ in your dev-env
+
+=back
+
+=head1 OPTIONS
+
+=over
+
+=item B<--hudson E<lt>urlE<gt>>
+
+Specifies the URL to the Hudson Continuous Integration server.
+
+Defaults to C<https://lucite.socialtext.net:9080>
+
+=item B<--project E<lt>projectE<gt>>
+
+Specifies the Project in Hudson whose test results we should be examining.
+
+Defaults to "Socialtext-master".
+
+=item B<--build E<lt>buildE<gt>>
+
+Specifies the build number whose results we should be examining.
+
+Defaults to "lastCompletedBuild", but you can specify any build directly by
+number or by any of the other permalinks Hudson provides (e.g.
+"lastFailedBuild").
+
+=item B<--dot-prove E<lt>proveE<gt>>
+
+Specifies the path to the Hudson build artifact that contains the F<.prove>
+file.
+
+Defaults to F<artifacts/.prove>
+
+=item B<--candidate E<lt>testE<gt>>
+
+Specifies the list of candidate tests.  If not specified, the list of
+candidate tests is calculated automatically.
+
+To specify multiple candidate tests, use this command line option multiple
+times, in order.
+
+=item B<--all>
+
+When checking "did the test pass?", consider failures for I<all> of the tests
+that were run, not just the one we're checking.
+
+By default, we B<only> check for failures in the test we're looking at, and we
+ignore failures in the candidates.  With C<--all>, we also track failures in
+the candidates.
+
+Useful for helping hunt down chains of failures in a single run.
+
+=item B<--fdefs>
+
+Runs F<fresh-dev-env-from-scratch> between test runs, to ensure that not only
+have we cleaned out the test environment but also that F<~/.nlw/> has been
+properly reset.
+
+=item B<--dryrun>
+
+Dry-run; show the selected candidate tests, but don't actually do a test run.
+
+Implies C<--verbose>.
+
+=item B<--verbose>
+
+Displays verbose output while zeroing in on shortest failure path.
+
+=item B<--help>
+
+Displays a brief usage statement.
+
+=item B<--man>
+
+Displays the man page.
+
+=back
+
+=head1 AUTHOR
+
+Graham TerMarsch (graham.termarsch@socialtext.com)
+
+=head1 COPYRIGHT
+
+Copyright 2009 Socialtext, Inc., All Rights Reserved.
+
+=cut

@@ -1,0 +1,127 @@
+| *Comment* | Test Case: Business Control Panel SJ Group Add Workspace |
+
+| *Comment* | Test Case: Business Control Panel SJ Group Add Workspace SETUP |
+
+| set | group_name | bcp-group-sj-%%start_time%% |
+| set | group_two | bcp-group-two-%%start_time%% |
+| set | ws_to_add | group-sj-ws-%%start_time%% |
+| set | add_ws_two | sj-ws-two-%%start_time%% |
+| set | fake_ws | fake-ws%%start_time%% |
+
+| st-admin | create-workspace --name %%ws_to_add%% --title %%ws_to_add%% | was created |
+| st-admin | create-workspace --name %%add_ws_two%% --title %%add_ws_two%% | was created |
+| st-admin | set-permissions --workspace %%ws_to_add%% --permissions public | have been changed to public |
+| st-admin | set-permissions --workspace %%add_ws_two%% --permissions public | have been changed to public |
+
+| *Comment* | Test Case: Business Control Panel SJ Group Add Workspace create group via groups UI |  |
+| open_ok | /nlw/control/group |  |
+| wait_for_element_visible_ok | //input[@type='button' and @value="Create New Group"] | 30000 |
+| click_ok | //input[@type='button' and @value="Create New Group"] |  |
+| wait_for_element_visible_ok | st-groupname | 30000 |
+| wait_for_element_visible_ok | st-group-create-submit | 30000 |
+| type_ok | st-groupname | %%group_name%% |
+| pause | 5000 |  |
+| click_and_wait | st-group-create-submit |  |
+| wait_for_element_visible_ok | //input[@id='addToAccountLookahead'] | 30000 |
+| text_like | //body | Created By: %%short_username%% |
+| text_like | //body | %%group_name%% |
+| wait_for_element_visible_ok | //a[contains(text(),'%%short_username%%')] | 10000 |
+| wait_for_text_present_ok | Users (1) | 10000 |
+| wait_for_text_present_ok | Workspaces (0) | 30000 |
+| wait_for_element_visible_ok | st-group-permission-set-selector | 30000 |
+| is_selected_ok | st-group-permission-set-selector | label=Self-Join: Non-Members can view and join the group. |
+| get_group_id | %%group_name%% | group_id_one |
+| st-admin | create-group --n %%group_two%% --e %%username%% | %%group_two%% Group has been created |
+| get_group_id | %%group_two%% | group_id_two |
+| st-admin | set-permissions --g %%group_id_two%% --p self-join | The permissions for the %%group_two%% group have been changed to self-join |
+
+| *Comment* | Test Case: Business Control Panel SJ Group Add Workspace Add a workspace - See permission set enabled |  |
+| wait_for_element_visible_ok | st-group-permission-set-selector | 30000 |
+| wait_for_element_visible_ok | st-group-permission-set-submit | 30000 |
+| pause | 5000 |  |
+| is_editable | st-group-permission-set-selector |  |
+| is_editable | st-group-permission-set-submit |  |
+
+| *Comment* | Test Case: Business Control Panel SJ Group Add Workspace different permission set/error |
+| click_and_wait | add-workspace |  |
+| wait_for_text_present_ok | Add Group to Workspace | 30000 |
+| wait_for_text_present_ok | Send invitation email | 30000 |
+| wait_for_element_visible_ok | send-invite-message | 30000 |
+| wait_for_element_visible_ok | invite-as-admins | 30000 |
+| wait_for_element_visible_ok | st-assign-to-workspace | 30000 |
+| type_ok | st-assign-to-workspace | %%workspace%% |
+| click-and-wait | //input[@value='Add to Workspace'] |  |
+| wait_for_text_present_ok | group and workspace do not have compatible permission sets | 30000 |
+| wait_for_text_present_ok | Workspaces (0) | 30000 |
+
+| *Comment* | Test Case: Business Control Panel SJ Group Add Workspace Non existant WS |  |
+| click_and_wait | add-workspace |  |
+| wait_for_text_present_ok | Add Group to Workspace | 30000 |
+| wait_for_text_present_ok | Send invitation email | 30000 |
+| wait_for_element_visible_ok | st-assign-to-workspace | 30000 |
+| type_ok | st-assign-to-workspace | %%fake_ws%% |
+| click-and-wait | //input[@value='Add to Workspace'] |  |
+| wait_for_text_present_ok | No Workspace identified by %%fake_ws%% | 30000 |
+| wait_for_text_present_ok | Workspaces (0) | 30000 |
+
+| *Comment* | Test Case: Business Control Panel SJ Group Add Workspace Add new workspace - Correct Permission Set |  |
+| st-admin | set-permissions --permissions self-join --workspace %%ws_to_add%% | workspace have been changed to self-join |
+| click_and_wait | add-workspace |  |
+| wait_for_text_present_ok | Add Group to Workspace | 30000 |
+| wait_for_element_visible_ok | workspace_id | 30000 |
+| select_ok | workspace_id | label=%%ws_to_add%% |
+| click-and-wait | //input[@value='Add to Workspace'] |  |
+| wait_for_text_present_ok | Group '%%group_name%%' now has the role of member in the %%ws_to_add%% Workspace | 30000 |
+| wait_for_text_present_ok | Workspaces (1) | 30000 |
+
+| *Comment* | Test Case: Business Control Panel SJ Group Add Workspace Give Admin privileges |  |
+| st-admin | set-permissions --permissions self-join --workspace %%add_ws_two%% | workspace have been changed to self-join |
+| click_and_wait | add-workspace |  |
+| wait_for_text_present_ok | Add Group to Workspace | 30000 |
+| wait_for_element_visible_ok | workspace_id | 30000 |
+| select_ok | workspace_id | label=%%add_ws_two%% |
+| wait_for_element_visible_ok | invite-as-admins |  |
+| check_ok | invite-as-admins |  |
+| is_checked_ok | invite-as-admins |  |
+| click-and-wait | //input[@value='Add to Workspace'] |  |
+| wait_for_text_present_ok | Group '%%group_name%%' now has the role of admin in the %%add_ws_two%% Workspace | 30000 |
+| wait_for_text_present_ok | Workspaces (2) | 30000 |
+
+| *Comment* | Test Case: Business Control Panel SJ Group Add Workspace Confirm Admin privileges |  |
+| st-admin | show-members --w %%add_ws_two%% | admin |
+
+| *Comment* | Test Case: Business Control Panel SJ Group Add Workspace Add Another Group to a WS - buttons deactivate |  |
+| st-admin | add-member --g %%group_id_two%% --w %%ws_to_add%% | %%group_two%% now has the role of 'member' in the %%ws_to_add%% Workspace |
+| refresh |  |  |
+| wait_for_element_visible_ok | st-group-permission-set-selector | 30000 |
+| wait_for_element_visible_ok | st-group-permission-set-submit | 30000 |
+| pause | 5000 |  |
+| st_uneditable_ok | st-group-permission-set-selector |  |
+| st_uneditable_ok | st-group-permission-set-submit |  |
+
+| *Comment* | Test Case: Business Control Panel SJ Group Add Workspace Remove the group |  |
+| st-admin | remove-member --g %%group_id_two%% --workspace %%ws_to_add%% | %%group_two%% is no longer a member of %%ws_to_add%% |
+| refresh |  |  |
+| wait_for_element_visible_ok | st-group-permission-set-selector | 30000 |
+| wait_for_element_visible_ok | st-group-permission-set-submit | 30000 |
+| pause | 5000 |  |
+| is_editable | st-group-permission-set-selector |  |
+| is_editable | st-group-permission-set-submit |  |
+
+| *Comment* | Test Case: Business Control Panel SJ Group Add Workspace Change Group to private - workspaces change too. |  |
+| st-admin | set-permissions -g %%group_id_one%% --p private | The permissions for the %%group_name%% group have been changed to private |
+| st-admin | show-acls --w %%ws_to_add%% | permission set name: member-only |
+| st-admin | show-acls --w %%ws_to_add%% | permission set name: member-only |
+
+| *Comment* | Test Case: Business Control Panel SJ Group Add Workspace Change Group to self-join - workspaces change too. |  |
+| st-admin | set-permissions -g %%group_id_one%% --p self-join | The permissions for the %%group_name%% group have been changed to self-join |
+| st-admin | show-acls --w %%ws_to_add%% | permission set name: self-join |
+| st-admin | show-acls --w %%ws_to_add%% | permission set name: self-join |
+
+| *Comment* | Test Case: Business Control Panel SJ Group Add Workspace TEARDOWN |  |
+| st-admin | delete-workspace --w %%ws_to_add%% --no-export |  |
+| st-admin | delete-workspace --w %%add_ws_two%% --no-export |  |
+| delete_group | %%group_id_one%% |  |
+| delete_group | %%group_id_two%% |  |
+
+| *Comment* | Test Case: Business Control Panel SJ Group Add Workspace COMPLETED |  |

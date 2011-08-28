@@ -1,0 +1,15 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use lib "$ENV{ST_CURRENT}/nlw/lib";
+use Socialtext::JobCreator;
+
+Socialtext::JobCreator->insert(
+    'Socialtext::Job::CreateStagingUsers', {
+        job => { priority => 80 },
+    }
+);
+
+
+1;

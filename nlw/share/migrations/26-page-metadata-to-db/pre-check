@@ -1,0 +1,19 @@
+#!/usr/bin/env perl
+#@COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_singlevalue/;
+use Socialtext::Migration::Utils qw/ensure_socialtext_schema/;
+
+# This migration requires that we be running at least version 5 of the
+# DBMS schema; the 'page' table _needs_ to be present, see {bz 850} for what
+# happens if it is not.
+ensure_socialtext_schema(5);
+
+my $metadata_count = sql_singlevalue('SELECT COUNT(*) FROM page');
+if ($metadata_count) {
+    # Rows exist in this table already, ass-u-me no need to migrate.
+    exit 1;
+}
+# No rows exist, we should migrate metadata
+exit 0;

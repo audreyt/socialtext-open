@@ -1,0 +1,37 @@
+INSTALL.yum -- Installing dependencies with Yum
+
+@COPYRIGHT@
+
+== OVERVIEW ==
+
+Yum is an automated package manager for Fedora, RedHat, CentOS and other
+related Linux distributions.  Using yum as your package installer will
+make the installation of the Socialtext software much easier.
+
+== Adding repositories ==
+
+The base CentOS repositories used by yum are pretty small.  The Dag Yum
+repository contains many more Perl modules.  To tell yum to use Dag,
+create the file /etc/yum.repos.d/dag.repo with the following contents:
+
+    [dag]
+    Name=Dag RPM Repository for Red Hat Enterprise Linux
+    baseurl=http://apt.sw.be/redhat/el4/en/i386/dag
+    gpgcheck=1
+    enabled=1
+    gpgkey=http://dag.wieers.com/packages/RPM-GPG-KEY.dag.txt
+
+Then, install the packages listed in build/pkg-lists/yum.
+
+== Errors ==
+
+I've run into problems with yum complaining that rtld(GNU_HASH) is not
+installed.  Apparently the solution to this is to update glibc and the
+entire toolchain, which is hardly a simple task.
+
+http://linux.derkeiler.com/Mailing-Lists/Fedora/2006-11/msg05619.html
+
+Fortunately, this should only show up if you've enabled the
+fedora-development or fedora-extras-development repositories:
+
+http://www.redhat.com/archives/fedora-list/2006-September/msg03314.html

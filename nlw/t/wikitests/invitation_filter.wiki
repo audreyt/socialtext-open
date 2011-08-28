@@ -1,0 +1,46 @@
+* Fixture: SocialRest
+
+| *Comment*        | Adding members via st-admin should respect that workspace's invitation filter |                    |
+| set              | workspace1                                                                    | ws1-%%start_time%% |
+| create-workspace | %%workspace1%%                                                                |                    |
+| st-admin         | set-workspace-config -w %%workspace1%% invitation_filter socialtext.com       |                    |
+
+| set | root | root-%%start_time%%@socialtext.com.another.com |
+| set | good | good-%%start_time%%@socialtext.com             |
+| set | bad1 | bad1-%%start_time%%@bad.org                    |
+| set | bad2 | bad2-%%start_time%%@bad.org                    |
+| set | bad3 | bad3-%%start_time%%@bad.org                    |
+
+| st-admin | create-user --email %%root%% --password password |
+| st-admin | create-user --email %%good%% --password password |
+| st-admin | create-user --email %%bad1%% --password password |
+| st-admin | create-user --email %%bad2%% --password password |
+| st-admin | create-user --email %%bad3%% --password password |
+
+| st-admin | add-member -w %%workspace1%% -e %%root%%              |
+| st-admin | add-member -w %%workspace1%% -e %%good%%              |
+| st-admin | add-member -w %%workspace1%% -e %%bad1%%              |
+| st-admin | add-workspace-admin -w %%workspace1%% -e %%bad2%%     |
+| st-admin | invite-user -w %%workspace1%% -e %%bad3%% -f %%root%% |
+
+| http-user-pass | %%root%%                              | password |
+| get            | /data/workspaces/%%workspace1%%/users |          |
+| body-like      | %%root%%                              |          |
+| body-like      | %%good%%                              |          |
+| body-unlike    | %%bad1%%                              |          |
+| body-unlike    | %%bad2%%                              |          |
+| body-unlike    | %%bad3%%                              |          |
+
+| *Comment*        | Adding members via add-users-from should respect target workspace's invitation filter |                    |
+| set              | workspace2                                                                            | ws2-%%start_time%% |
+| create-workspace | %%workspace2%%                                                                        |                    |
+| st-admin         | set-workspace-config -w %%workspace2%% invitation_filter another.com                  |                    |
+| st-admin         | add-users-from -w %%workspace1%% -t %%workspace2%%                                    |                    |
+
+| http-user-pass | %%root%%                              | password |
+| get            | /data/workspaces/%%workspace2%%/users |          |
+| body-like      | %%root%%                              |          |
+| body-unlike    | %%good%%                              |          |
+| body-unlike    | %%bad1%%                              |          |
+| body-unlike    | %%bad2%%                              |          |
+| body-unlike    | %%bad3%%                              |          |

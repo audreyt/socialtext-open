@@ -1,0 +1,69 @@
+Tests for Tag History for a page via the REST API
+
+* Fixture: SocialRest
+
+| Comment          | Test Setup    |                                     |
+| set              | username      | u%%start_time%%@ken.socialtext.net  |
+| create-user      | %%username%%  | %%password%%                        |
+| http-user-pass   | %%username%%  | %%password%%                        |
+| set              | workspace     | w%%start_time%%                     |
+| create-workspace | %%workspace%% |                                     |
+| add-member       | %%username%%  | %%workspace%%                       |
+| set              | page          | monkey                  |           |
+| edit-page        | %%workspace%% | %%page%%                | Hi there! |
+| set              | tags_uri      | /data/workspaces/%%workspace%%/pages/%%page%%/taghistory |
+
+| Comment   | Support JSON |                  |
+| GET       | %%tags_uri%%                                                   | application/json |
+
+| code-is   | 200                            |                  |
+| Comment   | Support HTML |                  |
+| GET       | %%tags_uri%%                                                   | text/html |
+| code-is   | 200                            |                  |
+
+| Comment   | Support text |                  |
+| GET       | %%tags_uri%%                                                   | text/plain |
+| code-is   | 200                            |                  |
+
+| Comment   | Tags is empty because the page does not have any tags |                  |
+| body-like | Tags: \n                         |                  |
+
+| Comment   | Time is a full date/time |                  |
+| body-like | qr/Revision Date: \d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d GMT/ |                  |
+
+| Comment   | Has a revision id |                  |
+| body-like | qr/Revision Id: .+/ |                  |
+
+| Comment   | Add some tag history                                   |                  |
+| POST      | /data/workspaces/%%workspace%%/pages/%%page%%/tags     | Content-Type=text/plain | Foo       |
+| POST      | /data/workspaces/%%workspace%%/pages/%%page%%/tags     | Content-Type=text/plain | Bar       |
+| POST      | /data/workspaces/%%workspace%%/pages/%%page%%/tags     | Content-Type=text/plain | Kim       |
+| DELETE    | /data/workspaces/%%workspace%%/pages/%%page%%/tags/Foo |
+| POST      | /data/workspaces/%%workspace%%/pages/%%page%%/tags     | Content-Type=text/plain | Car       |
+| POST      | /data/workspaces/%%workspace%%/pages/%%page%%/tags     | Content-Type=text/plain | Foo       |
+| DELETE    | /data/workspaces/%%workspace%%/pages/%%page%%/tags/Kim |
+
+| Comment   | Check tag history is ok    |            |
+| GET       | %%tags_uri%%               | text/plain |
+| code-is   | 200                        |            |
+| body-like | Tags: \n                   |            |
+| body-like | Tags: Foo\n                |            |
+| body-like | Tags: Foo, Bar\n           |            |
+| body-like | Tags: Foo, Bar, Kim\n      |            |
+| body-like | Tags: Bar, Kim\n           |            |
+| body-like | Tags: Bar, Kim, Car\n      |            |
+| body-like | Tags: Bar, Kim, Car, Foo\n |            |
+| body-like | Tags: Bar, Car, Foo\n      |            |
+
+| Comment   | DELETE should not work  |   |
+| DELETE    | %%tags_uri%%            |   |
+| code-is   | 405                     |   |
+
+| Comment   | POST should not work    |   |
+| POST      | %%tags_uri%%            |   |
+| code-is   | 405                     |   |
+
+| Comment   | PUT should not work     |   |
+| PUT       | %%tags_uri%%            |   |
+| code-is   | 405                     |   |
+

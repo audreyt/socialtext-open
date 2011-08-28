@@ -1,0 +1,28 @@
+These testcases are specific to the appliance.
+
+Test Case: Privacy Defaults can only succeed if it is the first test run by All Appliance Testcases in a freshly built appliance
+
+* [Test Case: User: Primary Account]
+* [Test Case: Appliance Health Report]
+* [Test Case: Bare Account]
+* [Test Case: change signal limit]
+* [Test case: Account Types]
+* [Test Case: User Settings: First Last locale order]
+* [Test case: Appliance Console]
+* [Test case: Console Setup]
+* [Test case: Console Backup and Restore]
+* [Test case: Business Control Panel Settings]
+* [Test case: Business Control Panel Account Google Analytics]
+* [Test Case: Captcha]
+* [Test Case: Data Jobs]
+* [Test Case: Custom Skin UI]
+* [Test Case: Global Time Override]
+
+Keep these two authen renewal cases together
+
+* [Test Case: Authen Renewal]
+* [Test Case: Authen Renewal Reset]
+
+Save Race Conditions uses st-appliance-ctl stop/start
+
+* [Test Case: Save Race Conditions]

@@ -1,0 +1,58 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+#
+# fixture-sort
+#
+# Sorts the given files by which test fixtures they use.
+#
+# Useful for grouping unit-tests together by fixture, to help achieve better
+# re-use of cached test fixtures.
+#
+###############################################################################
+
+use strict;
+use warnings;
+use Memoize;
+use File::Slurp qw(slurp);
+
+memoize('fixture_key');
+
+# Get the list of tests to sort, from STDIN.
+my @tests = <>;
+chomp @tests;
+
+# Sort the tests alphabetically, then grouped by fixture.
+my @sorted = sort { fixture_key($a) cmp fixture_key($b) } sort @tests;
+print "$_\n" for @sorted;
+
+exit;
+
+
+
+
+###############################################################################
+# Returns a sortable key for the test, based on the fixtures used by the test.
+sub fixture_key {
+    my $test     = shift;
+    my @fixtures = eval { fixtures_used_by($test) };
+    return '' unless @fixtures;
+    return 'clean' if (grep {/clean|destructive/} @fixtures);
+    return join '-', sort @fixtures;
+}
+
+###############################################################################
+# Returns a list of the fixtures that are used by the given test.
+sub fixtures_used_by {
+    my $test  = shift;
+    my @lines = grep { /^fixtures/ } slurp($test);
+
+    my @fixtures;
+    foreach my $line (@lines) {
+        $line =~ s/.*fixtures\((.*)\).*/$1/;    # remove "fixtures()" function call
+        $line =~ s/qw\((.*)\)/$1/;              # remove "qw()" wrapper
+        $line =~ s/qw\/(.*)\//$1/;              # remove "qw//" wrapper
+        $line =~ s/['",]/ /g;                   # remove punctuation or separator chars
+        push @fixtures, grep { defined } split(/\s+/, $line);
+    }
+    return @fixtures;
+}

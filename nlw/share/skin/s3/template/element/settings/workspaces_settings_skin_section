@@ -1,0 +1,62 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[% PROCESS element/settings/start form_action="workspaces_settings_skin" %]
+
+<dl class="form">
+  <dt><label>[% loc('wiki.skin') %]</label></dt>
+  <dd>
+    [% loc('info.skin') %]
+  </dd>
+</dl>
+<dl class="form">
+  <dt><label>[% loc('skin.support') %]</label></dt>
+  <dd>    
+    [% loc('skin.unsupported') %]
+  </dd>
+</dl>
+<dl class="form">
+  <dt><label>[% loc('skin.select:') %]</label></dt>
+  <dd>
+    <input id="st-workspaceskin-default" type="radio" name="uploaded_skin" value="0"[% IF NOT uploaded_skin %] checked="true"[% END %] >[% loc('skin.default') %]<br/>
+    <input id="st-workspaceskin-custom" type="radio" name="uploaded_skin" value="1"[% IF uploaded_skin %] checked="true"[% END %] [% IF !skin_files.size() %]disabled="true"[% END %]>[% loc('skin.customized') %]
+  </dd>
+</dl>
+
+</form>
+
+<dl class="form">
+  <form id="st-workspaceskin-uploadform" method="post" name="skin-upload" action="[% script_name %]" enctype="multipart/form-data">
+    <input type="hidden" name="action" value="skin_upload" />
+    <dd>
+      [% loc('skin.select-file:') %]<br/>
+      <input id="st-workspaceskin-file" type="file" name="skin_file" size="35" value="[% loc('skin.browse') %]" />
+      <input id="st-workspaceskin-submit" name="submit" type="submit" value="[% loc('do.upload') %]" />
+    </dd>
+
+    <dd>
+      [% IF skipped_files.size() %][% skipblock = PROCESS element/settings/list_skipped_files %][% ELSE %][% skipblock = '' %][% END %]
+      [%- upload_error = upload_error _ skipblock -%]
+      [% IF upload_error -%]<div id="st-errorbox" class="st-errorbox">[% upload_error %]</div>[% END -%]
+    </dd>
+  </form>
+</dl>
+
+<dl class="form" [% IF !skin_files.size() %][% "style=\"display: none;\"" %][% END %]>
+  <form id="st-workspaceskin-removefiles" method="post" name="remove-files" action="[% script_name %]" enctype="application/x-www-form-urlencoded">
+    <input type="hidden" name="action" value="remove_skin_files" />
+    <dt><label>[%- loc('skin.files') %]</label></dt>
+    <dd>
+      <input id="st-workspaceskin-removesubmit" name="submit" type="submit" value=[% loc('skin.remove-existing') %] />
+    </dd>
+  </form>
+  <table class="standard-table" [% UNLESS skin_files.size() %]style="display: none;"[% END %]>
+    <tr>
+      <th>[% loc('skin.file') %]</th>
+      <th>[% loc('skin.size') %]</th>
+      <th>[% loc('skin.uploaded') %]</th>
+    </tr>
+      [% FOREACH file IN skin_files %]
+      <tr class="[% loop.count % 2 ? 'w-st-even-row' : '' %]"><td>[% file.name %]</td><td class="alignright">[% file.size %]</td><td>[% file.date %]</td></tr>
+      [% END %]
+  </table>
+</dl>

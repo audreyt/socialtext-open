@@ -1,0 +1,64 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use 5.12.0;
+use autodie;
+use warnings;
+use open qw(:std :utf8);
+use File::Basename;
+use Getopt::Long;
+use FindBin '$RealBin';
+use lib "$RealBin/../lib";
+use Socialtext::l10n::DevUtils;
+use File::Slurp qw(slurp);
+
+my ($lang);
+GetOptions(
+    'lang|l=s' => \$lang,
+) and @ARGV and $lang or die "Usage: $0 --lang lang patch.po\n";
+
+my $patchPo = shift;
+
+chdir "$RealBin/..";
+
+my $patch = slurp($patchPo);
+if ($patch =~ /^\[\[\[/m) {
+    # It's a .txt file - turn it into .po first.
+    system("dev-bin/l10n-txt-to-po" => $patchPo);
+    $patchPo =~ s/\.txt\b//;
+    $patchPo =~ s/\.po\b//;
+    $patch = slurp("$patchPo.po");
+    unlink "$patchPo.po";
+}
+
+for my $po (glob("share/l10n/$lang/*.po")) {
+    (my $en = $po) =~ s!/$lang/!/en/!;
+
+    my %myIds = map { $_ => 1 } `grep msgid $po | sort`;
+    my %enIds = map { $_ => 1 } `grep msgid $en | sort`;
+    my @delta = grep { not exists $myIds{$_} } keys %enIds;
+    my $out = '';
+
+    for my $id (@delta) {
+        $id =~ s/msgid "(.+)"\s*/$1/ or die "Invalid id: $id";
+        if ($patch =~ /(msgid "\Q$id\E"\n(?:.+\n)+)/) {
+            $out .= "\n$1";
+        }
+        else {
+            warn "*** Cannot find: $id\n";
+        }
+    }
+
+    $out or next;
+
+    open my $fh, '>>', $po;
+    print $fh $out;
+    close $fh;
+
+    rename $po => "$po.unsorted";
+    system("msgcat -w 99999 -n -s $po.unsorted > $po");
+    unlink "$po.unsorted";
+    
+    say "*** Patched: $po\n";
+}
+
+system("dev-bin/l10n-make-po-js");

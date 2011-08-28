@@ -1,0 +1,42 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+use Cwd;
+use File::Basename;
+
+
+if ( dirname($0) ne '/usr/local/bin' ) {
+    my $parent = dirname( Cwd::abs_path($0) );
+    $parent =~ s{/bin/?$}{};
+
+    require lib; lib->import("$parent/lib");
+}
+
+require Socialtext::Account;
+require Socialtext::Workspace;
+require Socialtext::Hostname;
+
+my $name = shift;
+my $title = shift || $name;
+
+my $ws = Socialtext::Workspace->new( name => $name );
+
+if ($ws) {
+    warn "A workspace named $name already exists.\n";
+    exit 0;
+}
+
+my $account_name = Socialtext::Hostname::domain();
+$account_name = 'Socialtext' if $account_name =~ /socialtext/;
+
+my $account = Socialtext::Account->new( name => $account_name );
+$account ||= Socialtext::Account->create( name => $account_name );
+
+Socialtext::Workspace->create(
+    name       => $name,
+    title      => $title,
+    account_id => $account->account_id,
+);

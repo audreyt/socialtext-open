@@ -1,0 +1,76 @@
+| *Comment* | START Test Case: Sidebar: Recently Viewed |  |
+
+ be sure a number of recent viewings have occurred | | view some pages as needed
+
+| *Comment* | Test Case: Sidebar: Recently Viewed. Set up test data |  |
+
+| st-admin | update-page --w %%workspace%% --e %%email%% --p "TC Sidebar RV 1 %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |
+| st-admin | update-page --w %%workspace%% --e %%email%% --p "TC Sidebar RV 2 %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |
+| st-admin | update-page --w %%workspace%% --e %%email%% --p "TC Sidebar RV 3 %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |
+
+ "Settings -> Screen Layout"<http://> | screen layout UI appears
+ check "Include Recently Viewed items as a side box when viewing pages?" checkbox. Save. | settings take effect.
+
+| *Comment* | Test Case: Sidebar: Recently Viewed Change screen layout to show breadcrumbs |  |
+
+| open_ok | /%%workspace%%/?action=users_settings |  |
+| clickAndWait | link=Screen Layout |  |
+| check_ok | display__include_breadcrumbs |  |
+| clickAndWait | link=Save |  |
+
+| open_ok | /%%workspace%%/?TC Sidebar RV 3 %%start_time%% |  |
+| open_ok | /%%workspace%%/?TC Sidebar RV 2 %%start_time%% |  |
+| open_ok | /%%workspace%%/?TC Sidebar RV 1 %%start_time%% |  |
+
+ Visit any page. Open the sidebar | Sidebar contains recently viewed section
+ Observe values in sidebar | Sidebar contains list of most recently viewed pages in most recently viewed order
+
+| *Comment* | Test Case: Sidebar: Recently Viewed. Sidebar |  |
+| text_like | link=TC Sidebar RV 2 %%start_time%% | TC Sidebar RV 2 %%start_time%% |
+| text_like | link=TC Sidebar RV 3 %%start_time%% | TC Sidebar RV 3 %%start_time%% |
+
+| *Comment* | Test Case: Sidebar: Recently Viewed validate sorting |  |
+| text_like | qr/TC Sidebar RV 2 %%start_time%%.+TC Sidebar RV 3 %%start_time%%/ |  |
+
+ "What's New,"<http://> then Recently Viewed tab | same list appears in same order
+
+| *Comment* | Test Case: Sidebar: Recently Viewed. list view |  |
+| open_ok | /%%workspace%%/index.cgi?action=recent_changes |  |
+| clickAndWait | link=Recently Viewed |  |
+| text_like | link=TC Sidebar RV 1 %%start_time%% | TC Sidebar RV 1 %%start_time%% |
+| text_like | link=TC Sidebar RV 2 %%start_time%% | TC Sidebar RV 2 %%start_time%% |
+| text_like | qr/TC Sidebar RV 1 %%start_time%%.+TC Sidebar RV 2 %%start_time%%/ |  |
+
+ visit several pages | Recently Viewed list changes in sidebar to track viewed pages
+ "What's New,"<http://www2.socialtext.net/s3wt/%3Chttp:%3E/http></http/> then Recently Viewed tab | same list appears in same order
+
+| *Comment* | Test Case: Sidebar: Recently Viewed. Visit several pages |  |
+| open_ok | /%%workspace%%/?Announcements and Links |  |
+| open_ok | /%%workspace%%/?TC Sidebar RV 3 %%start_time%% |  |
+
+| *Comment* | Test Case: Sidebar: Recently Viewed Visit A&L again to force Sidebar update |  |
+| open_ok | /%%workspace%%/?Announcements and Links |  |
+| text_like | qr/TC Sidebar RV 3 %%start_time%%.+Announcements.+TC Sidebar RV 1 %%start_time%%.+TC Sidebar RV 2 %%start_time%%/ |  |
+
+ "Settings -> Screen Layout"<http:///> | screen layout UI appears
+ uncheck "Include Recently Viewed items as a side box when viewing pages?" checkbox. Save. | settings take effect.
+ Visit any page. Open the sidebar | Sidebar *DOES NOT* contain recently viewed section
+
+| *Comment* | Test Case: Sidebar: Recently Viewed. uncheck sidebar |  |
+| open_ok | /%%workspace%%/index.cgi?action=users_settings |  |
+| clickAndWait | link=Screen Layout |  |
+| uncheck_ok | display__include_breadcrumbs |  |
+| clickAndWait | link=Save |  |
+| open_ok | /%%workspace%%/?TC Sidebar RV 3 %%start_time%% |  |
+| text_unlike | contentRight | Announcements and Links |
+| text_unlike | contentRight | TC Sidebar RV 2 %%start_time%% |
+| text_unlike | contentRight | TC Sidebar RV 1 %%start_time%% |
+| text_like | contentRight | Incoming Links |
+
+| *Comment* | Test Case: Sidebar: Recently Viewed. Teardown |  |
+
+| st-admin | purge-page --w %%workspace%% --p tc_sidebar_rv_1_%%start_time%% | was purged |
+| st-admin | purge-page --w %%workspace%% --p tc_sidebar_rv_2_%%start_time%% | was purged |
+| st-admin | purge-page --w %%workspace%% --p tc_sidebar_rv_3_%%start_time%% | was purged |
+
+| *Comment* | Test Case: Sidebar: Recently Viewed COMPLETED |  |

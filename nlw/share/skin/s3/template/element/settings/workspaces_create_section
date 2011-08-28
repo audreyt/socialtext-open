@@ -1,0 +1,35 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[% PROCESS element/settings/start %]
+<dl class="form">
+  <dt><label>[% loc('wiki.title') %]</label></dt>
+  <dd>
+    [% loc('info.wiki-title') %]
+  </dd>
+  <dd>
+    <input type="text" name="title" value="[% title %]" size="50" />
+    ([% loc('info.required') %])
+  </dd>
+  <dd>
+    <i>[% loc('example.title') %]</i>
+  </dd>
+</dl>
+
+<dl class="form">
+  <dt><label>[% loc('wiki.name') %]</label></dt>
+  <dd>
+    [% loc("info.wiki-id") %] 
+    [% loc('info.valid-wiki-name') %]
+  </dd>
+  <dd>
+    <input type="text" name="name" value="[% name %]" size="30" />
+    ([% loc('info.required') %])
+  </dd>
+  <dd>
+    [% loc('example.wiki-url:') %]
+    http://[% appconfig.web_hostname %]/acme-product-dev
+    [% loc('example.wiki-email:') %]
+    acme-product-dev@[% appconfig.email_hostname %]
+  </dd>
+</dl>
+[% PROCESS element/settings/stop %]

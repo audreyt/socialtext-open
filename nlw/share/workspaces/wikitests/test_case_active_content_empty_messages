@@ -1,0 +1,59 @@
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Active Content Empty Messages |  |
+
+| set | empty_member | empty_member_%%start_time%%@ken.socialtext.net |
+| set | empty_acct | empty_acct_%%start_time%% |
+
+| *Comment* | Test Case: Active Content Empty Messages setup empty user and account |  |
+| st-admin | create-account --name %%empty_acct%% |  |
+| st-admin | create-user --e %%empty_member%% --p %%password%% --account %%empty_acct%% |  |
+
+| *Comment* | Test Case: Active Members Empty Messages login %%empty_member%% |  |
+| st-logoutin | %%empty_member%% | %%password%% |
+
+| *Comment* | Test Case: Active Content Empty Messages get an empty Active Content widget |  |
+| st_single_widget_in_dashboard | gallery-widget-Active Content |  |
+| st-name-widget | 1 | active_content |
+| st-widget-title-like | active_content | Active Content |
+| st-widget-settings | active_content |  |
+| uncheck_ok | rotate |  |
+| select_ok | view | Viewed Pages |
+| click_ok | st-savebutton-%%active_content%% |  |
+| wait_for_element_not_visible_ok | st-savebutton-%%active_content%% | 30000 |
+
+| *Comment* | Test Case: Active Content Empty Messages set the empty Content messages |  |
+| set | EmptyViews | The most frequently viewed pages will be listed here. After you explore your new workspaces, you can see the most viewed pages here. |
+| set | EmptyEdits | The most frequently edited pages will be listed here. Try editing a page in one of your new workspaces. |
+| set | EmptyWatch | The most frequently watched pages will be listed here. Try watching a page in one of your new workspaces by clicking on the Watch icon in the page's toolbar. |
+| set | EmptyEmail | The most frequently emailed pages will be listed here. Try emailing a page to a colleague by clicking on the Email icon in the page's toolbar. |
+
+| *Comment* | Test Case: Active Content Empty Messages Check the Empty Content messages |  |
+| *Comment* | Test Case: Active Content Empty Messages clicks don't work if you go too fast |  |
+| set_speed_ok | 2000 |  |
+
+| wait_for_text_present_ok | Viewed | 30000 |
+| wait_for_text_present_ok | %%EmptyViews%% | 30000 |
+
+| wait_for_element_visible_ok | link=Edited | 30000 |
+| click_ok | link=Edited |  |
+| wait_for_text_present_ok | %%EmptyEdits%% | 30000 |
+
+| wait_for_element_visible_ok | link=Watched | 30000 |
+| click_ok | link=Watched |  |
+| wait_for_text_present_ok | %%EmptyWatch%% | 30000 |
+
+| wait_for_element_visible_ok | link=Emailed | 30000 |
+| click_ok | link=Emailed |  |
+| wait_for_text_present_ok | %%EmptyEmail%% | 30000 |
+
+| wait_for_element_visible_ok | link=Viewed | 30000 |
+| click_ok | link=Viewed |  |
+| wait_for_text_present_ok | %%EmptyViews%% | 30000 |
+
+| *Comment* | Test Case: Active Content Empty Messages TEARDOWN |  |
+| st-process-jobs |  |  |
+| st-admin | deactivate-user --e %%empty_member%% |  |
+| delete-account | %%empty_acct%% |  |
+
+| *Comment* | Test Case: Active Content Empty Messages COMPLETED |  |

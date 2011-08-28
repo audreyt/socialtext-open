@@ -1,0 +1,86 @@
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: People Dashboard Plugins |  |
+
+| *Comment* | Test Case: People Dashboard Plugins Create an account/user |  |
+| set | user | pdp%%start_time%%@matt.socialtext.net |
+| set | acct | pdp-acct-%%start_time%% |
+| set | ws | pdp-ws-%%start_time%% |
+
+| st-admin | create-account --name %%acct%% | was created |
+| st-admin | create-workspace --empty --name %%ws%% --title %%ws%% --account %%acct%% | was created |
+| st-admin | create-user --email %%user%% --password %%password%% --account %%acct%% | was created |
+| st-admin | add-member --email %%user%% --workspace %%ws%% | now has the role of 'member' in the |
+| st-admin | enable-plugin --plugin dashboard --all-accounts |  |
+| st-admin | enable-plugin --plugin signals --all-accounts |  |
+
+| set | page1 | page_one_%%start_time%% |
+| set | page2 | page_two_%%start_time%% |
+| set | tagtoadd | tag-%%start_time%% |
+| set | signal1 | What would you If I sang out of tune %%start_time%% |
+| set | signal2 | Would you stand up and walk out on me %%start_time%% |
+
+| *Comment* | Test Case: People Dashboard Plugins Create an pages and signals, tag |  |
+| st-logoutin | %%user%% | %%password%% |
+| tag_profile_via_gui | %%tagtoadd%% |  |
+| st-create-wikipage | %%ws%% | %%page1%% |
+| st-create-wikipage | %%ws%% | %%page2%% |
+| http-user-pass | %%user%% | %%password%% |
+| post-signal | %%signal1%% |  |
+| post-signal | %%signal2%% |  |
+
+| *Comment* | Test Case: People Dashboard Plugins Setup Activities Widget |  |
+| st_single_widget_in_dashboard | gallery-widget-Activities |  |
+
+| *Comment* | Test Case: People Dashboard Plugins Set event limit to 25 |  |
+| st-name-widget | 1 | activities_widget |
+| st-widget-title-like | activities_widget | Activities |
+| st-widget-settings | activities_widget |  |
+| wait_for_element_visible_ok | limit | 30000 |
+| select_ok | limit | 25 |
+| click_ok | st-savebutton-%%activities_widget%% |  |
+| wait_for_element_not_visible_ok | limit | 30000 |
+
+| *Comment* | Test Case: People Dashboard Plugins See pages, Signals, Tags |  |
+| wait_for_text_present_ok | edited %%page1%% in %%ws%% | 30000 |
+| text_like | //body | edited %%page2%% in %%ws%% |
+| text_like | //body | tagged themself %%tagtoadd%% |
+| text_like | //body | %%signal1%% |
+| text_like | //body | %%signal2%% |
+
+| *Comment* | Test Case: People Dashboard Plugins Disable Signals, see only pages, people tags |  |
+| st-admin | disable-plugin --plugin signals --account %%acct%% | The signals plugin is now disabled |
+| refresh |  |  |
+| st-name-widget | 1 | activities_widget |
+| wait_for_text_present_ok | edited %%page1%% in %%ws%% | 30000 |
+| text_like | //body | edited %%page2%% in %%ws%% |
+| text_like | //body | tagged themself %%tagtoadd%% |
+| text_unlike | //body | %%signal1%% |
+| text_unlike | //body | %%signal2%% |
+
+| *Comment* | Test Case: People Dashboard Plugins disable people see only pages NOT people tags or signals |  |
+| st-admin | disable-plugin --plugin people --account %%acct%% | is now disabled |
+| refresh |  |  |
+| st-name-widget | 1 | activities_widget |
+| wait_for_text_present_ok | edited %%page1%% in %%ws%% | 30000 |
+| text_like | //body | edited %%page2%% in %%ws%% |
+| text_unlike | //body | tagged themself %%tagtoadd%% |
+| text_unlike | //body | %%signal1%% |
+| text_unlike | //body | %%signal2%% |
+
+| *Comment* | Test Case: People Dashboard Plugins enable signals NOTE |  |
+| *Comment* | Test Case: People Dashboard Plugins enable signals NOTE This will implicitly enable people |  |
+| *Comment* | Test Case: People Dashboard Plugins enable signals NOTE Per Tracy Ruggles, 6/24/2010 irc log 11:38 AM |  |
+| st-admin | enable-plugin --plugin signals --account %%acct%% | is now enabled |
+| refresh |  |  |
+| st-name-widget | 1 | activities_widget |
+| wait_for_text_present_ok | edited %%page1%% in %%ws%% | 30000 |
+| text_like | //body | edited %%page2%% in %%ws%% |
+| text_like | //body | tagged themself %%tagtoadd%% |
+| text_like | //body | %%signal1%% |
+| text_like | //body | %%signal2%% |
+
+| *Comment* | Test Case: People Dashboard Plugins teardown |  |
+| st-admin | delete-workspace --no-export --w %%ws%% |  |
+
+| *Comment* | Test Case: People Dashboard Plugins COMPLETED |

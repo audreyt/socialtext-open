@@ -1,0 +1,104 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+use List::MoreUtils qw(any);
+use Socialtext::SQL qw(sql_txn sql_selectrow get_dbh sql_singlevalue);
+
+my $DEBUG = $ENV{DEBUG_MIGRATION} || 0;
+
+# For accounting
+my $updates    = 0;
+my $db_hits    = 0;
+my $cache_hits = 0;
+
+# Cached DB lookups
+my %cache = ();
+
+my $updator = get_dbh->prepare(q{
+    UPDATE signal SET in_reply_to_id = ? WHERE signal_id = ?});
+
+my $run = 1;
+while ($run) {
+    $run = 0; # assume this is the last run.
+    sql_txn {
+        my ($signal, $reply) = signal_for_update();
+        if ($signal && $reply) {
+            $run = 1; # we found one, there may be more
+            update_signal($signal, $reply);
+            $updates++;
+        }
+    }
+}
+
+print "\nUpdates: $updates\nDB Hits: $db_hits\nCache Hits: $cache_hits\n"
+    if $DEBUG;
+
+exit;
+
+sub update_signal {
+    my $signal = shift;
+    my $reply  = shift;
+
+    print "Found signal $signal, unthreading...\n" if $DEBUG == 2;
+
+    my $source = find_source($reply);
+    $updator->execute($source, $signal);
+}
+
+sub signal_for_update {
+    # signal has at least a grandparent
+    return sql_selectrow(q{
+        SELECT signal_id,
+               in_reply_to_id
+          FROM signal AS child
+         WHERE in_reply_to_id IS NOT NULL
+           AND EXISTS (
+                   SELECT 1
+                     FROM signal
+                    WHERE in_reply_to_id IS NOT NULL
+                      AND signal_id = child.in_reply_to_id
+               )
+         LIMIT 1
+         FOR UPDATE
+    });
+}
+
+sub find_source {
+    my $signal = shift;
+    my @seen   = ($signal);
+
+    while (my $maybe = find_signal_parent($signal)) {
+
+        # Protect against bad data in the DB.
+        die "circular reply, $signal. Aborting update.\n"
+            if any { $_ == $maybe } @seen;
+
+        $signal = $maybe; # new signal to check against
+        $db_hits++;
+    }
+    print "... found source $signal\n" if $DEBUG == 2;
+
+    return $signal;
+}
+
+sub find_signal_parent {
+    my $signal_id = shift;
+
+    if (my $cached = $cache{$signal_id}) {
+        $cache_hits++;
+        return $cached;
+    }
+
+    my $found = sql_singlevalue(q{
+        SELECT in_reply_to_id
+          FROM signal
+         WHERE signal_id = ?
+    }, $signal_id);
+
+    $cache{$signal_id} = $found;
+    $db_hits++;
+
+    return $found;
+}

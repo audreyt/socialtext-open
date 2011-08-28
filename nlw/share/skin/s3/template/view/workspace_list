@@ -1,0 +1,29 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[% USE decorate %]
+[% WRAPPER $frame_name id="workspaceListPage" %]
+  <div id="controls">
+    <div id="st-editing-tools-edit">
+    </div><!-- controlsLeft END -->
+    <div id="controlsRight">
+    </div><!-- controlsRight END -->
+  </div>
+
+  <div id="contentContainer">
+    <div id="contentColumns">
+      <div id="contentLeft">
+        <p>
+          [% loc('info.logged-in=name', '<b>' _ user.username _ '</b>') %]
+        </p>
+        <p>
+          <a href="/nlw/submit/logout[% IF wiki.is_public %]?redirect_to=[% wiki.uri | html %][% END %]">[% loc('nav.logout') %]</a>
+        </p>
+      </div>
+      <div id="contentRight" class="wiki">
+        [% INCLUDE 'element/workspace_list/my_workspaces' %]
+        [% INCLUDE 'element/workspace_list/public_workspaces' %]
+      </div>
+    </div>
+    <div class="clear">&nbsp;</div>
+  </div>
+[% END %]

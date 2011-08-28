@@ -1,0 +1,6 @@
+[%# @COPYRIGHT@ -%]
+<div class="st-skippedfiles">
+  <span class="st-section-label">[% loc('Files are imported only from ZIP/TGZ javascript/, css/ and images/ paths. Files with other paths are not imported.') %]</span><br/>
+  <span class="st-section-label">[% loc('These files were not imported:') %] </span>
+  <span class="st-skippedfiles-list">[% skipped_files.join(', ') %]</span>
+</div>

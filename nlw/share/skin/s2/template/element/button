@@ -1,0 +1,14 @@
+[% DEFAULT corners = 'straight' %]
+<table class="button-table"><tr><td>
+    <div class="button-[% corners %]">
+        <div class="button-[% corners %]-right-top">
+            <div class="button-[% corners %]-left-bottom">
+                <div class="button-[% corners %]-right-bottom">
+                    <div class="button-content">
+                        <a id="[% id %]" href="[% href || '#' %]" title="[% tooltip %]">[% label %]</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</td></tr></table>

@@ -1,0 +1,40 @@
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: All People Tags Widget. Create the widget |  |
+| st-single-widget-in-dashboard | gallery-widget-All People Tags |  |
+
+| *Comment* | Test Case: All People Tags Widget. Configure the widget for 10 |  |
+| st-name-widget | 1 | apt |
+| st-widget-title-like | apt | All People Tags |
+| st-widget-settings | apt |  |
+| wait_for_element_visible_ok | //select[@name='limit'] | 30000 |
+| select_ok | //select[@name='limit'] | label=10 |
+| wait_for_element_visible_ok | st-savebutton-%%apt%% | 30000 |
+| click_ok | st-savebutton-%%apt%% |  |
+| wait_for_element_not_visible_ok | st-savebutton-%%apt%% | 30000 |
+
+| *Comment* | Test Case: All People Tags Widget. Configure the widget for 25 |  |
+| open_ok | /st/dashboard |  |
+| st-name-widget | 1 | apt |
+| st-widget-title-like | apt | All People Tags |
+| st-widget-settings | apt |  |
+| wait_for_element_visible_ok | //select[@name='limit'] | 30000 |
+| select_ok | //select[@name='limit'] | label=25 |
+| wait_for_element_visible_ok | st-savebutton-%%apt%% | 30000 |
+| click_ok | st-savebutton-%%apt%% |  |
+| wait_for_element_not_visible_ok | st-savebutton-%%apt%% | 30000 |
+
+| *Comment* | Test Case: All People Tags Widget. Configure the widget for all |  |
+| open_ok | /st/dashboard |  |
+| st-name-widget | 1 | apt |
+| st-widget-title-like | apt | All People Tags |
+| st-widget-settings | apt |  |
+| wait_for_element_visible_ok | //select[@name='limit'] | 30000 |
+| select_ok | //select[@name='limit'] | label=all |
+| wait_for_element_visible_ok | st-savebutton-%%apt%% | 30000 |
+| click_ok | st-savebutton-%%apt%% |  |
+| wait_for_element_not_visible_ok | st-savebutton-%%apt%% | 30000 |
+
+| *Comment* | Test Case: All People Tags Widget COMPLETED |  |
+
+TODO: make some people, make some tags, see if limits work

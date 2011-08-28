@@ -1,0 +1,19 @@
+#!/bin/bash
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+
+OUT=$(psql -U $DB_USER -d $DB -t -c '\d "Workspace"' 2>&1)
+
+if [ $? -ne 0 ]; then
+    if echo "$OUT" | grep -q "Did not find any relation named"; then
+        echo "Workspace table not found.  Aborting migration: $OUT"
+        exit 2
+    else
+        echo "Database Error, Aborting Migration: $OUT"
+        exit 1
+    fi
+fi
+
+echo "Enabling Unplugged on all workspaces."
+exit 0

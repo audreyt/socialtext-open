@@ -1,0 +1,41 @@
+[%# @COPYRIGHT@ -%]
+
+<p style="font-weight: bold;">
+  [% loc("email.thank-you-for-joining-company-collaboration-group-hosted-by-socialtext") %]
+</p>
+
+
+[% IF requires_confirmation %]
+
+  [% SET uri = confirmation_uri | html %]
+  <p>[% loc('email.click-to-confirm-email-and-login=uri', uri) %]</p>
+  <p>[% loc('email.copy-url-into-browser-to-confirm-email:') %]</p>
+  <blockquote>[% uri %]&amp;account_for=free50</blockquote>
+  <p>[% loc('email.to-start-click-above') %]</p>
+
+[% ELSE %]
+
+  <p>
+    [% loc('invite.web-address:') %] <a href="[% account_uri | html %]">[% account_uri | html %]</a><br />
+    [% loc('invite.username:') %] [% username | html %]
+  </p>
+
+  [% IF appconfig.is_default('user_factories') %]
+    [% IF app_name; a = 'a'; ELSE; a = 'an'; END %]
+    <p>
+      [% loc("email.same-password-as-existing-group=a,app,app", a, app_name, app_name) %]
+      [% loc("invite.link-to-reset-password:") %]
+      [% forgot_password_uri %]
+    </p>
+  [% END %]
+
+  <p>[% loc('email.keep-this-for-future-reference') %]</p>
+
+[% END %]
+
+<p>[% loc("email.we-encourage-you-to-invite-others") %]</p>
+<p>[% loc("email.if-unsolicited-contact-abuse-link") %]</p>
+
+<p>[% loc("email.happy-collaborating!") %]</p>
+<p><img alt="Socialtext logo" src="http://www.socialtext.com/themes/socialtext/images/header_logo.gif" /></p>
+<p style="font-weight: bold; font-style: italic;"><a href="http://www.socialtext.com">www.socialtext.com</a></p>

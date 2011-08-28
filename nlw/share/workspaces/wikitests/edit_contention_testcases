@@ -1,0 +1,15 @@
+Opening a page for editing, then going to it in Selenium, cancels the edit contention. So we use three separate tests, connected by a common page called `Special Edit Contention Page`.
+
+I tried to hook these tests together using %%start_time%% and other tricks to pass a page title between them, but failed. So the page title is always `Special Edit Contention Page`.
+
+opens the page for editing
+
+* [Test Case: Edit Contention Setup]
+
+tests the edit contention UI
+
+* [Test Case: Edit Contention Execute]
+
+purges the page
+
+* [Test Case: Edit Contention Reset]

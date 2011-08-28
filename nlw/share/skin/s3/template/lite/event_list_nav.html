@@ -1,0 +1,50 @@
+[% IF section == "activities" %]
+<div data-role="header" data-inline="true" data-position="inline" data-theme="c">
+  <h4>
+    [% loc('nav.recent-activities') %]
+  </h4>
+</div>
+[% END %]
+<div class="tabs" data-role="navbar"><ul>
+    [% IF section == "activities" %]
+        [% INCLUDE conversations_tab %]
+        [% INCLUDE followed_tab %]
+        [% INCLUDE all_tab %]
+    [% ELSIF section == "signals" %]
+        [% INCLUDE all_tab %]
+        [% INCLUDE followed_tab %]
+        [% INCLUDE mine_tab %]
+    [% END %]
+</ul></div>
+
+[% BLOCK mine_tab %]
+    [% IF mine %]
+        <li><a id="mobile-activity-mine" rel="" class="ui-btn-active">[% loc("nav.mine") %]</a></li>
+    [% ELSE %]
+        <li><a id="mobile-activity-mine" rel="" href="/m/[% section %]?mine=1">[% loc("nav.mine") %]</a></li>
+    [% END %]
+[% END %]
+
+[% BLOCK all_tab %]
+    [% IF all %]
+        <li><a id="mobile-activity-all" rel="" class="ui-btn-active">[% loc('nav.all') %]</a><span class="menu-padding">&nbsp;</span></li>
+    [% ELSE %]
+        <li><a id="mobile-activity-all" rel="" href="/m/[% section %]?all=1">[% loc("nav.all") %]</a><span class="menu-padding">&nbsp;</span></li>
+    [% END %]
+[% END %]
+
+[% BLOCK conversations_tab %]
+    [% IF all || followed %]
+        <li><a id="mobile-activity-conversations" rel="" href="/m/[% section %]">[% loc("nav.conversations") %]</a><span class="menu-padding">&nbsp;</span></li>
+    [% ELSE %]
+        <li><a id="mobile-activity-conversations" rel="" class="ui-btn-active">[% loc("nav.conversations") %]</a><span class="menu-padding">&nbsp;</span></li>
+    [% END %]
+[% END %]
+
+[% BLOCK followed_tab %]
+    [% IF followed %]
+        <li><a id="mobile-activity-followed" rel="" class="ui-btn-active">[% loc("nav.following") %]</a><span class="menu-padding">&nbsp;</span></li>
+    [% ELSE %]
+        <li><a id="mobile-activity-followed" rel="" href="/m/[% section %]?followed=1">[% loc("nav.following") %]</a><span class="menu-padding">&nbsp;</span></li>
+    [% END %]
+[% END %]

@@ -1,0 +1,215 @@
+user adds page to watchlist using Watchlist icon at top of sidebar icon turns color to indicate membership in watchlist
+
+| *Comment* | STARTING Test case: Watchlist |
+
+| *Comment* | Test case: Watchlist watch |  |
+| st-admin | update-page --w %%workspace%% --e %%email%% --p "Watchlist %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |
+| open_ok | /%%workspace%%/?Watchlist %%start_time%% |  |
+| wait_for_element_visible_ok | link=Watch | 30000 |
+| st-watch-page | 1 |  |
+| st-is-watched | 1 |  |
+
+user removes page from watchlist by clicking the star on the page icon reverses colors to indicate no longer in watchlist
+
+| *Comment* | Test case: Watchlist unwatch and rewatch |  |
+| st-watch-page | 0 |  |
+| st-is-watched | 0 |  |
+| st-watch-page | 1 |  |
+| st-is-watched | 1 |  |
+
+Visit some individual pages in the workspace; add them to the watchlist. View watchlist; pages appear in watchlist
+
+| *Comment* | Test case: Watchlist create and watch AAA |  |
+| st-admin | update-page --w %%workspace%% --e %%email%% --p "AAA %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |
+| open_ok | /%%workspace%%/?AAA %%start_time%% |  |
+| wait_for_element_visible_ok | link=Watch | 30000 |
+| st-watch-page | 1 |  |
+| st-is-watched | 1 |  |
+
+| *Comment* | Test case: Watchlist create and watch BBB |  |
+| st-admin | update-page --w %%workspace%% --e %%email%% --p "BBB %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |
+| open_ok | /%%workspace%%/?BBB %%start_time%% |  |
+| wait_for_element_visible_ok | link=Watch | 30000 |
+| st-watch-page | 1 |  |
+| st-is-watched | 1 |  |
+
+| *Comment* | Test case: Watchlist create and watch CCC |  |
+| st-admin | update-page --w %%workspace%% --e %%email%% --p "CCC %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |
+| open_ok | /%%workspace%%/?CCC %%start_time%% |  |
+| wait_for_element_visible_ok | link=Watch | 30000 |
+| st-watch-page | 1 |  |
+| st-is-watched | 1 |  |
+
+| *Comment* | Test case: Watchlist has three pages |  |
+| click_and_wait | link=My Watchlist |  |
+| wait_for_element_visible_ok | contentContainer | 30000 |
+| text_like | contentContainer | Pages You're Watching |
+| text_like | contentContainer | AAA %%start_time%% |
+| text_like | contentContainer | BBB %%start_time%% |
+| text_like | contentContainer | CCC %%start_time%% |
+| st-is-watched | 1 | AAA %%start_time%% |
+| st-is-watched | 1 | BBB %%start_time%% |
+| st-is-watched | 1 | CCC %%start_time%% |
+
+User removes page from watchlist through the watchlist UI.
+Watchlist icon reverses color to indicate no longer a member of watchlist.
+Entry does not disappear.
+User adds removed page from watchlist through the watchlist UI.
+Watchlist icon reverses color to indicate a member of watchlist.
+
+| *Comment* | Test case: Watchlist UI |  |
+| st-watch-page | 0 | AAA %%start_time%% |
+| st-watch-page | 0 | BBB %%start_time%% |
+| st-watch-page | 0 | CCC %%start_time%% |
+| text_like | contentContainer | AAA %%start_time%% |
+| text_like | contentContainer | BBB %%start_time%% |
+| text_like | contentContainer | CCC %%start_time%% |
+| st-watch-page | 1 | AAA %%start_time%% |
+| st-is-watched | 1 | AAA %%start_time%% |
+| st-watch-page | 1 | BBB %%start_time%% |
+| st-is-watched | 1 | BBB %%start_time%% |
+| st-watch-page | 1 | CCC %%start_time%% |
+| st-is-watched | 1 | CCC %%start_time%% |
+
+When a page that is on the watchlist is deleted, it is removed from the watchlist.
+Remove all pages from watchlist; watchlist displays "No watchlist for USER ID in "
+
+| *Comment* | Test case: Watchlist delete page |  |
+| text_like | contentContainer | Watchlist %%start_time%% |
+| st-is-watched | 1 | Watchlist %%start_time%% |
+| st-admin | purge-page --w %%workspace%% --page watchlist_%%start_time%% | was purged |
+| click_and_wait | link=My Watchlist |  |
+| text_unlike | contentContainer | Watchlist %%start_time%% |
+
+| *COMMENT* | verifyTextPresent No watchlist for | can't do this until we find a way to clear the watchlist
+otherwise this test is not rerunnable when it fails
+and the watchlist is not empty |
+
+| *Comment* | Test case: Watchlist SORTING |
+
+Set up to check sorting. (↑) (↓)
+
+| click_and_wait | link=My Watchlist |  |
+
+| *Comment* | Test case: Watchlist title sort |  |
+| select_and_wait | sort-picker | label=Title |
+| wait_for_element_visible_ok | contentContainer | 30000 |
+| text_like | contentContainer | qr/AAA %%start_time%%.+BBB %%start_time%%.+CCC %%start_time%%/ |
+
+| *Comment* | label=Title (desc) |  |
+| select_and_wait | sort-picker | label=Title (↓) |
+| text_like | contentContainer | qr/CCC %%start_time%%.+BBB %%start_time%%.+AAA %%start_time%%/ |
+
+| *Comment* | label=Title (asc) |  |
+| select_and_wait | sort-picker | label=Title (↑) |
+| text_like | contentContainer | qr/AAA %%start_time%%.+BBB %%start_time%%.+CCC %%start_time%%/ |
+
+| *Comment* | Create Date, should start descending |  |
+| select_and_wait | sort-picker | label=Date Created |
+| text_like | contentContainer | qr/CCC %%start_time%%.+BBB %%start_time%%.+AAA %%start_time%%/ |
+| select_and_wait | sort-picker | label=Date Created (↑) |
+| text_like | contentContainer | qr/AAA %%start_time%%.+BBB %%start_time%%.+CCC %%start_time%%/ |
+
+add a new page for date and revision sorting
+
+| *Comment* | Test case: Watchlist create a new page |  |
+| st-admin | update-page --w %%workspace%% --e %%email%% --p "New Watchlist %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |
+| open_ok | /%%workspace%%/?New Watchlist %%start_time%% |  |
+| wait_for_element_visible_ok | st-watchlist-indicator | 30000 |
+| st-watch-page | 1 |  |
+| st-is-watched | 1 |  |
+
+| *Comment* | Test case: Watchlist create an additional rev |  |
+| st-admin | update-page --w %%workspace%% --e %%email%% --p "New Watchlist %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been updated |
+| click_and_wait | link=My Watchlist |  |
+
+title sort
+
+| *Comment* | Test case: Watchlist sort by title |  |
+| select_and_wait | sort-picker | label=Title |
+| text_like | contentContainer | qr/AAA %%start_time%%.+BBB %%start_time%%.+CCC %%start_time%%.+New Watchlist %%start_time%%/ |
+
+| *Comment* | label=Title (desc) |  |
+| select_and_wait | sort-picker | label=Title (↓) |
+| text_like | contentContainer | qr/New Watchlist %%start_time%%.+CCC %%start_time%%.+BBB %%start_time%%.+AAA %%start_time%%/ |
+
+| *Comment* | label=Title (asc) |  |
+| select_and_wait | sort-picker | label=Title (↑) |
+| text_like | contentContainer | qr/AAA %%start_time%%.+BBB %%start_time%%.+CCC %%start_time%%.+New Watchlist %%start_time%%/ |
+
+check for date sorting
+
+| *Comment* | Test case: Watchlist sort by Date |  |
+| select_and_wait | sort-picker | label=Date Last Edited |
+| text_like | contentContainer | qr/New Watchlist %%start_time%%.+CCC %%start_time%%.+BBB %%start_time%%.+AAA %%start_time%%/ |
+
+| *Comment* | label=Date (asc) |  |
+| select_and_wait | sort-picker | label=Date Last Edited (↑) |
+| text_like | contentContainer | qr/AAA %%start_time%%.+BBB %%start_time%%.+CCC %%start_time%%.+New Watchlist %%start_time%%/ |
+
+| *Comment* | label=Date (desc) |  |
+| select_and_wait | sort-picker | label=Date Last Edited (↓) |
+| text_like | contentContainer | qr/New Watchlist %%start_time%%.+CCC %%start_time%%.+BBB %%start_time%%.+AAA %%start_time%%/ |
+
+Revisions sort
+
+| *Comment* | Test case: Watchlist sort by Revisions |  |
+| select_and_wait | sort-picker | label=Revisions |
+| text_like | contentContainer | qr/New Watchlist %%start_time%%.+AAA %%start_time%%/ |
+
+| *Comment* | label=Revisions (asc) |  |
+| select_and_wait | sort-picker | label=Revisions (↑) |
+| text_like | contentContainer | qr/AAA %%start_time%%.+New Watchlist %%start_time%%/ |
+
+| *Comment* | label=Revisions (desc) |  |
+| select_and_wait | sort-picker | label=Revisions (↓) |
+| text_like | contentContainer | qr/New Watchlist %%start_time%%.+AAA %%start_time%%/ |
+
+create a user that lexically precedes the logged in user by creating a user that begins with start_time
+However, don't use %%email%% in that username because that permanently creates another user name in the user DB that
+contains %%email%% as a substring and that messes up other tests like Test Case: Email
+
+| *Comment* | Test Case: Watchlist verify revision by different user |  |
+
+| set | s_user | %%start_time%%@%%start_time%%.socialtext.net |
+| st-admin | create-user --email %%s_user%% --password 123456 |  |
+| st-admin | add-member --email %%s_user%% --workspace %%workspace%% |  |
+| st-admin | update-page --email %%s_user%% --workspace %%workspace%% --page "BBB %%start_time%%" < %%wikitest_client_files%%wikitest.txt | The "BBB %%start_time%%" page has been updated. |
+
+| *Comment* | Test Case: Watchlist navigate away and reload Watchlist |  |
+| click_and_wait | link=My Watchlist |  |
+
+Last Edited By sort
+
+| *Comment* | Test case: Watchlist sort by Last Edited By |  |
+| select_and_wait | sort-picker | label=Last Edited By |
+| text_like | contentContainer | qr/BBB %%start_time%%.+AAA %%start_time%%.+CCC %%start_time%%.+New Watchlist %%start_time%%/ |
+
+| *Comment* | label=Last Edited By (desc) |  |
+| select_and_wait | sort-picker | label=Last Edited By (↓) |
+| text_like | contentContainer | qr/New Watchlist %%start_time%%.+CCC %%start_time%%.+AAA %%start_time%%.+BBB %%start_time%%/ |
+
+| *Comment* | label=Last Edited By (asc) |  |
+| select_and_wait | sort-picker | label=Last Edited By (↑) |
+| text_like | contentContainer | qr/BBB %%start_time%%.+AAA %%start_time%%.+CCC %%start_time%%.+New Watchlist %%start_time%%/ |
+
+| *Comment* | Test case: Watchlist Teardown |  |
+| st_admin | purge-page --w %%workspace%% --page aaa_%%start_time%% | was purged |
+| st_admin | purge-page --w %%workspace%% --page bbb_%%start_time%% | was purged |
+| st_admin | purge-page --w %%workspace%% --page ccc_%%start_time%% | was purged |
+| st_admin | purge-page --w %%workspace%% --page new_watchlist_%%start_time%% | was purged |
+
+| *Comment* | Test case: Watchlist COMPLETED |
+
+^ DONE_TESTING
+^ Remaining TODO:
+
+| Figure out a way to check which element of a dropdown menu is currently selected, text_like does not do this | Check dropdown menu functionality in Settings-&gt;Watchlist |  |
+| Change notification to every minute, then edit a page in the watchlist | notification is saved as Every Minute |  |
+| Wait a few minutes, then read email | watchlist notification message received |  |
+| In the email, click through to change the preference for notification frequency | arrive at correct UI page |  |
+| if preference in watchlist email is set to display name, links, edited by and edited date, the email is displayed correctly according to the preference | verify correct email content |  |
+| if preference in watchlist email is set to display page title and link only, the email is displayed correctly | change preference, edit a watched page, receive email, verify correct email content |  |
+| clicking on a page link in the watchlist email takes you to the correct page |  |  |
+| when a page is removed from the watchlist, it is removed from email | remove a page from the watchlist, edit a watched page, receive email, verify that removed page is not present |  |
+| when a page is removed from watch list, it is removed from rss | click RSS icon for watchlist; examine RSS content |  |

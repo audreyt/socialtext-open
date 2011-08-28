@@ -1,0 +1,157 @@
+* Fixture: SocialWidgets
+
+| *Comment* | Ryker |  |
+
+| set | sacc | Ryker |
+
+The Ryker account ID is 9 on demo.st.net
+Change this if needed for a different account ID
+
+| set | rykerID | 9 |
+
+| set | sd1 | `socialtextdemo1@gmail.com` |
+| set | sd2 | `socialtextdemo2@gmail.com` |
+| set | sd3 | `socialtextdemo3@gmail.com` |
+| set | sd4 | `socialtextdemo4@gmail.com` |
+| set | sd5 | `socialtextdemo5@gmail.com` |
+| set | sd6 | `socialtextdemo6@gmail.com` |
+
+| set | sd1F | Joseph |
+| set | sd1L | Hines |
+| set | sd2F | Dawn |
+| set | sd2L | Foster |
+
+| set | sd3F | Matthew |
+| set | sd3L | Doire |
+| set | sd4F | Carol |
+| set | sd4L | Sutton |
+
+| set | sd5F | Brian |
+| set | sd5L | Lawson |
+| set | sd6F | Valerie |
+| set | sd6L | Parise |
+
+| set | short_sd1 | `%%sd1F%% %%sd1L%%` |
+| set | short_sd2 | `%%sd2F%% %%sd2L%%` |
+| set | short_sd3 | `%%sd3F%% %%sd3L%%` |
+| set | short_sd4 | `%%sd4F%% %%sd4L%%` |
+| set | short_sd5 | `%%sd5F%% %%sd5L%%` |
+| set | short_sd6 | `%%sd6F%% %%sd6L%%` |
+
+| set | spwd | socialtext |
+
+| *Comment* | Ryker - send signals |  |
+
+Log on as socialtextdemo4@gmail.com / PW = socialtext
+Signal: *Reminder!!!* The Engineering team meeting is starting in 15 minutes in conference room *WS1701*
+
+| http-user-pass | %%sd4%% | %%spwd%% |
+| post-json | /data/signals | {"signal":"*Reminder!!!* The Engineering team meeting is starting in 15 minutes in conference room *WS1701*","account_ids":[%%rykerID%%]} |
+
+Log on as socialtextdemo2@gmail.com / PW = socialtext
+Signal: Does anyone know when our benefits enrollment paperwork is due?
+
+| http-user-pass | %%sd2%% | %%spwd%% |
+| post-json | /data/signals | {"signal":"Does anyone know when our benefits enrollment paperwork is due?","account_ids":[%%rykerID%%]} |
+
+Log on as socialtextdemo1@gmail.com / PW = socialtext
+Signal: Urgent Does anyone know about "Sunpowered Systems"<http://www.sunpowered.com>?
+
+| http-user-pass | %%sd1%% | %%spwd%% |
+| post-json | /data/signals | {"signal":"Urgent Does anyone know about \"Sunpowered Systems\"<http://www.sunpowered.com>? ","account_ids":[%%rykerID%%]} |
+
+Log on as socialtextdemo3@gmail.com / PW = socialtext
+Signal: @JosephHines A few customers have mentioned them, but I think they are pretty regional.
+
+| http-user-pass | %%sd3%% | %%spwd%% |
+| post-json | /data/signals | {"signal":"{user: %%sd1%%} A few customers have mentioned them, but I think they are pretty regional.","account_ids":[%%rykerID%%]} |
+
+Log on as socialtextdemo6@gmail.com / PW = socialtext
+Signal: Heading into the city to give my _Reducing Power Consumption Around The Home_ talk to the "Bay Area Home Owners Assoc"<http://www.bah.com>
+
+| http-user-pass | %%sd6%% | %%spwd%% |
+| post-json | /data/signals | {"signal":"Heading into the city to give my _Reducing Power Consumption Around The Home_ talk to the \"Bay Area Home Owners Assoc\"<http://www.bah.com>","account_ids":[%%rykerID%%]} |
+
+Log on as socialtextdemo2@gmail.com / PW = socialtext
+Signal: d @JosephHines Let's talk about SunPowered in private, I have some inside news about them.
+
+| http-user-pass | %%sd2%% | %%spwd%% |
+| post-json | /data/signals | {"signal":"d {user: %%sd1%%} Let's talk about SunPowered in private, I have some inside news about them.","account_ids":[%%rykerID%%]} |
+
+Log on as socialtextdemo3@gmail.com / PW = socialtext
+Signal: @DawnFoster, The {link: HR [Event Calendar]} page in the HR Workspace has the information you need, and a link to all the forms to complete.
+
+| http-user-pass | %%sd3%% | %%spwd%% |
+| post-json | /data/signals | {"signal":"{user: %%sd2%%}, The {link: HR [Event Calendar]} page in the HR Workspace has the information you need, and a link to all the forms to complete.","account_ids":[%%rykerID%%]} |
+
+Log on as socialtextdemo4@gmail.com / PW = socialtext
+tag page http://demo.socialtext.net/rykerengineering/index.cgi?great_trends_in_solar_panels_and_solar_energy with Solar
+tag profile http://demo.socialtext.net/st/profile/131 with "Launch Team"
+
+| set | tagPage | Great Trends in Solar Panels and Solar Energy |
+| set | engineering | rykerengineering |
+
+| *Comment* | Ryker. Tag %%tagPage%% with Solar tag |  |
+| st-logoutin | %%sd4%% | %%spwd%% |
+| http-user-pass | %%sd4%% | %%spwd%% |
+
+| open_ok | /%%engineering%%/?%%tagPage%% |  |
+| wait_for_element_visible_ok | link=Add Tag | 30000 |
+| click_ok | link=Add Tag |  |
+| wait_for_element_visible_ok | st-tags-field | 30000 |
+| type_ok | st-tags-field | Solar %%start_time%% |
+| wait_for_element_visible_ok | st-tags-plusbutton-link | 30000 |
+| click_ok | st-tags-plusbutton-link |  |
+
+| *Comment* | Ryker. Tag %%short_sd1%% with Launch Team %%start_time%% |  |
+| open_ok | /?action=people |  |
+| st-search | %%short_sd1%% | People matching '%%short_sd1%%' |
+| text_like | Marketing |  |
+| click_and_wait | link=%%short_sd1%% |  |
+| wait_for_element_visible_ok | new_tag | 30000 |
+| type_ok | new_tag | Launch Team %%start_time%% |
+| click_ok | //input[@value='Add Tag'] |  |
+
+| st_process_jobs |  |  |
+| pause | 1000 | Kudos comes after tag event |
+
+Log on as socialtextdemo6@gmail.com / PW = socialtext
+Signal: A great customer reference story was just published by @JosephHines in "Alternative Energy Tech"<http://www.altnrg.com>. Kudos!
+
+| http-user-pass | %%sd6%% | %%spwd%% |
+| post-json | /data/signals | {"signal":"A great customer reference story was just published by {user: %%sd1%%} in \"Alternative Energy Tech\"<http://www.altnrg.com>. Kudos!","account_ids":[%%rykerID%%]} |
+
+Log on as socialtextdemo5@gmail.com / PW = socialtext
+Edit page http://demo.socialtext.net/rykersales/index.cgi?master_customer_list with "Please make sure to include location so we can assign the proper rep."
+
+| set | editPage | Master Customer List |
+| set | rykersales | rykersales |
+
+| st-logoutin | %%sd5%% | %%spwd%% |
+| http-user-pass | %%sd5%% | %%spwd%% |
+| st-edit-page | /%%rykersales%%/?%%editPage%% | Please make sure to include location so we can assign the proper rep. |
+
+Log on as socialtextdemo1@gmail.com / PW = socialtext
+Signal d @‍DawnFoster Ok, I'm free to talk after 11am. Thanks for your help
+
+| http-user-pass | %%sd1%% | %%spwd%% |
+| post-json | /data/signals | {"signal":"d {user: %%sd2%%} Ok, I'm free to talk after 11am. Thanks for your help","account_ids":[%%rykerID%%]} |
+
+Log on as socialtextdemo2@gmail.com / PW = socialtext
+Comment on page: http://demo.socialtext.net/marketingdemo/index.cgi?brainstorming_for_web_site_redesign saying
+We need to provide a place for two-way communication with our customers regarding product feedback.
+
+| set | commentPage | Brainstorming for web site redesign |
+| set | commentContent | We need to provide a place for two-way communication with our customers regarding product feedback. |
+| set | commentws | marketingdemo |
+
+| st-logoutin | %%sd2%% | %%spwd%% |
+| http-user-pass | %%sd2%% | %%spwd%% |
+
+| open_ok | /%%commentws%%/?%%commentPage%% |  |
+| click_ok | st-comment-button-link |  |
+| wait_for_element_visible_ok | comment | 30000 |
+| type_ok | comment | %%commentContent%% |
+| click_ok | link=Save |  |
+
+| *Comment* | Ryker COMPLETED |  |

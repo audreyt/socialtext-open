@@ -1,0 +1,17 @@
+| *Comment* | Test Case: Settings: Email Notification |  |
+
+| *Comment* | Test Case: Settings: Email Notification enable |  |
+| clickAndWait | link=Settings |  |
+| clickAndWait | link=Workspace Features |  |
+| click_ok | //input[@name='email_notify_is_enabled' and @value='1'] |  |
+| clickAndWait | link=Save |  |
+| text_like | contentLeft | Email Notification |
+
+| *Comment* | Test Case: Settings: Email Notification disable |  |
+| clickAndWait | link=Settings |  |
+| clickAndWait | link=Workspace Features |  |
+| click_ok | //input[@name='email_notify_is_enabled' and @value='0'] |  |
+| clickAndWait | link=Save |  |
+| text_unlike | contentLeft | Email Notification |
+
+| *Comment* | Test Case: Settings: Email Notification COMPLETED |  |

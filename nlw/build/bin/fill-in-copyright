@@ -1,0 +1,67 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use File::Spec::Functions qw(catfile catdir updir);
+use File::Basename qw(dirname);
+use File::Slurp qw(read_file write_file);
+use Cwd qw(abs_path);
+$| = 1;
+
+our $base_dir = shift || "Usage: $0 dir\n";
+our $NLW_DIR = catdir( dirname($0), updir, updir );
+our $COPYRIGHT_FILE = catfile( $NLW_DIR, 'build', "copyright.txt" );
+
+my @copyright = read_file($COPYRIGHT_FILE);
+for my $file (find_files_with_stub($base_dir)) {
+    replace_stub($file, \@copyright);
+}
+
+sub replace_stub {
+    my ( $file, $copyright ) = @_;
+    my @lines = read_file($file);
+    my @pre;
+    my $copyright_added = 0;
+    while (@lines) {
+        my $line = shift @lines;
+        if ( $line =~ /\@COPYRIGHT\@/ ) {
+            if ( $line =~ /^\s*#/ ) {          # hash comments
+                push @pre, "#\n", (map "# $_", @$copyright), "#\n";
+            }
+            elsif ( $line =~ /^\s*<\!--/ ) {    # html style comments
+                push @pre, "<!--\n", @$copyright, " -->\n";
+            }
+            elsif ( $line =~ /^\s*\/\*/ ) {    # /* */ comments
+                push @pre, "/*\n", @$copyright, " */\n";
+            }
+            elsif ( $line =~ m{^\s*//} ) {     # // comments
+                push @pre, "//\n", (map "// $_", @$copyright), "//\n";
+            }
+            elsif ( $line =~ m{^\s*\[\%\#} ) {  # [%# %] comments (TT2)
+                push @pre, "[\%#\n", @$copyright, " -\%]\n";
+            }
+            else {
+                push @pre, @$copyright;
+            }
+            $copyright_added = 1;
+            last;
+        }
+        else {
+            push @pre, $line;
+        }
+    }
+
+    if ($copyright_added) {
+        print "Updated copyright for $file\n";
+        write_file($file, @pre, @lines);
+    }
+}
+
+sub find_files_with_stub {
+    my $dir = abs_path(shift);
+    my @files = `grep -rl '\@COPYRIGHT\@' $dir | grep -v '\\.svn'`;
+    chomp(@files);
+    return
+        sort map { abs_path($_) }
+        grep     { $_ !~ /\.(?:tar\.gz|zip|tgz|swp)$/ } @files;
+}

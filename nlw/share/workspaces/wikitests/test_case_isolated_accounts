@@ -1,0 +1,73 @@
+| *Comment* | Test Case: Isolated Accounts |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Isolated Accounts SETUP create a group |  |  |  |
+| st-setup-a-group | 1 | 1 | 1 | grp_one |
+
+| *Comment* | Test Case: Isolated Accounts SETUP capture account, group, user, ws |  |
+| set | acct_one | %%group_acct%% |
+| set | grp_one | %%group_name%% |
+| set | user_one | %%group_user%% |
+| set | user_one_short | %%group_user_short%% |
+| set | ws_one | %%group_ws%% |
+
+| *Comment* | Test Case: Isolated Accounts SETUP define tag and pages |  |
+| set | tag_one | new tag %%start_time%% |
+| set | page_one | page one %%start_time%% |
+| set | page_two | page two %%start_time%% |
+| set | page_three | page three %%start_time%% |
+
+| *Comment* | Test Case: Isolated Accounts SETUP another account and user |  |
+| set | user_two | `user-two-%%start_time%%@matt.socialtext.net` |
+| set | acct_two | acc-two-%%start_time%% |
+| st-admin | create-account --name %%acct_two%% | was created |
+| st-admin | create-user --e %%user_two%% --p %%password%% --account %%acct_two%% | was created |
+
+| *Comment* | Test Case: Isolated Accounts Login as %%user_one%%, dirty account |  |
+| st-logoutin | %%user_one%% | %%password%% |
+| include | [Test Cases Isolated Accounts: Dirty] |  |
+
+| *Comment* | Test case: Isolated Accounts Login as %%user_two%%, verify clean |  |
+| open_ok | /nlw/submit/logout |  |
+| wait_for_element_visible_ok | password |  |
+| st-login | %%user_two%% | %%password%% |
+| open_ok | /st/dashboard/ |  |
+| wait_for_text_present_ok | There are no events to display because no events have been created. | 30000 |
+
+| *Comment* | Test Case: Isolated Accounts Add %%user_two%% from %%group_id%%, %%group_ws%%, %%group_acct%% |  |
+| st-admin | add-member --e %%user_two%% --g %%group_id%% |  |
+| st-admin | add-member --e %%user_two%% --w %%ws_one%% |  |
+| st-admin | add-member --e %%user_two%% --account %%acct_one%% |  |
+
+| open_ok | /%%group_ws%% / |  |
+| open_ok | /st/dashboard |  |
+| wait_for_text_not_present_ok | There are no events to display because no events have been created. | 30000 |
+
+| *Comment* | Test Case: Isolated Accounts Remove %%group_user%% from %%group_id%%, %%group_ws%%, %%group_acct%% |  |
+| st-admin | remove-member --e %%user_two%% --g %%group_id%% |  |
+| st-admin | remove-member --e %%user_two%% --w %%ws_one%% |  |
+| st-admin | remove-member --e %%user_two%% --account %%acct_one%% |  |
+
+| *Comment* | Test case: Isolated Accounts Login as %%user_two%%, verify clean after removal |  |
+| open_ok | /st/dashboard |  |
+| wait_for_text_present_ok | There are no events to display because no events have been created. | 30000 |
+| wait_for_element_not_present_ok | link=%%ws_one%% | 30000 |
+| wait_for_element_not_present_ok | link=%%grp_one%% | 30000 |
+
+| *Comment* | Test Case: Isolated Accounts TODO Make sure there are no workspace links, group links in the nav bar |
+| *Comment* | Test Case: Isolated Accounts TODO pulldown each event type, verify clean |
+| *Comment* | Test Case: Isolated Accounts TODO Send a signal you should see, mention a workspace you can't, don't see |
+
+| *Comment* | Test Case: Isolated Accounts TODO add a person, check for leaked person events |
+| *Comment* | Test Case: Isolated Accounts TODO add a signal, check for leaked signal events |
+| *Comment* | Test Case: Isolated Accounts TODO add a workspace, check for leaked workspace events |
+| *Comment* | Test Case: Isolated Accounts TODO add a group, check for leaked group events |
+
+| *Comment* | Test Case: Isolated Accounts TEARDOWN |  |
+| st-process-jobs |  |  |
+| st-admin | delete-workspace --w %%ws_one%% --no-export | has been deleted |
+| delete-group | %%group_id%% |  |
+| delete-account | %%group_acct%% |  |
+
+| *Comment* | Test Case: Isolated Accounts COMPLETED |

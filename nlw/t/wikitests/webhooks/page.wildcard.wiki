@@ -1,0 +1,92 @@
+* Fixture: WebHook
+
+| standard-test-setup | foo                   |     |                |
+| standard-test-setup | bar                   |     |                |
+
+* Explicit test for permissions for page.* webhook - customer reported this issue
+| new-webhook-testcase | create a page.* webhook as a non-admin |               |                                         |
+| add-webhook          | page.*                                 | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%"} |
+
+ | set-business-admin  | %%bar_email_address%% | 1   |                |
+| new-webhook-testcase  | page.* should fire for a new page being created                                |               |                                         |
+| add-webhook           | page.*                                                                         | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%"} |
+| edit-page             | %%bar_workspace%%                                                                   | Foo           | Sample Content                          |
+| job-count             | WebHook                                                                             | 1             |                                         |
+| st-process-jobs       |                                                                                     |               |                                         |
+| job-count             | WebHook                                                                             | 0             |                                         |
+| webhook-payload-parse |                                                                                     |               |                                         |
+| json-like             | [{"class":"page.create"}]                                                             |               |                                         |
+| json-like             | [{"actor":{"id":%%user_id%%,"best_full_name":"bar user %%start_time%%"}}]             |               |                                         |
+| json-like             | [{"object":{"editor":{"id":%%user_id%%,"best_full_name":"bar user %%start_time%%"}}}] |               |                                         |
+| json-like             | [{"object":{"workspace":{"title":"%%bar_workspace%%","name":"%%bar_workspace%%"}}}]   |               |                                         |
+| json-like             | [{"object":{"id":"foo"}}]                                                             |               |                                         |
+| json-like             | [{"object":{"name":"Foo"}}]                                                           |               |                                         |
+| json-like             | [{"object":{"uri":"%%browser_url%%/%%bar_workspace%%/foo"}}]                |               |                                         |
+| json-like             | [{"object":{"edit_summary":""}}]                                                      |               |                                         |
+| json-like             | [{"object":{"tags":[]}}]                                                              |               |                                         |
+| json-like             | [{"object":{"tags_added":[]}}]                                                        |               |                                         |
+| json-like             | [{"object":{"tags_deleted":[]}}]                                                      |               |                                         |
+| json-like             | [{"object":{"type":"wiki"}}]                                                          |               |                                         |
+| json-like             | [{"object":{"revision_count":"1"}}]                                                   |               |                                         |
+| webhook-like          | "revision_id":"\d+\.\d+"                                                                 |               |                                         |
+| webhook-like          | "edit_time"                                                                         |               |                                         |
+| webhook-like          | "create_time"                                                                       |               |                                         |
+
+| new-webhook-testcase | page.* fires for edit |
+| add-webhook           | page.*                  | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%"} |
+| edit-page             | %%bar_workspace%%       | Foo           | This is a new page                      |
+| job-count             | WebHook                 | 1             |                                         |
+| st-process-jobs       |                         |               |                                         |
+| job-count             | WebHook                 | 0             |                                         |
+| webhook-payload-parse |                         |               |                                         |
+| json-like             | [{"class":"page.update"}] |               |                                         |
+
+| new-webhook-testcase | page.* fires for tag |
+| add-webhook           | page.*                  | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%"} |
+| tag-page              | %%bar_workspace%%       | Foo           | Tarvu                                   |
+| job-count             | WebHook                 | 1             |                                         |
+| st-process-jobs       |                         |               |                                         |
+| job-count             | WebHook                 | 0             |                                         |
+| webhook-payload-parse |                         |               |                                         |
+| json-like             | [{"class":"page.update"}] |               |                                         |
+| json-like             | [{"object":{"tags_added":["Tarvu"]}}] |               |                                         |
+
+| new-webhook-testcase  | page.* fires for untag                |               |                                         |
+| add-webhook           | page.*                                | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%"} |
+| untag-page            | %%bar_workspace%%                     | Foo           | Tarvu                                   |
+| job-count             | WebHook                               | 1             |                                         |
+| st-process-jobs       |                                       |               |                                         |
+| job-count             | WebHook                               | 0             |                                         |
+| webhook-payload-parse |                                       |               |                                         |
+| json-like             | [{"class":"page.update"}]               |               |                                         |
+| json-like             | [{"object":{"tags_deleted":["Tarvu"]}}] |               |                                         |
+
+| new-webhook-testcase | page.* fires for delete |
+| add-webhook           | page.*                  | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%"} |
+| delete-page             | %%bar_workspace%%       | Foo           | |
+| job-count             | WebHook                 | 1             |                                         |
+| st-process-jobs       |                         |               |                                         |
+| job-count             | WebHook                 | 0             |                                         |
+| webhook-payload-parse |                         |               |                                         |
+| json-like             | [{"class":"page.delete"}] |               |                                         |
+
+| new-webhook-testcase | page.* fires for watch |
+| add-webhook           | page.*                  | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%"} |
+| watch-page            | %%bar_workspace%%       | Foo           ||
+| job-count             | WebHook                 | 1             |                                         |
+| st-process-jobs       |                         |               |                                         |
+| job-count             | WebHook                 | 0             |                                         |
+| webhook-payload-parse |                         |               |                                         |
+| json-like             | [{"class":"page.watch"}] |               |                                         |
+
+| new-webhook-testcase | page.* fires for unwatch |
+| add-webhook           | page.*                  | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%"} |
+| unwatch-page            | %%bar_workspace%%       | Foo           ||
+| job-count             | WebHook                 | 1             |                                         |
+| st-process-jobs       |                         |               |                                         |
+| job-count             | WebHook                 | 0             |                                         |
+| webhook-payload-parse |                         |               |                                         |
+| json-like             | [{"class":"page.unwatch"}] |               |                                         |
+
+# For other filter tests, see t/wikitests/webhooks/page.tag.wiki
+# The code flow is the same, so these tests are omitted

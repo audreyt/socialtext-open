@@ -1,0 +1,12 @@
+<div id="st-listtools">
+    <ul class="level1">
+        <li class="submenu"><span id="st-listtools-export">[% loc('Export') %]</span>
+            <ul class="level2">
+                [% IF loc_system_lang != 'ja' %]
+                <li class="first"><a title="[% loc('Create PDF document from checked pages') %]" id="st-listview-submit-pdfexport" href="#">[% loc('Export to PDF') %]</a></li>
+                [% END %]
+                <li class="separator"><a title="[% loc('Create Word document from checked pages') %]" id="st-listview-submit-rtfexport" href="#">[% loc('Export to Word') %]</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>

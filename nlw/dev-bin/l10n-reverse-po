@@ -1,0 +1,66 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use 5.12.0;
+use autodie;
+use warnings;
+use open qw(:std :utf8);
+use subs qw(outs is_key);
+use Getopt::Long;
+use FindBin '$RealBin';
+use lib "$RealBin/../lib";
+use Socialtext::l10n::DevUtils;
+
+my $inplace;
+my $msgstr;
+my $msgid;
+GetOptions(
+    'inplace|i!' => \$inplace,
+    'msgid!' => \$msgid,
+    'msgstr!' => \$msgstr,
+) and @ARGV or die "Usage: $0 [--inplace] [--msgid|--msgstr] input.po\n";
+
+die "Cannot specify both --msgid and --msgstr; please choose one as the field for new.style keys.\n"
+    if $msgid and $msgstr;
+
+my ($in, $out);
+for my $po (@ARGV) {
+    if ($po eq '-') {
+        $in = *STDIN;
+    }
+    else {
+        open $in, '<', $po;
+    }
+
+    if ($inplace) {
+        open $out, '>', "$po.new";
+        select $out;
+    }
+
+    local $/ = "\n\n";
+    while (<$in>) {
+        if (/^msgid ""\nmsgstr ""/m) {
+            outs $_;
+            next;
+        }
+
+        my ($comments, $id, $str) = split(/\n(?=msg)/, "\n$_");
+        if (($msgid and is_key($str)) or ($msgstr and is_key($id)) or (!$msgid and !$msgstr)) {
+            $id =~ s/^msgid/msgstr/m;
+            $str =~ s/^msgstr/msgid/m;
+        }
+        else {
+            ($str, $id) = ($id, $str);
+        }
+        outs $comments;
+        outs $str;
+        outs $id;
+    }
+
+    close $in;
+    if ($inplace) {
+        close $out;
+        unlink $po;
+        rename "$po.new" => $po;
+        warn "*** Changed file in-place: $po\n";
+    }
+}

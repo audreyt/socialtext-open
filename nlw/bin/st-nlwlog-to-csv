@@ -1,0 +1,192 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Getopt::Long;
+use Pod::Usage;
+
+my @exclude = ();
+my @include = ();
+my $help;
+my $interval = 's';
+my $man;
+my $file;
+my $last;
+my $first;
+my $min_calls = 0;
+my $top = -1;
+my $debug = 0;
+GetOptions(
+    'file:s' => \$file,
+    'start|first:s' => \$first,
+    'end|last:s' => \$last,
+    'exclude:s' => \@exclude,
+    'include:s' => \@include,
+    'interval:s' => \$interval,
+    'top:i' => \$top,
+    'min:i' => \$min_calls,
+    'debug' => \$debug,
+    'help|?' => \$help,
+    'man' => \$man,
+) or pod2usage(2);
+pod2usage(1) if $help;
+pod2usage(-exitstatus => 0, -verbose => 2) if ($man || !$file);
+pod2usage(-exitstatus => 0, -verbose => 2) if (scalar(@exclude) && scalar(@include));
+
+my %excludes = ();
+foreach (@exclude) {
+    $excludes{uc($_)} = 1;
+}
+
+my $has_includes;
+my %includes = ();
+foreach (@include) {
+    $has_includes = 1;
+    $includes{uc($_)} = 1;
+}
+
+my $first_seconds = 0;
+my $last_seconds = 3600*24*2;
+if ($first) {
+    $first_seconds = time_bucket($first, $interval);
+}
+
+if ($last) {
+    $last_seconds = time_bucket($last, $interval);
+}
+
+my $parse_command = qq!grep DATA $file | awk 'BEGIN { FS = "[ ,]+" } ; {print \$9 " " \$3 }'!;
+
+warn "$parse_command\n" if $debug;
+my $records = `$parse_command`;
+my %calls;
+my %call_counts;
+my %time_counts;
+my %timings;
+foreach my $line (split /\n/, $records) {
+    warn "$line\n" if $debug;
+    my ($url, $time) =  split / /, $line;
+    next if should_exclude($url);
+    my $seconds = time_bucket($time, $interval);
+    next if ($seconds < $first_seconds || $seconds > $last_seconds);
+    $calls{$url}{$seconds} += 1;
+    $call_counts{$url} += 1;
+    $time_counts{$seconds} += 1;
+    $timings{$seconds} = $time;
+}
+
+my $max_calls = 0;
+my $max_time = '';
+print "call";
+foreach my $time (sort keys %timings) {
+    if ($time_counts{$time} > $max_calls) {
+        $max_calls = $time_counts{$time};
+        $max_time = $timings{$time};
+    }
+
+    print ",$timings{$time}";
+}
+print "\n";
+
+foreach my $call (sort { $call_counts{$b} <=> $call_counts{$a} } keys %calls) {
+    next if $call_counts{$call} < $min_calls;
+    print $call;
+    foreach my $time (sort keys %timings) {
+        my $count = exists($calls{$call}{$time}) ? $calls{$call}{$time} : 0;
+        print ",$count";
+    }
+    print "\n";
+    last if (!--$top);
+}
+
+warn "\nMax calls per second: $max_calls at $max_time\n";
+
+sub time_bucket {
+    my $time = shift;
+    my $interval = shift || 's';
+
+    my ($h, $m, $s) =  split /:/, $time;
+    my $bucket;
+    if ($interval eq 's') {
+        $bucket = $h*3600 + $m*60 + $s;
+    } elsif ($interval eq 'm') {
+        $bucket = $h*3600 + $m*60;
+    }
+    return $bucket;
+    
+}
+
+sub should_exclude {
+    my $url = shift;
+    if ($has_includes) {
+        return !exists $includes{$url};
+    } else {
+        return exists $excludes{$url};
+    }
+}
+
+__END__
+=head1 NAME
+
+st-nlwlogtocsv - Convert nlw.log file into CSV for charting
+
+=head1 SYNOPSIS
+
+st-nlwlogotcsv --file [--last --first --min --top --interval --exclude --include --debug]
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<--exclude>
+
+Exclude a URL from the stats. You can use more than one --exclude parameter. If you specify an exclude you cannot specify an include.
+
+=item B<--file>
+
+Name of the log file to parse
+
+=item B<--first>
+
+The first time to include in the CSV file. Format is HH:MM:SS. If not included the CSV file will start with the first entry in the log file.
+
+=item B<--include>
+
+Include only the URL from the stats. You can use more than one --include parameter. If you specify an include you cannot specify an exclude.
+
+=item B<--interval>
+
+Specify m if you want to group calls by the minute, s if by the second. Default is s
+
+=item B<--last>
+
+The last time to include in the CSV file. Format is HH:MM:SS. If not included the CSV file will end with the last entry in the log file.
+
+=item B<--min>
+
+The minimum number of requests, over the time period of the CSV file, for a URL to be included in the output.
+
+=item B<--top>
+
+Restrict the output to the top N calls; e.g. --top 5 will only output the top 5 calls.
+
+=item B<--debug>
+
+Print debug text during the run
+
+=item B<-help>
+
+Print a brief help message and exits.
+
+=item B<-man>
+
+Prints the manual page and exits.
+
+=back
+
+=head1 DESCRIPTION
+
+Parse the nlw.log file, pulling out the /DATA calls. Creates a CSV of the calls, showing the number of calls per second
+
+=cut
+

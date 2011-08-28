@@ -1,0 +1,40 @@
+Test case to make sure that the "My Settings" page doesn't mojibake.
+
+Verifies a fix for:
+
+* Bug #1073; STROIS, i18n; utf8 user first and last names render as mojibake on /?action=user_settings page
+
+| *Comment* | STARTING: Test Case: user settings no mojibake |
+
+| *Comment* | UTF-8 test data |  |
+| set | utf8_first_name | 山田 |
+| set | utf8_last_name | 太郎 |
+
+| *Comment* | Create test user |  |
+| set | test_username | usnm_%%start_time%%@ken.socialtext.net |
+
+| st-admin | create-user --email %%test_username%% --password %%password%% |  |
+| st-admin | add-member --email %%test_username%% --workspace %%workspace%% |  |
+| st-logoutin | %%test_username%% | %%password%% |
+
+| *Comment* | Use the "My Settings" page to set utf-8 first/last name |  |
+| open-ok | /%%workspace%%/index.cgi?action=users_settings |  |
+| wait_for_element_visible_ok | //input[@name='first_name'] | 30000 |
+| type_ok | //input[@name='first_name'] | %%utf8_first_name%% |
+| type_ok | //input[@name='last_name'] | %%utf8_last_name%% |
+| click_and_wait | link=Save |  |
+
+| *Comment* | Verify no mojibake on /:ws/index.cgi?action=users_settings |  |
+| open-ok | /%%workspace%%/index.cgi?action=users_settings |  |
+| value_is | first_name | %%utf8_first_name%% |
+| value_is | last_name | %%utf8_last_name%% |
+
+| *Comment* | Verify no mojibake on /?action=users_settings |  |
+| open-ok | /?action=users_settings |  |
+| value_is | first_name | %%utf8_first_name%% |
+| value_is | last_name | %%utf8_last_name%% |
+
+| *Comment* | Test Case: user settings no mojibake TEARDOWN |
+| st-admin | set-user-names --email %%test_username%% --f "" --l "" |
+
+| *Comment* | Test Case: user settings no mojibake COMPLETED |

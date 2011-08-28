@@ -1,0 +1,26 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+
+use Digest::MD5 qw[md5_hex];
+use File::Find::Rule;
+
+my @pms = sort { $a->[1] cmp $b->[1] || $a->[2] cmp $b->[2]}
+          map  { my $name = $_;
+                 my $path;
+                 for my $inc (@INC) {
+                     $path = $inc and last
+                       if $name =~ s[^$inc/][];
+                 }
+                 [ $_, $name, $path ]
+               } File::Find::Rule->new->file->name('*.pm')->in(@INC);
+my %seen;
+for my $pm ( @pms ) {
+    next if $seen{$pm->[1]}++;
+    open my $fh, '<', $pm->[0]
+        or die "Cannot read $pm->[0]: $!";
+    my $code = do { local $/; <$fh> };
+    my $check = md5_hex($code);
+    printf "%s\t%s\n", $pm->[1], $check;
+}

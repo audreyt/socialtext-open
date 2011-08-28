@@ -1,0 +1,7 @@
+<a[% IF accesskey %] accesskey="[% accesskey %]"[% END
+%][% IF        id %] id="[% id %]"[% END
+%][% IF   onclick %] onclick="[% onclick %]"[% END
+%][% IF    target %] target="[% target %]"[% END
+%][% IF     class %] class="[% class %]"[%
+    ELSE          %] class="workspace-bar-link"[% END
+                  %] href="[% href %]">[% name %]</a>

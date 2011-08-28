@@ -1,0 +1,15 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+
+use Socialtext::SQL qw/sql_singlevalue/;
+
+my $has_self_join = eval { sql_singlevalue(q{select COUNT(*) from "Permission" where name = 'self_join' })} ;
+if (defined($has_self_join) && $has_self_join == 1) {
+    print "Skipping self_join permissions migration: self_join permission already exists";
+    exit 1;
+}
+
+print "Running migration to create self_join permission";
+exit 0;

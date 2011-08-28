@@ -1,0 +1,65 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+
+use FindBin;
+use Fatal qw(open close);
+use Template;
+
+my $CLI = "$FindBin::Bin/../lib/Socialtext/CLI.pm";
+
+open my $fh, '<', $CLI;
+my @headings = grep /^=head2/, <$fh>;
+close $fh;
+
+my @cmds;
+my %opts;
+
+chomp @headings;
+foreach my $h (@headings) {
+    $h =~ s/^=head2\s+//;
+
+    $h =~ s/^'(.+)'$/$1/; # some options have quotes that aren't needed
+    $h =~ s/[\[\]]//g; # optional args are in square brackets
+    $h =~ s/\s+or\s+/ /g; # alternatives specified with 'or'
+    $h =~ s/--/-/g; # sometimes there's just one dash; normalize it down
+    $h =~ s/< .+$//g; # piped-in filenames
+    $h =~ s/<[^>]+>//g; # for no good reason, some words have angle brackets
+
+    my @words = split /\s+/,$h;
+    my $cmd = shift @words;
+    my %word_set = map { $_ => 1 } map { "-$_" } grep /^-/, @words;
+
+    my @args = sort keys %word_set;
+                         
+    push @cmds, $cmd;
+    $opts{$cmd} = join ' ',@args;
+}
+
+sub cmd_switch {
+    my $cmd = shift;
+    return <<EOT;
+        $cmd)
+            opts="$opts{$cmd}"
+            ;;
+EOT
+}
+
+@cmds = sort @cmds;
+
+my $all_cmds = join ' ', @cmds;
+
+my $template_options = {
+    INCLUDE_PATH => ["$FindBin::Bin/../build/templates/socialtext"],
+    TOLERANT     => 0,
+    UNICODE      => 1,
+};
+
+my $template = Template->new( $template_options );
+
+$template->process('bash_completion.tt2', {
+    cmds => \@cmds,
+    all_cmds => $all_cmds,
+    opts => \%opts,
+}) or die $template->error;

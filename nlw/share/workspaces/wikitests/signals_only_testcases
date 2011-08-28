@@ -1,0 +1,43 @@
+* Fixture: SocialWidgets
+
+This testset tests the Signals Only configuration: dashboard disabled, signals enabled, no wikis other than Help wikis.
+
+In a dev env, it will delete all the standard wikis from a dev env and devnull1 member from help-en and help-adminguide.
+In a VE, it will turn it into a microblogging appliance by executing `st-appliance-config set signals_only 1`
+
+Since it will delete all wikis, the plan server and plan workspace must be in a different running environment.
+
+To use this testset:
+
+`export SELENIUM_PLAN_SERVER=http://$PLAN_SERVER:$PLAN_PORT`
+
+dev env: `cdcur; source nlw/dev-bin/sotc`
+appliance: `cd; source /usr/share/stconfig/stbin/qa/appliance/asotc`
+
+for example:
+
+.pre
+sudo su - qa1 (Signals Only dev env is user qa1 dev env, topaz:22201.  It will be wrecked.)
+export SELENIUM_PLAN_SERVER=http://topaz.socialtext.net:22004 (plan server and workspace is from topaz:22004)
+cdcur
+source nlw/dev-bin/sotc
+.pre
+
+sotc will `run-wiki-tests --plan-page signals_only_testcases` using the plan server and workspace, thus executing this page:
+
+NOTE: each of these test must manage its own plugin enables/disables, logins and logouts independently so order is not significant
+
+* [Test Case: Setup Signals Only]
+* [Test Case: Edit Profile]
+* [Test Case: Verify Profile]
+* [Test Case: Tagging Profile]
+* [Test Case: Signals Search]
+* [Test Case: Signals Search Pagination]
+* [Test Case: Follow]
+* [Test case: Signals Login Logout]
+* [Test Case: Invite people to your network]
+* [Signals Annotations TestCases]
+
+The True Microblogging TC will only succeed on an actual microblogging VE
+
+* [Test Case: True Microblogging]

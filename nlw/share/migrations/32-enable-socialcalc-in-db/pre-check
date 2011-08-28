@@ -1,0 +1,16 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+
+use Socialtext::Migration::Utils qw/ensure_socialtext_schema/;
+
+# If socialcalc is installed, run the migration
+unless (-d '/usr/share/nlw/plugin/socialcalc') {
+    print "Skipping migration because socialcalc is not installed\n";
+    exit 1;
+}
+
+print "Running migration to move socialcalc file on disk to database";
+ensure_socialtext_schema(21);
+exit 0;

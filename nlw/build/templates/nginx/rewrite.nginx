@@ -1,0 +1,156 @@
+    # Deny all TRACE requests
+    if ($request_method = TRACE) {
+      return 403;
+    }
+
+    # include file for rewrite rules on this system
+    include conf.d/rewrite*;
+
+    # unconditionally include local socialtext add-on rewrite rules on this system
+    include socialtext-conf.d/rewrite*;
+
+[%- IF config.nlw_uri_is_ssl && !for_ssl_vhost %]
+    [%- colon_port = config.ports.https == 443 ? '' : ':' _ config.ports.https -%]
+    rewrite /nlw.* https://[% config.nlw_server_hostname %][% colon_port %]$1 break;
+[%- END %]
+
+    # Rewrite for reports
+    rewrite ^/nlw/reports(.*)$ /webplugin/cgi/reports/report.cgi$1 break;
+
+    # make sure user agents that don't do gzipped javascript use
+    # the uncompressed version - Note SAFARI!!!
+    # ALSO notice that this RewriteRule is NOT the last one in the chain
+    if ($http_user_agent ~* AppleWebKit) {
+        rewrite ^(.*)\.js\.gz$ $1.js permanent;
+    }
+    if ($http_accept_encoding !~ gzip) {
+        rewrite ^(.*)\.js\.gz$ $1.js permanent;
+    }
+
+    # Rewrite /noauth feeds to /feed, don't escape args!
+    rewrite ^/noauth/feed/(.+)   /feed/$1 redirect;
+
+    # this first one is only here for sake of doc-pages, everything
+    # else should use /static
+    rewrite /.*/base/(.+)           /static/skin/s2/$1 redirect;
+    rewrite ^/static/[\.0-9]+/(.+)$ /static/$1         last;
+
+    # Redirect old CGI and SCGI proxy URLs to the new HTTP version
+    rewrite ^/nlw/plugin/[^/]+/widgets/proxy.cgi$  /nlw/json-proxy  break;
+    rewrite ^/nlw/proxy.scgi$                      /nlw/json-proxy  break;
+    rewrite ^/nlw/[\.0-9]+/.+.scgi$                /nlw/json-proxy  break;
+    # Redirect versioned proxy to the un-numbered place
+    rewrite ^/nlw/[\.0-9]+/json-proxy$             /nlw/json-proxy  break;
+
+    rewrite ^/nlw/plugin/[\.0-9]+/(.+)$  /nlw/plugin/$1      last;
+    rewrite ^/nlw/plugin/:[^/]+/(.+)$    /nlw/plugin/$1      last;
+
+    rewrite ^/ig/ifpc_relay              /nlw/plugin/widgets/ifpc_relay.html redirect;
+
+[%- IF not (config.is_appliance) %]
+    rewrite    ^/my/$       http://[% config.nlw_server_hostname %] last;
+[%- END %]
+
+    # Old style container rewrites
+    if ($args ~ ^signals\/q\/(.+)) {
+        set $signals_q $1;
+        rewrite ^/$ /st/signals?q=$signals_q? redirect;
+    }
+    if ($args ~ ^([^=]+)$) {
+        set $container $1;
+        rewrite ^/$ /st/$container? redirect;
+    }
+    rewrite ^/st/people$  /?action=people    redirect;
+
+    rewrite ^/control/   /nlw/control/  redirect;
+
+    # Redirect all /ig over to google permanently
+    rewrite ^/ig/(.+)   http://www.google.com/ig/$1 permanent;
+
+    # Fix {bz: 2963} where extra slashes are added during /:ws/?:pname rewrite
+    rewrite ^/lite/+page/+([^/]+)/+(.*)  /m/page/$1/$2  redirect;
+
+    rewrite    ^/lite(/?.*)$     /m$1        last;
+    rewrite    ^/m/a$            /m/activities last;
+    rewrite    ^/m/s$            /m/signals    last;
+    rewrite    ^/m/p$            /m/people     last;
+    rewrite    ^/m/w$            /m/workspace_list     last;
+    rewrite    ^/m/?$             /m          last;
+    rewrite    ^/m/page/([^/]+)$ /m/page/$1/ last;
+
+    rewrite    ^/([^/\.]+)/emailprefs\??(.*)$ "/$1/index.cgi?action=preferences_settings&preferences_class_id=email_notify;$2" last;
+    rewrite    ^/([^/\.]+)/watchlistprefs\??(.*)$ "/$1/index.cgi?action=preferences_settings&preferences_class_id=watchlist;$2" last;
+
+    rewrite    ^/nlw/control/?$         /nlw/control/index.html  last;
+    rewrite    ^(/nlw/control/[^/]+)/$  $1 last;
+
+    ### Rewrite /ws/index.cgi?page and /ws/?page to /ws/page {{{
+    set $index_cgi_match 0;
+    if ($uri ~ ^/+([^/]+)/*(index\.cgi)?$) {
+      set $index_cgi_match 1;
+    }
+    if ($uri ~ ^/(nlw|challenge|data|feed|js|m|settings|st)(/|$)) {
+      set $index_cgi_match 0;
+    }
+    if ($uri ~ ^/(avatar|widget_thumbnail|account_logo|wafl|group-photo|webplugin|widget_thumbnail)(/|$)) {
+      set $index_cgi_match 0;
+    }
+    if ($args ~ "=") {
+      set $index_cgi_match 0;
+    }
+    if ($args ~ ^\s*$) {
+      set $index_cgi_match 0;
+    }
+    set $index_cgi_rewrite "$index_cgi_match-$request_method";
+    if ($index_cgi_rewrite ~ "1-GET$") {
+      rewrite ^/+([^/]+)/*(?:index.cgi)?$ /$1/$args? permanent;
+    }
+    ### }}}
+
+    set $to_backend 1;
+    if ($uri ~ ^/nlw/plugin) {
+        set $to_backend 0;
+    }
+    if ($uri ~ ^/logos) {
+        set $to_backend 0;
+    }
+    if ($uri ~ ^/favicon\.ico$) {
+        set $to_backend 0;
+    }
+    if ($uri ~ ^/robots.txt$) {
+        set $to_backend 0;
+    }
+
+    if ($to_backend) {
+        rewrite "^(/challenge(?:[/\?].*|$))" $1 break;
+        rewrite "^/(?!index.cgi)([^/]+)(\?.+)?$" "/$1/$2" permanent;
+        rewrite "^/(?!index.cgi)([^/]+)/?(\?.+)?$" "/$1/index.cgi$2" break;
+    }
+
+[%- MACRO pass_to_backend BLOCK %]
+        proxy_pass http://localhost:[% apache_perl_port %];
+        # Rewrite upstream redirects correctly
+        proxy_redirect http://[% config.nlw_server_hostname %]/ /;
+        proxy_redirect http://[% config.nlw_web_hostname %]/ /;
+        proxy_redirect https://[% config.nlw_server_hostname %]/ /;
+        proxy_redirect https://[% config.nlw_web_hostname %]/ /;
+[%- END %]
+
+    # Rewrite API POST|PUT|DELETEs so they are not rate limited
+    if ($method_uri ~ ^(POST|PUT|DELETE)/data/) {
+        rewrite "/(.+)$" "/MODMETHOD/$1" break;
+    }
+    location ~ ^/MODMETHOD/data/ {
+        rewrite "/MODMETHOD/(.+)$" "/$1" break;
+        [% pass_to_backend() %]
+    }
+
+    # rate-limit GET /data/signals /data/events
+    location ~ ^/data/(signals|events) {
+        limit_req zone=slowapi burst=10;
+        [% pass_to_backend() %]
+    }
+
+    location / {
+        [% pass_to_backend() %]
+    }

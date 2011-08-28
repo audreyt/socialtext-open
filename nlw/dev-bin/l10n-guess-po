@@ -1,0 +1,129 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use 5.12.0;
+use autodie;
+use warnings;
+use open qw(:std :utf8);
+use List::Util 'max';
+use File::Basename;
+use Getopt::Long;
+use FindBin '$RealBin';
+use lib "$RealBin/../lib";
+use Socialtext::l10n::DevUtils;
+
+# TODO: Use "XXX-assigned.key" for reusable leveraged keys from en.po.
+
+my $inplace;
+GetOptions( 'inplace|i!' => \$inplace ) and @ARGV
+    or die "Usage: $0 [--inplace] input.po\n";
+
+my %SectionMap = (
+    "add-a-block.html" => "code",
+    "table-create.html" => "table",
+    "table-options.html" => "table",
+    "widget_resource.js" => "wafl",
+    "opensocial-setup.html" => "widget",
+    "lib/Socialtext/Appliance" => "appliance",
+    "libsocialtext-appliance-perl/sbin" => "appliance",
+    "libsocialtext-appliance-perl/template" => "console",
+    "share/template/data/event" => "event",
+    "share/template/data/job" => "job",
+    "share/template/data/bug" => "bug",
+    "share/template/email" => "email",
+    "share/template/desktop" => "desktop",
+    "share/template/errors" => "error",
+    "share/template/authen" => "login",
+    "share/skin/wikiwyg/javascript/jemplate_wikiwyg/insert_menu" => "insert",
+    "common/javascript/Socialtext" => "api",
+    "libsocialtext-appliance-perl/template/backup.html" => "backup",
+);
+
+sub words {
+    my $text = shift;
+    $text =~ s/<[^>]*//g;
+    $text =~ s/&\w+;//g;
+    return map { s/_/-/g; s/^-//; s/-$//; s/spreadsheet/sheet/ig; s/workspace/wiki/ig; lc $_ } grep {
+        not($_ ~~ [qw[a an the]]);
+    } grep /\w/, split(/\W+/, $text);
+}
+
+my ($in, $out);
+for my $po (@ARGV) {
+    my $msgid;
+    my @params;
+    my $section;
+    my $punct = '';
+    my $default_section = basename($po);
+    $default_section =~ s/\..*//;
+    $default_section =~ s/socialcalc/sc/;
+
+    open $in, '<', $po;
+
+    if ($inplace) {
+        open $out, '>', "$po.new";
+        select $out;
+    }
+
+    for (<$in>) {
+        when (/^msgid "(.*?)([!:?]?)"$/) {
+            print;
+            my $max = 0;
+            my $id = $1;
+            $punct = $2;
+            while ($id =~ s/%(\d+)/ /) {
+                $max = max($max, $1);
+            }
+            if ($id =~ s/%(?:\*|\w+)\([^)]*?(\w+)[^)]*\)/$1/g) {
+                $id .= "-count";
+            }
+            $msgid = join '-', words $id;
+            if ($max) {
+                push @params, (('XXX') x $max);
+                $msgid .= "=" . join(',', @params[0..$max-1]);
+            }
+        }
+        when (/^#\: (.*)/) {
+            my $sources = $1;
+            for my $key (sort keys %SectionMap) {
+                if ($sources =~ /\Q$key\E/i) {
+                    $section = "###-" . $SectionMap{$key};
+                    last;
+                }
+            }
+            if ($sources =~ m{lib/Socialtext/(?:Pluggable/)?Plugin/(\w+)}) {
+                $section = "###-" . lc $1;
+            }
+            print;
+        }
+        when (/^#\. \((.*)\)/) {
+            my $param = $1;
+            # Turn foo.name to "foo-name"
+            do {} while $param =~ s/(\w+(?:\[[^\]]+\])?)\.(\w+)/$2/;
+            @params = words $param;
+            print;
+        }
+        when (/^msgstr "(.*)"$/) {
+            if ($1 eq '' or $1 ~~ /^(###|XXX)/) {
+                $section //= "###-$default_section";
+                say qq[msgstr "$section.$msgid$punct"];
+            }
+            else {
+                print;
+            }
+            $section = "###-$default_section";
+            @params = ();
+            $punct = '';
+        }
+        default {
+            print;
+        }
+    }
+
+    close $in;
+    if ($inplace) {
+        close $out;
+        unlink $po;
+        rename "$po.new" => $po;
+        warn "*** Changed file in-place: $po\n";
+    }
+}

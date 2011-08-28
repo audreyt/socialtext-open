@@ -1,0 +1,35 @@
+[%# @COPYRIGHT@ -%]
+[%- SET escaped_title = workspace.title | html -%]
+[%- SET escaped_uri   = preference_uri  | html -%]
+<html>
+<head>
+ <title>[% loc('email.recent-changes-in=wiki', escaped_title) %]</title>
+</head>
+
+<body>
+
+<p>
+  [% user.guess_real_name | html %],
+</p>
+
+<p>
+  [% loc('email.following-pages-have-recently-changed=uri,wiki,date,time', workspace.uri, escaped_title, email_date, email_time) %]
+</p>
+
+<ul>
+  [%- FOR page = pages %]
+    [% PROCESS 'email/page-details.html' %]
+  [%- END %]
+</ul>
+
+<hr />
+
+<p>
+  [% loc('email.change-email-preferences-at=wiki,uri', escaped_title, escaped_uri) %]
+</p>
+
+
+[% PROCESS 'email/standard-footer.html', support_link = 0 %]
+
+</body>
+</html>

@@ -1,0 +1,208 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+# Slam the search engine to see what we can see
+
+use strict;
+use warnings;
+use LWP::UserAgent;
+use HTTP::Request::Common;
+use IO::File;
+
+use constant DICT => '/usr/share/dict/words';
+use constant USER_AGENT => 'search-slam';
+
+use Getopt::Long;
+my %opts = (
+    count     => 10,
+    host      => 'www2.socialtext.net',
+    port      => 443,
+    workspace => 'corp',
+    verbose   => '',
+    errors    => 1,
+    results   => '',
+    words     => DICT,
+    ssl       => 1,
+);
+
+GetOptions( 'count:s'     => \$opts{count},
+            'user:s'      => \$opts{user},
+            'pass:s'      => \$opts{pass},
+            'host:s'      => \$opts{host},
+            'workspace:s' => \$opts{workspace},
+            'port:s'      => \$opts{port},
+            'words:s'     => \$opts{words},
+            'verbose'     => \$opts{verbose},
+            'errors'      => \$opts{errors},
+            'results'     => \$opts{results},
+            'literal'     => \$opts{literal},
+            'help'        => \$opts{help},
+            'ssl!'        => \$opts{ssl},
+          ) or exit 1;
+
+do_help() if $opts{help} or not ($opts{user} and $opts{pass});
+
+my @prefixes = qw(title category);
+
+my @words;
+get_words(\@words);
+do_requests(\@words);
+
+sub get_words {
+    my $words = shift;
+    my $fh = new IO::File;
+
+    $fh->open($opts{words}) or
+        die "unable to open $opts{words}: $!\n";
+
+    foreach my $word ($fh->getlines()) {
+        chomp $word;
+        warn "adding $word\n" if $opts{verbose};
+        push(@$words, $word);
+    }
+    $fh->close;
+}
+
+sub do_requests {
+    my $words = shift;
+    my @queries;
+
+    if ($opts{literal}) {
+        push(@queries, @$words);
+    } else {
+        for (1 .. $opts{count}) {
+            push(@queries, form_query($words));
+        }
+    }
+
+    foreach my $query (sort(@queries)) {
+        do_request($query);
+    }
+}
+
+sub form_query {
+    my $words = shift;
+    my $count_words = int(rand(3)) + 1;
+    my @query;
+
+    for (1 .. $count_words) {
+        push(@query, $$words[int(rand(@$words))]);
+    }
+
+    my $quote = '';
+    my $splat = '';
+    my $prefix = '';
+    my $join = ' ';
+    if (int(rand(2))) {
+        $quote = '"';
+        $splat = '*';
+        $prefix = make_prefix();
+    }
+    if (int(rand(2))) {
+        $join = ' OR ';
+        $quote = '';
+    }
+
+    return $quote . join($join, @query) . $quote if  $count_words > 1;
+    return $prefix . $query[0] . $splat;
+}
+
+sub make_prefix {
+    return $prefixes[int(rand(@prefixes))] . ':';
+}
+
+sub do_request {
+    my $query = shift;
+    my $url = make_url($query, $opts{ssl}, $opts{host},
+        $opts{port}, $opts{workspace});
+
+    my $ua = new LWP::UserAgent;
+    $ua->agent(USER_AGENT . ' ' . $ua->agent);
+
+    my $request = new HTTP::Request('GET', $url);
+    $request->authorization_basic($opts{user}, $opts{pass});
+    
+    warn "query is $query\n" if $opts{verbose};
+    warn "  requesting $url\n" if $opts{verbose};
+    my $result = $ua->request($request);
+
+    if ($result->is_success()) {
+        parse_content($query, $result->content());
+    } else {
+        warn $result->code . ": $url\n";
+    }
+}
+
+sub make_url {
+    my $query = shift;
+    my $ssl = shift;
+    my $hostname = shift;
+    my $port = shift;
+    my $workspace = shift;
+
+    
+    my $http = $ssl ? 'https' : 'http';
+
+    return
+    "$http://$hostname:$port/$workspace/index.cgi?action=search;search_term=$query";
+}
+
+sub parse_content {
+    my $query = shift;
+    my $content = shift;
+
+    my ($title) = ($content =~ /<title>(.*)<\/title>/s);
+    my ($title_count) = ($title =~ /\((\d+)\)$/m);
+
+    $content =~ s/^.*BEGIN search_content//s;
+    $content =~ s/END search_content.*$//s;
+
+    if ($content =~ /^<p><strong>([^<]+).*$/m) {
+        my $info = $1;
+        print "Error: $query: $info\n" if $opts{errors};
+    } else {
+        my @count = grep {/<tr class/} split(/\n/, $content);
+        print "Results: $query: ", scalar(@count), "($title_count)\n"
+            if $opts{results};
+    }
+}
+
+sub do_help {
+    print<<"EOF";
+
+A script to run a number of requests against the search engine in a given
+workspace on a given host. Uses a provide file or /usr/share/dict/words
+as a source of words from which to generate queries. There are many options,
+only --user and --pass are required.
+
+  --user=      The username for accessing the workspace
+
+  --pass=      The password for accessing the workspace
+
+  --workspace= The id of the workspace to access. Default: corp
+
+  --host=      The hostname where the workspace lives.
+               Default: www2.socialtext.net
+
+  --count=     Number of requests to make. Default: 10
+
+  --words=     A file with one word per line.
+               Default: /usr/share/dict/words
+
+  --literal    Use the words file as literal queries, ignoring count.
+
+  --verbose    Output queries, urls, words. Default: false
+
+  --errors     Display error messages from search: Default: true
+
+  --results    Report number of search results. Default: false
+
+  --ssl        Use ssl (default).
+
+  --nossl      Don't use ssl.
+
+  --help       This info.
+
+EOF
+    exit;
+}

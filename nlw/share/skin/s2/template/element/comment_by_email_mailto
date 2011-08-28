@@ -1,0 +1,2 @@
+[% USE encode_mailto %]
+mailto:[% wiki.email_in_address %]?subject=[% page_title | encode_mailto | uri %]

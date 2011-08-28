@@ -1,0 +1,47 @@
+[%# @COPYRIGHT@ -%]
+[%# vim: set et sts=2 sw=2: %]
+<form id="st-register-form" name="register" method="post" action="/nlw/submit/register">
+  <input type="hidden" name="redirect_to" value="[% redirect_to | html %]" />
+[% IF target_workspace %]
+  <input type="hidden" name="workspace_name" value="[% target_workspace.name%]" />
+[% END %]
+
+  <dl class="form">
+    <dt> <label for="email_address">[% loc('login.email-address:') %]</label> </dt> </dt>
+    <dd> <input id="email_address" name="email_address" type="text" size="30" value="[% email_address %]" /> </dd>
+  </dl>
+
+  <dl class="form">
+    <dt><label for="password">[% loc('login.password:') %]</label> </dt>
+    <dd> <input id="register_password" name="password" type="password" size="30" value="" /> </dd>
+  </dl>
+
+  <dl class="form">
+    <dt><label for="password2">[% loc('login.re-type-password:') %]</label> </dt>
+    <dd> <input id="register_password2" name="password2" type="password" size="30" value="" /> </dd>
+  </dl>
+
+  <dl class="form">
+    <dt><label for="first_name">[% loc('login.first-name:') %]</label> </dt>
+    <dd> <input id="first_name" name="first_name" type="text" size="30" value="[% first_name %]" /> <i> [% loc('login.optional') %]</i> </dd> 
+  </dl>
+
+  <dl class="form">
+    <dt><label for="last_name">[% loc('login.last-name:') %]</label> </dt>
+    <dd> <input id="last_name" name="last_name" type="text" size="30" value="[% last_name %]" /> <i> [% loc('login.optional') %]</i> </dd> 
+  </dl>
+
+  <div>[% captcha_form %]</div>
+  <div class="hidesubmit"><input type="submit"></div>
+
+  <div class="loginButtons">
+    <ul class="formButtons" style="float: left">
+      <li class="flexButtonBlue">
+        <a class="genericBlueButton" id="register_btn" href="#" onclick="document.forms['register'].submit(); return false">
+          [% loc('login.register') %]
+        </a>
+      </li>
+    </ul>
+    <div class="clear"></div>
+  </div>
+</form>

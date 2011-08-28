@@ -1,0 +1,16 @@
+[% loc('email.congratulations!') %]
+
+[% loc('email.invited-as-admin-to-new=wiki', workspace_title) %]
+
+[% loc('email.address-of-new-wiki-is=uri', workspace_uri) %]
+
+[% loc("email.ready-to-set-up-new-wiki-choose-your-next-step:") %]
+
+* [% loc('email.go-to-test-confirmation-message-home-page') %]
+* [% loc('email.invite-other-people-to-test-confirmation-message') %]
+* [% loc('email.review-settings-for-test-confirmation-message:') %]
+** [% loc('email.wiki-appearance') %]
+** [% loc('email.wiki-features') %]
+** [% loc('email.wiki-privacy') %]
+
+[% loc('wiki.visit-later=wiki', workspace_title) %]

@@ -1,0 +1,40 @@
+See also: [FormattingTest] | [FormattingToDo] | [WikiwygFormattingTest] | WikiwygFormattingToDo
+
+{wikiwyg_formatting_test_run_all}
+
+Italicizing multiple lines from the UI (using Firefox - what does IE do?) {rt: 13795}:
+.wikiwyg_formatting_test
+<div class="wiki"><span style="font-style: italic;">one</span><br
+style="font-style: italic;"><br style="font-style: italic;"><span
+style="font-style: italic;">two</span><br></div>
+~~
+_one_
+
+_two_
+.wikiwyg_formatting_test
+
+Bolding on the TD itself (needs ticket?):
+.wikiwyg_formatting_test
+<table style="border-collapse: collapse;" class="formatter_table">
+<tbody><tr>
+<td style="border: 1px solid black; padding: 0.2em; font-weight:
+bold;">asdef</td>
+<td style="border: 1px solid black; padding: 0.2em; font-weight:
+bold;">dfs</td>
+<td style="border: 1px solid black; padding: 0.2em; font-weight:
+bold;">dfsa</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; padding: 0.2em;">1</td>
+<td style="border: 1px solid black; padding: 0.2em;">2</td>
+<td style="border: 1px solid black; padding: 0.2em;">3</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; padding: 0.2em;">4</td>
+<td style="border: 1px solid black; padding: 0.2em;">5</td>
+<td style="border: 1px solid black; padding: 0.2em;">5</td>
+</tr>
+</tbody></table>
+~~
+(TODO - this drops the bolding when you get to Wikitext)
+.wikiwyg_formatting_test

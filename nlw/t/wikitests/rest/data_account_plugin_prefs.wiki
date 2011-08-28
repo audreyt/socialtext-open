@@ -1,0 +1,100 @@
+* Fixture: SocialRest
+
+### Setup
+| set                    | acct              | account-%%start_time%%                          |              |
+| create-account         | %%acct%%          |                                                 |              |
+| set                    | acct_id           | %%account_id%%                                  |              |
+| set                    | auth              | auth-user-%%start_time%%@ken.socialtext.com     |              |
+| create-user            | %%auth%%          | password                                        |              |
+| set                    | acct_user | acct-user-%%start_time%%@ken.socialtext.com     |              |
+| create-user            | %%acct_user%%          | password                                        | %%acct%%             |
+| set                    | disabled          | %%start_time%%-disabled                         |              |
+| set                    | disabled_user     | disabled-%%start_time%%@ken.socialtext.com      |              |
+| create-account         | %%disabled%%      |                                                 |              |
+| disable-account-plugin | %%disabled%%      | signals                                         |              |
+| set                    | %%disabled_user%% | disabled-user-%%start_time%%@ken.socialtext.net |              |
+| create-user            | %%disabled_user%% | password                                        | %%disabled%% |
+| set-business-admin     | %%disabled_user%% | 1                                               |              |
+
+
+## Reset the server-wide signals limit
+| st-config      | set signals_size_limit 401                           |                              |
+
+## User is not logged in
+| *Comment*      | User is not logged in                                  |                              |
+| http-user-pass |                                                        |                              |
+| PUT-json       | /data/accounts/%%acct_id%%/plugins/signals/preferences | {"signals_size_limit":"350"} |
+| code-is        | 401                                                    |                              |
+
+## User is not logged in
+| *Comment*      | User is not logged in                                  |                              |
+| http-user-pass |                                                        |                              |
+| PUT-json       | /data/accounts/%%acct%%/plugins/signals/preferences    | {"signals_size_limit":"350"} |
+| code-is        | 401                                                    |                              |
+
+## User is not business admin
+| *Comment*      | User is not business admin                          |                              |
+| http-user-pass | %%auth%%                                            | password                     |
+| PUT-json       | /data/accounts/%%acct%%/plugins/signals/preferences | {"signals_size_limit":"350"} |
+| code-is        | 403                                                 |                              |
+
+## Account does not exist
+| *Comment*      | Account does not exist                             |                              |
+| http-user-pass | devnull1@socialtext.com                            | d3vnu11l                     |
+| PUT-json       | /data/accounts/ENOSUCH/plugins/signals/preferences | {"signals_size_limit":"350"} |
+| code-is        | 404                                                |                              |
+
+## Signals is not enabled
+| *Comment*      | Signals is not enabled                                  |                              |
+| http-user-pass | %%disabled_user%%                                       | password                     |
+| PUT-json       | /data/accounts/%%disabled%%/plugins/signals/preferences | {"signals_size_limit":"350"} |
+| code-is        | 404                                                     |                              |
+
+## Default Account Limit Can be found in account ReST lookup
+| *Comment*    | Can be found in account ReST lookup             |     |
+| GET-json     | /data/accounts/%%acct%%                         |     |
+| code-is      | 200                                             |     |
+| json-parse   |                                                 |     |
+| json-path-is | $.plugin_preferences.signals.signals_size_limit | 400 |
+
+## User is business admin
+| *Comment*      | User is business admin                              |                              |
+| http-user-pass | devnull1@socialtext.com                             | d3vnu11l                     |
+| PUT-json       | /data/accounts/%%acct%%/plugins/signals/preferences | {"signals_size_limit":"350"} |
+| code-is        | 204                                                 |                              |
+
+## Can be found in account ReST lookup
+| *Comment*    | Can be found in account ReST lookup             |     |
+| GET-json     | /data/accounts/%%acct%%                         |     |
+| code-is      | 200                                             |     |
+| json-parse   |                                                 |     |
+| json-path-is | $.plugin_preferences.signals.signals_size_limit | 350 |
+
+## Can be found in user's ReST lookup
+| *Comment*      | Can be found in user's accounts ReST lookup                 |          |
+| http-user-pass | %%acct_user%%                                               | password |
+| GET-json       | /data/users/%%acct_user%%                                   |          |
+| code-is        | 200                                                         |          |
+| json-parse     |                                                             |          |
+| json-path-is   | $.accounts[0].plugin_preferences.signals.signals_size_limit | 350      |
+
+## Size limit must be a positive integer
+| *Comment*      | Size limit must be a positive integer               |                               |
+| http-user-pass | devnull1@socialtext.com                             | d3vnu11l                      |
+| PUT-json       | /data/accounts/%%acct%%/plugins/signals/preferences | {"signals_size_limit":"word"} |
+| code-is        | 400                                                 |                               |
+| body-like      | Size Limit must be a positive integer               |                               |
+| PUT-json       | /data/accounts/%%acct%%/plugins/signals/preferences | {"signals_size_limit":"-19"}  |
+| code-is        | 400                                                 |                               |
+| body-like      | Size Limit must be a positive integer               |                               |
+| PUT-json       | /data/accounts/%%acct%%/plugins/signals/preferences | {"signals_size_limit":"20.5"} |
+| code-is        | 400                                                 |                               |
+| body-like      | Size Limit must be a positive integer               |                               |
+
+## Can't set higher than server max
+| *Comment*      | Can't set higher than server max                    |                              |
+| st-config      | set signals_size_limit 10                           |                              |
+| http-user-pass | devnull1@socialtext.com                             | d3vnu11l                     |
+| PUT-json       | /data/accounts/%%acct%%/plugins/signals/preferences | {"signals_size_limit":"350"} |
+| code-is        | 400                                                 |                              |
+| body-like      | Size Limit Exceeds Server Max                       |                              |

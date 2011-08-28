@@ -1,0 +1,16 @@
+#!/bin/bash
+
+TABLE=$1
+COLUMN=$2
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+
+empty=`psql --no-align --tuples-only -U $DB_USER -d $DB -t -c "select count(1) from pg_class as c, pg_attribute as a where relname = '$TABLE' and c.oid = a.attrelid and a.attname = '$COLUMN'"`
+
+if [ "$empty" == "0" ]; then
+    echo "$COLUMN column not added to $TABLE table"
+    exit -1
+fi
+echo "Added $COLUMN column to $TABLE table"
+exit 0

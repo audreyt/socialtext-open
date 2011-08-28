@@ -1,0 +1,64 @@
+*Rationale*: make sure that when a blog is created, 'Weblog' is not appended to to the name specified if it ends in (blog | Blog | Weblog | weblog), and is appended otherwise.
+
+This test provoked by {rt: 27013} - creating a blog name ending in "Blog" gives "Blog Weblog".
+
+| *Comment* | Test Case: Weblog naming |  |
+
+| *Comment* | Test Case: Weblog naming: Add 'Weblog' to name if needed |  |
+| open_ok | /%%workspace%%/?action=users_settings |  |
+
+| click_and_wait | link=Create New Blog |  |
+| type_ok | weblog_title | add1 %%start_time%% |
+| click_and_wait | link=Save |  |
+| text_like | st-editing-tools-edit | add1 %%start_time%% Blog |
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=Create New Blog |  |
+| type_ok | weblog_title | add2 %%start_time%% log |
+| click_and_wait | link=Save |  |
+| text_like | st-editing-tools-edit | add2 %%start_time%% log Blog |
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=Create New Blog |  |
+| type_ok | weblog_title | add3 blog %%start_time%% |
+| click_and_wait | link=Save |  |
+| text_like | st-editing-tools-edit | add3 blog %%start_time%% Blog |
+
+| *Comment* | Test Case: Weblog naming: 'Blog' not added to name if not needed |  |
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=Create New Blog |  |
+| type_ok | weblog_title | noadd1 %%start_time%% blog |
+| click_and_wait | link=Save |  |
+| text_like | st-editing-tools-edit | noadd1 %%start_time%% blog |
+| text_unlike | st-editing-tools-edit | qr/blog Blog/i |
+
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=Create New Blog |  |
+| type_ok | weblog_title | noadd2 %%start_time%% weblog |
+| click_and_wait | link=Save |  |
+| text_like | st-editing-tools-edit | noadd2 %%start_time%% weblog |
+| text_unlike | st-editing-tools-edit | qr/weblog Blog/i |
+
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=Create New Blog |  |
+| type_ok | weblog_title | noadd3 %%start_time%% Blog |
+| click_and_wait | link=Save |  |
+| text_like | st-editing-tools-edit | noadd3 %%start_time%% Blog |
+| text_unlike | st-editing-tools-edit | qr/blog Blog/i |
+
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=Create New Blog |  |
+| type_ok | weblog_title | noadd4 %%start_time%% Weblog |
+| click_and_wait | link=Save |  |
+| text_like | st-editing-tools-edit | noadd4 %%start_time%% Weblog |
+| text_unlike | st-editing-tools-edit | qr/Weblog blog/i |
+
+| *Comment* | Test Case: Weblog naming TEARDOWN |  |
+| st-process-jobs | PageIndex | %%workspace%% |
+| st-admin | purge-page --w %%workspace%% --page first_post_in_add1_%%start_time%%_blog | was purged |
+| st-admin | purge-page --w %%workspace%% --page first_post_in_add2_%%start_time%%_log_blog | was purged |
+| st-admin | purge-page --w %%workspace%% --page first_post_in_add3_blog_%%start_time%%_blog | was purged |
+| st-admin | purge-page --w %%workspace%% --page first_post_in_noadd1_%%start_time%%_blog | was purged |
+| st-admin | purge-page --w %%workspace%% --page first_post_in_noadd2_%%start_time%%_weblog | was purged |
+| st-admin | purge-page --w %%workspace%% --page first_post_in_noadd3_%%start_time%%_blog | was purged |
+| st-admin | purge-page --w %%workspace%% --page first_post_in_noadd4_%%start_time%%_weblog | was purged |
+
+| *Comment* | Test Case: Weblog naming COMPLETED |  |

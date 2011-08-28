@@ -1,0 +1,101 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+
+use Getopt::Long;
+use Pod::Usage 1.12;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Class::MOP;
+use Socialtext::Jobs;
+use Socialtext::DaemonUtil;
+
+# don't run as root
+Socialtext::DaemonUtil->Check_and_drop_privs();
+
+my %opts;
+GetOptions(
+    'h|help|?' => sub { pod2usage( { -verbose => 1, -input => $0 } ); exit },
+    'H|man'    => sub { pod2usage( { -verbose => 2, -input => $0 } ); exit },
+    'class'    => \$opts{class},
+    'verbose' => \$opts{verbose},
+    'dryrun'  => \$opts{dryrun},
+) or die;
+
+my $Pattern = $ARGV[0]
+    || sub { pod2usage( { -verbose => 1, -input => $0 } ); exit };
+
+Socialtext::Jobs->Unlimit_list_jobs();
+
+if ($Pattern =~ /^(?:id=)?(\d+)$/) {
+    # prevent an error-prone common usage
+    $Pattern = qr/ id=$1;/;
+}
+else {
+    $Pattern = qr/$Pattern/;
+}
+
+my @jobs_to_check;
+if ($opts{class}) {
+    push @jobs_to_check, Socialtext::Jobs->list_jobs(
+        funcname => $opts{class},
+        want_handle => 1,
+    );
+}
+else {
+    my @job_types = Socialtext::Jobs->job_types;
+    for my $type (@job_types) {
+        push @jobs_to_check, Socialtext::Jobs->list_jobs(
+            funcname => $type,
+            want_handle => 1,
+        );
+    }
+}
+
+for my $j (@jobs_to_check) {
+    remove_if_match($j);
+}
+
+my %ws_name;
+sub remove_if_match {
+    my $job = shift;
+    my ($string, $shortname)
+        = Socialtext::Jobs->job_to_string($job, {ws_names => \%ws_name});
+
+    return unless $string =~ $Pattern;
+
+    if ($opts{dryrun}) {
+        warn "would de-schedule event for $string\n";
+    }
+    else {
+        warn "de-scheduling event for $string\n" if $opts{verbose};
+        eval "require ".$job->funcname
+            unless Class::MOP::is_class_loaded($job->funcname);
+        $job->completed;
+    }
+}
+
+=head1 NAME
+
+ceq-rm - Remove jobs in the ceqlotron queue according to perl regexp or ID
+
+=head1 SYNOPSIS
+
+B<ceq-rm 'perl regexp'>
+
+B<ceq-rm number>
+
+=head1 OPTIONS
+
+    --dryrun    Report on what would be removed, but don't actually remove
+    --verbose   Report on each job removed
+    --class     Only look at events of a certain class.
+    --help      This help page
+    --man       Manual page
+
+=head1 SEE ALSO
+
+L<ceq-stat(1)>, L<ceq-read(1)>, L<ceqlotron(1)>
+
+=cut

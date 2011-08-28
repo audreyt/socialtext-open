@@ -1,0 +1,51 @@
+diff --git a/nlw/lib/Socialtext/Group.pm b/nlw/lib/Socialtext/Group.pm
+index 92e0f78..1cffb7e 100644
+--- a/nlw/lib/Socialtext/Group.pm
++++ b/nlw/lib/Socialtext/Group.pm
+@@ -482,6 +482,46 @@ sub _build_workspace_count {
+     return shift->workspaces->count;
+ }
+ 
++sub _sorted_supergroup_roles_apply {
++    my $row = shift;
++    return {
++        %$row,
++        supergroup => Socialtext::Group->GetGroup(
++            group_id => $row->{supergroup_id}),
++        role => Socialtext::Role->new(role_id => $row->{role_id}),
++    };
++}
++
++{
++    my $perspective = Socialtext::UserSetPerspective->new(
++    cols => [
++        'user_set_id',
++        'user_set_id - '.PG_GROUP_OFFSET.' AS supergroup_id',
++        'role_id'
++    ],
++    subsort => "user_set_id ASC, role_id ASC",
++    view => [
++        from       => 'contained',      # *this* group
++        into       => 'groups',         # groups this group is part of
++        into_alias => 'user_set_id',    # for JOINing convenience
++        alias      => 'ggr',
++    ],
++    aggregates => {
++        workspace_count  => [ into => 'workspaces', using => 'user_set_id' ],
++        supergroup_count => [ into => 'groups',     using => 'user_set_id' ],
++        subgroup_count   => [ from => 'groups',     using => 'user_set_id' ],
++        account_count    => [ into => 'accounts',   using => 'user_set_id' ],
++    },
++    order_by => \&Socialtext::UserSetContainer::_sorted_group_roles_order_by,
++    apply    => \&_sorted_supergroup_roles_apply,
++    );
++    sub sorted_supergroup_roles {
++        my ($self, %opts) = @_;
++        $opts{where} = ['ggr.from_set_id' => $self->user_set_id];
++        $opts{thing} = $self;
++        return $perspective->get_cursor(\%opts);
++    }
++}
+ 
+ __PACKAGE__->meta->make_immutable;
+ 1;

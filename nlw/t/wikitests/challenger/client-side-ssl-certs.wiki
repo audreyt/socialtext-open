@@ -1,0 +1,34 @@
+Verify that Client-Side SSL Certificate authentication support works.
+
+* Fixture: SocialRest
+
+| set | https | https://%%hostname%%:%%https_port%% |
+
+| *Comment*   | Create a test User to work with |                                        |
+| set         | test_username                   | test-%%start_time%%@ken.socialtext.net |
+| create-user | %%test_username%%               |                                        |
+
+| *Comment* | Enable Client-Side SSL Certificate credentials extractor |
+| st-config | set credentials_extractors SSLCertificate:Guest          |
+
+| *Comment*     | Enable Client-Side SSL Cert support on the server |
+| st-client-ssl | server-on                                         |
+
+| *Comment*   | Without a Client-Side SSL cert, requests should be treated as unauthenticated |
+| GET         | %%https%%/st/dashboard                                                        |
+| code-is     | 302                                                                           |
+| header-like | Location: %%https%%/challenge                                                 |
+| GET-json    | %%https%%/data/users/%%test_username%%                                        |
+| code-is     | 404                                                                           |
+
+| *Comment*     | Enable Client-Side SSL Certs, requests should now work |                   |
+| st-client-ssl | client-on                                              | %%test_username%% |
+| GET           | %%https%%/st/dashboard                                 |                   |
+| code-is       | 200                                                    |                   |
+| body-like     | Socialtext.email_address = "%%test_username%%"         |                   |
+| GET-json      | %%https%%/data/users/%%test_username%%                 |                   |
+| code-is       | 200                                                    |                   |
+
+| *Comment*     | CLEANUP: Reset the configuration                  |
+| st-config     | set credentials_extractors BasicAuth:Cookie:Guest |
+| st-client-ssl | server-off                                        |

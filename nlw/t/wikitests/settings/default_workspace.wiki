@@ -1,0 +1,31 @@
+Test /settings/default_workspace
+
+* Fixture: SocialRest
+
+| comment       | set up |
+| reset-plugins |        |
+| set | ws_name  | %%start_time%%-ws                   |
+| set | ws_title | %%start_time%%-Workspace            |
+| set | admin    | %%start_time%%-admin@socialtext.com |
+| st-admin  | create-workspace --name %%ws_name%% --title %%ws_title%%      |
+| st-admin  | create-user --email %%admin%% --password password             |
+| st-admin  | add-workspace-admin --email %%admin%% --workspace %%ws_name%% |
+| st-config | set default_workspace %%ws_name%%                             |
+
+| comment | log in |
+| http-user-pass | %%admin%% |  password |
+
+| comment   | view the default workspace  |                  |
+| get       | /settings/default_workspace | application/json |
+| code-is   | 200                         |                  |
+| body-like | "name":"%%ws_name%%",       |                  |
+
+| comment   | reset the default workspace to null |
+| st-config | set default_workspace ''            |
+
+| comment    | view it again                |                  |
+| get        | /settings/default_workspace  | application/json |
+| code-is    | 404                          |                  |
+| body-like  | Default Workspace not found. |                  |
+| has-header | Content-type                 | text/plain       |
+

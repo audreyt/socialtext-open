@@ -1,0 +1,81 @@
+## For [Story: Global user settings for timezone]
+
+* Fixture: SocialRest
+
+| set         | actor     | actor%%start_time%%@ken.socialtext.net |
+| create-user | %%actor%% | password                               |
+| set         | other     | other%%start_time%%@ken.socialtext.net |
+| create-user | %%other%% | password                               |
+
+################################################################################
+## logged in as default user
+
+## GET, user does not exist
+| *Comment* | GET, user does not exist            |
+| GET-json  | /data/users/ENOSUCHUSER/preferences |
+| code-is   | 404                                 |
+| body-like | User not found                      |
+
+################################################################################
+## Log in as actor
+| http-user-pass | %%actor%% | password |
+
+## GET, user exists but is not visible (as actor)
+| *Comment* | GET, user exists but is not visible (as actor) |
+| GET-json  | /data/users/%%other%%/preferences   |
+| code-is   | 403                                 |
+| body-like | User not authorized                 |
+
+## GET, user is visible (as actor)
+| *Comment* | GET, user is visible (as actor) |
+| GET-json     | /data/users/%%actor%%/preferences |                                 |
+| code-is      | 200                               |                                 |
+| header-is    | Content-Type                      | application/json; charset=UTF-8 |
+| json-parse   |                                   |                                 |
+| json-path-is | $.timezone.timezone               | -0800                           |
+
+## POST, user exists but is not visible (as actor)
+| *Comment* | POST, user exists but is not visible (as actor) |
+| POST-json | /data/users/%%other%%/preferences | {"timezone":{"field":"value"}} |
+| code-is   | 403                               |                                |
+| body-like | User not authorized               |                                |
+
+## POST, bad json (as actor)
+| *Comment* | POST, bad json (as actor)         |                              |
+| POST-json | /data/users/%%actor%%/preferences | {"timezone":{"field":"value" |
+| code-is   | 400                               |                              |
+| body-like | Content should be a JSON hash.    |                              |
+| POST-json | /data/users/%%actor%%/preferences | ["timezone","field","value"] |
+| code-is   | 400                               |                              |
+| body-like | Content should be a JSON hash.    |                              |
+
+## POST (as actor)
+| *Comment* | POST (as actor) |
+| POST-json    | /data/users/%%actor%%/preferences | {"timezone":{"field":"value"}}  |
+| code-is      | 201                               |                                 |
+| GET-json     | /data/users/%%actor%%/preferences |                                 |
+| code-is      | 200                               |                                 |
+| header-is    | Content-Type                      | application/json; charset=UTF-8 |
+| json-parse   |                                   |                                 |
+| json-path-is | $.timezone.field                  | value                           |
+
+################################################################################
+## Log in as business admin 
+| http-user-pass | devnull1@socialtext.com | d3vnu11l |
+
+## GET (as business admin)
+| *Comment* | GET (as business admin) |
+| GET-json   | /data/users/%%actor%%/preferences |                                 |
+| code-is    | 200                               |                                 |
+| header-is  | Content-Type                      | application/json; charset=UTF-8 |
+
+## POST (as business admin)
+| *Comment* | POST (as business admin) |
+| POST-json    | /data/users/%%actor%%/preferences | {"email":{"something":"else"}}  |
+| code-is      | 201                               |                                 |
+| GET-json     | /data/users/%%actor%%/preferences |                                 |
+| code-is      | 200                               |                                 |
+| header-is    | Content-Type                      | application/json; charset=UTF-8 |
+| json-parse   |                                   |                                 |
+| json-path-is | $.timezone.field                  | value                           |
+| json-path-is | $.email.something                 | else                            |

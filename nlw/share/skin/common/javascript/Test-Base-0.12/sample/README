@@ -1,0 +1,11 @@
+To set up a Test.Base based test suite, do the following steps:
+
+1) Copy this directory from the Test.Base distribution to your project
+   and rename it `tests` (a JSAN standard)
+2) Rename `./Test/Sample.js` to your own local project test file. This
+   is where you put any code that overrides or extends Test.Base.js
+3) Edit the config.yaml file to your own values.
+4) Write a bunch of test files with names like `foo.t.js` and
+   `bar.t.js`.
+5) Run: `cd run; make clean; make`
+6) Point your browser at `http://your.domain/Your-Project/tests/run/index.html`

@@ -1,0 +1,18 @@
+[%# @COPYRIGHT@ -%]
+[%
+  FOREACH year = archive.keys.nsort.reverse;
+    FOREACH month = archive.$year.keys.nsort.reverse;
+      NEXT IF !archive.$year.$month;
+      PROCESS archive_link category = category,
+                           start    = archive.$year.$month.start,
+                           limit    = archive.$year.$month.limit,
+                           month    = month,
+                           year     = year;
+    END;
+  END;
+%]
+
+[% BLOCK archive_link %]
+<li><a href="[% script_name %]?action=weblog_display;category=[% category %];start=[% start %];limit=[% limit %]">[% hub.helpers.format_date(year, month) %]</a></li>
+[% END %]
+

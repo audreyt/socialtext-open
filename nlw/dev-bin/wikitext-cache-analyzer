@@ -1,0 +1,89 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use autodie;
+use JSON qw/decode_json/;
+
+# This script is useful for analyzing the wikitext html cache hits/misses
+# And looking for areas that could use improvement
+
+my %stats;
+
+my @files = glob("nlw.log*");
+for my $file (@files) {
+    open my $fh, '<', $file;
+    while (<$fh>) {
+        next unless m/wikitext_(HIT|MISS)\((\d+)\)/;
+        my ($hit, $count) = ($1 eq 'HIT', $2);
+        my $uri = 'unknown';
+        my $pname = 'unknown';
+        next unless m/WEB,GET/;
+        my $q = {};
+        if (m/WEB,[A-Z]+,([^,]+),\w+,ACTOR_ID:\d+,(.+)/) {
+            $uri = $1;
+            $q = eval { decode_json($2) } || {};
+            next if $@;
+            $pname = $q->{ws} || 'unknownws';
+            $pname .= ":" . ($q->{pname} || 'unknown-pname');
+        }
+        else {
+            die "NOT WEB GET? $_";
+        }
+
+        if ($hit) {
+            $stats{by_uri}{$uri}{hits} += $count;
+            $stats{hits} += $count;
+            $stats{hits_by_page}{$pname} += $count;
+        }
+        else {
+            $stats{by_uri}{$uri}{miss} += $count;
+            $stats{miss} += $count;
+            $stats{by_page}{$pname} += $count;
+            if ($uri eq '/:WS/INDEX.CGI') {
+                $stats{index_misses}{$pname} += $count;
+            }
+            if (my $action = $q->{q}{action}) {
+                $stats{by_action}{$action} += $count;
+            }
+        }
+    }
+}
+
+print "|| sort=on\n| *Path* | *Hits* | *Misses* |\n";
+for my $path (sort keys %{ $stats{by_uri} }) {
+    my $hits = $stats{by_uri}{$path}{hits} || 0;
+    my $miss = $stats{by_uri}{$path}{miss} || 0;
+    print "| $path | $hits | $miss |\n";
+}
+print "| *Total* | $stats{hits} | $stats{miss} |\n";
+
+my $cache_rate = sprintf "%0.2d", $stats{hits} / ($stats{miss} + $stats{hits}) * 100;
+print "Cache rate: \%$cache_rate\n";
+
+print "INDEX.CGI Misses\n\n";
+print "|| sort=on\n| *Page* | *Misses* |\n";
+my $count = 0;
+for my $page (sort { $stats{index_misses}{$b} <=> $stats{index_misses}{$a} } keys %{ $stats{index_misses} }) {
+    print "| $page | $stats{index_misses}{$page} |\n";
+    last if $count++ > 30;
+}
+
+print "\n\nAll Misses\n\n";
+print "|| sort=on\n| *Page* | *Misses* | *Hits* |\n";
+$count = 0;
+for my $page (sort { $stats{by_page}{$b} <=> $stats{by_page}{$a} } keys %{ $stats{by_page} }) {
+    print "| $page | $stats{by_page}{$page} | $stats{hits_by_page}{$page} |\n";
+    last if $count++ > 30;
+}
+
+print "\n\nMisses By Action\n\n";
+print "|| sort=on\n| *Page* | *Misses* |\n";
+$count = 0;
+for my $page (sort { $stats{by_action}{$b} <=> $stats{by_action}{$a} } keys %{ $stats{by_action} }) {
+    print "| $page | $stats{by_action}{$page} |\n";
+    last if $count++ > 30;
+}
+
+__DATA__
+
+Mar 29 07:57:10 www2 nlw[25868]: [33] WEB,GET,/DATA/WORKSPACES/:WS/PAGES/:PNAME,200,ACTOR_ID:4851,{"q":{"html":"1","link_dictionary":"Absolute"},"status":"200","pname":"learning_resources","ws":"help","timers":"overall(1):0.120,handler_run(1):0.071,web_auth(1):0.047,sql_execute(17):0.041,get_page_json(1):0.035,get_dbh(21):0.030,user_new(3):0.022,plugins_for_uset(1):0.015,user_restriction_all_for_user(3):0.007,user_accts(4):0.004,uset_query(4):0.003,record_event(1):0.003,sql_singleblob(1):0.001,QtoA(1):0.000,wikitext_HIT(1):0.000,ldap_user_check_cache(1):0.000"}

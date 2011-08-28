@@ -1,0 +1,76 @@
+* Fixture: SocialRest
+
+## Setup: In order to test editability of a lite page, we'll need to test with
+## a workspace admin, a workspace member, and a simple authenticated user. We'll
+## start by making the workspace public-read-only and checking out the presence
+## of an Edit link. Once verified, we'll turn on locking for a particular page
+## and test for an Edit link again. This tests out the fix for {bz: 3151} 
+
+| *Comment*           | Create a test page |              |                               |
+| standard-test-setup |                    |              |                               |
+| set                 | page               | edit_testing |                               |
+| edit_page           | %%workspace%%      | %%page%%     | Content here is not important |
+
+
+| *Comment*   | Create a workspace admin                                        |                                        |
+| set         | admin                                                           | admin%%start_time%%@ken.socialtext.net |
+| create_user | %%admin%%                                                       | password                               |
+| st-admin    | add-workspace-admin --workspace %%workspace%% --email %%admin%% |                                        |
+
+| *Comment*   | Create a workspace member                               |                                         |
+| set         | member                                                  | member%%start_time%%@ken.socialtext.net |
+| create_user | %%member%%                                              | password                                |
+| st-admin    | add-member --workspace %%workspace%% --email %%member%% |                                         |
+
+| *Comment*   | Create an authenticated user ( to test read-only ) |                                       |
+| set         | auth                                               | auth%%start_time%%@ken.socialtext.net |
+| create_user | %%auth%%                                           | password                              |
+
+| *Comment* | Setup workspace to be public-read-only                                   |
+| st-admin  | set-permissions --workspace %%workspace%% --permissions public-read-only |
+
+## First pass at 'Edit' link presence
+
+| *Comment*      | Workspace Admin can edit                   |          |
+| http-user-pass | %%admin%%                                  | password |
+| GET            | /m/page/%%workspace%%/%%page%%             |          |
+| code-is        | 200                                        |          |
+| body-like      | /m/page/%%workspace%%/%%page%%?action=edit |          |
+
+| *Comment*      | Workspace Member can edit                  |          |
+| http-user-pass | %%member%%                                 | password |
+| GET            | /m/page/%%workspace%%/%%page%%             |          |
+| code-is        | 200                                        |          |
+| body-like      | /m/page/%%workspace%%/%%page%%?action=edit |          |
+
+| *Comment*      | Authenticated user cannot edit             |          |
+| http-user-pass | %%auth%%                                   | password |
+| GET            | /m/page/%%workspace%%/%%page%%             |          |
+| code-is        | 200                                        |          |
+| body-unlike    | /m/page/%%workspace%%/%%page%%?action=edit |          |
+
+## Set up page locking
+
+| *Comment* | Lock test page |
+| st-admin | set-workspace-config --workspace %%workspace%% allows_page_locking 1 |
+| st-admin | lock-page --workspace %%workspace%% --page %%page%% | has been locked. |
+
+## Run user tests again
+
+| *Comment*      | Workspace Admin can still edit             |          |
+| http-user-pass | %%admin%%                                  | password |
+| GET            | /m/page/%%workspace%%/%%page%%             |          |
+| code-is        | 200                                        |          |
+| body-like      | /m/page/%%workspace%%/%%page%%?action=edit |          |
+
+| *Comment*      | Workspace Member can no longer edit        |          |
+| http-user-pass | %%member%%                                 | password |
+| GET            | /m/page/%%workspace%%/%%page%%             |          |
+| code-is        | 200                                        |          |
+| body-unlike    | /m/page/%%workspace%%/%%page%%?action=edit |          |
+
+| *Comment*      | Authenticated user still cannot edit       |          |
+| http-user-pass | %%auth%%                                   | password |
+| GET            | /m/page/%%workspace%%/%%page%%             |          |
+| code-is        | 200                                        |          |
+| body-unlike    | /m/page/%%workspace%%/%%page%%?action=edit |          |

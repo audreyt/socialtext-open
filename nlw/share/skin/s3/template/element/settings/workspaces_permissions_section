@@ -1,0 +1,49 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[% PROCESS element/settings/start %]
+
+<dl class="form">
+  <dt><label>[% loc('wiki.privacy') %]</label></dt>
+  <dd>
+    [% loc('info.wiki-private') %] 
+  </dd>
+  [% IF current_permission_set_name == "member-only" %]
+    <p>[% loc('info.public-wiki', support_address) %]</p>
+  [% ELSE %]
+  <dt><label>[% loc('wiki.permission-type:') %]</label></dt>
+  <dd>
+    <input type="radio" name="permission_set_name" value="member-only" />
+    <strong>[% loc('config.private') %]</strong> - [% loc('config.wiki-private') %]
+  </dd>
+  <dd>
+    <input type="radio" name="permission_set_name" checked="checked" value="not-member-only" />
+    [% IF current_permission_set_name == "custom" %]
+      <strong>[% loc('wiki.custom-permission') %]</strong> - [% loc('config.wiki-custom') %]
+    [% ELSE %]
+      <strong>[% loc('config.public') %]</strong> - [% loc('config.wiki-public') %]
+    [% END %]
+  </dd>
+  [% END %]
+
+  <dt><label>[% loc('wiki.email-senders?') %]</label></dt>
+  <dd>
+    <input type="radio" name="guest_has_email_in" [% IF fill_in_data.guest_has_email_in %]checked="1"[% END %] value="1" />
+    [% loc('wiki.anyone-can-email') %]
+  </dd>
+  <dd>
+    <input type="radio" name="guest_has_email_in" [% UNLESS fill_in_data.guest_has_email_in %]checked="1"[% END %] value="0" />
+    [% SET people_role = permission_set_name.match('public-(?:read|comment)-only') ? loc('wiki.members') : loc('config.registered-users') %]
+    [% loc('wiki.only-email-from=role', people_role ) %] 
+  </dd>
+  <dt><label>[% loc('nav.page-locking') %]</label></dt>
+  <dd>
+    <input type="radio" id="settings-lock-pages" name="allows_page_locking" [% IF fill_in_data.allows_page_locking %]checked="1"[% END %] value="1" />
+    [% loc('wiki.enable-page-locking') %]
+  </dd>
+  <dd>
+    <input type="radio" id="settings-unlock-pages" name="allows_page_locking" [% UNLESS fill_in_data.allows_page_locking %]checked="1"[% END %] value="0" />
+    [% loc('wiki.disable-locking') %]
+  </dd>
+</dl>
+
+[% PROCESS element/settings/stop %]

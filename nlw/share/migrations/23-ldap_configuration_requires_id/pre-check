@@ -1,0 +1,20 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::LDAP::Config;
+
+# find out where the LDAP config is, and abort if not present
+my $ldap_yaml = Socialtext::LDAP::Config->config_filename();
+exit 1 unless (-f $ldap_yaml);
+
+# load LDAP config, and see if all of the entries have an "id" field.
+my @entries = YAML::LoadFile($ldap_yaml);
+my $allok   = 1;
+foreach my $config (@entries) {
+    $allok = 0 unless exists $config->{id};
+}
+exit 1 if $allok;
+
+print "LDAP configuration present, updating to add new required 'id' field\n";
+exit 0;

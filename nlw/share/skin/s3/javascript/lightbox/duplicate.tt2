@@ -1,0 +1,40 @@
+[%# vim: set et sts=2 sw=2: %]
+<div class="lightbox" id="st-duplicate-lightbox">
+  <form id='st-duplicate-form'>
+    <input type="hidden" name="action" value="duplicate_page" />
+    <input type="hidden" name="page_name" value="[% page_title | html_encode %]" />
+    <input type="hidden" name="json" value="1"/>
+    <div class="title">
+      [% loc('do.duplicate') %]
+      <span id="duplicate-page-page-title">"[% page_title %]"</span>
+    </div>
+    <p id="st-duplicate-error" class="error"></p>
+
+    <label for="new_title" class="duplicate-page-form-element">[% loc('page.new-name') %]:</label>
+      <input id="st-duplicate-newname" type="text" name="new_title" value="" size="34" />
+    </p>
+    <p class="input">
+    <label for="keep_categories" class="duplicate-page-form-element">[% loc('tag.keep') %]:</label>
+      <input type="checkbox" name="keep_categories" value="1" checked="true" />
+    </p>
+    <p class="input">
+    <label for="keep_attachments" class="duplicate-page-form-element">[% loc('file.keep') %]:</label>
+    <input type="checkbox" name="keep_attachments" value="1" checked="true" />
+
+    <div class="hint">([% loc('info.after-duplicate') %])</div>
+
+    <div class="buttons">
+        <ul class="widgetButton" style="float:left; padding:10px">
+          <li class="flexButton">
+              <a id="st-duplicate-savelink" class="submit genericOrangeButton" href="#">[% loc('do.duplicate') %]</a>
+          </li>
+        </ul>
+        <ul class="widgetButton" style="float:left; padding:10px">
+          <li class="flexButton">
+              <a class="close genericOrangeButton" id="st-duplicate-cancellink" href="#">[% loc('do.cancel') %]</a>
+          </li>
+        </ul>
+    </div>
+
+  </form>
+</div>

@@ -1,0 +1,15 @@
+[%# @COPYRIGHT@ -%]
+[% PROCESS lite/header.html %]
+
+    <div>
+        <p>[% loc('page.is-locked') %]
+        [% loc('page.back=uri', page.uri) %]
+        [% loc('edit.view-unsaved:') %]</p>
+    <div>
+        <pre>
+[% content | html %]
+        </pre>
+    </div>
+
+[% PROCESS lite/footer.html %]
+

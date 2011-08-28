@@ -1,0 +1,150 @@
+[%# @COPYRIGHT@ -%]
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >
+
+<title> NLW Wikiwyg Anal Tool </title>
+
+<!-- BEGIN css_links -->
+<link rel="stylesheet" type="text/css" href="[% static_path %]/css/wikiwyg.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="[% static_path %]/css/formatter.css" media="screen" />
+
+<link rel="stylesheet" type="text/css" media="wikiwyg" href="[% static_path %]/css/wikiwyg_editor.css" />
+
+<script type="text/javascript">
+function nlw_make_static_path(rest) {
+    return "[% static_path %]" + rest;
+}
+</script>
+
+<script type="text/javascript" src="[% static_path %]/javascript/socialtext.js.gz"></script>
+<script type="text/javascript" src="[% static_path %]/javascript/Wikiwyg/Dominator.js"></script>
+<script type="text/javascript" src="[% static_path %]/javascript/Wikiwyg/Analyzer.js"></script>
+<style type="text/css">
+
+/* big screen, pleace */
+body { width: 1440px; }
+
+.Analyzer {
+    border-top: 1px solid #99f;
+    border-left: 1px solid #99f;
+    border-right: 1px solid #99a;
+    border-bottom: 1px solid #99a;
+    width: 480px;
+    height: 200px;
+    float: left;
+    margin: 2px 5px 0 0;
+    overflow:hidden;
+}
+
+.Analyzer h1 { font-size: 16pt; text-align:center; border-bottom: 1px solid #119;}
+
+#dominator_mode_div {
+    width:970px;
+}
+
+.spacer { clear:both; width:0; height:0;}
+
+iframe#wysiwyg_iframe {
+    display:block !important;
+    width:95%;
+    height:100px;
+}
+
+textarea {
+    width:95%;
+    height:100px;
+}
+
+#dominator_div,
+#preview_div {
+    overflow:scroll;
+    height:100px;
+}
+
+</style>
+
+</head>
+<!-- BEGIN body_tag -->
+<body id="nlw_main_body">
+    <form>
+    <input type="hidden" id="st-page-editing-pagename" value="Analyzer"/>
+
+    <div>
+        <select name="page_selector" style="width: 150px">
+            <option value="0">&lt;Empty Page&gt;</option>
+            [% FOR page_id = page_ids %]
+            <option value="[% page_id %]">[% page_id %]</option>
+            [% END %]
+        </select>
+        <select name="layout_selector" style="width: 150px">
+            <option value="1">Default Layout</option>
+            <option value="2">Dominator on Top</option>
+        </select>
+        <select name="height_selector" style="width: 150px">
+            <option value="0">Default Height</option>
+            <option value="100">100</option>
+            <option value="200">200</option>
+            <option value="300">300</option>
+            <option value="400">400</option>
+            <option value="500">500</option>
+            <option value="600">600</option>
+            <option value="700">700</option>
+            <option value="800">800</option>
+            <option value="900">900</option>
+        </select>
+    </div>
+    <div id="toolbar_div"></div>
+    <div id="bogus_wikiwyg_content_div">&nbsp;</div>
+    <div id="simple_mode_div" class="Analyzer">
+        <h1>
+        <input type="radio" name="mode" value="simple" "checked" />
+        Simple
+        </h1>
+        <iframe id="wysiwyg_iframe"></iframe>
+        <div class="spacer">&nbsp;</div>
+    </div>
+
+    <div id="advanced_mode_div" class="Analyzer">
+        <h1>
+        <input type="radio" name="mode" value="advanced" />
+        Advanced
+        </h1>
+        <textarea id="wikitextarea"></textarea>
+        <div class="spacer">&nbsp;</div>
+    </div>
+
+    <div class="spacer">&nbsp;</div>
+
+    <div id="html_mode_div" class="Analyzer">
+        <h1>
+        <input type="radio" name="mode" value="html" />
+        HTML
+        </h1>
+        <textarea id="htmltextarea"></textarea>
+        <div class="spacer">&nbsp;</div>
+    </div>
+
+    <div id="preview_mode_div" class="Analyzer">
+        <h1>
+        <input type="radio" name="mode" value="preview" />
+        Display/Preview
+        </h1>
+        <div id="preview_div">&nbsp;</div>
+        <div class="spacer">&nbsp;</div>
+    </div>
+
+    <div class="spacer">&nbsp;</div>
+
+    <div id="dominator_mode_div" class="Analyzer">
+        <h1>DOMinator</h1>
+        <div id="dominator_div">&nbsp;</div>
+        <div class="spacer">&nbsp;</div>
+    </div>
+    </form>
+
+</body>
+</html>
+

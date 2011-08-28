@@ -1,0 +1,204 @@
+* Fixture: SocialWidgets
+
+TODO: use follow/unfollow to test Signals switch on Everyone/Following
+TODO: make this run with LDAP user devnullx
+TODO: this test is too long; split into two or three independent TCs
+
+| *Comment* | Test Case: Follow |  |
+
+| set | fuser | fool-%%start_time%%@ken.socialtext.net |
+| set | fFname | Fool-%%start_time%%-Me |
+
+| *Comment* | Test Case: Follow. create %%fuser%% in default account. Name: %%fFname%% |  |
+| st-admin | create-user --e %%fuser%% --p %%password%% --first %%fFname%% | was created |
+| st-admin | enable-plugin --account %%hostname%% --p signals |  |
+
+| *Comment* | Test Case: Follow. login as %%username%% |  |
+
+| st-logoutin | %%username%% | %%password%% |
+
+| *Comment* | Test Case: Follow. Process jobs |  |
+| st_process_jobs | PersonIndex |  |
+
+| *Comment* | Test Case: Follow. Open %%fFname%% profile |  |
+| wait_for_element_visible_ok | link=People | 30000 |
+| click_and_wait | link=People |  |
+| text_like | All People |  |
+| wait_for_element_visible_ok | st-search-term | 30000 |
+| type_ok | st-search-term | %%fuser%% |
+| click_and_wait | st-search-submit |  |
+| wait_for_element_visible_ok | link=%%fFname%% | 30000 |
+| click_and_wait | link=%%fFname%% |  |
+
+| *Comment* | Test Case: Follow. Make %%short_username%% Follow %%fFname%% |  |
+| wait_for_element_visible_ok | link=Follow this person | 30000 |
+| pause | 5000 | needed for IE7 |
+| click_ok | link=Follow this person |  |
+| wait_for_element_visible_ok | link=Stop following this person | 30000 |
+
+| *Comment* | Test Case: Follow. Verify Follow %%fFname%% in %%short_username%% profile |  |
+| open_ok | /st/profile |  |
+| wait_for_text_present_ok | Colleagues | 30000 |
+| st-name-widget | 4 | follow_widget |
+| st-widget-title-like | follow_widget | Colleagues |
+| st-select-widget-frame | follow_widget |  |
+| wait_for_element_visible_ok | //td[contains(text(),'Follows')] | 30000 |
+| click_ok | //td[contains(text(),'Follows')] |  |
+| wait_for_element_visible_ok | link=%%fFname%% | 30000 |
+
+| *Comment* | Test Case: Follow. Don't click the follow link since it is in the child frame |  |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Follow. Verify Follow %%fFname%% in Signals Web UI |  |
+| click_and_wait | link=Signals |  |
+| wait_for_text_present_ok | Colleagues | 30000 |
+| st-name-widget | 2 | follow_widget |
+| st-widget-title-like | follow_widget | Colleagues |
+| st-select-widget-frame | follow_widget |  |
+| wait_for_element_visible_ok | //td[contains(text(),'Follows')] | 30000 |
+| click_ok | //td[contains(text(),'Follows')] |  |
+| wait_for_element_visible_ok | link=%%fFname%% | 30000 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Follow. Unfollow %%fFname%% |  |
+| wait_for_element_visible_ok | link=People | 30000 |
+| click_and_wait | link=People |  |
+| text_like | All People |  |
+
+| *Comment* | use the profile link that is hidden in the People menu |  |
+| wait_for_element_present_ok | link=%%fFname%% | 30000 |
+| click_and_wait | link=%%fFname%% |  |
+| wait_for_element_visible_ok | link=Stop following this person | 30000 |
+| pause | 5000 | needed for IE7 |
+| click_ok | link=Stop following this person |  |
+| wait_for_element_visible_ok | link=Follow this person | 30000 |
+
+| *Comment* | Test Case: Follow. Unfollow - IE needs profile reopened |  |
+| wait_for_element_visible_ok | link=People | 30000 |
+| click_and_wait | link=People |  |
+| text_like | All People |  |
+| wait_for_element_visible_ok | st-search-term | 30000 |
+| type_ok | st-search-term | %%fuser%% |
+| click_and_wait | st-search-submit |  |
+| wait_for_element_visible_ok | link=%%fFname%% | 30000 |
+| click_and_wait | link=%%fFname%% |  |
+| wait_for_element_visible_ok | link=Follow this person | 30000 |
+
+| *Comment* | Test Case: Follow. Verify UnFollow %%fFname%% in %%short_username%% profile |  |
+| open_ok | /st/profile |  |
+| wait_for_text_present_ok | Colleagues | 30000 |
+| st-name-widget | 4 | follow_widget |
+| st-widget-title-like | follow_widget | Colleagues |
+| st-select-widget-frame | follow_widget |  |
+| wait_for_element_not_present_ok | link=%%fFname%% | 30000 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Follow. Verify UnFollow %%fFname%% in Signals Web UI |  |
+| click_and_wait | link=Signals |  |
+| wait_for_text_present_ok | Colleagues | 30000 |
+| st-name-widget | 2 | follow_widget |
+| st-widget-title-like | follow_widget | Colleagues |
+| st-select-widget-frame | follow_widget |  |
+| wait_for_element_not_present_ok | link=%%fFname%% | 30000 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Follow. Set up mutual following. %%short_username%% follows %%fFname%% again |  |
+| wait_for_element_visible_ok | link=People | 30000 |
+| click_and_wait | link=People |  |
+| text_like | All People |  |
+| wait_for_element_visible_ok | st-search-term | 30000 |
+| type_ok | st-search-term | %%fuser%% |
+| click_and_wait | st-search-submit |  |
+| wait_for_element_visible_ok | link=%%fFname%% | 30000 |
+| click_and_wait | link=%%fFname%% |  |
+| wait_for_element_visible_ok | link=Follow this person | 30000 |
+| click_ok | link=Follow this person |  |
+| wait_for_element_visible_ok | link=Stop following this person | 30000 |
+
+| *Comment* | Test Case: Follow. Create mutual following. %%fuser%% logs in |  |
+| st-logoutin | %%fuser%% | %%password%% |
+
+| *Comment* | Test Case: Follow. Create mutual following. %%fFname%% follows %%short_username%% |  |
+| wait_for_element_visible_ok | link=People | 30000 |
+| click_and_wait | link=People |  |
+| text_like | All People |  |
+| wait_for_element_visible_ok | st-search-term | 30000 |
+| type_ok | st-search-term | %%username%% |
+| click_and_wait | st-search-submit |  |
+| wait_for_element_visible_ok | //a[contains(text(),'%%short_username%%')] | 60000 |
+| click_and_wait | //a[contains(text(),'%%short_username%%')] |  |
+| wait_for_element_visible_ok | link=Follow this person | 60000 |
+| click_ok | link=Follow this person |  |
+| wait_for_element_visible_ok | link=Stop following this person | 60000 |
+
+| *Comment* | Test Case: Follow. Verify %%fFname%% follows %%short_username%% |  |
+| open_ok | /st/profile |  |
+| wait_for_text_present_ok | Colleagues | 30000 |
+| st-name-widget | 4 | follow_widget |
+| st-widget-title-like | follow_widget | Colleagues |
+| st-select-widget-frame | follow_widget |  |
+| wait_for_element_visible_ok | //td[contains(text(),'Follows')] | 30000 |
+| click_ok | //td[contains(text(),'Follows')] |  |
+| wait_for_element_visible_ok | //a[contains(text(),'%%short_username%%')] | 30000 |
+
+| *Comment* | Test Case: Follow. Is %%short_username%% a Follower of %%fFname%% |  |
+| wait_for_element_visible_ok | //td[contains(text(),'Followers')] | 30000 |
+| click_ok | //td[contains(text(),'Followers')] |  |
+| wait_for_element_visible_ok | //a[contains(text(),'%%short_username%%')] | 30000 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Follow. Open profile for %%short_username%% |  |
+| wait_for_element_visible_ok | link=People | 30000 |
+| click_and_wait | link=People |  |
+| text_like | All People |  |
+| wait_for_element_visible_ok | st-search-term | 30000 |
+| type_ok | st-search-term | %%username%% |
+| click_and_wait | st-search-submit |  |
+| wait_for_element_visible_ok | //a[contains(text(),'%%short_username%%')] | 30000 |
+| click_and_wait | //a[contains(text(),'%%short_username%%')] |  |
+
+| *Comment* | Test Case: Follow. Verify %%short_username%% follows %%fFname%% |  |
+| wait_for_text_present_ok | Colleagues | 30000 |
+| st-name-widget | 4 | follow_widget |
+| st-widget-title-like | follow_widget | Colleagues |
+| st-select-widget-frame | follow_widget |  |
+| wait_for_element_visible_ok | //td[contains(text(),'Follows')] | 30000 |
+| click_ok | //td[contains(text(),'Follows')] |  |
+| wait_for_element_visible_ok | link=%%fFname%% | 30000 |
+
+| *Comment* | Test Case: Follow. Is %%fFname%% a Follower of %%short_username%% |  |
+| wait_for_element_visible_ok | //td[contains(text(),'Followers')] | 30000 |
+| click_ok | //td[contains(text(),'Followers')] |  |
+| wait_for_element_visible_ok | link=%%fFname%% | 30000 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Follow. %%fFname%% stops following %%short_username%% |  |
+| wait_for_element_visible_ok | link=Stop following this person | 30000 |
+| click_ok | link=Stop following this person |  |
+| wait_for_element_visible_ok | link=Follow this person | 30000 |
+
+| *Comment* | Test Case: Follow. Follow - IE needs profile reopened to %%short_username%% profile |  |
+| wait_for_element_visible_ok | link=People | 30000 |
+| click_and_wait | link=People |  |
+| text_like | All People |  |
+| wait_for_element_visible_ok | st-search-term | 30000 |
+| type_ok | st-search-term | %%username%% |
+| click_and_wait | st-search-submit |  |
+| wait_for_element_visible_ok | //a[contains(text(),'%%short_username%%')] | 30000 |
+| click_and_wait | //a[contains(text(),'%%short_username%%')] |  |
+| wait_for_element_visible_ok | link=Follow this person | 30000 |
+
+| *Comment* | Test Case: Follow. %%fFname%% Verifies stopped following %%short_username%% |  |
+| open_ok | /st/profile |  |
+| wait_for_text_present_ok | Colleagues | 30000 |
+| st-name-widget | 4 | follow_widget |
+| st-widget-title-like | follow_widget | Colleagues |
+| st-select-widget-frame | follow_widget |  |
+| wait_for_element_visible_ok | //td[contains(text(),'Follows')] | 30000 |
+| click_ok | //td[contains(text(),'Follows')] |  |
+| wait_for_text_present_ok | You Follow no one yet | 30000 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Follow TEARDOWN |  |
+
+| *Comment* | Test Case: Follow COMPLETED |  |

@@ -1,0 +1,103 @@
+Installing Socialtext Open release 2.20 on Ubuntu
+
+@COPYRIGHT@
+
+These installation instructions will work on a clean instance of Ubuntu 6.06, Dapper Drake.
+
+The installation process, including all downloads, takes about an hour.
+
+See http://www.socialtext.net/open/index.cgi?socialtext_open for updates.
+
+
+1) Downloading. This step takes a minute or two.
+* Download Socialtext Open
+* tar xvf Socialtext-Open-2.20.y.z.tar.gz 
+* cd Socialtext-Open-2.20.y.z 
+
+
+2) Running apt-get. This step takes 15-20 minutes.
+ 
+ * With sudo, edit /etc/apt/sources.list. Uncomment the two lines about the universe repository
+    ** deb http://us.archive.ubuntu.com/ubuntu/ dapper universe
+    ** deb-src http://us.archive.ubuntu.com/ubuntu/ dapper universe
+ * sudo apt-get update
+ * sudo apt-get install `cat build/pkg-lists/dapper` 
+    ** Continue?  Y
+ (Apt-get will get a bunch of files and libraries.)
+  
+ Ubuntu config asks some questions.  
+ Enter the default (hit return or enter) for everything except the FQDN localhost question.
+ 
+ Here's what Ubuntu config will ask: 
+ 
+ * Console users only 
+ * Configuring x11-common: OK
+ * Desired nice value for x server to use:  0 
+ * Apache-perl needs to be configured : OK
+ * Start apache at boot time  yes
+ * suExec enable?   NO
+ (A bunch more unpacking happens)
+ (Setting up happens)
+ * Ubuntu config asks some more questions as it sets up postgres and apache-perl:
+ * Obsolete major version 7.4   : OK
+ * Select modules apache-perl will load: tab over to OK and hit enter
+ * Set the FQDN domain name for apache-perl default server  (enter your localhost here -  all in lower case letters please.)
+ * Set the email address of the apache-perl administrator:  enter email, tab to ok, hit enter.
+ * Default directory for apache-perl server: (/var/www)   OK
+ * Port:  80   (ok)
+(Setting up continues.)
+  
+  
+3)  Getting CPAN libraries. This takes around 5 minutes.
+(Note that you only need to do the urllist configuration on EC2, in
+most cases the default settings will work fine)
+* Sudo cpan.  
+** NO to manual configuration.
+** o conf urllist push http://mirrors.kernel.org/cpan/
+** o conf commit
+ ** quit
+ *  sudo cpan -i YAML::Dumper 
+ *  sudo cpan -i force install Feed::Find Encode::Unicode::Japanese Test::Pod
+  
+4) Configuring and installing   This step takes around 30 minutes.
+
+sudo ./configure --socialtext-open=1 --hostname=yourhost.com --url=http://yourhost.com   --server-admin=defaultuser@yourhost.com   --support-address=defaultuser@yourhost.com
+
+You will have to answer a few questions:
+
+Install these missing dependencies from CPAN? YES
+
+5) Setting up Postgres.  This step takes about 5 minutes.
+
+See docs/INSTALL.postgres
+
+6) Setting up mail
+
+The easiest MTA to use is Exim.  To set it up on ubuntu, simply do the following:
+sudo apt-get install exim
+ 
+ After the system_alias section of /etc/exim/exim.conf
+  
+  st_aliases:
+    driver = aliasfile
+    file_transport = address_file
+    pipe_transport = address_pipe
+    file = /var/www/socialtext/aliases.deliver
+    search_type = lsearch
+    user = www-data
+               
+The install exim adds it the /etc/inetd.conf file even if you dont use inetd. This causes the normal exim start script to fail silently. You can rename the file to avoid this problem.
+                
+sudo ./etc/init.d/exim start
+
+7) Making sure it works. This takes about 2 minutes.
+
+  * browse to <server>/help/index.cgi
+  * sudo -u www-data /usr/local/bin/st-create-workspace admin
+  * sudo -u www-data st-admin create-user --email you@yourserver.com --password password
+  * sudo -u www-data st-admin add_member --email you@yoursever.com --workspace admin
+  * browse to <server>/challenge
+  * login with the username
+
+That's it! You now have a fully functional Socialtext wiki.  
+

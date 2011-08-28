@@ -1,0 +1,122 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use FindBin qw/$Bin/;
+use lib "$Bin/../lib";
+use Socialtext::Wikil10n qw/load_existing_l10ns make_rester/;
+use Socialtext::System qw/shell_run/;
+use Socialtext::File qw/set_contents/;
+use Encode;
+use File::Path qw/mkpath/;
+use utf8;
+
+my $live = shift;
+my $r    = make_rester($live);
+my $l10n = load_localizations();
+
+my $js_output = 'share/skin/s3/javascript/l10ns.js';
+my $is_js     = qr#share/skin/s3/javascript|share/skin/s3/template/element/jst#;
+my $is_po     = qr#lib/\S+\.pm|share/skin/s3/template#;
+create_js_check_l10ns( 'tmp', $l10n );
+check_translation_status();
+exit;
+
+sub check_translation_status {
+    shell_run("find share/l10n -name '*.po' |egrep -v '.svn|zz.po|zj.po' |LC_ALL=C xargs --verbose --max-args=1 msgfmt -c -v");
+    shell_run("find tmp -name '*.po' |egrep -v '.svn|zz.po|zj.po' |LC_ALL=C xargs --verbose --max-args=1 msgfmt -c -v");
+}
+
+sub create_js_check_l10ns {
+    my $dir  = shift;
+    my $l10n = shift;
+
+    unless ( -d $dir) {
+       mkpath $dir or die "Can't create $dir directory";
+    }
+    my $js_hash = {};
+    for my $locale ( keys %$l10n ) {
+        $js_hash->{$locale} = _create_js_check_po($dir, $locale, $l10n->{$locale} );
+    }
+    $js_hash->{zz} = _create_js_check_po($dir, 'zz', $l10n->{en} );
+    $js_hash->{zj} = _create_js_check_po($dir, 'zj', $l10n->{en} );
+
+}
+
+sub _create_js_check_po {
+    my $dir = shift;
+    my $locale = shift;
+    my $dict   = shift;
+
+    my $output = <<'EOT';
+msgid ""
+msgstr ""
+"Project-Id-Version: Socialtext i18n\n"
+"PO-Revision-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: Socialtext i18n team\n"
+"Last-Translator: Socialtext i18n team\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+EOT
+
+    for my $id ( keys %$dict ) {
+        my $l = $dict->{$id};
+        next unless $l->{reference} =~ $is_js;
+        $output .= "#: $l->{reference}\n";
+        $output .= "#. $l->{other}\n" if $l->{other};
+
+        # Create fake zz locale strings
+        my $str = $l->{msgstr};
+
+        # keep the js small by skipping empties
+        next unless $str;
+
+        Encode::_utf8_on($str) unless Encode::is_utf8($str);
+        $output .= qq(msgid "$id"\nmsgstr "$str"\n\n);
+    }
+
+    my $filename = "$dir/" . "js_" . "$locale.po";
+    set_contents( $filename, $output, 1 );
+    print "Wrote $filename\n";
+}
+
+sub _create_js_hash {
+    my $locale = shift;
+    my $dict   = shift;
+
+    my %strings;
+    for my $id ( keys %$dict ) {
+        my $l = $dict->{$id};
+        next unless $l->{reference} =~ $is_js;
+
+        # Create fake zz locale strings
+        my $str = $l->{msgstr};
+        $str = _haxorify($id)    if $locale eq 'zz';
+        $str = _haxorify_jp($id) if $locale eq 'zj';
+
+        # keep the js small by skipping empties
+        next unless $str;
+
+        Encode::_utf8_on($str) unless Encode::is_utf8($str);
+        $strings{$id} = $str;
+    }
+    return \%strings;
+}
+
+sub load_localizations {
+    my %items;
+    for my $page ( $r->get_taggedpages('l10n') ) {
+        my @tags = $r->get_pagetags($page);
+        my $locale;
+        for (@tags) {
+            $locale = $1 if m/^locale=(\w+)$/;
+        }
+        die "Could not find locale for page ($page)" unless $locale;
+        $items{$locale} = load_existing_l10ns( $r, $page );
+    }
+    return \%items;
+}
+

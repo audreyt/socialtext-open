@@ -1,0 +1,61 @@
+[% WRAPPER layout/html content_id = 'st-listview' box_javascript = 0 actions = 'element/listview/actionbar' subnav = 'element/wiki/subnav-listview' %]
+
+<div id="st-page-wiki-title">[% wiki.title %]</div>
+<div>
+    <div id="st-list-title">
+        [% loc('All Tags in [_1]', wiki.title) %]
+    </div>
+    <div id="st-actions-bar-spacer-clear">&nbsp;</div>
+</div>
+[% IF allow_delete %]
+<form action="[% script_name %]" method="post">
+<input type="hidden" name="action" value="category_delete" />
+[% END %]
+  <table id="tags-table" class="standard-table">
+   <thead>
+    <tr>
+  [% IF allow_delete %]
+     <th></th>
+  [% END %]
+     <th>[% loc('Tag') %]</th>
+     <th>[% loc('Pages') %]</th>
+    </tr>
+   </thead>
+   <tbody>
+[% FOREACH row = rows %]
+[% IF row.page_count != 0 %]
+    <tr class="[% IF loop.index % 2 %]odd[% ELSE %]even[% END %] w-st-[% IF loop.index % 2 %]odd[% ELSE %]even[% END %]-row">
+  [% IF allow_delete %]
+     <td>
+      <input type="checkbox" name="category" value="[% row.display | html %]" />
+     </td>
+  [% END %]
+     <td>
+      <a href="[% script_name %]?action=category_display;category=[% row.escaped %]">[% row.display | html %]</a>
+     </td>
+     <td>[% row.page_count %]</td>
+    </tr>
+[% END %]
+[% END %]
+   </tbody>
+  </table>
+<script type="text/javascript">
+/* REVIEW - there must be a better spot to put this, but where? */
+/* This was moved to the end of the file to avoid IE browser race condition */
+/* It should be done onload */
+new Widget.SortableTable( {
+    "tableId": "tags-table",
+    "initialSortColumn": 0,
+    "secondarySortColumn": 0,
+    "columnSpecs": [
+        { sort: "text" },
+        { sort: "number", defaultDir: "desc" }
+    ]
+} );
+</script>
+
+[% IF allow_delete %]
+  [% INCLUDE element/formbutton value="Delete Selected Categories" %]
+</form>
+[% END %]
+[% END %]

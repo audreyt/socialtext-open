@@ -1,0 +1,7 @@
+[%# @COPYRIGHT@ -%]
+[%
+  RETURN UNLESS hub.checker.check_permission('edit_controls') || hub.checker.check_permission('edit')
+%]
+<div class="sidebar-box-content-edit-link">
+  <a href="[% hub.weblog.page_edit_path %]#edit">[% loc('edit') %]</a>
+</div>

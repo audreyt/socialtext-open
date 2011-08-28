@@ -1,0 +1,5 @@
+| st-find-user | %%find_user_short%% |  |
+| wait_for_element_visible_ok | new_tag | 30000 |
+| type_ok | new_tag | %%tag_to_apply%% |
+| click_ok | //input[@value='Add Tag'] |  |
+| wait_for_element_visible_ok | link=%%tag_to_apply%% | 30000 |

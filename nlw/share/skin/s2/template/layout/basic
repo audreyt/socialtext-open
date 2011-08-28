@@ -1,0 +1,65 @@
+[% USE html_encode %]
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>[% title || display_title %] / [% wiki.title %]</title>
+        <link rel="stylesheet" type="text/css" href="[% css.screen %]" media="screen" />
+        [% IF loc_lang == 'ja' %]
+        <link rel="stylesheet" type="text/css" href="[% css.per_locale %]" media="screen" />
+        [% END %]
+        <link rel="stylesheet" type="text/css" href="[% css.print %]" media="print" />
+        <!-- basic -->
+        <!--[if IE 6]>
+        <link rel="stylesheet" type="text/css" href="[% css.ie %]" media="screen" />
+        <![endif]-->
+        <!--[if gte IE 6]>
+        <link rel="stylesheet" type="text/css" href="[% css.ieprint %]" media="print" />
+        <![endif]-->
+        [% IF box_javascript %]
+            <link rel="stylesheet" type="text/css" href="[% css.wikiwyg %]" media="wikiwyg" />
+        [% END %]
+
+        [% INCLUDE "element/wiki/js-bootstrap" %]
+        [% IF loc_lang != 'en' %]
+        <script type="text/javascript" charset="utf-8"
+            src="[% wiki.skin_uri('s2') %]/javascript/l10ns.js.gz">
+        </script>
+        [% END %]
+        <script type="text/javascript"
+            src="[% wiki.skin_uri('s2') %]/javascript/socialtext.js.gz">
+        </script>
+    </head>
+    <body id="socialtext-wiki">
+        <div id="st-display-mode-container" style="display: block;">
+            <div id="st-actions-bar">
+                [% INCLUDE $subnav IF subnav %]
+                [% INCLUDE element/system_status IF wiki.system_status %]
+                <div id="st-actions-bar-spacer">&nbsp;</div>
+                [% IF actions %][% INCLUDE $actions %][% END %]
+                <div id="st-actions-bar-spacer-clear">&nbsp;</div>
+            </div>
+            <div id="st-content-border">
+            [% IF dropshadow.defined AND dropshadow %]
+                <div id="st-content-border-left"><div id="st-content-border-right"><div id="st-content-border-top"><div id="st-content-border-bottom">
+                <div id="st-content-border-left-top"><div id="st-content-border-right-top"><div id="st-content-border-left-bottom"><div id="st-content-border-right-bottom">
+            [% END %]
+                <div id="[% content_id %]" class="st-content">
+                    [% content %]
+                    <br style="clear: both;height: 1px" />
+                </div>
+            [% IF dropshadow.defined AND dropshadow %]
+                </div></div></div></div>
+                </div></div></div></div>
+            [% END %]
+            </div>
+            [% IF footer %]<div id="st-footer">[% INCLUDE $footer %]</div>[% END %]
+            <div id="st-socialtext-attribution">
+                <a href="http://socialtext.com" id="st-socialtext-attribution-link">
+                    <img id="st-socialtext-attribution-image"
+                         src="[% wiki.skin_uri('s2') %]/images/st/logo/socialtext-logo-152x26.gif"
+                         title="Socialtext v[% app_version | html_encode %]" />
+                </a>
+            </div>
+        </div>
+    </body>
+</html>

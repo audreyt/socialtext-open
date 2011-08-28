@@ -1,0 +1,10 @@
+# @COPYRIGHT@
+package Socialtext::Build::ConfigureValues;
+use strict;
+use warnings;
+
+# Build-time settings are data dumped into this file at build time.
+our $VAR1;
+@BUILD_SETTINGS@
+
+1;

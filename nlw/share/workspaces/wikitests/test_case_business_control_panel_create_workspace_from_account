@@ -1,0 +1,108 @@
+| *Comment* | Test Case: Business Control Panel Create Workspace from Account |  |
+
+| set | acct | acct-for-account-%%start_time%% |
+| set | wstitle | WS For Account %%start_time%% |
+| set | wsname | ws-for-account-%%start_time%% |
+
+| set | altacct | alt-for-account-%%start_time%% |
+| set | alttitle | Alt For Account %%start_time%% |
+| set | altname | differws-%%start_time%% |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Account - create acct |  |
+| create-account | %%acct%% | was created |
+| create-account | %%altacct%% | was created |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Account. find account by search |  |
+| open_ok | /nlw/control/account |  |
+| wait_for_element_visible_ok | st-search-by-name | 30000 |
+| type_ok | st-search-by-name | %%acct%% |
+| click_and_wait | st-submit-search-by-name |  |
+| wait_for_element_visible_ok | link=%%acct%% | 30000 |
+| click_and_wait | link=%%acct%% |  |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Account. Create Workspace from account page |  |
+| wait_for_element_present_ok | //input[contains(@value,'Create New Workspace in this Account')] | 30000 |
+| click_and_wait | //input[contains(@value,'Create New Workspace in this Account')] |  |
+| location_like | /nlw/control/workspaces/new?account_id |  |
+| wait_for_text_present_ok | Create Workspace | 30000 |
+| wait_for_text_present_ok | Title: | 30000 |
+| text_like | //body | qr/Account:\s+%%acct%%.+(change)/ism |
+| text_like | //body | qr/URI:\s+http[s]?:\/\/%%hostname%%/ism |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Account - default case |  |
+| wait_for_element_visible_ok | workspace_title | 30000 |
+| click_ok | workspace_title | %%wstitle%% |
+| type_ok | workspace_title | %%wstitle%% |
+| st_unchecked_ok | auto_name |  |
+| wait_for_element_visible_ok | //input[@type='submit' and @value="Create Workspace"] | 30000 |
+| st-pause-click | 2000 | //input[@type='submit' and @value="Create Workspace"] |
+| wait_for_text_present_ok | You must add at least one workspace administrator. | 30000 |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Account - a workspace admin |  |
+| wait_for_element_visible_ok | addUserLookahead | 30000 |
+| type-lookahead-ok | addUserLookahead | %%short_username%% |
+| wait_for_element_visible_ok | link=%%short_username%% | 5000 |
+| click_ok | link=%%short_username%% |  |
+| wait_for_element_visible_ok | link=%%username%% | 20000 |
+| wait_for_text_present_ok | Users (1) | 30000 |
+| wait_for_element_present_ok | userTable-dropdown-2-0 | 30000 |
+| select_ok | userTable-dropdown-2-0 | label=Admin |
+| pause | 10000 |  |
+| st-pause-click | 5000 | //input[@type='submit' and @value="Create Workspace"] |
+
+| *Comment* | Test Case: Business Control Panel from Create Workspace from Account. verify workspace created |  |
+| wait_for_text_present_ok | %%wsname%% workspace | 30000 |
+| location_like | /nlw/control/workspace |  |
+| wait_for_text_present_ok | Users (1) | 30000 |
+| wait_for_text_present_ok | Groups (0) | 30000 |
+| text_like | //body | qr/Group.+Add Group To Workspace/ism |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Account. go back to acct page |  |
+| wait_for_element_visible_ok | link=%%acct%% | 30000 |
+| click_ok | link=%%acct%% |  |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Account. Create using alternate account |  |
+| wait_for_element_present_ok | //input[contains(@value,'Create New Workspace in this Account')] | 30000 |
+| click_and_wait | //input[contains(@value,'Create New Workspace in this Account')] |  |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Account - alternate account and WS name |  |
+| wait_for_element_visible_ok | workspace_title | 30000 |
+| type_ok | workspace_title | %%altname%% |
+| wait_for_element_visible_ok | auto_name | 30000 |
+| pause | 10000 |  |
+| click_ok | link=change |  |
+| type_lookahead_ok | changeAccountLookahead | %%altacct%% |
+| wait_for_element_visible_ok | link=%%altacct%% | 30000 |
+| click_ok | link=%%altacct%% |  |
+| pause | 10000 |  |
+| wait_for_element_visible_ok | addUserLookahead | 30000 |
+| type-lookahead-ok | addUserLookahead | %%short_username%% |
+| wait_for_element_visible_ok | link=%%short_username%% | 5000 |
+| click_ok | link=%%short_username%% |  |
+| wait_for_element_visible_ok | link=%%username%% | 20000 |
+| wait_for_text_present_ok | Users (1) | 30000 |
+| select_ok | userTable-dropdown-2-0 | label=Admin |
+| pause | 10000 |  |
+| wait_for_element_visible_ok | create | 30000 |
+| st-pause-click | 5000 | create |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Account. verify alternate WS created |  |
+| wait_for_text_present_ok | %%altname%% workspace | 30000 |
+| location_like | /nlw/control/workspace |  |
+| wait_for_text_present_ok | Users (1) | 30000 |
+| text_like | //body | qr/Account:\s+%%altacct%%/ism |
+| text_like | //body | qr/%%altname%% workspace/ism |
+| text_like | //body | qr/Group.+Add Group To Workspace/ism |
+
+TODO: add users and groups to a creating workspace
+TODO: test the error conditions which were all buggy
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Account TEARDOWN |  |
+
+| st-process-jobs |  |  |
+| st-admin | delete-workspace --no-export --w %%wsname%% | has been deleted |
+| st-admin | delete-workspace --no-export --w %%altname%% | has been deleted |
+| delete-account | %%acct%% | has been deleted |
+| delete-account | %%altacct%% | has been deleted |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Account COMPLETED |

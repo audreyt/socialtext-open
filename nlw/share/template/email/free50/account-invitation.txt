@@ -1,0 +1,30 @@
+[% loc("email.thank-you-for-joining-company-collaboration-group-hosted-by-socialtext") %]
+
+
+[% IF requires_confirmation -%]
+[% loc("email.click-to-confirm-email:") %] [% confirmation_uri %]&account_for=free50
+
+[% loc('email.to-start-click-above-link') %]
+
+[% ELSE -%]
+[% loc('email.web-address:') %] [% account_uri | html %]
+[% loc('email.username:') %] [% username | html %]
+
+[% IF appconfig.is_default('user_factories') -%] 
+[% IF app_name; a = 'a'; ELSE; a = 'an'; END -%]
+[% loc("email.same-password-as-existing-account=a,app,app", a, app_name, app_name) %]
+[% loc("email.follow-link-to-select-password:") %]
+[% forgot_password_uri %]
+
+[% END -%]
+[% loc("email.keep-this-for-future-reference") %]
+
+[% END -%]
+
+[% loc("email.we-encourage-you-to-invite-others") %]
+
+[% loc("email.if-unsolicited-contact-abuse") %]
+
+[% loc("email.happy-collaborating!") %]
+[% loc("email.leader-in-enterprise-social-software") %]
+www.socialtext.com

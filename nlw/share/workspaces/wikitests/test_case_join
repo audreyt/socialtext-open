@@ -1,0 +1,105 @@
+| *Comment* | Test Case: Join. |  |
+
+| *Comment* | Test Case: Join. Define a fresh account and a ws in it |  |
+| set | acct | SJ %%start_time%% |
+| set | acct_ws | sj-%%start_time%% |
+
+| *Comment* | Test Case: Join. Define a brand new user to self-join. Make the email address of that user a wiki. |  |
+| set | to_ws | to-ws-%%start_time%% |
+| set | to_ws_user | %%to_ws%%@%%wikiemail%% |
+
+| *Comment* | Test Case: Join. Create new acct, self-join ws in it, and brand new (workspace == new user) |  |
+| create-account | %%acct%% |  |
+
+| *Comment* | Test Case: Join. Create the self-join workspace %%acct%% |  |
+| st-admin | create-workspace --name %%acct_ws%% --title "%%acct%%" --account "%%acct%%" | created |
+| st-admin | set-permissions --w %%acct_ws%% --p public-join-to-edit | have been changed |
+
+| *Comment* | The self-joining user is %%to_ws_user%% and the wiki to be created is %%to_ws%%, so the user email addr and wiki email addr are identical, so we can read the email in the wiki! |  |
+| st-admin | create-workspace --empty --name %%to_ws%% --title "%%to_ws%%" --account "%%acct%%" | created |
+
+| *Comment* | Test Case: Join. Allow invitation to be mailed to %%to_ws%% |  |
+| st-admin | add-permission --w %%to_ws%% --role guest --p email_in | has been granted |
+
+| *Comment* | Test Case: Join. Add %%username%% to %%to_ws%% so he can login and click the new user's verification link |  |
+| st-admin | add-workspace-admin --w %%to_ws%% --u %%username%% |  |
+| st-config | set self_registration 1 | Wrote updated config file |
+| st-config | set allow_network_invitation 1 | Wrote updated config file |
+| st-appliance-config | set captcha_enabled 0 | Set captcha_enabled to 'UNDEF' |
+| st-admin | set-account-config --account "%%acct%%" allow_invitation 1 | has been updated |
+
+| *Comment* | Test Case: Join. Logged-in user joins immediately. |  |
+| open_ok | /%%acct_ws%% |  |
+| wait_for_element_visible_ok | link=Join to edit | 30000 |
+| wait_for_element_not_present_ok | link=Edit | 5000 |
+| click_and_wait | link=Join to edit |  |
+| wait_for_text_present_ok | %%acct%% |  |
+| wait_for_element_visible_ok | link=Edit | 5000 |
+| wait_for_element_visible_ok | link=Comment | 5000 |
+
+| *Comment* | Test Case: Join. Disable self register and verify |  |
+| st-logout |  |  |
+| st-config | set self_registration 0 | Wrote updated config file |
+| open_ok | /%%acct_ws%% |  |
+| wait_for_element_not_present_ok | link=Join to edit | 5000 |
+| st-config | set self_registration 1 | Wrote updated config file |
+
+| *Comment* | Test Case: Join. New user joins and registers |  |
+| open_ok | /%%acct_ws%% |  |
+| wait_for_element_visible_ok | link=Join to edit | 30000 |
+| wait_for_element_not_present_ok | link=Edit | 5000 |
+| click_and_wait | link=Join to edit |  |
+| wait_for_element_visible_ok | email_address | 30000 |
+| wait_for_element_visible_ok | register_password | 30000 |
+| wait_for_element_visible_ok | register_password2 | 30000 |
+| wait_for_element_visible_ok | first_name | 30000 |
+| wait_for_element_visible_ok | last_name | 30000 |
+| type_ok | email_address | %%to_ws_user%% |
+| type_ok | register_password | %%password%% |
+| type_ok | register_password2 | %%password%% |
+| type_ok | first_name | Donald |
+| type_ok | last_name | Duck |
+| wait_for_element_visible_ok | register_btn | 30000 |
+| click_and_wait | register_btn |  |
+| text_like | An email confirming your registration has been sent to %%to_ws_user%% |  |
+
+| *Comment* | Test Case: Join. login to %%to_ws%% as %%username%% and open the confirmation email |  |
+| st-logoutin | %%username%% | %%password%% |
+
+| *Comment* | Wait 90 seconds for the confirmation email to arrive |  |
+| pause | 90000 |  |
+
+| *Comment* | Test Case: Join. Navigate to the confirmation email |  |
+| open_ok | /%%to_ws%%/?action=recent_changes |  |
+| text_like | workspaceName | %%to_ws%% |
+| wait_for_element_visible_ok | link=Welcome to the %%acct%% workspace - please confirm your email to join | 30000 |
+| click_and_wait | link=Welcome to the %%acct%% workspace - please confirm your email to join |  |
+
+| *Comment* | Test Case: Join. click the confirmation link |  |
+| text_like | Your profile has been added |  |
+| wait_for_element_visible_ok | //a[contains(@href,'confirm_email')] | 30000 |
+| click_ok | //a[contains(@href,'confirm_email')] |  |
+
+| *Comment* | Test Case: Join. Login screen opens in a second window |  |
+| pause | 10000 |  |
+| selectWindow | Login |  |
+
+| *Comment* | Test Case: Join. New user joins, primary account set to %%acct%% |  |
+| wait_for_element_visible_ok | login_btn | 30000 |
+| text_like | Your email address, %%to_ws_user%%, has been confirmed |  |
+| type_ok | username | %%to_ws_user%% |
+| type_ok | password | %%password%% |
+| click_and_wait | login_btn |  |
+| location_like | /%%acct_ws%% |  |
+| wait_for_element_visible_ok | st-edit-button-link | 5000 |
+| wait_for_element_visible_ok | st-comment-button-link | 5000 |
+| st-admin | get-user-account --u %%to_ws_user%% | Primary account for "%%to_ws_user%%" is %%acct%%. |
+
+| *Comment* | Test Case: Join TEARDOWN |  |
+| st-process-jobs |  |  |
+| delete-workspace | %%to_ws%% | Recklessly deleting workspace |
+| delete-workspace | %%acct_ws%% | Recklessly deleting workspace |
+| st-admin | deactivate-user --e %%to_ws_user%% |  |
+| delete-account | %%acct%% | Recklessly deleting |
+
+| *Comment* | Test Case: Join COMPLETED |  |

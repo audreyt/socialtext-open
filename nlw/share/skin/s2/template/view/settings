@@ -1,0 +1,14 @@
+[%# @COPYRIGHT@ -%]
+[% WRAPPER layout/html 
+    content_id = 'st-settings',
+    box_javascript = 0,
+    title = display_title,
+    actions = 'element/settings/actions',
+    subnav = 'element/wiki/subnav-default' %]
+<table id="st-settings-pane">
+  <tr>
+    <td id="st-settings-select">[% PROCESS element/settings/select %]</td>
+    <td id="st-settings-section">[% settings_section %]</td>
+  </tr>
+</table>
+[% END %]

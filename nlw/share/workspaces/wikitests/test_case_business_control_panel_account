@@ -1,0 +1,128 @@
+
+| *Comment* | Test case: Business Control Panel Account |  |
+
+| st-admin | give-accounts-admin --email %%email%% | %%username%% now has accounts admin access |
+
+| set | new_acct | acct %%start_time%% |  |
+| set | new_user | bcpuser%%start_time%%@ken.socialtext.net |  |
+| set | short_new | bcpuser%%start_time%% |  |
+| set | new_acct_2 | other_acct_%%start_time%% |  |
+| create-account | %%new_acct_2%% |  |  |
+| create-user | %%new_user%% | %%password%% | %%new_acct_2%% |
+
+| *Comment* | Test case: Business Control Panel Account Restrict domain |  |
+| set | restrict_acct | restrictedacc%%start_time%% |
+| st-admin | create-account --name %%restrict_acct%% |  |
+| open_ok | /nlw/control/account |  |
+| wait_for_element_visible_ok | st-search-by-name | 30000 |
+| type_ok | st-search-by-name | %%restrict_acct%% |
+| wait_for_element_visible_ok | st-submit-search-by-name | 30000 |
+| click_and_wait | st-submit-search-by-name |  |
+| wait_for_element_visible_ok | link=%%restrict_acct%% | 30000 |
+| click_and_wait | link=%%restrict_acct%% |  |
+| wait_for_element_visible_ok | st-account-restrict-to-domain |  |
+| type_ok | st-account-restrict-to-domain | floodyflooy |
+| click_and_wait | st-account-restrict-submit |  |
+| wait_for_text_present_ok | Domain (floodyflooy) is not valid. | 30000 |
+| type_ok | st-account-restrict-to-domain | floodyflooy.notadomain |
+| click_and_wait | st-account-restrict-submit |  |
+| wait_for_text_present_ok | Account updated | 30000 |
+| type_ok | st-account-restrict-to-domain | xndev.com |
+| click_and_wait | st-account-restrict-submit |  |
+| wait_for_text_present_ok | Account updated | 30000 |
+| verifyValue | st-account-restrict-to-domain | xndev.com |
+| st-admin | show-account-config --account %%restrict_acct%% | xndev.com |
+
+| *Comment* | Test case: Business Control Panel Socialtext Account exists |  |
+| open_ok | /nlw/control/account |  |
+| text_like | st-display-mode-container | Accounts |
+| wait_for_element_visible_ok | st-search-by-name | 30000 |
+| type_ok | st-search-by-name | Socialtext |
+| wait_for_element_visible_ok | st-submit-search-by-name | 30000 |
+| click_and_wait | st-submit-search-by-name |  |
+| wait_for_element_visible_ok | //a[@title='view Socialtext'] | 30000 |
+| click_and_wait | //a[@title='view Socialtext'] |  |
+| text_like | Socialtext account |  |
+
+| *Comment* | Test case: Business Control Panel Account Create and verify new account |  |
+| click_and_wait | link=Accounts |  |
+| wait_for_element_visible_ok | st-new-account-name | 30000 |
+| type_ok | st-new-account-name | %%new_acct%% |
+| click_and_wait | st-submit-new-account-submit |  |
+| text_like | The %%new_acct%% account has been created. |  |
+| st-admin | disable-plugin --p dashboard --acc "%%new_acct%%" |  |
+| st-admin | disable-plugin --p people --acc "%%new_acct%%" |  |
+| st-admin | disable-plugin --p signals --acc "%%new_acct%%" |  |
+
+| *Comment* | Test case: Business Control Panel Account validate plugins are disabled. |  |
+| *Comment* | Test case: Business Control Panel Account show new account |  |
+| wait_for_element_visible_ok | st-search-by-name | 30000 |
+| wait_for_element_visible_ok | st-submit-search-by-name | 30000 |
+| type_ok | st-search-by-name | %%new_acct%% |
+| click_and_wait | st-submit-search-by-name |  |
+| wait_for_element_visible_ok | link=%%new_acct%% | 30000 |
+| click_and_wait | link=%%new_acct%% |  |
+| text_like | Custom Skins: Socialtext 3 default skin |  |
+| text_like | qr/Socialtext People\s+\(click to enable\)/ism |  |
+| text_like | qr/Socialtext Signals\s+\(click to enable\)/ism |  |
+| text_like | qr/Socialtext Dashboard\s+\(click to enable\)/ism |  |
+
+| *Comment* | Test case: Business Control Panel Account Add a user |  |
+| *Comment* | Test case: Business Control Panel Account don't use a hyphenated user so that BFN matches email |  |
+| wait_for_text_present_ok | Add Existing User: | 30000 |
+| wait_for_text_present_ok | Users (0) | 30000 |
+| wait_for_element_visible_ok | addUserLookahead | 30000 |
+| type_lookahead_ok | addUserLookahead | %%short_new%% |
+| wait_for_element_visible_ok | link=%%short_new%% | 5000 |
+| click_and_wait | link=%%short_new%% |  |
+| wait_for_text_present_ok | Users (1) | 5000 |
+| wait_for_element_visible_ok | link=%%new_acct_2%% | 5000 |
+
+| *Comment* | Test case: Business Control Panel Account plugin one at a time, click the confirmation, validate that plugin is enabled. |  |
+| click_ok | toggle_plugin_people |  |
+| verifyConfirmation | Socialtext People is a paid option. For more information about fees, contact your sales representative.\n\nPress 'OK' to enable this module or 'Cancel' to exit. |  |
+| wait_for_page_to_load | 30000 |  |
+| text_like | qr/Socialtext People\s+\(click to disable\)/ism |  |
+| *Comment* | As of 01/09, Signals is enabled when People is enabled |  |
+| text_like | qr/Socialtext Signals\s+\(click to disable\)/ism |  |
+
+| click_ok | toggle_plugin_signals |  |
+| verifyConfirmation | You are about to disable Socialtext Signals |  |
+| wait_for_page_to_load | 30000 |  |
+| text_like | qr/Socialtext Signals\s+\(click to enable\)/ism |  |
+
+| *Comment* | Test case: Business Control Panel Account go the other way |  |
+| click_ok | toggle_plugin_people |  |
+| verifyConfirmation | You are about to disable Socialtext People |  |
+| wait_for_page_to_load | 30000 |  |
+| text_like | qr/Socialtext People\s+\(click to enable\)/ism |  |
+| click_ok | toggle_plugin_signals |  |
+| verifyConfirmation | Socialtext Signals is a paid option. For more information about fees, contact your sales representative.\n\nPress 'OK' to enable this module or 'Cancel' to exit. |  |
+| wait_for_page_to_load | 30000 |  |
+| text_like | qr/Socialtext Signals\s+\(click to disable\)/ism |  |
+
+| *Comment* | Test case: Business Control Panel Account. Enable Dashboard |  |
+| click_ok | toggle_plugin_dashboard |  |
+| wait_for_element_not_present_ok | toggle_plugin_dashboard |  |
+
+| *Comment* | Test case: Business Control Panel Account rename account |  |
+| wait_for_element_visible_ok | link=Rename Account | 5000 |
+| click_and_wait | link=Rename Account |  |
+| wait_for_element_visible_ok | st-new-name | 10000 |
+| type_ok | st-new-name | newacct%%start_time%% |
+| click_and_wait | //input[@value='Rename'] |  |
+| text_like | newacct%%start_time%% account |  |
+| wait_for_element_visible_ok | link=Rename Account | 5000 |
+| click_and_wait | link=Rename Account |  |
+| type_ok | st-new-name | %%new_acct%% |
+| click_and_wait | //input[@value='Rename'] |  |
+| text_like | %%new_acct%% account |  |
+
+| *Comment* | Test Cse: Business Control Panel Account TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%new_user%% |  |
+| delete-account | %%new_acct%% |  |
+| delete-account | %%new_acct_2%% |  |
+| delete-account | %%restrict_acct%% |  |
+
+| *Comment* | Test case: Business Control Panel Account COMPLETED |  |

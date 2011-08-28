@@ -1,0 +1,38 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+use File::Basename;
+use File::Copy;
+use File::Find::Rule;
+use File::Slurp;
+use URI::Escape;
+
+for my $dir ( glob "/var/www/socialtext/data/*" ) {
+    my $ws = basename($dir);
+
+    for my $f ( File::Find::Rule->file->not( File::Find::Rule->symlink )->name( qr/\.txt$/ )->in($dir) ) {
+        my $text = read_file($f);
+
+        if ( $text =~ s{<https?://www\.socialtext\.net/\Q$ws\E/index\.cgi\?([^=\n\r]+?)>}
+                       { make_wiki_link($1) }eg ) {
+            my $x = 1;
+            $x++ while -f "$f.bak.$x";
+
+            print "$f => $f.bak.$x\n";
+            copy( $f => "$f.bak.$x" );
+
+            write_file( $f, $text );
+        }
+    }
+}
+
+sub make_wiki_link {
+    my $text = shift;
+
+    $text = uri_unescape( $text );
+
+    return "[$text]";
+}

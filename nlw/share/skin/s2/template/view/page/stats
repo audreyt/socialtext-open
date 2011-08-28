@@ -1,0 +1,71 @@
+[%# @COPYRIGHT@ -%]
+[% WRAPPER layout/html content_id = 'st-page-usagereport' box_javascript = '0' dropshadow = 0 subnav = 'element/wiki/subnav-default' %]
+<div id="st-page-wiki-title">[% wiki.title %]</div>
+<div id="st-page-title"><a href="?[% page_id %]">[% display_title %]</a>: <span class="st-page-title-decorator">Page Statistics</span></span></div>
+[% IF ! error %]
+<div id="st-usagereport-navbar">[ <a href="index.cgi?[% page_id %]">Return to page</a> ] [ <a href="index.cgi?action=page_stats_index;page_id=[% page_id %]">Report Index</a> ]</div>
+<div id="st-usagereport-date"><h2>Report for [% display_date %]</h2></div>
+  <table class="standard-table page-stats-content">
+   <caption>[% loc("Summary") %]</caption>
+   <thead>
+    <tr>
+     <th>[% loc("Type") %]</th>
+     <th>[% loc("Total") %]</th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr class="odd">
+     <td>[% loc("Views") %]</td>
+     <td>[% summary_stats.DISPLAY_PAGE %]</td>
+    </tr>
+    <tr class="even">
+     <td>[% loc("Edits") %]</td>
+     <td>[% summary_stats.EDIT_PAGE %]</td>
+    </tr>
+    <tr class="odd">
+     <td>[% loc("Uploads") %]</td>
+     <td>[% summary_stats.UPLOAD_ATTACHMENT %]</td>
+    </tr>
+    <tr class="even">
+     <td>[% loc("Downloads") %]</td>
+     <td>[% summary_stats.DOWNLOAD_ATTACHMENT %]</td>
+    </tr>
+   </tbody>
+  </table>   
+
+  [% PROCESS element/pagestats/page_table
+     action = 'Views',
+     rows   = page_views,
+     total  = summary_stats.DISPLAY_PAGE
+   %]
+
+  [% PROCESS element/pagestats/page_table
+     action = 'Edits',
+     rows   = page_edits,
+     total  = summary_stats.EDIT_PAGE
+   %]
+
+  [% IF attachment_uploads.size %]
+    [% PROCESS element/pagestats/attachments_table
+       action = 'Uploads',
+       rows   = attachment_uploads,
+       total  = summary_stats.UPLOAD_ATTACHMENT
+     %]
+  [% ELSE %]
+    <p>[% loc("No uploads.") %]</p>
+  [% END %]
+
+  [% IF attachment_downloads.size %]
+    [% PROCESS element/pagestats/attachments_table
+       action = 'Downloads',
+       rows   = attachment_downloads,
+       total  = summary_stats.DOWNLOAD_ATTACHMENT
+     %]
+  [% ELSE %]
+    <p>[% loc("No downloads.") %]</p>
+  [% END %]
+
+[% ELSE %]
+  [% error %]
+[% END %]
+[% END %]

@@ -1,0 +1,93 @@
+| *Comment* | STARTED Test Case: Command Line Tests OTHER |  |
+
+| set | cmdline_workspace | clw_%%start_time%% |
+| set | cmdline_account | cla_%%start_time%% |
+| set | cli_user | `cli-%%start_time%%@ken.socialtext.net` |
+
+| *Comment* | Test Case: Command Line Tests OTHER test plugin enable/disable |  |
+| st-admin | create_account --name %%cmdline_account%% | qr/A new account named "%%cmdline_account%%" was created\./ |
+| st-admin | create-workspace --empty --name %%cmdline_workspace%% --title %%cmdline_workspace%% --account %%cmdline_account%% |  |
+| st-admin | create-user --email %%cli_user%% --password d3vnu1ll |  |
+| st-admin | add-member --email %%username%% --password %%password%% --workspace %%cmdline_workspace%% |  |
+
+| *Comment* | Test Case: Command Line Tests OTHER setup the enable/disable tests |  |
+| *Comment* | There are no verification strings since the output is unpredictable |  |
+| st-admin | enable-plugin --plugin signals --all-accounts |  |
+| st-admin | enable-plugin --plugin people --all-accounts |  |
+| st-admin | enable-plugin --plugin dashboard --all-accounts |  |
+| st-admin | enable-plugin --plugin socialcalc --all-workspaces |  |
+
+| *Comment* | Test Case: Command Line Tests OTHER test disable for all accounts |  |
+| st-admin | disable-plugin --plugin signals --all-accounts | The signals plugin is now disabled for all accounts |
+| st-admin | disable-plugin --plugin people --all-accounts | The people plugin is now disabled for all accounts |
+| st-admin | disable-plugin --plugin dashboard --all-accounts | The dashboard plugin is now disabled for all accounts |
+| st-admin | disable-plugin --plugin socialcalc --all-workspaces | The socialcalc plugin is now disabled for all workspaces |
+
+| *Comment* | Test Case: Command Line Tests OTHER test enable/disable for one account |  |
+| st-admin | enable-plugin --account %%cmdline_account%% --plugin dashboard | The dashboard plugin is now enabled for account %%cmdline_account%% |
+| st-admin | enable-plugin --account %%cmdline_account%% --plugin people | The people plugin is now enabled for account %%cmdline_account%% |
+
+| *Comment* | Remember: People enables Signals by order of Project Management |  |
+| st-admin | enable-plugin --account %%cmdline_account%% --plugin signals | No changes |
+| st-admin | enable-plugin --workspace %%cmdline_workspace%% --plugin socialcalc | The socialcalc plugin is now enabled for workspace %%cmdline_workspace%% |
+
+| st-admin | disable-plugin --account %%cmdline_account%% --plugin signals | The signals plugin is now disabled for account %%cmdline_account%% |
+| st-admin | disable-plugin --account %%cmdline_account%% --plugin people | The people plugin is now disabled for account %%cmdline_account%% |
+| st-admin | disable-plugin --account %%cmdline_account%% --plugin dashboard | The dashboard plugin is now disabled for account %%cmdline_account%% |
+| st-admin | disable-plugin --workspace %%cmdline_workspace%% --plugin socialcalc | The socialcalc plugin is now disabled for workspace %%cmdline_workspace%% |
+
+| *Comment* | Test Case: Command Line Tests OTHER test enable for all accounts |  |
+| st-admin | enable-plugin --plugin dashboard --all-accounts | The dashboard plugin is now enabled for all accounts |
+| st-admin | enable-plugin --plugin people --all-accounts | The people plugin is now enabled for all accounts |
+| st-admin | enable-plugin --plugin signals --all-accounts | No changes |
+
+| st-admin | enable-plugin --plugin socialcalc --all-accounts | qr/The socialcalc plugin can not be set at the account scope/ |
+| st-admin | enable-plugin --plugin socialcalc --all-workspace | The socialcalc plugin is now enabled for all workspaces |
+
+| st-admin | --help | qr/plugin/ |
+
+set-logo-from-file --workspace --file /path/to/file.jpg
+
+| *Comment* | Test Case: Command Line Tests OTHER set-logo-from-file |  |
+| *Comment* | Test Case: Command Line Tests OTHER set-logo-from file needs %%wikitest_files%%/wikitest.jpg on the CLIENT, not the server |  |
+
+| st-admin | set-logo-from-file | qr/The command you called \(set-logo-from-file\) requires a workspace to be specified/ |
+| st-admin | set-logo-from-file --workspace %%cmdline_workspace%% | qr/The command you called \(set-logo-from-file\) requires a file to be specified with the --file option/ |
+| st-admin | set-logo-from-file --workspace %%cmdline_workspace%% --file /foo/bar/baz.jpg | No such file or directory |
+| st-admin | set-logo-from-file --workspace %%cmdline_workspace%% --file /foo/bar | Logo file must be a gif, jpeg, or png file. |
+| st-admin | set-logo-from-file --workspace %%cmdline_workspace%% --file %%wikitest_client_files%%wikitest.jpg | The logo file was imported as the new logo for the %%cmdline_workspace%% workspace. |
+
+set-ping-uris --workspace <uri> <uri>
+
+| *Comment* | Test Case: Command Line Tests OTHER set-ping-uris succeeds with no arguments |  |
+
+| st-admin | set-ping-uris | qr/The command you called \(set-ping-uris\) requires a workspace to be specified/ |
+| st-admin | set-ping-uris --workspace %%cmdline_workspace%% | qr/The ping uris for the %%cmdline_workspace%% workspace have been updated/ |
+
+send-weblog-pings --workspace --page
+
+| st-admin | send-weblog-pings | qr/The command you called \(send-weblog-pings\) requires a workspace to be specified/ |
+| st-admin | send-weblog-pings --workspace %%cmdline_workspace%% | qr/The %%cmdline_workspace%% workspace has no ping uris/ |
+
+update-page --workspace --page [--username or --email] < page-body.txt
+
+| st-admin | update-page | qr/The command you called \(update-page\) requires a workspace to be specified/ |
+| st-admin | update-page --workspace %%cmdline_workspace%% | qr/The command you called \(update-page\) requires a user to be specified/ |
+| st-admin | update-page --workspace %%cmdline_workspace%% --page nosuchpage | qr/The command you called \(update-page\) requires a user to be specified/ |
+| st-admin | update-page --workspace %%cmdline_workspace%% --user %%cli_user%% | qr/The command you called \(update-page\) requires a page to be specified/ |
+
+from-input < <list of commands>
+version
+help
+
+| *Comment* | Test Case: Command Line Tests OTHER from-input requires STDIN |  |
+| st-admin | version | qr/Socialtext v.+Copyright 2004-201.+ Socialtext, Inc./ |
+| st-admin | help | qr/Socialtext::CLI.+USERS.+WORKSPACES.+INDEXING.+ACCOUNTS.+EMAIL.+OTHER.+Copyright.+Socialtext/ |
+
+| *Comment* | Test Case: Command Line Tests OTHER TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%cli_user%% |  |
+| st-admin | delete-workspace --w %%cmdline_workspace%% --no-export | has been deleted |
+| delete-account | %%cmdline_account%% |  |
+
+| *Comment* | Test Case: Command Line Tests OTHER COMPLETED |  |

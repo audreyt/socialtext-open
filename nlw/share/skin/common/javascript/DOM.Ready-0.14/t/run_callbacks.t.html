@@ -1,0 +1,32 @@
+<html>
+
+<head>
+ <script type="text/javascript" src="lib/JSAN.js"></script>
+ <script type="text/javascript">
+  JSAN.addRepository("lib", "../lib");
+  JSAN.errorLevel = "die";
+  JSAN.use("Test.More");
+  JSAN.use("DOM.Ready");
+ </script>
+ <script type="text/javascript">
+  DOM.Ready._resetClass();
+  DOM.Ready._stopTimer();
+
+  var found_id1;
+  DOM.Ready.onIdReady( "id1", function () { found_id1 = 1 } );
+ </script>
+</head>
+<body>
+
+ <div id="id1"></div>
+
+ <pre style="white-space: pre" id="test"><script>
+  plan({ tests: 1 });
+
+  DOM.Ready.runCallbacks();
+
+  ok( found_id1, "id1 was ready when runCallbacks was called" ); 
+</script></pre>
+
+</body>
+</html>

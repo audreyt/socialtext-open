@@ -1,0 +1,48 @@
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: People Search Edit A Profile Access profile. |  |
+| open_ok | /st/edit_profile |  |
+| text_like | //body | Edit Profile |
+
+| *Comment* | Test Case: People Search Edit A Profile Verify profile present. |  |
+| st-name-widget | 1 | profile_details |
+| st-select-widget-frame | profile_details |  |
+| wait_for_element_visible_ok | photo-upload-button | 60000 |
+| text_like | //body | Name |
+| text_like | //body | Organization |
+| text_like | //body | Contact |
+| text_like | //body | IM |
+| text_like | //body | Web |
+| text_like | //body | First Name |
+| text_like | //body | Last Name |
+
+| *Comment* | Test Case: People Search Edit A Profile Fill in all values with unique strings |  |
+| wait_for_element_visible_ok | field_first_name | 30000 |
+| type_ok | field_first_name | %%first%% |
+| type_ok | field_last_name | %%last%% |
+| type_ok | field_position | %%default_field%% position |
+| type_ok | field_company | %%default_field%% company |
+| type_ok | field_location | %%location%% |
+| type_ok | field_work_phone | %%default_field%% work |
+| type_ok | field_mobile_phone | %%default_field%% mobile |
+| type_ok | field_home_phone | %%default_field%% home |
+| type_ok | field_aol_sn | %%default_field%% aol |
+| type_ok | field_yahoo_sn | %%default_field%% yahoo |
+| type_ok | field_gtalk_sn | %%default_field%% gtalk |
+| type_ok | field_skype_sn | %%default_field%% skype |
+| type_ok | field_sametime_sn | %%default_field%% sametime |
+| type_ok | field_twitter_sn | %%default_field%% twitter |
+| type_ok | field_blog | %%default_field%% blog |
+| type_ok | field_personal_url | %%default_field%% personal |
+| type_ok | field_linkedin_url | %%default_field%% linkedin |
+| type_ok | field_facebook_url | %%default_field%% facebook |
+
+| *Comment* | Test Case: Edit A Profile. Be conservative around clicking update |  |
+| wait_for_element_visible_ok | update_profile | 30000 |
+| pause | 5000 | settling time |
+| click_and_pause | update_profile | 12000 |
+| wait_for_text_present_ok | Profile | 30000 |
+| wait_for_text_present_ok | Tag | 30000 |
+| wait_for_text_present_ok | Activities | 30000 |
+
+| *Comment* | Test Case: People Search Edit A Profile COMPLETED |  |

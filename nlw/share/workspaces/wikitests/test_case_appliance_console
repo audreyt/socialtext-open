@@ -1,0 +1,176 @@
+* Fixture: ApplianceConfig
+
+| *Comment* | Test Case: Appliance Console |  |
+
+| *Comment* | *Invalid user logs in to console* |  |
+| st-admin | remove-system-admin --email %%email%% | no longer has system admin access |
+| open | /console |  |
+| is_text_present_ok | Log in to Socialtext |  |
+
+| *Comment* | *Valid user logs in to console* |  |
+
+| st-admin | give-system-admin --email %%email%% | now has system admin access |
+| open | /console |  |
+| is_text_present_ok | Socialtext Appliance |  |
+
+| *Comment* | *Login goes to overview tab* |  |
+
+| is_text_present_ok | Workspaces |  |
+| is_text_present_ok | To view and manage the Workspaces, Accounts, Groups and Users on the system, go to the Control Panel tool. |  |
+| is_element_present_ok | link=Control Panel |  |
+| is_text_present_ok | Disk Usage |  |
+| is_text_present_ok | total |  |
+| is_text_present_ok | free |  |
+| is_text_present_ok | percent free |  |
+| is_element_present_ok | link=Backup |  |
+| is_element_present_ok | link=Setup |  |
+| is_element_present_ok | link=Shutdown |  |
+| is_element_present_ok | link=Report a Problem |  |
+| is_element_present_ok | link=Socialtext, Inc. |  |
+
+| *Comment* | *Setup tab moved to separate Test Case: Console Setup* |  |
+
+| *Comment* | *Backup tab* |  |
+
+| click_ok | link=Backup |
+| wait_for_page_to_load_ok | 10000 |
+
+| is_element_present_ok | set_destination |
+| is_text_present_ok | Backup Destination |
+| is_text_present_ok | Backup files can be stored on a Windows shared directory (a SMB/CIFS share). |
+| is_text_present_ok | Choosing an "Archive Directory" will store backups inside that sub-directory within the share. |
+| is_text_present_ok | Backup Server name |
+| is_element_present_ok | smbhost |
+| is_text_present_ok | Backup Share Name |
+| is_element_present_ok | smbshare |
+| is_text_present_ok | Username |
+| is_element_present_ok | smbuser |
+| is_text_present_ok | Password |
+| is_element_present_ok | smbuser |
+| is_text_present_ok | Archive Directory |
+| is_element_present_ok | archivedir |
+
+| *Comment* | *Change stuff in backup* |  |
+
+| type_ok | smbhost | test_server |
+| type_ok | smbshare | test_dir |
+| type_ok | smbuser | test_user |
+| type_ok | smbpass | test_pass |
+| click_ok | set_destination |  |
+| wait_for_page_to_load_ok | 30000 |  |
+
+| *Comment* | *Check Backup* |  |
+
+| config_is | smbhost | test_server |
+| config_is | smbpass | test_pass |
+| config_is | smbshare | test_dir |
+| config_is | smbuser | test_user |
+
+| *Comment* | *Change More Stuff* |  |
+| wait_for_element_visible_ok | //select[@name='weeks'] | 30000 |
+| select_ok | //select[@name='weeks'] | label=manually |
+| is_selected_ok | //select[@name='weeks'] | label=manually |
+| wait_for_element_visible_ok | dow_2 | 30000 |
+| check_ok | dow_2 |  |
+| is_checked_ok | dow_2 |  |
+| wait_for_element_visible_ok | //select[@name='retain_weeks'] | 30000 |
+| select_ok | //select[@name='retain_weeks'] | label=indefinitely |
+| is_selected_ok | //select[@name='retain_weeks'] | label=indefinitely |
+| wait_for_element_visible_ok | //select[@name='hour'] | 30000 |
+| select_ok | //select[@name='hour'] | label=2 |
+| is_selected_ok | //select[@name='hour'] | label=2 |
+| wait_for_element_visible_ok | //select[@name='minutes'] | 30000 |
+| select_ok | //select[@name='minutes'] | label=15 |
+| is_selected_ok | //select[@name='minutes'] | label=15 |
+| wait_for_element_visible_ok | //input[@name='save_schedule'] | 30000 |
+| click_and_wait | //input[@name='save_schedule'] |  |
+
+| *Comment* | *Check Changes* |  |
+| wait_for_element_visible_ok | //select[@name='weeks'] | 30000 |
+| is_selected_ok | //select[@name='weeks'] | label=manually |
+| is_checked_ok | dow_2 |  |
+| is_selected_ok | //select[@name='retain_weeks'] | label=indefinitely |
+| is_selected_ok | //select[@name='hour'] | label=2 |
+| is_selected_ok | //select[@name='minutes'] | label=15 |
+
+| *Comment* | *Report a Problem tab* |  |
+
+| click_ok | link=Report a Problem |
+| wait_for_page_to_load_ok | 30000 |
+| is_element_present_ok | link=Overview |
+| is_element_present_ok | link=Backup |
+| is_element_present_ok | link=Setup |
+| is_element_present_ok | link=Shutdown |
+| is_element_present_ok | link=Socialtext, Inc. |
+| is_text_present_ok | Appliance Documentation |
+| is_element_present_ok | link=Appliance Manual Workspace |
+| is_text_present_ok | Contact Socialtext Support |
+| is_element_present_ok | link=Socialtext Support Form |
+
+| type_ok | tarball_email | bogus_qa_email@ken.socialtext.net |
+| type_ok | tarball_desc | THIS REPORT GENERATED FROM APPLIANCE WIKITESTS RUN BY QA. PLEASE IGNORE OR FORWARD TO QA. |
+| click_ok | tarball_button |  |
+| wait_for_element_visible_ok | tarball_message | 60000 |
+| wait_for_text_present_ok | Tarball Built, Upload Complete. Your message has been submitted to Socialtext Support. | 60000 |
+| text_like | tarball_message | Tarball Built, Upload Complete. Your message has been submitted to Socialtext Support. |
+
+| *Comment* | *Shutdown tab* |  |
+
+| click_ok | link=Shutdown |  |
+| wait_for_page_to_load_ok | 30000 |  |
+| is_element_present_ok | link=Overview |  |
+| is_element_present_ok | link=Backup |  |
+| is_element_present_ok | link=Setup |  |
+| is_element_present_ok | link=Report a Problem |  |
+| is_element_present_ok | link=Socialtext, Inc. |  |
+| is_text_present_ok | Shut Down Appliance |  |
+| is_element_present_ok | shutdown |  |
+| is_text_present_ok | Reboot Appliance |  |
+| is_element_present_ok | reboot |  |
+
+| *Comment* | Don't shutdown or reboot the appliance |  |
+
+| *Comment* | Test Case: Appliance Console COMPLETED |  |
+
+^ DONE_TESTING
+
+^ Test Description
+
+These tests should be refactored into executable tests:
+
+^^ Overview tab
+
+* Disk usage should match actual disk usage
+* Disk usage should only show one partition, 'System'
+
+^^ Backup tab
+
+* Set Backup Destination
+** Should save the values to `/etc/socialtext/appliance.conf`
+* Automatic Backup Schedule
+** Should write a new crontab (it overwrites the current crontab)
+* Perform Backup
+** Should save a backup file to the configured Samba share
+* Restore Backup
+** Should list the available backups on the Samba share
+** Should restore a backup from the Samba share
+
+^^ Setup tab
+
+* Set Date and Time to valid and invalid timestamps
+
+* Set time server to valid and invalid servers
+* Click synchronize timeserver now!
+** Time should be change to proper time
+* Apache Logs
+** Should show the apache log file
+* Set Email Configuration
+** If empty and set, `/etc/exim4/update-exim4.conf.conf` set to internet style
+** If host provided, `/etc/exim4/update-exim4.conf.conf` set to smarthost style
+* Create Initial Workspace
+** click, should blow away all users/workspaces, and re-create admin/help workspaces
+
+^^ Shutdown tab
+
+* Reboot should reboot the box
+* Shutdown should shutdown the box

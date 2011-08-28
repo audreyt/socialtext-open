@@ -1,0 +1,11 @@
+#!/bin/bash
+# @COPYRIGHT@
+
+FILE=$2
+
+dprofpp -O 30 $FILE > cpu.$1.profile &
+dprofpp -O 30 -l $FILE > count.$1.profile &
+dprofpp -G '::BEGIN$' -O 30 -r $FILE > real.$1.profile &
+dprofpp -S $FILE > merged.$1.profile &
+dprofpp -O 30 -I $FILE > cpu.inc.$1.profile &
+wait

@@ -1,0 +1,78 @@
+| *Comment* | Test Case: Active Members Setup - Create users and accounts |  |
+| create-account | %%am_acct_one%% |  |
+| create-account | %%am_acct_two%% |  |
+
+| *Comment* | Test Case: Active Members Setup - Create non-empty WS |  |
+| st-admin | create-workspace --name %%am_ws_1%% --title %%am_ws_1%% --account %%am_acct_one%% | created |
+| st-admin | create-workspace --name %%am_ws_2%% --title %%am_ws_2%% --account %%am_acct_two%% | created |
+
+| add-member | %%username%% | %%am_ws_1%% |
+| add-member | %%username%% | %%am_ws_2%% |
+| enable-acct-plugin | dashboard | %%am_acct_one%% |
+| enable-acct-plugin | people | %%am_acct_one%% |
+| enable-acct-plugin | signals | %%am_acct_one%% |
+| enable-acct-plugin | dashboard | %%am_acct_two%% |
+| enable-acct-plugin | people | %%am_acct_two%% |
+| enable-acct-plugin | signals | %%am_acct_two%% |
+
+| create-user | %%members_email_1%% | %%password%% | %%am_acct_one%% |
+| add-member | %%members_email_1%% | %%am_ws_1%% |  |
+| add-member | %%members_email_1%% | %%am_ws_2%% |  |
+| create-user | %%members_email_2%% | %%password%% | %%am_acct_one%% |
+| add-member | %%members_email_2%% | %%am_ws_1%% |  |
+| add-member | %%members_email_2%% | %%am_ws_2%% |  |
+| create-user | %%members_email_3%% | %%password%% | %%am_acct_one%% |
+| add-member | %%members_email_3%% | %%am_ws_1%% |  |
+| add-member | %%members_email_3%% | %%am_ws_2%% |  |
+| create-user | %%view_edit_email%% | %%password%% | %%am_acct_one%% |
+| add-member | %%view_edit_email%% | %%am_ws_1%% |  |
+| add-member | %%view_edit_email%% | %%am_ws_2%% |  |
+
+| *Comment* | Test Case: Active Members - %%view_edit_email%% verify empty messages in %%am_acct_one%% |  |
+| set | empty_acct | %%am_acct_one%% |
+| set | empty_user | %%view_edit_email%% |
+
+| *Comment* | Test Case: Active Members - %%view_edit_email%% Creates a page in %%am_ws_1%% |  |
+| st-logoutin | %%view_edit_email%% | %%password%% |
+
+| open_ok | /%%am_ws_1%%/ |  |
+| open_ok | /%%am_ws_1%%/?action=new_page |  |
+
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
+| type_ok | st-newpage-pagename-edit | %%createme_page1%% |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| st-page-save |  |  |
+
+| *Comment* | Test Case: Active Members - %%view_edit_email%% creates a page in %%am_ws_2%% |  |
+| open_ok | /%%am_ws_2%%/ |  |
+| open_ok | /%%am_ws_2%%/?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
+| type_ok | st-newpage-pagename-edit | %%createme_page2%% |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| st-page-save |  |  |
+
+| *Comment* | Test Case: Active Members - Other users view profiles, view/edit pages, and send signals |  |
+| st-logoutin | %%members_email_1%% | %%password%% |
+| set | mark | step1 |
+| set | logged_in_as | %%members_email_1%% |
+| set | logged_in_user | %%members_user_1%% |
+| include | [Test Case: Active Member Actions] |  |
+| st-logoutin | %%members_email_2%% | %%password%% |
+| set | mark | step2 |
+| set | logged_in_as | %%members_email_2%% |
+| set | logged_in_user | %%members_user_2%% |
+| include | [Test Case: Active Member Actions] |  |
+| st-logoutin | %%members_email_3%% | %%password%% |
+| set | mark | step3 |
+| set | logged_in_as | %%members_email_3%% |
+| set | logged_in_user | %%members_user_3%% |
+| include | [Test Case: Active Member Actions] |  |
+| include | [Test Case: Active Member Actions] |  |
+
+| *Comment* | Test Case: Active Members Setup COMPLETED |  |

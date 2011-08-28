@@ -1,0 +1,14 @@
+[% IF (errors && (errors.size > 0)) || (messages && (messages.size > 0)) %]
+      <div id="errors-and-messages">
+        [% FOR error IN errors %]
+          [% IF error.type %]
+            [% INCLUDE "errors/$error.type" %]
+          [% ELSE %]
+            <span class="error">[% error %]</span>
+          [% END %]
+        [% END %]
+        [% FOR msg IN messages %]
+          <span class="message">[% msg %]</span>
+        [% END %]
+      </div>
+[% END %]

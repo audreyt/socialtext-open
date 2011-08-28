@@ -1,0 +1,8 @@
+#!/bin/bash
+# @COPYRIGHT@
+
+if [ -d /usr/share/nlw/plugin/widgets ]; then
+    st-run-as-web-user st-widgets purge-jobs
+    st-run-as-web-user st-widgets update-all --force --exclude-gallery --verbose
+    st-run-as-web-user st-widgets update-gallery --force --verbose || true
+fi

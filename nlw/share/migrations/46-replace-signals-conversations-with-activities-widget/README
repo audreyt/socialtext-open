@@ -1,0 +1,6 @@
+For [Story: User views all activities in single widget], this migration replaces
+all Signals and Recent Conversations widgets with the new Activities widget.
+
+For Signals widgets, the replaced Activities widget will be pre-configured to
+"Signals only" mode.  For Recent Conversations widgets, the replace Activities
+widget will simply use the "all events from everyone" default mode.

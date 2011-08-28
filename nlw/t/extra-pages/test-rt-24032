@@ -1,0 +1,38 @@
+This page are test steps for {rt:24032}
+
+* Open this page on IE browsers, version 6 or 7.
+* Glance through the page content, make sure each block are visually separated by one line.
+* Edit this page, make sure each block are visually separated by at least one line in your current mode.
+* Switch to another mode. Blocks are expected to be separated by at least one line.
+* Switch back and forth several times without doing any editing. The visual separation of between each blocks should always be there.
+* Go to simple mode, and click somewhere in the middle of last paragraph.
+* Press "Enter" key multiple times to split that paragraph into two.
+* Make sure that new paragraph is visually separated from the old one by at least one line.
+* Switch to advanced mode. The new paragraph should be separated from the old paragraph by at least one blank line.
+* Switch to simple mode. Confirm the same condition.
+
+In other words, the separation should roundtrip visually. Multiple
+blanklines works like the way it always had, rather then all kept.
+
+----
+
+First paragraph goes here. Luptatum nulla facilisi nibh zzril ut diam nulla veniam, in velit duis, dolore. In nulla, vulputate facilisi dolore molestie feugait amet wisi sit. Velit et vel nulla magna ut.
+
+Dolor, consequat esse ex, nonummy ut praesent hendrerit in consectetuer in velit nostrud autem vel. Et ut sed iriure consequat commodo ut feugait nulla diam. Sit aliquip ea enim eu dolore facilisi ad dolore erat.
+
+Foobar ZZZ
+
+* FSDf
+* SDf
+* SDf
+
+* SDFSDFA
+* SDFSDF
+* F
+
+Test
+
+Foobar Foo
+
+Ut wisi adipiscing consequat ad diam tincidunt volutpat lobortis, quis consequat, erat? Autem eros elit ipsum duis velit aliquam dignissim eum lobortis in nibh. Vel nostrud nulla aliquip iriure vel te? Ipsum amet exerci velit enim magna ipsum. Dolore blandit blandit feugait euismod. Sit veniam aliquip consequat ad feugiat at autem duis ullamcorper. Vel duis dolore nulla dolore duis, nonummy duis dolor lobortis blandit consequat. In, minim praesent nulla veniam vero. Luptatum nibh eu nulla odio? Luptatum ex volutpat iusto augue amet? Nisl delenit suscipit, nisl blandit consequat duis at nibh aliquip, eum dolore in feugiat. Dolore iriure tincidunt feugait odio et elit. Velit amet consequat consequat accumsan hendrerit. Nulla elit, commodo vulputate augue. Sit nulla amet, eum dolor delenit veniam tation minim, ex. Consequat, magna feugait nonummy, molestie vel augue euismod erat tation nostrud te aliquip nisl nostrud. Nulla feugait molestie aliquam velit at veniam nisl! Et facilisi accumsan tincidunt nonummy laoreet elit ullamcorper facilisis adipiscing consectetuer. Luptatum vel nulla et laoreet facilisi aliquam ex, esse volutpat quis amet feugait.
+

@@ -1,0 +1,24 @@
+#!/bin/bash
+
+DB_SCHEMA=`st-config echo db_name`
+DB_FILE=etc/socialtext/db/socialtext-schema.sql
+STDB=bin/st-db 
+
+echo -n "This command will blow away your database and recreate it. Proceed? [Yn] " 
+read yes
+if [ "$yes" != "y" ] && [ "$yes" != "" ] && [ "$yes" != "Y" ]; then
+    exit
+fi
+
+scm revert $DB_FILE
+nlwctl stop
+dropdb $DB_SCHEMA
+$STDB sync --schema socialtext
+pglist public | grep -v 'COMMENT ON ' > $DB_FILE
+
+NEW_VERSION=`$STDB version --schema socialtext | sed 's/.*version: //'`
+
+cat >> $DB_FILE <<__EOT__
+DELETE FROM "System" WHERE field = 'socialtext-schema-version';
+INSERT INTO "System" VALUES ('socialtext-schema-version', '$NEW_VERSION');
+__EOT__

@@ -1,0 +1,134 @@
+    RewriteEngine On
+
+    # Deny all TRACE requests
+    RewriteCond %{REQUEST_METHOD} ^TRACE
+    RewriteRule .* - [F,L]
+
+    # We need to be smart about re-escaping characters on the way to the
+    # backend server.  
+    RewriteMap escape int:escape
+
+[%- IF config.confd_exists %]
+    # include file for rewrite rules on this system
+    Include conf.d/rewrite*
+[%- END %]
+
+    # unconditionally include local socialtext add-on rewrite rules on this system
+    Include socialtext-conf.d/rewrite*
+[%- UNLESS for_ssl_vhost %]
+    [%- IF config.ssl_name && config.redirect_to_ssl %]
+        # include file for per-workspace redirection to ssl, but only for
+        # non-SSL virts
+        Include conf.d/redirect-to-ssl
+    [%- END %]
+[%- END %]
+
+[%- IF config.apache_status %]
+    # Leave status URLs unmolested
+    RewriteRule    ^(/(perl-)?status)$  $1 [L]
+[%- END %]
+[%- IF not (config.is_appliance || config.is_dev) %]
+    RewriteCond    %{HTTP_HOST}  !^miki.socialtext.net$
+    RewriteCond    %{HTTP_HOST}  !^[% config.nlw_server_hostname %]:?\d*$
+    RewriteRule    (.*)          http://[% config.nlw_server_hostname %]$1  [R,L,NE]
+[%- END %]
+
+[%- IF config.nlw_uri_is_ssl && !for_ssl_vhost %]
+    [%- colon_port = config.ports.https == 443 ? '' : ':' _ config.ports.https -%]
+    RewriteRule  (/nlw.*)  https://[% config.nlw_server_hostname %][% colon_port %]$1  [R,L,NE]
+[%- END %]
+
+    # make sure user agents that don't do gzipped javascript use
+    # the uncompressed version - Note SAFARI!!!
+    # ALSO notice that this RewriteRule is NOT the last one in the chain
+    RewriteCond %{HTTP_USER_AGENT} ".*AppleWebKit.*" [OR]
+    RewriteCond %{HTTP:Accept-Encoding} !gzip
+    RewriteRule (.*)\.js\.gz$ $1\.js
+
+    # Rewrite /noauth feeds to /feed, don't escape args!
+    RewriteRule ^/noauth/feed/(.+)   /feed/$1 [R,L,NE]
+
+    # Support CSS-Kit/CSS Uploader
+    # Converts: /static/0.0.0.0/skin/images/logo.gif
+    #       To: /static/0.0.0.0/images/skin/logo.gif
+    #RewriteRule    ^/static/([\.0-9]+)/([^/]+)/(images|javascript|css)/(.+)$$  /static/$3/$2/$4  [PT,L]
+
+    # this first one is only here for sake of doc-pages, everything
+    # else should use /static
+    RewriteRule    /.*/base/(.+)                /static/skin/s2/$1  [R,L]
+    RewriteRule    ^/static/[\.0-9]+/(.+)$      /static/$1          [PT,L]
+
+    RewriteRule    ^/nlw/plugin/[\.0-9]+/(.+)$  /nlw/plugin/$1      [PT,L]
+    RewriteRule    ^/nlw/plugin/:[^/]+/(.+)$    /nlw/plugin/$1      [PT,L]
+
+[%- IF not (config.is_appliance) %]
+    RewriteRule    ^/my/$       http://www.socialtext.net/
+[%- END %]
+
+    # Old style container rewrites
+    RewriteCond    %{QUERY_STRING} ^signals\/q\/(.+)$
+    RewriteRule    ^/$ /st/signals?q=%1 [R,L]
+    RewriteCond    %{QUERY_STRING} ^([^=]+)$
+    RewriteRule    ^/$ /st/%1? [R,L]
+
+    RewriteRule    ^/control/   /nlw/control/  [R,L]
+
+    # backwards compat for old-style /foo/member/index.cgi links
+    RewriteRule    ^(/\w+)/member/(.*)  $1/$2          [R,L]
+
+    # Fix {bz: 2963} where extra slashes are added during /:ws/?:pname rewrite
+    RewriteRule    ^/lite/+page/+([^/]+)/+(.*)  /m/page/$1/$2  [R,L,NE]
+
+    RewriteRule    ^/lite(/?.*)$     /m$1        [R,L,NE]
+    RewriteRule    ^/m/a$            /m/activities [R,L,NE]
+    RewriteRule    ^/m/s$            /m/signals    [R,L,NE]
+    RewriteRule    ^/m/p$            /m/people     [R,L,NE]
+    RewriteRule    ^/m/w$            /m/workspace_list     [R,L,NE]
+    RewriteRule    ^/m/$             /m          [R,L,NE]
+    RewriteRule    ^/m/page/([^/]+)$ /m/page/$1/ [R,L,NE]
+
+    RewriteRule    !^/m$            -   [C]
+    RewriteRule    !^/data(/.*)?$   -   [C]
+    RewriteRule    !^/nlw           -   [C]
+    RewriteRule    !^/challenge     -   [C]
+    RewriteRule    !^/logos         -   [C]
+    RewriteRule    !^/favicon\.ico  -   [C]
+    RewriteRule    ^/([^/\.]+)/?$  /$1/index.cgi  [R,L,NE]
+    RewriteRule    ^/([^/\.]+)/emailprefs$      /$1/index.cgi?action=preferences_settings&preferences_class_id=email_notify [R,L,NE,QSA]
+    RewriteRule    ^/([^/\.]+)/watchlistprefs$  /$1/index.cgi?action=preferences_settings&preferences_class_id=watchlist    [R,L,NE,QSA]
+
+    # Not sure why DirectoryIndex does not work, but because of the
+    # way that directive works in Apache2 it probably doesn't matter
+    # anyway, as we would probably still require a rewrite rule to
+    # make sure the request got sent to the back end
+    RewriteRule    ^/nlw/control/?$         /nlw/control/index.html  [R,L]
+    RewriteRule    ^(/nlw/control/[^/]+)/$  $1 [R,L]
+
+    # Transform ? in REST strings into doubly-encoded %3F, and rely on
+    # Socialtext::Handler::REST to turn them back.
+    # REVIEW: Maybe use a PUA character here instead?
+[% FOREACH i = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1] %]
+    RewriteRule    ^/data/(.*)
+    [%- FOREACH j = [1..i] -%]
+\?(.*)
+    [%- END -%]
+   http://localhost:[% apache_perl_port %]/data/$1
+    [%- FOREACH j = [1..i] -%]
+\%3F$[% j+1 %]
+    [%- END -%]
+  [P,L]
+[%- END %]
+
+    # webplugin is supported for 'drop-in' third party apps
+    RewriteRule    !^/webplugin             -           [C]
+    RewriteRule    !^/nlw/plugin            -           [C]
+    RewriteRule    !^/static                -           [C]
+    RewriteRule    !^/logos                 -           [C]
+    RewriteRule    !^/favicon\.ico          -           [C]
+[%- IF config.is_appliance || config.is_dev %]
+    RewriteRule    !^/console               -           [C]
+[%- END %]
+
+    RewriteRule    (.*)   http://localhost:[% apache_perl_port %]$1  [P,L]
+
+    Alias /static  [% config.static_dir %]

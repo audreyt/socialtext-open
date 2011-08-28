@@ -1,0 +1,17 @@
+#!/bin/bash -e
+
+# N.B. Run this script as the instance user.
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+
+TABLE_EXISTS=`psql --no-align --tuples-only -U $DB_USER -d $DB -c "
+SELECT COUNT(*)
+FROM pg_class
+WHERE relname = 'search_sets'
+"`
+
+if [ "$TABLE_EXISTS" == "1" ]; then
+    echo "Search sets table already present.  Aborting."
+    exit 1
+fi

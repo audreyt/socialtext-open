@@ -1,0 +1,6 @@
+[%# @COPYRIGHT@ -%]
+<select name="[% name %]">
+  [% FOREACH value = values -%]
+    <option value="[% value %]"[% IF value == default %] selected="selected"[% END %]>[% labels.$value %]</option>
+  [% END -%]
+</select>

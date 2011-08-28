@@ -1,0 +1,327 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+require 5.012002;
+use strict;
+use warnings;
+use Data::Dumper;
+use Getopt::Long;
+use Cwd qw(abs_path);
+use File::Basename qw(dirname basename);
+use File::Spec::Functions qw(catfile updir);
+use FindBin;
+use lib "$FindBin::Bin/lib";
+use Socialtext::Locales qw( valid_code );
+$| = 1;
+
+our %options;
+our %settings;
+
+get_command_line_options();
+generate_from_in_files();
+my $ok = $options{dev} || sanity_checks();
+if ( $ok ) {
+    invoke_make_maker();
+    print_ok("Type 'make' to continue.");
+}
+else {
+    print_ok("Everything is not OK.  Install will not proceed.");
+    exit 1;
+}
+exit;
+
+sub get_command_line_options {
+    my %passed;
+
+    my $VAR1;
+    my $defaults_file = catfile( this_dir(), 'build', 'defaults.pl' );
+    die "Can't find defaults file: $defaults_file" unless -e $defaults_file;
+    eval `$^X $defaults_file 2>/dev/null`;
+    die "Could not load defaults: $@\n" if $@;
+    die "No defaults defined!\n" unless ref($VAR1) eq 'HASH';
+    %settings = %$VAR1;
+
+    GetOptions(
+        (map { ( "$_=s" => \$passed{$_} ) } keys %settings),
+        'l|varlist' => \$options{varlist},
+        'q|quiet'   => \$options{quiet},
+        'h|help'    => \$options{help},
+        'v|verbose' => \$options{verbose},
+    ) or exit 1;
+    die_help() if $options{help};
+    die_varlist() if $options{varlist};
+    my $default_hostname = $settings{hostname}->{value};
+
+    my $bad = 0;
+    for my $key ( sort keys %passed ) {
+        if ( defined ( my $val = $passed{$key} ) ) {
+            if ( $val =~ /^--/ ) {
+                warn qq{$key has the value "$val", which is probably a mistake\n};
+                $bad = 1;
+            }
+            $settings{$key}->{value} = $passed{$key};
+        }
+    }
+    exit 1 if $bad;
+
+    # Default the URL if it hasn't been set explicitly
+    if ( !$passed{url} or ($settings{hostname}->{value} eq $default_hostname) ) {
+        $settings{url}->{value} = "https://$settings{hostname}->{value}/";
+    }
+    $options{MM_ARGS} = [@ARGV] if @ARGV;
+    $options{dev} = $passed{dev};
+    print_settings();
+}
+
+sub generate_from_in_files {
+    print_ok('Generating files from *.in templates:');
+    for my $in_file ( find_in_files() ) {
+        my ($out_file) = ( $in_file =~ /(.*)\.in$/ );
+        print_ok( sprintf "   %s -> %s", basename($in_file), basename($out_file) );
+        if ( basename($in_file) eq 'ConfigureValues.pm.in' ) {
+            # Special target to dump settings to a library file.
+            save_build_settings( $in_file, $out_file );
+        }
+        elsif ( basename($in_file) eq 'Makefile.in' ) {
+            # Dump the Makefile in a special location
+            replace_vars( $in_file,
+                catfile( dirname($out_file), updir, basename($out_file) ) );
+        }
+        else {
+            replace_vars( $in_file, $out_file );
+        }
+    }
+    print_ok();
+}
+
+sub save_build_settings {
+    my ( $in_file, $out_file ) = @_;
+    my %vars = map { $_ => $settings{$_}->{value} } keys %settings;
+
+    my $dumper = Data::Dumper->new( [\%vars] );
+    $dumper->Sortkeys(1);
+    local %settings = ( 'build-settings' => {value => $dumper->Dump} );
+    replace_vars( $in_file, $out_file );
+}
+
+sub invoke_make_maker {
+    my $mm = catfile( this_dir(), 'build', 'bin', 'Makefile.PL' );
+    print_ok('Creating build system that installs the Perl libraries:');
+
+    my $dev = $options{dev} || 0;
+    my $prefix = $settings{prefix}->{value} || "";
+    my @cmd = (
+        $settings{perl}->{value},
+        $mm,
+        "--dev=$dev",
+    );
+    push( @cmd, @{$options{MM_ARGS}} ) if $options{MM_ARGS};
+    push( @cmd, '--quiet' ) if $options{quiet};
+
+    verbose("Running: " . join(" ", map "'$_'", @cmd));
+    system(@cmd) and die "Could not create build system\n";
+    print_ok();
+}
+
+sub _has_mm_args {
+    return @{ $options{MM_ARGS} || [] } > 0,
+}
+
+sub sanity_checks {
+    my $hostname = $settings{hostname}->{value};
+
+    # Make sure we have a fully-qualified hostname
+    my $ok = 1;
+
+    if ( $hostname !~ /\./ ) {
+        print <<"EOF";
+Your hostname, "$hostname", is not fully-qualified.  You may have problems
+with clients running on machines other than this one.  I suggest you
+rerun configure with a fully-qualified hostname parameter, such as:
+
+    \$ ./configure --hostname=$hostname.yoursite.com
+
+EOF
+    }
+
+
+    # Check the URL we're using
+    my $url = $settings{url}->{value};
+
+    $url =~ s{/\s*$}{}; # Ignore any trailing slash
+
+    if ( !( $url =~ s{^\s*https?://}{} ) ) {
+        $ok = 0;
+    }
+    my $basename = $url;
+
+    if ( !$ok || ($basename !~ m{\.}) ) {
+        my $better_url = "http://$basename.yoursite.com/";
+
+        print <<"EOF";
+Your URL is not a fully-qualified base URL.  You may have problems with
+clients running on machines other than this one.  I suggest you rerun
+configure with a fully-qualified URL parameter, such as:
+
+    \$ ./configure --url=${better_url}
+
+EOF
+    }
+
+    my $support_address = $settings{'support-address'}->{value};
+    unless ( looks_like_email( $support_address ) 
+        || $support_address =~ m{^https?://.+} ) {
+
+        $ok = 0;
+        print <<EOT;
+Your support-address parameter "$support_address"
+doesn't look like an email address or a URL. Please specify
+'--support-address'
+
+EOT
+    }
+
+    my $server_admin = $settings{'server-admin'}->{value};
+    unless ( looks_like_email( $server_admin ) ) {
+        $ok = 0;
+        print <<EOT;
+Your server-admin parameter "$server_admin"
+doesn't look like an email address.  Please specify '--server-admin'
+
+EOT
+    }
+
+    # Valid Locale code
+    my $locale = $settings{'default-locale'}->{value};
+    if (! valid_code($locale)) {
+        print <<"EOF";
+'$locale' is not a supported locale.
+
+EOF
+        $ok = 0;
+    }
+
+    return $ok;
+}
+
+sub replace_vars {
+    my ( $in, $out ) = @_;
+    my @vars = map {
+        my $name = $_;
+        $name =~ s/-/_/g;
+        uc($name) . "=" . $settings{$_}->{value}
+    } sort keys %settings;
+    my $cmd = build_bin('replace-vars');
+    my @cmd = ($cmd, $in, $out, @vars );
+    verbose("Running: " . join(" ", map "'$_'", @cmd));
+    system(@cmd) and die "Error running $cmd: $!\n";
+}
+
+sub find_in_files {
+    my $cmd = build_bin('list-in-files');
+    chomp(my @files = `$cmd 2>/dev/null`);
+    return @files;
+}
+
+sub print_settings {
+    print_ok('Configuration Settings:');
+    my $max = max_var_length();
+    for my $key ( sort keys %settings ) {
+        my $name = uc($key);
+        $name =~ s/-/_/g;
+        print_ok( sprintf "   \%${max}s = \%s", $name, $settings{$key}->{value} );
+    }
+    print_ok();
+}
+
+sub this_dir {
+    return abs_path( dirname(__FILE__) );
+}
+
+sub build_bin {
+    my $prog = shift;
+    return abs_path( catfile( this_dir(), 'build', 'bin', $prog ) );
+}
+
+sub print_ok {
+    my $string = @_ ? shift : "";
+    return if $options{quiet};
+    local $| = 1;
+    print "$string\n";
+}
+
+sub verbose {
+    my $string = @_ ? shift : "";
+    return unless $options{verbose};
+    local $| = 1;
+    print "$string\n";
+}
+
+sub max_var_length {
+    return ( sort { $b <=> $a } map length, keys %settings )[0];
+}
+
+sub die_help {
+    my $help =<<HELP;
+Usage: $0 [-q] [-h] [--VAR1=VAL1 ...] [MMARG1=MMVAL1 ...]
+
+Options:
+    -q --quiet
+        Try and prevent any extraneous output.
+
+    -v --verbose
+        Give verbose output on what exactly is going on.
+
+    -h --help
+        Display this help message.
+
+    -l --varlist
+        Display a full list with description of all the settings you can set
+        from this script.
+
+    --VAR1=VAL1
+        Assign VAR1 the value of VAL1 and replaces in all *.in files \@VAR1@
+        with VAL1.  These settings can be specified in the environment as
+        well as on the command line.  See --varlist for more information,
+        including which settings are available to be set and their default
+        values.
+
+    MMARG1=MMVAL1
+        These are bare options (i.e. they do not start with --).  They are
+        passed directly to ExtUtils::MakeMaker.
+HELP
+    print $help;
+    exit 0;
+}
+
+sub die_varlist {
+    my $list = "";
+    $list .= <<'PREAMBLE';
+These command line options correspond to build time settings.  These
+settings can also be specified as environment settings with similar names.
+The environment settings are all uppercase and dashes are underscores (e.g.
+The --st-user setting can also be set by setting the ST_USER environment
+variable).  During build stubs of the form @FOO@ (e.g. @ST_USER@) are replaced
+with the value of the variable.
+
+PREAMBLE
+    for my $var (sort keys %settings) {
+        my $doc = $settings{$var}->{doc};
+        my $spaces = " " x (25 - max_var_length());
+        $doc =~ s/^/    /mg;
+        my $def = $settings{$var}->{value};
+        $list .=<<ENTRY;
+--$var
+$doc    DEFAULT: $def
+
+ENTRY
+    }
+    print $list;
+    exit 0;
+}
+
+sub looks_like_email {
+    my $addr = shift;
+
+    return $addr =~ /^\S+\@\S+\.\S+$/;
+}

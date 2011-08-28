@@ -1,0 +1,13 @@
+[%# @COPYRIGHT@ -%]
+[% SET escaped_str = group_name | html %]
+<html>
+<head>
+ <title>[% loc('email.invite-to-join=container', escaped_str) %]</title>
+</head>
+
+<body>
+
+[% PROCESS $invitation_body %]
+
+</body>
+</html>

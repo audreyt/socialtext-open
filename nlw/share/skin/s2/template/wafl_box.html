@@ -1,0 +1,41 @@
+[%# @COPYRIGHT@ -%]
+<table class="wafl_container">
+  <tr>
+    <td>
+      <div class="wafl_box">
+        [% IF error %]
+          [% error %]
+        [% ELSE %]
+          <div class="wafl_titlebox">
+            <div class="wafl_title">
+              [% IF wafl_link %]
+                <a href="[% wafl_link %]">[% wafl_title %]</a>
+              [% ELSE %]
+                [% wafl_title %]
+              [% END %]
+            </div>
+          </div>
+          <div class="wafl_items">
+            [% IF wafl_html %]
+              [% wafl_html %]
+            [% END %]
+            [% IF items %]
+              <ul class="item_list">
+                [% FOREACH item = items %]
+                  <li class="item">
+                    <a href="[% item.URL %]" title="[% item.title %]">
+                      [% item.title %]
+                    </a>
+                    [% IF item.snippet %]
+                      <p class="snippet">[% item.snippet %]</p>
+                    [% END %]
+                  </li>
+                [% END %]
+              </ul>
+            [% END %]
+          </div>
+        [% END %]
+      </div>
+    </td>
+  </tr>
+</table>

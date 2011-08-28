@@ -1,0 +1,29 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw(sql_execute);
+use Socialtext::Gadgets::Gadget;
+
+my $bt_src = "http://hosting.gmodules.com/ig/gadgets/"
+           . "file/106092714974714025177/TwitterGadget.xml";
+my $as_src = "http://any-screen.com/gadget/Gadget.xml";
+
+# Don't do anything if the betwittered widget isn't even installed
+my $betwittered = Socialtext::Gadgets::Gadget->Fetch(src => $bt_src) || exit 0;
+my $bt_id = $betwittered->gadget_id;
+
+# Install the new widget, and get its ID
+eval {
+    my ($as_id) = Socialtext::Gadgets::Gadget->Install({ src => $as_src });
+    sql_execute(q{
+        UPDATE gadget_instance
+           SET gadget_id = ?
+         WHERE gadget_id = ?
+    }, $as_id, $bt_id);
+};
+if ($@) {
+    warn "Failed to install new widget from $as_src. Not a fatal error, continuing.\n";
+}
+
+exit 0;

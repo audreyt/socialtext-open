@@ -1,0 +1,56 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Getopt::Long;
+
+use Socialtext::Account;
+use Socialtext::Permission qw( ST_EDIT_CONTROLS_PERM ST_SELF_JOIN_PERM );
+use Socialtext::Role;
+use Getopt::Long qw(GetOptions);
+
+sub usage {
+    my $msg = shift;
+    warn "$msg\n" if $msg;
+    die <<EOT;
+$0 <account-name>
+
+Options:
+    --add
+EOT
+}
+
+my %opts;
+GetOptions(\%opts, qw(
+    add 
+    ));
+
+my $account_id = shift;
+my $add = delete $opts{add};
+
+usage() unless $account_id;
+my $acct=eval {Socialtext::Account->new( name => $account_id );};
+die("Could not find account $account_id\n") unless $acct;
+
+my $workspaces = $acct->workspaces;
+my $guestrole = Socialtext::Role->Guest;
+while ( my $ws = $workspaces->next ) {
+    my $perms = $ws->permissions;
+    
+    if ($perms->current_set_name eq 'public-authenticate-to-edit') {
+        $perms->set(set_name => 'public-join-to-edit');
+        print "Changing ".$ws->name." to use public-join-to-edit permission set\n";
+
+        if ($add) {
+            print "Adding users in account $account_id to workspace ".$ws->name."\n";
+            my $users = $acct->users;
+            while (my $user = $users->next ) {
+                unless ($user->is_system_created || $ws->has_user($user)) {
+                        $ws->add_user( user => $user);
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,35 @@
+dn: ou=related,dc=example,dc=com
+objectClass: organizationalUnit
+description: related employees
+ou: related
+
+dn: cn=Adrian Harris,ou=related,dc=example,dc=com
+objectClass: inetOrgPerson
+cn: Adrian Harris
+gn: Adrian
+sn: Harris
+mail: adrian.harris@example.com
+userPassword: abc123
+telephoneNumber: 250-555-1212
+displayName: Adrian "The Dog" Harris
+
+dn: cn=Ariel Young,ou=related,dc=example,dc=com
+objectClass: inetOrgPerson
+cn: Ariel Young
+gn: Ariel
+sn: Young
+mail: ariel.young@example.com
+userPassword: abc123
+manager: cn=Adrian Harris,ou=related,dc=example,dc=com
+telephoneNumber: 604-123-4567
+displayName: Ariel "Little Mermaid" Young
+
+dn: cn=Belinda King,ou=related,dc=example,dc=com
+objectClass: inetOrgPerson
+cn: Belinda King
+gn: Belinda
+sn: King
+mail: belinda.king@example.com
+userPassword: abc123
+manager: cn=Adrian Harris,ou=related,dc=example,dc=com
+telephoneNumber: 416-987-6543

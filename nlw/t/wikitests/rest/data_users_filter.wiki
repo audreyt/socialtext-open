@@ -1,0 +1,179 @@
+Test cases for the "user directory" ReST API.
+
+`/data/users?filter=` should search visible users (i.e. users with which the viewer shares an account) matching the specified filter text.
+
+* Fixture: SocialRest
+
+| Comment | set up users and accounts |
+
+| set              | acct1     | %%start_time%%acct1 |
+| set              | ws1       | %%start_time%%ws1   |
+| set              | acct2     | %%start_time%%acct2 |
+| create-account   | %%acct1%% |                     |
+| create-workspace | %%ws1%%   | %%acct1%%           |
+| create-account   | %%acct2%% |                     |
+
+Create five users.  Zeno is in another account so we can test visibility.  A B and C are in a workspace.
+
+| set | user_a | asdf-%%start_time%%-a@ken.socialtext.com |
+| set | user_b | zxcv-%%start_time%%-b@ken.socialtext.com |
+| set | user_c | zxcv-%%start_time%%-c@ken.socialtext.com |
+| set | user_d | asdf-%%start_time%%-d@ken.socialtext.com |
+| set | user_z | asdf-%%start_time%%-z@ken.socialtext.com |
+
+| set | fn_a | Artie |
+| set | fn_b | Bob   |
+| set | fn_c | Carl  |
+| set | fn_d | Dave  |
+| set | fn_z | Zeno  |
+
+| set | ln_a | Choke |
+| set | ln_b | Smith |
+| set | ln_c | Cho   |
+| set | ln_d | Smith |
+| set | ln_z | Smith |
+
+| create-user | %%user_a%% | password | %%acct1%% | %%fn_a%% %%ln_a%% |
+| create-user | %%user_b%% | password | %%acct1%% | %%fn_b%% %%ln_b%% |
+| create-user | %%user_c%% | password | %%acct1%% | %%fn_c%% %%ln_c%% |
+| create-user | %%user_d%% | password | %%acct1%% | %%fn_d%% %%ln_d%% |
+| create-user | %%user_z%% | password | %%acct2%% | %%fn_z%% %%ln_z%% |
+
+| set-user-id | user_a_id | %%user_a%% |
+| set-user-id | user_b_id | %%user_b%% |
+| set-user-id | user_c_id | %%user_c%% |
+| set-user-id | user_d_id | %%user_d%% |
+
+| add-member | %%user_a%% | %%ws1%% |
+| add-member | %%user_b%% | %%ws1%% |
+| add-member | %%user_c%% | %%ws1%% |
+
+| Comment        | run it all as user a |          |
+| http-user-pass | %%user_a%%           | password |
+
+Query on some string should prefix-match against the first name, last name and email address.
+
+The results should always be sorted by "Last Name, First Name"
+
+## This time through, let's check the entire JSON hash, in the future, we'll just check user_id's and assume that the rest is correct.
+| Comment      | happy path              |                  |
+| GET          | /data/users?filter=Carl | application/json |
+| code-is      | 200                     |                  |
+| json-parse   |                         |                  |
+| json-path-is | $[0].user_id            | %%user_c_id%%    |
+| json-path-is | $[0].first_name         | %%fn_c%%         |
+| json-path-is | $[0].last_name          | %%ln_c%%         |
+| json-path-is | $[0].email_address      | %%user_c%%       |
+| json-path-is | $[0].username           | %%user_c%%       |
+
+| Comment      | No filter: all users |                  |
+| GET          | /data/users          | application/json |
+| code-is      | 200                  |                  |
+| json-parse   |                      |                  |
+| json-path-is | $[0].user_id         | %%user_a_id%%    |
+| json-path-is | $[1].user_id         | %%user_b_id%%    |
+| json-path-is | $[2].user_id         | %%user_c_id%%    |
+| json-path-is | $[3].user_id         | %%user_d_id%%    |
+
+| Comment | An empty filter param should be a bad query |                  |
+| get     | /data/users?filter=                         | application/json |
+| code-is | 400                                         |                  |
+
+| Comment         | single letter "C"    |                  |
+| GET             | /data/users?filter=C | application/json |
+| code-is         | 200                  |                  |
+| json-parse      |                      |                  |
+| json-array-size | 2                    |                  |
+| json-path-is    | $[0].user_id         | %%user_a_id%%    |
+| json-path-is    | $[1].user_id         | %%user_c_id%%    |
+
+| Comment         | case insensitive     |                  |
+| GET             | /data/users?filter=c | application/json |
+| code-is         | 200                  |                  |
+| json-parse      |                      |                  |
+| json-array-size | 2                    |                  |
+| json-path-is    | $[0].user_id         | %%user_a_id%%    |
+| json-path-is    | $[1].user_id         | %%user_c_id%%    |
+
+| Comment         | spaces *are* ignored  |                  |
+| GET             | /data/users?filter=c+ | application/json |
+| code-is         | 200                   |                  |
+| json-parse      |                       |                  |
+| json-array-size | 2                     |                  |
+| json-path-is    | $[0].user_id          | %%user_a_id%%    |
+| json-path-is    | $[1].user_id          | %%user_c_id%%    |
+
+| Comment         | spaces *are* ignored      |                  |
+| GET             | /data/users?filter=+carl+ | application/json |
+| code-is         | 200                       |                  |
+| json-parse      |                           |                  |
+| json-array-size | 1                         |                  |
+| json-path-is    | $[0].user_id              | %%user_c_id%%    |
+
+| Comment         | "smit" gets two results |                  |
+| GET             | /data/users?filter=smit | application/json |
+| code-is         | 200                     |                  |
+| json-parse      |                         |                  |
+| json-array-size | 2                       |                  |
+| json-path-is    | $[0].user_id            | %%user_b_id%%    |
+| json-path-is    | $[1].user_id            | %%user_d_id%%    |
+
+| Comment         | "zxcv" gets two results (email match) |                  |
+| GET             | /data/users?filter=zxcv               | application/json |
+| code-is         | 200                                   |                  |
+| json-parse      |                                       |                  |
+| json-array-size | 2                                     |                  |
+| json-path-is    | $[0].user_id                          | %%user_b_id%%    |
+| json-path-is    | $[1].user_id                          | %%user_c_id%%    |
+
+| Comment         | "asdf" gets two results (zeno isn't visible) |                  |
+| GET             | /data/users?filter=asdf                      | application/json |
+| code-is         | 200                                          |                  |
+| json-parse      |                                              |                  |
+| json-array-size | 2                                            |                  |
+| json-path-is    | $[0].user_id                                 | %%user_a_id%%    |
+| json-path-is    | $[1].user_id                                 | %%user_d_id%%    |
+
+| Comment         | "zxcv" limit works              |                  |
+| GET             | /data/users?filter=zxcv;limit=1 | application/json |
+| code-is         | 200                             |                  |
+| json-parse      |                                 |                  |
+| json-array-size | 1                               |                  |
+| json-path-is    | $[0].user_id                    | %%user_b_id%%    |
+
+| Comment         | "zxcv" count works (same as limit) |                  |
+| GET             | /data/users?filter=zxcv;count=1    | application/json |
+| code-is         | 200                                |                  |
+| json-parse      |                                    |                  |
+| json-array-size | 1                                  |                  |
+| json-path-is    | $[0].user_id                       | %%user_b_id%%    |
+
+| Comment         | "zxcv" offset works                      |                  |
+| GET             | /data/users?filter=zxcv;count=1;offset=1 | application/json |
+| code-is         | 200                                      |                  |
+| json-parse      |                                          |                  |
+| json-array-size | 1                                        |                  |
+| json-path-is    | $[0].user_id                             | %%user_c_id%%    |
+
+/data/workspaces/:ws/users works similarly to /data/users, but is in a workspace context.  Test out the lookahead.
+
+| Comment         | workspace no filter: all users |                  |
+| GET             | /data/workspaces/%%ws1%%/users | application/json |
+| code-is         | 200                            |                  |
+| json-parse      |                                |                  |
+| json-array-size | 3                              |                  |
+| json-path-is    | $[0].user_id                   | %%user_a_id%%    |
+| json-path-is    | $[1].user_id                   | %%user_b_id%%    |
+| json-path-is    | $[2].user_id                   | %%user_c_id%%    |
+
+| Comment | workspace empty filter: invalid        |                  |
+| GET     | /data/workspaces/%%ws1%%/users?filter= | application/json |
+| code-is | 400                                    |                  |
+
+| Comment         | workspace simple filter                   |                  |
+| GET             | /data/workspaces/%%ws1%%/users?filter=cho | application/json |
+| code-is         | 200                                       |                  |
+| json-parse      |                                           |                  |
+| json-array-size | 2                                         |                  |
+| json-path-is    | $[0].user_id                              | %%user_a_id%%    |
+| json-path-is    | $[1].user_id                              | %%user_c_id%%    |

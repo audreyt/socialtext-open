@@ -1,0 +1,21 @@
+[%# @COPYRIGHT@ -%]
+[% WRAPPER $frame_name content_id = 'st-editcontention' %]
+
+[% IF page.page_type == 'spreadsheet' %]
+  [% PROCESS contention_msg type="spreadsheet" %]
+  [% page.to_html %]
+[% ELSE %]
+  [% PROCESS contention_msg type="document" %]
+  <pre id="st-editcontention-text">[% page_body %]</pre>
+[% END %]
+
+[% END %]
+
+[% BLOCK contention_msg %]
+  <p class="error-message">[% loc('page.locked=type', type) %]</p>
+
+  <p>[% loc('edit.view-locked') %]</p>
+
+  <p><a href="[% script_name %]?[% page.uri %]">[% loc('page.back=type', type) %]</a></p>
+  <hr />
+[% END %]

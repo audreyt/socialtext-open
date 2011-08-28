@@ -1,0 +1,39 @@
+Tests for `/data/groups/:group_id/workspaces`, implemented to help fix {bz: 3450}.
+
+* Fixture: SocialRest
+
+| standard-test-setup   |
+| delete-all-groups     |
+
+## Create a new group, add it to a couple of workspaces
+| *Comment*              | Setup        |                                        |           |   |
+| set                    | acct2        | acct2-%%start_time%%                   |           |   |
+| create-account         | %%acct2%%    |                                        |           |   |
+| set                    | acct2_id     | %%account_id%%                         |           |   |
+| set                    | admin        | admin%%start_time%%@ken.socialtext.net |           |   |
+| create-user            | %%admin%%    | password                               | %%acct2%% |   |
+| set                    | group        | group%%start_time%%                    |           |   |
+| create-group           | %%group%%    | %%acct2%%                              |           |   |
+| add-user-to-group      | %%admin%%    | %%group_id%%                           | admin     |   |
+| set                    | gold         | gold%%start_time%%                     |           |   |
+| create-workspace       | %%gold%%     | %%acct2%%                              |           |   |
+| set                    | gold_id      | %%workspace_id%%                       |           |   |
+| add-group-to-workspace | %%group_id%% | %%gold%%                               |           |   |
+| set                    | silver       | silver%%start_time%%                   |           |   |
+| create-workspace       | %%silver%%   | %%acct2%%                              |           |   |
+| set                    | silver_id    | %%workspace_id%%                       |           |   |
+| add-group-to-workspace | %%group_id%% | %%silver%%                             |           |   |
+| set                    | bronze       | bronze%%start_time%%                   |           |   |
+| create-workspace       | %%bronze%%   | %%acct2%%                              |           | 1 |
+| set                    | bronze_id    | %%workspace_id%%                       |           |   |
+| add-group-to-workspace | %%group_id%% | %%bronze%%                             |           |   |
+
+| http-user-pass | %%admin%% | password |
+| GET-json        | /data/groups/%%group_id%%/workspaces |               |
+| code-is         | 200                                  |               |
+| json-parse      |                                      |               |
+| json-array-size | 3                                    |               |
+| json-path-is    | $[0].is_all_users_workspace          | 1             |
+| json-path-is    | $[0].name                    | %%bronze%% |
+| json-path-is    | $[1].is_all_users_workspace          | 0             |
+| json-path-is    | $[2].is_all_users_workspace          | 0             |

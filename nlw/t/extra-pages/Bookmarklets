@@ -1,0 +1,11 @@
+.html
+<h1>Socialtext Bookmarklets</h1>
+
+<ul>
+<li>
+Use this Skin Selector Bookmarklet:
+
+<a href="javascript:void(function(){var script = document.createElement('script');script.src='/static/1.2.3.4/skin/common/select/select.js';document.getElementsByTagName('head')[0].appendChild(script)})()">ST Skin Select</a>
+</li>
+</ul>
+.html

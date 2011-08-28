@@ -1,0 +1,66 @@
+Socialtext Open is available to users free of charge, and accordingly
+comes with no specific promises of support. That being said, there are
+a number of ways to get answers to questions about Socialtext.
+
+Creating a page on the Socialtext Open Source wiki is a great way to
+make your problem or question known and invite discussion and help. The
+discussion about the problem will become part of the body of the
+workspace, the wiki way.
+
+    https://www.socialtext.net/stoss
+
+The Socialtext Open mailing lists and Socialtext Open forums are another
+place to send your questions or problems, whether with installation,
+running Socialtext Open, or any other problem. The lists and forums are
+read by many Socialtext Open users, as well as Socialtext employees.
+
+    https://www.socialtext.net/stoss/index.cgi?socialtext_open_mailing_lists
+    https://www.socialtext.net/stoss/index.cgi?socialtext_open_forums
+
+Sometimes you'll find people in Socialtext Open IRC, and they can help
+as well.
+
+    https://www.socialtext.net/stoss/index.cgi?socialtext_open_irc
+
+Please remember that whatever avenue you choose, Socialtext employees
+will be answering as best they can amid their other duties. If
+you're interested in paid support from Socialtext, please call us at
+1-877-GET-WIKI.
+
+== Asking questions
+
+When asking questions, you can help get better and faster answers by
+giving information that's as complete as possible. Include as much
+information about your situation as possible. For example, include:
+
+    * Version of Socialtext Open you're using
+    * Distribution of Linux/UNIX you're running on
+    * What versions of Perl and Apache you're using
+    * Version of your MTA (Sendmail, Qmail, etc) if it's mail-related
+    * How you ran configure, and the output it generated
+    * Any changes made to your /etc/socialtext/socialtext.conf file
+    * Full text of errors received on screen
+    * Relevant entries from your Apache error.log file
+
+Then include narrative about the problem. Tell what you did and how you
+got to where you are.  Sample query
+
+Here's a posting that lays out plenty of information that helps the
+reader understand the problem, and how you got there.
+
+    Hi, I'm having trouble installing Socialtext Open 2.5.1.4. I'm
+    running RedHat Enterprise 6.2, Apache 1.3.23 and Perl 5.8.8.
+
+    My problem is accessing the front page. I ran configure and make
+    and make install, and everything seems to install correctly. I
+    was able to start up apache-perl and the ceqlotron via the
+    /etc/init.d scripts, and I see via ps that they're running. However,
+    when I try to go to http://wiki.mysite.com, it redirects me to
+    adsl-203-312-23-1.myisp.com, which is the hostname assigned by my
+    DSL provider. I looked in /var/log/apache-perl/error-log but didn't
+    see any errors.
+
+This lets the reader say "A-ha, it sounds like you didn't specify
+--hostname=wiki.mysite.com when running configure." If the poster had
+included the output of configure as well, it would have been verifiable,
+too.

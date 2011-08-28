@@ -1,0 +1,59 @@
+This is the page used to drive testing of Widget editing.
+Use it to regression test Widget editing and to develop Widget test automation.
+It contains an example of an empty instance of every Link and WAFL type.
+Even if you type `{file: }`, wikiwyg turns it into `{file}`
+
+----
+
+| *Non-Widget Links* |  |
+| Wiki page link | [] |
+| Network Share
+`"Ad Social"<\\ad-social\shared\testme.txt>`
+See {rt: 15184} | "AD Social"<file:> |
+| Sharepoint | {sharepoint: } |
+| URL (plus irc ftp etc) | "Socialtext Hosted"<http://> |
+| Named link to external image | "Ken"<http://> |
+| Named Web link to wiki page | "Link to Socialtext search documentation"<http://> |
+|  |  |
+| *Widgets* |  |
+| Spreadsheet | {ss: } |
+| Cross link | "Look over there"{link} |
+| File | "This is the name of a file"{file} |
+| Image
+empty image disappears | "Click to see some talc"{image: none} |
+| Relative link | http:base/images/docs/ |
+| Section | {section} |
+| Section link | {link} |
+|  |  |
+| Weblog | "This is a weblog Name"{weblog} |
+| Blog | "This is a blog Name"{blog} |
+| Tag | "This is a tag name"{tag} |
+| Category
+This WAFL will get canonicalized to tag | {category} |
+| Table of contents | {toc: }|
+| Include page | {include: } |
+| Recent changes | {recent_changes: }|
+|  |  |
+| Recent changes in tagged pages | {tag_list: }|
+| Recent changes in categorized pages
+This WAFL will get canonicalized to tag | {category_list: }|
+| Recent changes in weblog | {weblog_list: }|
+| Recent changes in blog | {blog_list: }|
+| Search (text/tag/title) | {search: }|
+|  |  |
+| RSS feed | {fetchrss: }|
+| Atom feed | {fetchatom: }|
+| Google search | {googlesoap: }|
+| Technorati blog search | {technorati: }|
+|  |  |
+| AIM | aim: |
+| Yahoo (yahoo) | yahoo: |
+| Yahoo (ymsgr) | ymsgr: |
+| Skype (skype) | skype: |
+| Skype (callme) | callme: |
+|  |  |
+| date | {date} |
+| user | {user} |
+| as is | {{  }} |
+| new form | {new_form_page} |
+| tm | {tm} |

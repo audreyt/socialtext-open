@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <title>simple DOM.Events demo</title>
+        <script type="text/javascript" src="lib/JSAN.js"></script>
+        <script type="text/javascript">
+        //<![CDATA[
+            
+            JSAN.includePath = ["../lib", "lib"];
+            JSAN.errorLevel = "die";
+            JSAN.use("DOM.Events");
+            
+            function handleClick(e) {
+                e.currentTarget.style.backgroundColor = "#68b";
+            }
+            
+            DOM.Events.addListener(window, "load", function () {
+                alert("The page is loaded.");
+            });
+            
+            DOM.Events.addListener(window, "load", function () {
+                // this listener won't interfere with the first one
+                var divs = document.getElementsByTagName("div");
+                for(var i=0; i<divs.length; i++) {
+                    DOM.Events.addListener(divs[i], "click", handleClick);
+                }
+            });
+            
+        //]]>
+        </script>
+        <style type="text/css">
+            div {
+                font-family: sans-serif;
+                border: 1px solid black;
+                background-color: #eee;
+                padding: 10px;
+                margin: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div>click me</div>
+        <div>click me</div>
+        <div>click me</div>
+    </body>
+</html>

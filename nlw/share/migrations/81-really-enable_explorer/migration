@@ -1,0 +1,11 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::System qw/shell_run/;
+use Socialtext::Migration::Utils qw/create_job/;
+
+# create a monitoring job
+create_job('MakeExplorePublic', -30);
+
+exit 0;

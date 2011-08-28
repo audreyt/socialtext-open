@@ -1,0 +1,14 @@
+| *Comment* | Test Case: Friendly Name |  |
+
+* Fixture: SocialWidgets
+
+| set | start_time | %%start_time%%-1 |
+| include | [Test Case: Friendly Name 1] |  |
+
+| set | start_time | %%start_time%%-2 |
+| include | [Test Case: Friendly Name 2] |  |
+
+| set | start_time | %%start_time%%-3 |
+| include | [Test Case: Friendly Name 3] |  |
+
+| *Comment* | Test Case: Friendly Name COMPLETED |  |

@@ -1,0 +1,6 @@
+<div id="st-breadcrumbs" class="st-page-box">
+    <div id="st-breadcrumbs-title" class="st-page-box-title">[% loc('Recently Viewed') %]</div>
+    [% FOREACH page IN breadcrumbs %]
+    <div><a href="[% page.link %]">[% page.title %]</a></div>
+    [% END %]
+</div>

@@ -1,0 +1,100 @@
+| *Comment* | Test Case: Miki Dropdowns IE |  |
+
+| st-process-jobs |  |  |
+| refresh |  |  |
+| wait_for_element_visible_ok | mobile-paging-next | 10000 |
+| click_and_wait | mobile-paging-next |  |
+| wait_for_text_not_present_ok | Siggy Siggy Siggy %%start_time%% Sig | 3000 |
+| wait_for_text_present_ok | Siggy Siggy Siggy %%start_time%% 1 | 3000 |
+| wait_for_element_visible_ok | mobile-paging-first | 30000 |
+
+| wait_for_element_visible_ok | mobile-paging-previous | 3000 |
+| click_and_wait | mobile-paging-previous |  |
+| wait_for_text_not_present_ok | Siggy Siggy Siggy %%start_time%% Sig | 3000 |
+| wait_for_text_present_ok | Siggy Siggy Siggy %%start_time%% 20 | 3000 |
+| wait_for_text_present_ok | Siggy Siggy Siggy %%start_time%% 11 | 3000 |
+| wait_for_element_not_present_ok | mobile-paging-previous | 3000 |
+
+| wait_for_element_visible_ok | mobile-paging-next | 3000 |
+| click_and_wait | mobile-paging-next |  |
+| wait_for_element_visible_ok | mobile-paging-first | 30000 |
+| click_and_wait | mobile-paging-first |  |
+| wait_for_text_not_present_ok | Siggy Siggy Siggy %%start_time%% Sig | 3000 |
+| wait_for_text_present_ok | Siggy Siggy Siggy %%start_time%% 20 | 3000 |
+| wait_for_text_present_ok | Siggy Siggy Siggy %%start_time%% 11 | 3000 |
+| wait_for_element_not_present_ok | mobile-paging-first | 3000 |
+| wait_for_element_not_present_ok | mobile-paging-previous | 3000 |
+| wait_for_element_visible_ok | mobile-paging-next | 3000 |
+
+| *Comment* | Test Case: Miki Dropdowns IE. Send another 10 signals |  |
+| st-type-signal | Siggy Siggy Siggy %%start_time%% 11 | 1 |
+| click_and_pause | %%miki_signal_submit%% |  |
+| st-type-signal | Siggy Siggy Siggy %%start_time%% 12 | 1 |
+| click_and_pause | %%miki_signal_submit%% |  |
+| st-type-signal | Siggy Siggy Siggy %%start_time%% 13 | 1 |
+| click_and_pause | %%miki_signal_submit%% |  |
+| st-type-signal | Siggy Siggy Siggy %%start_time%% 14 | 1 |
+| click_and_pause | %%miki_signal_submit%% |  |
+| st-type-signal | Siggy Siggy Siggy %%start_time%% 15 | 1 |
+| click_and_pause | %%miki_signal_submit%% |  |
+| st-type-signal | Siggy Siggy Siggy %%start_time%% 16 | 1 |
+| click_and_pause | %%miki_signal_submit%% |  |
+| st-type-signal | Siggy Siggy Siggy %%start_time%% 17 | 1 |
+| click_and_pause | %%miki_signal_submit%% |  |
+| st-type-signal | Siggy Siggy Siggy %%start_time%% 18 | 1 |
+| click_and_pause | %%miki_signal_submit%% |  |
+| st-type-signal | Siggy Siggy Siggy %%start_time%% 19 | 1 |
+| click_and_pause | %%miki_signal_submit%% |  |
+| st-type-signal | Siggy Siggy Siggy %%start_time%% 20 | 1 |
+| click_and_pause | %%miki_signal_submit%% |  |
+
+
+| *Comment* | Test Case: Miki Dropdowns IE. Verify Next Page and First Page |  |
+| *Comment* | myself link removed |  |
+
+click_and_wait | link=%%miki_mysignals_link_name%% | |
+wait_for_text_present_ok | Siggy Siggy Siggy %%start_time%% 20 | 3000 |
+click_and_wait | mobile-paging-next | |
+wait_for_text_present_ok | Siggy Siggy Siggy %%start_time%% 10 | 3000 |
+click_and_wait | mobile-paging-next | |
+wait_for_text_present_ok | Siggy Siggy Siggy %%start_time%% Sig | 3000 |
+click_and_wait | mobile-paging-first | |
+wait_for_text_not_present_ok | Siggy Siggy Siggy %%start_time%% Sig | 3000 |
+wait_for_text_present_ok | Siggy Siggy Siggy %%start_time%% 11 | 3000 |
+
+| *Comment* | Test Case: Miki Dropdowns IE. Send signal to groups |  |
+
+| set | msacct | mobile-signals-%%start_time%% |
+| set | common_user | ms%%start_time%%@ken.socialtext.net |
+
+| *Comment* | Test Case: Miki Dropdowns IE. Create two accounts. Add %%common_user%% to both |  |
+| st-admin | create-account --name %%msacct%%-A | A new account named "%%msacct%%-A" was created |
+| st-admin | create-account --name %%msacct%%-B | A new account named "%%msacct%%-B" was created |
+| st-admin | enable-plugin --plugin signals --account %%msacct%%-A |  |
+| st-admin | enable-plugin --plugin signals --account %%msacct%%-B |  |
+
+| st-admin | create-user --e %%common_user%% --p %%password%% --account %%msacct%%-A | A new user |
+| st-admin | add-member --account %%msacct%%-B --u %%common_user%% | now has the role of 'member' in the %%msacct%%-B |
+
+| *Comment* | Test Case: Miki Dropdowns IE. Login as %%common_user%% to create a predictable "within" menu |  |
+| open_ok | /nlw/submit/logout |  |
+| st-login | %%common_user%% | %%password%% |
+
+| open_ok | /st/dashboard |  |
+| wait_for_element_visible_ok | link=Mobile | 30000 |
+| click_and_wait | link=Mobile |  |
+| wait_for_element_visible_ok | %%st_mobile_account_select%% | 30000 |
+
+| *Comment* | Test Case: Miki Dropdowns IE. Signal to %%msacct%%-A |  |
+| st_mobile_account_select_ok | %%msacct%%-A (primary, 1 user) |  |
+| st-type-signal | Signal to %%msacct%%-A | 1 |
+| click_and_pause | %%miki_signal_submit%% |  |
+| text_like | Signal to %%msacct%%-A |  |
+
+| *Comment* | Test Case: Miki Dropdowns IE. Signal to %%msacct%%-B |  |
+| st_mobile_account_select_ok | %%msacct%%-B (1 user) |  |
+| st-type-signal | Signal to %%msacct%%-B | 1 |
+| click_and_pause | %%miki_signal_submit%% |  |
+| text_like | Signal to %%msacct%%-B |  |
+
+| *Comment* | Test Case: Miki Dropdowns IE COMPLETED |  |

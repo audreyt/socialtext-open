@@ -1,0 +1,275 @@
+<html>
+
+<head>
+
+ <script type="text/javascript" src="lib/JSAN.js"></script>
+ <script type="text/javascript">
+  JSAN.addRepository("lib", "../lib");
+  JSAN.use("Test.More");
+  JSAN.errorLevel = "die";
+ </script>
+ <style>
+  table { border-collapse: collapse; }
+  th, td { border: 1px solid black; padding: 1em; }
+  a.w-st-resort-column { text-decoration: none }
+  .w-st-current-sorted-column { background-color: #eee }
+  th.w-st-asc-column-header { font-size: 110% }
+  th.w-st-desc-column-header { font-size: 90% }
+
+  span.asc, span.desc {
+      display: none;
+  }
+
+  th.w-st-current-sorted-column span.none {
+      display: none;
+  }
+
+  th.w-st-asc-column-header   span.asc  {
+      display: inline;
+  }
+
+  th.w-st-desc-column-header  span.desc  {
+      display: inline;
+  }
+ </style>
+
+</head>
+<body>
+
+ <table id="a-table">
+  <tr id="row0">
+   <th id="name-header">Name
+      <span class="none">&nbsp;none</span>
+      <span class="asc">&nbsp;asc</span>
+      <span class="desc">&nbsp;desc</span>
+   </th>
+   <th id="size-header">Size</th>
+   <th id="class-header">Class</th>
+   <th id="date-header">Date</th>
+   <th id="num-as-text-header">NumText</th>
+   <th id="not-sortable">Not sortable</th>
+   <th>More Text</th>
+   <th>Dupes</th>
+   <th>Money</th>
+  </tr>
+  <tr id="row1">
+   <td>A</td>
+   <td class="foobar">100</td>
+   <td>gamma</td>
+   <td>2005-10-23</td>
+   <td>500</td>
+   <td>x</td>
+   <td>zanzibar</td>
+   <td>same</td>
+   <td>$50.00</td>
+  </tr>
+  <tr id="row2">
+   <td>B</td>
+   <td>50</td>
+   <td>theta</td>
+   <td>2004-01-19</td>
+   <td>6</td>
+   <td>y</td>
+   <td>pickle</td>
+   <td>same</td>
+   <td>$999.99</td>
+  </tr>
+  <tr id="row3">
+   <td>C</td>
+   <td>75</td>
+   <td>alpha</td>
+   <td>2006-08-01</td>
+   <td>1000</td>
+   <td>z</td>
+   <td>hello</td>
+   <td>different</td>
+   <td>&#x20AC;1.99</td>
+  </tr>
+ </table>
+
+ <pre style="white-space: pre" id="test"><script>
+
+JSAN.use("Widget.SortableTable");
+plan( { tests: 68 } );
+
+function customSort (a, b) {
+
+    if ( a == "pickle" ) {
+        return -1;
+    }
+    else if ( b == "pickle" ) {
+        return 1;
+    }
+
+    /* For some insane reason the normal "<" and ">" operators seem to
+     * consider "zanzibar" and "hello" the same text here. On FF it
+     * only happens on the _second_ sorting run, but on IE6 it happens
+     * for both. WTF?
+     * 
+     * This little hack guarantees a repeatable sorting */
+    var ar = [a, b];
+    ar.sort();
+
+    return a == ar[0] ? -1 : 1;
+}
+
+{
+    table = new Widget.SortableTable( { tableId: "a-table",
+                                        initialSortColumn: 1,
+                                        columnSpecs: [ null, null, null, null,
+                                                       { sort: "text", defaultDir: "desc" },
+                                                       { skip: true },
+                                                       { sort: customSort }
+                                                     ] } );
+    ok( table, "constructor returned a new object" );
+
+    var href = document.getElementById("name-header").childNodes[0];
+    ok( href, "name-header has a child element" );
+    is( href.className, "w-st-resort-column", "class name is w-st-resort-column" );
+
+    var a_tags = document.getElementById("not-sortable").getElementsByTagName("a");
+    is( a_tags.length, 0, "not-sortable th contains no a tags" );
+
+    table.sortOnColumn(0);
+    var rows = document.getElementById("a-table").rows;
+    is( rows[1].id, "row1", "row1 is now first - numeric sort" );
+    is( rows[2].id, "row2", "row2 is now second - numeric sort" );
+    is( rows[3].id, "row3", "row3 is now third - numeric sort" );
+
+    like( rows[1].className, /\bw-st-even-row\b/,
+          "class name includes w-st-even-row" );
+    like( rows[2].className, /\bw-st-odd-row\b/,
+          "class name includes w-st-odd-row" );
+    like( rows[3].className, /\bw-st-even-row\b/,
+          "class name includes w-st-even-row" );
+
+    like( rows[0].cells[0].className, /\bw-st-current-sorted-column\b/,
+          "class name includes w-st-current-sorted-column" );
+    like( rows[0].cells[0].className, /\bw-st-asc-column-header\b/,
+          "class name includes w-st-asc-column-header" );
+    unlike( rows[0].cells[0].className, /\bw-st-desc-column-header\b/,
+          "class name does not include w-st-desc-column-header" );
+    like( rows[1].cells[0].className, /\bw-st-current-sorted-column\b/,
+          "class name includes w-st-current-sorted-column" );
+    like( rows[2].cells[0].className, /\bw-st-current-sorted-column\b/,
+          "class name includes w-st-current-sorted-column" );
+    like( rows[3].cells[0].className, /\bw-st-current-sorted-column\b/,
+          "class name includes w-st-current-sorted-column" );
+    like( rows[1].cells[1].className, /\bfoobar\b/,
+          "class name includes foobar" );
+
+    table.sortOnColumn(2);
+    var rows = document.getElementById("a-table").rows;
+    is( rows[1].id, "row3", "row3 is now first - text sort" );
+    is( rows[2].id, "row1", "row1 is now second - text sort" );
+    is( rows[3].id, "row2", "row2 is now third - text sort" );
+
+    like( rows[1].className, /\bw-st-even-row\b/,
+          "class name includes w-st-even-row" );
+    like( rows[2].className, /\bw-st-odd-row\b/,
+          "class name includes w-st-odd-row" );
+    like( rows[3].className, /\bw-st-even-row\b/,
+          "class name includes w-st-even-row" );
+
+    like( rows[1].cells[2].className, /\bw-st-current-sorted-column\b/,
+          "class name includes w-st-current-sorted-column" );
+    like( rows[2].cells[2].className, /\bw-st-current-sorted-column\b/,
+          "class name includes w-st-current-sorted-column" );
+    like( rows[3].cells[2].className, /\bw-st-current-sorted-column\b/,
+          "class name includes w-st-current-sorted-column" );
+    unlike( rows[0].cells[1].className, /\bw-st-current-sorted-column\b/,
+          "class name does not include w-st-current-sorted-column" );
+    unlike( rows[0].cells[1].className, /\bw-st-asc-column-header\b/,
+          "class name does not include w-st-asc-column-header" );
+    unlike( rows[1].cells[1].className, /\bw-st-current-sorted-column\b/,
+            "class name does not include w-st-current-sorted-column" );
+    unlike( rows[2].cells[1].className, /\bw-st-current-sorted-column\b/,
+            "class name does not include w-st-current-sorted-column" );
+    unlike( rows[3].cells[1].className, /\bw-st-current-sorted-column\b/,
+            "class name does not include w-st-current-sorted-column" );
+    like( rows[2].cells[1].className, /\bfoobar\b/,
+          "class name includes foobar" );
+
+    table.sortOnColumn(2);
+    var rows = document.getElementById("a-table").rows;
+    is( rows[1].id, "row2", "row2 is now first - text sort reverse" );
+    is( rows[2].id, "row1", "row1 is now second - text sort reverse" );
+    is( rows[3].id, "row3", "row3 is now third - text sort reverse" );
+
+    like( rows[0].cells[2].className, /\bw-st-desc-column-header\b/,
+         "class name includes w-st-asc-column-header" );
+
+    table.sortOnColumn(3);
+    var rows = document.getElementById("a-table").rows;
+    is( rows[1].id, "row3", "row3 is now first - date sort" );
+    is( rows[2].id, "row1", "row1 is now second - date sort" );
+    is( rows[3].id, "row2", "row2 is now third - date sort" );
+
+    table.sortOnColumn(3);
+    var rows = document.getElementById("a-table").rows;
+    is( rows[1].id, "row2", "row2 is now first - date sort reverse" );
+    is( rows[2].id, "row1", "row1 is now second - date sort reverse" );
+    is( rows[3].id, "row3", "row3 is now third - date sort reverse" );
+
+    table.sortOnColumn(4);
+    var rows = document.getElementById("a-table").rows;
+    is( rows[1].id, "row2", "row2 is now first - text (from columnSpecs) sort" );
+    is( rows[2].id, "row1", "row1 is now second - text (from columnSpecs) sort" );
+    is( rows[3].id, "row3", "row3 is now third - text (from columnSpecs) sort" );
+
+    table.sortOnColumn(4);
+    var rows = document.getElementById("a-table").rows;
+    is( rows[1].id, "row3", "row3 is now first - text (from columnSpecs) sort reverse" );
+    is( rows[2].id, "row1", "row1 is now second - text (from columnSpecs) sort reverse" );
+    is( rows[3].id, "row2", "row2 is now third - text (from columnSpecs) sort reverse" );
+
+    /* Repeated to make sure sorting works over and over */
+    table.sortOnColumn(4);
+    var rows = document.getElementById("a-table").rows;
+    is( rows[1].id, "row2", "row2 is now first - text (from columnSpecs) sort" );
+    is( rows[2].id, "row1", "row1 is now second - text (from columnSpecs) sort" );
+    is( rows[3].id, "row3", "row3 is now third - text (from columnSpecs) sort" );
+
+    table.sortOnColumn(4);
+    var rows = document.getElementById("a-table").rows;
+    is( rows[1].id, "row3", "row3 is now first - text (from columnSpecs) sort reverse" );
+    is( rows[2].id, "row1", "row1 is now second - text (from columnSpecs) sort reverse" );
+    is( rows[3].id, "row2", "row2 is now third - text (from columnSpecs) sort reverse" );
+
+    table.sortOnColumn(6);
+    var rows = document.getElementById("a-table").rows;
+    is( rows[1].id, "row2", "row2 is now first - custom sort" );
+    is( rows[2].id, "row3", "row3 is now second - custom sort" );
+    is( rows[3].id, "row1", "row1 is now third - custom sort" );
+
+    table.sortOnColumn(6);
+    var rows = document.getElementById("a-table").rows;
+    is( rows[1].id, "row1", "row1 is now first - custom sort reverse" );
+    is( rows[2].id, "row3", "row3 is now second - custom sort reverse" );
+    is( rows[3].id, "row2", "row2 is now third - custom sort reverse" );
+
+    table.sortOnColumn(7);
+    var rows = document.getElementById("a-table").rows;
+    is( rows[1].id, "row3", "row3 is now first - dupe in cell data" );
+
+    table.sortOnColumn(7);
+    var rows = document.getElementById("a-table").rows;
+    is( rows[3].id, "row3", "row3 is now third - dupe in cell data" );
+
+    table.sortOnColumn(8);
+    var rows = document.getElementById("a-table").rows;
+    is( rows[1].id, "row3", "row3 is now first" );
+    is( rows[2].id, "row1", "row1 is now second" );
+    is( rows[3].id, "row2", "row2 is now third" );
+
+    table.sortOnColumn(8);
+    var rows = document.getElementById("a-table").rows;
+    is( rows[1].id, "row2", "row2 is now first" );
+    is( rows[2].id, "row1", "row1 is now second" );
+    is( rows[3].id, "row3", "row3 is now third" );
+}
+
+ </script></pre>
+
+</body>
+</html>

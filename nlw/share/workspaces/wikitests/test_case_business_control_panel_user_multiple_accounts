@@ -1,0 +1,87 @@
+| *Comment* | Test Case: Business Control Panel User Multiple Accounts |
+
+| *Comment* | Test Case: Business Control Panel User Multiple Accounts Global Vars |  |
+| set | primacct | bcpprimacct%%start_time%% |
+| set | acct2 | bcp_ma_acct2_%%start_time%% |
+| set | newuser | bcp-ma-%%start_time%%@matt.socialtext.net |
+
+| *Comment* | Test Case: Business Control Panel User Multiple Accounts Setup |  |  |
+| create-account | %%primacct%% |  |  |
+| set | primacct_id | %%account_id%% |  |
+| create-account | %%acct2%% |  |  |
+| set | acct2_id | %%account_id%% |  |
+| create-user | %%newuser%% | %%password%% | %%primacct%% |
+| set | userid | %%user_id%% |  |
+| st-admin | give-accounts-admin --e %%email%% |  |  |
+
+| *Comment* | Test Case: Business Control Panel User Multiple Accounts Find user |  |
+| st-search-cp-users | %%start_time%% |  |
+| wait_for_element_visible_ok | link=%%primacct%% | 30000 |
+
+| *Comment* | Test Case: Business Control Panel User Add 2nd Account |  |
+| open_ok | /nlw/control/user/%%user_id%% |  |
+| wait_for_text_present_ok | Add User to Account: | 30000 |
+| wait_for_element_visible_ok | addAccountLookahead | 30000 |
+| type_lookahead_ok | addAccountLookahead | %%acct2%% |
+| wait_for_element_visible_ok | link=%%acct2%% | 30000 |
+| click_ok | link=%%acct2%% |  |
+| wait_for_text_present_ok | Accounts (2) | 30000 |
+| text_like | //body | qr/%%acct2%%.+Member of Account.+%%primacct%%.+Primary Account/ |
+| wait_for_element_visible_ok | link=Name | 30000 |
+| click_ok | link=Name |  |
+
+| *Comment* | Test Case: Business Control Panel User. Sort does not cause page load. Pause. |  |
+| pause | 5000 | Yes, pause is bad. Wait for javascript. text_like doesn't have a wait_for; wait_for_text_present_ok doesn't do regexps |
+| text_like | //body | qr/%%primacct%%.+Primary Account.+%%acct2%%.+Member of Account/ |
+| wait_for_element_visible_ok | link=Name | 30000 |
+| click_ok | link=Name |  |
+| pause | 5000 | Yes, pause is bad. Wait for javascript. text_like doesn't have a wait_for; wait_for_text_present_ok doesn't do regexps |
+| text_like | //body | qr/%%acct2%%.+Member of Account.+%%primacct%%.+Primary Account/ |
+
+| *Comment* | Test Case: Business Control Panel User TODO - Flip Primary-ness of accounts |  |
+
+| *Comment* | Test Case: Business Control Panel User Remove 2nd Account |  |
+| wait_for_element_visible_ok | accountTable-select-0 | 30000 |
+| click_ok | accountTable-select-0 |  |
+| wait_for_element_visible_ok | //input[@type='button' and @value="Remove from account(s)"] | 30000 |
+| click_ok | //input[@type='button' and @value="Remove from account(s)"] |  |
+| wait_for_text_present_ok | Accounts (1) | 30000 |
+
+| *Comment* | Test Case: Business Control Panel User Multiple Accounts Find user |  |
+| st-search-cp-users | %%start_time%% |  |
+| wait_for_element_visible_ok | link=%%primacct%% | 30000 |
+| wait_for_element_visible_ok | //a[contains(text(),'%%newuser%%')] | 30000 |
+
+| *Comment* | Test Case: Business Control Panel User Workspaces and links |  |
+| set | primws | bcpprimws%%start_time%% |
+| st-admin | create-workspace --name %%primws%% --title %%primws%% --account %%primacct%% --empty | created |
+| st-admin | add-member --w %%primws%% --u %%newuser%% | now has the role |
+| click_and_wait | //a[contains(text(),'%%newuser%%')] | 30000 |
+
+| set | accountTable | `//div[@id='accountTable']/table/tbody//tr` |
+| set | workspaceTable | `//div[@id='workspaceTable']/table/tbody//tr` |
+
+| *Comment* | Test Case: Business Control Panel User wait for tables to populate |  |
+| wait_for_element_visible_ok | %%accountTable%% | 30000 |
+| wait_for_element_visible_ok | %%workspaceTable%% | 30000 |
+
+| *Comment* | Test Case: Business Control Panel Workspace table and links |  |
+| is_element_present_ok | %%workspaceTable%% | //a[contains(text(),'%%primws%%')] |
+| text_like | %%workspaceTable%% | system-user |
+| text_unlike | %%workspaceTable%% | href |
+
+| *Comment* | Test Case: Business Control Panel Account table and links |  |
+| is_element_present_ok | %%accountTable%% | //a[contains(text(),'%%primws%%')] |
+| text_like | %%accountTable%% | Primary Account |
+
+| *Comment* | TEST FOR {bz: 5349} should pass |  |
+| text_unlike | %%accountTable%% | href |
+
+| *Comment* | Test Case: Business Control Panel User Multiple Accounts TEARDOWN |  |
+| st-process-jobs |  |  |
+| delete-workspace | %%primws%% |  |
+| st-admin | deactivate-user --u %%newuser%% |  |
+| delete-account | %%acct2%% |  |
+| delete-account | %%primacct%% |  |
+
+| *Comment* | Test Case: Business Control Panel User Multiple Accounts COMPLETED |

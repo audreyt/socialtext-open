@@ -1,0 +1,17 @@
+#!/bin/bash
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+OUT=$(psql -U $DB_USER -d $DB -t -c '\d "WorkspaceBreadcrumb"' 2>&1)
+
+if [ $? -ne 0 ]; then
+    if echo "$OUT" | grep -q "Did not find any relation named"; then
+        echo "WorkspaceMigration table not found.  Migration failed!"
+        exit 1;
+    else
+        echo "Could not run post-check.  Failed: $OUT"
+        exit 1
+    fi
+fi
+
+exit 0;

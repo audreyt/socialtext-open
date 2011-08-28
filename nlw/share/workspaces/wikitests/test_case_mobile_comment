@@ -1,0 +1,53 @@
+| *Comment* | Test Case: Mobile Comment |
+
+| set | cws | `miki-c-ws-%%start_time%%` |
+| set | cmikiacct | mikicacct-%%start_time%% |
+| set | cmikiuser | `mikiuser%%start_time%%@ken.socialtext.net` |
+| set | short_mikiuser | mikiuser%%start_time%% |
+| set | comment_text | Is this thing on? %%start_time%% |
+
+| create_account | %%cmikiacct%% |  |  |
+| create_workspace | %%cws%% | %%cmikiacct%% |  |
+| create_user | %%cmikiuser%% | %%password%% | %%cmikiacct%% |
+
+| st-admin | add-member --e %%cmikiuser%% --w %%cws%% | now has the role |
+| st-admin | update-page --email %%cmikiuser%% --workspace %%cws%% --page "new_%%start_time%%" < %%wikitest_client_files%%wikitest.txt | The "new_%%start_time%%" page has been created. |
+
+| st-logoutin | %%cmikiuser%% | %%password%% |
+
+| *Comment* | Test Case: Mobile Comment Go to a specific page, see comment button |  |
+| st-process-jobs |  |  |
+| st_open_noeval | /%%cws%%/index.cgi?new_%%start_time%% |  |
+| wait_for_element_present_ok | link=Mobile | 30000 |
+| click_and_wait | link=Mobile |  |
+| wait_for_element_visible_ok | link=Workspaces | 30000 |
+| wait_for_element_visible_ok | link=Activity | 30000 |
+| wait_for_element_visible_ok | link=Log out | 30000 |
+| wait_for_element_visible_ok | comment_textarea | 30000 |
+
+| *Comment* | Test Case: Mobile Comment Type, click save, see text |  |
+| type_ok | comment_textarea | %%comment_text%% |
+| submit | st-miki-comment-form |  |
+| wait_for_text_present_ok | contributed by | 30000 |
+| wait_for_text_present_ok | %%comment_text%% | 30000 |
+
+| *Comment* | Test Case: Mobile Comment Make permissions public join-to-edit, do not see comment, join, see comment |  |
+| st-admin | remove-member --w %%cws%% --e %%cmikiuser%% | no longer has the role of |
+| st-admin | set-permissions --p public-join-to-edit --w %%cws%% | have been changed |
+| st_open_noeval | /%%cws%%/index.cgi?new_%%start_time%% |  |
+| wait_for_element_present_ok | link=Mobile | 30000 |
+| click_and_wait | link=Mobile |  |
+| wait_for_element_not_present_ok | comment_textarea | 30000 |
+
+
+| st-admin | add-member --e %%cmikiuser%% --w %%cws%% | now has the role |
+| st_open_noeval | /%%cws%%/index.cgi?new_%%start_time%% |  |
+| wait_for_element_present_ok | link=Mobile | 30000 |
+| click_and_wait | link=Mobile |  |
+| wait_for_element_visible_ok | comment_textarea | 30000 |
+
+
+| *Comment* | Test Case: Mobile Comment TEARDOWN |  |
+| st-admin | delete-workspace --no-export --w %%cws%% | been deleted |
+
+| *Comment* | Test Case: Mobile Comment COMPLETED |

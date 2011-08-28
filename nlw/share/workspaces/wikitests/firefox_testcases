@@ -1,0 +1,53 @@
+*As many non-Appliance testcases as possible are run here*.
+Firefox is required because we run File Testcases
+Socialcalc enabled is required because we run Calc Testcases
+
+*It is possible to run as the default LDAP user*
+*if you first run `xwt enable_ldap` to get LDAP enabled so the default LDAP user may successfully login.*
+
+* [Disable Google Analytics]
+
+* [Test Case: A Enable LDAP]
+
+LDAP groups only works in a pristine environment where the groups are not yet formed
+
+* [Test Case: LDAP Groups]
+
+Stubborn Testcases succeed if run early but sporadically fail in context for no discernable reason
+
+* [Stubborn Testcases]
+
+* [Control Panel Testcases]
+* [Core Testcases]
+
+People tests
+
+* [Profile Testcases]
+
+Test Case: People Search moved to Stubborn Testcases
+
+* [Test Case: People Relevance Search]
+
+* [User Groups UI Testcases]
+* [Signals Testcases]
+* [Calc Testcases]
+* [File Testcases]
+* [Localization Testcases]
+* [Test Case: RSS Icons]
+* [Test Case: Table Info]
+
+LDAP Testcases will Enable LDAP and use a known LDAP user instead of a Default user where required
+
+* [LDAP Testcases]
+
+Default User Testcases will Disable LDAP so it can test wiki functions that only work for the Default user
+It will re-enable LDAP when it finishes.
+
+* [Default User Testcases]
+
+People and Dasboard plugin tests. Keep these two cases together in alpha order.
+
+* [Test Case: People Dashboard Plugins]
+* [Test Case: People Dashboard Plugins Reset]
+
+* [Dashboard Testcases]

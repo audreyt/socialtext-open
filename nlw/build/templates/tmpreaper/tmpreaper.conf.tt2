@@ -1,0 +1,58 @@
+# tmpreaper.conf
+# - local configuration for tmpreaper's daily run
+#
+# This is only used if /etc/cron.daily/tmpreaper was also updated,
+# i.e. there's a line ". /etc/tmpreaper.conf" in that file.
+
+# Remove the next line if you understand the possible security implications of
+# having tmpreaper run automatically;
+# see /usr/share/doc/tmpreaper/README.security.gz
+
+#SHOWWARNING=true
+
+if [ "$SHOWWARNING" = true ]; then
+    echo "Please read /usr/share/doc/tmpreaper/README.security.gz first;"
+    echo "edit /etc/tmpreaper.conf to remove this message."
+    exit 0
+fi
+
+
+# TMPREAPER_TIME
+#       is the max. age of files before they're removed.
+#       default:
+#       the TMPTIME value in /etc/default/rcS if it's there, else
+#       TMPREAPER_TIME=7d (for 7 days)
+#       I recommend setting the value in /etc/default/rcS, as
+#       that is used to clean out /tmp whenever the system is booted.
+#
+# TMPREAPER_PROTECT_EXTRA
+#       are extra patterns that you may want to protect.
+#       Example:
+#       TMPREAPER_PROTECT_EXTRA='/tmp/isdnctrl* /tmp/important*'
+#
+# TMPREAPER_DIRS
+#       are the directories to clean up.
+#       *never* supply / here! That will wipe most of your system!
+#       Example:
+#       TMPREAPER_DIRS='/tmp/. /var/tmp/.'
+#
+# TMPREAPER_ADDITIONALOPTIONS
+#       extra options that are passed to tmpreaper, e.g. --all
+
+
+# magic to get the TMPREAPER_TIME value from /etc/default/rcS
+
+if grep '^TMPTIME=' /etc/default/rcS >/dev/null 2>&1; then
+    eval $(grep '^TMPTIME=' /etc/default/rcS)
+fi
+if [ -n "$TMPTIME" -a "$TMPTIME" -gt 0 ]; then
+    TMPREAPER_TIME=${TMPTIME}d
+else
+    TMPREAPER_TIME=7d
+fi
+
+# override default values for Socialtext.
+TMPREAPER_TIME=[% config.tmpreaper_time %]
+TMPREAPER_PROTECT_EXTRA='[% config.tmpreaper_protect_extra %]'
+TMPREAPER_DIRS='[% config.tmpreaper_dirs %]'
+TMPREAPER_ADDITIONALOPTIONS='[% config.tmpreaper_additionaloptions %]'

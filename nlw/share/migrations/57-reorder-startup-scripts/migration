@@ -1,0 +1,22 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+
+for my $f (glob("/etc/rc?.d/?20ceqlotron")) {
+    my $start = 1;
+    $start = 0 if $f =~ m/K20/;
+    my $new_runlevel = $start ? 90 : 19;
+
+    (my $new_f = $f) =~ s/20/$new_runlevel/;
+    print "  Renaming $f to $new_f\n";
+    rename $f => $new_f or warn "Could not rename $f to $new_f: $!";
+}
+
+for my $f (glob("/etc/rc?.d/?90socialtext-solr")) {
+    (my $new_f = $f) =~ s/90/89/;
+    print "  Renaming $f to $new_f\n";
+    rename $f => $new_f or warn "Could not rename $f to $new_f: $!";
+}
+
+exit 0;

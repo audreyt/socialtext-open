@@ -1,0 +1,20 @@
+[%# @COPYRIGHT@ -%]
+[% PROCESS lite/header.html %]
+[% IF tags %]
+    <div data-role="header" data-inline="true" data-position="inline" data-theme="d">
+    <h4>[% loc("tag.all=wiki", ws.title) |html %]</h4>
+    </div>
+    <ul data-role="listview">
+        [% FOREACH tag = tags %]
+            <li><a href="/m/tag/[% ws.name %]/[% tag.name | uri | html %]">[% tag.name | html %]</a><span class="ui-li-count">[% tag.page_count %]</span></li>
+        [% END %]
+    </ul>
+[% ELSE %]
+    <div data-role="header" data-inline="true" data-position="inline" data-theme="d">
+    <h4>[% loc("wiki.tag=tag", tag) |html %]</h4>
+    </div>
+        [% PROCESS lite/page_list.html %]
+[% END %]
+    [% PROCESS lite/paging.html %]
+[% PROCESS lite/footer.html %]
+

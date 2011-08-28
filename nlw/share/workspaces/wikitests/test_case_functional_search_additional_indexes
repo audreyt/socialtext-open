@@ -1,0 +1,65 @@
+| *Comment* | Test Case: Functional Search Additional Indexes |
+| *Comment* | Searches must have DATE upper bounds well before the creation date of this wiki, and cannot use NOW |
+| *Comment* | as an end date and expect to rerun successfully in a polluted wiki. |
+
+| st-search | `tag_count:0 AND created:[2004-07-21T23:59:59.999Z TO 2010-12-25T00:00:00.000Z]` | `Pages matching 'tag_count:0 AND created:[2004-07-21T23:59:59.999Z TO 2010-12-25T00:00:00.000Z]'` |
+| st-result | 9 total |  |
+
+| st-search | creator:1 | Pages matching 'creator:1' |
+| st-result | 20 total |  |
+
+| st-search | `created:[2009-07-21T23:59:59.999Z TO 2010-12-25T00:00:00.000Z]` | `Pages matching 'created:[2009-07-21T23:59:59.999Z TO 2010-12-25T00:00:00.000Z]'` |
+| st-result | 6 total |  |
+
+| st-search | `date:[2010-07-15T22:05:01.999Z TO 2010-12-25T00:00:00.000Z]` | `Pages matching 'date:[2010-07-15T22:05:01.999Z TO 2010-12-25T00:00:00.000Z]'` |
+| st-result | 4 total |
+| st-result | Powerpoint Sample for search results |  |
+| st-result | Boilerplate PPT File.pptx |  |
+| st-result | Excel Sample for Search Results |  |
+| st-result | Sample Excel 2007 file.xlsx |  |
+
+| st-search | `pagetype:spreadsheet AND created:[2004-07-21T23:59:59.999Z TO 2010-12-25T00:00:00.000Z]` | `Pages matching 'pagetype:spreadsheet AND created:[2004-07-21T23:59:59.999Z TO 2010-12-25T00:00:00.000Z]'` |
+| st-result | 5 total |  |
+| st-result | Car Loan |  |
+| st-result | House Payment |  |
+| st-result | Credit Card Payment |  |
+| st-result | Another Salary |  |
+| st-result | Salary |  |
+
+| st-search | filename:aa.txt | Pages matching 'filename:aa.txt' |
+| st-result | 1 total |  |
+| st-result | aa.txt |  |
+
+| st-search | filename_ext:docx | Pages matching 'filename_ext:docx' |
+| st-result | In the Beginning was a word document.docx |  |
+| st-result | 1 total |  |
+
+| st-search | filename:aa | Pages matching 'filename:aa' |
+| st-result | aa.txt |  |
+| st-result | 1 total |  |
+
+| st-search | tag_exact:"carroll's poem" | Pages matching 'tag_exact:"carroll's poem"' |
+| st-result | 2 total |  |
+| st-result | Jabberwocky |  |
+| st-result | beamish boy |  |
+
+| st-search | `tag_count:[3 to 4]` | `Pages matching 'tag_count:[3 to 4]'` |
+| st-result | 6 total |  |
+| st-result | House Payment |  |
+| st-result | Another Salary |  |
+| st-result | Kinosearch test page: truth & falsity |  |
+| st-result | Kinosearch test page: politics |  |
+| st-result | jabber |  |
+
+
+| st-search | tag_count:4 | Pages matching 'tag_count:4' |
+| st-result | Another Salary |  |
+| st-result | Kinosearch test page: politics |  |
+
+| st-search | tag_exact: "carroll's poem" |  |
+| st-result | 2 total |  |
+| st-result | Jabberwocky |  |
+| st-result | beamish boy |  |
+
+
+| *Comment* | Test Case: Functional Search Additional Indexes COMPLETED |

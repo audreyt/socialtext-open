@@ -1,0 +1,6 @@
+
+| {widget: local:people:all_tags.xml __title__=All%20People%20Tags __width__=300 up_limit=all} | {widget: top_content __title__=Active%20Content __width__=300 up_view=view_page up_account=lucite.socialtext.net up_workspace= up_period=-1week rotate=false} |
+| {widget: active_members __title__=Active%20People __width__=300 up_account=lucite.socialtext.net up_period=-1week up_view=profile_views rotate=false} | {widget: one_page __title__=Wiki%20Page __width__=600 up_workspace_name=test-data up_page_title=Congratulations!%20You%20know%20how%20to%20use%20a%20workspace} |
+| {widget: one_web_page.xml __title__=Web%20Page __width__=300 up_title=A%20Web%20page up_scrolling=no up_height=300 up_url=http://www.socialtext.com} | {widget: one_spreadsheet __title__=Spreadsheet%20Page __width__=300 up_workspace_name=test-data up_page_title=Car%20Loan up_height=300 up_initial_coord=A1} |
+| {widget: oneimage __title__=Image __width__=300 up_src=http://www.socialtext.net/static/skin/s3/images/logo.png up_title=Image} | {widget: rss __title__=RSS%20Viewer __width__=300 up_title=RSS%20Viewer up_rss_feed=http://www.socialtext.com/blog/feed up_count=5 up_max_desc=250} |
+| {widget: tag_cloud __title__=Workspace%20Tags __width__=300 up_workspace=wikitests up_limit=0} |  |

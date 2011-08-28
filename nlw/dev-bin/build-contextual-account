@@ -1,0 +1,29 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+use FindBin qw($Bin);
+use lib "$Bin/../lib";
+use Test::More;
+use Test::Socialtext::AccountContext;
+
+my $name;
+my $clean;
+GetOptions(
+    'name=s' => \$name,
+    'clean-env' => \$clean
+);
+die "Need a name\n" unless $name;
+
+if ($clean) {
+    system('make-test-fixture --home_dir $HOME --fixture clean --fixture base_config --fixture admin');
+}
+
+my $context = Test::Socialtext::AccountContext->new(export_name=>$name);
+$context->prepare();
+
+done_testing();
+
+exit;

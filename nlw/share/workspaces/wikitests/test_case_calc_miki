@@ -1,0 +1,22 @@
+| *Comment* | STARTING Test Case: Calc Miki |
+| *Comment* | Test Case: Miki - View a spreadsheet in the Miki |
+| open_ok | /%%workspace%%/index.cgi?car_loan |
+| click_and_wait | link=Mobile |
+
+| *Comment* | Test Case: Calc Miki - verify opened spreadsheet via its Mobile link |  |
+| text_like | //a[contains(@href,'m/changes/%%workspace%%')] | What's New |
+| text_like | This loan is offered through the Biggie Motors Automation Corporation |  |
+| text_like | 3890.40 |  |
+| text_like | Loan Amount |  |
+| text_like | Payment |  |
+| wait_for_element_not_present_ok | link=Edit | 5000 |
+
+| *Comment* | Test Case: Calc Miki Open a spreadsheet directly in Miki |  |
+| open_ok | /m/page/%%workspace%%/car_loan |  |
+| text_like | This loan is offered through the Biggie Motors Automation Corporation |  |
+| text_like | 3890.40 |  |
+| text_like | Loan Amount |  |
+| text_like | Payment |  |
+| wait_for_element_not_present_ok | link=Edit | 5000 |
+
+| *Comment* | Test Case: Calc Miki COMPLETED |  |

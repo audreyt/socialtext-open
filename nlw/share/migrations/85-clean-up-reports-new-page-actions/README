@@ -1,0 +1,3 @@
+This migration cleans up incorrect data in the workspace_actions_by_user and nlw_log_actions tables.
+
+A bug was incorrectly recording edit actions as page create, falsely inflating the page counts produced by reports.

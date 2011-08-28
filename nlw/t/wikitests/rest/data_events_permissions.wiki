@@ -1,0 +1,222 @@
+* Fixture: SocialRest
+
+Account: LawFirm
+Account: LegalClient
+Wiki: PublicWiki in lawfirm account
+Wiki: SuperPrivate wiki in legalclient account
+User: Lawyer primary account is LawFirm
+User: LegalSecretary primary account is LawFirm
+User: LegalClient primary account is LegalClient
+
+Lawyer is a member of SuperPrivate Wiki
+Lawyer is a secondary member of LegalClient account
+LegalClient is a member of SuperPrivateWiki
+LegalSecretary is *not* a member of SuperPrivate Wiki, or legalclient accounts
+LegalClient is a member of SuperPrivateWiki
+LegalClient is following Lawyer
+LegalSecretary is following Lawyer
+
+| set | lawfirm | lawfirm%%start_time%% |
+| set | legalclient | legalclient%%start_time%% |
+| create-account | %%lawfirm%% |
+| create-account | %%legalclient%% |
+
+| set | lawyer | lawyer%%start_time%%@example.com |
+| create-user | %%lawyer%% | password | %%lawfirm%% |
+| set-user-id | lawyer_id | %%lawyer%% |
+| set | secretary | secretary%%start_time%%@example.com |
+| create-user | %%secretary%% | password | %%lawfirm%% |
+| set-user-id | secretary_id | %%secretary%% |
+| set | client | client%%start_time%%@example.com |
+| create-user | %%client%% | password | %%legalclient%% |
+| set-user-id | client_id | %%client%% |
+
+| Comment | Create the workspaces for this scene |
+| set | public | public%%start_time%% |
+| set | superprivate | superprivate%%start_time%% |
+| create-workspace | %%public%% | %%lawfirm%% |
+| set-ws-permissions | %%public%% | public |
+| create-workspace | %%superprivate%% | %%legalclient%% |
+
+| Comment | just lawyers and clients in superprivate (can't trust secretaries) |
+| add-member | %%lawyer%% | %%superprivate%% |
+| add-member | %%client%% | %%superprivate%% |
+
+| http-user-pass | %%client%% | password |
+| post | /data/people/%%client%%/watchlist | Content-Type=application/json | {"person":{"id":"%%lawyer%%"}} |
+| code-is | 204 |
+| http-user-pass | %%secretary%% | password |
+| post | /data/people/%%secretary%%/watchlist | Content-Type=application/json | {"person":{"id":"%%lawyer%%"}} |
+| code-is | 204 |
+
+_Lawyer updates a page in superprivate wiki._
+
+| Comment | as Lawyer |
+| st-clear-events | |
+| http-user-pass | %%lawyer%% | password |
+| edit-page | %%superprivate%% | start_here | DISCLAIMER: a lawÿer wrote this page |
+
+| Comment | Legal Client should be able to get the update |
+| http-user-pass | %%client%% | password |
+| get | /data/events| application/json |
+| code-is | 200 |
+| json-parse | |
+| json-array-size | 1 |
+| body-like | qr/"actor":{[^}]+"id":"?\Q%%lawyer_id%%\E/ |
+| get | /data/events/activities/%%lawyer%% | application/json |
+| code-is | 200 |
+| json-parse | |
+| json-array-size | 1 |
+| body-like | qr/"actor":{[^}]+"id":"?\Q%%lawyer_id%%\E/ |
+
+| Comment | Secretary can't see the event, b/c they aren't in superprivate |
+| http-user-pass | %%secretary%% | password |
+| get | /data/events| application/json |
+| code-is | 200 |
+| json-parse | |
+| json-array-size | 0 |
+| get | /data/events/activities/%%lawyer%% | application/json |
+| code-is | 200 |
+| json-parse | |
+| json-array-size | 0 |
+
+_Lawyer updates a page in public wiki._
+
+| Comment | update the public wiki as the lawyer |
+| st-clear-events | |
+| http-user-pass | %%lawyer%% | password |
+| edit-page | %%public%% | start_here | DISCLAIMER: a lawÿer wrote this page |
+
+| Comment | Legal Client cannot see the public event |
+| http-user-pass | %%client%% | password |
+| get | /data/events| application/json |
+| code-is | 200 |
+| json-parse | |
+| json-array-size | 0 |
+
+| Comment | Legal Client can see the public event in /data/events/activities/<lawyer> |
+| get | /data/events/activities/%%lawyer%% | application/json |
+| code-is | 200 |
+| json-parse | |
+| json-array-size | 1 |
+| body-like | qr/"actor":{[^}]+"id":"?\Q%%lawyer_id%%\E/ |
+
+| Comment | Secretary cannot see the public event in /data/events |
+| http-user-pass | %%secretary%% | password |
+| get | /data/events| application/json |
+| code-is | 200 |
+| json-parse | |
+| json-array-size | 0 |
+
+| Comment | Secretary can see the public event in /data/events/activities/<lawyer> |
+| get | /data/events/activities/%%lawyer%% | application/json |
+| code-is | 200 |
+| json-parse | |
+| json-array-size | 1 |
+| body-like | qr/"actor":{[^}]+"id":"?\Q%%lawyer_id%%\E/ |
+
+_Legal Client update's his profile_
+
+| st-clear-events | | |
+
+| Comment | client updates his profile |
+| http-user-pass | %%client%% | password |
+| post-json | /data/people/%%client%% | {"first_name":"Big","last_name":"Wig"} | |
+| code-is   | 204 | |
+
+| Comment | Lawyer should see the profile update, b/c they share legalclient account |
+| http-user-pass | %%lawyer%% | password |
+| get | /data/events| application/json |
+| code-is | 200 |
+| json-parse | |
+| json-array-size | 1 |
+| body-like | qr/"actor":{[^\}]+"id":"?\Q%%client_id%%\E/ |
+| body-like | qr/"person":{[^\}]+"id":"?\Q%%client_id%%\E/ |
+| get | /data/events/activities/%%client%% | application/json |
+| code-is | 200 |
+| json-parse | |
+| json-array-size | 1 |
+| body-like | qr/"actor":{[^\}]+"id":"?\Q%%client_id%%\E/ |
+| body-like | qr/"person":{[^\}]+"id":"?\Q%%client_id%%\E/ |
+
+| Comment | Secretary does not see the profile update, b/c they don't share an account |
+| http-user-pass | %%secretary%% | password |
+| get | /data/events| application/json |
+| code-is | 200 |
+| json-parse | |
+| json-array-size | 0 |
+| get | /data/events/activities/%%client%% | application/json |
+| code-is | 200 |
+| json-parse | |
+| json-array-size | 0 |
+
+_Lawyer tags the client_
+
+| Comment | lawyer tags client |
+| http-user-pass | %%lawyer%% | password |
+| post-json | /data/people/%%client%%/tags | {"tag_name":"good client"} |
+| code-is   | 204 | |
+
+| Comment | client should see the event b/c he shares an acct with lawyer |
+| http-user-pass | %%client%% | password |
+| get | /data/events| application/json |
+| code-is | 200 |
+| json-parse | |
+| json-array-size | 2 |
+| body-like | qr/"actor":{[^\}]+"id":"?\Q%%lawyer_id%%\E/ |
+| body-like | qr/"person":{[^\}]+"id":"?\Q%%client_id%%\E/ |
+| body-like | qr/"tag_name":"good client"/ |
+| get | /data/events/activities/%%client%% | application/json |
+| code-is | 200 |
+| json-parse | |
+| json-array-size | 2 |
+| body-like | qr/"actor":{[^\}]+"id":"?\Q%%lawyer_id%%\E/ |
+| body-like | qr/"person":{[^\}]+"id":"?\Q%%client_id%%\E/ |
+| body-like | qr/"tag_name":"good client"/ |
+
+| Comment | Secretary does not see the tagging, b/c they don't share an account with the client |
+| http-user-pass | %%secretary%% | password |
+| get | /data/events| application/json |
+| code-is | 200 |
+| json-parse | |
+| json-array-size | 0 |
+| get | /data/events/activities/%%client%% | application/json |
+| code-is | 200 |
+| json-parse | |
+| json-array-size | 0 |
+
+_secretary and client can see each other now, b/c they are in the same workspace_
+
+| Comment | Create a new account for secretary and client, and they should see the event |
+| set | billing | billing%%start_time%% |
+| create-account | %%billing%% |
+| set | payable | payable%%start_time%% |
+| create-workspace | %%payable%% | %%billing%% |
+| add-member | %%client%% | %%payable%% |
+| add-member | %%secretary%% | %%payable%% |
+
+| Comment | Secretary now sees the profile update, b/c they share an account | |
+| http-user-pass  | %%secretary%% | password         |
+| get             | /data/events  | application/json |
+| code-is         | 200           |                  |
+| json-parse      |               |                  |
+| json-array-size | 2             |                  |
+
+| get | /data/events/activities/%%client%% | application/json |
+| code-is | 200 |
+| json-parse | |
+| json-array-size | 2 |
+
+_Remove people from the billing account, secretary shouldn't see client events anymore_
+
+| Comment | Secretary does not see the tagging, b/c they don't share an account with the client where people is enabled |
+| st-admin | disable-plugin --account %%billing%% --plugin people |
+| http-user-pass | %%secretary%% | password |
+| get | /data/events| application/json |
+| code-is | 200 |
+| json-parse | |
+| json-array-size | 0 |
+| get | /data/events/activities/%%client%% | application/json |
+| code-is | 200 |
+| json-parse | |
+| json-array-size | 0 |

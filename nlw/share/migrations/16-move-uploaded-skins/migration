@@ -1,0 +1,95 @@
+#!/bin/bash
+
+CODE_BASE=${CODE_BASE:-`st-config echo code_base`}
+
+# Strip off the path info to find the name of this script
+SCRIPT_NAME=`perl -e 'my $n = shift; $n =~ s#.+/##; print $n' $0`
+
+# Use the refactored column adding code
+MIG_DIR=`dirname $0`/..
+$MIG_DIR/add-column/$SCRIPT_NAME Workspace uploaded_skin boolean "'f'"
+
+function run_sql () {
+    echo $1;
+    psql -U `st-config echo db_user` -d `st-config echo db_name` -t -c "$1"
+}
+
+rm -rf $CODE_BASE/images/widgets
+
+run_sql "UPDATE \"Workspace\" SET \"skin_name\" = 's2' WHERE \"skin_name\" = 'nlw'"
+
+for dir in $CODE_BASE/css/*; do 
+    rmdir $dir 2>/dev/null && continue # Remove empty skins
+
+    # Uninstall skins that weren't installed using dist-upgrade
+    # reason (i.e. weren't found on apt.st.net)
+    skin=`basename $dir`
+    dpkg -S $dir 2>/dev/null
+    if [ "$?" = "0" ]; then
+	skin_pkg=`echo -n $skin_pkg | sed 's/:.*$//'`
+        echo "$skin was not upgraded during dist-upgrade!! Reverting to s2 skin!"
+        run_sql "UPDATE \"Workspace\" SET \"skin_name\" = 's2' WHERE \"skin_name\" = '$skin' OR \"skin_name\" = 'nlw'"
+        apt-get remove --yes st-$skin-skin
+        continue 
+    fi
+
+    # If this is true, it's probably because cruft was left around in a skin's
+    # css or images directory
+    dpkg -S "$CODE_BASE/skin/$skin" 2>/dev/null
+    if [ "$?" = "0" ]; then
+        echo "Not migrating the $skin skin to uploaded-skins!"
+        echo "It was installed by apt"
+        continue
+    fi
+    
+    for type in css images javascript; do
+        [ -d "$CODE_BASE/$type/$skin" ] || continue
+
+        ls $CODE_BASE/$type/$skin/* >/dev/null 2>&1 &&
+        su www-data -c "mkdir -p $CODE_BASE/uploaded-skin/$skin/$type" &&
+        mv $CODE_BASE/$type/$skin/* $CODE_BASE/uploaded-skin/$skin/$type;
+
+        # Remove hidden fies
+        rm -rf $CODE_BASE/$type/$skin
+    done
+
+    # Convert all paths in css files
+    ls -1 $CODE_BASE/uploaded-skin/$skin/css | while read css; do
+        cssfile=$CODE_BASE/uploaded-skin/$skin/css/$css
+        sed -i "s/..\/..\/images\/st/..\/..\/s2\/images\/st/g" "$cssfile"
+        sed -i "s/..\/..\/images\/$skin/..\/images/g" "$cssfile"
+    done
+
+    if [ -d "$CODE_BASE/uploaded-skin/$skin" ]; then
+        run_sql "UPDATE \"Workspace\" SET \"uploaded_skin\" = '1' WHERE \"skin_name\" = '$skin'"
+
+        su www-data -c "touch $CODE_BASE/uploaded-skin/$skin/info.yaml"
+        cat <<EOT >$CODE_BASE/uploaded-skin/$skin/info.yaml
+cascade_css: 1
+name: $skin
+version: 1.0.0
+abstract: Custom Uploaded Skin - $skin
+skin_type: s2
+author:
+  name: Your name here
+  email: your-email@domain.tld
+license: CPAL
+depends:
+  - st-common-skin (>=0.0)
+  - st-s2-skin (>=0.0)
+EOT
+    else
+        run_sql "UPDATE \"Workspace\" SET \"skin_name\" = 's2' WHERE \"skin_name\" = '$skin'"
+    fi
+
+done
+
+for type in css images javascript; do
+    rmdir $CODE_BASE/$type/* $CODE_BASE/$type 2>/dev/null
+    if [ -d $CODE_BASE/$type ]; then
+        su www-data -c "tar -czvf $CODE_BASE/old-$type.tgz $CODE_BASE/$type" &&
+        rm -rf $CODE_BASE/$type
+    fi
+done
+
+echo done

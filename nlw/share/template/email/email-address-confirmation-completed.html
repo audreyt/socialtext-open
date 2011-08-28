@@ -1,0 +1,63 @@
+<html>
+<head>
+ <title>[% loc('email.your-email-has-been-confirmed') %]</title>
+</head>
+
+<body>
+
+<p>
+[% loc('email.hello') %]
+</p>
+
+[% IF target_workspace %]
+<p>
+[% SET escaped_str = title | html %]
+[% loc('email.email-confirmed-login-to=wiki', escaped_str ) %]
+</p>
+
+<p>
+[% loc('email.to-do-so-go-to-this-web-address:') %] <a href="[% uri | html %]">[% uri | html %]</a>
+</p>
+
+<p>
+[% loc('email.login-with-email-address:') %] [% user.email_address %]
+</p>
+[% ELSE %]
+<p>
+[% SET escaped_str = app_name | html %]
+[% loc('email.email-confirmed-login-to=app', escaped_str ) %]
+</p>
+
+[% IF groups.size > 0 %]
+<p>[% loc('email.you-are-member-of-following-groups:') %]</p>
+<ul>
+[% FOREACH group IN groups %]
+    <li><a href="[% group.uri | html %]">[% group.name | html %]</a>
+[% END %]
+</ul>
+[% ELSE %]
+<p>[% loc('email.you-are-member-of-following-wikis:') %]</p>
+<ul>
+[% FOREACH workspace IN workspaces %]
+    <li><a href="[% workspace.uri | html %]">[% workspace.title | html %]</a>
+[% END %]
+</ul>
+[% END %]
+
+<p>
+[% loc('email.login-with-email-address:') %] [% user.email_address %]
+</p>
+[% END %]
+
+<p>
+[% loc('email.keep-this-for-future-reference') %]
+[% loc('email.questions-please') %]
+<a href="[% support_address | html %]">
+  [% loc('email.contact-support') %]</a>.
+</p>
+
+[% PROCESS 'email/standard-footer.html'
+   support_link = 0 %]
+
+</body>
+</html>

@@ -1,0 +1,245 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Getopt::Long;
+use Pod::Usage;
+use Socialtext::NTLM::Config;
+
+###############################################################################
+# Read in our command line arguments.
+my ($help, $man);
+my $domain;
+my $primary;
+my @backup;
+GetOptions(
+    'domain:s'  => \$domain,
+    'primary:s' => \$primary,
+    'backup:s'  => \@backup,
+    'help|?'    => \$help,
+    'man'       => \$man,
+) || pod2usage(1);
+pod2usage(1) if ($help);
+pod2usage( -exitstatus=>0, -verbose=>2 ) if ($man);
+
+###############################################################################
+# Make sure that we were given a known/valid command.
+my %Commands = (
+    cat     => \&cat,
+    file    => \&file,
+    edit    => \&edit,
+    set     => \&set,
+    remove  => \&remove,
+);
+my $command = shift @ARGV;
+pod2usage(1) unless ($command && exists $Commands{$command});
+
+###############################################################################
+# Load up the NTLM configuration, taking into consideration that it either
+# might not be present (yet) or might only be partially configured.
+my $config = Socialtext::NTLM::Config->load()
+          || Socialtext::NTLM::Config->new();
+
+###############################################################################
+# Perform the command specified on the command line
+$Commands{$command}->();
+
+###############################################################################
+# All done; exit peacefully.
+exit;
+
+###############################################################################
+# Cat.  Shows the contents of the current configuration file.
+sub cat {
+    exec 'cat', Socialtext::NTLM::Config->config_filename;
+    die "exec cat: $!";
+}
+
+###############################################################################
+# File.  Echoes the path to the NTLM configuration file.
+sub file {
+    print "\n ", Socialtext::NTLM::Config->config_filename, "\n\n";
+}
+
+###############################################################################
+# Edit.  Edits the configuration file.
+sub edit {
+    my $editor = $ENV{EDITOR} || 'vi';
+    exec $editor, Socialtext::NTLM::Config->config_filename;
+    die "exec $editor: $!";
+}
+
+###############################################################################
+# Set.  Sets the configuration for a domain (either adding a new domain, or
+# updating an existing one).
+sub set {
+    # need a "--domain" in order to tell us what config we're adding/updating
+    unless ($domain) {
+        die "need to specify --domain in order to set configuration\n";
+    }
+    # need at least one of "--primary" or "--backup" to add/update
+    unless ($primary or @backup) {
+        die "need at least one of --primary or --backup to specify configuration to set\n";
+    }
+
+    # load up the NTLM configuration, and split it into "stuff we're keeping
+    # as is" and "an existing entry we're updating".
+    my @all_config = Socialtext::NTLM::Config->load();
+    my @cfg_keep   = grep { $_->domain ne $domain } @all_config;
+    my ($toupdate) = grep { $_->domain eq $domain } @all_config;
+
+    # update an existing config, or add a new one
+    if ($toupdate) {
+        print "Updating existing configuration for '$domain'\n";
+        $toupdate->primary($primary) if ($primary);
+        $toupdate->backup(\@backup)  if (@backup);
+    }
+    else {
+        # adding a new configuration requires a "--primary" to be defined
+        unless ($primary) {
+            die "can't add new domain without specifying a --primary domain controller\n";
+        }
+
+        print "Adding new configuration for '$domain'\n";
+        $toupdate = Socialtext::NTLM::Config->new(
+            domain  => $domain,
+            primary => $primary,
+            (@backup ? (backup => \@backup) : ()),
+        );
+    }
+
+    # save the NTLM configuration
+    Socialtext::NTLM::Config->save( @cfg_keep, $toupdate );
+    print "Wrote updated config file to " , Socialtext::NTLM::Config->config_filename, "\n\n";
+}
+
+###############################################################################
+# Remove.  Removes the configuration for a given domain.
+sub remove {
+    # need a "--domain" in order to tell us which one to remove
+    unless ($domain) {
+        die "need to specify --domain in order to remove a configuration\n";
+    }
+
+    # load up the NTLM configuration, and split it into "stuff we're keeping
+    # as is" and "stuff we're removing"
+    my @all_config = Socialtext::NTLM::Config->load();
+    my @cfg_keep   = grep { $_->domain ne $domain } @all_config;
+    my ($toremove) = grep { $_->domain eq $domain } @all_config;
+
+    # can't remove a configuration if it doesn't exist
+    unless ($toremove) {
+        warn "No configuration for '$domain' found in NTLM configuration.\n";
+        return;
+    }
+
+    # save the updated configuration back to disk
+    Socialtext::NTLM::Config->save(@cfg_keep);
+    print "Removed configuration for '$domain'\n";
+    print "Wrote updated config file to " , Socialtext::NTLM::Config->config_filename, "\n\n";
+}
+
+=head1 NAME
+
+st-ntlm-config - Make changes to Socialtext NTLM configuration
+
+=head1 SYNOPSIS
+
+  st-ntlm-config <command> [options]
+
+  Commands:
+    cat         Displays contents of NTLM configuration file
+    file        Prints path to NTLM configuration file
+    edit        Opens NTLM configuration file in editor
+    set         Sets configuration for a domain
+    remove      Removes configuration for a domain
+
+  Options:
+    --domain    Specifies the NTLM domain to set/remove configuration for
+    --primary   Specifies the primary domain controller
+    --backup    Specifies the backup domain controlers
+                (may be specified more than once)
+    --help/-?   Brief help message
+    --man       Full documentation
+
+  Example:
+    st-ntlm-config set --domain SOCIALTEXT --primary PRIMARY_DC
+    st-ntlm-config set --domain SOCIALTEXT --backup ONE --backup TWO
+    st-ntlm-config remove --domain SOCIALTEXT
+
+=head1 DESCRIPTION
+
+C<st-ntlm-config> is a command line utility to help manage the NTLM
+configuration file for Socialtext, which is typically stored in
+F</etc/socialtext/ntlm.yaml>.
+
+Please note that order B<is> important within the F<ntlm.yaml> file, for
+determining what the "default" and "fallback" NTLM Domains are; first listed
+NTLM configuration is the default, second listed NTLM configuration is the
+fallback.  If the NTLM SSO handshake doesn't indicate the NTLM Domain to
+authenticate the User against, these will be used to attempt authentication.
+
+=head1 OPTIONS
+
+=over
+
+=item B<cat>
+
+Prints out the contents of the entire Socialtext NTLM configuration file.
+
+=item B<file>
+
+Prints out the full path to the Socialtext NTLM configuration file.
+
+=item B<edit>
+
+Edits the configuration file using the editor defined in the C<EDITOR>
+environment variable.  Defaults to F<vi>.
+
+=item B<set> --domain E<lt>domainE<gt> --primary E<lt>pdcE<gt> --backup E<lt>bdcE<gt>
+
+Sets/updates the configuration for a given C<--domain>.
+
+If the C<--domain> specified already exists in the configuration, its
+C<--primary> and/or C<--backup> domain controllers are updated.
+
+If the C<--domain> specified does B<not> exist in the configuration, a new
+configuration entry is created for this domain using the provided C<--primary>
+and/or C<--backup> domain contollers.
+
+=item B<remove> --domain E<lt>domainE<gt>
+
+Removes the configuration for the given C<--domain> from the configuration
+file.
+
+=item --primary E<lt>pdcE<gt>
+
+Specifies the Primary Domain Controller.
+
+=item --backup E<lt>bdcE<gt>
+
+Specifies the Backup Domain Controller.  May be specified multiple times on
+the command line, if you want to list multiple BDCs.
+
+=item --help/-?
+
+Displays a brief help message.
+
+=item --man
+
+Displays the full documentation.
+
+=back
+
+=head1 AUTHOR
+
+Socialtext, Inc.  C<< <code@socialtext.com> >>
+
+=head1 COPYRIGHT
+
+Copyright 2009 Socialtext, Inc.,  All Rights Reserved.
+
+=cut

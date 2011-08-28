@@ -1,0 +1,65 @@
+#!/usr/bin/env perl
+## @COPYRIGHT@
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use lib "$FindBin::Bin/../../socialtext-reports/lib";
+
+use Socialtext::Reports::DB qw/connect_params get_dbh/;
+use Socialtext::Workspace;
+use Socialtext::User;
+use Socialtext::Role;
+
+
+my $member = Socialtext::Role->Member();
+
+my $dbh = get_dbh();
+
+my $workspace = "growth_report_test";
+my @user_ids = ('devnull1@socialtext.com','t1@socialtext.com','t3@socialtext.com','t4@socialtext.com','t5@socialtext.com','t6@socialtext.com','t7@socialtext.com');
+setup_accounts($workspace);
+$dbh->commit();
+$dbh->disconnect();
+
+sub setup_accounts {
+    # Create Workspace in code ...
+    my $workspace = shift;
+    my $ws;
+    eval {
+        $ws = Socialtext::Workspace->new(name => $workspace);
+        if (Socialtext::Workspace->NameIsValid( name => $workspace ) ) {
+            print "Creating Workspace $workspace ...\n";
+            $ws = Socialtext::Workspace->create(name       => $workspace,
+                                                title      => $workspace,
+                                                account_id => 2);
+        } else {
+           print "Name is not valid\n";
+        }
+   };
+  
+   my $member = Socialtext::Role->Member();
+   my @arrmembers = ('devnull1@socialtext.com', 't1@socialtext.com','t2@socialtext.com', 't3@socialtext.com', 't4@socialtext.com', 't5@socialtext.com',
+                     't6@socialtext.com', 't7@socialtext.com');
+                 
+   foreach my $username (@arrmembers) {
+        my $user = Socialtext::User->new(username=> $username);
+        unless ( $user ) {
+            eval {
+                $user = Socialtext::User->create(username=> $username,
+                                                 email_address => $username,
+                                                 password=> 'password');
+            };
+            next if $@;
+            print "\#Creating User $username ...\n";
+        }
+
+        unless (  $ws->has_user( $user ) ) {
+            print "\#Adding $username to $workspace ...\n";
+            $ws->add_user(user => $user,
+                          role => $member);
+        }
+    }                                                     
+}
+
+

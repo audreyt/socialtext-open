@@ -1,0 +1,83 @@
+Tests the ReST representations for Users
+
+* Fixture: SocialRest
+
+| standard-test-setup |
+
+| set                 | bob                 | bob%%start_time%%@ken.socialtext.net |
+| create-user         | %%bob%%             |                                      |
+| add-user-to-account | %%bob%%             | %%account%%                          |
+| set_business_admin  | %%bob%%             | 1                                    |
+| create-user         | carl                |                                      |
+| add-user-to-group   | %%carl%%            | %%group_id%%                         |
+| create-user         | dave                |                                      |
+| add-user-to-group   | %%dave%%            | %%group_id%%                         |
+| create-account      | %%start_time%%other |                                      |
+| set                 | other_id            | %%account_id%%                       |
+| set                 | private_id          | %%start_time%%abc123                 |
+
+| *Comment* | As HTML                                                        |
+| GET       | /data/users/%%username%%                                       |
+| code-is   | 200                                                            |
+| body-like | <tr><td>email_address</td><td>%%username%%</td></tr>           |
+| body-like | <tr><td>username</td><td>%%username%%</td></tr>                |
+| body-like | <tr><td>first_name</td><td></td></tr>                          |
+| body-like | <tr><td>middle_name</td><td></td></tr>                         |
+| body-like | <tr><td>last_name</td><td></td></tr>                           |
+| body-like | <tr><td>creator_username</td><td>system-user</td></tr>         |
+| body-like | <tr><td>created_by_user_id</td><td>1</td></tr>                 |
+| body-like | <tr><td>primary_account_name</td><td>%%account%%</td></tr>     |
+| body-like | <tr><td>is_system_created</td><td>0</td></tr>                  |
+| body-like | <tr><td>is_business_admin</td><td>0</td></tr>                  |
+| body-like | <tr><td>is_technical_admin</td><td>0</td></tr>                 |
+| body-like | <tr><td>email_address_at_import</td><td>%%username%%</td></tr> |
+| body-like | <tr><td>last_login_datetime</td><td>-infinity</td></tr>        |
+| body-unlike | <tr><td>accounts |
+| body-unlike | <tr><td>groups |
+
+| *Comment* | As JSON                                  |                  |
+| GET       | /data/users/%%username%%                 | application/json |
+| body-like | "email_address":"%%username%%"           |                  |
+| body_like | "username":"%%username%%"                |                  |
+| body_like | "first_name":""                          |                  |
+| body_like | "middle_name":""                         |                  |
+| body_like | "last_name":""                           |                  |
+| body_like | "creator_username":"system-user"         |                  |
+| body_like | "created_by_user_id":"1"                 |                  |
+| body_like | "primary_account_name":"%%account%%"     |                  |
+| body_like | "is_system_created":"0"                  |                  |
+| body_like | "is_business_admin":"0"                  |                  |
+| body_like | "is_technical_admin":"0"                 |                  |
+| body_like | "email_address_at_import":"%%username%%" |                  |
+| body_like | "last_login_datetime":"-infinity"        |                  |
+
+| json-parse |
+| json-path-size | $.accounts | 1 |
+| json-path-is | $.accounts[0].account_name | %%account%% |
+| json-path-size | $.groups | 1 |
+| json-path-is |  $.groups[0].name | %%group%% |
+
+| *Comment* | Non-business admin cannot update user |
+| http-user-pass | %%username%% |
+| PUT-json | /data/users/%%username%% | {"primary_account_id":%%other_id%%} |
+| code-is |  401 |
+
+| *Comment* | Business admin can update user |
+| http-user-pass | %%bob%% | password |
+| PUT-json | /data/users/%%username%% | {"private_external_id":"%%private_id%%"} |
+| code-is |  204 |
+
+| *Comment* | Non-business admin cannot see private fields |
+| http-user-pass | %%username%% | password |
+| GET-json | /data/users/%%username%%?want_private_fields=1 |
+| code-is | 200 |
+| json-parse |
+| json-path-missing | $.private_external_id |
+
+| *Comment* | Business admin can request private fields |
+| http-user-pass | %%bob%% | password |
+| GET-json | /data/users/%%username%%?want_private_fields=1 |
+| code-is | 200 |
+| json-parse |
+| json-path-exists | $.private_external_id |
+| json-path-is | $.private_external_id | %%private_id%% |

@@ -1,0 +1,129 @@
+
+* Fixture: SocialRest
+
+| standard-test-setup |
+
+| set         | hakim                    | hakim%%start_time%%@ken.socialtext.net  |
+| create-user | %%hakim%%                | password                                |
+| set         | hakim_id                 | %%user_id%%                             |
+
+| *Comment* | Create a self-join group, ensure restricted access |
+
+| set            | account2     | acct2-%%start_time%%                   |              |            |           |
+| create-account | %%account2%% |                                        |              |            |           |
+| set            | sjgroup      | sjgroup%%start_time%%                  |              |            |           |
+| create-group   | %%sjgroup%%  | %%account2%%                           | %%username%% |            | self-join |
+| set            | steve        | steve%%start_time%%@ken.socialtext.net |              |            |           |
+| create-user    | %%steve%%    | password                               | %%account2%% | Stevey Boy |           |
+| set-user-id    | steve_id     | %%steve%%                              |              |            |           |
+
+* related user == shares an account with the group
+* member == in the group
+* unrelated user == not in the group or in the group's account(s)
+
+| http-user-pass | %%hakim%% | password |
+
+| *Comment* | Check that an unrelated user can't see the group membership |
+| GET-json | /data/groups/%%group_id%%/users |
+| code-is  | 404                             |
+
+| *Comment* | Check that an unrelated user can't modify the group |
+| POST-json | /data/groups/%%group_id%%/users | {"user_id":%%hakim_id%%} |
+| code-is   | 404                             |                          |
+| POST-json | /data/groups/%%group_id%%/membership | [{"user_id":%%hakim_id%%, "role":"member"}] |
+| code-is   | 404                             |                          |
+
+| *Comment* | Check that a *connected* user can access the group |
+
+| http-user-pass | %%steve%% | password |
+
+| GET-json | /data/groups/%%group_id%%?show_members=1&show_admins=1 |
+| code-is           | 200                  |              |
+| json-parse        |                      |              |
+| json-path-is      | $.group_id           | %%group_id%% |
+| json-path-is      | $.name               | %%sjgroup%%  |
+| json-path-is      | $.permission_set     | self-join    |
+| json-path-exists  | $.members            |              |
+| json-path-missing | $.members[0]         |              |
+| json-path-exists  | $.admins[0].username | %%username%% |
+| json-path-is      | $.user_count         | 1            |
+| json-path-is      | $.workspace_count    | 0            |
+
+| *Comment* | Check that a *connected* user can self-join |
+| POST-json | /data/groups/%%group_id%%/users | {"user_id":%%steve_id%%} |
+| code-is   | 202                             |                          |
+
+| GET-json | /data/groups/%%group_id%%?show_members=1&show_admins=1 |
+| code-is          | 200                  |              |
+| json-parse       |                      |              |
+| json-path-is     | $.members[0].user_id | %%steve_id%% |
+| json-path-exists | $.admins[0].username | %%username%% |
+| json-path-is     | $.user_count         | 2            |
+| json-path-is     | $.workspace_count    | 0            |
+
+| *Comment* | Check that a *connected* user can't become an admin |
+| POST-json | /data/groups/%%group_id%%/membership | [{"user_id":"%%steve_id%%","role_name":"admin"}] |
+| code-is   | 403                                  |                                           |
+
+| *Comment* | Check that a *connected* user can't demote someone else |
+| POST-json | /data/groups/%%group_id%%/membership | [{"username":"%%username%%","role_name":"member"}] |
+| code-is   | 403                                  |                                             |
+
+| *Comment* | Check that self-joined user can leave |
+| POST-json | /data/groups/%%group_id%%/trash | [{"user_id":%%steve_id%%}] |
+| code-is   | 204                             |                            |
+
+| GET-json | /data/groups/%%group_id%%?show_members=1&show_admins=1 |
+| code-is           | 200                  |              |
+| json-parse        |                      |              |
+| json-path-is      | $.group_id           | %%group_id%% |
+| json-path-is      | $.name               | %%sjgroup%%  |
+| json-path-is      | $.permission_set     | self-join    |
+| json-path-exists  | $.members            |              |
+| json-path-missing | $.members[0]         |              |
+| json-path-exists  | $.admins[0].username | %%username%% |
+| json-path-is      | $.user_count         | 1            |
+| json-path-is      | $.workspace_count    | 0            |
+
+##
+| *Comment* | Check that self-join events are visible for non members |
+
+| GET-json          | /data/events?group_id=%%group_id%%&html=0 |       |
+| json-response-is | 200 | 3 |
+| json-path-is   | $[0].event_class | group        |
+| json-path-is   | $[0].action      | remove_user     |
+| json-path-is | $[0].person.id   | %%steve_id%% |
+
+##
+| *Comment* | Make sure only permanant users' person events show up in event feeds |
+
+| POST-json | /data/people/%%username%%/tags | {"tag_name":"cool admin"} |
+| code-is   | 204                            |                           |
+| POST-json | /data/people/%%steve%%/tags    | {"tag_name":"cool guy"}   |
+| code-is   | 204                            |                           |
+
+| set-user-id | user_id | %%username%% |
+
+| GET-json          | /data/events?group_id=%%group_id%%&html=0&event_class=person |             |
+| json-response-is | 200 | 0 |
+
+## Confirm fix for {bz: 3982};
+## A private group that has only AUW workspace
+## memberships can update its permission-set from private to self-join
+| set              | bz_acct_name      | bz3982-acct%%start_time%%                    |                  |         |         |
+| create-account   | %%bz_acct_name%%  |                                              |                  |         |         |
+| set              | bz_acct_id        | %%account_id%%                               |                  |         |         |
+| set              | bz_username       | bz3982-user%%start_time%%@ken.socialtext.net |                  |         |         |
+| create-user      | %%bz_username%%   | password                                     | %%bz_acct_name%% |         |         |
+| set              | bz_user_id        | %%user_id%%                                  |                  |         |         |
+| set              | bz_ws_name        | bz3982-ws%%start_time%%                      |                  |         |         |
+| create-workspace | %%bz_ws_name%%    | %%bz_acct_name%%                             |                  | 1       |         |
+| set              | bz_ws_id          | %%workspace_id%%                             |                  |         |         |
+| set              | bz_group_name     | bz3982-group%%start_time%%                   |                  |         |         |
+| create-group     | %%bz_group_name%% | %%bz_acct_name%%                             | %%bz_username%%  | 'Group' | private |
+| set              | bz_group_id       | %%group_id%%                                 |                  |         |         |
+
+| *Comment* | Can change group permissions in presence of AUW |
+| http-user-pass | %%bz_username%%              | password                       |
+| PUT-json       | /data/groups/%%bz_group_id%% | {"permission_set":"self-join","name":"Group"} |
+| code-is        | 202                          |                                |

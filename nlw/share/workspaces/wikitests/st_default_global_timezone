@@ -1,0 +1,32 @@
+Restore the next line for testing only
+include | [Default Global Timezone Values] | |
+
+
+
+| *Comment* | st-default-global-timezone: set global timezone to default values |  |
+| *Comment* | requires that [Default Global Timezone Values] has been called |  |
+| set_default | tech_admin | %%email%% |
+| st-admin | give-system-admin --e %%tech_admin%% | now has |
+
+| open_ok | /console/?rm=Setup |  |
+| wait_for_element_visible_ok | timezone__timezone | 30000 |
+| select_ok | timezone__timezone | label=%%default_timezone%% |
+| is_selected_ok | timezone__timezone | label=%%default_timezone%% |
+| select_ok | timezone__dst | label=%%default_dst%% |
+| is_selected_ok | timezone__dst | label=%%default_dst%% |
+| select_ok | timezone__date_display_format | value=%%default_date_display_format%% |
+| is_selected_ok | timezone__date_display_format | value=%%default_date_display_format%% |
+| select_ok | timezone__time_display_12_24 | value=%%default_time_display_12_24%% |
+| is_selected_ok | timezone__time_display_12_24 | value=%%default_time_display_12_24%% |
+| uncheck_ok | timezone__time_display_seconds |  |
+| st_unchecked_ok | timezone__time_display_seconds |  |
+
+| click_and_wait | //input[@type='submit' and @value='Update' ] |  |
+
+| is_selected_ok | timezone__timezone | label=%%default_timezone%% |
+| is_selected_ok | timezone__dst | label=%%default_dst%% |
+| is_selected_ok | timezone__date_display_format | value=%%default_date_display_format%% |
+| is_selected_ok | timezone__time_display_12_24 | value=%%default_time_display_12_24%% |
+| verifyValue | //input[@name='timezone__time_display_seconds'] | off |
+
+| *Comment* | st-default-global-timezone: COMPLETED |  |

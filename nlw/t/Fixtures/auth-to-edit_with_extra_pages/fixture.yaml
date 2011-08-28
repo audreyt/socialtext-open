@@ -1,0 +1,10 @@
+fixtures:
+  - db
+  - help
+
+workspaces:
+  auth-to-edit:
+    extra_pages: 1
+
+conflicts:
+  - auth-to-edit

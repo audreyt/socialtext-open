@@ -1,0 +1,11 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::System qw/shell_run/;
+use Socialtext::Migration::Utils qw/create_job/;
+
+# turn off explorer link
+shell_run('st-appliance-set-config explore_is_public 0');
+
+exit 0;

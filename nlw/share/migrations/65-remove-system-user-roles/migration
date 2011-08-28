@@ -1,0 +1,46 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+use Socialtext::SQL qw/:exec :txn/;
+use Socialtext::UserSet ();
+use Socialtext::JobCreator;
+
+sql_begin_work();
+
+my $set = Socialtext::UserSet->new;
+
+print "Finding system-created users\n";
+my $all_sys_users_sth = sql_execute('
+    SELECT user_id FROM "UserMetadata" WHERE is_system_created
+    ');
+while ( my ($user_id) = $all_sys_users_sth->fetchrow_array ) {
+    # removes all roles belonging to a this user
+    eval {
+        $set->remove_set($user_id);
+    };
+    die $@ if $@ && $@ !~ /^node $user_id doesn't exist\b/;
+
+    # schedules jobs to re-index System Users (so they get removed; see below)
+    Socialtext::JobCreator->index_person($user_id);
+}
+
+# removes the business- and system-admin "flags" for all System Users
+print "Removing admin privileges for system-created users...\n";
+sql_execute(q{
+    UPDATE "UserMetadata"
+       SET is_business_admin = false, is_technical_admin = false
+     WHERE is_system_created
+});
+
+# disable the system-user password
+sql_execute(q{
+    UPDATE users
+       SET password = '*no-password*'
+     WHERE driver_username = 'system-user' AND driver_key = 'Default'
+});
+
+print "Done\n";
+sql_commit();
+exit 0;

@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+
+DAYS_TO_KEEP_BACKUP=180
+
+echo "Deleting DB backup files older than $DAYS_TO_KEEP_BACKUP days."
+
+storage_dir=$(st-config echo data_root_dir)/storage/db-backups
+if [ -d "$storage_dir" ]; then
+    find "$storage_dir" -name '*.sql' -mtime +"$DAYS_TO_KEEP_BACKUP" -delete
+fi

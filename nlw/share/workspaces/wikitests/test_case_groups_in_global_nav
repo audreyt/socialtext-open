@@ -1,0 +1,49 @@
+| *Comment* | Test Case: User Groups in Global Nav |  |
+| set | grps_acct | user-groups-ui-%%start_time%% |
+| set | grps_ws | user-groups-ws-%%start_time%% |
+| create-account | %%grps_acct%% |  |
+| create-workspace | %%grps_ws%% | %%grps_acct%% |
+
+| *Comment* | Test Case: User Groups in Global Nav Create a group |  |
+| set | groupname | user-groups-ui-%%start_time%% |
+| create_group | %%groupname%% |  |
+
+| *Comment* | Test Case: User Groups in Global Nav Create TWO Users |  |
+| *Comment* | Test Case: User Groups in Global Nav Create is not member of group |  |
+| set | group_member | user-groupsui-%%start_time%%@matt.socialtext.net |
+| set | not_group_member | notmember%%start_time%%@matt.socialtext.net |
+| set | escaped_not_group | notmember%%start_time%%\@matt.socialtext.net |
+| create-user | %%group_member%% | %%password%% |
+| create-user | %%not_group_member%% | %%password%% |
+| add-user-to-group | %%group_member%% | %%group_id%% |
+
+| *Comment* | Test Case: User Groups in Global Nav Groups plugin is required for Groups |  |
+| st-admin | disable-plugin --plugin groups --all-accounts |  |
+| st-logoutin | %%not_group_member%% | %%password%% |
+| open_ok | /?dashboard |  |
+| wait_for_element_not_present_ok | link=Groups | 30000 |
+| st-admin | enable-plugin --plugin groups --all-accounts |  |
+
+| *Comment* | Test Case: User Groups in Global Nav People is required for Groups |  |
+| st-admin | disable-plugin --plugin people --all-accounts |  |
+| st-logoutin | %%not_group_member%% | %%password%% |
+| open_ok | /?dashboard |  |
+| wait_for_element_not_present_ok | link=Groups | 30000 |
+
+| *Comment* | Test Case: User Groups in Global Nav Add People INDIRECTLY |  |
+| st-admin | enable-plugin --plugin people --account %%grps_acct%% |  |
+| add_member | %%not_group_member%% | %%grps_ws%% |
+| open_ok | /?dashboard |  |
+| wait_for_element_visible_ok | link=Groups | 30000 |
+
+| *Comment* | Test Case: User Groups in Global Nav Add People DIRECTLY |  |
+| st-admin | enable-plugin --plugin people --all-accounts |  |
+| st-logoutin | %%group_member%% |  |
+| open_ok | /?dashboard |  |
+| wait_for_element_visible_ok | link=Groups | 30000 |
+
+| *Comment* | Test Case: User Groups in Global Nav Teardown |
+| delete-group | %%group_id%% |
+| st-admin | delete-workspace --w %%grps_ws%% --no-export |
+
+| *Comment* | Test Case: Groups in Global Nav COMPLETE |

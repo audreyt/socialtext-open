@@ -1,0 +1,19 @@
+#!/usr/bin/env perl
+
+use strict;
+use WWW::Mechanize;
+
+# This simulates a naughty bot which ignores redirects. A customer
+# used such a bot on their appliance, and this caused its session to
+# grow infinitely. This session bug in our code seemed to tickle a bug
+# in Postgres, so the sessions table ended up growing enormously (to
+# gigabytes), even though the biggest session was only 5MB.
+
+my $host = $ARGV[0] || 'localhost';
+
+my $mech = WWW::Mechanize->new();
+$mech->requests_redirectable( [] );
+
+for (1..5000) {
+    $mech->get("http://$host/login-to-edit/index.cgi?action=new_page");
+}

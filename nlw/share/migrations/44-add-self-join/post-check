@@ -1,0 +1,12 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use Socialtext::SQL qw/:exec/;
+
+my $has_self_join = eval { sql_singlevalue(q{select COUNT(*) from "Permission" where name = 'self_join' })} ;
+
+if (defined($has_self_join) && $has_self_join == 1) {
+    exit 0;
+}
+
+print "Failed to find exactly one instance of self_join permission!";
+exit 1;

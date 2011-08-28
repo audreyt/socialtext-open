@@ -1,0 +1,15 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+<form method="post" action="[% script_name %]" enctype="application/x-www-form-urlencoded">
+  <input type="hidden" name="action" value="workspaces_unsubscribe" />
+  <input type="hidden" name="preferences_class_id" value="[% preferences_class_id %]" />
+  <dl class="form">
+    <dt><label>[% loc('do.unsubscribe') %]</label></dt>
+    <dd>
+      [% loc('wiki.confirm-unsubscribe') %]
+    </dd>
+    <dd>
+      <input type="submit" value="[% loc('do.unsubscribe=wiki', workspace.name) %]" name="Button"/>
+    </dd>
+  </dl>
+</form>

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+ORIG_DIR=`pwd`;
+
+cd share/l10n/help;
+tar xfz help-en.tar.gz;
+rm -f help-en.tar.gz plugin/help-en/indexes/*;
+tar cfz help-en.tar.gz *;
+cd $ORIG_DIR;
+
+echo "Rejiggered the stupid tarball";

@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+use Sys::Hostname;
+
+if ( Sys::Hostname::hostname =~ /^www2?\.socialtext\.net$/ ) {
+    print "Skipping Migration, assuming this was done by hand.\n";
+    exit 1;
+}
+
+print "Migrating account features.\n";
+exit 0;

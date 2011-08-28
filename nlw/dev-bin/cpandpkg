@@ -1,0 +1,36 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+
+sub run {
+    my $cmd = join ' ', @_;
+    print "$cmd\n";
+    system(@_) == 0 or die "$cmd: $!\n";
+}
+# XXX i don't actually know if dh-make-perl handles Build.PL's or not.
+unless (-e 'Makefile.PL' or -e 'Build.PL') {
+    die "No Makefile.PL, no Build.PL, and no args.  Downloading, building, and packaging all of CPAN.  Please wait...\n"
+      if 0 == @ARGV;
+    my $arg = shift;
+    system(qw'cpanp -d --force --fetchdir=.', $arg) == 0 or die $!;
+    (my $arg_dashes = $arg) =~ s/::/-/g;
+    my $pattern = $arg_dashes . '*';
+    my @matches = glob($pattern);
+    die "Couldn't find any files that match $pattern"
+      if 0 == @matches;
+    die "Found too many files that match $pattern... extract one, cd to its dir, and rerun this script\n"
+      if 1 < @matches;
+    my $tarball = $matches[0];
+    run 'uz', $tarball;
+    (my $dir = $tarball) =~ s/\.tar\.gz//g;
+    chdir $dir
+      or die "Couldn't chdir to $dir: $!";
+}
+run qw'dh-make-perl --build';
+print "======================
+Now, do something like this:
+.../dev-bin/upload-deb libfoo-perl.deb &&
+sudo apt-get update &&
+sudo apt-get install libfoo-perl
+";

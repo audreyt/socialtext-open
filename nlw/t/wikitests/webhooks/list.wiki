@@ -1,0 +1,142 @@
+* Fixture: WebHook
+
+| standard-test-setup | foo |
+| standard-test-setup | bar |
+| set-business-admin | %%bar_username%% | 1 |
+
+| new-webhook-testcase | Create a bunch of webhooks, make sure permissions are correct. |
+| add-webhook | page.tag | http://tou.ch |
+| set-from-header | global_hook_url | Location |
+| header-like | Location | qr/^\/data\/webhooks\/\d+$/ |
+| add-webhook | signal.create | http://tou.ch |
+| set-from-header | global_hook_url2 | Location |
+| add-webhook | page.tag | http://tou.ch | {"workspace_id":"%%foo_workspace_id%%"} |
+| set-from-header | page_hook_url | Location |
+| add-webhook | signal.create | http://tou.ch | {"account_id":"%%foo_account_id%%"} |
+| add-webhook | signal.create | http://tou.ch | {"group_id":"%%foo_group_id%%"} |
+| add-webhook | signal.create | http://tou.ch | {"details":{"to_user":%%foo_user_id%%}} |
+
+| Comment | Badmins see all |
+| GET_json | /data/webhooks |
+| code-is | 200 |
+| json-parse |
+| json-array-size | 6 |
+
+| Comment | Reg users see things they created |
+| set-business-admin | %%bar_username%% | 0 |
+| GET_json | /data/webhooks |
+| code-is | 200 |
+| json-parse |
+| json-array-size | 6 |
+
+| Comment | reg users cannot see things they are a member of or are addressed to, unless they are the creator |
+| http-user-pass | %%foo_username%% | %%foo_password%% |
+| GET_json | /data/webhooks |
+| code-is | 200 |
+| json-parse |
+| json-array-size | 0 |
+
+| set-business-admin | %%foo_username%% | 1 |
+| GET_json | /data/webhooks |
+| code-is | 200 |
+| json-parse |
+| json-array-size | 6 |
+
+DELETE tests:
+
+| Comment |  badmins can delete anyones webhooks |
+| DELETE | %%global_hook_url%% |
+| code-is | 204 |
+| set-business-admin | %%foo_username%% | 0 |
+| DELETE | %%global_hook_url2%% |
+| code-is | 403 |
+
+| Comment | reg users can delete their own webhooks |
+| http-user-pass | %%bar_username%% | %%bar_password%% |
+| DELETE | %%global_hook_url2%% |
+| code-is | 204 |
+| DELETE | %%page_hook_url%% |
+| code-is | 204 |
+
+
+User Deactivation
+
+| Comment | Deactivating a user deletes their webhooks |
+| deactivate-user | %%bar_username%% |
+| GET_json | /data/webhooks |
+| code-is | 200 |
+| json-parse |
+| json-array-size | 0 |
+
+
+| new-webhook-testcase | Listing by class |               |
+| http-user-pass | %%foo_username%% | %%foo_password%% |
+| set-business-admin | %%foo_username%% | 1 |
+| add-webhook          | page.*           | http://tou.ch |
+| add-webhook          | page.create      | http://tou.ch |
+| add-webhook          | page.update      | http://tou.ch |
+| add-webhook          | page.tag         | http://tou.ch |
+| add-webhook          | page.delete      | http://tou.ch |
+| add-webhook          | page.watch       | http://tou.ch |
+| add-webhook          | page.unwatch     | http://tou.ch |
+| add-webhook          | signal.create    | http://tou.ch |
+
+| GET_json        | /data/webhooks |
+| code-is         | 200            |
+| json-parse      |                |
+| json-array-size | 8              |
+
+| GET_json        | /data/webhooks?class=page |
+| code-is         | 200            |
+| json-parse      |                |
+| json-array-size | 7              |
+
+| GET_json        | /data/webhooks?class=page.* |
+| code-is         | 200            |
+| json-parse      |                |
+| json-array-size | 1              |
+
+| GET_json        | /data/webhooks?class=page.create |
+| code-is         | 200            |
+| json-parse      |                |
+| json-array-size | 1              |
+
+| GET_json        | /data/webhooks?class=page.update |
+| code-is         | 200            |
+| json-parse      |                |
+| json-array-size | 1              |
+
+| GET_json        | /data/webhooks?class=page.tag |
+| code-is         | 200            |
+| json-parse      |                |
+| json-array-size | 1              |
+
+| GET_json        | /data/webhooks?class=page.tag |
+| code-is         | 200            |
+| json-parse      |                |
+| json-array-size | 1              |
+
+| GET_json        | /data/webhooks?class=page.delete |
+| code-is         | 200            |
+| json-parse      |                |
+| json-array-size | 1              |
+
+| GET_json        | /data/webhooks?class=page.watch |
+| code-is         | 200            |
+| json-parse      |                |
+| json-array-size | 1              |
+
+| GET_json        | /data/webhooks?class=page.unwatch |
+| code-is         | 200            |
+| json-parse      |                |
+| json-array-size | 1              |
+
+| GET_json        | /data/webhooks?class=signal |
+| code-is         | 200            |
+| json-parse      |                |
+| json-array-size | 1              |
+
+| GET_json        | /data/webhooks?class=signal.create |
+| code-is         | 200            |
+| json-parse      |                |
+| json-array-size | 1              |

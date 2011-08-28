@@ -1,0 +1,11 @@
+[%# @COPYRIGHT@ -%]
+[% FOREACH value = values %]
+  <div class="preference-radio">
+    <label>
+      <input name="[% name %]" value="[% value %]" 
+        [%- IF value == default %] checked="checked" [% END -%]
+      type="radio" />
+      [% labels.$value %]
+    </label>
+  </div>
+[% END %]

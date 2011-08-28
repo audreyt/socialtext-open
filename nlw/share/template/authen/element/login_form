@@ -1,0 +1,78 @@
+[%# @COPYRIGHT@ -%]
+[%# vim: set et sts=2 sw=2: %]
+<form id="st-login-form" name="login" method="post" action="/nlw/submit/login">
+<div data-role="fieldcontain">
+  <input type="hidden" name="redirect_to" value="[% redirect_to | html %]" />
+  <input type="hidden" name="lite" value="[% lite | html %]" />
+
+    <fieldset data-role="controlgroup">
+  [% IF target_workspace %]
+    <input type="hidden" name="workspace_name" value="[% target_workspace.name%]" />
+  [% END %]
+
+  <dl class="form">
+    <dt> <label for="username">[% username_label %]</label> </dt>
+    <dd> <input id="username" name="username" type="text" size="30" value="[% username %]" autofocus /> </dd>
+
+    <dt> <label for="password">[% loc('login.password:') %]</label> </dt>
+    <dd> <input id="password" name="password" type="password" size="30" value="" /> </dd>
+  </dl>
+
+  <div class="form-element">
+    <input class="checkbox" name="remember" type="checkbox" id="remember" value="1" />
+    [% IF lite %]
+      <span class="description">
+        <label for="remember">[% loc('login.remember-me-on-this-device') %]</label>
+      </span>
+    [% ELSE %]
+      <span class="description">
+        <label for="remember">[% loc('login.remember-me') %]</label>
+      </span>
+      <a id="remember-lightbox" href="#" onclick="$.showLightbox('Checking this box will keep you logged in for up to [% remember_duration %], or until you sign out.  Un-checking this box will cause you to be automatically logged out when you close your browser.')">[?]</a>
+    [% END %]
+  </div>
+
+  [% IF lite %]
+  </fieldset><fieldset>
+  <input data-theme="b" data-icon="arrow-r" type="submit" value="[% loc('login.log-in') %]"/>
+  [% ELSE %]
+  <div class="hidesubmit"><input type="submit"/></div>
+  <div class="loginButtons">
+    <ul class="formButtons" style="float: left">
+      <li class="flexButtonBlue">
+        <a id="login_btn" class="genericBlueButton" href="#" onclick="document.forms['login'].submit(); return false">
+          [% loc('login.log-in') %]
+        </a>
+      </li>
+    </ul>
+    <div class="clear"></div>
+  </div>
+  [% END %]
+
+    </fieldset>
+</div>
+</form>
+
+[% UNLESS miki %]
+<script type="text/javascript">
+  if (typeof(jQuery) != 'undefined') {
+    function authen_focus() {
+      var username = jQuery('#username');
+      var password = jQuery('#password');
+      if (username && password) {
+        if (username.val().length) {
+          password.focus();
+        }
+        else {
+          username.focus();
+        }
+      }
+      else if (password) {
+        password.focus();
+      }
+    }
+
+    jQuery(document).ready(authen_focus);
+  }
+</script>
+[% END %]

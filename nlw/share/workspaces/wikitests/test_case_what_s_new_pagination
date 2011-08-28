@@ -1,0 +1,50 @@
+| *Comment* | Test Case: What's New Pagination |  |
+
+| *Comment* | Test Case: What's New Pagination: Create new workspace |  |
+| set | pws | pageme-workspace-%%start_time%% |
+| st-admin | create-workspace --empty --name %%pws%% --title %%pws%% | was created |
+| st-admin | add-member --username %%username%% --workspace %%pws%% | now has the role of |
+
+| *Comment* | Test Case: What's New Pagination: Create Pages |  |  |  |
+| st-create-pages | %%pws%% | 200 |  |  |
+
+| *Comment* | Test Case: What's New Pagination Explore UI |  |
+| open_ok | /%%pws%%/ |  |
+| click_ok | link=What's New |  |
+| wait_for_element_visible_ok | link=2 | 30000 |
+| wait_for_element_visible_ok | link=3 | 30000 |
+| wait_for_element_visible_ok | link=Next | 30000 |
+| wait_for_element_visible_ok | link=Last | 30000 |
+| click_ok | link=2 |  |
+| wait_for_element_visible_ok | link=Previous | 30000 |
+| wait_for_element_visible_ok | link=First | 30000 |
+| wait_for_element_visible_ok | link=Next | 30000 |
+| wait_for_element_visible_ok | link=Last | 30000 |
+| wait_for_element_visible_ok | link=3 | 30000 |
+| wait_for_element_visible_ok | link=1 |  |
+
+| *Comment* | Test Case: What's New Pagination - grid should be 5 links wide |
+| wait_for_element_visible_ok | link=5 | 30000 |
+| click_ok | link=5 |  |
+| wait_for_element_visible_ok | link=4 | 30000 |
+| wait_for_element_visible_ok | link=3 | 30000 |
+| wait_for_element_visible_ok | link=6 | 30000 |
+| wait_for_element_visible_ok | link=7 | 30000 |
+| click_ok | link=Next |  |
+| wait_for_element_visible_ok | link=5 | 30000 |
+| wait_for_element_visible_ok | link=7 | 30000 |
+
+| *Comment* | Test Case: What's New Pagination - Appearance when last is clicked |
+| click_ok | link=Last |  |
+| wait_for_text_present_ok | Last | 30000 |
+| wait_for_text_present_ok | Next | 30000 |
+| wait_for_element_present_ok | link=First | 30000 |
+| wait_for_element_present_ok | link=Previous | 30000 |
+| wait_for_element_not_present_ok | link=Last | 30000 |
+| wait_for_element_not_present_ok | link=Next | 30000 |
+
+| *Comment* | Test case: What's New Pagination TEARDOWN |  |
+
+| st-admin | delete-workspace --w %%pws%% --no-export | has been deleted |
+
+| *Comment* | Test case: What's New Pagination COMPLETED |  |

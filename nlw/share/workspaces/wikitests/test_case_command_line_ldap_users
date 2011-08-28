@@ -1,0 +1,68 @@
+| *Comment* | STARTING Test Case: Command Line LDAP USERS |  |
+
+| set | cli_user | `devnullx` |
+| set | cmdline_workspace | clw_%%start_time%% |
+| st-admin | create-workspace --empty --name %%cmdline_workspace%% --title %%cmdline_workspace%% | A new workspace named "%%cmdline_workspace%%" was created. |
+
+| *Comment* | Test Case: Command Line LDAP user Add member |  |
+| st-admin | add-member --username %%cli_user%% --workspace %%cmdline_workspace%% | qr/%%cli_user%% now has the role of 'member' in the %%cmdline_workspace%% workspace/ism |
+
+| *Comment* | Test Case: Command Line LDAP user Add workspace admin |  |
+| st-admin | add-workspace-admin --username %%cli_user%% --workspace %%cmdline_workspace%% | qr/%%cli_user%% now has the role of 'admin' in the %%cmdline_workspace%% workspace/ism |
+
+| *Comment* | Test Case: Command --usernameLine LDAP Remove workspace admin |  |
+| st-admin | remove-workspace-admin --username %%cli_user%% --workspace %%cmdline_workspace%% | qr/no longer has the role of 'admin' in the %%cmdline_workspace%% workspace/ism |
+
+| *Comment* | Test Case: Command Line LDAP user Add WS impersonator |  |
+| st-admin | add-workspace-impersonator --username %%cli_user%% --workspace %%cmdline_workspace%% | qr/%%cli_user%% now has the role of 'impersonator' in the %%cmdline_workspace%% workspace/ism |
+
+| *Comment* | Test Case: Command Line LDAP user Remove impersonator |  |
+| st-admin | remove-workspace-impersonator --username %%cli_user%% --workspace %%cmdline_workspace%% | qr/no longer has the role of 'impersonator' in the %%cmdline_workspace%% workspace/ism |
+
+| *Comment* | Test Case: Command Line LDAP user Disable Email Notify |  |
+| st-admin | disable-email-notify --username %%cli_user%% --workspace %%cmdline_workspace%% | qr/Email notify has been disabled for %%cli_user%% in the %%cmdline_workspace%% workspace/ism |
+
+| *Comment* | Test Case: Command Line LDAP user Set locale |  |
+| st-admin | set-locale --username %%cli_user%% --workspace %%cmdline_workspace%% --locale zq | Locale for %%cli_user%% is now zq |
+| st-admin | set-locale --username %%cli_user%% --workspace %%cmdline_workspace%% --locale en | Locale for %%cli_user%% is now en |
+
+| *Comment* | Test Case: Command Line LDAP user give-accounts-admin |  |
+| st-admin | give-accounts-admin --username %%cli_user%% | %%cli_user%% now has accounts admin access. |
+
+| *Comment* | Test Case: Command Line LDAP user remove-accounts-admin |  |
+| st-admin | remove-accounts-admin --username %%cli_user%% | %%cli_user%% no longer has accounts admin access. |
+
+| *Comment* | Test Case: Command Line LDAP user give-system-admin |  |
+| st-admin | give-system-admin --username %%cli_user%% | %%cli_user%% now has system admin access. |
+
+| *Comment* | Test Case: Command Line LDAP user remove-system-admin |  |
+| st-admin | remove-system-admin --username %%cli_user%% | %%cli_user%% no longer has system admin access. |
+
+| *Comment* | Test Case: Command Line LDAP user update page |  |
+| st-admin | update-page --username %%cli_user%% --workspace %%cmdline_workspace%% --page "page1 %%start_time%%" < %%wikitest_client_files%%wikitest.txt | The "page1 %%start_time%%" page has been created. |
+
+| *Comment* | Test Case: Command Line LDAP user Remove member |  |
+| st-admin | remove-member --username %%cli_user%% --workspace %%cmdline_workspace%% | qr/%%cli_user%% no longer has the role of 'member' in %%cmdline_workspace%%/ism |
+
+| *Comment* | Test Case: Command Line LDAP user Add member again |  |
+| st-admin | add-member --username %%cli_user%% --workspace %%cmdline_workspace%% | qr/%%cli_user%% now has the role of 'member' in the %%cmdline_workspace%% workspace/ism |
+
+| *Comment* | Test Case: Command Line LDAP user deactivate user TODO: add this back in when we can create a unique user to deactivate. This is causing TC: Verify LDAP Enabled to fail unnecessarily |  |
+
+ st-admin | deactivate-user --username %%cli_user%% | qr/%%cli_user%% has been removed from workspaces.+%%cmdline_workspace%%(,.+%%workspace%%)?/ |
+
+ *Comment* | Test Case: Command Line LDAP user Add member BACK to %%workspace%% | |
+st-admin | add-workspace-admin --username %%cli_user%% --workspace %%workspace%% | qr/%%cli_user%% now has the role of 'admin' in the %%workspace%% workspace/ism |
+
+| *Comment* | Test Case: Command Line LDAP USERS commands should fail |  |
+| st-admin | create-user --username %%cli_user%% | The username you provided, "%%cli_user%%", is already in use. |
+| st-admin | change-password --username %%cli_user%% --p betternot | qr/Remotely sourced passwords cannot be updated via Socialtext/ism |
+| st-admin | set-user-names --username %%cli_user%% --first-name CLI --last-name USER | qr/Remotely sourced Users cannot be updated via Socialtext/ism |
+
+| *Comment* | Test Case: Command Line LDAP user TEARDOWN |  |
+| st-admin | delete-workspace --workspace %%cmdline_workspace%% --no-export | has been deleted |
+
+| *Comment* | Test Case: Command Line LDAP user Add member BACK to %%workspace%% just in case needed |  |
+| st-admin | add-workspace-admin --username %%cli_user%% --workspace %%workspace%% | has the role of 'admin' |
+
+| *Comment* | Test Case: Command Line: LDAP USERS COMPLETED |

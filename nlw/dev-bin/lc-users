@@ -1,0 +1,268 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+use Email::Valid;
+use Fcntl 'O_RDWR';
+use File::Path ();
+use Getopt::Long;
+use MLDBM qw( DB_File Data::Dumper );
+use Spiffy qw(:XXX);
+
+my %opts;
+GetOptions(
+    'root:s' => \$opts{root},
+    'debug'  => \$opts{debug},
+) or exit 1;
+
+$opts{root} ||=  '/var/www/socialtext';
+chdir $opts{root} or die "Cannot chdir to $opts{root}: $!";
+
+tie my %users, 'MLDBM', 'users.db', O_RDWR, 0644
+  or die "Cannot tie to users.db: $!";
+
+tie my %workspaces, 'MLDBM', 'workspaces.db', O_RDWR, 0644
+  or die "Cannot tie to workspaces.db: $!";
+
+tie my %htpasswd, 'DB_File', 'htpasswd.db', O_RDWR, 0644
+  or die "Cannot tie to htpasswd.db: $!";
+
+my %canon;
+for my $u ( keys %users ) {
+    unless ( ref $users{$u}
+             && Email::Valid->address($u)
+             && grep { workspace_exists($_) } @{ $users{$u}{workspaces} } ) {
+        purge_user($u);
+        next;
+    }
+
+    push @{ $canon{lc $u} }, $u;
+}
+
+for my $c ( keys %canon ) {
+    clean_users_db($c);
+
+    unless ( was_canonical($c) ) {
+        clean_htpasswd_db($c);
+        clean_user_directories($c);
+    }
+}
+
+for my $ws ( keys %workspaces ) {
+    unless ( workspace_exists($ws) ) {
+        delete $workspaces{$ws};
+        next;
+    }
+
+    clean_workspaces_db($ws);
+
+    # XXX don't quit when these things fail or
+    # data will be left in a bad state
+    eval {clean_users_plugin_data($ws);};
+    warn $@ if $@;
+    eval {clean_htgroup_data($ws);};
+    warn $@ if $@;
+}
+
+clean_bogus_htpasswd_entries();
+clean_usernames_db();
+
+
+sub was_canonical {
+    my $c = shift;
+
+    return 0 unless exists $canon{$c};
+    return 1 if $canon{$c}[0] eq $c && @{ $canon{$c} } == 1;
+    return 0;
+}
+
+sub purge_user {
+    my $u = shift;
+
+    warn "Purging $u\n" if $opts{debug};
+
+    delete $_->{$u} for \%users, \%htpasswd;
+}
+
+sub clean_users_db {
+    my $c = shift;
+
+    my %in_ws;
+    my %sel_ws;
+    my @times;
+    for my $u ( @{ $canon{$c} } ) {
+        @in_ws{ grep { workspace_exists($_) } @{ $users{$u}{workspaces} } } = ();
+        @sel_ws{ grep { workspace_exists($_) } @{ $users{$u}{selected_workspaces} } } = ();
+
+        my $ws = $users{$u}{workspaces}[0];
+        push @times, [ $u, (stat "user/$ws/$u/.trail")[9] || 0 ];
+    }
+    my @names_by_time = map { $_->[0] } sort { $b->[1] <=> $a->[1] } @times;
+
+    my $canonical_data = $users{ $names_by_time[0] };
+    delete @users{ @{ $canon{$c} } };
+
+    $canonical_data->{create_by} = lc $canonical_data->{create_by};
+    $canonical_data->{workspaces} = [ sort keys %in_ws ];
+    $canonical_data->{selected_workspaces} = [ sort keys %sel_ws ];
+
+    $users{$c} = $canonical_data;
+
+    $canon{$c} = \@names_by_time;
+}
+
+sub clean_htpasswd_db {
+    my $c = shift;
+
+    my $names = $canon{$c};
+
+    my $canonical_pw = find_first_entry( \%htpasswd, $names )
+        or next;
+
+    delete @htpasswd{ @$names };
+
+    $htpasswd{$c} = $canonical_pw;
+}
+
+sub clean_user_directories {
+    my $c = shift;
+
+    for my $ws ( @{ $users{$c}{workspaces} } ) {
+        my $canon_dir = "user/$ws/$c";
+        my $has_dir = -d $canon_dir ? 1 : 0;
+
+        for my $n ( @{ $canon{$c} } ) {
+
+            my $dir = "user/$ws/$n";
+            next unless -d $dir;
+            next if $n eq $c;
+
+            if ($has_dir) {
+                File::Path::rmtree($dir);
+            }
+            else {
+                rename $dir => $canon_dir
+                    or die "Cannot rename $dir => $canon_dir: $!";
+                $has_dir = 1;
+            }
+        }
+    }
+}
+
+sub clean_workspaces_db {
+    my $ws = shift;
+
+    my $workspace_info = $workspaces{$ws};
+    $workspace_info->{create_by} = lc $workspace_info->{create_by};
+
+    $workspaces{$ws} = $workspace_info;
+}
+
+sub clean_users_plugin_data {
+    my $ws = shift;
+
+    my $f = "plugin/$ws/users.db";
+
+    # skip this process if the file is not there
+    return unless -f $f;
+
+    tie my %plugin_users, 'MLDBM', $f, O_RDWR, 0644
+        or die "Cannot tie to $f: $!";
+
+    my %seen;
+    for my $u ( keys %plugin_users ) {
+
+        next if $seen{$u};
+
+        unless ( $canon{lc $u} ) {
+            delete $plugin_users{$u};
+            next;
+        }
+
+        my $c = lc $u;
+        my $names = $canon{lc $u};
+
+        unless ($names) {
+            delete $plugin_users{$u};
+            next;
+        }
+
+        my $canonical_data = find_first_entry( \%plugin_users, $names )
+            or next;
+
+        @seen{ @$names } = ();
+
+        delete @plugin_users{ @$names };
+        $canonical_data->{added_by} = lc $canonical_data->{added_by};
+
+        $plugin_users{$c} = $canonical_data;
+    }
+}
+
+sub clean_htgroup_data {
+    my $ws = shift;
+
+    my $f = "htgroup/$ws/htgroup.db";
+
+    # skip this process if the file is not there
+    return unless -f $f;
+
+    tie my %htgroup, 'DB_File', $f, O_RDWR, 0644
+        or die "Cannot tie to $f: $!";
+
+    my %seen;
+    for my $u ( grep { ! was_canonical(lc $_) } keys %htgroup ) {
+
+        next if $seen{$u};
+
+        unless ( $canon{lc $u} ) {
+            delete $htgroup{$u};
+            next;
+        }
+
+        my $c = lc $u;
+        my $names = $canon{$c};
+
+        unless ($names) {
+            delete $htgroup{$u};
+            next;
+        }
+
+        my $canonical_groups = find_first_entry( \%htgroup, $names )
+            or next;
+
+        @seen{ @$names } = ();
+
+        delete @htgroup{ @$names };
+
+        $htgroup{$c} = $canonical_groups;
+    }
+}
+
+sub clean_bogus_htpasswd_entries {
+    my @bogus = grep { /[A-Z]/ || ! Email::Valid->address($_) } keys %htpasswd;
+    delete @htpasswd{@bogus};
+}
+
+sub clean_usernames_db {
+    my $file = 'usernames.db';
+    return unless -f $file;
+
+    tie my %usernames, 'DB_File', $file, O_RDWR, 0644
+        or die "Cannot tie to $file: $!";
+
+    $usernames{$_} = lc $usernames{$_} for keys %usernames;
+}
+
+sub workspace_exists { -d "workspace/$_[0]" && -d "plugin/$_[0]" }
+
+sub find_first_entry {
+    my $hash = shift;
+    my $names = shift;
+
+    for my $n (@$names) {
+        return $hash->{$n} if exists $hash->{$n};
+    }
+}

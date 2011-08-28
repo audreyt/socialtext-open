@@ -1,0 +1,556 @@
+# @COPYRIGHT@
+msgid ""
+msgstr ""
+"Project-Id-Version: Socialtext i18n\n"
+"PO-Revision-Date: 2011-06-14 09:22-0700\n"
+"Language-Team: Socialtext i18n team\n"
+"Last-Translator: Socialtext i18n team\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: share/plugin/groups/share/widgets/all_groups/config.yaml:4
+msgid "description.all_groups"
+msgstr "All Available Groups"
+
+#: share/plugin/groups/share/widgets/edit_information/config.yaml:4
+msgid "description.edit_information"
+msgstr "Edit Group Information"
+
+#: share/plugin/groups/share/widgets/edit_people/config.yaml:4
+msgid "description.edit_people"
+msgstr "Edit Group People"
+
+#: share/plugin/groups/share/widgets/information/config.yaml:4
+msgid "description.information"
+msgstr "Group Information"
+
+#: share/plugin/groups/share/widgets/membership/config.yaml:4
+msgid "description.membership"
+msgstr "Edit Group Membership"
+
+#: share/plugin/groups/share/widgets/my_groups/config.yaml:4
+msgid "description.my_groups"
+msgstr "My Groups"
+
+#: share/plugin/groups/share/widgets/people/config.yaml:4
+msgid "description.people"
+msgstr "People in this group."
+
+#: share/plugin/groups/share/widgets/teaser/config.yaml:4
+msgid "description.teaser"
+msgstr "Coming Soon"
+
+#: share/plugin/groups/share/widgets/workspaces/config.yaml:4
+msgid "description.workspaces"
+msgstr "Lists all of the workspaces in the current group"
+
+#: share/plugin/groups/share/javascript/lightbox/create-group.tt2:64 share/plugin/groups/share/javascript/lightbox/delete-group.tt2:20 share/plugin/groups/share/javascript/lightbox/leave-group.tt2:17 share/plugin/groups/share/widgets/membership/jemplate/create_workspace.tt2:74 share/plugin/groups/template/edit_group_footer:11 share/plugin/groups/template/edit_group_footer:4 share/plugin/groups/template/group_footer:14 share/plugin/groups/template/group_footer:7
+msgid "do.cancel"
+msgstr "Cancel"
+
+#: share/plugin/groups/share/widgets/membership/jemplate/create_workspace.tt2:69 share/plugin/groups/share/widgets/membership/jemplate/members.tt2:3 share/plugin/groups/template/edit_group_footer:7 share/plugin/groups/template/group_footer:10
+msgid "do.create"
+msgstr "Create"
+
+#: share/plugin/groups/share/javascript/lightbox/delete-group.tt2:25
+msgid "do.delete"
+msgstr "Delete"
+
+#: share/plugin/groups/template/group_links:11 share/plugin/groups/template/grouplist:93
+msgid "do.join"
+msgstr "Join"
+
+#: share/plugin/groups/share/javascript/lightbox/leave-group.tt2:11 share/plugin/groups/template/group_links:8
+msgid "do.leave"
+msgstr "Leave"
+
+#: share/plugin/groups/share/widgets/membership/jemplate/create_workspace.tt2:64
+msgid "do.next"
+msgstr "Next"
+
+#: share/plugin/groups/share/widgets/membership/jemplate/members.tt2:3
+msgid "do.save"
+msgstr "Save"
+
+#. (item.title)
+#: share/plugin/groups/share/widgets/membership/widget.js:615
+msgid "error.already-exists-in-group=member"
+msgstr "%1 already exists in this Group"
+
+#: share/plugin/groups/share/widgets/membership/widget.js:490 share/plugin/groups/share/widgets/membership/widget.js:549
+msgid "error.at-least-one-group-admin-needed"
+msgstr "Groups need at least one admin"
+
+#: share/plugin/groups/share/widgets/workspaces/widget.js:66
+msgid "error.display-list-of-wikis"
+msgstr "Unable to display list of workspaces."
+
+#: share/plugin/groups/share/widgets/information/jemplate/widget.tt2:3
+msgid "error.load-profile-data"
+msgstr "Unable to load profile data."
+
+#: share/plugin/groups/template/nav_groups:23
+msgid "error.not-member-of-any-groups"
+msgstr "Currently, you are not a member of any groups."
+
+#: share/plugin/groups/share/widgets/people/jemplate/peoplelist.tt2:2
+msgid "error.retrieving-list-of-users"
+msgstr "Error retrieving list of users"
+
+#: share/plugin/groups/share/widgets/edit_information/widget.js:92
+msgid "group.acl-member-only"
+msgstr "Member Only"
+
+#: share/plugin/groups/share/widgets/edit_information/widget.js:91
+msgid "group.acl-private"
+msgstr "Private"
+
+#: share/plugin/groups/share/widgets/edit_information/widget.js:90
+msgid "group.acl-self-join"
+msgstr "Self-Join"
+
+#: share/plugin/groups/share/widgets/edit_people/jemplate/existingUsers.tt2:11 share/plugin/groups/share/widgets/edit_people/jemplate/existingUsers.tt2:13 share/plugin/groups/share/widgets/people/jemplate/peoplelist.tt2:17 share/plugin/groups/share/widgets/people/jemplate/peoplelist.tt2:19
+msgid "group.first"
+msgstr "first"
+
+#: share/plugin/groups/share/widgets/edit_people/jemplate/existingUsers.tt2:17 share/plugin/groups/share/widgets/edit_people/jemplate/existingUsers.tt2:19 share/plugin/groups/share/widgets/people/jemplate/peoplelist.tt2:23 share/plugin/groups/share/widgets/people/jemplate/peoplelist.tt2:25
+msgid "group.next"
+msgstr "next"
+
+#: share/plugin/groups/share/widgets/edit_people/jemplate/existingUsers.tt2:5 share/plugin/groups/share/widgets/edit_people/jemplate/existingUsers.tt2:7 share/plugin/groups/share/widgets/people/jemplate/peoplelist.tt2:11 share/plugin/groups/share/widgets/people/jemplate/peoplelist.tt2:13
+msgid "group.previous"
+msgstr "previous"
+
+#: share/plugin/groups/share/widgets/membership/jemplate/members.tt2:19
+msgid "groups.add-members"
+msgstr "Add Members"
+
+#: share/plugin/groups/share/widgets/membership/jemplate/workspaces.tt2:16
+msgid "groups.add-wikis"
+msgstr "Add Workspaces"
+
+#: share/plugin/groups/share/javascript/lightbox/create-group.tt2:54
+msgid "groups.admin-can-change-setting-after-creation"
+msgstr "The group administrators can change this setting after the group is created."
+
+#: share/plugin/groups/share/widgets/edit_information/jemplate/widget.tt2:25
+msgid "groups.administrators"
+msgstr "Administrators"
+
+#: share/plugin/groups/share/widgets/all_groups/widget.html:2
+msgid "groups.all-available"
+msgstr "All Available Groups"
+
+#: share/plugin/groups/share/widgets/membership/widget.js:249
+msgid "groups.all-members-in-group-account-can-see-wiki-content"
+msgstr "All of the members in the Group account can see the workspace content."
+
+#: share/plugin/groups/share/widgets/membership/jemplate/members.tt2:24
+msgid "groups.begin-typing-name-here"
+msgstr "begin typing name here..."
+
+#: share/plugin/groups/share/widgets/membership/jemplate/workspaces.tt2:21
+msgid "groups.begin-typing-wiki-here"
+msgstr "begin typing workspace here..."
+
+#: share/plugin/groups/share/widgets/edit_information/jemplate/widget.tt2:40
+msgid "groups.change"
+msgstr "Change"
+
+#: share/plugin/groups/share/javascript/lightbox/create-group.tt2:23
+msgid "groups.change-type"
+msgstr "Change Group Type"
+
+#: share/plugin/groups/share/widgets/membership/jemplate/list.tt2:53
+msgid "groups.changed"
+msgstr "changed"
+
+#: share/plugin/groups/share/javascript/lightbox/create-group.tt2:33
+msgid "groups.choose-type-then-click-next"
+msgstr "Please choose the group type, then click <b>Next</b>"
+
+#: share/plugin/groups/share/javascript/lightbox/delete-group.tt2:10
+msgid "groups.confirm-delete?"
+msgstr "Are you sure you want to delete this group?"
+
+#: share/plugin/groups/share/javascript/lightbox/leave-group.tt2:5
+msgid "groups.confirm-leave?"
+msgstr "This action cannot be undone. Are you sure you'd like to leave this group?"
+
+#: share/plugin/groups/share/javascript/lightbox/create-group.tt2:26
+msgid "groups.create"
+msgstr "Create Group"
+
+#: share/plugin/groups/template/create_group_hello:3
+msgid "groups.create-a-group"
+msgstr "Create a Group"
+
+#: share/plugin/groups/template/nav_groups:27
+msgid "groups.create-group"
+msgstr "Create Group..."
+
+#: share/plugin/groups/template/directory_links:5
+msgid "groups.create-new-group"
+msgstr "Create New Group"
+
+#. (ws_title)
+#: share/plugin/groups/share/widgets/workspaces/widget.js:27
+msgid "groups.create-new-page-in=wiki"
+msgstr "Create new page in %1"
+
+#: share/plugin/groups/share/widgets/membership/jemplate/workspaces.tt2:41
+msgid "groups.create-new-wiki"
+msgstr "Create New Workspace"
+
+#: share/plugin/groups/share/widgets/membership/jemplate/create_workspace.tt2:31 share/plugin/groups/share/widgets/membership/jemplate/create_workspace.tt2:44
+msgid "groups.creating-self-join-wiki"
+msgstr "You are creating a self-join workspace. Non-members will be able to discover the workspace through search, activity updates and profile pages of workspace members, and the home page of this group. Non-members can see the workspace content."
+
+#: share/plugin/groups/share/javascript/lightbox/delete-group.tt2:2
+msgid "groups.delete"
+msgstr "Delete Group"
+
+#: share/plugin/groups/share/javascript/lightbox/delete-group.tt2:14
+msgid "groups.delete-is-final"
+msgstr "You will not be able to restore the group once it's deleted. Users will no longer be able to signal to this group and any access to workspaces through this group will be revoked."
+
+#: share/plugin/groups/template/edit_group_links:3
+msgid "groups.delete-this"
+msgstr "Delete This Group"
+
+#. (name)
+#: share/plugin/groups/share/javascript/lightbox/delete-group.tt2:6
+msgid "groups.delete=name"
+msgstr "Delete %1"
+
+#: share/plugin/groups/share/widgets/edit_information/widget.js:163
+msgid "groups.description-1000-characters-max"
+msgstr "Description is limited to 1000 characters"
+
+#: share/plugin/groups/share/widgets/edit_information/jemplate/widget.tt2:9
+msgid "groups.description:"
+msgstr "Description:"
+
+#: share/plugin/groups/template/directory_hello:2 share/plugin/groups/template/nav_groups:15
+msgid "groups.directory"
+msgstr "Group Directory"
+
+#: share/plugin/groups/share/widgets/information/jemplate/widget.tt2:12
+msgid "groups.edit"
+msgstr "(Edit)"
+
+#: share/plugin/groups/template/group_links:10
+msgid "groups.edit-group"
+msgstr "Edit Group"
+
+#: share/plugin/groups/template/group_links:16
+msgid "groups.edit-layout"
+msgstr "Edit Layout"
+
+#. (container.group.name)
+#: share/plugin/groups/template/edit_group_hello:4
+msgid "groups.edit=name"
+msgstr "Edit Group: %1"
+
+#: share/plugin/groups/share/widgets/membership/jemplate/list.tt2:11 share/plugin/groups/share/widgets/membership/jemplate/list.tt2:13
+msgid "groups.first"
+msgstr "first"
+
+#: share/plugin/groups/share/widgets/all_groups/jemplate/list.tt2:8 share/plugin/groups/share/widgets/my_groups/jemplate/list.tt2:4 share/plugin/groups/template/create_group_hello:2 share/plugin/groups/template/edit_group_hello:3
+msgid "groups.group"
+msgstr "Group"
+
+#: share/plugin/groups/share/widgets/people/jemplate/peoplelist.tt2:4
+msgid "groups.group-contains-no-member"
+msgstr "This group contains no member"
+
+#: share/plugin/groups/share/widgets/workspaces/widget.js:8
+msgid "groups.group-is-not-member-of-any-wikis"
+msgstr "This group is not a member of any workspaces."
+
+#: share/plugin/groups/share/widgets/edit_information/jemplate/widget.tt2:14
+msgid "groups.group-logo-image:"
+msgstr "Group Logo / Image:"
+
+#: share/plugin/groups/share/widgets/information/jemplate/widget.tt2:30
+msgid "groups.group-type"
+msgstr "Group Type"
+
+#: share/plugin/groups/share/widgets/edit_information/jemplate/widget.tt2:36
+msgid "groups.group-type:"
+msgstr "Group Type:"
+
+#. (container.group.display_permission_set)
+#: share/plugin/groups/template/groups_hello:3
+msgid "groups.heading=acl"
+msgstr "%1 group"
+
+#: share/plugin/groups/share/javascript/lightbox/leave-group.tt2:3
+msgid "groups.leave"
+msgstr "Leave Group"
+
+#: share/plugin/groups/template/grouplist:103
+msgid "groups.member"
+msgstr "member"
+
+#: share/plugin/groups/template/grouplist:105 share/plugin/groups/template/grouplist:38
+msgid "groups.member-plural"
+msgstr "members"
+
+#: share/plugin/groups/share/widgets/all_groups/jemplate/list.tt2:6 share/plugin/groups/share/widgets/my_groups/jemplate/list.tt2:3
+msgid "groups.members"
+msgstr "Members"
+
+#: share/plugin/groups/template/grouplist:53
+msgid "groups.name"
+msgstr "Name"
+
+#: share/plugin/groups/share/widgets/edit_information/jemplate/widget.tt2:3
+msgid "groups.name-of-group:"
+msgstr "Name of Group:"
+
+#: share/plugin/groups/share/widgets/edit_information/widget.js:159
+msgid "groups.name-required"
+msgstr "Name is required"
+
+#: share/plugin/groups/share/widgets/workspaces/widget.js:29
+msgid "groups.new-page"
+msgstr "new page"
+
+#: share/plugin/groups/share/widgets/membership/jemplate/list.tt2:17 share/plugin/groups/share/widgets/membership/jemplate/list.tt2:19
+msgid "groups.next"
+msgstr "next"
+
+#: share/plugin/groups/share/javascript/lightbox/create-group.tt2:59
+msgid "groups.next-step"
+msgstr "Next"
+
+#: share/plugin/groups/share/widgets/membership/jemplate/members.tt2:11
+msgid "groups.no-other-members-use-form-below-to-invite"
+msgstr "Currently, you are the only member of this group.<br/>Use the form below to invite your colleagues."
+
+#: share/plugin/groups/share/widgets/membership/jemplate/workspaces.tt2:7
+msgid "groups.no-wikis-use-form-below-to-select"
+msgstr "Currently, there are no workspaces associated with this group. Use the form below to select workspaces."
+
+#. (button)
+#: share/plugin/groups/share/widgets/membership/jemplate/members.tt2:4
+msgid "groups.note-click-this-to-save-changes=button"
+msgstr "NOTE: Click <b>%1</b> to save changes."
+
+#: share/plugin/groups/share/widgets/membership/jemplate/members.tt2:39
+msgid "groups.note-message-sent-to-added-members-only"
+msgstr "NOTE: message sent to added members only"
+
+#: share/plugin/groups/share/widgets/membership/jemplate/members.tt2:37
+msgid "groups.personal-message-optional:"
+msgstr "Personal message (optional):"
+
+#: share/plugin/groups/share/widgets/membership/jemplate/list.tt2:5 share/plugin/groups/share/widgets/membership/jemplate/list.tt2:7
+msgid "groups.previous"
+msgstr "previous"
+
+#: share/plugin/groups/share/javascript/lightbox/create-group.tt2:49
+msgid "groups.private"
+msgstr "Private Group"
+
+#: share/plugin/groups/share/javascript/lightbox/create-group.tt2:50
+msgid "groups.private-not-listed-in-directory"
+msgstr "Will not be displayed in the Group Directory and new members must be invited by the group administrators."
+
+#: share/plugin/groups/share/widgets/membership/jemplate/list.tt2:60
+msgid "groups.remove"
+msgstr "remove"
+
+#: share/plugin/groups/share/widgets/edit_information/jemplate/widget.tt2:31
+msgid "groups.reset-photo"
+msgstr "Reset Photo"
+
+#: share/plugin/groups/template/group_links:24
+msgid "do.revert-to-default"
+msgstr "Revert to Default…"
+
+#: share/plugin/groups/share/widgets/membership/widget.js:425
+msgid "groups.role-admin"
+msgstr "Admin"
+
+#: share/plugin/groups/share/widgets/membership/widget.js:424
+msgid "groups.role-member"
+msgstr "Member"
+
+#: share/plugin/groups/template/edit_group_footer:14 share/plugin/groups/template/group_footer:17
+msgid "groups.save"
+msgstr "Save"
+
+#: share/plugin/groups/share/javascript/lightbox/create-group.tt2:28
+msgid "groups.search-before-creating"
+msgstr "Before creating a group, you can search names and descriptions for existing groups."
+
+#: share/plugin/groups/share/javascript/lightbox/create-group.tt2:30
+msgid "groups.search-here"
+msgstr "type your search here..."
+
+#: share/plugin/groups/template/search_box_groups:1
+msgid "groups.search:"
+msgstr "Search Groups:"
+
+#: share/plugin/groups/share/javascript/lightbox/create-group.tt2:39
+msgid "groups.self-join"
+msgstr "Self-Join Group"
+
+#: share/plugin/groups/share/javascript/lightbox/create-group.tt2:40
+msgid "groups.self-join-listed-in-directory"
+msgstr "Can be seen in the Group Directory by everyone and anyone can join."
+
+#. ((page * per_page)
+#. ((page * per_page) + 1, (more ? ((page + 1) * per_page) : totalResults), totalResults)
+#: share/plugin/groups/share/widgets/all_groups/jemplate/list.tt2:44
+msgid "groups.showing=from,to,total"
+msgstr "Showing Groups %1 - %2 of %3 total."
+
+#: share/plugin/groups/share/widgets/all_groups/jemplate/list.tt2:7
+msgid "groups.status"
+msgstr "Status"
+
+#. (group_name)
+#: share/plugin/groups/share/javascript/lightbox/delete-group.js:21
+msgid "groups.successfully-deleted=name"
+msgstr "The group, %1, has been successfully deleted."
+
+#: share/plugin/groups/share/widgets/membership/jemplate/create_workspace.tt2:30 share/plugin/groups/share/widgets/membership/jemplate/create_workspace.tt2:43
+msgid "groups.title-of-your-new-wiki-can-changed-later"
+msgstr "This will be the title of your new workspace. It can be changed later."
+
+#: share/plugin/groups/share/widgets/membership/jemplate/create_workspace.tt2:23 share/plugin/groups/share/widgets/membership/jemplate/create_workspace.tt2:37
+msgid "groups.title:"
+msgstr "Title:"
+
+#: share/plugin/groups/share/javascript/lightbox/create-group.tt2:24
+msgid "groups.toggling-self-join-and-private"
+msgstr "When making a Private group a Self-join group, any user in the group's Accounts will be able to join the group and then optionally invite others into the group. When changing a Self-join group to a Private group, it will no longer appear in the Group Directory and will become invite-only by the group administrators."
+
+#: share/plugin/groups/share/widgets/membership/jemplate/list.tt2:60
+msgid "groups.undo"
+msgstr "undo"
+
+#: share/plugin/groups/share/widgets/membership/jemplate/create_workspace.tt2:50
+msgid "groups.url:"
+msgstr "URL:"
+
+#: share/plugin/groups/share/widgets/membership/jemplate/members.tt2:32
+msgid "groups.use-input-above-to-invite-group-members"
+msgstr "Use the input above to invite colleagues to this group."
+
+#: share/plugin/groups/share/widgets/membership/jemplate/workspaces.tt2:29
+msgid "groups.use-input-above-to-select-group-wikis"
+msgstr "Use the input above to select workspaces to associate with this group."
+
+#: share/plugin/groups/share/widgets/edit_information/jemplate/widget.tt2:44
+msgid "groups.wiki-prevents-updating-group-permissions"
+msgstr "This group has at least one workspace that prevents you from being able to update the group permissions."
+
+#: share/plugin/groups/share/widgets/membership/widget.js:308
+msgid "groups.wiki-with-that-name-already-exists"
+msgstr "A Workspace with that name already exists"
+
+#: share/plugin/groups/share/widgets/all_groups/widget.js:11 share/plugin/groups/template/grouplist:30 share/plugin/groups/template/grouplist:88
+msgid "groups.you-are-member"
+msgstr "You are currently a member of this group."
+
+#: share/plugin/groups/share/widgets/all_groups/widget.js:70
+msgid "groups.you-are-now-member-of-group"
+msgstr "You are now a member of the <strong>&nbsp;</strong> group."
+
+#. ('<span class="workspace-permission-set">&nbsp;</span>', '<span class="group-permission-set">&nbsp;</span>')
+#. ("<span class=\"workspace-permission-set\">&nbsp;</span>", "<span class=\"group-permission-set\">&nbsp;</span>")
+#: share/plugin/groups/share/widgets/membership/jemplate/workspaces.tt2:30
+msgid "groups.you-can-only-associate=wiki-acl,group-acl"
+msgstr "You can only associate %1 workspaces with a %2 group."
+
+#: share/plugin/groups/share/widgets/membership/jemplate/workspaces.tt2:32
+msgid "groups.you-must-be-wiki-admin-to-associate-it-with-group"
+msgstr "You must be an Admin of the workspace in order to associate it with this group."
+
+#. (offset + 1, last, pager.total_entries)
+#: share/plugin/groups/template/grouplist:49
+msgid "info.showing=from,to,total"
+msgstr "Showing %1 - %2 of %3 total."
+
+#: share/plugin/groups/share/widgets/membership/jemplate/create_workspace.tt2:55
+msgid "info.valid-wiki-name"
+msgstr "It must consist of 3-30 lowercase letters, numbers, underscores or dashes."
+
+#: share/plugin/groups/share/widgets/membership/jemplate/create_workspace.tt2:54
+msgid "info.wiki-id"
+msgstr "This is a short unique identifier used as part of your workspace's web address and email address."
+
+#: share/plugin/groups/share/widgets/membership/jemplate/create_workspace.tt2:28 share/plugin/groups/share/widgets/membership/jemplate/create_workspace.tt2:41
+msgid "info.wiki-title"
+msgstr "This is the title of your workspace. It may be changed later if you want."
+
+#: share/plugin/groups/share/widgets/all_groups/jemplate/list.tt2:48 share/plugin/groups/share/widgets/all_groups/jemplate/list.tt2:50 share/plugin/groups/share/widgets/my_groups/jemplate/list.tt2:43 share/plugin/groups/share/widgets/my_groups/jemplate/list.tt2:45
+msgid "nav.first"
+msgstr "First"
+
+#: share/plugin/groups/template/nav_groups:1
+msgid "nav.groups"
+msgstr "Groups"
+
+#: share/plugin/groups/share/widgets/all_groups/jemplate/list.tt2:66 share/plugin/groups/share/widgets/all_groups/jemplate/list.tt2:68 share/plugin/groups/share/widgets/my_groups/jemplate/list.tt2:61 share/plugin/groups/share/widgets/my_groups/jemplate/list.tt2:63
+msgid "nav.last"
+msgstr "Last"
+
+#: share/plugin/groups/share/widgets/all_groups/jemplate/list.tt2:60 share/plugin/groups/share/widgets/all_groups/jemplate/list.tt2:62 share/plugin/groups/share/widgets/my_groups/jemplate/list.tt2:55 share/plugin/groups/share/widgets/my_groups/jemplate/list.tt2:57
+msgid "nav.next"
+msgstr "Next"
+
+#: share/plugin/groups/share/widgets/all_groups/jemplate/list.tt2:54 share/plugin/groups/share/widgets/all_groups/jemplate/list.tt2:56 share/plugin/groups/share/widgets/my_groups/jemplate/list.tt2:49 share/plugin/groups/share/widgets/my_groups/jemplate/list.tt2:51
+msgid "nav.previous"
+msgstr "Previous"
+
+#: share/plugin/groups/template/grouplist:51
+msgid "sort.by:"
+msgstr "Sort by:"
+
+#: share/plugin/groups/share/widgets/all_groups/config.yaml:3
+msgid "title.all_groups"
+msgstr "All Available Groups"
+
+#: share/plugin/groups/share/widgets/edit_information/config.yaml:3
+msgid "title.edit_information"
+msgstr "Information"
+
+#: share/plugin/groups/share/widgets/edit_people/config.yaml:3
+msgid "title.edit_people"
+msgstr "Membership"
+
+msgid "title.group-members"
+msgstr "Members"
+
+msgid "title.group-workspaces"
+msgstr "Workspaces"
+
+#: share/plugin/groups/share/widgets/information/config.yaml:3
+msgid "title.information"
+msgstr "Information"
+
+#: share/plugin/groups/share/widgets/my_groups/config.yaml:3
+msgid "title.my_groups"
+msgstr "My Groups"
+
+#: share/plugin/groups/share/widgets/people/config.yaml:3
+msgid "title.people"
+msgstr "Membership"
+
+#: share/plugin/groups/share/widgets/teaser/config.yaml:3
+msgid "title.teaser"
+msgstr "Workspaces"
+
+#: share/plugin/groups/share/widgets/workspaces/config.yaml:3
+msgid "title.workspaces"
+msgstr "Workspaces"
+
+#: share/plugin/groups/share/widgets/membership/jemplate/create_workspace.tt2:17
+msgid "wiki.create"
+msgstr "Create New Workspace"

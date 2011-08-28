@@ -1,0 +1,108 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use 5.12.0;
+use warnings;
+use FindBin qw/$RealBin/;
+use lib "$RealBin/../lib";
+use Locale::Maketext::Lexicon 0.85; # Ensures xgettext.pl terminates
+use File::Basename 'basename';
+use Getopt::Long;
+use Socialtext::System qw/shell_run/;
+use File::Path qw(make_path remove_tree);
+chdir "$RealBin/..";
+
+my ($new, $old, $lang, $reuse);
+GetOptions(
+    'new|n!' => \$new,
+    'old|o!' => \$old,
+    'reuse|r!' => \$reuse,
+    'lang|l=s' => \$lang,
+) or die "Usage: $0 [--new|--reuse|--old] [--lang lang] [sections]\n";
+
+$new = 1 if $reuse;
+
+if (!$old and !$new) {
+    die "Please specify one of --new, --reuse or --old.\n";
+}
+
+my @plugins = map { basename($_) } grep { -d and (-d "$_/share" or -d "$_/template") } glob('share/plugin/*');
+my %Sections = (
+    bin => 'bin',
+    lib => 'lib',
+    wikiwyg => 'share/skin/wikiwyg/javascript',
+    appliance => ['../appliance/libsocialtext-appliance-perl/template', '../appliance/libsocialtext-appliance-perl/sbin'],
+#   s2 => ['share/skin/s2/template', 'share/skin/s2/javascript'],
+    s3 => ['share/skin/s3/template', 'share/skin/s3/javascript'],
+    template => 'share/template',
+    reports => ['../socialtext-reports/template', '../socialtext-reports/lib'],
+    common => 'share/skin/common/javascript',
+    map {
+        $_ => [grep { -d and (join(',', glob("$_/*")) ne "$_/images") } glob("share/plugin/$_/{share,template}")]
+    } @plugins
+);
+
+%Sections = map {
+    /^plugins?$/
+        ? (map { $_ => $Sections{$_} } @plugins)
+        : $Sections{$_}
+            ? ($_ => $Sections{$_})
+            : die "No such section: $_"
+} @ARGV if @ARGV;
+
+# Cleanup temporary JS files before extracting
+shell_run("dev-bin/jsmake cleanall");
+
+if ($new) {
+    $lang = 'new' if $new;
+    remove_tree "share/l10n/$lang";
+    make_path "share/l10n/$lang";
+}
+else {
+    $lang //= 'en';
+}
+
+for my $key (sort keys %Sections) {
+    my $dir = $Sections{$key};
+    $dir = [$dir] unless ref $dir;
+    next unless @$dir;
+
+    if ($key eq 'wikiwyg' or $key eq 'lib') {
+#        shell_run('./dev-bin/l10n-widget-to-js');
+        unlink 'lib/Socialtext/Widget_resource.pm';
+        unlink 'share/skin/wikiwyg/javascript/widget_resource.js';
+    }
+
+    shell_run(
+        qw( xgettext.pl -now -P perl=* -P tt2=* ),
+        -o => "share/l10n/$lang/$key.po",
+        map { -D => $_ } @$dir
+    );
+
+    my $po = "share/l10n/$lang/$key.po";
+    if ($new and -e $po) {
+        system("perl -ni -e 'print unless /^# SOME DESCRIPTIVE TITLE./ .. /^#:/ and not /^#:/' $po");
+        system("msggrep -w 99999 --sort-output --msgid -v -e '^<!\\|^[a-z][a-z0-9][a-z0-9]*\\.' $po > $po.new");
+        unless ($reuse) {
+            system("dev-bin/l10n-guess-po --inplace $po.new");
+            system("dev-bin/l10n-reverse-po --msgid --inplace $po.new");
+        }
+        system("mv $po.new $po");
+        unlink $po unless -s $po;
+    }
+
+    if ($key eq 'wikiwyg' or $key eq 'lib') {
+        shell_run('git checkout share/skin/wikiwyg/javascript/widget_resource.js');
+    }
+}
+
+if ($reuse) {
+    system("msgcat --no-wrap share/l10n/new/*.po > new.po");
+    system("msggrep --no-wrap -T -e . share/l10n/en.po | dev-bin/l10n-reverse-po - | msguniq --no-wrap -s > en.pot");
+    system("msgmerge --no-wrap -N -s en.pot new.po | msggrep --no-wrap -T -e . | grep -v '^#[,~]' > reusable.po.new");
+    system("msgcat --no-wrap reusable.po.new | perl -ne 'print if /^\$/..0' > reusable.po");
+    unlink "reusable.po.new";
+    warn "*** Generated reusable keys: reusable.po\n";
+    warn "    Please edit it and run: ./dev-bin/l10n-po-to-nlw reusable.po\n"
+}
+
+#shell_run("msgcat share/l10n/en/*.po > share/l10n/en.po");

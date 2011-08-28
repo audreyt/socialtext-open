@@ -1,0 +1,37 @@
+| *Comment* | Test Case: Data Jobs |
+
+| *Comment* | Test Case: Data Jobs SETUP |  |
+| set | user | datajobs%%start_time%%@matt.socialtext.net |
+| set | acct | datajobs%%start_time%% |
+| st-admin | create-account --name %%acct%% | A new account named "%%acct%%" was created |
+| st-admin | create-user --e %%user%% --p %%password%% | A new user with the username "%%user%%" was created. |
+
+| *Comment* | Test Case: Data Jobs Login, see error message - no permissions |  |
+| st-logoutin | %%user%% | %%password%% |
+| open_ok | /data/jobs |  |
+| wait_for_text_present_ok | User not authorized | 30000 |
+| wait_for_element_not_present_ok | link=JSON | 30000 |
+| wait_for_element_not_present_ok | link=YAML | 30000 |
+| wait_for_element_not_present_ok | link=PageIndex | 30000 |
+| wait_for_element_not_present_ok | link=SignalIndex | 30000 |
+
+| *Comment* | Test Case: Data Jobs Login, Grant Permissions, See Screen |  |
+| st-admin | give-accounts-admin --e %%user%% | now has accounts admin access |
+| open_ok | /data/jobs |  |
+| wait_for_element_visible_ok | link=JSON | 30000 |
+| wait_for_element_visible_ok | link=YAML | 30000 |
+| wait_for_element_visible_ok | link=PageIndex | 30000 |
+| text_unlike | //body | User not authorized |
+| text_like | //body | qr/SignalIndex[\s\t]+\d+[\s\t]+\d+[\s\t]+\d+[\s\t]+\d+/ |
+
+| *Comment* | Test Case: Data Jobs Login, Remove accounts admin, add system admin, do not see screen |  |
+| st-admin | remove-accounts-admin --e %%user%% | no longer has accounts admin access |
+| st-admin | give-system-admin --e %%user%% | now has system admin access |
+| open_ok | /data/jobs |  |
+| wait_for_text_present_ok | User not authorized | 30000 |
+| wait_for_element_not_present_ok | link=JSON | 30000 |
+| wait_for_element_not_present_ok | link=YAML | 30000 |
+| wait_for_element_not_present_ok | link=PageIndex | 30000 |
+| text_unlike | //body | PageIndex |
+
+| *Comment* | Test Case: Data Jobs COMPLETED |

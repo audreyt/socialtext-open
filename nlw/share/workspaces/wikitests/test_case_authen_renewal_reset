@@ -1,0 +1,9 @@
+| *Comment* | Test Case: Authen Renewal Reset |
+| *Comment* | Test Case: Authen Renewal Reset - should always follow but be separate from [Test Case: Authen Renewal] |
+| *Comment* | because if TC: Authen Renewal bombs, as it does in IE 6, this reset is critical for oncoming tests. |
+
+
+| *Comment* | Set us back to a reasonable auth cookie soft limit |
+| st-config | set auth_token_soft_limit 86400 |
+
+| *Comment* | Test Case: Authen Renewal Reset COMPLETED |

@@ -1,0 +1,111 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+# Script to gather the DISPLAY/EDIT/DOWNLOAD/UPLOAD stats from
+# /var/log/nlw.log and aggregate it into the workspace plugin
+# directory for all workspaces where the page stats reporting is
+# turned on.  Since this is a prototype, we will do our best to
+# be light on the server
+
+use strict;
+use warnings;
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+
+use DateTime;
+use Getopt::Long;
+use Socialtext::File;
+use Socialtext::LogParser;
+use Socialtext::Paths;
+use Socialtext::Workspace;
+use Sys::Hostname;
+
+
+my %opts = ( file => '/var/log/nlw.log.0' );
+GetOptions(
+    'help'    => \$opts{help},
+    'file:s'  => \$opts{file},
+    'verbose' => \$opts{verbose},
+) or exit 1;
+
+show_help() if $opts{help};
+
+unless ( -f $opts{file} and -r _ ) {
+    print "There is no readable log file at $opts{file}\n";
+    exit 0;
+}
+
+open my $fh, '<', $opts{file}
+    or die "Cannot read $opts{file}: $!";
+
+my $filename = DateTime->now()->strftime('%Y%m%d%H%M%S');
+
+# Ensures that the stats files are owned by the right user/group
+my ( $uid, $gid ) = ( stat Socialtext::AppConfig->data_root_dir() )[4, 5];
+$> = $uid;
+$) = $gid;
+
+while (<$fh>) {
+    my %parsed = Socialtext::LogParser->parse_log_line($_);
+
+    next unless $parsed{workspace_name};
+
+    unless ( Socialtext::Workspace->new( name => $parsed{workspace_name} ) ) {
+        msg("Skipping apparent workspace $parsed{workspace_name}, which is not in dbms.\n");
+        next;
+    }
+
+    my $plugin_dir
+        = Socialtext::Paths::plugin_directory( $parsed{workspace_name} );
+    my $page_dir
+        = Socialtext::File::catdir( $plugin_dir, 'counter', $parsed{page_id} );
+
+    Socialtext::File::ensure_directory( $page_dir );
+
+    my $file = Socialtext::File::catfile( $page_dir, $filename );
+
+    open my $page_fh, '>>', $file
+        or die "Cannot append to $file: $!";
+    print $page_fh $_
+        or die "Cannot append to $file: $!";
+    close $page_fh
+        or die "Cannot append to $file: $!";
+
+    msg("Found log line for $parsed{page_id} in $parsed{workspace_name}\n");
+
+    my $latest = Socialtext::File::catfile( $page_dir, 'LATEST' );
+
+    if ( -l $latest ) {
+        unlink $latest
+            or die "Cannot unlink $latest: $!";
+    }
+
+    symlink $filename, $latest
+        or die "Cannot symlink $filename => $latest: $!";
+}
+
+sub msg {
+    print @_ if $opts{verbose};
+}
+
+sub show_help {
+    print <<"EOF";
+
+ st-page-stats
+
+ This script parses the application log file and create per-page stat
+ files based on what it finds in that file.
+
+ This script accepts the following options.
+
+ --file      The file to parse for stats. Defaults to /var/log/nlw.log.0
+
+ --verbose   Tells you what the script is doing as it does it
+
+ --help      Produce this output.
+
+EOF
+    exit(0);
+}
+

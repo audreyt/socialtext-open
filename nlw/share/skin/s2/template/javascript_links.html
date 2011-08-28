@@ -1,0 +1,8 @@
+[%# @COPYRIGHT@ -%]
+[% PROCESS inlined_javascript.html %]
+[% IF loc_lang != 'en' %]
+<script type="text/javascript" charset="utf-8"
+    src="[% wiki.skin_uri('s2') %]/javascript/l10ns.js.gz">
+</script>
+[% END %]
+  <script type="text/javascript" src="[% wiki.skin_uri('s2') %]/javascript/socialtext-comment.js.gz"></script>

@@ -1,0 +1,62 @@
+* Fixture: SocialRest
+
+| set            | distinct     | data-users-%%start_time%% |
+| create-account | %%distinct%% |                           |
+
+| set            | albert       | albert-%%start_time%%@ken.socialtext.net |              |
+| create-user    | %%albert%%   | password                                 | %%distinct%% |
+| set            | albert_id    | %%user_id%%                              |              |
+| set            | bob          | bob-%%start_time%%@ken.socialtext.net    |              |
+| create-user    | %%bob%%      | password                                 | %%distinct%% |
+| set            | bob_id       | %%user_id%%                              |              |
+| set            | carl         | carl-%%start_time%%@ken.socialtext.net   |              |
+| create-user    | %%carl%%     | password                                 | %%distinct%% |
+| set            | carl_id      | %%user_id%%                              |              |
+| set            | doug         | doug-%%start_time%%@ken.socialtext.net   |              |
+| create-user    | %%doug%%     | password                                 | %%distinct%% |
+| set            | doug_id      | %%user_id%%                              |              |
+
+| st-admin | set-external-id --username %%albert%% --external-id %%albert%% |
+| st-admin | set-external-id --username %%bob%% --external-id %%bob%%       |
+| st-admin | set-external-id --username %%carl%% --external-id %%carl%%     |
+| st-admin | set-external-id --username %%doug%% --external-id %%doug%%     |
+
+| set-business-admin | %%albert%% | 1 |
+
+| *Comment* | Non business admin does not see private fields by default |
+| http-user-pass | %%bob%% | password |
+| GET-json | /data/users |
+| json-response-is | 200 | 4 |
+| json-path-missing | $[0].private_external_id |
+| json-path-missing | $[1].private_external_id |
+| json-path-missing | $[2].private_external_id |
+| json-path-missing | $[3].private_external_id |
+
+| *Comment* | Non business admin cannot see private fields when requesting |
+| GET-json | /data/users?want_private_fields=1 |
+| json-response-is | 200 | 4 |
+| json-path-missing | $[0].private_external_id |
+| json-path-missing | $[1].private_external_id |
+| json-path-missing | $[2].private_external_id |
+| json-path-missing | $[3].private_external_id |
+
+| *Comment* | Business admin does not see private fields by default |
+| http-user-pass | %%albert%% | password |
+| GET-json | /data/users |
+| json-response-is | 200 | 4 |
+| json-path-missing | $[0].private_external_id |
+| json-path-missing | $[1].private_external_id |
+| json-path-missing | $[2].private_external_id |
+| json-path-missing | $[3].private_external_id |
+
+| *Comment* | Business admin can see private fields |
+| GET-json | /data/users?want_private_fields=1 |
+| json-response-is | 200 | 4 |
+| json-path-exists | $[0].private_external_id |
+| json-path-is     | $[0].private_external_id | %%albert%% |
+| json-path-exists | $[1].private_external_id |
+| json-path-is     | $[1].private_external_id | %%bob%% |
+| json-path-exists | $[2].private_external_id |
+| json-path-is     | $[2].private_external_id | %%carl%% |
+| json-path-exists | $[3].private_external_id |
+| json-path-is     | $[3].private_external_id | %%doug%% |

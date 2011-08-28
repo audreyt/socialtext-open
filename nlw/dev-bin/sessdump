@@ -1,0 +1,36 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+use Apache::Session::File;
+use Data::Dumper;
+
+if ( !@ARGV ) {
+    print STDERR <DATA>;
+    exit(1);
+}
+
+
+for my $parm ( @ARGV ) {
+    my $parm = shift;
+
+    my @parts = split( /\//, $parm );
+    my $filename = pop @parts;
+    my $dir = @parts ? join( "/", @parts ) : ".";
+
+    tie my %session, 'Apache::Session::File', $filename, {Directory => $dir};
+
+    $Data::Dumper::Quotekeys = 0;
+    $Data::Dumper::Terse = 0;
+
+    print "$filename\n";
+    print Dumper( \%session ), "\n";
+}
+
+__DATA__
+sessdump filename-in-cwd
+sessdump fully-qualified-path
+
+Command line utility to output the session attributes in a given session file

@@ -1,0 +1,12 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::Migration::Utils qw/ensure_socialtext_schema
+                                    create_job_for_each_workspace/;
+
+ensure_socialtext_schema(61); # Current version when this migration written
+
+create_job_for_each_workspace('MigrateUserWorkspacePrefs');
+
+exit 0;

@@ -1,0 +1,7 @@
+See {bz: 5388}
+
+This is some cleanup work around our incomplete implementation of "deleted"
+users. All users who are marked `all_users.is_deleted` need to be re-indexed
+in solr so that they do not show up in search results. Since there is no way
+do mark users as such in the UI yet, we don't have to worry about this stuff
+getting out of sync.

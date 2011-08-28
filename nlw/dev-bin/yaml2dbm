@@ -1,0 +1,22 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use DB_File;
+use Fcntl qw(O_CREAT O_RDWR);
+use YAML;
+
+{ no warnings 'once';
+$YAML::UseVersion = 0;
+}
+
+my $yaml = shift;
+my $db = shift;
+
+die "usage yaml2dbm <yaml-file> <dbm-file-path>\n" unless $yaml && $db;
+
+my %file;
+tie %file, 'DB_File', $db, O_CREAT|O_RDWR;
+
+my $hash = YAML::LoadFile($yaml);
+$file{$_} = $hash->{$_} for keys %$hash;
+untie %file;

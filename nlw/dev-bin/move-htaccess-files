@@ -1,0 +1,5 @@
+#!/bin/bash
+# @COPYRIGHT@
+
+find /var/www/socialtext-1.0 -type f -name '.htaccess' -exec mv '{}' '{}.old' \;
+find /var/www/socialtext -type f -name '.htaccess' -exec mv '{}' '{}.old' \;

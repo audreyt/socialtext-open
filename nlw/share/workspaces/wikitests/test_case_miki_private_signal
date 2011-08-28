@@ -1,0 +1,73 @@
+| *Comment* | STARTING Test Case: Miki Private Signal |  |
+
+| *Comment* | Test Case: Miki Private Signal Create new account, workspace, user, add user |  |
+| set | miki_acct_prv | mikiacct-%%start_time%% |
+| set | miki_user_prv | `mikiuser%%start_time%%@matt.socialtext.net` |
+| set | short_mikiuser_prv | mikiuser%%start_time%% |
+| set | other_miki_user_prv | `othermiki%%start_time%%@matt.socialtext` |
+| set | other_short_miki_user_prv | othermiki%%start_time%% |
+| set | other_acct | other_miki_acct%%start_time%% |
+| set | third_user | thirduser%%start_time%%@matt.socialtext.net |
+| set | prv_signal | it was twenty years ago %%start_time%% today |
+
+| create_account | %%miki_acct_prv%% |  |  |
+| create_account | %%other_acct%% |  |  |
+
+| st-admin | disable-plugin --p signals --account %%miki_acct_prv%% | is now disabled |  |
+| create_user | %%miki_user_prv%% | %%password%% | %%miki_acct_prv%% |
+| create_user | %%other_miki_user_prv%% | %%password%% | %%miki_acct_prv%% |
+| create_user | %%third_user%% | %%password%% | %%miki_acct_prv%% |
+| st-logoutin | %%miki_user_prv%% | %%password%% |  |
+
+| *Comment* | Test case: Miki Private Signal Get to other user's profile |  |
+| st_process_jobs | PersonIndex |  |
+| open_ok | /m/people |  |
+| wait_for_element_visible_ok | st-search-text | 30000 |
+| wait_for_element_visible_ok | st-search-submit | 30000 |
+| type_ok | st-search-text | %%other_short_miki_user_prv%% |
+| submit | st-people-form | 30000 |
+| wait_for_element_visible_ok | link=%%other_short_miki_user_prv%% | 30000 |
+| click_ok | link=%%other_short_miki_user_prv%% |
+
+| *Comment* | Test case: Miki Private Signal Open global nav signals disabled, no private link |  |
+| wait_for_element_not_present_ok | mobile-signals | 30000 |
+| wait_for_element_not_present_ok | mobile-profile-privmsg | 30000 |
+
+| *Comment* | Test case: Miki Private Signal Open global nav add secondary account with signals enabled, now YES private link |  |
+| st-admin | add-member --account %%other_acct%% --e %%miki_user_prv%% | now has the role of |
+| st-admin | add-member --account %%other_acct%% --e %%other_miki_user_prv%% | now has the role of |
+| st_process_jobs | PersonIndex |  |
+| refresh |  |  |
+| wait_for_element_visible_ok | mobile-profile-privmsg | 30000 |
+
+| *Comment* | Test case: Miki Private Signal Open global nav enable signals on primary account, see private link |  |
+| enable_acct_plugin | people | %%miki_acct_prv%% |
+| st_process_jobs | PersonIndex |  |
+| refresh |  |  |
+| wait_for_element_visible_ok | mobile-profile-privmsg | 30000 |
+
+| *Comment* | Test case: Miki Private Signal Send private signal |  |
+| pause | 3000 |  |
+| click_ok | mobile-profile-privmsg |  |
+| wait_for_element_visible_ok | st-signal-text | 30000 |
+| wait_for_element_visible_ok | st-signal-submit | 30000 |
+| type_ok | st-signal-text | %%prv_signal%% |
+| submit | st-signal-form | 30000 |
+| wait_for_text_present_ok | Private message sent. | 30000 |
+| wait_for_element_visible_ok | mobile-profile-signals | 30000 |
+| click_ok | mobile-profile-signals |  |
+| wait_for_text_present_ok | %%prv_signal%% | 30000 |
+| text_like | //body | qr/%%short_mikiuser_prv%%.+minute.+ago/ |
+| text_like | //body | qr/private signal to %%other_short_miki_user_prv%%/ |
+
+| *Comment* | Test case: Miki Private Signal Send private signal |  |
+| open_ok | /?action=workspace_list |  |
+| st-logoutin | %%third_user%% | %%password%% |
+| wait_for_element_visible_ok | link=Mobile | 30000 |
+| click_and_wait | link=Mobile |  |
+| wait_for_text_not_present_ok | private | 30000 |
+| text_unlike | //body | private |
+| text_unlike | //body | %%prv_signal%% |
+
+| *Comment* | Test case: Miki Private Signal - No teardown needed - no workspaces! |  |
+| *Comment* | Test case: Miki Private Signal - COMPLETED |  |

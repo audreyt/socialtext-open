@@ -1,0 +1,56 @@
+INSTALL.troubleshooting -- Troubleshooting installation
+
+@COPYRIGHT@
+
+=== I just get a "server error" ===
+
+Common things to check:
+
+* Check your apache-perl error logs
+
+* Make sure apache-perl is running.
+
+* Make sure Postgres is running.
+
+
+=== My home page redirects to some page that I didn't expect  ===
+
+If your home page redirects to "localhost.localdomain" or some other
+machine name that you didn't expect, you probably didn't specify
+the hostname at configuration time, and ./configure couldn't correctly
+figure it out.  Rerun ./configure with a fully-qualified hostname:
+
+    $ ./configure --hostname=hostname.example.com
+
+Then, rerun "make" and "make install".
+
+"make install" will not overwrite the existing socialtext.conf file,
+so you'll need to either delete the /etc/socialtext/socialtext.conf
+before rerunning "make install", or manually update it yourself to
+have web_hostname and email_hostname set to fully-qualified hostnames:
+
+    email_hostname: hostname.example.com
+    web_hostname: hostname.example.com
+
+
+== database "NLW_yourname_testing" does not exist
+
+To run the test suite, Socialtext needs a scratch database to work
+in.  See docs/INSTALL.postgres for details on creating this database.
+
+
+== dev-bin/create-db-user can't locate Socialtext/AppConfig.pm ==
+
+If you're doing a make install, and this happens:
+
+    $ sudo make install
+    [ ! -e /etc/dont-install-nlw-here ]
+    rm -f -R /usr/share/nlw 
+    rm -f -R /usr/lib/perl5/site_perl/5.8.5/{Public,Control,Socialtext}
+    sudo -u postgres /usr/bin/perl dev-bin/create-db-user
+    Can't locate Socialtext/AppConfig.pm in @INC (@INC contains:
+    /home/andy/socialtext/dev-bin/../lib .... long list of directories ....
+
+it's because your postgres user doesn't have read permissions to
+the directory you've built Socialtext into.  Make sure that it's
+world-readable.

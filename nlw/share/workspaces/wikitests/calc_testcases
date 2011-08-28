@@ -1,0 +1,37 @@
+If Test Case: Verify Location fails, you have not configured your
+test env properly and are not testing the test-workspace
+
+* [Test Case: Verify Location]
+
+* [Test Case: Calc View Spreadsheet Page]
+* [Test Case: Calc New Page]
+* [Test Case: Calc Miki]
+* [Test case: Calc Watchlist]
+* [Test Case: Calc Tags]
+* [Test Case: Calc Tools: Rename Page]
+* [Test Case: Calc Tools: Delete Page]
+* [Test Case: Calc Tools: Duplicate Page]
+* [Test Case: Calc Tools: Copy Page to Workspace]
+* [Test Case: Calc Tools: Export as HTML]
+
+* [Test case: Calc functional search tests]
+* [Test Case: Calc Phrase search]
+* [Test Case: Calc Explore Spreadsheet sidebar]
+* [Test Case: Calc Tagging]
+* [Test Case: Calc What's New]
+* [Test Case: Calc Orphans List]
+* [Test Case: Calc All Pages]
+
+^ DONE_TESTING
+----
+
+^ TODOs and Consider-s
+
+ `[Test Case New Page No Overwrite]` (Features to do this now are missing from socialcalc)
+`[Test Case: stemming]` DO WE WANT TO ADD STEMMING TESTS TO SOCIALCALC PAGES ?
+`[Test Case: Revisions]` (Features to do this now are missing from socialcalc)
+`[Test Case: Home]` (This behavior relies on the old home page and is dependent on dashboard. Calctests should not do that.)
+`[Test Case: Inter Workspace Search]` - TBD.
+
+* [Test Case: Sidebar: Recently Viewed]
+* [Test Case: Sidebar: Recent Changes]

@@ -1,0 +1,50 @@
+# These modules are optional.  They are only for development, as they are for
+# dev-only features (Apache::Reload), or only used in a few .t files.
+#
+# If it's not worth it to make someone install a module only to run a
+# test or two, then put it in here.  If it's a test module that's used in
+# many .t files, then put it in the main Deps.yaml file.
+#
+# If your code doesn't require a specific minimum version of a module,
+# list "0" as the version.  Please do NOT include a non-zero version number
+# unless one is actually required.  It will be a false dependency, and we
+# will make people upgrade modules that they don't need to.
+---
+# For reloading modules as we work on them.
+Apache::Reload: 0
+App::Ack: 0
+
+# For getting memory usage, in conjunction with Apache::Status
+B::TerseSize: 0
+
+Email::Send::Test: 2.04
+File::Next: 0.30
+HTML::TableExtract: 2.10
+HTML::Tidy: 1.06
+Image::Size: 3.0
+MIME::Base64: 3.07
+
+# For testing RTF export.
+RTF::Parser: 0
+Test::Base: 0.52
+Test::Builder: 0.32
+Test::Deep: 0
+Test::Harness: 3.17
+Test::HTTP: 0.11
+Test::Memory::Cycle: 0
+Test::MockObject: 0
+Test::More: 0.62
+Test::Output: 0.09
+Test::Pod: 0
+Test::Pod::Coverage: 0
+Test::Program: 0
+Test::WWW::Selenium: 0
+Test::WWW::Mechanize: 0
+Test::Mock::LWP: 0
+
+Socialtext::WikiFixture::Socialtext: 0
+Socialtext::WikiTest: 0.05
+Test::Differences: 0.47
+
+# For mocking libraries
+mocked: 0.09

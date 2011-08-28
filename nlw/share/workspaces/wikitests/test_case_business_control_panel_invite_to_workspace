@@ -1,0 +1,71 @@
+| *Comment* | Test Case: Business Control Panel Invite To Workspace |  |
+
+| set | email1 | group-1-%%start_time%%@ken.socialtext.com |
+| create_user | %%email1%% | %%password%% |
+| set | user1 | %%user_id%% |
+| set | email2 | group-2-%%start_time%%@ken.socialtext.com |
+| create_user | %%email2%% | %%password%% |
+| set | user2 | %%user_id%% |
+| set | email3 | group-3-%%start_time%%@ken.socialtext.com |
+| create_user | %%email3%% | %%password%% |
+| set | user3 | %%user_id%% |
+| set | email4 | group-4-%%start_time%%@ken.socialtext.com |
+| create_user | %%email4%% | %%password%% |
+| set | user4 | %%user_id%% |
+| set | email5 | group-5-%%start_time%%@ken.socialtext.com |
+| create_user | %%email5%% | %%password%% |
+| set | user5 | %%user_id%% |
+| set | new_ws_title | new-add-to-ws-%%start_time%% |
+
+| *Comment* | Test Case: Business Control Panel Invite To Workspace - Add Via /CP UI |  |
+
+| *Comment* | Test Case: Control Panel Add To Workspace - No user selected |  |
+| open_ok | /nlw/control/user |  |
+| wait_for_element_visible_ok | link=Invite to Workspace(s) | 30000 |
+| click_ok | link=Invite to Workspace(s) |  |
+| verifyAlert | No users selected, please select at least one user and try again. |  |
+
+| *Comment* | Test Case: Business Control Panel Invite To Workspace - search for %%start_time%% |  |
+| wait_for_element_visible_ok | username | 30000 |
+| wait_for_element_visible_ok | st-username-search-submit | 30000 |
+| type_ok | username | %%start_time%% |
+| click_and_wait | st-username-search-submit |  |
+
+| *Comment* | Test Case: Business Control Panel Invite To Workspace - select three users |  |
+| wait_for_element_visible_ok | %%user1%% | 30000 |
+| click_ok | %%user1%% |  |
+| wait_for_element_visible_ok | %%user2%% | 30000 |
+| click_ok | %%user2%% |  |
+| wait_for_element_visible_ok | %%user3%% | 30000 |
+| click_ok | %%user3%% |  |
+
+| *Comment* | Test Case: Business Control Panel Invite To Workspace - select new WS title/name/account |  |
+| wait_for_element_visible_ok | link=Invite to Workspace(s) | 30000 |
+| click_and_wait | link=Invite to Workspace(s) |  |
+| wait_for_element_visible_ok | workspace-title | 30000 |
+| type_ok | workspace-title | %%new_ws_title%% |
+| wait_for_element_visible_ok | workspace-name | 30000 |
+| type_ok | workspace-name | %%new_ws_title%% |
+
+| wait_for_element_visible_ok | accountLookahead | 30000 |
+| type_lookahead_ok | accountLookahead | Social |
+| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'text')][1] | 30000 |
+| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'text')][1] |  |
+
+| wait_for_element_visible_ok | members | 30000 |
+| select_ok | members | %%email1%% |
+| wait_for_element_visible_ok | add-selected | 30000 |
+| click_ok | add-selected |  |
+
+| *Comment* | Test Case: Business Control Panel Invite To Workspace - Invite three users |  |
+| wait_for_element_visible_ok | invite-button | 30000 |
+| click_and_wait | invite-button |  |
+| wait_for_text_present_ok | Congratulations! You successfully created a new workspace with 3 users. They will receive an invitation message with a link to %%new_ws_title%%. | 30000 |
+| wait_for_text_present_ok | %%new_ws_title%% workspace | 30000 |
+| wait_for_element_visible_ok | link=Usage Reports | 30000 |
+| wait_for_element_visible_ok | link=Growth Reports | 30000 |
+
+| *Comment* | Test Case: Business Control Panel Invite To Workspace TEARDOWN |  |
+| st-admin | delete-workspace --workspace %%new_ws_title%% --no-export | has been deleted |
+
+| *Comment* | Test case: Business Control Panel Invite To Workspace COMPLETED |  |

@@ -1,0 +1,418 @@
+# @COPYRIGHT@
+msgid ""
+msgstr ""
+"Project-Id-Version: Socialtext i18n\n"
+"PO-Revision-Date: 2011-07-29 10:31+0800\n"
+"Last-Translator: Socialtext i18n team\n"
+"Language-Team: Socialtext i18n team\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: share/plugin/signals/share/widgets/explore/config.yaml:5
+msgid "description.explore"
+msgstr "发布讯息及显示活动，包含讯息与工作区活动。"
+
+#: share/plugin/signals/share/widgets/explore_filters/config.yaml:5
+msgid "description.explore_filters"
+msgstr "书签过滤器"
+
+#: share/plugin/signals/share/widgets/profile/config.yaml:4
+msgid "description.profile"
+msgstr "个人档案"
+
+#: share/plugin/signals/share/javascript/lightbox/explore-about.tt2:17
+msgid "do.close"
+msgstr "关闭"
+
+#. (limit)
+#: share/plugin/signals/template/bookmarklet/too_long.html:6
+msgid "error.signal-too-long=limit"
+msgstr "您的讯息超过了 %1 字数"
+
+#: share/plugin/signals/template/explore_header:9
+msgid "explore.all-assets"
+msgstr "所有资源"
+
+#: share/plugin/signals/share/widgets/explore_filters/jemplate/filters.tt2:8
+msgid "explore.all-people"
+msgstr "所有人"
+
+#: share/plugin/signals/share/widgets/explore_filters/jemplate/filters.tt2:25 share/plugin/signals/share/widgets/explore_filters/jemplate/filters.tt2:26
+msgid "explore.any-group"
+msgstr "任何群组"
+
+#: share/plugin/signals/share/widgets/explore_filters/jemplate/filters.tt2:38 share/plugin/signals/share/widgets/explore_filters/jemplate/filters.tt2:39
+msgid "explore.any-tag"
+msgstr "任何标签"
+
+#: share/plugin/signals/share/widgets/explore_filters/jemplate/filters.tt2:49 share/plugin/signals/share/widgets/explore_filters/jemplate/filters.tt2:50
+msgid "explore.anyone"
+msgstr "任何人"
+
+#: share/plugin/signals/share/widgets/explore_filters/widget.js:398 share/plugin/signals/share/widgets/explore_filters/widget.js:408
+msgid "explore.anytime"
+msgstr "任何时间"
+
+#: share/plugin/signals/template/explore_header:10
+msgid "explore.attachments"
+msgstr "附件"
+
+#: share/plugin/signals/template/explore_hello:2
+msgid "explore.beta"
+msgstr "探索（测试）"
+
+#: share/plugin/signals/share/javascript/lightbox/explore-about.tt2:10
+msgid "explore.do-not-show-again"
+msgstr "不要再显示此信息"
+
+#: share/plugin/signals/share/widgets/explore_filters/widget.js:290
+msgid "explore.everyone"
+msgstr "所有人"
+
+#: share/plugin/signals/share/widgets/explore_filters/jemplate/filters.tt2:15
+msgid "explore.from"
+msgstr "从"
+
+#: share/plugin/signals/share/widgets/explore_filters/jemplate/filters.tt2:22
+msgid "explore.groups"
+msgstr "群组"
+
+#: share/plugin/signals/share/widgets/explore_filters/widget.js:289
+msgid "explore.just-me"
+msgstr "只有我"
+
+#: share/plugin/signals/template/explore_header:17
+msgid "explore.mentions"
+msgstr "提及"
+
+#: share/plugin/signals/share/widgets/explore_filters/jemplate/filters.tt2:10
+msgid "explore.mine"
+msgstr "我的"
+
+#: share/plugin/signals/share/widgets/explore_filters/widget.js:398 share/plugin/signals/share/widgets/explore_filters/widget.js:404
+msgid "explore.now"
+msgstr "现在"
+
+msgid "explore.number-of-activities-to-display"
+msgstr "显示活动数量上限"
+
+#: share/plugin/signals/share/widgets/explore_filters/jemplate/filters.tt2:46
+msgid "explore.people"
+msgstr "人员"
+
+#: share/plugin/signals/share/widgets/explore_filters/jemplate/filters.tt2:9
+msgid "explore.people-i-follow"
+msgstr "我关注的人"
+
+#: share/plugin/signals/share/widgets/explore_filters/jemplate/filters.tt2:57
+msgid "explore.permalink-for-this-view"
+msgstr "此检视的永久链接"
+
+#: share/plugin/signals/template/explore_header:16
+msgid "explore.recency"
+msgstr "发布时间"
+
+#: share/plugin/signals/template/explore_header:14
+msgid "explore.sort-by:"
+msgstr "排序按："
+
+#: share/plugin/signals/share/widgets/explore_filters/jemplate/filters.tt2:34
+msgid "explore.tags-from"
+msgstr "标签来自"
+
+#: share/plugin/signals/share/widgets/explore_filters/jemplate/filters.tt2:17
+msgid "explore.to"
+msgstr "到"
+
+#: share/plugin/signals/share/widgets/explore_filters/widget.js:181
+msgid "explore.type-to-select-group"
+msgstr "输入来选择特定群组"
+
+#: share/plugin/signals/share/widgets/explore_filters/widget.js:315
+msgid "explore.type-to-select-person"
+msgstr "输入来选择特定人员"
+
+#: share/plugin/signals/share/widgets/explore_filters/widget.js:260
+msgid "explore.type-to-select-tag"
+msgstr "输入来选择特定标签"
+
+#: share/plugin/signals/share/widgets/explore_filters/jemplate/filters.tt2:3
+msgid "explore.using-filters"
+msgstr "使用下面的过滤器来筛选结果。点击“x”来取消过滤。"
+
+#: share/plugin/signals/template/explore_header:12
+msgid "explore.web-links"
+msgstr "网页链接"
+
+#: share/plugin/signals/template/explore_header:11
+msgid "explore.wiki-links"
+msgstr "工作区链接"
+
+#: share/plugin/signals/share/javascript/lightbox/explore-about.tt2:4
+msgid "info.about-explore"
+msgstr "<b>Socialtext 探索</b> 让您轻松发现同事们通过 Socialtext 讯息分享的文件和链接。使用顶部的标签来选择类型，用左边的筛选功能来减少要显示的信息。<br /> <br /> 每个列出的项目都有一个以上提及它的讯息对话。您可以点击项目来打开链接，或者点击标题左边的方框来查看和回复对话。"
+
+#: share/plugin/signals/template/nav_signals_explore:1
+msgid "nav.explore"
+msgstr "探索"
+
+#: share/plugin/signals/template/cp_signal_size_limit:2 share/plugin/signals/template/element/settings/private_menu:1 share/plugin/signals/template/nav_signals:1 share/plugin/signals/template/signals_hello:1
+msgid "nav.signals"
+msgstr "讯息"
+
+#: share/plugin/signals/share/javascript/lightbox/explore-about.tt2:2
+msgid "nav.socialtext-explore"
+msgstr "Socialtext 探索"
+
+#: share/plugin/signals/template/bookmarklet/index.html:47
+msgid "signals.about-bookmarklet!"
+msgstr "将其作为书签（或收藏夹）安装，当您有网页要讯息或分享，只需点击或选择书签就可以发送讯息了！"
+
+#: share/plugin/signals/share/javascript/signals.js:820
+msgid "signals.all-groups"
+msgstr "所有群组"
+
+#: share/plugin/signals/share/widgets/profile/widget.html:21
+msgid "signals.all-shared-groups"
+msgstr "所有的共享群组"
+
+#: share/plugin/signals/template/email/direct-message.html:14
+msgid "signals.attachments:"
+msgstr "此讯息的附件如下："
+
+#: share/plugin/signals/template/bookmarklet/index.html:42
+msgid "signals.bookmarklet"
+msgstr "讯息书签"
+
+#: share/plugin/signals/template/bookmarklet/index.html:51
+msgid "signals.bookmarklet-for-ie-users"
+msgstr "须知：使用Internet Explorer的用户，右键点击下面的按钮，选择“添加到收藏夹”，然后选择“链接”文件夹。"
+
+#: share/plugin/signals/template/bookmarklet/index.html:64
+msgid "signals.bookmarks-bar-missing?"
+msgstr "看不到书签栏？"
+
+#: share/plugin/signals/template/bookmarklet/too_long.html:13
+msgid "signals.click-cancel-to-signal-to-self"
+msgstr "（点击 [取消] 来隐藏自己的讯息。）"
+
+#: share/plugin/signals/share/javascript/template/rightBar.tt2:26
+msgid "signals.delete"
+msgstr "删除"
+
+#: share/plugin/signals/template/bookmarklet/index.html:53
+msgid "signals.drag-button-to-bookmarks-bar"
+msgstr "对于其它的浏览器，您只需将按钮拖放到书签栏下面。"
+
+#. (event.context.body)
+#: share/plugin/signals/template/data/events/signal:1 share/plugin/signals/template/data/events/signal:3
+msgid "signals.edit-save=event"
+msgstr "%1。"
+
+#: share/plugin/signals/template/email/direct-message.html:28
+msgid "signals.email-from-socialtext"
+msgstr "此条消息由Socialtext讯息发送。"
+
+#: share/plugin/signals/template/email/direct-message.html:29
+msgid "signals.email-link-to-preferences"
+msgstr "不想收到Socialtext讯息的邮件或者更改您的偏好设置，请访问"
+
+#: share/plugin/signals/template/element/settings/signals_settings_section:7
+msgid "signals.email-to-private-message"
+msgstr "将 Socialtext 的私人讯息作为电子邮件发送"
+
+#: share/plugin/signals/share/javascript/template/rightBar.tt2:20
+msgid "signals.expunge"
+msgstr "消去"
+
+#: share/plugin/signals/template/bookmarklet/index.html:65
+msgid "signals.find-bookmarks-bar"
+msgstr "在您的浏览器菜单中找到并且选择“显示书签栏”。"
+
+#. (global_limit)
+#: share/plugin/signals/template/cp_signal_size_limit:7
+msgid "signals.global-limit=size"
+msgstr "该设备的最大值是 %1"
+
+msgid "signals.liked=creator,uri,snippet"
+msgstr "说 %1 的这则<a href=\"%2\">讯息</a>很赞：“%3”。"
+
+#. (a.user_count)
+#. (g.user_count)
+#: share/plugin/signals/template/lite/signals.html:52 share/plugin/signals/template/lite/signals.html:63
+msgid "signals.network-count=users"
+msgstr "%1 名用户"
+
+msgid "signals.number-of-signals-to-display"
+msgstr "显示讯息数量上限"
+
+#. (user_link(row.signal.user_id)
+#. (user_link(row.signal.user_id), row.signal.uri, to_localtime(row.signal.at), networks(row.signal))
+#: share/plugin/signals/template/view/signallist:81
+msgid "signals.on=user,uri,date,networks"
+msgstr "%1 在 <a href=\"%2\">%3</a> <b>%4</b>."
+
+#. (user_link(row.signal.user_id)
+#. (user_link(row.signal.user_id), row.signal.uri, to_localtime(row.signal.at), user_link(row.signal.recipient.id))
+#: share/plugin/signals/template/view/signallist:77
+msgid "signals.on=user,uri,date,private-to"
+msgstr "%1 在 <a href=\"%2\">%3</a> 给 %4 私人讯息。"
+
+#. (user_link(row.signal.user_id)
+#. (user_link(row.signal.user_id), row.signal.uri, to_localtime(row.signal.at), user_link(row.signal.in_reply_to.user_id))
+#: share/plugin/signals/template/view/signallist:79
+msgid "signals.on=user,uri,date,reply-to"
+msgstr "%1 在 <a href=\"%2\">%3</a> 给%4回复。"
+
+#: share/plugin/signals/template/permalink_hello:2
+msgid "signals.permalink"
+msgstr "讯息的永久链接"
+
+#: share/plugin/signals/template/lite/signals.html:40
+msgid "signals.post-to"
+msgstr "发布到"
+
+#. (a.user_count)
+#: share/plugin/signals/template/lite/signals.html:50
+msgid "signals.primary-account=users"
+msgstr "主帐户，%1 名用户"
+
+#. ("<a href=\"$webroot/st/profile/$sender.user_id\">$sender.best_full_name</a>")
+#. (('<a href="' _ webroot _ '/st/profile/' _ sender.user_id _ '">' _ sender.best_full_name _ '</a>'))
+#: share/plugin/signals/template/email/direct-message.html:0 share/plugin/signals/template/email/direct-message.html:5
+msgid "signals.private-message-from=user:"
+msgstr "您收到了 %1 的私人讯息："
+
+#: share/plugin/signals/template/element/settings/signals_settings_section:8
+msgid "signals.private-message-to-email"
+msgstr "如果勾选上，每次别人给您发送私人讯息，您将会收到包含该消息的电子邮件。"
+
+#: share/plugin/signals/template/element/settings/private_menu:3 share/plugin/signals/template/element/settings/signals_settings_section:5
+msgid "signals.private-messages"
+msgstr "私人讯息"
+
+#: share/plugin/signals/share/javascript/template/rightBar.tt2:13
+msgid "signals.private-reply"
+msgstr "私密回复"
+
+#. (person, event.context.body)
+#: share/plugin/signals/template/data/events/signal:1 share/plugin/signals/template/data/events/signal:6
+msgid "signals.private-to=person,body"
+msgstr "给 %1 发送私人讯息：“%2”。"
+
+#: share/plugin/signals/template/explore_links:3
+msgid "signals.refresh"
+msgstr "刷新"
+
+#: share/plugin/signals/share/javascript/template/rightBar.tt2:8
+msgid "signals.reply"
+msgstr "回复"
+
+#: share/plugin/signals/template/email/direct-message.html:24
+msgid "signals.reply-privately"
+msgstr "私密回复该讯息。"
+
+#: share/plugin/signals/template/search_box_signals:1
+msgid "signals.search:"
+msgstr "搜索讯息："
+
+#: share/plugin/signals/share/widgets/explore_filters/widget.js:291
+msgid "signals.selected-people"
+msgstr "选定的好友"
+
+#: share/plugin/signals/share/widgets/profile/widget.html:29
+msgid "signals.send-as-private-message"
+msgstr "发送为私人讯息"
+
+#: share/plugin/signals/template/bookmarklet/too_long.html:12
+msgid "signals.share-to-colleagues?"
+msgstr "给您的同事分享这条链接？"
+
+#: share/plugin/signals/template/bookmarklet/index.html:44
+msgid "signals.share-with-bookmarklet"
+msgstr "使用这个方便的书签来通过讯息分享所有网站上的页面。"
+
+#. (offset + 1, last, pager.total_entries)
+#: share/plugin/signals/template/view/signallist:26
+msgid "signals.showing=from,to,total"
+msgstr "显示第 %1 - %2 项，共 %3 项。"
+
+#: share/plugin/signals/template/bookmarklet/index.html:57
+msgid "signals.signal-this!"
+msgstr "分享此页！"
+
+#: share/plugin/signals/template/bookmarklet/index.html:4
+msgid "signals.signal-this-bookmarklet"
+msgstr "“分享此页”书签"
+
+#: share/plugin/signals/share/widgets/profile/widget.html:19
+msgid "signals.signal-to"
+msgstr "发送到"
+
+#: share/plugin/signals/template/cp_signal_size_limit:3
+msgid "signals.size-limit:"
+msgstr "最大长度："
+
+#: share/plugin/signals/template/view/signallist:28
+msgid "signals.sort-by:"
+msgstr "排列方式"
+
+#: share/plugin/signals/template/view/signallist:30
+msgid "signals.sort-newest"
+msgstr "最新的"
+
+#: share/plugin/signals/template/view/signallist:31
+msgid "signals.sort-oldest"
+msgstr "最早的"
+
+#: share/plugin/signals/template/view/signallist:32
+msgid "signals.sort-relevance"
+msgstr "相关度"
+
+#: share/plugin/signals/template/view/signallist:33
+msgid "signals.sort-sender"
+msgstr "发送者"
+
+#. (signal.networks.size)
+#. (event.context.account_ids.size + event.context.group_ids.size)
+#: share/plugin/signals/template/data/events/signal.meta:4 share/plugin/signals/template/view/signallist:10
+msgid "signals.to-groups=count"
+msgstr "给%1个群组"
+
+#. (signal.networks.0)
+#. (a.name)
+#. (g.name)
+#: share/plugin/signals/template/data/events/signal.meta:13 share/plugin/signals/template/data/events/signal.meta:8 share/plugin/signals/template/view/signallist:7
+msgid "signals.to=name"
+msgstr "给%1"
+
+#: share/plugin/signals/template/bookmarklet/too_long.html:7
+msgid "signals.try-again:"
+msgstr "请重新尝试："
+
+msgid "signals.unliked=creator,uri,snippet"
+msgstr "取消对 %1 的这则<a href=\"%2\">讯息</a>说赞：“%3”。"
+
+#: share/plugin/signals/template/lite/signals.html:36
+msgid "signals.update"
+msgstr "更新"
+
+#: share/plugin/signals/template/lite/signals.html:6
+msgid "signals.what-are-you-working-on?"
+msgstr "您在做什么呢？"
+
+#: share/plugin/signals/template/email/direct-message.html:29
+msgid "signals.your-settings"
+msgstr "您的设置"
+
+msgid "title.activities"
+msgstr "活动"
+
+#: share/plugin/signals/share/widgets/explore_filters/config.yaml:4
+msgid "title.explore_filters"
+msgstr "筛选"
+
+#: share/plugin/signals/share/widgets/profile/config.yaml:3
+msgid "title.profile"
+msgstr "个人档案"

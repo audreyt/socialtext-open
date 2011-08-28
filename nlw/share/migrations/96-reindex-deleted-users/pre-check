@@ -1,0 +1,18 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_singlevalue/;
+
+my $count = sql_singlevalue(qq{
+    SELECT COUNT(1)
+      FROM all_users
+     WHERE is_deleted});
+
+if ($count > 0) {
+    exit 0;
+}
+else {
+    print "no deleted users, skipping\n";
+    exit 1;
+}

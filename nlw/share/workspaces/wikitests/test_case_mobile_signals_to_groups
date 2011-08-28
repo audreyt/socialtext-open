@@ -1,0 +1,61 @@
+
+| *Comment* | Test Case: Mobile Signals to Groups |  |
+
+
+* Fixture: SocialWidgets
+
+| set | msg_user | mstg_user_%%start_time%%@david.socialtext.net |
+| set | acct1 | a_acct_%%start_time%% |
+| set | acct2 | b_acct_%%start_time%% |
+| set | group11 | a_group_%%start_time%% |
+| set | group12 | b_group_%%start_time%% |
+| set | group21 | group_%%start_time%% |
+
+| create_account | %%acct1%% |  |  |
+| create_account | %%acct2%% |  |  |
+| create_user | %%msg_user%% | %%password%% | %%acct1%% |
+| st-admin | add-member --account %%acct2%% --email %%msg_user%% | now has the role |  |
+| create-group | %%group11%% | %%acct1%% | %%msg_user%% |
+| set | group11_id | %%group_id%% |  |
+| create-group | %%group12%% | %%acct1%% | %%msg_user%% |
+| set | group12_id | %%group_id%% |  |
+| create-group | %%group21%% | %%acct2%% | %%msg_user%% |
+| set | group21_id | %%group_id%% |  |
+
+| *Comment* | Test Case: Mobile Signals to Group check order of groups in Post to: menu |  |
+| st-logoutin | %%msg_user%% | %%password%% |
+| open_ok | /st/m/signals |  |
+| wait_for_element_visible_ok | link=%%acct1%% (primary, 1 user) | 30000 |
+| mouseOver | link=%%acct1%% (primary, 1 user) |  |
+| wait_for_element_visible_ok | //a[contains(text(),%%group11%%)] | 30000 |
+| wait_for_element_visible_ok | //a[contains(text(),%%group12%%)] | 5000 |
+| wait_for_element_visible_ok | //a[contains(text(),%%acct2%%)] | 5000 |
+| wait_for_element_visible_ok | //a[contains(text(),%%group21%%)] | 5000 |
+| text_like | qr/%%acct1%%.+\.\.\..+%%group11%%.+\.\.\..+%%group12%%.+%%acct2%%.+\.\.\..+%%group21%%/ |  |
+
+*Why does click_ok change both dropdowns?*
+
+| *Comment* | Test Case: Mobile Signals send signal to one group |  |
+| wait_for_element_present_ok | //a[@value='group-%%group11_id%%'] | 5000 |
+| click_ok | //a[@value='group-%%group11_id%%'] |  |
+| wait_for_element_visible_ok | link=%%group11%% (1 user) | 5000 |
+| st-type-signal | New signal to %%group11%% | 1 |
+| st_pause_click | 5000 | mobile_post |
+| wait_for_text_present_ok | By you | 30000 |
+| text_like | qr/New signal to %%group11%%.+By you.+minute ago.+to.+%%group11%%/ism |  |
+
+| *Comment* | Test Case: Mobile Signals check for signal in other UI |  |
+| open_ok | /st/signals |  |
+| wait_for_text_present_ok | Signals |  |
+| text_like | qr/New signal to %%group11%%.+By you/ism |  |
+
+| *Comment* | Test Case: Mobile Signals to Group TEARDOWN |  |
+| st-process-jobs |  |  |
+| st-admin | deactivate-user --email %%msg_user%% | removed |
+| delete-group | %%group11_id%% |  |
+| delete-group | %%group12_id%% |  |
+| delete-group | %%group21_id%% |  |
+| delete-account | %%acct1%% |  |
+| delete-account | %%acct2%% |  |
+
+| *Comment* | Test Case: Mobile Signals to Group COMPLETED |  |

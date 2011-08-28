@@ -1,0 +1,16 @@
+[% IF error %]
+<div id="errors-and-messages">
+    <span class="error">[% error %]</span>
+</div>
+[% ELSE %]
+<ul class="event_list">
+    [% FOR event = events %]
+        <li class="[% event.row_class %] timestamped[% IF event == events.last() %] last[% END %][% IF event == events.first() %] first[% END %]">
+            [% PROCESS data/event e=event out="html" %]
+            <div class="clear"></div>
+        </li>
+    [% END %]
+</ul>
+[% END %]
+
+[% INCLUDE lite/paging.html %]

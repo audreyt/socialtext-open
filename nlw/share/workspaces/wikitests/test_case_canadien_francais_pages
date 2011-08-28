@@ -1,0 +1,81 @@
+| *Comment* | Test Case: Canadien Francais (Pages) |  |
+
+| *Comment* | Test Case: Sorting for Canadien Francais (Pages) - Create Pages |  |
+| set | acct | cfpages%%start_time%% |
+| set | ws | cfpages%%start_time%% |
+| set | pageA | Ångström%%start_time%% |
+| set | pageL | LOLCat%%start_time%% |
+| set | pageM | ḿegashark%%start_time%% |
+| set | pageN | nunmanuma%%start_time%% |
+| set | pageX | Xylophone%%start_time%% |
+| set | user | cfuser%%start_time%%@matt.socialtext.net |
+| st-admin | create-account --name %%acct%% | was created |
+| st-admin | create-workspace --name %%ws%% --title %%ws%% --empty | was created |
+| st-admin | create-user --e %%user%% --p %%password%% --account %%acct%% | was created |
+| st-admin | add-member --e %%user%% --w %%ws%% | now has the role of |
+
+| *Comment* | Test Case: Sorting for Canadien Francais (Pages) - Login, go to %%ws%% |  |
+| st-logoutin | %%user%% | %%password%% |
+| st-create-page | %%ws%% | %%pageX%% |
+| st-create-page | %%ws%% | %%pageA%% |
+| st-create-page | %%ws%% | %%pageL%% |
+| st-create-page | %%ws%% | %%pageN%% |
+| st-create-page | %%ws%% | %%pageM%% |
+
+| *Comment* | Test Case: Sorting for Canadien Francais (Pages) - Test Sorting for Page in Search Results |  |
+| st-process-jobs |  |  |
+| open_ok | /%%ws%%/%%pageX%% |  |
+| st-search | %%start_time%% | Pages matching '%%start_time%%' |
+| wait_for_element_visible_ok | sort-picker | 30000 |
+| select_and_wait | sort-picker | label=Title |
+| wait_for_element_visible_ok | link=%%pageA%% | 30000 |
+| text_like | //body | qr/%%pageA%%.+%%pageL%%.+%%pageM%%.+%%pageN%%.+%%pageX%%/ |
+
+
+| *Comment* | Test Case: Sorting for Canadien Francais (Pages) - Test Sorting for Page in Watched List |  |
+| open_ok | /%%ws%%/%%pageA%% |  |
+| wait_for_element_visible_ok | link=Watch | 30000 |
+| st-watch-page | 1 |  |
+| st-is-watched | 1 |  |
+
+| open_ok | /%%ws%%/%%pageL%% |
+| wait_for_element_visible_ok | link=Watch | 30000 |
+| st-watch-page | 1 |  |
+| st-is-watched | 1 |  |
+
+| open_ok | /%%ws%%/%%pageM%% |
+| wait_for_element_visible_ok | link=Watch | 30000 |
+| st-watch-page | 1 |  |
+| st-is-watched | 1 |  |
+
+| open_ok | /%%ws%%/%%pageN%% |
+| wait_for_element_visible_ok | link=Watch | 30000 |
+| st-watch-page | 1 |  |
+| st-is-watched | 1 |  |
+
+| open_ok | /%%ws%%/%%pageX%% |
+| wait_for_element_visible_ok | link=Watch | 30000 |
+| st-watch-page | 1 |  |
+| st-is-watched | 1 |  |
+
+| wait_for_element_visible_ok | link=My Watchlist | 30000 |
+| click_and_wait | link=My Watchlist |  |
+| wait_for_element_visible_ok | sort-picker | 30000 |
+| select_and_wait | sort-picker | label=Title |
+| wait_for_element_visible_ok | link=%%pageA%% | 30000 |
+| text_like | //body | qr/%%pageA%%.+%%pageL%%.+%%pageM%%.+%%pageN%%.+%%pageX%%/ |
+
+| *Comment* | Test Case: Sorting for Canadien Francais (Pages) - Test Sorting for Page in All Pages |  |
+| wait_for_element_visible_ok | link=All Pages | 30000 |
+| click_and_wait | link=All Pages |  |
+| wait_for_element_visible_ok | sort-picker | 30000 |
+| select_and_wait | sort-picker | label=Title |
+| text_like | //body | qr/%%pageA%%.+%%pageL%%.+%%pageM%%.+%%pageN%%.+%%pageX%%/ |
+
+| *Comment* | Test Case: Canadien Francais (Pages) TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%user%% |  |
+| st-admin | delete-workspace --no-export --w %%ws%% | has been deleted |
+| delete-account | %%acct%% |  |
+
+| *Comment* | Test Case: Canadien Francais (Pages) COMPLETED |

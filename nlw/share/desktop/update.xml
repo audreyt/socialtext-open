@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="utf-8"?>
+<update xmlns="http://ns.adobe.com/air/framework/update/description/1.0">
+  <version>4.7.4.3</version>
+  <url>http://www.socialtext.com/desktop/SocialtextDesktop-4.7.4.3.air</url>
+  <description><![CDATA[[4.7.4.3 - Sat Aug  6 00:01:05 PDT 2011]
+(Enhancements)
+* Signals: Deleting a signal now refreshes the display immediately.
+* Signals: Like/Unlike from other users now displays immediately.
+
+[4.7.4.0 - Sun Jul 24 00:17:38 PDT 2011]
+(Features)
+* Signals: Support for "Like a Signal" for ST server version 4.7.4+.
+
+(Enhancements)
+* Signals: Adopted new layout for threaded view.
+
+[4.7.3.0 - Fri Jun 10 09:18:23 PDT 2011]
+(Enhancements)
+* Signals: Clicking the "Search" sub-tab now sets focus on the search field.
+* Signals: Flashback now correctly retrieves "before" and "after" signals again. {bz: 5255}
+
+[4.7.2.0 - Sun May  8 02:56:08 PDT 2011]
+(Enhancements)
+* Improved OpenSocial Widgets rendering for ST server version 4.7.2+.
+
+[4.7.0.4 - Wed Mar 23 22:55:49 PDT 2011]
+(Enhancements)
+* Signals: Posted signals show up much faster than before.
+* Signals: Expanding thread replies is now much faster than before.
+* Signals: Disable network toggling when fetching "More" in threadview. {bz: 4979}
+* Activity: Resume requests after server upgrade. {bz: 4834}
+* Redirect to https:// when connecting to ssl-only appliances with http://. {bz: 5071}
+* Compatibility with Adobe AIR 2.6 runtime.
+
+[4.6.3 - Thu Feb 17 14:42:55 PST 2011]
+(Features)
+* OpenSocial Widgets in pages now work in mini-browser and preview pane. {bz: 4933}
+* Syntax-highlighted code blocks now work in mini-browser and preview pane. {bz: 4933}
+
+(Enhancements)
+* Fix "DM with mention of same user is displayed as a mention". {bz: 4942}
+* Fix "Add a video to a signal, but delete the video Title. Save. See 'null'". {bz: 4942}
+* Fix "No video thumbnails in Signal listviews". {bz: 4942}
+* Fix "PostTo dropdown menu frozen". {bz: 4976}
+* Fix "Toggling 'Show Signals within' results in inconsistent signals display". {bz: 4979}
+
+[4.6.0 - Mon Feb 14 10:52:21 PST 2011]
+(Enhancements)
+* Signals: Fix glitch in displaying embedded video on Windows platforms.
+* Signals: Various performance improvements.
+
+[4.5.4.2 - Fri Feb  4 22:06:26 PST 2011]
+(Features)
+* Signals: Add an "insert video" icon for ST 4.5.4+.
+* People: Display emails in people's Colleagues sub-tab.
+* People: Added image smoothing and rounded corners for group icons and avatar icons.
+* People: Add a per-person Signals sub-tab to agree with Mobile UI.
+* People: Display friendly name in the Colleagues sub-tab after following a person.
+* Activities: Link "x times ago" in signals events to their permalinks.
+* Activities: Display a helpful message if there are no events to display.
+
+(Enhancements)
+* Signals: Upgraded to latest Activity Widget codebase for performance improvements.
+* Signals: Fix tab/shift-tab navigation for insert web/wiki link panels. {bz: 4299}
+* Improve idle-time CPU usage, down from 5%~10% to 1~4%.
+
+[4.5.3 - Tue Jan  4 10:07:43 PST 2011]
+(Enhancements)
+* Refresh the initial Activity tab if the user switch to it with hotkey (C-2).
+
+[4.5.2.4 - Fri Dec 10 21:15:34 PST 2010]
+(Features)
+* Activities: Sub-tabs start loading when first switched to them to improve overall performance.
+* Signals: Sub-tabs start loading when first switched to them to improve overall performance.
+* Signals: Sub-tabs are now populated with backlogged entries upon initial loading.
+* Workspace: A new per-page "Tags" sub-tab for displaying, adding and deleting tags.
+
+[4.5.2.2 - Thu Nov 11 17:54:23 PST 2010]
+(Enhancements)
+* Signals: Typing in thread-reply window is now faster. {bz: 4563}
+* Signals: Entries in Name and Tag lookaheads now shows up consistently. {bz: 4649}
+* Signals: Clicking "More" in per-group threadview no longer results in large time gaps. {bz: 4590}
+* Signals: The "X New" notice now goes away after posting a reply. {bz: 4530}
+* Signals: Correctly resume push client after a server upgrade. {bz: 4556}
+* Signals: On refreshing threaded Signals view, check for deletion of visible entries only.
+* Signals: Fix the push client to avoid unnecessary periodic resynchronization. {bz: 4548}
+
+[4.5.1.2 - Fri Oct 22 03:44:14 PDT 2010]
+(Enhancements)
+* Signals: Repeated searches in Signal/Search tab now works again. (broken in 4.5.1).
+* Signals: Only refresh when push is actually desynchronized.
+* Workspaces: "System User" no longer shows a broken avatar. {bz: 4473}
+* Login: "Log me in automatically" now works more consistently.
+
+[4.5.1.1 - Wed Oct 20 16:11:10 PDT 2010]
+(Enhancements)
+* Signals: Bubbling-up after posting a reply now works again for ST 4.5.0.8+. {bz: 4530}
+* Performance: Fetch /data/signals with a reasonable ?after limit when re-synchronizing from push failure.
+* Performance: Switching to "All My Groups" for the first time is now much faster. {bz: 4432}
+
+[4.5.1 - Fri Oct  1 02:05:31 PDT 2010]
+(Features)
+* Auto-renew the time-limited login cookie every 24 hours for server version 4.5.0+.
+
+[4.4.0 - Wed Sep 29 03:00:18 PDT 2010]
+(Enhancements)
+* Signals: When a signal is deleted, remove it from all sub-tabs and popup windows as well.
+* Performance: Fetch /data/people only once, not twice, during startup.
+
+[4.3.3 - Wed Sep  8 00:17:57 PDT 2010]
+(Enhancements)
+* Signals: Reduced lagging when typing in mention, private, tag and page-name lookaheads.
+* Signals: Faster switching of "Post to" when "Show Signals within" is set to "All Groups".
+* Signals: Allow reply boxes with only whitespaces in them to close when the focus changes.
+* When Encrypted Store fail on Linux, navigate to the Adobe knowledge base with help instructions.
+
+[4.3.2 - Mon Aug 16 01:48:39 PDT 2010]
+(Enhancements)
+* Signals: Display tooltips on "Reply to conversation" icons. {bz: 4201}
+* Signals: When push is enabled, sending a new signal will still trigger an immediate refresh.
+* Workspaces: File in directories with spaces are now uploadable for Mac/AIR2. {bz: 4142}
+* Passwords are now saved in the system encrypted store.
+
+[4.3.1 - Wed Aug  4 20:10:48 PDT 2010]
+(Features)
+* Signals: Support for real-time "Push" delivery mechanism.
+* Signals: Add support for actions in signal annotations.
+* Signals: Pressing @ now triggers the "mention" autocompleter.
+* Signals: Pressing # now triggers the "tag" autocompleter.
+* Signals: Show the "Post to" dropdown even if there's only one network to post to.
+* Signals: When new signals arrive when the reply box is still open, show a "X new" alert.
+* People: Paged people display and people search for ST 4.3.1+.
+* People: Show a restricted view when navigating to a restricted profile.
+* Workspaces: Fixes locking up when searching for a common word.
+
+(Enhancements)
+* {bz: 4201}: Pressing Enter multiple times when sending reply causes duplicated replies.
+* {bz: 4098}: Find now works again on Activity subtabs.
+* {bz: 4049}: In Add Web Link, "text" field should be above "destination".
+* {bz: 4072}: In Add Web Link, supply "http://" prefix and disallow invalid URLs.
+* {bz: 4061}: Attach file jump scrolls to top of widget.
+* Switching from a single group to "Show All Groups" now retains old signals.
+
+[4.2.1 - Sat Jun 26 09:43:09 PDT 2010]
+(Features)
+* Signals: New button for uploading attachments.
+* Signals: New buttons for inserting tags, web links and wiki links.
+* Signals: New "Attachment" subtab listing signals with attachments.
+* Signals: Support for displaying attachment and inline thumbnails.
+* Signals: Dynamically adjust input box's height for multiline signals.
+
+(Enhancements)
+* Signals: Replaced "Followed" and "Mine" subtabs's text with icons.
+
+[4.2.0 - Mon May 31 05:06:30 PDT 2010]
+(Enhancements)
+* Signals: Apply account skin coloring for list-views correctly.
+* Signals: Clicking "More" button in threadview now synchronizes with listview.
+* Signals: The Search subtab no longer displays a non-functional "More" button.
+* Workspaces: Clicking the "Searching..." spinner stops the current search.
+* Shorten file names of on-disk config settings to be <256 characters.
+
+[4.1.0.2 - Wed May 26 03:39:02 PDT 2010]
+(Enhancements)
+* Fix a bug in 4.1.0.1 causing the "People" tab to be empty.
+
+[4.1.0.1 - Tue May 11 00:43:21 PDT 2010]
+(Enhancements)
+* Fix a bug where incoming signals sometimes freeze Desktop when typing a reply.
+* Increased height of Input area for Signals and Conversation boxes.
+
+[4.1.0 - Thu May  6 18:22:01 PDT 2010]
+(Features)
+* Signals: Support for thread view of Signal Conversations by default.
+* Signals: Click "x ago" to open Permalink in browser.
+* Signals: New navigation hot keys: C-8 (Previous subtab), C-9 (Next subtab).
+* Signals: New view-toggling hot key: C-0 (Toggles between list/thread views)
+* Signals: Click "as a topic/reply" to launch Conversation view.
+* Signals: Fetch 100 signals on startup by default (was 50).
+* People: Hide deactivated/deleted users from @-completion and directory.
+* UI: Switched to a new icon set, free of the airplane sigil.
+
+(Enhancements)
+* Signals: Improved interactivity when displaying large batch of signals.
+* Conversation: Clicking a signal entry to focus on the reply input box.
+* People: Logout then login into another server now properly refreshes the list.
+
+[4.0.2 - Thu Apr  8 19:59:23 PDT 2010]
+(Enhancements)
+* "Log me in automatically" now takes effect upon the first try.
+
+[4.0.1 - Thu Mar 25 08:15:27 PDT 2010]
+(Features)
+* Users can now directly install, upgrade and launch Desktop from an appliance.
+* Administrators can now turn off auto-updating from system console.
+* Support Authenticating Proxies in Mac OS X's System Settings.
+* Signals: Support for server-configurable expanded input limits.
+* Signals: Increased default input limits from 140 to 400.
+
+(Enhancements)
+* Signals: Add a ":" separator between User and timestamp for improved legibility.
+* Signals: On Login, reset "Signal To" to Primary group if it was set to "All Groups".
+* Signals: Reliably resume updates when internet connection was stopped and resumed.
+* People: Logout/Login no longer results in duplicated people entries.
+* People: Sort names alphabetically for the "All My Groups" list.
+* People: Hide Refresh button when People list is still refreshing.
+* Workspaces: Inter-workspace links now correctly opens in lightbox view.
+
+[4.0.0 - Fri Feb 26 15:26:02 PST 2010]
+(Features)
+* Signals: @-completion now displays only members in the "Signal to" network.
+* People: New "Open" button in a Profile to navigate to its Web interface.
+* Activities: Support for "...More...", with much faster refresh speed.
+* Activities: Update style to match the Dashboard widget.
+* Activities: Renamed the tab from "Activity" to "Activities".
+* Activities: Include People events in display, in addition to Page events.
+* Activities: Include "Follow" events in display.
+* Status Bar: Click to display version history.
+* Status Bar: Show the logged-in user name.
+* Login: Add a link to follow us on Twitter and Facebook.
+
+(Enhancements)
+* Signals: Say "Show Signals within" instead of "Show Signals from".
+* People: Filter text no longer affects @-completion in Signals and "Edited By" in Workspaces.
+* People: Much improved performance; no longer freezes up upon first login.
+* Correctly restore the Active Tab and Subtabs upon restart.
+* Server timeout set to 60 seconds for improved performance.
+* Gracefully delay requests when server response is slower than update interval.
+* Add version number to user-agent string for easier server log analysis.
+
+[3.7.5 - Mon Feb  1 15:54:18 PST 2010]
+(Enhancements)
+* Fix {bz: 3504}: Hidden profile fields should stay hidden in People's Profiles.
+* Fix {bz: 3528}: Workspace/Network lists are now remembered by ID, not by index.
+
+[3.7.4 - Fri Jan 15 13:43:23 PST 2010]
+(Features)
+* Settings: New "Display all Personal messages" option to filter popups.
+* Signals: Support for Socialtext Groups in "Signal to" and "Show Signals from".
+* Signals: When "Signals to" changes, change "Show Signals from" to match.
+* Signals: Inform the user when "Show Signals from" changes away from "Signals to".
+* Signals: Entries in Followed/Mine/Personal/Sent/Link sub-tabs are now Flashbackable.
+* People: Support for Socialtext Groups in All People listing.
+
+(Enhancements)
+* Login: No longer display a harmless error message when the server had no signals.
+* Signals: "Show Signal from" no longer scrolls horizontally with long Network names.
+* Signals: Popups should now consume less CPU when fading in and fading out.
+* Signals: Disable the "Signal to" dropdown only when replying, not when mentioning.
+* Workspaces: Renamed the tab from "Workspace" for better consistency with Web UI.
+* Workspaces: SocialCalc spreadsheets are now displayed using the same Web UI styling.
+* Workspaces: Only allow double-clicking on known-displayable attachments.
+
+[3.7.0 - Tue Nov 24 07:07:05 PST 2009]
+(Features)
+* Signals: Double-click a search result to see its historical context as "Flashback".
+* Signals: Support per-network views in addition to "Show Signals from all networks".
+* Workspace: Add "All Workspaces" search for server version v3.7.1.2+.
+* Workspace: Double-click an image or HTML attachment to view it in a lightbox.
+
+(Enhancements)
+* "Minimize" in Microsoft Windows now minimizes to system tray.
+* Login: Do not pre-fill Server URL, but offer a button to set to Socialtext Hosted.
+* Signals: Disable "Signal to Account" dropdown when replying or direct-messaging.
+* Signals: Clicking on the Signal Search view now auto-focuses on search term input box.
+* Signals: @-completion now work reliably the first time after login.
+* People: Use the ST star icon for "Follow/Stop following this person" instead of a checkbox.
+* People: Keyword filtering no longer interferes with Signal tab's @-completion.
+* Workspace: Correctly style Wiki text in preview and lightbox.
+  (e.g. horizontal borders in tables are now visible.)
+
+[3.6.2 - Mon Sep 28 23:31:04 PDT 2009]
+* Add support for Signal Search for Socialtext server v3.6.3+.
+* Failed login to www.socialtext.net will now fallback to www1 for Free50 users.
+
+[3.6.1 - Mon Sep 21 10:27:15 PDT 2009]
+* Fix the case where filtering for non-existent People deactivates People tab.
+
+[3.6.0 - Sun Sep  6 04:19:03 PDT 2009]
+* Fix incorrect People tab display with Socialtext server v3.6.0+.
+* Fix the bug where too general a search freezes Workspace tab.
+
+[3.5.9 - Thu Sep  3 21:22:21 PDT 2009]
+* Double-clicking a row in Workspace tab now opens the Page inside a mini-browser.
+* A page set as home page in the mini-browser will now open immediately after Login.
+* Support for Activity tab display with Socialtext server v3.6.0+.
+
+[3.5.8 - Thu Aug 20 16:44:17 PDT 2009]
+* Fix a performance issue by checking deletion for visible-in-viewport signals only.
+
+[3.5.7 - Thu Aug 13 20:03:52 PDT 2009]
+* Add support for Deleting signals for Socialtext server v3.5.9+.
+
+[3.5.6 - Thu Jul  2 19:56:08 PDT 2009]
+* Add support for Activity feed in Socialtext server v3.5.7+.
+* Activity feed should no longer be refreshed when already logged out.
+
+[3.5.5 - Thu Jun 18 00:42:44 PDT 2009]
+* Hide "Private to" button if the server does not support private message.
+* Disable the "Replies and Mentions" tab if the server supports neither.
+* Send @UserName, not {user:*}, if the server does not support user mentions.
+
+[3.5.4 - Wed May 27 23:53:13 PDT 2009]
+* Names not prefixed with @ will no longer appear in the @ tab.
+* Fix the bug where Signals with smiley icons erroneously appearing in the @ tab.
+
+[3.5.3 - Fri May 15 04:59:03 PDT 2009]
+* New "Private to" and "Insert mention" buttons for Signals tab.
+* New "Refresh" button in the Workspace tab to refresh the workspaces list.
+* Clicking the popup notification now stops currently queued popups.
+* Ctrl-R now consistently refreshes People and Workspace list in those tabs.
+* Drag-and-drop URLs from Browser into the Signals tab now inserts links.
+* Drag-and-drop text into the Signals tab now correctly appends the text.
+* Rename Signals and Activity's "My Colleagues" tab to "Followed".
+* Upon logout, SD now clears all leftover data from the previous session.
+* Auto-correct typed "(@UserName)" to "( @UserName )" to form a proper mention.
+* Private Signals that mentions you again now appears in @ tab as well.
+* Fix the bug that sometimes turns the People/Profile tab blank.
+* Add Server URL to the default status bar.
+
+[3.5.2 - Fri May  1 15:43:45 PDT 2009]
+* Support for proper replies, private messages, and user mentions.
+* New "Private message" sub-tab for Signals to list private messages.
+* New "...more..." button at the bottom of Signals/All to fetch older Signals.
+* New "Save as..." button to save Signals as HTML file on disk.
+* New "Help" button on the top bar, next to "Settings".
+* New "I don't know my password" link on login panel.
+* Typing "@" in the Signal text body now pulls down people's photos.
+* Typing "@" in the Signal text body now offers "private message" buttons.
+* "Replies"/"Private"/"Links" are now icon tabs, not text tabs.
+* On Workspace selection change, redo search unless one is in progress.
+* Mac: New "Reset application window" item in dock icon's right-click menu.
+
+[3.5.1 - Sat Apr 11 03:04:41 PDT 2009]
+* If the server supports invitation, display an invite link.
+* If the server supports skinning, skin the client accordingly upon login.
+* Show "Welcome, New User!" link when the user had not set first/last name yet.
+* Show "Upload your photo!" link when the user had not uploaded their photo yet.
+* Added a "refresh" button to the Activity tab and the People tab.
+* Changed "Hide signals from other networks" to "Show signals from other networks".
+* When login is successful, immediately re-run the previous Workspace query.
+* For Outlook compatibility, we no longer show First/Last names when clicking email links.
+
+[3.5.0 - Tue Mar 24 20:06:54 PDT 2009]
+* The default server URL was incorrectly set to www2.socialtext.net;
+  it should be www.socialtext.net.
+
+[3.4.2 - Sat Mar 21 06:54:56 PDT 2009]
+* Users can choose which network to Signal to.
+* Signals show which network the Signal was sent to.
+* Typing "@" in Signals input box now auto-completes user names.
+* New "People" tab showing a people directory.
+* Users can view profile information on individual users.
+* New "Workspace" tab for searching on individual workspaces.
+* Drag-and-drop uploading and downloading Page attachments.
+* In Signals tab, new "@Replies" tab collects signals mentioning your name.
+* In Signals tab, new "Links" tab collects signals containing hyperlinks.
+
+[3.4.0 - Thu Feb 26 17:37:29 PST 2009]
+* First public release.
+]]></description>
+</update>

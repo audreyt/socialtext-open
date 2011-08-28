@@ -1,0 +1,7 @@
+In this iteration, 2009-05-11, we made it possible for workspace admins
+to lock pages on a workspace given that 1) the workspace was configured
+to allow such and 2) the admin had the 'lock' permssion ( See
+Socialtext::Permission for details ).
+
+By default, we'd like to add the 'lock' permission to admins on all
+existing workspaces.

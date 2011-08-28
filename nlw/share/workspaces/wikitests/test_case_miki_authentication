@@ -1,0 +1,84 @@
+| *Comment* | Test Case: Miki Authentication |  |
+
+If this test fails, and it fails in IE 6 because IE 6 caches Miki pages even when it should not,
+it leaves the workspace in auth-to-edit mode because it does not run teardown and that breaks all tests
+that follow it. So we do this test in a scratch workspace instead
+
+| *Comment* | Test Case: Miki Authentication setup |  |
+| set | miki_space | miki-%%start_time%% |
+| st-admin | create-workspace --empty --name %%miki_space%% --title "Miki %%start_time%%" |  |
+| st-admin | add-workspace-admin --workspace %%miki_space%% --email %%email%% |  |
+
+| *Comment* | Test Case: Miki Authentication Login and Logout from Miki/Lite UI |  |
+| open_ok | /m/page/%%miki_space%% |  |
+| text_like | link=Workspaces | Workspaces |
+| text_like | link=People | People |
+| text_like | link=Activity | Activity |
+| text_like | link=Edit | Edit |
+| text_like | link=Log out | Log out |
+| click_and_wait | link=Log out |  |
+
+| *Comment* | Test Case: Miki Authentication Login page |  |
+| open_ok | /m/page/%%miki_space%% |  |
+| wait-for-element-present-ok | st-login-form | 1000 |
+| type_ok | username | %%username%% |
+| type_ok | password | %%password%% |
+| click_and_wait | //input[@value='Log in'] |  |
+| text_like | link=Signals | Signals |
+| text_like | link=Workspaces | Workspaces |
+| text_like | link=People | People |
+| text_like | link=Activity | Activity |
+| text_like | link=Edit | Edit |
+| text_like | link=Log out | Log out |
+| click_and_wait | link=Log out |  |
+
+| *Comment* | Test Case: Miki Authentication test login and redirect |  |
+
+| open_ok | /m/page/%%miki_space%%/ |  |
+| type_ok | username | %%username%% |
+| type_ok | password | %%password%% |
+| click_and_wait | //input[@value='Log in'] |  |
+
+| *Comment* | Test Case: Miki Authentication test logged in after redirect |  |
+| location_like | /m/page/%%miki_space%% |  |
+| text_like | link=Edit | Edit |
+| click_and_wait | link=Edit |  |
+| text_like | link=Cancel | Cancel |
+| text_like | link=Log out | Log out |
+| text_unlike | //a[contains(@href,'/nlw/submit/logout')] | Log in |
+| click_and_wait | link=Log out |  |
+
+| *Comment* | Test Case: Miki Authentication test join-to-edit |  |
+| st-admin | set-permissions --workspace %%miki_space%% --permissions public-join-to-edit |  |
+
+| open_ok | /m/page/%%miki_space%% |  |
+| location_like | /m/page/%%miki_space%% |  |
+
+| *Comment* | Test Case: Miki Authentication logged out - can't edit |  |
+| wait_for_element_not_present_ok | link=Edit | 30000 |
+
+| click_and_wait | link=Log in |  |
+| type_ok | username | %%username%% |
+| type_ok | password | %%password%% |
+| click_and_wait | //input[@value='Log in'] |  |
+
+| *Comment* | Test Case: Miki Authentication join-to-edit FAIL. Should redirect to WS |  |
+| *Comment* | Test Case: Miki Authentication open WS explicitly |  |
+
+| open_ok | /m/page/%%miki_space%% |  |
+| text_like | link=Signals | Signals |
+| text_like | link=Workspaces | Workspaces |
+| text_like | link=People | People |
+| text_like | link=Activity | Activity |
+| text_like | link=Edit | Edit |
+| click_and_wait | link=Edit |  |
+| text_like | link=Cancel | Cancel |
+| text_like | link=Log out | Log out |
+
+| click_and_wait | link=Log out |  |
+| location_like | /m/login |  |
+
+| *Comment* | Test Case: Miki Authentication Teardown |  |
+| st-admin | delete-workspace --workspace %%miki_space%% --no-export | has been deleted |
+
+| *Comment* | Test case: Miki Authentication COMPLETED |  |

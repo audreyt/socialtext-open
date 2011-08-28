@@ -1,0 +1,3 @@
+| *Comment* | Test Case: User Creates Group Image Uploaded |  |
+| *Comment* | Test Case: User Creates Group Image Uploaded Fails on IE6, GoogleChrome - so don't check on those browsers |  |
+| wait_for_element_visible_ok | //img[contains(@src,'/data/uploads/')] | 30000 |

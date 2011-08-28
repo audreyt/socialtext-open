@@ -1,0 +1,19 @@
+* Fixture: HealthReport
+
+| *Comment* | Test Case: Appliance Health Report |  |
+
+| *Comment* | Test Case: Appliance Health Report Create local report |  |
+| st_create_health_report |  |  |
+
+| st-admin | add-member --e %%username%% --w st-health | has the role of 'member' |
+
+| *Comment* | Test Case: Appliance Health Report verify local report |  |
+| open_ok | %%health_report_url%% |  |
+| text_like | //body | General info about this report |
+| text_like | //body | Snapshot of the hardware state. |
+| text_like | //body | Socialtext Job Queue Snapshot |
+
+| *Comment* | Test Case: Appliance Health Report TEARDOWN |  |
+| st-admin | remove-member --e %%username%% --w st-health | no longer has the role of |
+
+| *Comment* | Test Case: Appliance Health Report COMPLETED |  |

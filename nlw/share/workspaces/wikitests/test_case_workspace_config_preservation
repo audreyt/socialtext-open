@@ -1,0 +1,101 @@
+| *Comment* | Test Case: Workspace Config Preservation |  |
+
+| *Comment* | Test Case: Workspace Config Preservation Setup |  |
+| set | temp_ws_name | tc_wcp_%%start_time%% |
+| set | temp_ws_tarball | /tmp/%%temp_ws_name%%.1.tar.gz |
+| st-admin | create-workspace --empty --name %%temp_ws_name%% --title 'Test Case: Workspace Config Preservation workspace' | A new workspace named "%%temp_ws_name%%" was created. |
+
+| *Comment* | Test Case: Workspace Config Preservation Alter Workspace Config |  |
+| *Comment* | - |  |
+| *Comment* | Some of these values are not set because I (scotty) am not sure whether or how they're supposed to be altered |  |
+
+| *Comment* | not setting: st-admin set-workspace-config --workspace %%temp_ws_name%% account_id | The workspace config for %%temp_ws_name%% has been updated. |
+| st-admin | set-workspace-config --workspace %%temp_ws_name%% allows_html_wafl 0 | The workspace config for %%temp_ws_name%% has been updated. |
+| st-admin | set-workspace-config --workspace %%temp_ws_name%% basic_search_only 1 | The workspace config for %%temp_ws_name%% has been updated. |
+| st-admin | set-workspace-config --workspace %%temp_ws_name%% cascade_css 0 | The workspace config for %%temp_ws_name%% has been updated. |
+| st-admin | set-workspace-config --workspace %%temp_ws_name%% comment_by_email 1 | The workspace config for %%temp_ws_name%% has been updated. |
+
+| *Comment* | not setting: st-admin set-workspace-config --workspace %%temp_ws_name%% created_by_user_id | The workspace config for %%temp_ws_name%% has been updated. |
+| *Comment* | not setting: st-admin set-workspace-config --workspace %%temp_ws_name%% creation_datetime | The workspace config for %%temp_ws_name%% has been updated. |
+
+| *Comment* | not setting: st-admin set-workspace-config --workspace %%temp_ws_name%% customjs_name | The workspace config for %%temp_ws_name%% has been updated. |
+| *Comment* | not setting: st-admin set-workspace-config --workspace %%temp_ws_name%% customjs_uri | The workspace config for %%temp_ws_name%% has been updated. |
+| st-admin | set-workspace-config --workspace %%temp_ws_name%% email_addresses_are_hidden 1 | The workspace config for %%temp_ws_name%% has been updated. |
+| st-admin | set-workspace-config --workspace %%temp_ws_name%% email_notification_from_address random-email@socialtext.com | The workspace config for %%temp_ws_name%% has been updated. |
+| st-admin | set-workspace-config --workspace %%temp_ws_name%% email_notify_is_enabled 0 | The workspace config for %%temp_ws_name%% has been updated. |
+| st-admin | set-workspace-config --workspace %%temp_ws_name%% email_weblog_dot_address 1 | The workspace config for %%temp_ws_name%% has been updated. |
+| st-admin | set-workspace-config --workspace %%temp_ws_name%% enable_unplugged 1 | The workspace config for %%temp_ws_name%% has been updated. |
+| st-admin | set-workspace-config --workspace %%temp_ws_name%% external_links_open_new_window 0 | The workspace config for %%temp_ws_name%% has been updated. |
+| st-admin | set-workspace-config --workspace %%temp_ws_name%% header_logo_link_uri http://slashdot.org/ | The workspace config for %%temp_ws_name%% has been updated. |
+| st-admin | set-workspace-config --workspace %%temp_ws_name%% homepage_is_dashboard 0 | The workspace config for %%temp_ws_name%% has been updated. |
+| *Comment* | not setting: st-admin set-workspace-config --workspace %%temp_ws_name%% homepage_weblog | The workspace config for %%temp_ws_name%% has been updated. |
+| st-admin | set-workspace-config --workspace %%temp_ws_name%% incoming_email_placement top | The workspace config for %%temp_ws_name%% has been updated. |
+| *Comment* | not setting: st-admin set-workspace-config --workspace %%temp_ws_name%% invitation_filter | The workspace config for %%temp_ws_name%% has been updated. |
+| *Comment* | not setting: st-admin set-workspace-config --workspace %%temp_ws_name%% invitation_template | The workspace config for %%temp_ws_name%% has been updated. |
+| *Comment* | not setting: st-admin set-workspace-config --workspace %%temp_ws_name%% logo_uri | The workspace config for %%temp_ws_name%% has been updated. |
+| st-admin | set-workspace-config --workspace %%temp_ws_name%% no_max_image_size 1 | The workspace config for %%temp_ws_name%% has been updated. |
+| *Comment* | not setting: st-admin set-workspace-config --workspace %%temp_ws_name%% page_title_prefix | The workspace config for %%temp_ws_name%% has been updated. |
+| st-admin | set-workspace-config --workspace %%temp_ws_name%% prefers_incoming_html_email 1 | The workspace config for %%temp_ws_name%% has been updated. |
+| st-admin | set-workspace-config --workspace %%temp_ws_name%% restrict_invitation_to_search 1 | The workspace config for %%temp_ws_name%% has been updated. |
+| st-admin | set-workspace-config --workspace %%temp_ws_name%% show_title_below_logo 0 | The workspace config for %%temp_ws_name%% has been updated. |
+| st-admin | set-workspace-config --workspace %%temp_ws_name%% show_welcome_message_below_logo 1 | The workspace config for %%temp_ws_name%% has been updated. |
+| *Comment* | not setting: st-admin set-workspace-config --workspace %%temp_ws_name%% skin_name | The workspace config for %%temp_ws_name%% has been updated. |
+| st-admin | set-workspace-config --workspace %%temp_ws_name%% sort_weblogs_by_create 1 | The workspace config for %%temp_ws_name%% has been updated. |
+| *Comment* | not setting: st-admin set-workspace-config --workspace %%temp_ws_name%% title | The workspace config for %%temp_ws_name%% has been updated. |
+| *Comment* | not setting: st-admin set-workspace-config --workspace %%temp_ws_name%% unmasked_email_domain | The workspace config for %%temp_ws_name%% has been updated. |
+| *Comment* | not setting: st-admin set-workspace-config --workspace %%temp_ws_name%% workspace_id | The workspace config for %%temp_ws_name%% has been updated. |
+| *Comment* | not setting: st-admin set-workspace-config --workspace %%temp_ws_name%% workspace_template | The workspace config for %%temp_ws_name%% has been updated. |
+| *Comment* | not setting: st-admin set-workspace-config --workspace %%temp_ws_name%% ping URIs | The workspace config for %%temp_ws_name%% has been updated. |
+| *Comment* | not setting: st-admin set-workspace-config --workspace %%temp_ws_name%% custom comment form fields | The workspace config for %%temp_ws_name%% has been updated. |
+
+| *Comment* | Test Case: Workspace Config Preservation Delete and Re-import Workspace |  |
+
+| st-admin | delete-workspace --workspace %%temp_ws_name%% | The %%temp_ws_name%% workspace has been exported to %%temp_ws_tarball%% and deleted. |
+| pause | 10000 | give KS time to clean up |
+| st-admin | import-workspace --tarball %%temp_ws_tarball%% | Workspace has been imported |
+
+| *Comment* | Test Case: Workspace Config Preservation Check Workspace Settings |  |
+| *Comment* | not checking: st-admin set-workspace-config --workspace %%temp_ws_name%% account_id |  |
+| st-admin | show-workspace-config --workspace %%temp_ws_name%% | qr/allows_html_wafl *: *0/ |
+| st-admin | show-workspace-config --workspace %%temp_ws_name%% | qr/basic_search_only *: *1/ |
+
+| st-admin | show-workspace-config --workspace %%temp_ws_name%% | qr/cascade_css *: *0/ |
+| st-admin | show-workspace-config --workspace %%temp_ws_name%% | qr/comment_by_email *: *1/ |
+| *Comment* | not checking: st-admin show-workspace-config --workspace %%temp_ws_name%% | qr/created_by_user_id/ |
+| *Comment* | not checking: st-admin show-workspace-config --workspace %%temp_ws_name%% | qr/creation_datetime/ |
+| *Comment* | not checking: st-admin show-workspace-config --workspace %%temp_ws_name%% | qr/custom_title_label/ |
+| *Comment* | not checking: st-admin show-workspace-config --workspace %%temp_ws_name%% | qr/customjs_name/ |
+| *Comment* | not checking: st-admin show-workspace-config --workspace %%temp_ws_name%% | qr/customjs_uri/ |
+| st-admin | show-workspace-config --workspace %%temp_ws_name%% | qr/email_addresses_are_hidden *: *1/ |
+| st-admin | show-workspace-config --workspace %%temp_ws_name%% | qr/email_notification_from_address *: *random-email@socialtext.com/ |
+| st-admin | show-workspace-config --workspace %%temp_ws_name%% | qr/email_notify_is_enabled *: *0/ |
+| st-admin | show-workspace-config --workspace %%temp_ws_name%% | qr/email_weblog_dot_address *: *1/ |
+| st-admin | show-workspace-config --workspace %%temp_ws_name%% | qr/enable_unplugged *: *1/ |
+| st-admin | show-workspace-config --workspace %%temp_ws_name%% | qr/external_links_open_new_window *: *0/ |
+| st-admin | show-workspace-config --workspace %%temp_ws_name%% | qr/header_logo_link_uri *: .*slashdot.org/ |
+| st-admin | show-workspace-config --workspace %%temp_ws_name%% | qr/homepage_is_dashboard *: *0/ |
+| *Comment* | not checking: st-admin show-workspace-config --workspace %%temp_ws_name%% | qr/homepage_weblog/ |
+| st-admin | show-workspace-config --workspace %%temp_ws_name%% | qr/incoming_email_placement *: *top/ |
+| *Comment* | not checking: st-admin show-workspace-config --workspace %%temp_ws_name%% | qr/invitation_filter/ |
+| *Comment* | not checking: st-admin show-workspace-config --workspace %%temp_ws_name%% | qr/invitation_template/ |
+| *Comment* | not checking: st-admin show-workspace-config --workspace %%temp_ws_name%% | qr/logo_uri/ |
+| st-admin | show-workspace-config --workspace %%temp_ws_name%% | qr/no_max_image_size *: *1/ |
+| *Comment* | not checking: st-admin show-workspace-config --workspace %%temp_ws_name%% | qr/page_title_prefix/ |
+| st-admin | show-workspace-config --workspace %%temp_ws_name%% | qr/prefers_incoming_html_email *: *1/ |
+| st-admin | show-workspace-config --workspace %%temp_ws_name%% | qr/restrict_invitation_to_search *: *1/ |
+| st-admin | show-workspace-config --workspace %%temp_ws_name%% | qr/show_title_below_logo *: *0/ |
+| st-admin | show-workspace-config --workspace %%temp_ws_name%% | qr/show_welcome_message_below_logo *: *1/ |
+| *Comment* | not checking: st-admin show-workspace-config --workspace %%temp_ws_name%% | qr/skin_name/ |
+| st-admin | show-workspace-config --workspace %%temp_ws_name%% | qr/sort_weblogs_by_create *: *1/ |
+| *Comment* | not checking: st-admin show-workspace-config --workspace %%temp_ws_name%% | qr/title/ |
+| *Comment* | not checking: st-admin show-workspace-config --workspace %%temp_ws_name%% | qr/unmasked_email_domain/ |
+| *Comment* | not checking: st-admin show-workspace-config --workspace %%temp_ws_name%% | qr/workspace_id/ |
+| *Comment* | not checking: st-admin show-workspace-config --workspace %%temp_ws_name%% | qr/workspace_template/ |
+| *Comment* | not checking: st-admin show-workspace-config --workspace %%temp_ws_name%% | qr/ping URIs/ |
+| *Comment* | not checking: st-admin show-workspace-config --workspace %%temp_ws_name%% | qr/custom comment form fields/ |
+
+| *Comment* | Test Case: Workspace Config Preservation TEARDOWN |  |
+| st-process-jobs |  |  |
+| st-admin | delete-workspace --workspace %%temp_ws_name%% --no-export | The %%temp_ws_name%% workspace has been deleted. |
+
+| *Comment* | Test Case: Workspace Config Preservation COMPLETED |  |

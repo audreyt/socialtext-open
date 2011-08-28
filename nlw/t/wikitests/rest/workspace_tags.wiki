@@ -1,0 +1,94 @@
+Tests for Workspace Tags via the REST API
+
+* Fixture: SocialRest
+
+| Comment          | Test Setup    |                                     |
+| set              | username      | u%%start_time%%@ken.socialtext.net  |
+| create-user      | %%username%%  | %%password%%                        |
+| http-user-pass   | %%username%%  | %%password%%                        |
+| set              | workspace     | w%%start_time%%                     |
+| create-workspace | %%workspace%% |                                     |
+| add-member       | %%username%%  | %%workspace%%                       |
+| set              | tags_uri      | /data/workspaces/%%workspace%%/tags |
+
+| Comment   | workspace has no tags to start |                  |
+| GET       | %%tags_uri%%                   | text/plain       |
+| code-is   | 200                            |                  |
+| body-like | qr/^$/                         |                  |
+| GET       | %%tags_uri%%                   | application/json |
+| code-is   | 200                            |                  |
+| body-like | qr/^\[]$/                      |                  |
+
+| Comment     | Create a workspace tag |                         |     |
+| POST        | %%tags_uri%%           | Content-Type=text/plain | Foo |
+| code-is     | 201                    |                         |     |
+| has-header  | Location               |                         |     |
+| header-like | Location               | tags/Foo                |     |
+
+| Comment   | workspace with one workspace tag                               |                  |
+| GET       | %%tags_uri%%                                                   | text/plain       |
+| code-is   | 200                                                            |                  |
+| body-like | qr/^Foo$/                                                      |                  |
+| GET       | %%tags_uri%%                                                   | application/json |
+| code-is   | 200                                                            |                  |
+| body-like | [{"page_count":0,"value":"foo","name":"Foo","uri":"tags/Foo"}] |                  |
+
+| Comment   | Tag a page                                         |                         |           |
+| set       | page                                               | Monkey                  |           |
+| edit-page | %%workspace%%                                      | %%page%%                | Hi there! |
+| POST      | /data/workspaces/%%workspace%%/pages/%%page%%/tags | Content-Type=text/plain | Foo       |
+| code-is   | 201                                                |                         |           |
+
+| Comment   | workspace with one workspace tag, one page tag                 |                  |
+| GET       | %%tags_uri%%                                                   | text/plain       |
+| code-is   | 200                                                            |                  |
+| body-like | qr/^Foo$/                                                      |                  |
+| GET       | %%tags_uri%%                                                   | application/json |
+| code-is   | 200                                                            |                  |
+| body-like | [{"page_count":1,"value":"foo","name":"Foo","uri":"tags/Foo"}] |                  |
+
+| Comment   | Tag a page again                                   |                         |           |
+| set       | page                                               | Monkey                  |           |
+| POST      | /data/workspaces/%%workspace%%/pages/%%page%%/tags | Content-Type=text/plain | Bar       |
+| code-is   | 201                                                |                         |           |
+
+| Comment   | workspace with one workspace tag, two page tags |                  |
+| GET       | %%tags_uri%%                                    | text/plain       |
+| code-is   | 200                                             |                  |
+| body-like | Bar                                      |                  |
+| body-like | Foo                                      |                  |
+| GET       | %%tags_uri%%?order=alpha                        | application/json |
+| code-is   | 200                                             |                  |
+| body-like | [{"page_count":1,"value":"bar","name":"Bar","uri":"tags/Bar"},{"page_count":1,"value":"foo","name":"Foo","uri":"tags/Foo"}] |  |
+
+| Comment | delete a workspace tag, should delete page tag |
+| DELETE | %%tags_uri%%/Foo |
+| code-is | 204 |
+| GET       | %%tags_uri%%                                    | text/plain       |
+| code-is   | 200                                             |                  |
+| body-like | Bar                                      |                  |
+| GET       | %%tags_uri%%                                    | application/json |
+| code-is   | 200                                             |                  |
+| body-like | [{"page_count":1,"value":"bar","name":"Bar","uri":"tags/Bar"}] |  |
+
+| Comment | create a workspace tag, duplicating an existing page tag |
+| POST        | %%tags_uri%%           | Content-Type=text/plain | Bar |
+| code-is     | 201                    |                         |     |
+| has-header  | Location               |                         |     |
+| header-like | Location               | tags/Bar                |     |
+| GET       | %%tags_uri%%                                    | text/plain       |
+| code-is   | 200                                             |                  |
+| body-like | Bar                                      |                  |
+| GET       | %%tags_uri%%                                    | application/json |
+| code-is   | 200                                             |                  |
+| body-like | [{"page_count":1,"value":"bar","name":"Bar","uri":"tags/Bar"}] |  |
+
+| Comment | delete a page tag, workspace tag should persist |
+| DELETE | /data/workspaces/%%workspace%%/pages/%%page%%/tags/Bar |
+| code-is | 204 |
+| GET       | %%tags_uri%%                                    | text/plain       |
+| code-is   | 200                                             |                  |
+| body-like | Bar                                      |                  |
+| GET       | %%tags_uri%%                                    | application/json |
+| code-is   | 200                                             |                  |
+| body-like | [{"page_count":0,"value":"bar","name":"Bar","uri":"tags/Bar"}] |  |

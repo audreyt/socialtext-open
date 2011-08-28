@@ -1,0 +1,18 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Try::Tiny;
+use Socialtext::SQL qw/sql_execute/;
+use Socialtext::Upload;
+
+my $standins = join(',', map {'?'} @Socialtext::Upload::SupportedImageTypes);
+my $sth = sql_execute(qq{
+    UPDATE attachment
+       SET is_image = false
+     WHERE is_image IS true
+       AND mime_type NOT IN ($standins)
+}, @Socialtext::Upload::SupportedImageTypes);
+
+exit;
+################################################################################

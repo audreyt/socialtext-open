@@ -1,0 +1,39 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/get_dbh/;
+use Socialtext::System qw/shell_run/;
+
+if ($>) {
+    print "Not running as root - skipping marketo plugin install.\n";
+}
+else {
+    print "Installing the Marketo plugin\n";
+    shell_run("st-appliance-install-plugin marketo");
+}
+
+my $dbh = get_dbh();
+my $accts = $dbh->selectall_arrayref(q{
+    SELECT a.account_id,
+           a.name
+      FROM "Account" a
+     WHERE account_type = 'Free 50'
+       AND NOT EXISTS (
+         SELECT 1 FROM account_plugin
+          WHERE account_id = a.account_id
+            AND plugin = 'marketo'
+     )
+});
+
+my $ins_sth = $dbh->prepare(q{
+    INSERT INTO account_plugin (account_id, plugin) VALUES (?,?)
+});
+
+for my $acct (@$accts) {
+    my ($id, $name) = @$acct;
+    print "Enabling Marketo for account: $name\n";
+    $ins_sth->execute($id, 'marketo');
+}
+
+exit 0;

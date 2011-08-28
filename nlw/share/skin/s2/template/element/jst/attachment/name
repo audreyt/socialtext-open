@@ -1,0 +1,3 @@
+{for a in attachments}
+<li class="st-attachments-line st-page-box-listing-entry"><a href="${a.uri}" class="st-attachments-link" title="${ loc('Uploaded by [_1]', a.uploader) }">${a.name}</a></li>
+{/for}

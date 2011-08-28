@@ -1,0 +1,30 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::Migration::Utils qw(ensure_socialtext_schema);
+use Socialtext::SQL qw(sql_singlevalue);
+
+# Schema version '17' introduces the "users" table.
+ensure_socialtext_schema(17);
+
+# see if we have any LDAP users that have *never* had their data refreshed
+# from the underlying LDAP store.
+my $count = sql_singlevalue( qq{
+    SELECT COUNT(*)
+      FROM users
+     WHERE driver_key ~* 'LDAP'
+       AND cached_at = '-infinity';
+    } );
+
+# if we have LDAP users that have _never_ been cached, run the migration.
+#
+# alternatively, could be either:
+#   a) have no LDAP users, or
+#   b) all of the LDAP users have been refreshed from LDAP at some point
+if ($count > 0) {
+    print "uncached LDAP users present; priming local cache\n";
+    exit 0;
+}
+
+exit 1;

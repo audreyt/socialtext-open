@@ -1,0 +1,104 @@
+* Fixture: SocialRest
+
+Tests to create groups via REST and CLI.
+
+| standard-test-setup   |
+
+| set | g6 | group-6-%%start_time%% |
+| set | g7 | group-7-%%start_time%% |
+| set | g8 | group-8-%%start_time%% |
+| set | private_first | cool-people-only-%%start_time%% |
+
+
+| *Comment* | Exercise the CLI a little |
+| set      | cli_common   | --account %%account%% --email %%email_address%%      |
+| st-admin | create-group --name %%private_first%% %%cli_common%%              | Group has been created |
+| st-admin | create-group --name %%g7%% %%cli_common%% --permissions private   | Group has been created |
+| st-admin | create-group --name %%g6%% %%cli_common%% --permissions self-join | Group has been created |
+| st-admin | create-group --name %%g6%% %%cli_common%% --permissions open | Invalid permissions name |
+
+| set-group-id | private_first_id | %%private_first%% |
+| set-group-id | g7_id            | %%g7%%            |
+| set-group-id | g6_id            | %%g6%%            |
+
+| comment | check the default on the cli create-group cmd | |
+| GET-json     | /data/groups/%%private_first_id%% |                   |
+| code-is      | 200                               |                   |
+| json-parse   |                                   |                   |
+| json-path-is | $.name                            | %%private_first%% |
+| json-path-is | $.permission_set                  | private           |
+
+| comment | check the specific set on the cli create-group cmd | |
+| GET-json     | /data/groups/%%g6_id%% |           |
+| code-is      | 200                    |           |
+| json-parse   |                        |           |
+| json-path-is | $.name                 | %%g6%%    |
+| json-path-is | $.permission_set       | self-join |
+
+| *Comment* | create a group via rest with self-join permission set |
+| POST-json | /data/groups | {"name":"%%g8%%", "permission_set":"self-join"} |
+| code-is | 201 |
+| json-parse |
+| json-path-set | g8_id | $.group_id |
+
+| *Comment* | verify the permission set of that group |
+| GET-json     | /data/groups/%%g8_id%% |           |
+| code-is      | 200                    |           |
+| json-parse   |                        |           |
+| json-path-is | $.name                 | %%g8%%    |
+| json-path-is | $.permission_set       | self-join |
+
+
+| *Comment* | change the permission set of that group via PUT |
+| PUT-json     | /data/groups/%%g8_id%% | {"name":"%%g8%%","description":"yar","permission_set":"private" } |
+| code-is | 202 |
+
+| *Comment*    | verify the new permission set of that group |         |
+| GET-json     | /data/groups/%%g8_id%%                      |         |
+| code-is      | 200                                         |         |
+| json-parse   |                                             |         |
+| json-path-is | $.name                                      | %%g8%%  |
+| json-path-is | $.permission_set                            | private |
+
+| *Comment* | try an invalid permission set via PUT |
+| PUT-json | /data/groups/%%g8_id%% | {"name":"%%g8%%","description":"yar","permission_set":"trustafarian" } |
+| code-is  | 400                    |                                                                        |
+| body-like | Invalid permissions name: trustafarian |
+
+| *Comment* | verify the permission set of that group didn't change |
+| GET-json     | /data/groups/%%g8_id%% |                 |
+| code-is      | 200                    |                 |
+| json-parse   |                        |                 |
+| json-path-is | $.name                 | %%g8%%          |
+| json-path-is | $.permission_set       | private         |
+
+| *Comment* | Cannot change set from 'private' to 'self-join' when the group has workspaces user doesn't admin |
+| set                    | ws8                    | ws8-%%start_time%%                             |
+| create-workspace       | %%ws8%%                |                                                |
+| add-group-to-workspace | %%g8_id%%              | %%ws8%%                                        |
+| PUT-json               | /data/groups/%%g8_id%% | {"permission_set":"self-join","name":"%%g8%%"} |
+| code-is                | 403                    |                                                |
+
+| *Comment* | verify the permission set of that group didn't change |
+| GET-json     | /data/groups/%%g8_id%% |                 |
+| code-is      | 200                    |                 |
+| json-parse   |                        |                 |
+| json-path-is | $.name                 | %%g8%%          |
+| json-path-is | $.permission_set       | private         |
+
+| *Comment* | Can change set from 'private' to 'self-join' when the user admins the group's workspaces |
+| add-member | %%email_address%%      | %%ws8%%                                        | admin |
+| PUT-json   | /data/groups/%%g8_id%% | {"permission_set":"self-join","name":"%%g8%%"} |       |
+| code-is    | 202                    |                                                |       |
+
+| *Comment* | verify the permission set of that group did change |
+| GET-json     | /data/groups/%%g8_id%% |           |
+| code-is      | 200                    |           |
+| json-parse   |                        |           |
+| json-path-is | $.name                 | %%g8%%    |
+| json-path-is | $.permission_set       | self-join |
+
+| *Comment* | just update the description |                                         |
+| PUT-json  | /data/groups/%%g8_id%%      | {"name":"%%g8%%","description":"woot!"} |
+| code-is   | 202                         |                                         |
+

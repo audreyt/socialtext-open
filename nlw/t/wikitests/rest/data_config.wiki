@@ -1,0 +1,24 @@
+Test cases for the "server config" ReST API.
+
+For logged-in users, `/data/config` should return at least the "allow_network_invitation" key (used in SD).
+
+* Fixture: SocialRest
+
+| http-user-pass |              |                  |
+| get            | /data/config | application/json |
+| code-is        | 401          |                  |
+
+| http-user-pass | %%username%% | %%password%%     |
+| get            | /data/config | application/json |
+| code-is        | 200          |                  |
+
+| http-user-pass          |                                    |                  |
+| set-nlw-cookie-for-user | %%username%%                       |                  |
+| get                     | /data/config                       | application/json |
+| code-is                 | 200                                |                  |
+| json-parse              |                                    |                  |
+| json-like               | { "allow_network_invitation":"0" } |                  |
+| body-like               | "desktop_update_url":              |                  |
+| body-like               | /st/desktop/update"                |                  |
+| body-like               | "server_version":                  |                  |
+| body-like               | "api_version":                     |                  |

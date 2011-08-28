@@ -1,0 +1,9 @@
+#!/bin/bash
+# @COPYRIGHT@
+
+LOG=/var/log/nlw.log
+
+cat $LOG | grep " \[$UID\] "
+
+
+

@@ -1,0 +1,13 @@
+This directory contains refactored code to add a column to an existing database table.
+
+USAGE:
+
+ <script_name> <table> <new_column_name> <new_column_type> <new_column_default>
+
+Helpers
+=======
+
+USAGE:
+
+ _set_not_null <table> <column_name> <default_value>
+

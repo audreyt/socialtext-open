@@ -1,0 +1,19 @@
+[%# @COPYRIGHT@ -%]
+[% PROCESS element/settings/start %]
+  [% FOREACH preference = preference_list %]
+    <tr valign="top">
+      <td width="47%" class="preferences-td" align="right">
+       <div class="preferences-query">[% IF preference.query %][% loc(preference.query) %][% END %]</div>
+      </td>
+    [% IF preference.layout_over_under %]
+      </tr>
+      <tr>
+    [% ELSE %]
+      <td class="preferences-td">&nbsp;</td>
+    [% END %]
+      <td width="47%" class="preferences-td">
+    [% preference.form_element %]
+     </td>
+    </tr>
+  [% END %]
+[% PROCESS element/settings/end %]

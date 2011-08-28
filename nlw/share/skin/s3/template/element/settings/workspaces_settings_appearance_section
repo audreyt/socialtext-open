@@ -1,0 +1,71 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[% PROCESS element/settings/start %]
+<dl class="form">
+  <dt><label>[% loc('wiki.title') %]</label></dt>
+  <dd>[% loc('info.wiki-title') %]</dd>
+
+  <dd>
+    <input type="text" name="title" value="[% workspace.title | html %]" size="50" />
+    ([% loc('info.required') %])
+  </dd>
+  <dd>
+    <i>[% loc('example.title') %]</i>
+  </dd>
+</dl>
+
+<!--
+<dl class="form">
+  <dt><label>[% loc('wiki.logo') %]</label></dt>
+  <dd>[% loc('info.wiki-logo') %]</dd>
+  <dd>[% loc("info.default-logo") %]</dd>
+
+  <dd>
+    <b>[% loc('image.web') %]</b>
+    ([% loc('info.optional') %])<br/>
+    <input type="radio" checked="checked" name="logo_type" value="uri" /> <input type="text" name="logo_uri" value="[% workspace.logo_uri %]" size="30" />
+  </dd>
+  <dd>
+    <i>[% loc('example.logo-url') %]</i>
+  </dd>
+  <dd>
+    <b>[% loc('image.upload') %]</b>
+    ([% loc('info.optional') %])<br/>
+    <input type="radio" name="logo_type" value="file" /> <input type="file" name="logo_file" size="35" />
+  </dd>
+  <dd>
+    <i>[% loc('example.logo') %]</i>
+  </dd>
+</dl>
+-->
+
+<dl class="form">
+  <dt><label>[% loc('wiki.link') %]</label></dt>
+  <dd>
+    [% loc('info.central=wiki', workspace.title) %]<br />
+    [% loc('info.wiki-as-blog') %]
+  </dd>
+  <dd>
+    <input type="radio" name="homepage_is_weblog"
+      [%- UNLESS workspace.homepage_weblog %]
+        checked="checked"
+      [%- END %]
+        value="0" />
+    [% loc('wiki.central-page') %]<br/>
+
+    <input type="radio" name="homepage_is_weblog"
+      [%- IF workspace.homepage_weblog %]
+        checked="checked"
+      [%- END %]
+        value="1" />
+    [% loc('config.blog:') %]
+    <input name="homepage_weblog" value="[% workspace.homepage_weblog %]"
+      [%- UNLESS workspace.homepage_weblog %]
+        disabled="true"
+      [%- END %]
+      />
+      <br/>
+
+   </dd>
+</dl>
+[% PROCESS element/settings/stop %]

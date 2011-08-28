@@ -1,0 +1,74 @@
+
+| *Comment* | Test Case: Business Control Panel Confirm User |  |
+
+| st-config | set self_registration 1 |  |
+| st-config | set allow_network_invitation 1 |  |
+| set | self_reg | mattself%%start_time%% |
+| set | eself_reg | %%self_reg%%@matt.socialtext.net |
+
+| set | self_reg2 | mattself2%%start_time%% |
+| set | eself_reg2 | %%self_reg2%%@matt.socialtext.net |
+
+| *Comment* | Test Case: Business Control Panel Confirm User, self-register |  |
+| open_ok | /nlw/submit/logout |  |
+| wait_for_element_visible_ok | link=Register | 30000 |
+| click_and_wait | link=Register |  |
+| wait_for_element_visible_ok | email_address | 30000 |
+| wait_for_element_visible_ok | register_password | 30000 |
+| wait_for_element_visible_ok | register_password2 | 30000 |
+| wait_for_element_visible_ok | register_btn | 30000 |
+| type_ok | email_address | %%eself_reg%% |
+| type_ok | register_password | password |
+| type_ok | register_password2 | password |
+| click_and_wait | register_btn |  |
+| wait_for_text_present_ok | An email confirming your registration has been sent to | 30000 |
+| open_ok | /st/dashboard |  |
+| wait_for_text_present_ok | Log in to Socialtext | 30000 |
+| wait_for_element_visible_ok | username | 30000 |
+
+| *Comment* | Test Case: Business Control Panel Confirm User login as %%username%% |  |
+| st-login | %%username%% | %%password%% |
+| st_search_cp_users | %%eself_reg%% |  |
+| st_build_cp_name | %%eself_reg%% | user_in_cp |
+| wait_for_element_visible_ok | link=%%user_in_cp%% | 30000 |
+| click_ok | link=%%user_in_cp%% |  |
+| wait_for_text_present_ok | User requires confirmation | 30000 |
+| wait_for_element_visible_ok | //input[@value='Confirm user'] | 30000 |
+| click_and_wait | //input[@value='Confirm user'] |  |
+| wait_for_text_present_ok | User is confirmed | 30000 |
+| wait_for_text_present_ok | The "%%self_reg%%" user was confirmed. | 30000 |
+
+| *Comment* | Test Case: Business Control Panel Confirm User, logout, login as self-register |  |
+| st-process-jobs |  |  |
+| open_ok | /st/dashboard |  |
+| st-logoutin | %%eself_reg%% | password |
+| open_ok | /st/dashboard |  |
+| wait_for_text_present_ok | Welcome, New User | 30000 |
+
+| *Comment* | Test Case: Confirm User, self-register user2 |  |
+| click_and_wait | link=Log out |  |
+| wait_for_element_visible_ok | link=Register | 30000 |
+| click_and_wait | link=Register |  |
+| wait_for_element_visible_ok | email_address | 30000 |
+| wait_for_element_visible_ok | register_password | 30000 |
+| wait_for_element_visible_ok | register_password2 | 30000 |
+| wait_for_element_visible_ok | register_btn | 30000 |
+| type_ok | email_address | %%eself_reg2%% |
+| type_ok | register_password | password |
+| type_ok | register_password2 | password |
+| click_and_wait | register_btn |  |
+| wait_for_text_present_ok | An email confirming your registration has been sent to | 3000 |
+
+| *Comment* | Test Case: Business Control Panel Confirm User st-admin confirm-user %%eself_reg2%% |  |
+| st-admin | confirm-user --e %%eself_reg2%% --p %%password%% | has been confirmed with password |
+
+| *Comment* | Test Case: Business Control Panel Confirm User login as %%eself_reg2%% |  |
+| st-login | %%eself_reg2%% | %%password%% |
+| open_ok | /st/dashboard |  |
+| wait_for_text_present_ok | Welcome, New User | 30000 |
+
+| *Comment* | Test Case: Business Control Panel Confirm User TEARDOWN |  |
+| st-admin | deactivate-user --e %%eself_reg%% | removed |
+| st-admin | deactivate-user --e %%eself_reg2%% | removed |
+
+| *Comment* | Test Case: Business Control Panel Confirm User COMPLETED |  |

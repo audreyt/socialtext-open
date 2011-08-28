@@ -1,0 +1,81 @@
+[%# @COPYRIGHT@ -%]
+[%- enctype = 'application/x-www-form-urlencoded' -%]
+<form method="post" name="settings" action="[% script_name %]" enctype="[% enctype %]">
+  [% PROCESS element/settings/save IF hub.action != 'users_listall' OR hub.checker.check_permission('admin_workspace') %]
+  <input type="hidden" name="action" value="workspaces_settings_skin" />
+  <input type="hidden" name="preferences_class_id" value="[% preferences_class_id %]" />
+  [%- IF settings_error %]<div id="st-errorbox" class="st-errorbox">[% settings_error %]</div>[% END -%]
+<table id="st-workspaceskin-table">
+
+
+<tr><td>
+    <div class="workspace-entry-header">[% loc('Workspace Skin') %]</div>
+    <div class="workspace-entry">
+        <div class="workspace-entry-p">
+            [% loc('Socialtext enables you to customize the look and feel of your workspace. You can use the default skin supplied by Socialtext or customize your own skin.') %]
+        </div>
+        <div class="workspace-entry-p">
+            [% kit_link = loc('<a href="http://www.socialtext.net/open/index.cgi?css_kit">Skin Customization Kit</a>') %]
+            [% style_guide_link = loc('<a href="/help-en/index.cgi?socialtext_style_customization_guide">Socialtext Style Customization Guide</a>') %]
+            [% loc('To customize your own skin, download the [_1], modify the skin files to your liking, and upload them here. Complete documentation on skin customization is available in the [_2].<h4>Skin support is not included in basic support. Users who upload skins are responsible for keeping copies of their skin files and for keeping their skins current as the Socialtext application changes.</h4>', kit_link, style_guide_link) %]
+        </div>
+    </div>
+</td></tr>
+
+<tr><td>
+    <div class="workspace-entry">
+        <div class="workspace-entry-p"><span class="settings-label">[% loc('Select a workspace skin:') %]</span></div>
+        <div class="workspace-entry-p">
+            <input id="st-workspaceskin-default" type="radio" name="uploaded_skin" value="0"[% IF NOT uploaded_skin %] checked="true"[% END %] >[% loc('Default Skin.') %]<br/>
+            <input id="st-workspaceskin-custom" type="radio" name="uploaded_skin" value="1"[% IF uploaded_skin %] checked="true"[% END %] [% IF !skin_files.size() %]disabled="true"[% END %]>[% loc('Customized Skin.') %]
+        </div>
+        </form>
+    </div>
+</td></tr>
+
+<tr><td>
+    <div id="st-workspaceskin-fileupload" class="workspace-entry">
+        <form id="st-workspaceskin-uploadform" method="post" name="skin-upload" action="[% script_name %]" enctype="multipart/form-data">
+        <input type="hidden" name="action" value="skin_upload" />
+        <div class="workspace-entry-p">
+            [% loc('Select the ZIP or TGZ file that contains the customized skin files:') %]
+        </div>
+        <div class="workspace-entry-p">
+            <input id="st-workspaceskin-file" type="file" name="skin_file" size="35" value="[% loc('Browse ...') %]" />
+            <input id="st-workspaceskin-submit" name="submit" type="submit" value="[% loc('Upload') %]" />
+        </div>
+        [% IF skipped_files.size() %][% skipblock = PROCESS element/settings/list_skipped_files %][% ELSE %][% skipblock = '' %][% END %]
+        [%- upload_error = upload_error _ skipblock -%]
+        [% IF upload_error -%]<div id="st-errorbox" class="st-errorbox">[% upload_error %]</div>[% END -%]
+        </form>
+    </div>
+</td></tr>
+
+<tr><td>
+    <div id="st-workspaceskin-filelist" class="workspace-entry" [% IF !skin_files.size() %][% "style=\"display: none;\"" %][% END %]>
+        <form id="st-workspaceskin-removefiles" method="post" name="remove-files" action="[% script_name %]" enctype="application/x-www-form-urlencoded">
+        <input type="hidden" name="action" value="remove_skin_files" />
+        <div class="workspace-entry-p" [% IF !skin_files.size() %][% "style=\"display: none;\"" %][% END %]>
+            <span class="settings-label">[%- loc('Customized Skin Files') %]</span>
+            <span id="st-workspaceskin-resetfiles">
+                <input id="st-workspaceskin-removesubmit" name="submit" type="submit" value=[% loc('Remove&nbsp;Existing&nbsp;Files') %] />
+            </span>
+        </div>
+        </form>
+        <table class="standard-table" [% IF !skin_files.size() %][% "style=\"display: none;\"" %][% END %]>
+            <thead>
+                <tr>
+                <th>[% loc('File') %]</th>
+                <th>[% loc('Size (bytes)') %]</th>
+                <th>[% loc('Uploaded') %]</th>
+                </tr>
+            </thead>
+            <tbody>
+            [% FOREACH file IN skin_files %]
+            <tr class="[% loop.count % 2 ? 'w-st-even-row' : '' %]"><td>[% file.name %]</td><td class="alignright">[% file.size %]</td><td>[% file.date %]</td></tr>
+            [% END %]
+            </tbody>
+        </table>
+    </div>
+</td></tr>
+</table>

@@ -1,0 +1,11 @@
+[% BLOCK button %]
+    <table id="st-[% style %]-button" class="st-page-action-button"><tr><td>
+    <div id="st-[% style %]-button-border-left-middle"><div id="st-[% style %]-button-border-right-middle">
+    <div id="st-[% style %]-button-border-left-top"><div id="st-[% style %]-button-border-right-top">
+    <div id="st-[% style %]-button-border-left-bottom"><div id="st-[% style %]-button-border-right-bottom">
+            <a id="st-[% style %]-button-link" class="st-page-action-button-link" href="#FIXME">[% label %]</a>
+    </div></div>
+    </div></div>
+    </div></div>
+    </td></tr></table>
+[% END %]

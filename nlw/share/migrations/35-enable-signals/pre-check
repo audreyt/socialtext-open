@@ -1,0 +1,13 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+
+# If signals is installed, run the migration
+unless (-d '/usr/share/nlw/plugin/signals') {
+    print "Skipping migration because signals is not installed\n";
+    exit 1;
+}
+
+print "Running migration to enable signals for all accounts with people";
+exit 0;

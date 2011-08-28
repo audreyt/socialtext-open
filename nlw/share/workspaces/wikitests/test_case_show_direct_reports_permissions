@@ -1,0 +1,239 @@
+| *Comment* | Test Case: Show Direct Reports |
+
+* Fixture: SocialWidgets
+
+skip.ie because update-profile causes Se to exit in IE
+
+Here's the basic setup:
+
+Manager will belong to accountM
+Users 01 will belong to account One
+Users 02 will belong to account Two
+User 03 will belong to account Three
+User 04 will belong to account tmp
+User 05 will belong to account tmp
+
+We will all create accounts Joiner1 and Joiner2
+and workspaces joiner1 and joiner2 in those accounts
+Manager will belong to both workspaces
+User 01 will belong to both workspaces
+User 02 will belong to joiner1
+User 03 will belong to joiner2
+User 04 will belong to joiner1
+User 05 will belong to joiner2
+
+Therefore ...
+
+User02 will see Manager has user 01, user02 and user04 as direct reports ONLY (does not see 03 or 05)
+User02 will see user01, user04 as peers (does not see 03, 05)
+User04 will see Manager has user01, User02, User04, User05 (because 04 and 05 share account tmp) as direct report (Not user03)
+Manager see's 'em all
+
+| *Comment* | Test Case: Show Direct Reports Permissions - Create Accounts |  |
+| set | acct_m | acctm-%%start_time%% |
+| set | acct_one | acctone-%%start_time%% |
+| set | acct_two | accttwo-%%start_time%% |
+| set | acct_three | acctthree-%%start_time%% |
+| set | acct_tmp | accttmp-%%start_time%% |
+| set | acct_joiner_one | acctjoiner_one-%%start_time%% |
+| set | acct_joiner_two | acctjoiner_two-%%start_time%% |
+
+| st-admin | create-account --name %%acct_m%% | was created |
+| st-admin | create-account --name %%acct_one%% | was created |
+| st-admin | create-account --name %%acct_two%% | was created |
+| st-admin | create-account --name %%acct_three%% | was created |
+| st-admin | create-account --name %%acct_tmp%% | was created |
+| st-admin | create-account --name %%acct_joiner_one%% | was created |
+| st-admin | create-account --name %%acct_joiner_two%% | was created |
+
+| st-admin | enable-plugin --plugin dashboard --account %%acct_m%% |  |
+| st-admin | enable-plugin --plugin dashboard --account %%acct_one%% |  |
+| st-admin | enable-plugin --plugin dashboard --account %%acct_two%% |  |
+| st-admin | enable-plugin --plugin dashboard --account %%acct_tmp%% |  |
+| st-admin | enable-plugin --plugin dashboard --account %%acct_joiner_one%% |  |
+| st-admin | enable-plugin --plugin dashboard --account %%acct_joiner_two%% |  |
+
+| *Comment* | Test Case: Show Direct Reports Permissions - Create Workspaces |  |
+| set | joiner1 | joiner1ws%%start_time%% |
+| set | joiner2 | joiner2ws%%start_time%% |
+| st-admin | create-workspace --empty --name %%joiner1%% --title %%joiner1%% --account %%acct_joiner_one%% | was created |
+| st-admin | create-workspace --empty --name %%joiner2%% --title %%joiner2%% --account %%acct_joiner_two%% | was created |
+
+| *Comment* | Test Case: Show Direct Reports Permissions - Create Users |  |
+| set | user1_short | subordinate01%%start_time%% |
+| set | user1 | %%user1_short%%@matt.socialtext.net |
+| set | user2_short | subordinate02%%start_time%% |
+| set | user2 | %%user2_short%%@matt.socialtext.net |
+| set | user3_short | subordinate03%%start_time%% |
+| set | user3 | %%user3_short%%@matt.socialtext.net |
+| set | user4_short | subordinate04%%start_time%% |
+| set | user4 | %%user4_short%%@matt.socialtext.net |
+| set | user5_short | subordinate05%%start_time%% |
+| set | user5 | %%user5_short%%@matt.socialtext.net |
+
+| set | manager_short | managerwithdirects%%start_time%% |
+| set | manager | %%manager_short%%@matt.socialtext.net |
+
+| *Comment* | Test Case: Show Direct Reports Create Users Permissions - Create Users |  |
+| st-admin | create-user --e %%user1%% --p %%password%% --account %%acct_one%% | was created |
+| st-admin | create-user --e %%user2%% --p %%password%% --account %%acct_two%% | was created |
+| st-admin | create-user --e %%user3%% --p %%password%% --account %%acct_three%% | was created |
+| st-admin | create-user --e %%user4%% --p %%password%% --account %%acct_tmp%% | was created |
+| st-admin | create-user --e %%user5%% --p %%password%% --account %%acct_tmp%% | was created |
+| st-admin | create-user --e %%manager%% --p %%password%% --account %%acct_m%% | was created |
+
+| *Comment* | Test Case: Show Direct Reports Create Users Permissions - Add-members |  |
+| st-admin | add-member --e %%manager%% --w %%joiner1%% | now has the role of 'member' in the |
+| st-admin | add-member --e %%manager%% --w %%joiner2%% | now has the role of 'member' in the |
+| st-admin | add-member --e %%user1%% --w %%joiner1%% | now has the role of 'member' in the |
+| st-admin | add-member --e %%user1%% --w %%joiner2%% | now has the role of 'member' in the |
+| st-admin | add-member --e %%user2%% --w %%joiner1%% | now has the role of 'member' in the |
+| st-admin | add-member --e %%user3%% --w %%joiner2%% | now has the role of 'member' in the |
+| st-admin | add-member --e %%user4%% --w %%joiner1%% | now has the role of 'member' in the |
+| st-admin | add-member --e %%user5%% --w %%joiner2%% | now has the role of 'member' in the |
+
+| st-process-jobs | PersonIndex |  |
+
+| *Comment* | Test Case: Show Direct Reports Permissions - Edit Manager field for the users |  |
+| st-logoutin | %%user1%% | %%password%% |
+| call | [st-add-manager] | manager_short=%%manager_short%% |
+| st-logoutin | %%user2%% | %%password%% |
+| call | [st-add-manager] | manager_short=%%manager_short%% |
+| st-logoutin | %%user3%% | %%password%% |
+| call | [st-add-manager] | manager_short=%%manager_short%% |
+| st-logoutin | %%user4%% | %%password%% |
+| call | [st-add-manager] | manager_short=%%manager_short%% |
+| st-logoutin | %%user5%% | %%password%% |
+| call | [st-add-manager] | manager_short=%%manager_short%% |
+
+| *Comment* | Test Case: Show Direct Reports Permissions - Login as Manager, see all direct reports |  |
+| st-logoutin | %%manager%% | %%password%% |
+| wait_for_element_visible_ok | link=%%manager_short%% | 30000 |
+| click_and_wait | link=%%manager_short%% |  |
+| wait_for_text_present_ok | Profile | 30000 |
+| wait_for_text_present_ok | Activities | 30000 |
+| wait_for_text_present_ok | Employees | 30000 |
+| wait_for_text_present_ok | %%user1_short%% | 30000 |
+| wait_for_text_present_ok | %%user2_short%% | 30000 |
+| wait_for_text_present_ok | %%user3_short%% | 30000 |
+| wait_for_text_present_ok | %%user4_short%% | 30000 |
+| wait_for_text_present_ok | %%user5_short%% | 30000 |
+
+| *Comment* | Test Case: Show Direct Reports Permissions - User02 will see Manager has user 01, user02 and user04 as direct reports ONLY (does not see 03 or 05) |  |
+| st-logoutin | %%user2%% | %%password%% |
+| st-process-jobs |  |  |
+| st-find-user | %%manager_short%% |  |
+| wait_for_element_visible_ok | link=%%user1_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user2_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user4_short%% | 30000 |
+| wait_for_element_not_present_ok | link=user3_short%% | 30000 |
+| wait_for_element_not_present_ok | link=user5_short%% | 30000 |
+
+| *Comment* | Test Case: Show Direct Reports Permissions - User02 will see user01, user04 as peers (does not see 03, 05) |  |
+| st-logoutin | %%user2%% | %%password%% |
+| st-find-user | %%manager_short%% |  |
+| wait_for_element_visible_ok | link=%%user2_short%% | 30000 |
+| click_and_wait | link=%%user2_short%% |  |
+| wait_for_element_visible_ok | link=%%user1_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user4_short%% | 30000 |
+| wait_for_element_not_present_ok | link=user3_short%% | 30000 |
+| wait_for_element_not_present_ok | link=user3_short%% | 30000 |
+
+
+| *Comment* | Test Case: Show Direct Reports Permissions - User04 will see Manager has user01, User02, User04, User05 as direct report (Not user03) |  |
+| st-logoutin | %%user4%% | %%password%% |
+| st-find-user | %%manager_short%% |  |
+| wait_for_element_visible_ok | link=%%user1_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user2_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user4_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user5_short%% | 30000 |
+| wait_for_element_not_present_ok | link=%%user3_short%% | 30000 |
+
+| *Comment* | Test Case: Show Direct Reports Permissions - ... We remove manager from Joiner1 |  |
+| st-admin | remove-member --e %%manager%% --w %%joiner1%% | no longer has the role of |
+
+| *Comment* | Test Case: Show Direct Reports Permissions - Manager sees his direct reports are User01, User03, User05 - does not see user 02 or User04 |  |
+| st-logoutin | %%manager%% | %%password%% |
+| wait_for_element_visible_ok | link=%%manager_short%% | 30000 |
+| click_and_wait | link=%%manager_short%% |  |
+| wait_for_element_visible_ok | link=%%user1_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user3_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user5_short%% | 30000 |
+| wait_for_element_not_present_ok | link=user2_short%% | 30000 |
+| wait_for_element_not_present_ok | link=user4_short%% | 30000 |
+
+
+| *Comment* | Test Case: Show Direct Reports Permissions - ... We remove Manager from joiner2 |  |
+| st-admin | remove-member --e %%manager%% --w %%joiner2%% | no longer has the role of |
+| st-process-jobs |  |  |
+
+| *Comment* | Test Case: Show Direct Reports Permissions - Manager does not think he has any direct reports |  |
+| st-logoutin | %%manager%% | %%password%% |
+| wait_for_element_visible_ok | link=%%manager_short%% | 30000 |
+| click_and_wait | link=%%manager_short%% |  |
+| wait_for_element_not_present_ok | link=user1_short%% | 30000 |
+| wait_for_element_not_present_ok | link=user2_short%% | 30000 |
+| wait_for_element_not_present_ok | link=user3_short%% | 30000 |
+| wait_for_element_not_present_ok | link=user4_short%% | 30000 |
+| wait_for_element_not_present_ok | link=user5_short%% | 30000 |
+| text_unlike | //body | %%user1_short%% |
+| text_unlike | //body | Employees |
+
+
+| *Comment* | Test Case: Show Direct Reports Permissions - User02 sees no manager and no peers |  |
+| st-logoutin | %%user2%% | %%password%% |
+| wait_for_element_visible_ok | link=%%user2_short%% | 30000 |
+| click_and_wait | link=%%user2_short%% |  |
+| wait_for_element_not_present_ok | link=%%manager_short%% | 30000 |
+| text_unlike | //body | Peers: |
+| text_unlike | //body | Manager: |
+| wait_for_element_not_present_ok | link=user1_short%% | 30000 |
+| wait_for_element_not_present_ok | link=user3_short%% | 30000 |
+| wait_for_element_not_present_ok | link=user4_short%% | 30000 |
+| wait_for_element_not_present_ok | link=user5_short%% | 30000 |
+
+
+| *Comment* | Test Case: Show Direct Reports Permissions - User02 sees user04 has no peers |  |
+| st-logoutin | %%user2%% | %%password%% |
+| st-find-user | %%user4_short%% |  |
+| wait_for_element_not_present_ok | link=%%manager_short%% | 30000 |
+| text_unlike | //body | Peers: |
+| text_unlike | //body | Manager: |
+| wait_for_element_not_present_ok | link=user1_short%% | 30000 |
+| wait_for_element_not_present_ok | link=user3_short%% | 30000 |
+| wait_for_element_not_present_ok | link=user4_short%% | 30000 |
+| wait_for_element_not_present_ok | link=user5_short%% | 30000 |
+
+| *Comment* | Test Case: Show Direct Reports Permissions - User05 does not think he has peers |  |
+| st-logoutin | %%user5%% | %%password%% |
+| wait_for_element_visible_ok | link=%%user5_short%% | 30000 |
+| click_and_wait | link=%%user5_short%% |  |
+| wait_for_element_not_present_ok | link=%%manager_short%% | 30000 |
+| text_unlike | //body | Peers: |
+| text_unlike | //body | Manager: |
+| wait_for_element_not_present_ok | link=user1_short%% | 30000 |
+| wait_for_element_not_present_ok | link=user2_short%% | 30000 |
+| wait_for_element_not_present_ok | link=user3_short%% | 30000 |
+| wait_for_element_not_present_ok | link=user4_short%% | 30000 |
+
+| *Comment* | Test Case: Show Direct Reports Permissions TEARDOWN |  |
+| st-process-jobs |  |  |
+| delete-workspace | %%joiner1%% | Recklessly |
+| delete-workspace | %%joiner2%% | Recklessly |
+
+| st-admin | deactivate-user --e %%user1%% | has been deactivated |
+| st-admin | deactivate-user --e %%user2%% | has been deactivated |
+| st-admin | deactivate-user --e %%user3%% | has been deactivated |
+| st-admin | deactivate-user --e %%user4%% | has been deactivated |
+| st-admin | deactivate-user --e %%user5%% | has been deactivated |
+| st-admin | deactivate-user --e %%manager%% | has been deactivated |
+
+| delete-account | %%acct_m%% |  |
+| delete-account | %%acct_one%% |  |
+| delete-account | %%acct_two%% |  |
+| delete-account | %%acct_three%% |  |
+| delete-account | %%acct_tmp%% |  |
+| delete-account | %%acct_joiner_one%% |  |
+| delete-account | %%acct_joiner_two%% |  |
+
+| *Comment* | Test Case: Show Direct Reports Permissions COMPLETED |  |

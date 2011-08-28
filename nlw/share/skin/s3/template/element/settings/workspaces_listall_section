@@ -1,0 +1,24 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+<dl class="form">
+  <dt><label>[% loc('nav.wikis') %]</label></dt>
+</dl>
+
+<table>
+  <tr>
+    <th>
+      <label>[% loc('wiki.title') %]</label>
+    </th>
+    <th>
+      <label>[% loc('wiki.name') %]</label>
+    </th>
+  </tr>
+[% WHILE (workspace = workspaces.next) %]
+  <tr>
+    <td>
+      <a href="/[% workspace.name %]/">[% workspace.title %]</a>
+    </td>
+    <td>[% workspace.name %]</td>
+  </tr>
+[% END %]
+</table>

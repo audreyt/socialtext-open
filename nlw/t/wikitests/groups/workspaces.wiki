@@ -1,0 +1,201 @@
+Tests for `/data/groups/:group_id/workspaces`, implemented to help fix {bz: 3450}.
+
+* Fixture: SocialRest
+
+| standard-test-setup   |
+| delete-all-groups     |
+
+## We want an auw for the account, and this doesn't get created normally in 
+## the SocialBase fixture, so force it here
+| set                      | auw         | zzz-auw-%%start_time%% |
+| create-workspace         | %%auw%%     | %%account%%            |
+| add-account-to-workspace | %%account%% | %%auw%%                |
+
+
+## Create a new group, add it to a couple of workspaces
+| *Comment*              | Setup        |                                        |       |
+| set                    | admin        | admin%%start_time%%@ken.socialtext.net |       |
+| create-user            | %%admin%%    | password                               | %%account%%      |
+| set                    | group        | group%%start_time%%                    |       |
+| create-group           | %%group%%    | %%account%%                                       |       |
+| add-user-to-group      | %%admin%%    | %%group_id%%                           | admin |
+| set                    | gold         | gold%%start_time%%                     |       |
+| create-workspace       | %%gold%%     | %%account%%                                       |       |
+| set                    | gold_id      | %%workspace_id%%                       |       |
+| add-group-to-workspace | %%group_id%% | %%gold%%                               |       |
+| set                    | silver       | silver%%start_time%%                   |       |
+| create-workspace       | %%silver%%   | %%account%%                                       |       |
+| set                    | silver_id    | %%workspace_id%%                       |       |
+| add-group-to-workspace | %%group_id%% | %%silver%%                             |       |
+| set                    | bronze       | bronze%%start_time%%                   |       |
+| create-workspace       | %%bronze%%   | %%account%%                                       |       |
+| set                    | bronze_id    | %%workspace_id%%                       |       |
+| add-group-to-workspace | %%group_id%% | %%bronze%%                             |       |
+| set                    | copper       | copper%%start_time%%                   |       |
+| create-workspace       | %%copper%%   | %%account%%                                       |       |
+| set                    | copper_id    | %%workspace_id%%                       |       |
+################################################################################
+
+## GET, user is not authorized
+| *Comment* | GET, user is not authorized          |
+| GET       | /data/groups/%%group_id%%/workspaces |
+| code-is   | 403                                  |
+
+## Log in as group admin
+| *Comment*      | Log in as group admin |          |
+| http-user-pass | %%admin%%             | password |
+
+## GET HTML, workspaces are in order
+| *Comment* | GET HTML, workspaces are in order     |
+| GET       | /data/groups/%%group_id%%/workspaces  |
+| code-is   | 200                                   |
+| body-like | <h1>Group Workspaces</h1>             |
+| body-like | qr/%%bronze%%.+%%gold%%.+%%silver%%/s |
+
+## GET JSON, workspaces are in order
+| *Comment*       | GET JSON, workspaces are in order                        |
+| GET-json        | /data/groups/%%group_id%%/workspaces?exclude_auw_paths=1 |
+| code-is         | 200                                                      |
+| json-parse      |                                                          |
+| json-array-size | 3                                                        |
+
+## Verify that bronze is first w/correct info
+| *Comment*    | GET JSON; Verify that bronze is first w/correct info |                             |
+| json-path-is | $[0].name                                            | %%bronze%%                  |
+| json-path-is | $[0].title                                           | %%bronze%%                  |
+| json-path-is | $[0].id                                              | %%bronze_id%%               |
+| json-path-is | $[0].workspace_id                                    | %%bronze_id%%               |
+| json-path-is | $[0].uri                                             | /data/workspaces/%%bronze%% |
+
+## Verify that gold is second w/correct info
+| *Comment*    | GET JSON; Verify that gold is second w/correct info |                           |
+| json-path-is | $[1].name                                           | %%gold%%                  |
+| json-path-is | $[1].title                                          | %%gold%%                  |
+| json-path-is | $[1].id                                             | %%gold_id%%               |
+| json-path-is | $[1].workspace_id                                   | %%gold_id%%               |
+| json-path-is | $[1].uri                                            | /data/workspaces/%%gold%% |
+
+## Verify that silver is last w/correct info
+| *Comment*    | GET JSON; Verify that silver is last w/correct info |                             |
+| json-path-is | $[2].name                                           | %%silver%%                  |
+| json-path-is | $[2].title                                          | %%silver%%                  |
+| json-path-is | $[2].id                                             | %%silver_id%%               |
+| json-path-is | $[2].workspace_id                                   | %%silver_id%%               |
+| json-path-is | $[2].uri                                            | /data/workspaces/%%silver%% |
+
+## GET JSON, include AUW workspaces (order depends on hostname, don't test)
+| *Comment*       | GET JSON, workspaces are in order    |                             |
+| GET-json        | /data/groups/%%group_id%%/workspaces |                             |
+| code-is         | 200                                  |                             |
+| json-parse      |                                      |                             |
+| json-array-size | 4                                    |                             |
+
+## Create a new group for trying out POSTS
+| set          | post     | post-%%start_time%% |
+| create-group | %%post%% |                     |
+| set          | post_id  | %%group_id%%        |
+
+## POST, no group
+| *Comment* | POST, no group            |    |
+| POST-json | /data/groups/0/workspaces | {} |
+| code-is   | 404                       |    |
+| body-like | not found                 |    |
+
+## POST, not authorized to admin group
+| *Comment* | POST, not authorized to admin group |    |
+| POST-json | /data/groups/%%post_id%%/workspaces | {} |
+| code-is   | 401                                 |    |
+| body-like | user not authorized                 |    |
+
+## Add user to group so we can POST to its worksapces resource
+## Add the user to a couple of workspaces
+| add-user-to-group | %%admin%% | %%post_id%% | admin |
+| add-member        | %%admin%% | %%gold%%    | admin |
+| add-member        | %%admin%% | %%silver%%  | admin |
+| add-member        | %%admin%% | %%bronze%%  |       |
+
+## POST, bad json
+| *Comment* | POST, bad json                      |              |
+| POST-json | /data/groups/%%post_id%%/workspaces | {"workspace" |
+| code-is   | 400                                 |              |
+| body-like | bad json                            |              |
+
+## POST, not a workspace
+| *Comment* | POST, not a workspace               |                      |
+| POST-json | /data/groups/%%post_id%%/workspaces | {"workspace_id":"0"} |
+| code-is   | 400                                 |                      |
+| body-like | no such workspace                   |                      |
+
+## POST, not a workspace admin
+| *Comment* | POST, not a workspace admin         |                                  |
+| POST-json | /data/groups/%%post_id%%/workspaces | {"workspace_id":"%%bronze_id%%"} |
+| code-is   | 401                                 |                                  |
+| body-like | user cannot admin workspace         |                                  |
+
+## POST, not a role
+| *Comment* | POST, not a role                    |                                                      |
+| POST-json | /data/groups/%%post_id%%/workspaces | {"workspace_id":"%%silver_id%%","role":"nosuchrole"} |
+| code-is   | 400                                 |                                                      |
+| body-like | no such role                        |                                                      |
+
+## POST, add to a workspace
+| *Comment* | POST, add to a workpsace            |                                  |
+| POST-json | /data/groups/%%post_id%%/workspaces | {"workspace_id":"%%silver_id%%"} |
+| code-is   | 201                                 |                                  |
+| json-parse |
+| json-like | {"workspace_count":"2"}               |                                  |
+
+## POST, add to a workspace as admin
+| *Comment* | POST, add to a workspace as admin   |                                               |
+| POST-json | /data/groups/%%post_id%%/workspaces | {"workspace_id":"%%gold_id%%","role":"admin"} |
+| code-is   | 201                                 |                                               |
+| json-parse |
+| json-like | {"workspace_count":"3"}               |                                               |
+
+## Make user an admin of some more workspaces
+| add-member | %%admin%% | %%bronze%% | admin |
+| add-member | %%admin%% | %%copper%% | admin |
+
+## POST, multiple
+| *Comment* | POST, multiple                      |                                                                     |
+| POST-json | /data/groups/%%post_id%%/workspaces | [{"workspace_id":"%%bronze_id%%"},{"workspace_id":"%%copper_id%%"}] |
+| code-is   | 201                                 |                                                                     |
+| json-parse |
+| json-like | {"workspace_count":"5"}               |                                                                     |
+
+## POST, group already has role
+| *Comment* | POST, group already has role        |                                |
+| POST-json | /data/groups/%%post_id%%/workspaces | {"workspace_id":"%%gold_id%%"} |
+| code-is   | 409                                 |                                |
+| body-like | group already in workspace          |                                |
+
+## Cannot add self-join group to member-only workspaces
+| *Comment* | Cannot add self-join group to private workspaces |
+| set          | sj1     | sj1-%%start_time%% |           |  |           |
+| create-group | %%sj1%% |                    | %%admin%% |  | self-join |
+| set          | sj1_id  | %%group_id%%       |           |  |           |
+| POST-json | /data/groups/%%sj1_id%%/workspaces | {"workspace_id":"%%gold_id%%"} |
+| code-is   | 400                                |                                |
+
+## Cannot add private group to workspace if it is not member-only
+| *Comment* | Cannot add private group to workspace if it is not member-only |
+| set                | pubg1     | pubg1-%%start_time%% |           |  |         |
+| create-group       | %%pubg1%% |                      | %%admin%% |  | private |
+| set                | pubg1_id  | %%group_id%%         |           |  |         |
+| set-ws-permissions | %%gold%%  | public               |           |  |         |
+| POST-json | /data/groups/%%pubg1_id%%/workspaces | {"workspace_id":"%%gold_id%%"} |
+| code-is   | 400                                |                                |
+
+## Can add self-join Group to a self-join Workspace
+| *Comment* | Can add self-join Group to a self-join Workspace |
+| set                      | sjg       | sjg-%%start_time%%  |           |  |           |
+| create-group             | %%sjg%%   |                     | %%admin%% |  | self-join |
+| set                      | sjg_id    | %%group_id%%        |           |  |           |
+| set                      | sjws      | sjws-%%start_time%% |           |  |           |
+| create-workspace         | %%sjws%%  |                     |           |  |           |
+| set                      | sjws_id   | %%workspace_id%%    |           |  |           |
+| add-member               | %%admin%% | %%sjws%%            | admin     |  |           |
+| workspace-permission-set | %%sjws%%  | self-join           |           |  |           |
+# Test:
+| POST-json | /data/groups/%%sjg_id%%/workspaces | {"workspace_id":"%%sjws_id%%"} |
+| code-is   | 201                             |                                |

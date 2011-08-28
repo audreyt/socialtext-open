@@ -1,0 +1,11 @@
+This migration will move update all account defaults for appliances.
+Since these alterations have already taken place on our production
+servers, we will skip it if that's where we're running.
+
+This migration:
+
+* Makes the skin for all accounts s3
+* Adds the 'widgets' and 'dashboard' plugins to all accounts.
+* Removes the skin for any workspaces that were set to s2; they
+  can now rely on the account default.
+

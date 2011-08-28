@@ -1,0 +1,126 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+###############################################################################
+# Required inclusions.
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use File::Spec;
+use Getopt::Long;
+use Pod::Usage;
+use Test::Socialtext::Environment;
+
+###############################################################################
+# Read in our command line options.
+my ($help, $man);
+my @fixtures;
+my $home_dir;
+my $root_dir;
+my $base_dir;
+GetOptions(
+    'home_dir:s'    => \$home_dir,
+    'root_dir:s'    => \$root_dir,
+    'base_dir:s'    => \$base_dir,
+    'fixture:s'     => \@fixtures,
+    'help|?'        => \$help,
+    'man'           => \$man,
+) || pod2usage(1);
+pod2usage(1) if ($help);
+pod2usage( -exitstatus=>0, -verbose=> 2 ) if ($man);
+
+unless (@fixtures) {
+    die "No fixture(s) specified to create\n";
+}
+
+###############################################################################
+# If we were told to base things off of a "home_dir", set the root/base dirs
+# accordingly.
+if ($home_dir) {
+    $root_dir = File::Spec->catdir($home_dir, '.nlw');
+    $base_dir = File::Spec->catdir($root_dir, 'root');
+}
+
+###############################################################################
+# Create the fixture(s)
+Test::Socialtext::Environment->CreateEnvironment(
+    ($root_dir ? (root_dir => $root_dir) : ()),
+    ($base_dir ? (base_dir => $base_dir) : ()),
+    fixtures    => \@fixtures,
+    verbose     => 1,
+);
+
+###############################################################################
+# All done.
+exit;
+
+=head1 NAME
+
+make-test-fixture - Sets up a test fixture
+
+=head1 SYNOPSIS
+
+  dev-bin/make-test-fixture [options]
+
+  Options:
+    --fixture <fixture>     Name of fixture to create
+    --home_dir <dir>        Home directory to base dev-env off of
+    --base_dir <dir>        NLW base directory
+    --root_dir <dir>        NLW root directory
+    --help/-?               Brief help message
+    --man                   Full documentation
+
+  Example:
+    dev-bin/make-test-fixture  --home_dir /home/graham --fixture ALL
+
+=head1 DESCRIPTION
+
+C<make-test-fixture> is a command line utility to create one or more test
+fixtures, either for testing or for the purposes of setting up a dev-env.
+
+=head1 OPTIONS
+
+=over
+
+=item B<--fixture E<lt>fixtureE<gt>>
+
+Specifies the fixture to be created.  Can be specified more than once on the
+command line.
+
+=item B<--home_dir E<lt>dirE<gt>>
+
+Specifies the base home directory from which a dev-env is to be configured.
+
+This is a short-cut for:
+
+  --base_dir <home_dir>/.nlw
+  --root_dir <home_dir>/.nlw/root
+
+=item B<--base_dir E<lt>dirE<gt>>
+
+Specifies the NLW base directory.  Defaults to F<t/tmp>.
+
+=item B<--root_dir E<lt>dirE<gt>>
+
+Specifies the NLW root directory.  Defaults to F<t/tmp/root>.
+
+=item B<--help/-?>
+
+Displays a brief help message.
+
+=item B<--man>
+
+Displays the full documentation.
+
+=back
+
+=head1 AUTHOR
+
+Socialtext, Inc.  C<< <code@socialtext.com> >>
+
+=head1 COPYRIGHT
+
+Coypright 2009 Socialtext Inc., All Rights Reserved.
+
+=cut

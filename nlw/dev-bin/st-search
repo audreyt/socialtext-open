@@ -1,0 +1,212 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Getopt::Long;
+use Pod::Usage;
+use CGI;
+use Socialtext;
+use Socialtext::User;
+use Socialtext::Workspace;
+use Socialtext::Timer;
+
+###############################################################################
+# List of known sort types
+my %sort_types = map { $_ => 1 } qw(
+    Relevance
+    Subject
+    From
+    Date
+    revision_count
+);
+
+###############################################################################
+# Read in our command line arguments.
+my $workspace;
+my $username;
+my $sortby = 'Relevance';
+my $verbose;
+my $global;
+my $scope;
+my ($help, $man);
+GetOptions(
+    'workspace=s'   => \$workspace,
+    'global'        => \$global,
+    'scope=s'       => \$scope,
+    'username=s'    => \$username,
+    'sortby=s'      => \$sortby,
+    'verbose'       => \$verbose,
+    'help|?'        => \$help,
+    'man'           => \$man,
+) || pod2usage(1);
+my $term = join ' ', @ARGV;
+
+pod2usage(1) if ($help);
+pod2usage(1) unless ($workspace || $global);    # required option
+pod2usage(1) unless ($term);                    # search term required
+pod2usage(1) unless ($sort_types{$sortby});     # must be valid sort option
+pod2usage( -exitstatus=>0, -verbose=>2 ) if ($man);
+
+if ($global) {
+    $scope ||= '*';
+}
+
+###############################################################################
+# Grab the user that we're running searches as (default, System User)
+my $user = $username
+            ? Socialtext::User->new(username => $username)
+            : Socialtext::User->SystemUser();
+unless ($user) {
+    die "can't find user '$username'; aborting search\n";
+}
+verbose( "searching as user: " . $user->username() );
+
+###############################################################################
+# Instantiate the Workspace to search in
+my $ws = ($workspace) ?
+    Socialtext::Workspace->new(name => $workspace) :
+    Socialtext::NoWorkspace->new();
+unless ($ws) {
+    die "can't find workspace '$workspace'; aborting search\n";
+}
+verbose( "searching in workspace: " . $ws->name() );
+
+###############################################################################
+# Get the Hub that'll manage the fake search request for us, and tell it to go
+# load up its registry.
+my $st = Socialtext->new();
+my $hub = $st->load_hub(
+    current_user        => $user,
+    current_workspace   => $ws,
+);
+$hub->registry->load();
+
+###############################################################################
+# Fire off the search.
+verbose( "searching for: $term" );
+my $search  = $hub->search();
+my %sortdir = %{$search->sortdir};
+
+my $result_set;
+my $timer = Socialtext::Timer->new;
+{
+    $search->sortby( $sortby );
+    $search->search_for_term(
+        search_term => $term,
+        scope       => $scope,
+    );
+    $result_set = $search->result_set( $search->sorted_result_set(\%sortdir) );
+}
+
+print "matches found: $result_set->{hits}\n";
+printf "time taken: %0.03f\n", $timer->elapsed;
+
+if ($verbose) {
+    print "\nresults:\n";
+    foreach my $row (@{$result_set->{rows}}) {
+        printf( "%.6f\t%-30s\t%-20s\n",
+            $row->{Relevance},
+            trunc_str($row->{page_uri}, 30),
+            trunc_str($row->{username}, 20),
+        );
+    }
+}
+
+sub verbose {
+    print "@_\n" if ($verbose);
+}
+
+sub trunc_str {
+    my ($str, $maxlen) = @_;
+    if (length($str) > $maxlen) {
+        $str = substr($str, 0, $maxlen-3) . '...';
+    }
+    return $str;
+}
+
+=head1 NAME
+
+st-search - Basic search script
+
+=head1 SYNOPSIS
+
+  st-search [options] <search term>
+
+  Options:
+    --scope=<string>        Use this search scope (default: _)
+    --global                Alias for `--scope=*`
+    --workspace=<ws>        Workspace name to search in
+    --username=<username>   Username to run search as (default "system-user")
+    --sortby=<sortby>       Sort criteria (default "Relevance")
+    --verbose               Generate verbose output
+    --help/-?               Brief help message
+    --man                   Full documentation
+
+  Example:
+    st-search -w help-en "ReST interface"
+
+=head1 DESCRIPTION
+
+C<st-search> implements a B<basic> search mechanism.
+
+Isn't designed to be robust or provide you with tons of options, but should be
+suitable for at least counting up the number of results found and timing how
+long a search takes.
+
+=head1 OPTIONS
+
+=over
+
+=item B<--workspace=E<lt>wsE<gt>> (required)
+
+Specifies the name of the workspace that the search is to be performed in.
+
+=item B<--username=E<lt>usernameE<gt>>
+
+Specifies the name of the user that the search should be run as.  Defaults to
+"system-user".
+
+=item B<--scope=E<lt>stringE<gt>>
+
+Use this scope for the search.  A '_', the default, means just search the
+current workspace.  A '*' will search all workspaces that the user belongs to.
+Any other string will use that named scope (which is, in theory, a set of
+workspaces).
+
+=item B<--sortby=E<lt>sortbyE<gt>>
+
+Specifies how the results are to be sorted.  Defaults to "Relevance".
+
+Valid sort options include:
+
+  Relevance
+  Subject
+  From
+  Date
+  revision_count
+
+=item B<--verbose>
+
+Generates verbose output, including a listing of the rows in the result set.
+
+=item B<--help/-?>
+
+Displays a brief help message.
+
+=item B<--man>
+
+Displays the full documentation.
+
+=back
+
+=head1 AUTHOR
+
+Socialtext, Inc.  C<< <code@socialtext.com> >>
+
+=head1 COPYRIGHT
+
+Copyright 2008 Socialtext, Inc.,  All Rights Reserved.
+
+=cut

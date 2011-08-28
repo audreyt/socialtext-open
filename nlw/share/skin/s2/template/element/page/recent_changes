@@ -1,0 +1,6 @@
+<div id="st-recent-changes" class="st-page-box">
+    <div id="st-recent-changes-title" class="st-page-box-title">[% loc("What's New") %]</div>
+    [% FOREACH page IN recent_changes %]
+    <div><a href="[% page.link %]">[% page.title %]</a></div>
+    [% END %]
+</div>

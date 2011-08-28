@@ -1,0 +1,145 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+use lib 'lib';
+use Socialtext::SQL qw/get_dbh/;
+use Socialtext::UserSet qw/:const/;
+use Test::More tests => 15;
+
+my $dbh = get_dbh();
+local $dbh->{RaiseError} = 1;
+
+my ($mig_state) = $dbh->selectrow_array(qq{
+    SELECT value FROM "System" WHERE field = 'migration-56'
+});
+is $mig_state, 5, "all phases of the migration completed";
+
+my @tables = qw(
+   user_account_role
+   group_account_role
+   group_workspace_role
+   user_group_role
+   user_workspace_role
+);
+
+# Make sure that all non-affiliate roles have been deleted.
+for my $table (@tables) {
+    my ($count) = $dbh->selectrow_array(qq{
+        SELECT COUNT(1) FROM $table
+        WHERE role_id NOT IN (
+            SELECT role_id FROM "Role" WHERE name = 'affiliate' LIMIT 1
+        )
+    });
+    is $count, 0, "role entries for $table all migrated";
+}
+
+my %to_check = (
+    user => {
+        table      => '"UserMetadata"',
+        id_column  => 'user_id',
+        account_id => 'primary_account_id',
+        set_id_col => 'user_id',
+    },
+    group => {
+        table      => 'groups',
+        id_column  => 'group_id',
+        account_id => 'primary_account_id',
+        set_id_col => 'user_set_id',
+    },
+    workspace => {
+        table      => '"Workspace"',
+        id_column  => 'workspace_id',
+        account_id => 'account_id',
+        set_id_col => 'user_set_id',
+    }
+);
+
+# Ensure all Users/Groups/Workspaces have role `member` in their Primary
+# Account
+for my $thing (keys %to_check) {
+    my $meta = $to_check{$thing};
+    my $sql = qq{
+        SELECT COUNT(DISTINCT pacct.$meta->{id_column})
+          FROM $meta->{table} pacct
+         WHERE pacct.$meta->{account_id} NOT IN (
+            SELECT into_set_id - }.PG_ACCT_OFFSET.qq{
+              FROM user_set_include
+             WHERE from_set_id = pacct.$meta->{set_id_col}
+               AND into_set_id }.PG_ACCT_FILTER.qq{
+               AND role_id IN (SELECT role_id FROM "Role" WHERE name = 'member')
+         )
+    };
+    my ($count) = $dbh->selectrow_array($sql);
+    is $count, 0,
+        "all ${thing}s have a direct member role in their primary account";
+}
+
+# Ensure that there are no 'affiliate' roles in the user_set_include table.
+my ($count) = $dbh->selectrow_array(q{
+    SELECT COUNT(1)
+      FROM user_set_include
+     WHERE role_id IN (
+        SELECT role_id FROM "Role" WHERE name = 'affiliate'
+    )
+});
+is $count, 0, "no 'affiliate' roles found";
+
+my ($missing) = $dbh->selectrow_array(q{
+    SELECT COUNT(i)
+    FROM user_set_include i
+    LEFT JOIN user_set_path p USING (from_set_id,into_set_id)
+    WHERE p.from_set_id IS NULL
+});
+is $missing, 0, "all includes are present in the path table";
+
+my ($extra_paths) = $dbh->selectrow_array(q{
+    SELECT COUNT(p)
+      FROM user_set_path p
+      LEFT JOIN user_set_include i USING (from_set_id, into_set_id)
+     WHERE i.from_set_id IS NULL
+       AND icount(p.vlist) <= 2
+});
+is $extra_paths, 0, "the path table has no extra paths";
+
+my ($missing_components) = $dbh->selectrow_array(q{
+    SELECT COUNT(p)
+      FROM user_set_path p
+      LEFT JOIN user_set_path_component c USING (user_set_path_id)
+     WHERE c.user_set_path_id IS NULL
+});
+is $missing_components, 0, "the path_component table has no paths without components";
+
+my ($missing_trans_wksp_roles) = $dbh->selectrow_array(q{
+    SELECT COUNT(DISTINCT i.from_set_id)
+      FROM user_set_include i
+      JOIN "Workspace" w
+        ON (i.into_set_id - }.PG_WKSP_OFFSET.q{ = workspace_id )
+     WHERE i.into_set_id }.PG_WKSP_FILTER.q{
+       AND NOT EXISTS (
+        SELECT 1
+          FROM user_set_path p
+         WHERE p.from_set_id = i.from_set_id
+           AND p.into_set_id = w.account_id + }.PG_ACCT_OFFSET.q{
+           AND icount(p.vlist) = 3 AND p.vlist @ intset(w.user_set_id)
+      )
+});
+is $missing_trans_wksp_roles, 0, "sets have account roles due to workspace membership";
+
+my ($missing_trans_group_roles) = $dbh->selectrow_array(q{
+    SELECT COUNT(DISTINCT i.from_set_id)
+      FROM user_set_include i
+      JOIN groups g
+        ON (i.into_set_id - }.PG_GROUP_OFFSET.q{ = group_id )
+     WHERE i.into_set_id }.PG_GROUP_FILTER.q{
+       AND NOT EXISTS (
+        SELECT 1
+          FROM user_set_path p
+         WHERE p.from_set_id = i.from_set_id
+           AND p.into_set_id = g.primary_account_id + }.PG_ACCT_OFFSET.q{
+           AND icount(p.vlist) = 3 AND p.vlist @ intset(g.user_set_id)
+      )
+});
+is $missing_trans_group_roles, 0, "sets have account roles due to group membership";
+
+exit 0;

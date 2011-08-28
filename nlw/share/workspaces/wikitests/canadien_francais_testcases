@@ -1,0 +1,15 @@
+These tests will run in an fdef'd dev env, but for a VE, this is required:
+
+sudo st-appliance-ctl stop
+sudo st-db reset_db_locale en_US.UTF-8
+sudo st-appliance-ctl start
+
+* [Test Case: Canadien Francais (Users)]
+* [Test Case: Canadien Francais (Workspaces)]
+* [Test Case: Canadien Francais (Accounts)]
+* [Test Case: Canadien Francais (Pages)]
+* [Test Case: Canadien Francais (Tags)]
+* [Test Case: Canadien Francais (Groups)]
+
+Looks like it's passing to matt but selenium can't 'see' the links:
+TODO [Test Case: Canadien Francais (User Typeahead)]

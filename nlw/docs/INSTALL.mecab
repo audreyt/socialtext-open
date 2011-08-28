@@ -1,0 +1,16 @@
+INSTALL.mecab -- How to install japanese tokenization dictionary
+
+@COPYRIGHT@
+
+=== Japanese tokenization support ===
+
+Socialtext Open supports search in Japanese text.  This feature
+requires a dictionary for splitting text into sequence of words,
+because Japanese text do not have inter word spaces like
+Occidental languages do.
+
+Socialtext Open uses "MeCab" as its tokenization backend, and
+expects a dictionary that is encoded in UTF-8 to be installed in
+share/l10n/mecab/ directory.  The README file in that directory
+describes how to prepare such a dictionary in detail.
+

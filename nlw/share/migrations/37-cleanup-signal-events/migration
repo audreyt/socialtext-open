@@ -1,0 +1,47 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+
+# 
+# This migration basically does the equivalent of a 
+#
+#   DELETE FROM event WHERE event_class='signal';
+#   INSERT INTO event (...)
+#   SELECT FROM signal ...;
+#
+# But since there's no JSON encoder in plpgsql, we've got to do it in perl.
+# 
+# Since it's re-creating events for each signal, it should be safe to run this
+# migration multiple times.
+#
+
+use Socialtext::SQL qw/get_dbh/;
+use Socialtext::JSON qw/encode_json/;
+
+my $dbh = get_dbh();
+
+$dbh->{RaiseError} = 1;
+$dbh->{AutoCommit} = 0; # start a transaction
+
+$dbh->do(q{DELETE FROM event WHERE event_class='signal'});
+
+my $event_sth = $dbh->prepare(q{
+    INSERT INTO event (at, actor_id, signal_id, event_class, action, context) 
+    VALUES (?::timestamptz,?,?,'signal','signal',?)
+});
+my $signals_sth = $dbh->prepare(q{
+    SELECT *, at AT TIME ZONE 'UTC' || 'Z' AS at_utc 
+    FROM signal
+    ORDER BY at ASC
+});
+
+$signals_sth->execute();
+
+while (my $sig = $signals_sth->fetchrow_hashref()) {
+    my $ctx = encode_json({body => $sig->{body}});
+    $event_sth->execute(
+        $sig->{at_utc}, $sig->{user_id}, $sig->{signal_id}, $ctx);
+}
+
+$dbh->commit();

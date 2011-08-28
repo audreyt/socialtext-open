@@ -1,0 +1,16 @@
+This migration wasn't implemented using the proper database upgrade mechanism, and instead messed with the version and incorrectly tried to upgrade the schema itself. Using PL/PGSQL functions in the 2-3 db migration, we can properly upgrade the database.
+
+Therefore, the pre-check in this migration will always return 1 and skip this migration.
+
+===========
+
+This migration exists to migrate beta branches of code back to a known point.
+
+There are two issues in some released beta code.  This migration corrects the released beta code:
+
+1) The released beta code didn't have a user_id column in the 'storage' table.
+2) The released beta code already has event and people tables 
+
+All of these tables are added by the /etc/socialtext/db/socialtext-2-to-3.sql file, and this migration will bump the Socialtext Schema version to skip this sql update from happening.
+
+This migration will only run if the Schema version is 2; all boxes that we know of that had released beta code are at this version.

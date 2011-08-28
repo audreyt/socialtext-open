@@ -1,0 +1,19 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::JobCreator;
+use Getopt::Long;
+
+my $name;
+GetOptions('workspace=s' => \$name);
+die "USAGE: $0 --workspace <name>\n" unless $name;
+my $ws = Socialtext::Workspace->new(name => $name)
+    || die "There is no workspace named $name!\n";
+
+Socialtext::JobCreator->insert('Socialtext::Job::Upgrade::RebuildPageLinks', {
+    workspace_id => $ws->workspace_id,
+});
+1;

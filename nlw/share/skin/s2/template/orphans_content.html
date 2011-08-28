@@ -1,0 +1,6 @@
+[%# @COPYRIGHT@ -%]
+<ul id="orphans-list">
+  [% FOREACH page = pages %]
+    <li id="orphans-list-entry">[% hub.helpers.page_display_link_from_page(page) %]</li>
+  [% END %]
+</ul>

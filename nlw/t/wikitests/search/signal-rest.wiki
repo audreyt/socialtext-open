@@ -1,0 +1,117 @@
+* Fixture: Search
+
+# Testing the Signals search REST API options.
+
+| standard-test-setup |       |                                         |
+| set                 | origuser_id | %%user_id%% |
+| set                 | userZ | zzz_%%start_time%%@ken.socialtext.net |
+| create-user         | %%userZ%% | abc123 | %%account%% |
+| set                 | userY | yyy_%%start_time%%@ken.socialtext.net |
+| create-user         | %%userY%% | abc123 | %%account%% |
+
+# Create lots of messages for testing
+
+| post-signal     | Coffee #1  |
+| post-signal     | Coffee #2  |
+| post-signal     | Coffee #3  |
+| post-signal     | Coffee #4  |
+| post-signal     | Coffee #5  |
+| post-signal     | Coffee #6  |
+| post-signal     | Coffee #7  |
+| post-signal     | Coffee #8  |
+| post-signal     | Coffee #9  |
+| post-signal     | Coffee #10 |
+| post-signal     | Coffee #11 |
+| post-signal     | Coffee #12 |
+| post-signal     | Coffee #13 |
+| post-signal     | Coffee #14 |
+| post-signal     | Coffee #15 |
+| post-signal     | Coffee #16 |
+| post-signal     | Coffee #17 |
+| post-signal     | Coffee #18 |
+| post-signal     | Coffee #19 |
+| post-signal     | Coffee #20 |
+| post-signal     | Coffee #21 |
+| post-signal     | Coffee Coffee Coffee!!! I love coffee! #22 |
+| post-signal     | I am jittery from too much coffee!!!!!!!! |
+| http-user-pass | %%userZ%% | abc123 |
+| post-signal | I love coffee too! |
+| http-user-pass | %%userY%% | abc123 |
+| post-signal | I also love coffee! |
+| post-signal     | Coffee #23 |
+| job-count       | SignalIndex      | 26 |
+| st-process-jobs |            |
+| job-count       | SignalIndex      | 0 |
+| sleep | 1 |
+| http-user-pass | %%username%% | %%password%% |
+| post-signal | Another coffee! #24 |
+| st-process-jobs |            |
+
+# Baseline defaults to 25 results
+
+| get             | /data/signals?q=coffee | application/json |
+| code-is         | 200                    |                  |
+| json-parse      |                        |                  |
+| json-array-size | 25                     |                  |
+
+# Limit (and count)
+
+| get             | /data/signals?q=coffee;limit=3 | application/json |
+| code-is         | 200                            |                  |
+| json-parse      |                                |                  |
+| json-array-size | 3                              |                  |
+| get             | /data/signals?q=coffee;count=3 | application/json |
+| code-is         | 200                            |                  |
+| json-parse      |                                |                  |
+| json-array-size | 3                              |                  |
+
+# Order
+
+| get             | /data/signals?q=coffee;order=relevance;count=1 | application/json |
+| code-is         | 200                            |                  |
+| json-parse      |                                |                  |
+| json-array-size | 1                              |                  |
+| body-like | I love coffee |
+
+| get             | /data/signals?q=coffee;order=date;count=1 | application/json |
+| code-is         | 200                            |                  |
+| json-parse      |                                |                  |
+| json-array-size | 1                              |                  |
+| body-like | Another coffee |
+
+| get             | /data/signals?q=coffee;order=sender;direction=desc;count=1 | application/json |
+| code-is         | 200                            |                  |
+| json-parse      |                                |                  |
+| json-array-size | 1                              |                  |
+| body-like | zzz |
+
+| get             | /data/signals?q=coffee;order=sender;count=1 | application/json |
+| code-is         | 200                            |                  |
+| json-parse      |                                |                  |
+| json-array-size | 1                              |                  |
+| json-like | [{"user_id":"%%origuser_id%%"}] |
+
+# Offset
+
+| get             | /data/signals?q=coffee;order=sender;direction=desc;count=1;offset=1 | application/json |
+| code-is         | 200                            |                  |
+| json-parse      |                                |                  |
+| json-array-size | 1                              |                  |
+| body-like | yyy |
+
+# Direction
+
+| get             | /data/signals?q=coffee;order=sender;count=24;direction=asc | application/json |
+| code-is         | 200                            |                  |
+| json-parse      |                                |                  |
+| json-array-size | 24                             |                  |
+| body-unlike | yyy |
+| body-unlike | zzz |
+
+| get             | /data/signals?q=coffee;order=sender;count=2;direction=desc | application/json |
+| code-is         | 200                            |                  |
+| json-parse      |                                |                  |
+| json-array-size | 2                              |                  |
+| body-like | yyy |
+| body-like | zzz |
+

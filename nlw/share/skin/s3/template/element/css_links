@@ -1,0 +1,37 @@
+[%# @COPYRIGHT@ -%]
+[% IF miki %]
+    [%- FOREACH css_file IN css.mobile -%]
+      [%- PROCESS css_link -%]
+    [% END %]
+[% ELSE %]
+    [%- FOREACH css_file IN css.standard -%]
+      [%- PROCESS css_link -%]
+    [% END %]
+
+    [%- IF wikiwyg_mode -%]
+      [% FOREACH css_file IN css.wikiwyg -%]
+        [%- PROCESS css_link -%]
+      [% END %]
+    [% END %]
+
+    [%- FOREACH css_file IN css.common -%]
+      [%- PROCESS css_link -%]
+    [% END %]
+[% END %]
+
+[% IF dynamic_logo_url %]
+<style type="text/css">
+div#header div#logo a {
+	background: url([% dynamic_logo_url %]) no-repeat top left;
+}
+</style>
+[% END %]
+
+[%- BLOCK css_link -%]
+  [% media = 'screen' %][% SET media = 'print' IF css_file.search('print\.') %][% SET media = 'wikiwyg' IF css_file.search('wikiwyg\.') && ! wikiwyg_mode %]
+  [%- IF css_file.search('ie\.') OR css_file.search('\/ieprint') -%]<!--[if gte IE 6]>[% END %]
+  [%- IF css_file.search("ie7\.") -%]<!--[if gte IE 7]>[% END %]
+  [%- IF css_file.search("ie6\.") -%]<!--[if IE 6]>[% END %]
+  <link rel="stylesheet" type="text/css" href="[% css_file %]" media="[% media %]" />
+  [% IF css_file.search('ie\.') OR css_file.search("ie7\.") OR css_file.search("ie6\.") OR css_file.search('\/ieprint') -%]<![endif]-->[% END %]
+[% END %]

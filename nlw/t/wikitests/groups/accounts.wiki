@@ -1,0 +1,136 @@
+Tests for [Story: Groups ReST API]
+
+* Fixture: SocialRest
+
+| standard-test-setup |              |                |
+| set                 | base_acct    | %%account%% |
+| set                 | base_acct_id | %%account_id%% |
+
+# Lookup accounts in a group
+| set            | creator_acct     | c%%start_time%% |
+| create-account | %%creator_acct%% |                 |
+| set            | creator_acct_id  | %%account_id%%  |
+| set         | creator     | c%%start_time%%@ken.socialtext.net |                  |
+| create-user | %%creator%% | password                           | %%creator_acct%% |
+
+# Create an administrative user too
+| set                | admin     | a%%start_time%%@ken.socialtext.net |                  |
+| create-user        | %%admin%% | password                           | %%creator_acct%% |
+| set-business-admin | %%admin%% | 1                                  |                  |
+
+| set          | group1_name     | group%%start_time%% |             |
+| create-group | %%group1_name%% | %%creator_acct%%         | %%creator%% |
+| set          | group1_id       | %%group_id%%        |             |
+
+# `GET /data/groups/:group_id/accounts` lists all of the Accounts that the Group is a member of
+
+| http-user-pass  | %%creator%%                         | password |
+| GET             | /data/groups/%%group1_id%%/accounts |          |
+| code-is         | 200                                 |          |
+| header-like     | Cache-Control                       | private  |
+| json-parse      |                                     |          |
+| json-array-size | 1                                   |          |
+| body-like       | "account_id":"%%creator_acct_id%%"       |          |
+
+| http-user-pass | %%username%%                        | password |
+| GET            | /data/groups/%%group1_id%%/accounts |          |
+| code-is        | 404                                 |          |
+| header-like    | Cache-Control                       | private  |
+
+# Now add a user to the group, we should see their account
+
+| http-user-pass | %%admin%%                           | password                     |
+| POST-json      | /data/accounts/%%base_acct%%/groups | {"group_id":"%%group1_id%%"} |
+| code-is        | 204                                 |                              |
+
+| http-user-pass  | %%creator%%                         | password |
+| GET             | /data/groups/%%group1_id%%/accounts |          |
+| code-is         | 200                                 |          |
+| header-like     | Cache-Control                       | private  |
+| json-parse      |                                     |          |
+| json-array-size | 2                                   |          |
+| body-like       | "account_id":"%%base_acct_id%%"     |          |
+| body-like       | "account_id":"%%creator_acct_id%%"  |          |
+
+# Test the pageableness of /data/groups/:group_id/accounts
+
+| GET-json       | /data/groups/%%group1_id%%/accounts?startIndex=0 |                     |
+| code-is        | 200                                              |                     |
+| json-parse     |                                                  |                     |
+| json-path-is   | $.startIndex                                     | 0                   |
+| json-path-is   | $.itemsPerPage                                   | 25                  |
+| json-path-is   | $.totalResults                                   | 2                   |
+| json-path-size | $.entry                                          | 2                   |
+| json-path-is   | $.entry[0].account_id                            | %%base_acct_id%%    |
+| json-path-is   | $.entry[1].account_id                            | %%creator_acct_id%% |
+
+## Invalid group -> 404
+
+| GET             | /data/groups/9999999/accounts        |         |
+| code-is         | 404                                |         |
+| header-like     | Cache-Control                      | private |
+
+
+# visible by Business Admin (Business Admin can see all Groups)
+
+| set            | badmin     | badmin%%start_time%%@ken.socialtext.net |
+| create-user    | %%badmin%% | password                                |
+| http-user-pass | %%badmin%% | password                                |
+
+| set-business-admin | %%badmin%%                  | 1       |
+| GET                | /data/groups/%%group1_id%%/accounts |         |
+| code-is            | 200                         |         |
+| header-like        | Cache-Control               | private |
+| json-parse         |                             |         |
+| json-array-size    | 2                           |         |
+
+| set-business-admin | %%badmin%%                          | 0       |
+| GET                | /data/groups/%%group1_id%%/accounts |         |
+| header-like        | Cache-Control                       | private |
+| code-is            | 404                                 |         |
+
+# visible by Group Members (Members see Groups they are members of)                    
+
+| set               | jane     | jane%%start_time%%@ken.socialtext.net |
+| create-user       | %%jane%% | password                              |
+| http-user-pass    | %%jane%%                            | password      |
+
+| GET               | /data/groups/%%group1_id%%/accounts |               |
+| header-like       | Cache-Control                       | private       |
+| code-is           | 404                                 |               |
+| add-user-to-group | %%jane%%                            | %%group1_id%% |
+| GET               | /data/groups/%%group1_id%%/accounts |               |
+| code-is           | 200                                 |               |
+| header-like       | Cache-Control                       | private       |
+| json-parse        |                                     |               |
+| json-array-size   | 2                                   |               |
+
+# Test changing primary accounts
+
+| http-user-pass | %%admin%%                  | password            |
+| GET-json       | /data/groups/%%group1_id%% |                     |
+| json-parse     |                            |                     |
+| json-path-is   | $.primary_account_id       | %%creator_acct_id%% |
+
+| PUT-json | /data/groups/%%group1_id%% | {"account_id":"%%base_acct_id%%","name":"%%base_acct%%","permission_set":"private"} |
+| code-is  | 202                        |                                                                                     |
+
+| GET-json     | /data/groups/%%group1_id%% |                  |
+| code-is      | 200                        |                  |
+| json-parse   |                            |                  |
+| json-path-is | $.primary_account_id       | %%base_acct_id%% |
+
+# Now remove the group from the account, we should see the account
+
+| http-user-pass | %%creator%%                                          | password |
+| DELETE         | /data/accounts/%%creator_acct%%/groups/%%group1_id%% |          |
+| code-is        | 204                                                  |          |
+
+| http-user-pass  | %%creator%%                         | password |
+| GET             | /data/groups/%%group1_id%%/accounts |          |
+| code-is         | 200                                 |          |
+| header-like     | Cache-Control                       | private  |
+| json-parse      |                                     |          |
+| json-array-size | 1                                   |          |
+| body-like       | "account_id":"%%base_acct_id%%"     |          |
+| body-unlike     | "account_id":"%%creator_acct_id%%"  |          |

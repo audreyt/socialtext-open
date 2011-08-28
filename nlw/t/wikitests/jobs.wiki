@@ -1,0 +1,12 @@
+* Fixture: SocialRest
+
+| standard-test-setup |
+
+| GET | /data/jobs |
+| code-is | 403 |
+
+| set-business-admin | %%username%% | 1 |
+
+| GET | /data/jobs |
+| code-is | 200 |
+| body-like | AttachmentIndex |

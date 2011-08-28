@@ -1,0 +1,294 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Getopt::Long;
+use Pod::Usage;
+use AnyEvent;
+use AnyEvent::Handle;
+use Coro::AnyEvent;
+use Guard qw/scope_guard/;
+use Socialtext::Log qw/st_log/;
+
+our $VERSION = '3.0';
+
+our $man = 0;
+our $help = 0;
+our $pidfile;
+our $init_cmd;
+our $max_rss = 256; # in MiB
+our $max_vsz = 512; # in MiB
+our $max_fds = 512;
+our $signal  = 15; # SIGTERM
+our $tcp_port = 0;
+our $check_http = 0;
+our $daemontools = 0;
+our $solr = '';
+our $procname = '';
+our $config_prefix;
+
+GetOptions(
+    'help|?' => \$help,
+    man      => \$man,
+    'pidfile=s' => \$pidfile,
+    'daemontools' => \$daemontools,  
+    'init=s' => \$init_cmd,
+    'sig=i'  => \$signal,
+    'rss=i'  => \$max_rss,
+    'vsz=i'  => \$max_vsz,
+    'fds=i'  => \$max_fds,
+    'tcp=i'  => \$tcp_port,
+    'http!'  => \$check_http,
+    'config=s' => \$config_prefix,
+    'solr=s' => \$solr,
+    'procname=s' => \$procname,
+)
+or pod2usage(-exitstatus => 1, -message => $?);
+pod2usage(1) if $help;
+pod2usage(-exitstatus => 0, -verbose => 2) if $man;
+
+my $config_name = $config_prefix ? $config_prefix : 'default';
+
+{
+    my $update_running = `pgrep -f st-appliance-update`;
+    if ($update_running ne '') {
+        st_log()->debug("st-daemon-monitor: ".
+            "exiting because st-appliance-update is running");
+        exit 0;
+    }
+}
+
+if ($solr) {
+    $pidfile = '/var/run/socialtext-solr.pid';
+    $init_cmd = '/etc/init.d/socialtext-solr restart';
+    $max_fds = $max_rss = $max_vsz = 0; # don't check; java limits itself
+    $tcp_port = 8983;
+    $check_http = 1;
+}
+# read in the params from appliance.conf
+elsif ($config_prefix) {
+    eval "require Socialtext::Appliance::Config";
+    die "Can't use appliance config: $@" if $@;
+
+    my $conf = Socialtext::Appliance::Config->new;
+    no strict "refs";
+    for my $key (qw(
+        pidfile init_cmd signal max_rss max_vsz max_fds tcp_port
+        check_http daemontools procname
+    )) {
+        my $val = $conf->value("monitor_${config_prefix}_$key");
+        next unless defined $val;
+        ${"$key"} = $val;
+    }
+
+    # backwards compat for scgi option
+    if (!$check_http) {
+        my $val = $conf->value("monitor_${config_prefix}_check_scgi");
+        $check_http = $val if defined $val;
+    }
+}
+
+pod2usage(-exitstatus => 1, -message => "pidfile or daemontools is required")
+    unless $pidfile || $daemontools;
+pod2usage(-exitstatus => 1, -message => "init command or daemontools is required")
+    unless $init_cmd || $daemontools;
+
+if ($config_prefix) {
+    # allow relative paths
+    if ($pidfile && ($pidfile !~ m#^/#)) {
+        $pidfile = "/var/run/socialtext/$pidfile";
+    }
+    if ($init_cmd && ($init_cmd !~ m#^/#)) {
+        $init_cmd = "/etc/init.d/$init_cmd";
+    }
+}
+
+my $pid='';
+
+if ($pidfile) {
+    ($pid) = slurp($pidfile);
+} else {
+    my $svcinfo = `/usr/bin/svstat /var/lib/svscan/${procname}`;
+    if ($svcinfo =~ /\(pid (\d+)\)/) {
+        $pid = $1;
+    }
+    else {
+        recover ("Daemontools not reporting pid");
+    }
+}
+
+$pid ||= 0;
+
+sub slurp {
+    my $filename = shift;
+    local $@;
+    my @lines;
+    if (open(my $fh, '<', $filename)) {
+        @lines = <$fh>;
+        close $fh;
+    }
+    chomp @lines if @lines;
+    return @lines;
+}
+
+sub recover {
+    my $now = `/bin/date`;
+    chomp $now;
+    my $msg = shift;
+    st_log()->error("st-daemon-monitor [$config_name]: PID=".($pid ? $pid : '?')." $msg");
+    if ($signal && $pid) {
+        st_log()->info("st-daemon-monitor [$config_name]: sending $signal to $pid");
+        kill $signal, -$pid, $pid;
+
+        # if "supervise" dies, we *need* to killall to ensure that the kill
+        # gets to all of the running processes (otherwise we end up with
+        # unsupervised but running processes)
+        system("killall -$signal $procname") if $procname;
+    }
+    elsif (!$pid && $daemontools) {
+        st_log()->info("st-daemon-monitor [$config_name]: daemontools process has gone, trying to restart with svc/killall/svc combo");
+        system("/usr/bin/svc -d /var/lib/svscan/${config_prefix}");
+        system("killall -9 $procname") if $procname;
+        system("/usr/bin/svc -u /var/lib/svscan/${config_prefix}");
+    }
+
+    # 1 == ran init ok, 2 == init bad?
+    if ($init_cmd) {
+        st_log()->info("st-daemon-monitor [$config_name]: running $init_cmd");
+        system("$init_cmd") and exit 2;
+    } 
+    exit 1;
+}
+
+sub to_MiB {
+    my $n = shift;
+    return 0 unless $n;
+    if ($n =~ s/ kB\s*//) {
+        $n /= 2**10;
+    }
+    elsif ($n =~ s/ mB\s*//i) {
+        $n = $n+0;
+    }
+    elsif ($n =~ s/ gB\s*//i) {
+        $n *= 2**10;
+    }
+    elsif ($n =~ s/ tB\s*//i) {
+        $n *= 2**20;
+    }
+    else {
+        $n = 2**31; # "really big number"
+    }
+    return $n;
+}
+
+if (!$pid) {
+    recover("can't read pidfile");
+}
+
+my $there = -d "/proc/$pid";
+my @status = slurp("/proc/$pid/status") if $there;
+if (!$there or !@status) {
+    recover("is gone");
+}
+else {
+    my %status = map { split(/:\s+/,$_,2) } @status;
+
+    if ($status{State} =~ /\b(?:zombie|stopped)\b/i) {
+        recover("is zombified");
+    }
+
+    if ($max_rss && to_MiB($status{VmRSS}) > $max_rss) {
+        recover("is too big (RSS)");
+    }
+
+    if ($max_vsz && to_MiB($status{VmSize}) > $max_vsz) {
+        recover("is too big (vsize)");
+    }
+}
+
+#warn "checking fds\n";
+
+if ($max_fds) {
+    my $open_fd = eval {
+        `ls /proc/$pid/fd/ 2>/dev/null | wc -l`
+    };
+
+    if (!$open_fd) {
+        recover("is gone? can't read /proc/$pid/fd directory");
+    }
+    chomp $open_fd;
+
+    if ($open_fd > $max_fds) {
+        recover("has too many files open");
+    }
+}
+
+#warn "checking port open\n";
+
+if ($tcp_port && $tcp_port !~ /\D/) {
+    my $netstat = `netstat --listening --numeric-ports -n -t | awk '{print \$4}' | egrep ':${tcp_port}\$'`;
+    recover("tcp port $tcp_port is not open") unless $netstat;
+}
+
+#warn "checking http\n";
+
+if ($check_http) {
+    require HTTP::Request;
+    require LWP::UserAgent;
+
+    my $ua = LWP::UserAgent->new(
+        timeout => 10,
+        max_redirect => 0,
+    );
+    $ua->no_proxy('localhost');
+    $ua->agent("st-daemon-monitor/$VERSION ".$ua->_agent);
+
+    my $url = $solr
+        ? "http://localhost:$tcp_port/solr/$solr/admin/ping?wt=json"
+        : "http://localhost:$tcp_port/ping";
+
+    my $req = HTTP::Request->new(GET => $url,
+        [Accept => 'application/json; charset=UTF-8']);
+
+    my $resp = eval { $ua->request($req) };
+    my $err = $@;
+    if ($err || !$resp) {
+        recover("http server isn't responding? (error: $err)");
+    }
+
+    if ($resp->code != 200) {
+        recover("http server returned a non-200 response (code:".$resp->code.
+            ", msg:".$resp->message.")");
+    }
+}
+
+# all's well
+exit 0;
+
+=head1 NAME
+
+st-daemon-monitor - Monitor daemon processes
+
+=head1 SYNOPSIS
+
+  st-daemon-monitor --help
+
+  st-daemon-monitor --man (Full docs?)
+
+  st-daemon-monitor --config=proxy
+
+  st-daemon-monitor --pidfile <Filename> --init '<Cmd>' [Options]
+  
+
+  Options:
+    --sig <Int>         Signal to send before running init cmd (Default: 15)
+    --rss <Int>         RSS limit
+    --vsz <Int>         VSZ limit
+    --fds <Int>         FDS limit
+    --tcp <Port>        Check that the process is listingin on this port
+    --http              Ping http server on port passed as --tcp
+    --config <prefix>   Use /etc/socialtext/appliance.conf to read values
+
+=cut

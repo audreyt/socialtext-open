@@ -1,0 +1,80 @@
+Tests for adding groups to a workspace
+
+* Fixture: SocialRest
+
+| *Comment*           | Test Setup      |              |
+| standard-test-setup |                 |              |
+| create-group        | g%%start_time%% |              |
+| set                 | gid             | %%group_id%% |
+| add-user-to-group   | %%username%%    | %%gid%%      |
+
+# Unauthorized
+| post-json | /data/workspaces/%%workspace%%/groups | {"group_id":%%gid%%,"role_name":"member"} |
+| code-is   | 401                                   |                                           |
+# verify
+| get         | /data/workspaces/%%workspace%%/groups | application/json |
+| body-unlike | g%%start_time%%                       |                  |
+
+# Authorized
+| st-admin  | give-accounts-admin --email %%username%% |                                           |
+| post-json | /data/workspaces/%%workspace%%/groups    | {"group_id":%%gid%%,"role_name":"member"} |
+| code-is   | 201                                      |                                           |
+# verify
+| get       | /data/workspaces/%%workspace%%/groups | application/json |
+| body-like | g%%start_time%%                       |                  |
+
+| *Comment* | Invalid workspace, group and role |
+
+# Invalid group
+| post-json | /data/workspaces/%%workspace%%/groups | {"group_id":0,"role_name":"member"} |
+| code-is   | 400                                   |                                     |
+# Invalid workspace
+| post-json | /data/workspaces/invalid_workspace/groups | {"group_id":%%gid%%,"role_name":"member"} |
+| code-is   | 404                                       |                                           |
+# Invalid role name
+| create-group | g2%%start_time%%                      |                                                |
+| post-json    | /data/workspaces/%%workspace%%/groups | {"group_id":%%group_id%%,"role_name":"monkey"} |
+| code-is      | 400                                   |                                                |
+
+# Add a group as an admin role
+| create-group | ga%%start_time%%                      |                                                     |
+| set          | gaid                                  | %%group_id%%                                        |
+| post-json    | /data/workspaces/%%workspace%%/groups | {"group_id":%%gaid%%,"role_name":"admin"} |
+| code-is      | 201                                   |                                                     |
+# verify
+| get       | /data/workspaces/%%workspace%%/groups | application/json |
+| body-like | ga%%start_time%%                      |                  |
+
+# Add a group that is already a member
+| post-json | /data/workspaces/%%workspace%%/groups | {"group_id":%%gid%%,"role_name":"member"} |
+| code-is   | 409                                   |                                           |
+
+## PUT update group role
+| *Comment* | PUT update group role                 |                                              |
+| PUT-json  | /data/workspaces/%%workspace%%/groups | [{"group_id":"%%gid%%","role_name":"admin"}] |
+| code-is   | 204                                   |                                              |
+
+## PUT cannot remove last admin
+| *Comment* | PUT cannot remove last admin          |                                                                                            |
+| remove-member | %%username%% | %%workspace%% |
+| PUT-json  | /data/workspaces/%%workspace%%/groups | [{"group_id":"%%gid%%","role_name":"member"},{"group_id":"%%gaid%%","role_name":"member"}] |
+| code-is   | 409                                   |                                                                                            |
+
+## POST cannot add a self-join group
+| *Comment* | POST cannot add a self-join group |
+| set          | sj1     | sj1-%%start_time%% |              |  |           |
+| create-group | %%sj1%% |                    | %%username%% |  | self-join |
+| set          | sj1_id  | %%group_id%%       |              |  |           |
+| POST-json | /data/workspaces/%%workspace%%/groups | {"group_id":"%%sj1_id%%","role_name":"member"} |
+| code-is   | 400                                   |                                                |
+
+## POST cannot add a private group when workspace is not member-only
+| set                | privg1     | privg1-%%start_time%% |              |
+| create-group       | %%privg1%% |                       | %%username%% |
+| set                | privg1_id  | %%group_id%%          |              |
+| set                | pubws1     | pubws1-%%start_time%% |              |
+| create-workspace   | %%pubws1%% |                       |              |
+| set                | pubws1_id  | %%workspace_id%%      |              |
+| set-ws-permissions | %%pubws1%% | public                |              |
+| POST-json | /data/workspaces/%%pubws1%%/groups | {"group_id":"%%privg1_id%%","role_name":"member"} |
+| code-is   | 400                                |                                                   |

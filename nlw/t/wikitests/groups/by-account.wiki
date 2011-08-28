@@ -1,0 +1,145 @@
+Tests for [Story: Groups ReST API]
+
+* Fixture: SocialRest
+
+| standard-test-setup |
+| delete-group | %%group_id%% |
+
+# Verify no groups show up when fresh
+
+| GET             | /data/accounts/%%account%%/groups |         |
+| code-is         | 200                                  |         |
+| header-like     | Cache-Control                        | private |
+| json-parse      |                                      |         |
+| json-array-size | 0                                    |         |
+
+# Create a new group, make sure it shows up
+
+| set               | group1_name     | group%%start_time%%                    |              |
+| create-group      | %%group1_name%% | %%account%%                            | %%username%% |
+| set               | group1_id      | %%group_id%%                           |              |
+| set               | jenny          | jenny%%start_time%%@ken.socialtext.net |              |
+| create-user       | %%jenny%%      | password                               |              |
+| add-user-to-group | %%jenny%%      | %%group1_id%%                           |              |
+
+## visible by Group Creator (Creator sees Groups he created or is a member of)
+
+| GET              | /data/accounts/%%account%%/groups |   |
+| json-response-is | 200                               | 1 |
+| header-like       | Cache-Control        | private        |
+| json-path-is      | $[0].group_id        | %%group1_id%%   |
+| json-path-is      | $[0].name            | %%group1_name%% |
+| json-path-is      | $[0].user_count      | 2              |
+| json-path-is      | $[0].workspace_count | 0              |
+| json-path-missing | $[0].members         |                |
+
+
+## Show Members flag works (excludes self)
+
+| GET              | /data/accounts/%%account%%/groups?show_members=1 |   |
+| json-response-is | 200                                              | 1 |
+| header-like    | Cache-Control            | private        |
+| json-path-is   | $[0].group_id            | %%group1_id%%   |
+| json-path-is   | $[0].name                | %%group1_name%% |
+| json-path-is   | $[0].user_count          | 2              |
+| json-path-is   | $[0].workspace_count     | 0              |
+| json-path-size | $[0].members             | 1              |
+| json-path-is   | $[0].members[0].username | %%jenny%%      |
+| json-path-isnt | $[0].members[0].username | %%username%%   |
+
+
+## ... visible by Business Admin (Business Admin can see all Groups)
+
+| set                | badmin     | badmin%%start_time%%@ken.socialtext.net |
+| create-user        | %%badmin%% | password                                |
+| http-user-pass     | %%badmin%% | password                                |
+
+| set-business-admin | %%badmin%% | 1 |
+
+| GET              | /data/accounts/%%account%%/groups |         |
+| json-response-is | 200                               | 1       |
+| header-like      | Cache-Control                     | private |
+| json-path-is      | $[0].group_id        | %%group1_id%%   |
+| json-path-is      | $[0].name            | %%group1_name%% |
+| json-path-is      | $[0].user_count      | 2              |
+| json-path-is      | $[0].workspace_count | 0              |
+| json-path-missing | $[0].members         |                |
+
+| set-business-admin | %%badmin%% | 0 |
+
+| GET              | /data/accounts/%%account%%/groups |         |
+| json-response-is | 200                               | 0       |
+| header-like      | Cache-Control                     | private |
+
+
+## visible by Group Members (Members see Groups they are members of)
+## *not* visible by other Users (can't see Groups you have no relationship to)
+
+| set            | jane     | jane%%start_time%%@ken.socialtext.net |
+| create-user    | %%jane%% | password                              |
+| http-user-pass | %%jane%% | password                              |
+
+| GET              | /data/accounts/%%account%%/groups |         |
+| json-response-is | 200                               | 0       |
+| header-like      | Cache-Control                     | private |
+
+| add-user-to-group | %%jane%% | %%group1_id%% |
+
+| GET              | /data/accounts/%%account%%/groups |         |
+| json-response-is | 200                               | 1       |
+| header-like      | Cache-Control                     | private |
+| json-path-is      | $[0].group_id        | %%group1_id%%   |
+| json-path-is      | $[0].name            | %%group1_name%% |
+| json-path-is      | $[0].user_count      | 3              |
+| json-path-is      | $[0].workspace_count | 0              |
+| json-path-missing | $[0].members         |                |
+
+
+# POST to /data/accounts/:accountid/groups to add group to account
+
+| set            | account2        | acct2%%start_time%%  |              |
+| create-account | %%account2%%    |                      |              |
+| set            | group2_name     | group2%%start_time%% |              |
+| create-group   | %%group2_name%% | %%account2%%         | %%username%% |
+| set            | group2_id       | %%group_id%%         |              |
+
+# ... non-admin gets a 401 status code
+
+| http-user-pass | %%jane%%                          | password                     |
+| POST_json      | /data/accounts/%%account%%/groups | {"group_id":"%%group2_id%%"} |
+| code-is        | 401                               |                              |
+
+| GET              | /data/accounts/%%account%%/groups |               |
+| json-response-is | 200                               | 1             |
+| header-like      | Cache-Control                     | private       |
+| json-path-isnt   | $[0].group_id                     | %%group2_id%% |
+
+# ... Only account admin can do this (204)
+
+| set-business-admin | %%jane%%                          | 1                            |
+| POST_json          | /data/accounts/%%account%%/groups | {"group_id":"%%group2_id%%"} |
+| code-is            | 204                               |                              |
+
+| GET | /data/accounts/%%account%%/groups |
+| json-response-is | 200           | 2             |
+| header-like      | Cache-Control | private       |
+| json-path-is     | $[0].group_id | %%group1_id%% |
+| json-path-is     | $[1].group_id | %%group2_id%% |
+
+
+# ... group must exist or 400
+| POST_json | /data/accounts/%%account%%/groups | {"group_id":"999999"} |
+| code-is   | 400                               |                         |
+
+# ... account must exist or 404
+| POST_json | /data/accounts/fake-account/groups | {"group_id":"999999"} |
+| code-is   | 404                                |                         |
+
+# ... adding a group to account it already belongs to does not result in the group being included twice (409?)
+#
+
+| POST_json | /data/accounts/%%account%%/groups | {"group_id":"%%group2_id%%"} |
+| code-is   | 409                               |                                |
+| GET             | /data/accounts/%%account%%/groups |         |
+| json-response-is | 200                               | 2             |
+| header-like     | Cache-Control                     | private |

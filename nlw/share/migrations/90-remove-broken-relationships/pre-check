@@ -1,0 +1,25 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_singlevalue/;
+use Socialtext::Migration::Utils qw/ensure_socialtext_schema/;
+
+ensure_socialtext_schema(140);
+
+my $count = sql_singlevalue(q{
+    SELECT
+        COUNT(*)
+    FROM
+        profile_relationship
+    WHERE
+        NOT shares_account(user_id, other_user_id)
+});
+
+if ($count == 0) {
+    print "No bad profile relationships, skipping\n";
+    exit 1; # don't need the migration
+}
+
+print "Removing bad profile relationships...\n";
+exit 0; # run migration

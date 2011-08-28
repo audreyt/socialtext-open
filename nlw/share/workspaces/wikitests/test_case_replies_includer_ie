@@ -1,0 +1,61 @@
+Testcase is designed to be run simultaneously by any number of testers. The testers should be users in a given account only.
+Each tester camps on /st/signals. The test needs to be initiated with a single unique topic and a seed reply (how?) before initiating multi-browser.
+The idea is dead simple: there will always be a single Reply to conversation... link visible in each browser. Click it. Type a reply. Post. Wait(random). Loop (how)?.
+The wait time needs to be human-range, say min 10 seconds to 60 seconds. (Do we trade frequency for number of participants?).
+
+Questions that need answers:
+How to communicate duration or number of iterations? Possible: use SauceLabs max_duration variable.
+How to know if a problem was manifest strictly in a browser seen by a user? Possible: at end of test, get a browser up with the result. If the result is broken, you win. If it is not, suck down the videos and do some kind of frame compare. This doesn't totally work because of scrolling.
+
+| *Comment* | Test Case: Replies Includer. These vars will come in from the command line |  |
+
+| Comment | shared_account is %%shared_account%% |  |
+| Comment | shared_wait is %%delay%% |  |
+| Comment | shared_wait is %%rate%% |  |
+
+| *Comment* | Test Case: Replies. Setup and login |  |
+| set | my_acct | %%shared_account%% |
+| set | my_user | `%%my_acct%%-%%start_time%%@ken.socialtext.net` |
+| set | first_wait | %%delay%% |
+| set | my_wait | %%rate%% |
+
+| st-admin | create-account --name %%my_acct%% |  |
+| st-admin | create-user --account %%my_acct%% --e %%my_user%% --p %%password%% | was created |
+| st-login | %%my_user%% | %%password%% |
+
+| *Comment* | Test Case: Replies. Open Signals, get ready to reply. NOTE: need three seed replies |  |
+| open_ok | /st/signals |  |
+| wait_for_element_visible_ok | //div[@class='older'][last()] | 30000 |
+| click_ok | //div[@class='older'][last()] |  |
+| pause | %%first_wait%% |  |
+
+| set | frame_pause | 10 |
+| set | post_pause | 10 |
+| setSpeed | 3000 |  |
+| *Comment* | Test Case: Replies. removed setSpeed added frame_pause %%frame_pause%% post_pause %%post_pause%% |  |
+
+| set | i | 1 |
+| include | `[Test Case: Replies Include IE]` |
+
+| set | i | 2 |
+| include | `[Test Case: Replies Include IE]` |
+
+| set | i | 3 |
+| include | `[Test Case: Replies Include IE]` |
+
+| set | i | 4 |
+| include | `[Test Case: Replies Include IE]` |
+
+| set | i | 5 |
+| include | `[Test Case: Replies Include IE]` |
+
+| set | i | 6 |
+| include | `[Test Case: Replies Include IE]` |
+
+| set | i | 7 |
+| include | `[Test Case: Replies Include IE]` |
+
+| set | i | 8 |
+| include | `[Test Case: Replies Include IE]` |
+
+| *Comment* | Test Case: Replies COMPLETED |  |

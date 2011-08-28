@@ -1,0 +1,39 @@
+* Fixture: SocialRest
+
+| standard-test-setup |
+
+| set                      | auw         | zzz-auw-%%start_time%% |
+| create-workspace         | %%auw%%     | %%account%%            |
+| add-account-to-workspace | %%account%% | %%auw%%                |
+
+| Comment | by default, workspaces via AUWs are included |
+
+| set | wses | /data/groups/%%group_id%%/workspaces |
+
+| GET-json        | %%wses%%  |               |
+| code-is         | 200       |               |
+| json-parse      |           |               |
+| json-array-size | 2         |               |
+| json-path-is    | $[0].name | %%workspace%% |
+| json-path-is    | $[1].name | %%auw%%       |
+
+| Comment | exercise exclude_auw_paths filter |
+
+| GET-json        | %%wses%%?exclude_auw_paths=1 |               |
+| code-is         | 200                          |               |
+| json-parse      |                              |               |
+| json-array-size | 1                            |               |
+| json-path-is    | $[0].name                    | %%workspace%% |
+| json-path-isnt  | $[0].name                    | %%auw%%       |
+
+
+| Comment | deliberately add the group, bypasses filter |
+
+| add-group-to-workspace | %%group_id%% | %%auw%% | admin |
+
+| GET-json        | %%wses%%?exclude_auw_paths=1 |               |
+| code-is         | 200                          |               |
+| json-parse      |                              |               |
+| json-array-size | 2                            |               |
+| json-path-is    | $[0].name                    | %%workspace%% |
+| json-path-is    | $[1].name                    | %%auw%%       |

@@ -1,0 +1,836 @@
+body {
+    background: #ffffff;
+    margin: 0;
+}
+
+.st-suppressonprint {
+    display: none;
+}
+
+/* Wiki Navigation */
+
+#st-wiki-nav {
+    display: none;
+}
+
+.st-content {
+    background-color: white;
+    margin: 0px;
+    padding: 0px;
+}
+
+/* Personal Homepage */
+
+#st-homepage {
+    background: white url("../images/st/homepage/blue-fade.gif") top left no-repeat;
+}
+
+#st-homepage-layout {
+    margin-top: 15px;
+    clear: both;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#st-homepage-layout tr td.st-homepage-layout-cell {
+    padding: 5px;
+    vertical-align: top;
+}
+
+#st-homepage-layout-dashboard {
+    width: 60%;
+}
+
+#st-homepage-layout-notes {
+    width: 40%;
+}
+
+#st-homepage-notes, #st-homepage-dashboard {
+    text-align: left;
+    width: 95%;
+}
+
+#st-user-greeting, #st-wiki-title {
+    font-family: Helvetica, Verdana, sans-serif;
+}
+#st-wiki-title {
+    margin-left: 5px;
+    font-size: 200%;
+}
+
+#st-user-greeting {
+    font-size: 140%;
+    text-align: right;
+    float: right;
+}
+
+#st-group-notes-content, #st-personal-notes-content {
+}
+
+.st-homepage-section {
+    margin-bottom: 15px;
+}
+
+#st-homepage-notes .st-homepage-section {
+    background-color: white;
+    border: 1px solid #aaa;
+    padding: 15px;
+}
+
+.st-homepage-section-title {
+    font-size: 110%;
+    font-family: Helvetica, Verdana, sans-serif;
+}
+
+#st-homepage-notes .st-homepage-section-title {
+    color: #aaa;
+    text-decoration: underline;
+}
+
+.st-homepage-notes-edit-link {
+    background: url("../images/st/homepage/edit-icon.gif") no-repeat left top;
+    display: block;
+    text-indent: -2000px;
+    height: 13px;
+    width: 36px;
+    margin-right: -10px;
+    margin-top: -10px;
+    text-decoration: none;
+}
+
+.st-homepage-notes-edit {
+    font-family: Verdana, sans-serif;
+    font-size: 65%;
+    float: right;
+}
+
+.st-homepage-notes-content {
+    font-size: 85%;
+    margin-top: 10px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    font-family: Verdana, Helvetica, sans-serif;
+}
+
+#st-dyk {
+    border-color: #cca !important;
+    background-color: #ffe !important;
+}
+
+#st-dyk-title {
+    color: #e4a020 !important;
+    text-decoration: none !important;
+}
+
+
+/* Homepage Simple List */
+
+#st-whats-new-title-link {
+    background: url("../images/st/homepage/icon-28-pages.gif") no-repeat left top;
+}
+#st-watchlist-title-link {
+    background: url("../images/st/homepage/icon-28-star.gif") no-repeat left top;
+}
+#st-wikis-title-link {
+    background: url("../images/st/homepage/icon-28-group.gif") no-repeat left top;
+}
+.st-homepage-simplelist-title-link {
+    display: block;
+    padding-left: 32px;
+    min-height: 32px;
+}
+
+.st-homepage-simplelist-title {
+}
+
+.st-homepage-simplelist-table {
+    margin-left: 25px;
+    border: 1px dashed #ddd;
+    border-collapse: collapse;
+    font-family: Verdana, Helvetica, sans-serif;
+    font-size: 80%;
+    width: 100%;
+}
+
+.st-homepage-simplelist-table td {
+    padding: 2px;
+}
+
+.st-homepage-simplelist-table tr.st-homepage-simplelist-row-odd {
+    background-color: #f3f7f7;
+}
+
+.st-homepage-simplelist-table tr.st-homepage-simplelist-row-even {
+    background-color: white;
+}
+
+.st-homepage-simplelist-table a {
+    color: #4f55dd;
+    text-decoration: none;
+}
+
+.st-homepage-simplelist-right {
+    width: 20%;
+}
+
+.st-homepage-simplelist {
+}
+
+.st-homepage-simplelist-header {
+    min-height: 35px;
+}
+
+.st-homepage-simplelist-header .button-table {
+    float: right;
+    margin-right: 15px;
+    font-size: 95%;
+}
+
+.st-homepage-simplelist-header .button-table .button-content {
+    padding: 1px;
+}
+
+/* Homepage Wikis List */
+
+#st-wikis-title {
+}
+
+/* Wikitext Styling */
+
+.wiki {
+}
+
+.wiki hr {
+    margin-top: .4em;
+    margin-bottom: .4em;
+}
+
+.wiki .short-rule {
+    width: 25%;
+}
+
+.wiki .medium-rule {
+    width: 50%
+}
+
+.wiki ul,
+.wiki ol,
+.wiki blockquote {
+    margin-left: 2em;
+    padding-left: 0em;
+}
+
+.wiki table {
+    border-collapse: collapse;
+}
+
+.wiki td {
+    border: 1px;
+    border-style: solid;
+    padding: .2em;
+    vertical-align: top;
+}
+
+.wiki h1,
+.wiki h2,
+.wiki h3,
+.wiki h4,
+.wiki h5,
+.wiki h6 {
+    font-weight: bold;
+    font-style: normal;
+    margin-top: 0.4em;
+    margin-bottom: 0.2em;
+}
+
+.wiki h1 {font-size: 200%;}
+.wiki h2 {font-size: 170%;}
+.wiki h3 {font-size: 145%;}
+.wiki h4 {font-size: 125%;}
+.wiki h5 {font-size: 110%;}
+.wiki h6 {font-size: 100%;}
+
+.wiki pre {
+    background-color: #eee; /* XXX */
+    margin-left: 1em;
+    margin-right: 1em;
+    padding: .2em;
+}
+
+.wiki .incipient {
+    text-decoration: none;
+    border-bottom: 1px dashed;
+}
+
+/* Data and Templates */
+
+.st-jst-template, .st-json {
+    display: none;
+}
+
+/* Page Sidebox Common Styles */
+
+#st-page-boxes {
+    display: none;
+}
+
+/* Page Display */
+
+#st-page-content {
+    margin-top: 15px;
+}
+
+#st-page-content, #st-page-content td {
+    font-family: Verdana, Helvetica, sans-serif;
+    font-size: 90%;
+}
+
+#st-page-title {
+    font-family: Helvetica, Verdana, sans-serif;
+    font-size: 150%;
+    font-weight: bold;
+    color: #888;
+    border-bottom: 1px solid #888;
+    margin-bottom: 0.6em;
+}
+
+#st-page-details {
+    font-style: italic;
+    font-size: 75%;
+    font-family: Georgia, serif;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#st-page-stats {
+    float: right;
+}
+
+/* Actions Bar */
+
+#st-actions-bar {
+    display: none;
+}
+
+#st-page-boxes-underlay {
+    display: none;
+}
+
+/* Footer */
+#st-footer {
+    margin-top: -8px;
+    margin-bottom: 5px;
+    clear: both;
+}
+
+
+/* Lists */
+
+tr.w-st-even-row, tr.w-st-even-row td {
+    background-color: #f3f7f7;
+}
+
+.query-results-header-title, .query-results-header-last-edit-by {
+    text-align: left;
+}
+
+
+.query-results-row-revisions {
+    text-align: right;
+}
+
+.query-results-content {
+  font-size: 85%;
+  border-collapse: collapse;
+  border: 1px dashed #ddd;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}
+
+.query-results-row {
+  border-collapse: collapse;
+  border: 1px dashed #ddd;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}
+
+.query-results-row a {
+  text-decoration: underline !important;
+  color: #00f !important;
+}
+
+.query-results-row td {
+  font-family: Verdana;
+  padding: 0.3em;
+  border-left: 1px dashed #ddd;
+  border-right: 1px dashed #ddd;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+
+.query-results-header-row {
+  border-collapse: collapse;
+  border: 1px dashed #ddd;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}
+
+.query-results-header-row a {
+  text-decoration: underline !important;
+  color: #00f !important;
+}
+
+.query-results-header-row th {
+  font-family: Helvetica;
+  padding: 0.3em;
+  border-left: 1px dashed #ddd;
+  border-right: 1px dashed #ddd;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+
+div.st-actionbutton {
+    float: left;
+}
+
+div#st-actions-bar {
+    clear: both;
+    margin: 0.8em 20px 0.2em auto;
+    padding: 0;
+}
+
+#st-wiki-nav-actions {
+    display: none;
+}
+
+#st-page-details {
+    font-style: italic;
+    font-size: 75%;
+    font-family: Georgia, serif;
+    margin: 6px 0px 0px 0px;
+}
+
+#st-page-stats {
+    display: none;
+}
+
+#st-socialtext-attribution {
+    display: none;
+}
+
+#st-attribution {
+    margin-bottom: 0px;
+}
+
+
+/* Dialog Boxes */
+
+#st-attachments-attachinterface {
+    display: none;
+}
+
+#st-tagqueue-interface {
+    display: none;
+}
+
+#st-attachmentsqueue-interface {
+    display: none;
+}
+
+#st-attachmentsqueue-interface {
+    display: none;
+}
+
+#st-attachments-manageinterface {
+    display: none;
+}
+
+#st-newpage-duplicate {
+    display: none;
+}
+
+#st-newpage-save {
+    display: none;
+}
+
+
+/* Page tools icons */
+
+#st-pagetools-print {
+    background: url("../images/st/pagetools/print.gif")
+      left center no-repeat;
+}
+
+#st-pagetools-email {
+    background: url("../images/st/pagetools/email.gif")
+      left center no-repeat;
+}
+
+#st-pagetools-tools {
+    background: url("../images/st/pagetools/tools.gif")
+      left center no-repeat;
+}
+
+/*
+ #st-pagetools-watch {
+    background: url("../images/st/pagetools/watch-blue.gif")
+      left center no-repeat;
+}
+*/
+
+
+/* *********** Settings *********** */
+
+  #settings-pane {
+}
+* html #settings-pane { font-size: 85%;}
+
+.settings-start-table {
+}
+* html .settings-start-table { font-size: 90%;}
+
+#settings-select {
+    padding: 0px 10px 10px 10px;
+    vertical-align: top;
+    width: 1px;
+
+    background-color: #eff1ec;
+    border: none;
+}
+
+#settings-section {
+    padding: 0px 10px 10px 10px;
+    vertical-align: top;
+}
+
+.settings-top-header {
+    margin-top: 1em;
+    font-weight: bold;
+    width: 15em;
+}
+
+.settings-header {
+    margin-top: 1em;
+    font-weight: bold;
+}
+
+.settings-selections {
+    padding: 0px 0px 0px 20px;
+    line-height: 1.5em;
+}
+
+.settings-selections a:visited, .settings-selections a:active {
+    color: #0000ff;
+}
+
+.settings-link {
+    clear: both;
+    display: block;
+}
+
+.settings-section-left {
+    text-align: right;
+}
+
+.settings-label {
+    font-weight: bold;
+}
+
+.settings-help {
+    color: #888;
+}
+
+.settings-comment {
+}
+
+.users-invite-message {
+    padding: 0.5em 0.5em 0.5em 2em;
+    background-color: #eee;
+}
+
+.workspace-entry-header {
+    margin-top: .5em;
+    font-weight: bold;
+}
+
+.workspace-entry {
+    margin-left: 3em;
+}
+
+.workspace-entry-p {
+    margin-top: .5em;
+    margin-bottom: .75em;
+}
+
+.workspace-subentry {
+    font-style: italic;
+    font-weight: bold;
+    margin-left: 1.5em;
+}
+
+.preferences-td {
+    padding:.5em 0 1.5em 0;
+}
+
+.preferences-query {
+    text-align: left;
+}
+
+.preference-radio {
+    background-color: #cec;
+}
+.user-settings-listall-headings td {
+    background-color: #eff3ef;
+}
+
+#settings-save {
+    padding-bottom: 0.5em;
+}
+
+.standard-button-cancel {
+    font-weight: bold;
+    background-color: #71004b;
+
+    border-left: 1px solid #aaa;
+    border-top: 1px solid #aaa;
+    border-bottom: 2px solid #333;
+    border-right: 2px solid #333;
+    color: #f4f3b9;
+    width: 8em;
+}
+
+.standard-button-submit {
+    font-weight: bold;
+    background-color: #656084;
+
+    border-left: 1px solid #aaa;
+    border-top: 1px solid #aaa;
+    border-bottom: 2px solid #333;
+    border-right: 2px solid #333;
+    color: #f4f3b9;
+    width: 8em;
+}
+
+#st-settings {
+    font-family: Verdana, Arial, Helvetica, Sans-Serif;
+    font-size: 90%;
+}
+
+.formatter_table {
+    margin-left: 2px;
+}
+
+
+/*  Category List Display */
+
+#st-category-display-links {
+    margin-bottom: 1em;
+    font-size: 90%;
+}
+
+div.st-wiki-nav {
+    display: none;
+}
+
+#st-page-boxes-toggle {
+    display: none;
+}
+
+/* Below the fold Actions */
+
+#st-edit-actions-below-fold {
+    display: none;
+}
+
+/* Weblogs */
+
+#st-weblog-title {
+    display: none;
+}
+
+#st-weblog-navigation {
+    display: none;
+}
+
+div.st-weblog-entrynav {
+    display: none;
+}
+
+#st-weblog-banner {
+    display: none;
+}
+
+#st-weblog-archives {
+    display: none;
+}
+
+div.st-weblog-entry {
+    page-break-before: always;
+    margin-bottom: 1.2em;
+}
+
+div.st-weblog-entryspacer {
+    display: block;
+}
+
+div.st-weblog-topspacer {
+    margin: 0 30% 5px 30%;
+    border-bottom: thin solid black;
+    padding: 0.2em 0 0.8em 0;
+}
+
+div.st-weblog-bottomspacer {
+    margin: 5px 30% 0 30%;
+    border-top: thin solid black;
+    padding: 0.2em 0 2.0em 0;
+}
+
+div.st-weblog-middlespacer {
+    margin: 0 15% 0 15%;
+    border-top: thin solid black;
+}
+
+div.st-weblog-firstentry {
+    page-break-before: auto;
+}
+
+div.st-weblog-lastentry {
+    margin-bottom: 0em;
+}
+
+div.st-weblog-post-links {
+    display: none;
+}
+
+#st-weblog-actionbar {
+    display: none;
+}
+
+table#st-content-weblog-display-width-controller tr td {
+    vertical-align: top;
+}
+
+#st-content-weblog-display-width-controller-nav {
+    display: none;
+}
+
+div.st-weblog-entrytitle span.text {
+    font-family: Helvetica, Verdana, sans-serif;
+    font-size: 150%;
+    font-weight: bold;
+    color: #000;
+}
+
+.st-weblog-byline {
+    display: none;
+    margin-top: 0.5em;
+    text-align: left;
+    font-style: italic;
+    font-size: 70%;
+    font-family: Verdana, Helvetica, sans-serif;
+}
+
+/* Custom Header/Footer */
+
+#st-custom-header {
+    display: none;
+}
+
+#st-custom-footer {
+    display: none;
+}
+
+div.footerEndWrapper
+       {
+       font-size: 1.1em;
+       margin: 8px; margin-top: 20px;
+       padding-right: 14px;
+       }
+
+div.footerEnd
+       {
+       background: url("../images/footer/top_left.gif") top left no-repeat;
+       position: relative;
+       width: 100%;
+       }
+div.footerEnd h2
+       {
+       background: url("../images/footer/top_right.gif") top right no-repeat;
+       font-size:.75em;
+       padding:15px; padding-bottom: 0px;
+       margin:0;
+       position:relative;
+       right:-14px;
+       }
+div.footerEndBody
+       {
+       background: url("../images/footer/right.gif") top right repeat-y;
+       margin:0;
+       margin-top:-2em;
+       padding:15px; padding-top: 0px;
+       position:relative;
+       right:-14px;
+       font-size: .64em; color: #737373;
+       line-height: 1.5em;
+       }
+
+*+html div.footerEndBody
+       {
+       padding: 0px;
+       }
+*html div.footerEndBody
+       {
+       padding: 0px;
+       margin-bottom: -8px; margin-top: -2em;
+       }
+       *html div.footerEndBody p
+       {
+       height: 1%;
+       padding: 0px; margin: 8px;
+       }
+               div.footerEndBody a:link
+               {
+               font-weight: bold; color: #737373; text-decoration: none;
+               }
+       div.footerEndBody a:visited
+               {
+               font-weight: bold; color: #737373; text-decoration: none;
+               }
+       div.footerEndBody a:hover
+               {
+               font-weight: bold; color: #737373; text-decoration: underline;
+               }
+
+       div.footerEndBody div.logo
+               {
+               float: right; width: 150px;
+               padding-top: 4px;
+               position: relative;
+               }
+       div.footerEndBody div.logo img
+               {
+               border: 0;
+               }
+div.footerEndBottom
+       {
+       background: url("../images/footer/bottom_left.gif") bottom left no-repeat;
+       position:relative;
+       top:13px;
+       }
+div.footerEndBottom div
+       {
+       background: url("../images/footer/bottom_right.gif") bottom right no-repeat;
+       padding:15px; padding-top:0px; padding-bottom: 7px;     padding-left:0;
+       display:block;
+       margin:-2em 0 0 0;
+       position:relative;
+       right:-14px;
+       }
+
+div.st-page-box { display: none; }
+#bootstrap-loader { display: none; }
+#st-page-boxes-toggle { display: none; }
+#st-page-boxes { display: none; }
+#st-side-box-pagetools { display: none; }
+#st-footer-actions { display: none; }
+div.footerEndWrapper { display: none; }

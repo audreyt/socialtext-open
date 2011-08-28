@@ -1,0 +1,18 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[% PROCESS lite/html_begin.html %]
+
+<div data-role="header" data-position="inline">
+    <h4>[% loc('login.title') %]</h4>
+</div>
+<div class="content">
+  [% INCLUDE 'errors_and_messages' %]
+  [% INCLUDE 'authen/element/login_form' lite=1 %]
+  <p data-role="controlgroup">
+    <a data-role="button" href="/m/forgot_password">[% loc("nav.lost-password") %]</a>
+  </p>
+
+  [% INCLUDE 'lite/workspace_list/public_workspaces' %]
+</div>
+
+[% PROCESS lite/html_end.html %]

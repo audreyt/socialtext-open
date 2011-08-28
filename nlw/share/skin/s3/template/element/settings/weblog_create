@@ -1,0 +1,17 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[% PROCESS element/settings/start %]
+<dl class="form">
+  <dt><label>[% loc('blog.create') %]</label></dt>
+  <dd>
+    [% loc('blog.naming') %]
+  </dd>
+  <dd>
+    <input type="text" name="weblog_title" value="[% loc("blog.sample") %]" size="50" />
+    ([% loc('info.required') %])
+    <br/>
+    <i> [% loc('example.blog') %]</i>
+  </dd>
+</dl>
+
+[% PROCESS  element/settings/stop %]

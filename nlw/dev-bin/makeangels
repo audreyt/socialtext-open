@@ -1,0 +1,115 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+
+use FindBin;
+use LWP::UserAgent;
+use lib qq{$FindBin::Bin/../lib};
+use lib qq{$FindBin::Bin/../../plugins/people/lib};
+use lib qq{$FindBin::Bin/../../plugins/dashboard/lib};
+use lib qq{$FindBin::Bin/../../plugins/widgets/lib};
+use lib qq{$FindBin::Bin/../../plugins/socialcalc/lib};
+use Socialtext::CLI;
+use Socialtext::Resting;
+
+
+my $url = `nlwctl ports 2>&1`;
+$url =~ /^\s+URL:\s+([^\s]+)/s;
+my $baseurl=$1;
+
+sub add_peopletag {
+    my ($username, $password, $person, $tag) = @_;
+    warn "$username tagging $person with $tag";
+    my $rester = Socialtext::Resting->new(
+        username => $username,
+        password => $password,
+        server   => $baseurl,
+    );
+    $rester->put_persontag($person, $tag);
+    #warn $rester->response;
+}
+
+sub st_admin {
+    my $args = shift;
+    system ("st-admin $args");
+}
+
+# This script sets up the following accounts and people for the 
+# [story: users sees people by account] story tests
+#
+# | Account           | Angel (45 ppl) | Demon (200 ppl) | Limbo       |
+# | Socialtext People | enabled        | enabled         | disabled    |
+# |                   | workspace 1    | workspace 4     | workspace 7 |
+# |                   | workspace 2    | workspace 5     |             |
+# |                   | workspace 3    | workspace 6     |             |
+# 
+# | *Workspace:* | 1 | 2 | 3 | 4 | 5 | 6 | 7 | *Account:* | Angel | Demon | Limbo |
+# | Gabriel      | m | m |   |   |   | m |   |            | pri.  |       |       |
+# | Malachiel    |   |   |   |   |   |   |   |            | pri.  |       |       |
+# | Asmodeus     |   |   | m | m | m |   |   |            |       | pri.  |       |
+# | Beelzebub    |   |   |   |   |   | m | m |            |       | pri.  |       |
+# | Virgil       |   |   |   |   |   |   | m |            |       |       | pri.  |
+# 
+# 'm' = member of this workspace
+# 'pri.' = user's primary account (via `st-admin set-user-account` or similar)
+#
+# Also, tag each user with their user name (except Virgil, who doesn't have
+# people installed)  - Gabe is out of steam.
+
+# Create Angel, Demon, and Limbo Accounts
+st_admin('create-account --name Angel');
+st_admin('create-account --name Demon');
+st_admin('create-account --name Limbo');
+
+# Turn on people for Angel and Demon
+st_admin('enable-plugin --plugin people --account Angel');
+st_admin('enable-plugin --plugin people --account Demon');
+
+# Turn on dashboard to make it possible to click around when doing tests
+st_admin('enable-plugin --plugin dashboard --account Angel');
+st_admin('enable-plugin --plugin dashboard --account Demon');
+st_admin('enable-plugin --plugin dashboard --account Limbo');
+
+# Create workspaces for the various accounts
+st_admin('create-workspace --name wksp1 --title wksp1 --account Angel');
+st_admin('create-workspace --name wksp2 --title wksp2 --account Angel');
+st_admin('create-workspace --name wksp3 --title wksp3 --account Angel');
+st_admin('create-workspace --name wksp4 --title wksp4 --account Demon');
+st_admin('create-workspace --name wksp5 --title wksp5 --account Demon');
+st_admin('create-workspace --name wksp6 --title wksp6 --account Demon');
+st_admin('create-workspace --name wksp7 --title wksp7 --account Limbo');
+
+# Create and set-up users
+# Gabriel
+st_admin('create-user --email gabriel@not.real --password nopassword');
+st_admin('set-user-account --email gabriel@not.real --account Angel');
+st_admin('add-member --workspace wksp1 --email gabriel@not.real');
+st_admin('add-member --workspace wksp2 --email gabriel@not.real');
+st_admin('add-member --workspace wksp6 --email gabriel@not.real');
+add_peopletag('gabriel@not.real', 'nopassword', 'gabriel@not.real', 'gabriel');
+
+# Malachiel
+st_admin('create-user --email malachiel@not.real --password nopassword');
+st_admin('set-user-account --email malachiel@not.real --account Angel');
+add_peopletag('malachiel@not.real', 'nopassword', 'malachiel@not.real', 'malachiel');
+
+# Asmodeus
+st_admin('create-user --email asmodeus@not.real --password nopassword');
+st_admin('set-user-account --email asmodeus@not.real --account Demon');
+st_admin('add-member --workspace wksp3 --email asmodeus@not.real');
+st_admin('add-member --workspace wksp4 --email asmodeus@not.real');
+st_admin('add-member --workspace wksp5 --email asmodeus@not.real');
+add_peopletag('asmodeus@not.real', 'nopassword', 'asmodeus@not.real', 'asmodeus');
+
+# Beelzebub
+st_admin('create-user --email beelzebub@not.real --password nopassword');
+st_admin('set-user-account --email beelzebub@not.real --account Demon');
+st_admin('add-member --workspace wksp6 --email beelzebub@not.real');
+st_admin('add-member --workspace wksp7 --email beelzebub@not.real');
+add_peopletag('beelzebub@not.real', 'nopassword', 'beelzebub@not.real', 'beelzebub');
+ 
+# Virgil
+st_admin('create-user --email virgil@not.real --password nopassword');
+st_admin('set-user-account --email virgil@not.real --account Limbo');
+st_admin('add-member --workspace wksp7 --email virgil@not.real');

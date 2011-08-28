@@ -1,0 +1,34 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_singlevalue/;
+
+my $got_it = sql_singlevalue(q{
+    SELECT COUNT(1)
+    FROM "System"
+    WHERE field = 'push-enabled-all' AND value = 1
+});
+
+unless ($got_it) {
+    print "Enabling the push plugin for all future accounts didn't work.\n";
+    exit 1;
+}
+
+my $missing = sql_singlevalue(q{
+    SELECT COUNT(1)
+    FROM "Account" a
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM user_set_plugin usp
+        WHERE a.user_set_id = usp.user_set_id AND plugin = 'push'
+    )
+});
+
+if ($missing) {
+    print "Enabling the push plugin failed for some accounts.\n";
+    exit 1;
+}
+
+print "All accounts now have push enabled.\n";
+exit 0;

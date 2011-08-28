@@ -1,0 +1,7 @@
+See {bz: 5411}
+
+We noticed that we were trying to convert images that were not supported by
+browsers. Rather than waste processor power trying to convert, we'll simply
+decline to display them as images. This migration will change the
+`attachment.is_image` field to false for the images we've decided not to
+support.

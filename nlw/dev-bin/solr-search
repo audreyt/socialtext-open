@@ -1,0 +1,26 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::Search::AbstractFactory;
+
+my $factory = Socialtext::Search::AbstractFactory->GetFactory;
+my $searcher = $factory->create_searcher('admin');
+
+my $term = "workspace";
+my ($thunk, $num_hits) = $searcher->begin_search($term);
+my $hits = $thunk->();
+
+foreach my $hit (@$hits) {
+    if ($hit->can('attachment_id')) {
+        warn "'$term' found in attachment to page",
+            $hit->page_uri,
+            ".  Attachment id ", $hit->attachment_id;
+    }
+    else {
+        warn "'$term' found in page ", $hit->page_uri;
+    }
+}

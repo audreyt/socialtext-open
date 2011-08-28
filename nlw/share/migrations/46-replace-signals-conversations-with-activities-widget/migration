@@ -1,0 +1,64 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/get_dbh/;
+use Socialtext::JSON qw/encode_json/;
+use Socialtext::System qw/shell_run/;
+use Socialtext::Migration::Utils qw(ensure_socialtext_schema);
+
+ensure_socialtext_schema(77);
+
+my $dbh = get_dbh();
+
+$dbh->{RaiseError} = 1;
+$dbh->{AutoCommit} = 0;
+
+# Install the activities widget
+shell_run("st-run-as-web-user st-widgets install-widget --src 'local:widgets:activities'");
+
+my $signals_id = get_gadget_id('local:signals:signals');
+my $conversations_id = get_gadget_id('local:widgets:recent_conversations');
+my $activities_id = get_gadget_id('local:widgets:activities');
+
+my ($activities_pref_action_id) = $dbh->selectrow_array(q{
+    SELECT user_pref_id FROM gadget_user_pref WHERE name = ? AND gadget_id = ?;
+}, {}, 'action', $activities_id);
+
+die "Can't find the 'action' user pref key for activities widget!" unless $activities_pref_action_id;
+
+my $signals_instances = $dbh->selectcol_arrayref(q{
+    SELECT gadget_instance_id FROM gadget_instance WHERE gadget_id = ?;
+}, {}, $signals_id);
+
+my $conversations_instances = $dbh->selectcol_arrayref(q{
+    SELECT gadget_instance_id FROM gadget_instance WHERE gadget_id = ?;
+}, {}, $conversations_id);
+
+$dbh->do(q{
+    UPDATE gadget_instance SET gadget_id = ? WHERE gadget_id IN (?, ?)
+}, {}, $activities_id, $signals_id, $conversations_id);
+
+for my $id (@{ $signals_instances || [] }, @{ $conversations_instances || [] }) {
+    $dbh->do(q{
+        DELETE FROM gadget_instance_user_pref WHERE gadget_instance_id = ?
+    }, {}, $id);
+}
+
+for my $id (@{ $signals_instances || [] }) {
+    $dbh->do(q{
+        INSERT INTO gadget_instance_user_pref (gadget_instance_id, user_pref_id, value) VALUES (?, ?, ?)
+    }, {}, $id, $activities_pref_action_id, 'action=signal');
+}
+
+$dbh->commit;
+
+sub get_gadget_id {
+    my $src = shift;
+    my ($id) = $dbh->selectrow_array(q{
+        SELECT gadget_id FROM gadget WHERE src = ?
+    }, {}, $src);
+
+    die "Cannot find Gadget ID for $src" unless $id;
+    return $id;
+}

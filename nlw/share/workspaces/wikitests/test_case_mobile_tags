@@ -1,0 +1,112 @@
+| *Comment* | Test Case: Mobile Comment |
+
+| set | ws | `t-ws-%%start_time%%` |
+| set | tmikiacct | mikitacct-%%start_time%% |
+| set | tmikiuser | `tmikiuser%%start_time%%@ken.socialtext.net` |
+| set | short_tmikiuser | mikiuser%%start_time%% |
+
+| create_account | %%tmikiacct%% |  |  |
+| create_workspace | %%ws%% | %%tmikiacct%% |  |
+| create_user | %%tmikiuser%% | %%password%% | %%tmikiacct%% |
+
+| st-admin | add-member --e %%tmikiuser%% --w %%ws%% | now has the role |
+| st-admin | add-member --e %%username%% --w %%ws%% | now has the role |
+| http-user-pass | %%tmikiuser%% | %%password%% |
+
+| st_create_pages | %%ws%% | 13 | tags-%%start_time%%- |
+| st_massive_tags | /data/workspaces/%%ws%%/pages/tags-%%start_time%%-0/tags | aa | ap |
+| st_massive_tags | /data/workspaces/%%ws%%/pages/tags-%%start_time%%-1/tags | ba | bp |
+| st_massive_tags | /data/workspaces/%%ws%%/pages/tags-%%start_time%%-2/tags | ca | cp |
+| st_massive_tags | /data/workspaces/%%ws%%/pages/tags-%%start_time%%-3/tags | da | dp |
+| st_massive_tags | /data/workspaces/%%ws%%/pages/tags-%%start_time%%-4/tags | ea | ep |
+| st_massive_tags | /data/workspaces/%%ws%%/pages/tags-%%start_time%%-1/tags | aa | af |
+| st-process-jobs |  |  |  |
+
+| *Comment* | Test Case: Mobile Tags Go to tags list |  |
+| st-logoutin | %%tmikiuser%% | %%password%% |
+| st_open_noeval | /%%ws%%/ |  |
+| wait_for_element_present_ok | link=Mobile | 30000 |
+| click_and_wait | link=Mobile |  |
+| wait_for_element_visible_ok | link=Workspaces | 30000 |
+| wait_for_element_visible_ok | link=Activity | 30000 |
+| wait_for_element_visible_ok | link=Log out | 30000 |
+| wait_for_element_visible_ok | mobile-workspace-tags | 30000 |
+| click_and_wait | mobile-workspace-tags |  |
+
+
+| *Comment* | Test Case: Mobile Tags First page of tags list, click first link |  |
+| wait_for_element_visible_ok | link=aa | 30000 |
+| wait_for_element_visible_ok | link=ab | 30000 |
+| wait_for_element_visible_ok | link=ba | 30000 |
+| wait_for_element_visible_ok | link=be | 30000 |
+| wait_for_element_not_present_ok | link=bf | 30000 |
+| wait_for_element_visible_ok | mobile-paging-next | 30000 |
+| wait_for_element_not_present_ok | mobile-paging-previous | 5000 |
+| click_and_wait | link=aa |  |
+| wait_for_text_present_ok | tags-%%start_time%%-0 | 30000 |
+| wait_for_text_present_ok | tags-%%start_time%%-1 | 30000 |
+| wait_for_element_visible_ok | link=tags-%%start_time%%-0 | 30000 |
+| wait_for_element_visible_ok | link=tags-%%start_time%%-1 | 30000 |
+
+
+| *Comment* | Test Case: Mobile Tags 2nd Page of Tags list |  |
+| st_open_noeval | /%%ws%%/ |  |
+| wait_for_element_present_ok | link=Mobile | 30000 |
+| click_and_wait | link=Mobile |  |
+| wait_for_element_visible_ok | mobile-workspace-tags | 30000 |
+| click_and_wait | mobile-workspace-tags |  |
+| wait_for_element_visible_ok | mobile-paging-next | 30000 |
+| click_and_pause | mobile-paging-next |  |
+| wait_for_element_visible_ok | mobile-paging-previous | 30000 |
+| wait_for_element_visible_ok | mobile-paging-first | 30000 |
+| wait_for_element_not_present_ok | link=aa | 30000 |
+| wait_for_element_not_present_ok | link=ab | 30000 |
+| wait_for_element_not_present_ok | link=ba | 30000 |
+| wait_for_element_not_present_ok | link=be | 30000 |
+| wait_for_element_visible_ok | link=bf | 30000 |
+| wait_for_element_visible_ok | link=ca | 30000 |
+| wait_for_element_visible_ok | link=cj | 30000 |
+| wait_for_element_not_present_ok | link=ck | 30000 |
+| wait_for_element_not_present_ok | link=da | 30000 |
+
+| *Comment* | Test Case: Mobile Tags - Pagination Page Three And Four |  |
+| click_and_pause | mobile-paging-next |  |
+| wait_for_element_visible_ok | mobile-paging-previous | 30000 |
+| wait_for_element_visible_ok | mobile-paging-first | 30000 |
+| wait_for_element_not_present_ok | link=aa | 30000 |
+| wait_for_element_not_present_ok | link=ab | 30000 |
+| wait_for_element_not_present_ok | link=ba | 30000 |
+| wait_for_element_not_present_ok | link=be | 30000 |
+| wait_for_element_not_present_ok | link=bf | 30000 |
+| wait_for_element_not_present_ok | link=ca | 30000 |
+| wait_for_element_not_present_ok | link=cj | 30000 |
+| wait_for_element_visible_ok | link=ck | 30000 |
+| wait_for_element_visible_ok | link=do | 30000 |
+| wait_for_element_not_present_ok | link=ea | 30000 |
+| wait_for_element_visible_ok | mobile-paging-next | 30000 |
+| click_and_pause | mobile-paging-next |  |
+| wait_for_element_visible_ok | link=ea | 30000 |
+| wait_for_element_not_present_ok | link=ck | 30000 |
+| wait_for_element_not_present_ok | link=do | 30000 |
+| wait_for_element_not_present_ok | mobile-paging-next | 30000 |
+| click_and_pause | mobile-paging-previous |  |
+
+
+| *Comment* | Test Case: Mobile Tags - Back to page 1 via first link |  |
+| wait_for_element_visible_ok | mobile-paging-first | 30000 |
+| click_and_wait | mobile-paging-first |  |
+| wait_for_element_visible_ok | link=aa | 30000 |
+| wait_for_element_visible_ok | link=ab | 30000 |
+| wait_for_element_visible_ok | link=ba | 30000 |
+| wait_for_element_visible_ok | link=be | 30000 |
+| wait_for_element_not_present_ok | link=bf | 30000 |
+| wait_for_element_visible_ok | mobile-paging-next | 30000 |
+| wait_for_element_not_present_ok | mobile-paging-previous | 5000 |
+| wait_for_element_not_present_ok | mobile-paging-first | 5000 |
+
+
+
+| *Comment* | Test Case: Mobile Tags TEARDOWN |  |
+| st-admin | delete-workspace --no-export --w %%ws%% | been deleted |
+
+| *Comment* | Test Case: Mobile Tags COMPLETED |

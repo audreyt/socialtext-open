@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# We only need to run this migration if the database differs
+# from the schema we expect to have
+MIGDIR=`dirname $0`
+SCHEMA="$MIGDIR/nlw-schema.sql"
+PGLIST="$MIGDIR/pglist"
+
+TMP_SCHEMA="/tmp/NLW-current-schema.$$"
+export PGDATABASE=`st-config echo db_name`
+export PGUSER=`st-config echo db_user`
+sh $PGLIST > $TMP_SCHEMA
+
+diff $TMP_SCHEMA $SCHEMA

@@ -1,0 +1,56 @@
+[%# @COPYRIGHT@ -%]
+<table id="[% settings_table_id %]">
+  <tr>
+   <td>
+     [% PROCESS users_listing
+         label = loc('error.wiki-member-exists=count:', users_already_present.size),
+         users = users_already_present
+         IF users_already_present.size;
+        PROCESS user_group_listing 
+         label = loc('error.groups-member-exists=count:', has_role_in_group.size),
+         user_group_list = has_role_in_group
+         IF has_role_in_group.size ;
+        PROCESS user_group_listing
+         label = loc('invite.added-to-groups=users:', no_role_in_group.size),
+         user_group_list = no_role_in_group
+         IF no_role_in_group.size;
+        PROCESS users_listing
+         label = loc('error.invalid-email-address=count:', invalid_addresses.size),
+         users = invalid_addresses
+         IF invalid_addresses.size;
+        PROCESS users_listing
+         label = loc('info.invite-filter=domain', '<span style="color: red;">' _ domain _ '</span>'),
+         users = wrong_domain
+         IF wrong_domain.size;
+        PROCESS users_listing
+         label = loc('invite.added-to-wiki=users:', users_invited.size),
+         users = users_invited
+         IF groups.size == 0 && users_invited.size > 0 && checker.check_permission('admin_workspace') ;
+        PROCESS users_listing
+         label = loc('invite.request-sent=users:', users_invited.size),
+         users = users_invited
+         IF !checker.check_permission('admin_workspace') AND users_invited.size;
+     %]
+   </td>
+  </tr>
+ </table>
+
+[% BLOCK users_listing %]
+  <p style="font-weight: bold; margin-top: 5px">[% label %]</p>
+  <ul>
+    [% FOREACH user IN users %]
+      <li style="font-family: monospace">[% user |html %]</li>
+    [% END %]
+  </ul>
+[% END %]
+
+[% BLOCK user_group_listing %]
+   <p style="font-weight: bold; margin-top: 5px">[% label %]</p>
+   [% FOR user IN user_group_list.keys() %]
+   <p style="font-family: monospace">[% user |html %]:
+       [% FOR group IN user_group_list.$user %]
+            [% group.display_name |html %][% UNLESS loop.last() %], [% END %]
+       [% END %]
+   </p>
+   [% END %]
+[% END %]

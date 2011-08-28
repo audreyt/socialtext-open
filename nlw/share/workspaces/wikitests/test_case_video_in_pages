@@ -1,0 +1,108 @@
+| *Comment* | STARTING Test Case: Video In Pages |  |
+
+| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | link=Rich Text | 30000 |
+| click_ok | link=Rich Text |  |
+| pause | 5000 | wait for the Rich Text editor to load |
+
+| *Comment* | Test Case: Video In Pages enter good video URL |  |
+| click_ok | wikiwyg_button_video | 30000 |
+| wait_for_element_visible_ok | st-widget-video_url | 30000 |
+| type_ok | st-widget-video_url | http://www.youtube.com/watch?v=lH4lcrxP8mo |
+| is_checked_ok | //input[@value='original'] |  |
+| wait_for_element_visible_ok | st-widget-savebutton | 30000 |
+| wait_for_element_visible_ok | st-widget-cancelbutton | 30000 |
+| pause | 5000 | not too fast after typing |
+| click_ok | st-widget-savebutton |  |
+| wait_for_element_not_visible_ok | st-widget-cancelbutton | 5000 |
+
+| *Comment* | Test Case: Video In Pages verify good video URL |  |
+| pause | 5000 | wait for insert |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| pause | 5000 | wait for text to be populated |
+| verifyValue | wikiwyg_wikitext_textarea | `qr/{video: http:\/\/www.youtube.com\/watch\?v=lH4lcrxP8mo size=original}/s` |
+
+| *Comment* | Test Case: Video In Pages - Check Cancel Button |  |
+| click_ok | link=Rich Text |  |
+| pause | 5000 | wait for the Rich Text editor to load |
+| wait_for_element_visible_ok | wikiwyg_button_video | 30000 |
+| click_ok | wikiwyg_button_video | 30000 |
+| wait_for_element_visible_ok | st-widget-video_url | 30000 |
+| wait_for_element_visible_ok | st-widget-savebutton | 30000 |
+| wait_for_element_visible_ok | st-widget-cancelbutton | 30000 |
+| type_ok | st-widget-video_url | original content %%start_time%% |
+| click_ok | st-widget-cancelbutton |  |
+| wait_for_element_not_visible_ok | st-widget-cancelbutton | 5000 |
+
+| *Comment* | Test Case: Video In Pages - Check original content |  |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| verifyValue | wikiwyg_wikitext_textarea | `qr/{video: http:\/\/www.youtube.com\/watch\?v=lH4lcrxP8mo size=original}/s` |  |
+
+| *Comment* | Test Case: Video In Pages Bad URL |  |
+| click_ok | link=Rich Text |  |
+| pause | 5000 | wait for the Rich Text editor to load |
+| click_ok | wikiwyg_button_video | 30000 |
+| wait_for_element_visible_ok | st-widget-video_url | 30000 |
+| wait_for_element_visible_ok | st-widget-savebutton | 30000 |
+| wait_for_element_visible_ok | st-widget-cancelbutton | 30000 |
+| type_ok | st-widget-video_url | thisisatest |
+| click_ok | st-widget-savebutton |  |
+
+| *Comment* | Test Case: Video In Pages Check error |  |
+| wait_for_text_present_ok | is not a valid URL | 30000 |
+| wait_for_element_visible_ok | st-widget-video_url | 30000 |
+| wait_for_element_visible_ok | st-widget-savebutton | 30000 |
+| wait_for_element_visible_ok | st-widget-cancelbutton | 30000 |
+| click_ok | st-widget-cancelbutton |  |
+| wait_for_element_not_visible_ok | st-widget-cancelbutton | 5000 |
+
+| *Comment* | Test Case: Video In Pages Non-Video URL |  |
+| click_ok | wikiwyg_button_video | 30000 |
+| wait_for_element_visible_ok | st-widget-video_url | 30000 |
+| wait_for_element_visible_ok | st-widget-savebutton | 30000 |
+| wait_for_element_visible_ok | st-widget-cancelbutton | 30000 |
+| type_ok | st-widget-video_url | http://www.xndev.com/ |
+| click_ok | st-widget-savebutton |  |
+| wait_for_text_present_ok | Sorry, this URL is not hosted on any of our supported services (GoogleVideo, SlideShare, Vimeo, YouTube) | 30000 |
+| click_ok | st-widget-cancelbutton |  |
+| wait_for_element_not_visible_ok | st-widget-cancelbutton | 5000 |
+
+| *Comment* | Test Case: Video In Pages clear and abandon page |  |
+| click_ok | st-newpage-pagename-edit |  |
+
+| *Comment* | Test Case: Video In Pages Different Size - create page |  |
+| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| type_ok | wikiwyg_wikitext_textarea | original content %%start_time%% |
+| wait_for_element_visible_ok | link=Rich Text | 30000 |
+| click_ok | link=Rich Text |  |
+| pause | 5000 | wait for the Rich Text editor to load |
+
+| *Comment* | Test Case: Video In Pages Different Size - insert Slideshare small |  |
+| wait_for_element_visible_ok | wikiwyg_button_video | 30000 |
+| click_ok | wikiwyg_button_video | 30000 |
+| wait_for_element_visible_ok | st-widget-video_url | 30000 |
+| wait_for_element_visible_ok | st-widget-savebutton | 30000 |
+| wait_for_element_visible_ok | st-widget-cancelbutton | 30000 |
+| type_ok | st-widget-video_url | http://www.slideshare.net/alikhan_nazeer80/better-software-classic-testing-mistakes-presentation |
+| click_ok | //input[@value="small" and @name="size"] |  |
+| click_ok | st-widget-savebutton |  |
+| wait_for_element_not_visible_ok | st-widget-cancelbutton | 5000 |
+| pause | 5000 | wait for insert |
+
+| *Comment* | Test Case: Video In Pages Different Size - verify Slideshare small |  |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| pause | 5000 | wait for insert |
+| verifyValue | wikiwyg_wikitext_textarea | `qr/{video: http:\/\/www.slideshare.net\/alikhan_nazeer80\/better\-software\-classic\-testing\-mistakes\-presentation.+size\=small}/s` |
+
+| *Comment* | Test Case: Video In Pages clear and abandon page again |  |
+| click_ok | st-newpage-pagename-edit |  |
+
+| *Comment* | Test Case: Video In Pages COMPLETED |  |

@@ -1,0 +1,88 @@
+#!/bin/bash
+set -e
+
+ACCOUNT="Socialtext"
+
+PROGNAME=$(basename $0)
+SHORTOPTS="da:h"
+LONGOPTS="dry-run,account:,help"
+
+OPTS=$(getopt -o "$SHORTOPTS" --long "$LONGOPTS" -n "$PROGNAME" -- "$@")
+if [ $? -ne 0 ]; then
+    echo "'$progname --help' for more information" 1>&2
+    exit 1
+fi
+
+eval set -- "$OPTS"
+
+# Parse command line options.
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -d | --dry-run)
+            DRYRUN=1
+            shift
+            ;;
+        -a | --account)
+            ACCOUNT=$2
+            shift 2
+            ;;
+        -h | --help)
+            echo "Usage: $0 [--dry-run] [--account account_name] [tarball to import]"
+            exit 1
+            ;;
+        --)
+            shift
+            break
+            ;;
+        *)
+            echo "Error processing option: $1" 1>&2
+            exit 1;
+            ;;
+    esac
+done
+
+# Add DIRNAME and DIRNAME/../bin to PATH, so this works in dev-envs.
+DIRNAME=$(dirname $0)
+export PATH="$DIRNAME:$DIRNAME/../bin:$PATH"
+
+# Useful for clarity in output, that's the only reason it is here.
+abs_path() { perl -MCwd -le "print Cwd::abs_path(shift)" $1; }
+
+# Get the tarball and puzzle out the workspace name from it.
+TARBALL=${1:-"$DIRNAME/../share/l10n/help/help-en.tar.gz"}
+TARBALL=$(abs_path $TARBALL)
+WS_NAME=$(echo `basename $TARBALL` | cut -f 1 -d .)
+
+echo "Preparing to update workspace $WS_NAME in account $ACCOUNT."
+
+# Make sure the tarball exists
+if [ ! -r $TARBALL ]; then 
+    echo "File does not exist or is not readable: $TARBALL"; 
+    exit 1;
+fi
+
+# Construct commands to execute
+STADMIN=$(abs_path `which st-admin`)
+
+# Check that we found the st-admin command.
+if [ ! -x "$STADMIN" ]; then
+    echo "Could not find st-admin command";
+    exit 1;
+fi
+
+# Turn commands into echos if --dry-run was given.
+if [ -n "$DRYRUN" ]; then
+    echo "Dry running..."
+    echo $STADMIN delete-workspace --workspace $WS_NAME --no-export
+    echo $STADMIN import-workspace --tarball $TARBALL
+    echo $STADMIN set-workspace-config --workspace $WS_NAME account_name $ACCOUNT
+else
+    echo "Deleting workspace $WS_NAME."
+    $STADMIN delete-workspace --workspace $WS_NAME --no-export || /bin/true
+    echo "Importing $(basename $TARBALL) as workspace $WS_NAME."
+    $STADMIN import-workspace --tarball $TARBALL
+    $STADMIN set-workspace-config --workspace $WS_NAME account_name "$ACCOUNT"
+fi
+
+echo "Done updating workspace $WS_NAME."
+exit 0

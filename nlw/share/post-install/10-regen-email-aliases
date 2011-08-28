@@ -1,0 +1,7 @@
+#!/bin/bash
+set -e
+set -x
+
+user=$(st-build-setting st-user)
+group=$(st-build-setting st-group)
+st-regen-aliases --user $user --group $group || /bin/true

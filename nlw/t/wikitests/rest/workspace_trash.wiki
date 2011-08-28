@@ -1,0 +1,79 @@
+* Fixture: SocialRest
+
+######
+| *Comment*              | Setup            |                                             |             |
+| set                    | account          | account-%%start_time%%                      |             |
+| create-account         | %%account%%      |                                             |             |
+| set                    | arabica          | arabica-%%start_time%%                      |             |
+| create-workspace       | %%arabica%%      |                                             | %%account%% |
+| set                    | no_auth          | no_auth-%%start_time%%@ken.socialtext.net   |             |
+| create-user            | %%no_auth%%      | password                                    |             |
+| set                    | canephora        | canephora-%%start_time%%@ken.socialtext.net |             |
+| create-user            | %%canephora%%    | password                                    |             |
+| add-member             | %%canephora%%    | %%arabica%%                                 | admin       |
+| set                    | congensis        | congensis-%%start_time%%@ken.socialtext.net |             |
+| create-user            | %%congensis%%    | password                                    |             |
+| add-member             | %%congensis%%    | %%arabica%%                                 |             |
+| set                    | excelsa          | excelsa-%%start_time%%@ken.socialtext.net   |             |
+| create-user            | %%excelsa%%      | password                                    |             |
+| set                    | excelsa_id       | %%user_id%%                                 |             |
+| add-member             | %%excelsa%%      | %%arabica%%                                 |             |
+| set                    | gallienii        | gallienii-%%start_time%%                    |             |
+| create-group           | %%gallienii%%    |                                             |             |
+| set                    | gallienii_id     | %%group_id%%                                |             |
+| add-group-to-workspace | %%gallienii_id%% | %%arabica%%                                 |             |
+######
+
+## Log in as authenticated user
+| http-user-pass | %%no_auth%% | password |
+
+## No Access
+| *Comment*      | No Access                          |          |
+| POST-json      | /data/workspaces/%%arabica%%/trash |          |
+| code-is        | 403                                |          |
+
+## No Workspace
+| *Comment* | No Workspace                   |
+| POST-json | /data/workspaces/ENOSUCH/trash |
+| code-is   | 404                            |
+
+## Log in as admin
+| http-user-pass | %%canephora%% | password |
+
+## Check for correct users
+| *Comment*       | Check for correct users            |          |
+| GET-json        | /data/workspaces/%%arabica%%/users |          |
+| code-is         | 200                                |          |
+| json-parse      |                                    |          |
+| json-array-size | 3                                  |          |
+
+## Check for correct groups
+| *Comment*       | Check for correct groups            |          |
+| GET-json        | /data/workspaces/%%arabica%%/groups |          |
+| code-is         | 200                                 |          |
+| json-parse      |                                     |          |
+| json-array-size | 1                                   |          |
+
+## Trash users/groups
+| *Comment* | Trash users/groups                 |                                                                                             |
+| POST-json | /data/workspaces/%%arabica%%/trash | [{"username":"%%congensis%%"},{"user_id":"%%excelsa_id%%"},{"group_id":"%%gallienii_id%%"}] |
+| code-is   | 204                                |                                                                                             |
+
+## Check for updated users
+| *Comment*       | Check for updated users            |          |
+| GET-json        | /data/workspaces/%%arabica%%/users |          |
+| code-is         | 200                                |          |
+| json-parse      |                                    |          |
+| json-array-size | 1                                  |          |
+
+## Check for updated groups
+| *Comment*       | Check for updated groups            |          |
+| GET-json        | /data/workspaces/%%arabica%%/groups |          |
+| code-is         | 200                                 |          |
+| json-parse      |                                     |          |
+| json-array-size | 0                                   |          |
+
+## Cannot trash last Admin
+| *Comment* | Cannot trash last Admin            |                                |
+| POST-json | /data/workspaces/%%arabica%%/trash | [{"username":"%%canephora%%"}] |
+| code-is   | 409                                |                                |

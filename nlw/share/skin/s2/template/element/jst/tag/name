@@ -1,0 +1,18 @@
+{macro escape_tag_name(t)}
+    ${t.name|h|quoter}
+{/macro}
+{for t in tags}
+<li class="st-tags-tagline st-page-box-listing-entry">
+    <span class="${t.level}">
+        <a href="?action=category_display;category=${t.name|uri_escape};tag=/${t.name|uri_escape}"
+            class="st-tags-tagline-link">${t.name}</a>
+    </span>
+    {if Socialtext.perms.edit}
+    <span class="st-tags-tagdelete">
+        {var escaped_tag_name_value = escape_tag_name(t)} 
+        <a href="#" onclick="Tags.deleteTag('${t.name|escapespecial|quoter}'); return false"
+            title="${ loc('Remove [_1] tag from page', escaped_tag_name_value) }" class="st-tags-tagdelete">[x]</a>
+    <span></>
+    {/if}
+</li>
+{/for}

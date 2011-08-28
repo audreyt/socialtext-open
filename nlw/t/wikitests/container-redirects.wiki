@@ -1,0 +1,36 @@
+
+* Fixture: SocialRest
+
+# Setup
+
+| standard-test-setup |
+
+# Redirects
+
+| GET         | /?dashboard |                      |
+| code-is     | 302         |                      |
+| header-like | Location    | qr/\/st\/dashboard$/ |
+
+| GET         | /?profile/%%user_id%% |                                 |
+| code-is     | 302                   |                                 |
+| header-like | Location              | qr/\/st\/profile\/%%user_id%%$/ |
+
+| GET         | /?edit_profile |                         |
+| code-is     | 302            |                         |
+| header-like | Location       | qr/\/st\/edit_profile$/ |
+
+| GET         | /?signals/q/monkeys |                               |
+| code-is     | 302                 |                               |
+| header-like | Location            | qr/\/st\/signals\?q=monkeys$/ |
+
+| GET         | /?signals |                    |
+| code-is     | 302       |                    |
+| header-like | Location  | qr/\/st\/signals$/ |
+
+| GET         | /?group/%%group_id%% |                                |
+| code-is     | 302                  |                                |
+| header-like | Location             | qr/\/st\/group\/%%group_id%%$/ |
+
+| GET         | /?create_group |                         |
+| code-is     | 302            |                         |
+| header-like | Location       | qr/\/st\/create_group$/ |

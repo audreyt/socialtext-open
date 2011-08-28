@@ -1,0 +1,11 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::System qw/shell_run/;
+
+my $timeout = 60 * 60 * 2;
+shell_run("ceq-exec --timeout $timeout st-widgets delete-widget --src 'local:signals:signals'");
+shell_run("ceq-exec --timeout $timeout st-widgets delete-widget --src 'local:widgets:recent_conversations'");
+
+exit 0;

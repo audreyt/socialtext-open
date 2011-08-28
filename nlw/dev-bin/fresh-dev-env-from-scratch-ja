@@ -1,0 +1,13 @@
+#!/bin/bash -e
+# @COPYRIGHT@
+
+cd $(dirname $0)/..
+dev-bin/fresh-dev-env-from-scratch
+build/bin/convert-mecab-juman-dict-to-utf8
+bin/st-create-help-workspaces
+bin/st-config set locale ja
+bin/st-admin set-locale --email devnull1@socialtext.com --locale ja --workspace admin
+for w in help-ja admin; do
+    bin/st-admin index-workspace --workspace $w --sync
+done
+dev-bin/nlwctl -1 restart

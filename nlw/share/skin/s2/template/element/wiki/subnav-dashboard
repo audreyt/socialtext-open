@@ -1,0 +1,17 @@
+<div id="st-wiki-subnav" class="st-wiki-subnav-dashboard">
+    <div id="st-wiki-subnav-left">
+	<span class="st-wiki-subnav-label">[% loc("Quick jump") %]:&nbsp;</span>
+        <a id="st-wiki-subnav-link-whats-new" href="?action=recent_changes">[% loc("What's new") %]</a>
+	-
+        <a id="st-wiki-subnav-link-weblogs" href="?action=weblog_display">[% loc("Weblogs") %]</a>
+    </div>
+    <div id="st-wiki-subnav-right">
+	<span class="st-wiki-subnav-label">[% loc("See more") %]:&nbsp;</span>
+	<a id="st-wiki-subnav-link-all-pages" href="?action=changes&changes=all">[% loc("All pages") %]</a>
+	-
+	<a id="st-wiki-subnav-link-all-tags" href="?action=category_list">[% loc("All tags") %]</a>
+	-
+	<a id="st-wiki-subnav-link-all-files" href="?action=attachments_listall">[% loc("All files") %]</a>
+	<br style="clear: both; height: 1px;" />
+    </div>
+</div>

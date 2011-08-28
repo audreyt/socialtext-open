@@ -1,0 +1,52 @@
+| *Comment* | GroupsHomeShow |
+
+| set | aagrpname | AAghs-%%start_time%% |
+| set | bbgrpname | BBghs-%%start_time%% |
+| set | ccgrpname | CCghs-%%start_time%% |
+| set | newacctname | ghs-acct-%%start_time%% |
+| set | newws | ghs-ws-%%start_time%% |
+| set | pt | 30000 |
+
+| st-admin | disable-plugin --plugin groups --all-accounts |  |
+| st-admin | create-account --name %%newacctname%% | was created. |
+| st-admin | enable-plugin --plugin groups --account %%newacctname%% | The groups plugin is now enabled for account |
+| create-workspace | %%newws%% | %%newacctname%% |
+
+| create-group | %%ccgrpname%% | %%newacctname%% | %%username%% |
+| set | grp_idc | %%group_id%% |  |
+| add-user-to-group | %%username%% | %%group_id%% |  |
+
+| create-group | %%aagrpname%% | %%newacctname%% | %%username%% |
+| set | grp_ida | %%group_id%% |  |
+| add-user-to-group | %%username%% | %%group_id%% |  |
+
+| create-group | %%bbgrpname%% | %%newacctname%% | %%username%% |
+| set | grp_idb | %%group_id%% |  |
+| add-user-to-group | %%username%% | %%group_id%% |  |
+| add-group-to-workspace | %%group_id%% | %%newws%% |  |
+
+| open_ok | /?dashboard |  |
+| *Comment* | SEE Groups Dropdown - Hover over it |  |
+| *Comment* | SEE Groups Dropdown - Hover over it - ALPHABETICAL SORT OF GROUPS? |  |
+| *Comment* | SEE Groups Dropdown SEE list of three groups %%aagrpname%%, %%bbgrpname%%, %%ccgrpname%% |  |
+| pause | %%pt%% |  |
+| pause | %%pt%% |  |
+| pause | %%pt%% |  |
+
+| *Comment* | Open a group page |
+| open | /st/group/%%group_id%% |
+| *Comment* | SEE: Groups PAGE |
+| *Comment* | SEE: Group name %%bbgrpname%%, has member %%username%%, belonging to workspace %%newws%% |
+| pause | %%pt%% |
+
+| *Comment* | Turn OFF groups plugin for this account |  |
+| st-admin | disable-plugin --plugin groups --account %%newacctname%% |  |
+| open_ok | /?dashboard |  |
+| *Comment* | DO NOT SEE GROUP In Global Nav |  |
+| pause | %%pt%% |  |
+
+| *Comment* | GroupsHomeShow TearDown |  |
+| delete-created-groups |  |  |
+| st-admin | delete-workspace --w %%newws%% --no-export |  |
+
+| *Comment* | GroupsHomeShow COMPLETED |

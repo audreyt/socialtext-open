@@ -1,0 +1,13 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::AppConfig;
+use Socialtext::File qw/get_contents set_contents/;
+
+my $file = Socialtext::AppConfig->new->{file};
+my $content = get_contents($file);
+$content =~ s/\bdb_schema_name: /db_name: /g;
+set_contents($file, $content);
+
+exit 0;

@@ -1,0 +1,38 @@
+[-Bangs::ProhibitVagueNames]
+# It pains me to have this, but there are enough changes that I
+# can't deal with right now.
+
+[-CodeLayout::ProhibitParensWithBuiltins]
+[CodeLayout::ProhibitHardTabs]
+allow_leading_tabs = 0
+
+[-ControlStructures::ProhibitPostfixControls]
+[-ControlStructures::ProhibitUnlessBlocks]
+
+[-Documentation::RequirePodAtEnd]
+[-Documentation::RequirePodSections]
+
+[-ErrorHandling::RequireCarping]
+# We need a larger-scale strategy for die/warn
+
+[-Miscellanea::RequireRcsKeywords]
+
+[-Modules::ProhibitMultiplePackages]
+[-Modules::RequireVersionVar]
+
+[-RegularExpressions::RequireExtendedFormatting]
+[-RegularExpressions::RequireLineBoundaryMatching]
+
+[-Subroutines::RequireFinalReturn]
+
+[-TestingAndDebugging::ProhibitNoWarnings]
+[-TestingAndDebugging::ProhibitNoStrict]
+
+[-ValuesAndExpressions::ProhibitConstantPragma]
+[-ValuesAndExpressions::ProhibitEmptyQuotes]
+[-ValuesAndExpressions::ProhibitNoisyQuotes]
+
+[Variables::ProhibitPackageVars]
+add_packages = JSON Test::HTTP Test::Builder
+[-Variables::ProhibitPunctuationVars]
+

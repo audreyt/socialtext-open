@@ -1,0 +1,86 @@
+* Fixture: SocialRest
+# We can do little more than check return codes in this test. Still it's better than nothing.
+
+# Setup: Create a Group that we can use
+| set | group     | %%start_time%%group-photo            |
+| set | admin     | %%start_time%%admin@in-group.com     |
+| set | member    | %%start_time%%member@in-group.com    |
+| set | nonmember | %%start_time%%nonmember@in-group.com |
+| create-user       | %%nonmember%% | password     |       |
+| create-group      | %%group%%     |              |       |
+| create-user       | %%admin%%     | password     |       |
+| add-user-to-group | %%user_id%%   | %%group_id%% | admin |
+| create-user       | %%member%%    | password     |       |
+| add-user-to-group | %%user_id%%   | %%group_id%% |       |
+
+| http-user-pass | %%nonmember%% | password |
+# We do not have access to the group
+
+| *Comment* | Unauthorized, GET                     |           |
+| GET       | /data/groups/%%group_id%%/photo       |           |
+| code-is   | 401                                   |           |
+| header-is | Content-type                          | image/png |
+| GET       | /data/groups/%%group_id%%/small_photo |           |
+| code-is   | 401                                   |           |
+| header-is | Content-type                          | image/png |
+
+| *Comment* | Unauthorized, POST              |                           |             |                          |
+| POST-file | /data/groups/%%group_id%%/photo | method=file               | photo-local | t/widget/creepy_goat.jpg |
+| code-is   | 403                             |                           |             |                          |
+| header-is | Content-type                    | text/plain; charset=UTF-8 |             |                          |
+| body-like | must be a group admin           |                           |             |                          |
+|           |                                 |                           |             |                          |
+
+| *Comment* | No Group, GET              |           |
+| GET       | /data/groups/0/photo       |           |
+| code-is   | 404                        |           |
+| header-is | Content-type               | image/png |
+| GET       | /data/groups/0/small_photo |           |
+| code-is   | 404                        |           |
+| header-is | Content-type               | image/png |
+
+| *Comment* | No Group, POST       |                           |             |                          |
+| POST-file | /data/groups/0/photo | method=file               | photo-local | t/widget/creepy_goat.jpg |
+| code-is   | 404                  |                           |             |                          |
+| header-is | Content-type         | text/plain; charset=UTF-8 |             |                          |
+| body-like | group does not exist |                           |             |                          |
+
+# User is in Group as Member
+
+| *Comment*      | Member of Group, GET                  |           |
+| http-user-pass | %%member%%                            | password  |
+| GET            | /data/groups/%%group_id%%/photo       |           |
+| code-is        | 200                                   |           |
+| header-is      | Content-type                          | image/png |
+| GET            | /data/groups/%%group_id%%/small_photo |           |
+| code-is        | 200                                   |           |
+| header-is      | Content-type                          | image/png |
+
+| *Comment* | Member of Group, POST           |                           |             |                          |
+| POST-file | /data/groups/%%group_id%%/photo | method=file               | photo-local | t/widget/creepy_goat.jpg |
+| code-is   | 403                             |                           |             |                          |
+| header-is | Content-type                    | text/plain; charset=UTF-8 |             |                          |
+| body-like | must be a group admin           |                           |             |                          |
+
+# User is in Group as Admin
+
+| *Comment*      | Admin of Group, GET                   |           |
+| http-user-pass | %%admin%%                             | password  |
+| GET            | /data/groups/%%group_id%%/photo       |           |
+| code-is        | 200                                   |           |
+| header-is      | Content-type                          | image/png |
+| GET            | /data/groups/%%group_id%%/small_photo |           |
+| code-is        | 200                                   |           |
+| header-is      | Content-type                          | image/png |
+
+| *Comment* | Admin of Group, POST            |                           |             |                          |
+| POST-file | /data/groups/%%group_id%%/photo | method=file               | photo-local | t/widget/creepy_goat.jpg |
+| code-is   | 201                             |                           |             |                          |
+| header-is | Content-type                    | text/plain; charset=UTF-8 |             |                          |
+| body-like | photo uploaded                  |                           |             |                          |
+
+| *Comment* | Bad Args, POST                     |                           |                 |                          |
+| POST-file | /data/groups/%%group_id%%/photo    | method=file               | not-photo-local | t/widget/creepy_goat.jpg |
+| code-is   | 400                                |                           |                 |                          |
+| header-is | Content-type                       | text/plain; charset=UTF-8 |                 |                          |
+| body-like | photo-local is a required argument |                           |                 |                          |

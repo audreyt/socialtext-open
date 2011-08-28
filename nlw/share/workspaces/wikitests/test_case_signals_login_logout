@@ -1,0 +1,67 @@
+| *Comment* | Test Case: Signals Login/Logout expects to be included in a testset |  |
+
+| set | inout_user | inout_%%start_time%%@ken.socialtext.net |
+| st-admin | create-user --email %%inout_user%% --password %%password%% | created |
+
+| *Comment* | Test Case: Signals Login/Logout Login disable LDAP |  |
+| include | [Disable LDAP] |  |
+| st-admin | disable-plugin --p dashboard --account "%%defaultaccount%%" |  |
+
+| *Comment* | Test Case: Signals Login/Logout Login redirect |  |
+| open_ok | /nlw/submit/logout |  |
+| wait_for_element_visible_ok | username | 30000 |
+| wait_for_element_visible_ok | password | 30000 |
+| text_like | Log in to Socialtext |  |
+
+| *Comment* | Test Case: Signals Login/Logout Empty email address: |  |
+| type_ok | username |  |
+| type_ok | password | monkey |
+| click_and_wait | login_btn |  |
+| st-message | You must provide a valid email address. |  |
+
+| *Comment* | Test Case: Signals Login/Logout Malformed email address: |  |
+| type_ok | username | mr.poopypants |
+| type_ok | password | monkey |
+| click_and_wait | login_btn |  |
+| st-message | "mr.poopypants" is not a valid email address. Please use your email address to log in. |  |
+
+| *Comment* | Test Case: Signals Login/Logout Unregistered email address: |  |
+| type_ok | username | mr.poopypants@socialtext.net |
+| type_ok | password | monkey |
+| click_and_wait | login_btn |  |
+| st-message | Wrong email address or password - please try again |  |
+
+| *Comment* | Test Case: Signals Login/Logout Registered addr, wrong password |  |
+| st-login | %%username%% | wrong_password |
+| st-message | Wrong email address or password - please try again |  |
+
+| *Comment* | Test Case: Signals Login/Logout Forgotten password (bad user): |  |
+| click_and_wait | link=I don't know my password. |  |
+| text_like | Socialtext password help |  |
+| type_ok | username | mr.poopypants |
+| click_and_wait | //input[@value='Submit'] |  |
+| st-message | mr.poopypants is not registered as a user. Try a different entry? |  |
+
+| *Comment* | Test Case: Signals Login/Logout Forgotten password (good user): |  |
+| text_like | Socialtext password help |  |
+| type_ok | username | %%inout_user%% |
+| click_and_wait | //input[@value='Submit'] |  |
+| st-message | An email with instructions on changing your password has been sent to %%inout_user%% |  |
+| st-force-confirmation | %%inout_user%% | %%password%% |
+
+| open_ok | / |  |
+| text_like | Log in to Socialtext |  |
+
+| *Comment* | Test Case: Signals Login/Logout successful login: |  |
+| type_ok | username | %%inout_user%% |
+| type_ok | password | %%password%% |
+| click_and_wait | login_btn |  |
+| wait_for_element_visible_ok | link=People | 30000 |
+| click_and_wait | link=People |  |
+| text_like | All People |  |
+
+| *Comment* | Test case: Signals Login/Logout TEARDOWN |  |
+| include | [Enable LDAP] |  |
+| st-admin | enable-plugin --p dashboard --account "%%defaultaccount%%" |  |
+
+| *Comment* | Test case: Signals Login/Logout COMPLETED |  |

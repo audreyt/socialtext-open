@@ -1,0 +1,32 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::Schema;
+use Socialtext::System qw/shell_run/;
+
+my $schema = Socialtext::Schema->new;
+my $schema_file = $schema->_schema_filename;
+$schema_file =~ s#.+/(etc/socialtext.+)#$1#;
+my $schema_name = $schema->schema_name;
+my %connect_params = $schema->connect_params();
+
+# Allow specifying an output file instead of overriding the schema file
+$schema_file = shift if @ARGV;
+
+# Re-create the base schema
+$ENV{PGDATABASE} = $connect_params{db_name};
+shell_run("pglist public "
+    . " | grep -v 'COMMENT ON ' "
+    . " | egrep -v 'STARTS? WITH 1' > $schema_file");
+
+print "Appending the updated schema version to the schema file.\n";
+my $version = $schema->current_version;
+open(my $fh, ">>$schema_file") or die;
+print $fh <<EOT;
+DELETE FROM "System" WHERE field = '$schema_name-schema-version';
+INSERT INTO "System" VALUES ('$schema_name-schema-version', '$version');
+EOT
+close $fh or die "Can't write $schema_file: $!";

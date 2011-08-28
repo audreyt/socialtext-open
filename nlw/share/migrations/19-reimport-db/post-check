@@ -1,0 +1,13 @@
+#!/bin/bash
+
+MIGDIR=`dirname $0`
+DIFF=`$MIGDIR/check-schema`
+
+if [ -z "$DIFF" ]; then
+    echo "$PGDATABASE schema is correct.  Migration successful."
+    exit 0
+fi
+
+echo "ERROR ERROR ERROR: We have detected a problem with your database. To protect your data, we have halted the migration. Please contact Socialtext at support@socialtext.com or via your Priority Support contact immediately."
+
+exit -1

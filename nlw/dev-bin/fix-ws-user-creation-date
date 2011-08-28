@@ -1,0 +1,106 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+
+use DateTime;
+use DateTime::Format::Pg;
+use Fcntl qw( O_RDONLY );
+use Getopt::Long;
+use MLDBM;
+use Socialtext::SQL qw/get_dbh/;
+use Socialtext::User;
+
+
+my %opts = (
+    root => '/var/www/socialtext',
+);
+
+GetOptions(
+    'root:s'  => \$opts{root},
+    'help'    => \$opts{help},
+    'verbose' => \$opts{verbose},
+) or die;
+
+if ( $opts{help} ) {
+    print <<'.' ;
+USAGE: fix-ws-user-creation-date [ OPTIONS ]
+
+    This script imports workspace, user, and account data into the DBMS
+
+OPTIONS
+
+    --root=/path/to/data        Specify directory where root of data directory is.
+    --verbose                   Produce extra noise.
+
+.
+    exit;
+}
+
+$| = 1 if $opts{verbose};
+
+my $DefaultDate =
+    DateTime->new( year => 2003, time_zone => 'America/Los_Angeles' );
+
+chdir $opts{root} or die "Cannot chdir to $opts{root}: $!";
+
+update_workspaces();
+update_users();
+
+
+sub update_workspaces {
+    my %workspaces_db;
+    {
+        local $MLDBM::UseDB = 'DB_File';
+        tie %workspaces_db, 'MLDBM', 'workspaces.db', O_RDONLY, 0644
+            or die "Cannot tie to workspaces.db: $!";
+    }
+
+    my @workspace_names = 
+        grep { ! $workspaces_db{$_}{create_time} } keys %workspaces_db;
+
+    my $dbh = get_dbh();
+    my $sql = 'UPDATE "Workspace" SET creation_datetime = ? WHERE name IN (';
+    $sql .= join ', ', ('?') x @workspace_names;
+    $sql .= ')';
+
+    if ( $opts{verbose} ) {
+        my $c = scalar @workspace_names;
+        print "Setting $c workspaces' creation_datetime to 2003-01-01\n";
+    }
+
+    my $date = DateTime::Format::Pg->format_timestamptz($DefaultDate);
+    $dbh->do( $sql, {}, $date, @workspace_names );
+}
+
+sub update_users {
+    my %users_db;
+    {
+        local $MLDBM::UseDB = 'DB_File';
+        tie %users_db, 'MLDBM', 'users.db', O_RDONLY, 0644
+            or die "Cannot tie to users.db: $!";
+    }
+
+    for my $email ( keys %users_db )
+    {
+        my $user = Socialtext::User->new( email_address => $email )
+            or next;
+
+        my $date =
+            $users_db{$email}{create_time}
+            ? DateTime->from_epoch( epoch => $users_db{$email}{create_time} )
+            : $DefaultDate;
+
+        print "Updating creation_datetime for $email to ", $date->ymd, "\n";
+
+        $user->update_metadata(
+            creation_datetime =>
+            DateTime::Format::Pg->format_timestamptz($date),
+        );
+    }
+}
+

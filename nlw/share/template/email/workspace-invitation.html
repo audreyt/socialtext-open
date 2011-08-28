@@ -1,0 +1,13 @@
+[%# @COPYRIGHT@ -%]
+[% SET escaped_str = workspace.title | html %]
+<html>
+<head>
+ <title>[% loc('email.invite-to-join=container', escaped_str) %]</title>
+</head>
+
+<body>
+
+[% PROCESS $workspace_invitation_body %]
+
+</body>
+</html>

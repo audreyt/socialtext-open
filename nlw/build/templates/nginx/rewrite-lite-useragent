@@ -1,0 +1,48 @@
+# Redirect mobile browsers off to the miki/m version of the page
+
+# rewrite: /:ws/?args => /m/pages/:ws/?args
+[% IF !config.disable_mobile_redirect %]
+[% mobile_agents = ['BlackBerry', '^Nokia', 'Palm', 'SymbianOS', 'Windows CE',
+                    '^hiptop', 'iPhone', 'Android'] %]
+[% FOR ua IN mobile_agents %]
+  if ($http_user_agent ~ "[% ua %]") {
+    rewrite ^/+$ /m break;
+  }
+  set $redirect_page 1;
+  if (-e /usr/share/nlw/disable_mobile) {
+    set $redirect_page 0;
+  }
+  if ($uri ~ ^/(nlw|challenge|data|feed|js|m|settings|st)(/|$)) {
+    set $redirect_page 0;
+  }
+  # nginx-specific cache directories
+  if ($uri ~ ^/(avatar|widget_thumbnail|account_logo|wafl|group-photo|webplugin|widget_thumbnail)(/|$)) {
+    set $redirect_page 0;
+  }
+  if ($uri ~ ^/(index\.cgi|challenge(?:[\/\?]|$))) {
+    set $redirect_page 0;
+  }
+  set $ua_redirect "$http_user_agent-$redirect_page";
+  
+  if ($ua_redirect ~ "[% ua %].*-1$") {
+    # rewrite: /:ws/?args => /m/pages/:ws/?args
+    rewrite ^/+([^/]+)/*$ /m/page/$1/$args? redirect;
+    # rewrite: /:ws/index.cgi?:page => /m/pages/:ws/:page
+    rewrite ^/+([^/]+)/+index.cgi$ /m/page/$1/$args? redirect;
+    # rewrite: /:ws/:page => /m/pages/:ws/:page
+    rewrite ^/+([^/]+)/+([^/]+)$ /m/page/$1/$2 redirect;
+  }
+
+  set $is_gecko 0;
+  if ($http_user_agent ~ "Gecko") {
+      set $is_gecko 1;
+  }
+  set $ua_redirect "$http_user_agent-$is_gecko-$request_method";
+
+  # rewrite: /(st|m)/signals/:id?args /m/signals/:id?args
+  if ($ua_redirect ~ "[% ua %].*-1-GET$") {
+    rewrite ^/(st|m)/signals(/[^/]+)?$ /st/m/signals$2 redirect;
+  }
+
+[% END %]
+[% END %]

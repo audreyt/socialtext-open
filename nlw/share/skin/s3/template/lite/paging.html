@@ -1,0 +1,22 @@
+[% IF base_uri.match('\?'); char = '&'; ELSE; char = '?'; END %]
+<div class="paging" data-role="controlgroup" data-type="horizontal" style="text-align: center">
+    [% DEFAULT pagenum = 0 %]
+    [% IF pagenum > 1 %]
+    <a id="mobile-paging-first" data-icon="back" data-role="button" href="[% base_uri %]"><span class="nav-hint">&lt;&lt;&nbsp;</span>[% loc('lite.first-page') %]</a>
+    [% ELSIF pagenum > 0 %]
+    <a id="mobile-paging-first" data-icon="back" data-role="button" href="[% base_uri %]"><span class="nav-hint">&lt;&lt;&nbsp;</span>[% loc('lite.first-page') %]</a>
+    [% ELSE %]
+    <span class="nav-hint">&lt;&lt;&nbsp;[% loc('lite.first-page') %]</span>
+    [% END %]
+
+    [% IF pagenum > 0 %]
+    <a id="mobile-paging-previous" data-icon="arrow-l" data-role="button" href="[% base_uri %][% char %]page=[% pagenum - 1 %]"><span class="nav-hint">&lt;&nbsp;</span>[% loc('lite.previous-page') %]</a>
+    [% ELSE %]
+    <span class="nav-hint">&lt;&nbsp;[% loc('lite.previous-page') %]</span>
+    [% END %]
+    [% IF more %]
+    <a id="mobile-paging-next" data-icon="arrow-r" data-role="button" href="[% base_uri %][% char %]page=[% pagenum + 1 %]">[% loc('lite.next-page') %]<span class="nav-hint">&nbsp;&gt;</span></a>
+    [% ELSE %]
+    <span class="nav-hint">[% loc('lite.next-page') %]&nbsp;&gt;</span>
+    [% END %]
+</div>

@@ -1,0 +1,48 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+use Socialtext::SQL qw(sql_singlevalue);
+use Socialtext::Jobs;
+
+my $paths = sql_singlevalue(q{
+    SELECT count(*)
+      FROM user_set_path
+     WHERE from_set_id IN (
+        SELECT user_id
+          FROM "UserMetadata"
+         WHERE is_system_created
+     )
+});
+
+my $fail = 0;
+
+if ($paths) {
+    $fail = 1;
+    print "FAIL: Some system users didn't get their memberships removed\n";
+}
+
+my $admins = sql_singlevalue(q{
+    SELECT count(*)
+      FROM "UserMetadata"
+     WHERE is_system_created
+       AND (is_business_admin OR is_technical_admin)
+});
+
+if ($admins) {
+    $fail = 1;
+    print "FAIL: Some system users are still system/accounts admins\n";
+}
+
+Socialtext::Jobs->Unlimit_list_jobs;
+my @jobs = Socialtext::Jobs->list_jobs(
+    funcname => 'Socialtext::Job::PersonIndex');
+if (!@jobs) {
+    $fail = 1;
+    print "FAIL: No user re-indexing jobs were scheduled\n";
+}
+
+print "Migration successful, system users permissions updated.\n" unless $fail;
+exit($fail ? 1 : 0);

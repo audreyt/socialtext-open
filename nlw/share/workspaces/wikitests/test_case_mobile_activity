@@ -1,0 +1,102 @@
+| *Comment* | Test Case: Mobile Activity |  |
+
+| set | ma | ma-%%start_time%% |
+| set | mau | ma-%%start_time%%@ken.socialtext.net |
+| set | maus | ma %%start_time%% |
+
+| *Comment* | Test Case: Mobile Activity create WS, add member |  |
+| st-admin | create-user --e %%mau%% --p %%password%% --account "%%defaultaccount%%" | was created |
+| create_workspace | %%ma%% | %%defaultaccount%% |
+| add_member | %%username%% | %%ma%% |
+| add_member | %%mau%% | %%ma%% |
+
+| *Comment* | Test Case: Mobile Activity. CANNOT USE update-page BECAUSE NO EVENTS ARE CREATED |  |
+
+| *Comment* | Test Case: Mobile Activity. %%username%% starts a conversation in %%ma%% |  |
+| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0000 |
+
+| *Comment* | Test Case: Mobile Activity. %%mau%% creates 11 pages in %%ma%% |  |
+
+| st-logoutin | %%mau%% | %%password%% |  |
+
+| *Comment* | Test Case: Mobile Activity. CANNOT USE update-page BECAUSE NO EVENTS ARE CREATED |  |
+
+| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0001 |
+| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0002 |
+| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0003 |
+| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0004 |
+| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0005 |
+| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0006 |
+| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0007 |
+| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0008 |
+| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0009 |
+| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0010 |
+| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0011 |
+
+| *Comment* | Test Case: Mobile Activity. %%mau%% continues the conversation in %%ma%% |  |
+| open_ok | /%%ma%%?Mobile Activity %%start_time%% 0000 |  |
+| wait_for_element_visible_ok | st-edit-button-link | 30000 |
+| click_ok | st-edit-button-link |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| type_ok | wikiwyg_wikitext_textarea | %%mau%% continues the conversation in %%ma%% |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| st-page-save |  |  |
+| wait_for_element_visible_ok | st-edit-button-link | 60000 |
+
+| st-logoutin |  |  |
+
+| *Comment* | Test Case: Mobile Activity. Word but not Link |  |
+| open_ok | /m/activities |  |
+| wait_for_text_present_ok | All | 30000 |
+| wait_for_text_present_ok | My Conversations | 3000 |
+| wait_for_text_present_ok | People I follow | 3000 |
+
+| *Comment* | Test Case: Mobile Activity. Check All activity |  |
+| wait_for_element_present_ok | link=All | 3000 |
+| click_and_wait | link=All |  |
+| wait_for_element_visible_ok | mobile-paging-next | 30000 |
+| click_and_wait | mobile-paging-next |  |
+| wait_for_element_visible_ok | link=Mobile Activity %%start_time%% 0001 | 3000 |
+| wait_for_element_visible_ok | mobile-paging-previous | 3000 |
+| click_and_wait | mobile-paging-previous |  |
+| wait_for_element_visible_ok | link=Mobile Activity %%start_time%% 0011 | 3000 |
+| wait_for_element_visible_ok | link=Mobile Activity %%start_time%% 0005 | 3000 |
+| click_and_wait | mobile-paging-next |  |
+| wait_for_element_not_present_ok | link=Mobile Activity %%start_time%% 0011 | 3000 |
+| wait_for_element_not_present_ok | link=Mobile Activity %%start_time%% 0005 | 3000 |
+| click_and_wait | mobile-paging-previous |  |
+| wait_for_element_visible_ok | link=Mobile Activity %%start_time%% 0010 | 3000 |
+| wait_for_element_visible_ok | link=Mobile Activity %%start_time%% 0004 | 3000 |
+
+| *Comment* | Test Case: Mobile Activity. Check My Conversations activity |  |
+| click_and_wait | link=My Conversations |  |
+| wait_for_element_visible_ok | link=Mobile Activity %%start_time%% 0000 | 3000 |
+
+| *Comment* | Test Case: Mobile Activity. Check People I follow activity |  |
+| click_and_wait | link=%%maus%% |  |
+| wait_for_element_visible_ok | link=Follow | 3000 |
+| click_and_wait | link=Follow |  |
+| wait_for_element_visible_ok | link=Stop following | 3000 |
+| click_and_wait | link=Activity |  |
+| click_and_wait | link=People I follow |  |
+| wait_for_element_visible_ok | link=%%maus%% | 3000 |
+| text_like | qr/%%maus%%.+edited.+Mobile Activity %%start_time%% 0000.+in.+%%ma%%/ism |  |
+| click_and_wait | mobile-paging-next |  |
+| text_like | qr/%%maus%%.+edited.+Mobile Activity %%start_time%% 0001.+in.+%%ma%%/ism |  |
+
+| *Comment* | Test Case: Mobile Activity. Stop following and verify |  |
+| click_and_wait | link=%%maus%% |  |
+| wait_for_element_visible_ok | link=Stop following | 3000 |
+| click_and_wait | link=Stop following |  |
+| wait_for_element_visible_ok | link=Follow | 3000 |
+| click_and_wait | link=Activity |  |
+| click_and_wait | link=People I follow |  |
+| wait_for_element_not_present_ok | link=%%maus%% | 3000 |
+| text_unlike | //body | qr/%%maus%%.+edited.+Mobile Activity %%start_time%% 0000.+in.+%%ma%%/ism |
+
+| *Comment* | Test Case: Mobile Activity Teardown |  |
+| st-admin | delete-workspace --w %%ma%% --no-export | has been deleted |
+
+| *Comment* | Test Case: Mobile Activity COMPLETED |  |

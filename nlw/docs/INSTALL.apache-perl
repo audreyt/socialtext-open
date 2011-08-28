@@ -1,0 +1,160 @@
+INSTALL.apache-perl -- How to install Apache 1 + mod_perl
+
+@COPYRIGHT@
+
+Some Linux distributions do not have packages for Apache and mod_perl.
+Here are the directions to build an apache-perl for running Socialtext.
+
+== Download Apache
+
+As of this writing, the latest/greatest is 1.3.37.
+
+    http://httpd.apache.org/download.cgi
+
+== Download mod_perl
+
+As of this writing, the latest/greatest is 1.29.  Download it from:
+
+    http://perl.apache.org/download/
+
+The direct download link is:
+
+    http://perl.apache.org/dist/mod_perl-1.0-current.tar.gz
+
+== Unpack Apache and mod_perl
+
+Unpack the tarballs in parallel directories. In this example I'll use
+/usr/src.
+
+    $ cd /usr/src
+    $ tar zxvf apache_1.3.37.tar.gz
+    $ tar zxvf mod_perl-1.0-current.tar.gz
+
+
+== Configure Apache
+
+Run the configure program on the Apache directory, but don't run make yet.
+The options below include as few options as possible into the Apache.
+
+    $ cd apache_1.3.37
+    $ ./configure \
+        --prefix=/usr/local/apache-perl \
+        --target=apache-perl \
+        --with-perl=/usr/bin/perl \
+        --libexecdir=/usr/lib/apache-perl \
+        --logfiledir=/var/log/apache-perl \
+        --bindir=/usr/bin \
+        --sbindir=/usr/sbin \
+        --sysconfdir=/etc/apache-perl \
+        \
+        --activate-module=src/modules/perl/libperl.a \
+        \
+        --disable-module=auth_db \
+        --disable-module=autoindex \
+        --disable-module=cgi \
+        \
+        --enable-module=expires \
+        --enable-module=rewrite \
+        --enable-module=headers \
+        \
+        --enable-shared=access \
+        --enable-shared=alias \
+        --enable-shared=auth \
+        --enable-shared=dir \
+        --enable-shared=expires \
+        --enable-shared=headers \
+        --enable-shared=log_config \
+        --enable-shared=mime \
+        --enable-shared=mime_magic \
+        --enable-shared=negotiation \
+        --enable-shared=rewrite \
+        --enable-shared=setenvif \
+        --enable-shared=status \
+
+Configure will generate a lot of output, but don't run make yet.
+
+== Configure & build mod_perl
+
+This builds and installs mod_perl both in the Perl lib tree and in the Apache build tree.
+
+    $ cd ../mod_perl-1.29
+    $ perl Makefile.PL \
+        APACHE_SRC=../apache_1.3.37/src \
+        NO_HTTPD=1 \
+        USE_APACI=1 \
+        PREP_HTTPD=1 \
+        EVERYTHING=1 \
+
+    ... lots of output ...
+
+    $ make
+    $ make test # or just skip it!
+    $ sudo make install
+
+== Reconfigure and build Apache
+
+Now that mod_perl has been built and installed, and put its built module
+in the Apache directory, rerun the configure, make and install.
+
+    $ cd ../apache_1.3.37
+    $ # redo configure from two steps back
+
+Again, you'll get tons of output.  Now that that's done, run make and
+install it.
+
+    $ make
+    $ sudo make install
+
+== Build Apache::Request
+
+The Apache::Request module comes with a binary module that is notoriously
+difficult to get to build correctly under the CPAN shell.  You might as
+well build it by hand here while you're at it.
+
+To do this build, you have to have gcc's c++ installed.
+
+Get the tarball from:
+
+    http://search.cpan.org/dist/libapreq/
+
+The latest version as of this writing is:
+
+    http://search.cpan.org/CPAN/authors/id/S/ST/STAS/libapreq-1.33.tar.gz
+
+Download it and unpack it into /usr/src:
+
+    $ cd /usr/src
+    $ wget ......tar.gz
+    $ tar zxvf .....tar.gz
+    $ cd libapreq-1.33
+    $ ./configure
+    $ make
+
+If make can't find the location of the Apache header files (httpd.h etc),
+you may need to rerun configure with the location of the header files:
+
+    $ ./configure CPPFLAGS=-I/usr/local/apache-perl/include
+    $ make
+
+Finally, install it.
+
+    $ sudo make install
+
+
+== Create www-data user
+
+All of Socialtext's scripts are based on having the apache-perl run as
+the user "www-data".  If this user doesn't exist, create it.  If possible,
+give it a UID lower than 500, or however your distro numbers non-human
+accounts.
+
+== Make apache-perl automatically start
+
+The important thing to remember is that apache-perl needs to run
+all the time, as a service.  So does your Apache2 proxy if you're
+using the dual-Apache proxy setup.
+
+== You're done
+
+You now have an Apache 1.3 installation with mod_perl built in, ready
+for running Socialtext.

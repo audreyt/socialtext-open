@@ -1,0 +1,34 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Try::Tiny;
+use Socialtext::JobCreator;
+use Socialtext::SQL qw/sql_execute/;
+
+foreach_deleted_user(sub{ Socialtext::JobCreator->index_person(shift); });
+
+exit;
+################################################################################
+
+sub foreach_deleted_user {
+    my $coderef = shift;
+
+    my $sth = sql_execute(qq{SELECT user_id FROM all_users WHERE is_deleted});
+    my $rows = $sth->rows;
+    return unless $rows;
+
+    my $inc = 0;
+    my $created = 0;
+    print "Creating index jobs for $rows deleted users...\n";
+    while (my $row = $sth->fetchrow_hashref) {
+        print "... $inc jobs created... \n" if $inc && $inc % 500 == 0;
+
+        my $id = $row->{user_id};
+        try { $coderef->($id); $created++}
+        catch { warn "counldn't schedule job for user_id $id\n"; };
+
+        $inc++;
+    }
+    print "... Done, $created jobs created.\n";
+}

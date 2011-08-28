@@ -1,0 +1,44 @@
+| *Comment* | Test Case: Activities Widget Permalinks |  |
+
+* Fixture: SocialWidgets
+
+| set | acct | permalinkacct%%start_time%% |
+| set | user | permalink-%%start_time%%@matt.socialtext.net |
+| st-admin | create-account --name %%acct%% | was created |
+| st-admin | create-user --email %%user%% --password %%password%% --account %%acct%% | was created |
+| st-logoutin | %%user%% | %%password%% |
+
+| *Comment* | Test Case: Activities Widget: Send a signal ... |  |
+| http-user-pass | %%user%% | %%password%% |
+| post-signal | Picture yourself on a boat on a river %%start_time%% |  |
+| st_process_jobs | SignalIndex |  |
+
+| *Comment* | Test Case: Activities Widget: Find the link for that signal |  |
+| open_ok | /st/signals |  |
+| wait_for_text_present_ok | Signals | 30000 |
+| st-name-widget | 1 | outer_widget |
+| st-select-widget-frame | outer_widget |  |
+| GET-json | /data/events |  |
+| json-parse |  |  |
+
+json-path-set | signal_hash | $[0].hash |
+
+| GET-json | /data/events |  |
+| json-parse |  |  |
+| set-from-content | signal_hash | qr/"hash":"(\S+)","topics":/ |
+| wait_for_element_visible_ok | //a[contains(@href,'/st/signals/%%signal_hash%%')] | 30000 |
+
+| wait_for_element_visible_ok | //a[contains(@href,'/st/signals/%%signal_hash%%')] | 30000 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Activities Widget: Go to the pop-up page |  |
+| open_ok | /st/signals/%%signal_hash%% |  |
+| wait_for_text_present_ok | Signals - Permalink | 30000 |
+| st-name-widget | 1 | outer_widget |
+| st_verify_text_in_activities_widget | outer_widget | Picture yourself on a boat on a river %%start_time%% |
+
+| *Comment* | Test Case: Activities Widget: Send a reply |  |
+
+| *Comment* | TODO: write st-send-signal-via-reply-widget and st-verify-text-in-reply-widget |  |
+
+| *Comment* | Test Case: Activities Widget Permalinks COMPLETED |  |

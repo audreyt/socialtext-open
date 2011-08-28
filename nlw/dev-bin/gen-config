@@ -1,0 +1,1878 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+use FindBin;
+
+BEGIN {
+    return if __FILE__ =~ /share.*debian/;  # SKIP this block if installed
+
+    # We have to load the ConfigureValues from the tree that we're building.
+    # If we don't explicitly require this, BEFORE loading Socialtext::Build,
+    # Socialtext::Build might load an already-installed version from
+    # /usr/lib/wherever, which would give us old config values.
+    eval { require "$FindBin::Bin/../lib/Socialtext/Build/ConfigureValues.pm" };
+    $@ && die "$@\ngen-config cannot run until Socialtext has been configured.\n";
+}
+
+use lib "$FindBin::Bin/../lib";
+
+use Cwd;
+use File::Basename ();
+use File::Copy ();
+use File::Path ();
+use File::Spec;
+use File::Slurp ();
+use List::MoreUtils qw(firstval);
+use Getopt::Long;
+use Socialtext::AppConfig;
+use Socialtext::HTTP::Ports;
+use Socialtext::Build qw(get_prefixed_dir get_build_setting);
+use Socialtext::Hostname;
+use Socialtext::Paths;
+use Socialtext::System qw(shell_run);
+use Template ();
+use User::pwent;
+use YAML qw( LoadFile );
+
+my %opts;
+my %opt_specs;
+
+# allow for command to be run from -outside- of the current branch
+#
+# NOTE: it *must* be a relative path, otherwise TT2 chokes on it.
+my $inc = 'build';
+foreach my $maybe (
+        $ENV{ST_CURRENT} ? "$ENV{ST_CURRENT}/nlw/build" : (), 
+        $ENV{ST_SRC_BASE} ? "$ENV{ST_SRC_BASE}/current/nlw/build" : (),
+        File::Spec->catdir( File::Basename::dirname($0), File::Spec->updir, 'build' ),
+        ) {
+    if (-d $maybe) {
+        $inc = File::Spec->abs2rel($maybe);
+        die "unable to locate 'build' directory!" unless -d $inc;
+        last;
+    }
+}
+
+# These passthru options are options from the original call to
+# configure that may be overridden in the call to gen-config.
+
+my %passthru = (
+    'apache-status'     => 's',
+    'dev'               => 'i',
+);
+
+while ( my ($keyword,$type) = each %passthru ) {
+    $opts{$keyword} = get_build_setting($keyword);
+    $opt_specs{"$keyword=$type"} = \$opts{$keyword};
+}
+
+our $command_line = "$0 @ARGV";
+GetOptions(
+    %opt_specs,
+    'verbose'          => \$opts{verbose},
+    'sitewide'         => \$opts{sitewide},
+    'testing'          => \$opts{testing},
+    'root=s'           => \$opts{root},
+    'production'       => \$opts{production},
+    'appliance'        => \$opts{appliance},
+    'stdout'           => \$opts{stdout},
+    'quiet'            => \$opts{quiet},
+    'target=s'         => \$opts{target},
+    'hostname=s'       => \$opts{hostname},
+    'force-ssl-login'  => \$opts{'force-ssl-login'},
+    'help'             => sub { help() },
+) or die "Try --help for help\n"; # If options are invalid, show help and exit
+
+my $hostname = $opts{hostname} || Socialtext::Hostname::fqdn;
+my $user     = getpwuid($<);
+
+my $is_dev_install
+    = !( $opts{sitewide} || $opts{appliance} || $opts{production} );
+
+if ( $opts{dev} ) {
+    $opts{root} = File::Spec->catdir( $user->dir, '.nlw' );
+}
+
+# production _is_ different from staging
+my $is_production = $opts{production} || ($hostname eq 'www.socialtext.net');
+my $is_appliance  = $ENV{IS_APPLIANCE} || $opts{appliance}  || (-d '/usr/local/socialtext/appliance');
+
+my $app_prefix;
+if ($is_dev_install) {
+    $app_prefix = 'nlw-';
+} else {
+    $app_prefix = '';
+}
+
+main();
+
+sub main {
+    my %dirs;
+
+    if ( $opts{root} ) {
+        %dirs = local_dirs( $opts{root} );
+    }
+    else {
+        help( 'Not run with --sitewide, and no --root dir parameter given.' )
+            unless $opts{sitewide} || $opts{stdout};
+        %dirs = sitewide_dirs();
+    }
+
+    my @files;
+
+    # Format for each entry is
+    # [
+    #     source component =>  destination,
+    #     config parameters
+    #     whether or not to overwrite existing
+    # ]
+    if ( is_target_for( 'apache', 'nginx' ) ) {
+        my $params = nginx_params( \%dirs );
+        my $socialtext_conf_d = "$dirs{nginx_etc}/socialtext-conf.d";
+        push @files,
+            [
+                'nginx/base.nginx'
+                    => "$dirs{nginx_etc}/${app_prefix}nginx-live.conf",
+                $params, 'overwrite',
+            ],
+            [
+                'nginx/under-resourced.nginx'
+                    => "$dirs{nginx_etc}/${app_prefix}nginx-under-resourced.conf",
+                $params, 'overwrite',
+            ],
+            [
+                'nginx/unconfigured.nginx'
+                    => "$dirs{nginx_etc}/${app_prefix}nginx-unconfigured.conf",
+                $params, 'overwrite',
+            ],
+            [
+                'nginx/nlw.nginx'
+                    => "$dirs{nginx_etc}/auto-generated.d/nlw.conf",
+                $params, 'overwrite',
+            ],
+            [
+                'nginx/proxy.nginx' => "$dirs{nginx_etc}/proxy.conf",
+                $params, 'overwrite',
+            ],
+            [
+                'nginx/mime.nginx' => "$dirs{nginx_etc}/mime.conf",
+                $params, 'overwrite',
+            ],
+            [
+                'nginx/rewrite-lite-useragent'
+                    => "$socialtext_conf_d/rewrite-lite-useragent",
+                $params, 'overwrite',
+            ],
+            [
+                'nginx/empty.conf'
+                    => "$dirs{nginx_etc}/conf.d/socialtext-empty.conf",
+                $params, 0,
+            ],
+            [
+                'nginx/empty.conf'
+                    => "$socialtext_conf_d/include-empty.conf",
+                $params, 0,
+            ];
+
+            my $template_root = _get_template_root();
+            my $conf_d = "$template_root/nginx/conf.d";
+            for my $include (glob("$conf_d/*.tt2")) {
+                (my $file = $include) =~ s{^$conf_d/(.*)\.tt2$}{$1};
+                push @files, [
+                    "nginx/conf.d/$file.tt2"
+                        => "$dirs{nginx_etc}/conf.d/$file.conf",
+                    $params, 'overwrite',
+                ]
+            }
+
+            # Symlink nginx-live to nginx
+            my $cfg = "$dirs{nginx_etc}/${app_prefix}nginx.conf";
+            unlink $cfg if -e $cfg;
+            symlink "$dirs{nginx_etc}/${app_prefix}nginx-live.conf", $cfg
+                or die "Cannot symlink nginx-live.conf to $cfg: $!";
+
+
+            # If necessary, create a robots.txt
+            my $docroot = "$dirs{root}/docroot";
+            my $robots = "$docroot/robots.txt";
+            if (!-e $robots) {
+                unless (-d $docroot) {
+                    File::Path::mkpath($docroot)
+                        or die "Can't mkpath $docroot: $!";
+                }
+                open(my $fh, ">$robots") or die "Can't open $robots: $!";
+                print $fh "# Add any robot rules here, this file will not\n"
+                        . "# be overwritten on upgrade.\n";
+                close $fh or die "Can't write $robots: $!";
+            }
+            print "Copying static nginx html\n" unless $opts{quiet};
+            for my $file (qw/under-resourced unconfigured/) {
+                File::Copy::copy("$inc/static/nginx/$file.html"
+                    => "$dirs{root}/docroot/$file.html");
+            }
+    }
+
+    if ( is_target_for('html') ) {
+        my %config = (
+            'server_admin' => get_build_setting('server-admin'),
+            no_genconfig_header => 1,
+        );
+        my $static_dir = _static_dir();
+
+
+        symlink "$static_dir/html/502.standard.html" => "$static_dir/html/502.html"
+           unless ( -e "$static_dir/html/502.standard.html" || -l "$static_dir/html/502.standard.html" );
+    }
+
+    if ( is_target_for( "app" ) ) {
+        if (!$is_dev_install && $opts{appliance}) {
+
+            # This will set up the config for the postgres DB.
+            # but only for appliance builds.
+            my %pg_conf;
+            eval { 
+                require Socialtext::Appliance::Config;
+                my $conf = Socialtext::Appliance::Config->new;
+                %pg_conf = map { $_ => $conf->value($_) }
+                           grep {/^pg_/} $conf->config_keys_to_save;
+            };
+            die "Unable to load appliance config for postgres: $@" if $@;
+            push @files, [
+                'postgresql/postgresql.conf.tt2',
+                "$dirs{postgresql_base_dir}/postgresql.conf",
+                \%pg_conf,
+                'overwrite'
+            ];
+
+            # Set tmpreaper variables, the only non-default value for now is
+            # tmpreaper_protect_extra, which is added to fix {bz: 3205}.
+            my $tmpreaper_conf = {
+                tmpreaper_time              => '7d',
+                tmpreaper_protect_extra     => 'kinosearch_lockdir',
+                tmpreaper_dirs              => '/tmp/.',
+                tmpreaper_additionaloptions => '',
+            };
+            push @files, [
+                'tmpreaper/tmpreaper.conf.tt2',
+                "$dirs{etc}/tmpreaper.conf",
+                $tmpreaper_conf,
+                'overwrite',
+            ];
+        }
+
+        push @files,
+            [
+            'socialtext/stax/README' => "$dirs{socialtext_etc}/stax/README",
+            { },
+            'overwrite'
+            ],
+            [
+            'socialtext/shortcuts.yaml.tt2' => "$dirs{socialtext_etc}/shortcuts.yaml",
+            { },
+            $is_dev_install ? 'overwrite' : 0
+            ],
+            [
+            'socialtext/event_listeners.yaml.tt2' => "$dirs{socialtext_etc}/event_listeners.yaml",
+            { },
+            $is_dev_install ? 'overwrite' : 0
+            ],
+            [
+            'socialtext/uri_map.yaml.tt2' => "$dirs{socialtext_etc}/uri_map.yaml",
+            {
+                is_dev_install => $is_dev_install
+            },
+            #$is_dev_install ? 'overwrite' : 0
+            1,  # See RT 26836.
+            ],
+            [
+            'socialtext/auth_map.yaml.tt2' => "$dirs{socialtext_etc}/auth_map.yaml",
+            { },
+            $is_dev_install ? 'overwrite' : 0
+            ],
+            [
+            'socialtext/ldap.yaml.tt2' => "$dirs{socialtext_etc}/ldap.yaml",
+            { },
+            $is_dev_install ? 'overwrite' : 0
+            ],
+            [
+            'socialtext/ntlm.yaml.tt2' => "$dirs{socialtext_etc}/ntlm.yaml",
+            { },
+            $is_dev_install ? 'overwrite' : 0
+            ],
+            [
+            'socialtext/opentoken.yaml.tt2' => "$dirs{socialtext_etc}/opentoken.yaml",
+            { },
+            $is_dev_install ? 'overwrite' : 0
+            ],
+            ;
+    }
+    generate_app_config( \%dirs ) if is_target_for("app") && !$opts{stdout};
+    generate_config( @files );
+    copy_static_files( \%dirs )
+        if is_target_for( "ssl", "nginx" );
+}
+
+sub local_dirs {
+    my $root_dir = shift;
+
+    my %dirs = map { ($_, File::Spec->catdir( $root_dir, $_ )) } qw( etc run lock root cache );
+
+    %dirs = (
+        %dirs,
+        socialtext_etc => "$dirs{etc}/socialtext",
+        nginx_etc => "$dirs{etc}/nginx",
+        nginx_log => File::Spec->catfile( $root_dir, 'log', 'nginx' ),
+        nginx_base_dir => "$dirs{etc}/nginx",
+        nlw_psgi_log  => File::Spec->catfile( $root_dir, 'log', 'nlw-psgi' ),
+        ssl_base             => "$dirs{etc}/ssl",
+    );
+    for my $dir ( keys %dirs ) {
+        my $rx = $opts{target} || '.*';
+        $rx =~ s/-/_/g;
+        File::Path::mkpath( $dirs{$dir}, 0, 0755 ) if $dir =~ /$rx/i;
+    }
+    File::Path::mkpath( $dirs{etc}, 0, 0755 ) if is_target_for('app');
+    File::Path::mkpath( $dirs{ssl_base}, 0, 0755 ) if is_target_for('apache', 'nginx');
+
+    return %dirs;
+}
+
+sub sitewide_dirs {
+    return (
+        socialtext_etc       => get_prefixed_dir('confdir'),
+        etc                  => '/etc',
+        nginx_etc          => '/etc/nginx',
+        nginx_log          => '/var/log/nginx',
+        nginx_base_dir     => '/etc/nginx',
+        postgresql_base_dir  => '/etc/postgresql/9.0/main',
+        apache_perl_etc      => get_prefixed_dir('httpd_confdir'),
+        apache_perl_log      => get_prefixed_dir('httpd_logdir'),
+        apache_perl_base_dir => get_prefixed_dir('httpd_confdir'),
+        run                  => get_prefixed_dir('httpd_piddir'),
+        lock                 => get_prefixed_dir('httpd_lockdir'),
+        root                 => get_prefixed_dir('webroot'),
+        ssl_base             => get_prefixed_dir('ssldir'),
+        cache                => get_prefixed_dir('cachedir'),
+    );
+}
+
+sub is_target_for {
+    my @targets = @_;
+    return 1 unless $opts{target};
+    return grep { lc( $opts{target} ) eq $_ } @targets;
+}
+
+sub generate_app_config {
+    my %dirs = %{+shift};
+
+    my $output_file = "$dirs{socialtext_etc}/socialtext.conf";
+
+    my $source_file;
+    for my $file ( $output_file, "/etc/Socialtext/NLW.conf" ) {
+        $source_file = $file if -f $file;
+    }
+    $source_file ||= $output_file;
+
+    my %config = %{nginx_params( \%dirs )};
+
+    if ( $config{is_dev} ) {
+        my $frontend_ports = _frontend_ports();
+        $config{custom_http_port} = $frontend_ports->{http};
+        $config{ssl_port} = $frontend_ports->{https};
+        $config{email_errors_to} =
+            $ENV{NLW_EMAIL_CRASHES_TO_ME}
+          ? $user->name . '@socialtext.com'
+          : 'devnull1@socialtext.com';
+    }
+
+    $config{MAC_secret} = _existing_or_new_secret($source_file);
+
+    my $appconfig =
+        Socialtext::AppConfig->new( file => $source_file, strict => 0 );
+
+    for my $k ( Socialtext::AppConfig->Options() ) {
+        $appconfig->set( $k => $config{$k} ) if exists $config{$k};
+    }
+
+    if ( $opts{hostname} ) {
+        $appconfig->set( email_hostname => $opts{hostname} );
+        $appconfig->set( web_hostname => $opts{hostname} );
+    }
+
+    # Throttle ceqlotron in dev-envs.  The default values tend to spike load
+    # on shared machines.
+    if ($config{is_dev}) {
+        $appconfig->set(ceqlotron_max_concurrency => 1);
+        $appconfig->set(ceqlotron_synchronous     => 0);
+
+        # Help find memory leaks in dev-envs
+        $appconfig->set(ceqlotron_worker_loops => 1000);
+    }
+
+    File::Path::mkpath(
+       File::Basename::dirname($output_file), $opts{verbose}, 0755 );
+
+    $appconfig->write( file => $output_file );
+}
+
+sub _existing_or_new_secret {
+    my $target = shift;
+
+    return "DEVSECRET39284792387409812734" if $is_dev_install;
+
+    my $mac_file =
+        File::Spec->catfile(
+            File::Basename::dirname($target),
+            'MAC.secret',
+        );
+
+    if ( -f $mac_file ) {
+        return File::Slurp::read_file($mac_file);
+    }
+
+    if ( -f $target ) {
+        my $config = Socialtext::AppConfig->new( file => $target, strict => 0 );
+        return $config->MAC_secret() if $config->has_value('MAC_secret');
+    }
+
+    my @words = <DATA>;
+    chomp @words;
+
+    my @secrets;
+    for ( 1..10 ) {
+        push @secrets, $words[ rand @words ] . int(rand(1000));
+    }
+
+    return join ' ', @secrets;
+}
+
+sub _get_template_root {
+    my $template_root =
+        Cwd::abs_path(
+            File::Spec->catdir($inc, 'templates')
+        );
+
+    return $template_root;
+}
+
+sub generate_config {
+    my @files = @_;
+
+    my $template_root = _get_template_root();
+
+    my $tt = Template->new({
+        INCLUDE_PATH    => $template_root,
+        ABSOLUTE        => 1, # Allow absolute paths 
+    }) || die "$Template::ERROR\n";
+
+    while ( my $spec = shift @files ) {
+        my ( $source, $target, $config, $overwrite ) = @$spec;
+        next if -f $target && !$overwrite && !$opts{stdout};
+        _print_file_gen( "$inc/templates$source", $target );
+
+        my $buffer;
+        $tt->process( $source, {
+            config => $config,
+            ENV    => \%ENV,
+        }, \$buffer ) or die $Template::ERROR;
+
+        if ($opts{stdout}) {
+            print '#' x 78, "\n";
+            print "$target\n";
+            print "\$ $command_line\n";
+            print '#' x 78, "\n";
+            print $buffer;
+        }
+        else {
+            my $time = scalar localtime;
+            File::Path::mkpath( File::Basename::dirname($target), $opts{verbose}, 0755 );
+            open my $fh, ">", $target or die "Cannot write to $target: $!";
+            my $vim = "ft=apache";
+            $vim = "ft=nginx" if $source =~ m/nginx/;
+            $vim = "ft=conf" if $source =~ m/postgres/;
+            print ${fh} <<"EOF" unless $config->{no_genconfig_header};
+#
+# WARNING: DO NOT EDIT THIS FILE
+#
+# This configuration file was generated by the gen-config program.
+# Any changes to this file will be lost next time gen-config is run.
+# Instead, edit the appropriate TT2 template.
+#
+# Generated $time by the $source template
+# \$ $command_line
+#
+# vim: $vim ro
+#
+EOF
+            print {$fh} $buffer;
+            close $fh;
+            print "Created $target\n" unless ($opts{quiet});
+        }
+    } # while files to process
+}
+
+sub nginx_params {
+    my %dirs = %{+shift};
+
+    my $confd = "$dirs{nginx_etc}/conf.d";
+    my %config = (
+        standard_params( \%dirs ),
+        base_dir        => $dirs{nginx_base_dir},
+        log_dir         => $dirs{nginx_log},
+        lock_dir        => $dirs{lock},
+        nginx_etc_dir => $dirs{nginx_etc},
+        hostname_conf_exists => -f "$confd/hostname.conf",
+        redirect_to_ssl => -f "$confd/redirect-to-ssl",
+        nlw_config_file => File::Spec->catfile( $dirs{socialtext_etc}, 'socialtext.conf' ),
+        appliance_config_file => File::Spec->catfile( $dirs{socialtext_etc}, 'appliance.conf' ),
+        app_prefix      => $app_prefix,
+        log_prefix      => 'nlw',
+        nlw_server_aliases  => [],
+        nlw_uri_is_ssl     => $opts{'force-ssl-login'},
+    );
+
+    if ($is_dev_install) {
+        $config{user}  = $user->name;
+        $config{group} = scalar getgrgid( $user->gid );
+
+        # XXX FIXME
+        $config{servers} = {
+            keep_alive_timeout      => 30,
+            keep_alive_max_req      => 50,
+            worker_processes        => 1,
+        };
+
+        $config{use_canonical_name} = 'Off';
+
+        # We set this here rather than in Socialtext::AppConfig because, for
+        # ceq-stat and ceq-read, we are more interested in the distinction
+        # between a system install and a dev env than the distinction between
+        # a human user and a system user.
+        $config{change_event_queue_dir} = "$opts{root}/ceq";
+
+        # For the same reason as above, we set this here rather than in the
+        # logic in Socialtext::AppConfig.
+        $config{syslog_level} = 'info';
+
+        my $nginx_client_body_dir;
+        $nginx_client_body_dir = "$dirs{cache}/nginx_client_body";
+        unless (-d $nginx_client_body_dir) {
+            mkdir $nginx_client_body_dir
+                or die "Can't mkdir $nginx_client_body_dir: $!";
+        }
+        $config{nginx_client_body_dir} = $nginx_client_body_dir;
+
+        my $nginx_proxy_temp_dir = "$dirs{cache}/nginx_proxy";
+        unless (-d $nginx_proxy_temp_dir) {
+            mkdir $nginx_proxy_temp_dir
+                or die "Can't mkdir $nginx_proxy_temp_dir: $!";
+        }
+        $config{nginx_proxy_temp_dir} = $nginx_proxy_temp_dir;
+    }
+    else {
+        $config{user} = get_build_setting( 'st-user' );
+        $config{group} = get_build_setting( 'st-group' );
+        $config{servers} = {
+            keep_alive_timeout     => 30,
+            keep_alive_max_req     => 50,
+            worker_processes       => 1,
+        };
+        $config{use_canonical_name} = 'On';
+    }
+    $config{ssl_name} = _ssl_name(
+        ssl_base => $dirs{ssl_base},
+        search   => [ $config{nlw_web_hostname}, $config{nlw_server_hostname} ],
+    );
+
+    my $appconfig = Socialtext::AppConfig->new;
+    $config{ssl_client_cert} = _ssl_name(
+        ssl_base => $dirs{ssl_base},
+        search   => [ "$config{nlw_web_hostname}.client", "$config{nlw_server_hostname}.client" ],
+    ) if ($appconfig->credentials_extractors =~ /\b(?:SSLCertificate|CAC)\b/);
+
+    $config{ssl_only} = $appconfig->ssl_only();
+    $config{custom_http_port} = $appconfig->custom_http_port();
+    $config{disable_mobile_redirect} = $appconfig->disable_mobile_redirect();
+
+    if ($config{ssl_only}) {
+        die "Configured for SSL only, but no SSL certificate found/detected!\n"
+            unless $config{ssl_name};
+    }
+    else {
+        die "Client cert verification requires ssl_only setup\n"
+            if $config{ssl_client_cert};
+    }
+
+    return \%config;
+}
+
+sub _frontend_ports {
+    return {
+        http    => Socialtext::HTTP::Ports->http_port(),
+        https   => Socialtext::HTTP::Ports->https_port(),
+    };
+}
+
+sub _backend_ports {
+    return {
+        http       => Socialtext::HTTP::Ports->backend_http_port(),
+        https      => Socialtext::HTTP::Ports->backend_https_port(),
+        json_proxy => Socialtext::HTTP::Ports->json_proxy_port(),
+        console    => Socialtext::HTTP::Ports->console_port(),
+        pushd      => Socialtext::HTTP::Ports->pushd_port(),
+    };
+}
+
+sub _ssl_name {
+    my %opts   = @_;
+    my $base   = $opts{ssl_base};
+    my $search = $opts{search};
+
+    return firstval { -f "$base/certs/$_.crt" } @$search;
+}
+
+sub _static_dir {
+    if ($is_dev_install) {
+        return Cwd::abs_path(
+            File::Spec->catdir( File::Basename::dirname($0), File::Spec->updir, 'share' )
+        );
+    }
+    else {
+        return '/usr/share/nlw';
+    }
+}
+
+sub apache_perl_params {
+    my %dirs = %{+shift};
+
+    my $confd  = "$dirs{apache_perl_etc}/conf.d";
+
+    my %config = standard_params( \%dirs );
+
+    %config = (
+        %config,
+        base_dir        => $dirs{apache_perl_base_dir},
+        log_dir         => $dirs{apache_perl_log},
+        lock_dir        => $dirs{lock},
+        apache_perl_etc_dir => $dirs{apache_perl_etc},
+        confd_exists    => -d $confd,
+        nlw_config_file => File::Spec->catfile( $dirs{socialtext_etc}, 'socialtext.conf' ),
+        appliance_config_file => File::Spec->catfile( $dirs{socialtext_etc}, 'appliance.conf' ),
+        app_prefix      => $app_prefix,
+        log_prefix => 'nlw',
+        nlw_server_aliases => [],
+        use_canonical_name => 'On',
+    );
+
+    $config{inc} = _get_inc();
+
+    if ($is_dev_install) {
+        $config{user}  = $user->name;
+        $config{group} = scalar getgrgid( $user->gid );
+        $config{servers} =
+            ( $ENV{ST_MEMTOTAL} )
+            ? detect_server_settings()
+            : {
+                min_spare              => 1,
+                max_spare              => 1,
+                start                  => 1,
+                max_clients            => 3,
+                keep_alive_timeout     => 5,
+                keep_alive_max_req     => 15,
+                max_requests_per_child => 1000,
+            };
+        $config{use_canonical_name} = 'Off';
+    }
+    else {
+        $config{servers} = detect_server_settings();
+        $config{user}    = get_build_setting( 'st-user' );
+        $config{group}   = get_build_setting( 'st-group' );
+    }
+
+    return \%config;
+}
+
+# ST_MEMTOTAL environment variable can be use for testing specific amounts of
+# memory.
+# This function USED to return different settings for the st3beta appliances
+# but this is no longer needed. It may become useful again for virtual
+# appliances.
+sub detect_server_settings {
+
+#    my $mem_total = $ENV{ST_MEMTOTAL}
+#        || qx#cat /proc/meminfo | grep MemTotal | awk '{print \$2}'#;
+
+    return { # Typical prod/appliance 4G of ram configuration
+            min_spare              => 2,
+            max_spare              => 4,
+            start                  => 3,
+            max_clients            => 18,
+            keep_alive_timeout     => 30,
+            keep_alive_max_req     => 50,
+            max_requests_per_child => 1000,
+        };
+}
+
+sub _get_inc {
+    my @inc;
+
+    if ( $is_dev_install ) {
+        if (opendir my $dh, 'modules') {
+            # Find uppercased dirnames, build lib dirs out of them, and make
+            # sure that they actually exist.
+            @inc =
+                grep { -d }
+                map { Cwd::abs_path("modules/$_/lib") }
+                grep { /^[A-Z]/ } readdir $dh;
+            closedir $dh;
+        }
+
+        push @inc, Cwd::abs_path('lib');
+    }
+    else {
+        @inc = ( get_prefixed_dir("libdir"), @INC );
+    }
+
+    return \@inc;
+}
+
+sub _bool { $_[0] ? 1 : 0 }
+
+sub _get_langs {
+    opendir my $dh, 'build/templates/html';
+
+    my @langs =
+       grep { $_ =~ s/502.(.*).tt2/$1/g; } readdir $dh;
+    return @langs;
+}
+
+sub standard_params {
+    my %dirs = %{+shift};
+
+    my %config = (
+        is_dev          => _bool($is_dev_install),
+        is_production   => _bool($is_production),
+        is_appliance    => _bool($is_appliance),
+        apache_status   => $opts{'apache-status'},
+        server_admin    => get_build_setting('server-admin'),
+    );
+
+    $config{nlw_server_hostname} = $opts{hostname} 
+        || Socialtext::Hostname::fqdn() 
+        || $hostname 
+        || die "Could not figure out a hostname for this machine.\n";
+
+    $config{nlw_web_hostname} = Socialtext::AppConfig->web_hostname
+	|| $config{nlw_server_hostname};
+
+    $config{data_root_dir} = $dirs{root};
+    $config{cache_dir} = $dirs{cache};
+    $config{ssl_base_dir} = $dirs{ssl_base};
+
+    $config{frontend_ports} = _frontend_ports();
+    $config{backend_ports}  = _backend_ports();
+
+    $config{static_dir} = _static_dir();
+
+    $config{prefix_dir} = get_build_setting("prefix");
+    $config{pid_dir}    = $dirs{run};
+
+    $config{challenger} = Socialtext::AppConfig->challenger;
+
+    return %config;
+}
+
+sub _print_file_gen {
+    my $source = shift;
+    my $target = shift;
+
+    print "\t$source\n\t\t`--> $target\n" if $opts{verbose};
+}
+
+sub copy_static_files {
+    my %dirs = %{+shift};
+
+    my %config = standard_params( \%dirs );
+    return unless $config{is_dev};
+
+    my $to_use = firstval { -f "$inc/static/ssl/$_.crt" } (
+        $config{nlw_web_hostname},
+        $config{nlw_server_hostname},
+        'talc.socialtext.net',
+        'topaz.socialtext.net'
+    );
+
+    $to_use ||= 'lucite.socialtext.net';
+
+    my $crt_source = "$inc/static/ssl/$to_use.crt";
+    my $crt_target = "$dirs{ssl_base}/certs/$to_use.crt";
+    my $crt_target_alt = "$dirs{ssl_base}/certs/.crt";
+
+    my $key_source = "$inc/static/ssl/$to_use.key";
+    my $key_target = "$dirs{ssl_base}/private/$to_use.key";
+    my $key_target_alt = "$dirs{ssl_base}/private/.key";
+
+    for my $pair ( [ $crt_source, $crt_target ],
+                   [ $key_source, $key_target ],
+                   [ $crt_source, $crt_target_alt ],
+                   [ $key_source, $key_target_alt ],
+                 ) {
+        _print_file_gen(@$pair);
+        File::Path::mkpath( File::Basename::dirname( $pair->[1], 0, 0755 ) );
+        File::Copy::copy(@$pair)
+            or die "Cannot copy $pair->[0] => $pair->[1]: $!";
+    }
+}
+
+sub help {
+    my $message = shift || '';
+    print<<"END_OF_HELP";
+$message
+$0 [ --sitewide | --appliance --root=<dir> | \
+    --root=<div> ]
+
+Create the system config for an NLW installation. Works for production
+and staging hosting, appliances and developer environments. Responsible
+for the contents of /etc/Socialtext and the apache configuration.
+
+Options:
+
+--help        What you're reading now.
+
+--dev         Same as "--root=\$HOME/.nlw"
+              HINT: This is what you want if you are developing NLW!
+
+--verbose     Print output as the program runs.
+
+--sitewide    Generate a production or appliance config. If
+              /usr/local/socialtext/appliance is present, create an appliance
+              config. If the hostname is www.socialtext.net, we are 
+              production.
+
+--production  Generate a production config, disregarding the hostname.
+
+--appliance   Generate an appliance config even if the directory named 
+              above is not present.
+
+--root=<dir>  Put output in directories using <dir> as the base.
+
+--stdout      Don't output to files, output to STDOUT
+
+--quiet       Don't print anything to STDOUT
+
+--target      One of: app, nginx, ssl
+                 app - generate just the YAML in /etc/Socialtext
+                 nginx - just the nginx stuff
+                 ssl - just the SSL certs
+
+END_OF_HELP
+    exit(1) if $message;
+    exit(0);
+}
+
+
+# And now, 1,000 random words for building MAC secrets
+__DATA__
+abbots
+abolishing
+abscessing
+abscond
+abutted
+acidity
+acquited
+adapters
+adjudge
+ado
+adumbrates
+advise
+advisors
+aerie
+aeronautical
+affinity
+afternoon
+agaricic
+agent
+agglutinating
+airier
+alfresco
+alibi
+allot
+allows
+alohas
+aloof
+alpines
+aluminum
+alumnus
+ample
+amputee
+amusement
+anarchy
+anemia
+anemone
+ankled
+anticlimaxes
+antidotes
+anvil
+apartheid
+applaud
+appositives
+appropriation
+approximations
+arboretum
+ardent
+armistices
+ascribing
+ask
+aspic
+assassination
+astronomy
+attenuating
+auctioning
+authoritativeness
+authority
+automating
+availed
+avalanches
+aviator
+avowed
+awakes
+awarded
+babbles
+backboards
+balefuller
+bandages
+bandstand
+bandwagon
+banjo
+barn
+barreling
+bartenders
+bashed
+bays
+bearish
+beatific
+because
+bee
+been
+beets
+begged
+behave
+belches
+belongings
+beneficiaries
+benefitting
+berating
+besought
+betokens
+bibliographer
+bilking
+binoculars
+blacklists
+blastoffs
+bless
+blindingly
+bluefishes
+blunderers
+blurs
+blurted
+bluster
+board
+boas
+bogeys
+boggles
+boiled
+bolts
+bossiness
+bough
+boxed
+brace
+brainy
+brawled
+breadfruit
+breadth
+breast
+breathe
+breeziness
+breviary
+brocades
+brusque
+bucketed
+buffalo
+bulked
+bungling
+buoyed
+burghers
+burly
+burs
+bursitis
+cajoled
+calipered
+calipering
+calk
+calves
+cannibalistic
+capered
+careered
+carelessly
+catalysts
+cattails
+caveating
+celebrities
+centigrammes
+cerise
+cessation
+chambers
+chameleon
+chandlers
+channelled
+chaperones
+charmingest
+chewy
+chickened
+chief
+childlike
+chooses
+chunkier
+churning
+ciphered
+circularize
+clarity
+classes
+classifies
+climbers
+cloakrooms
+clothesline
+coeducational
+coherence
+colleaguing
+collectivizing
+colonize
+combo
+commemorates
+commodious
+compensating
+competitions
+completion
+complex
+comport
+compositional
+compulsive
+concertinaing
+concessionaire
+condemned
+condoes
+condolences
+consternation
+contemplates
+continence
+continuing
+contorted
+contraception
+convalescences
+cookery
+copilots
+coronets
+cosigners
+counterweights
+countryside
+courier
+creepily
+creosoting
+croaking
+crocheting
+croissant
+cudgeling
+curies
+cushion
+custards
+cuttings
+dandelion
+danker
+darken
+daunt
+debarkation
+debugging
+declines
+decontaminated
+decreases
+decreasing
+decrescendos
+deductive
+deejay
+deftly
+dehydrating
+demised
+demobilized
+demons
+denies
+denigrated
+depending
+depriving
+detain
+devotees
+diagonal
+diaphragms
+dibbles
+dickers
+digitized
+dinnering
+dipole
+disestablishing
+disfranchising
+dishevelled
+disillusion
+disinclines
+disinherited
+dislocation
+dispatcher
+dissociated
+divine
+docket
+dollops
+doorstep
+dope
+drift
+drivel
+droller
+dullards
+dusting
+earnings
+easygoing
+eggbeater
+eglantines
+electrification
+electrify
+electrifying
+elevenths
+eligible
+elk
+elliptic
+embattled
+emblems
+embolisms
+emptiest
+encephalitis
+enchilada
+encumber
+endeavoring
+enfolds
+ensure
+enunciates
+environment
+equity
+evades
+evolves
+exasperating
+excluded
+excommunicate
+existentialism
+exported
+expropriate
+extenuated
+extinctions
+exultation
+eyeliner
+fart
+fatalities
+fattened
+fazes
+fees
+festered
+festively
+feverish
+fiat
+fiercer
+fiftieths
+filth
+find
+finessing
+fireplugs
+firs
+fishtailing
+fixation
+flappers
+flavorless
+floe
+flopped
+flowery
+flukes
+flying
+flyweight
+fogies
+foolishness
+football
+forebodings
+forelocks
+forming
+franchising
+fueled
+fuelled
+fusible
+futility
+fuzz
+galaxies
+gallivanted
+genial
+germinated
+ghostwritten
+glazes
+gnashes
+gnawing
+goalkeepers
+godson
+gofers
+gonad
+governors
+grating
+gravitated
+grayest
+grenades
+grimly
+grottoes
+groundless
+gruff
+grumbles
+guidebooks
+guilders
+guile
+gullibility
+gullible
+gurney
+gutting
+guy
+hair
+handgun
+handlers
+hardheartedly
+harrowed
+hastily
+hatchets
+hatching
+hatting
+haylofts
+hazing
+headless
+headlines
+heartened
+heat
+heatedly
+heather
+heave
+heavily
+heroes
+heroin
+hibachis
+hiccoughs
+hickeys
+histograms
+hokey
+honeybees
+honoraries
+hooker
+horrified
+hostages
+hounding
+houseflies
+howls
+huddled
+humane
+humanist
+hummock
+huskiest
+hustlers
+hydroelectricity
+hypnotizes
+idiocies
+idiosyncrasies
+idly
+illicitly
+imperiled
+impiety
+implemented
+imponderable
+imposing
+impoverishes
+inboard
+indefinable
+indistinct
+individualized
+infiltrates
+ingratiated
+inherited
+inhibited
+injuring
+inputted
+instalment
+instilling
+interconnected
+interdepartmental
+interjection
+intestines
+invitations
+invocations
+itemize
+iteration
+jackal
+jades
+jangled
+jape
+jaywalker
+jeered
+jetsam
+johns
+kippers
+kited
+kiwi
+kleptomania
+knell
+knobs
+knuckled
+kopeck
+kraut
+lamentable
+languished
+lapse
+lashing
+launderer
+lavendered
+lavisher
+lazying
+leak
+legitimated
+libbing
+liberation
+libertarians
+licensees
+ligatured
+lingos
+lionizes
+lisle
+literary
+littleness
+livid
+loans
+locating
+locks
+lockstep
+locusts
+logs
+loiterers
+loosens
+lopsidedness
+losers
+louder
+low
+loyal
+lupin
+lushes
+macerated
+madrigal
+maledictions
+malingers
+manatee
+manifestation
+mantissa
+mantling
+marooned
+marshalled
+marvelled
+marvels
+massage
+masticated
+maximals
+mediation
+meditatively
+mellowness
+memoirs
+menstruates
+merest
+merge
+meritorious
+merrymaker
+mesquites
+metabolizing
+methane
+metrically
+microfiches
+microfilming
+micrometers
+miff
+misapprehensions
+misconceived
+misconceives
+misconstrued
+misleading
+misrepresents
+mite
+moating
+mockingbirds
+modals
+modes
+molar
+monolith
+monotoning
+moonstones
+morphology
+mortaring
+motlier
+mountains
+multicultural
+multinationals
+multitudes
+munching
+muscatels
+mystically
+mythological
+napalming
+nectarine
+negation
+nervier
+nettle
+neuritis
+nonobjective
+nonpartisan
+nonresident
+nontrivial
+northerlies
+nuncio
+obdurate
+objectively
+occur
+occurrences
+ocelot
+oops
+opaquer
+orally
+ornery
+outcasts
+outdoes
+outings
+outstretching
+overachiever
+overbears
+overhung
+overlapped
+overpopulation
+overreact
+overrides
+oversell
+oversize
+oversleep
+overstate
+overstay
+padlocks
+pagan
+pains
+paired
+pall
+panther
+paperweight
+parenthesizing
+paroxysms
+parsley
+particular
+partition
+partner
+passively
+pasty
+patiently
+patinas
+paunchiest
+peacefully
+pedagogics
+pejorative
+pentagons
+penthouse
+perdition
+perfectionism
+perming
+petal
+pettifogger
+pharaoh
+photoing
+pickax
+pikes
+pile
+pinhole
+pink
+plaits
+played
+playwright
+plinths
+plows
+plunked
+plural
+poky
+polkas
+portend
+portentously
+possesses
+posy
+pout
+preconditions
+premature
+premeditated
+prepackaged
+prepossesses
+prescription
+prevailed
+preventatives
+primaries
+privileged
+processional
+prodigious
+propagating
+prophylactic
+prosodial
+protecting
+protections
+protector
+psycho
+psychologies
+pub
+pubic
+puller
+pussyfooted
+pyre
+quadrilateral
+quagmired
+queer
+queerest
+quell
+quilter
+quinn
+quiz
+raffling
+raiders
+rambunctious
+rarest
+rationale
+rayon
+reactivating
+reapportions
+recharges
+reciprocate
+reciprocates
+reclaiming
+reconnaissances
+reconstitutes
+redirected
+rediscovering
+redressing
+reediest
+reflection
+reflex
+refract
+regiment
+rehearsed
+relieve
+relieves
+relinquishes
+remind
+renounces
+reopened
+reparation
+rephrasing
+reprimands
+requesting
+requests
+rescinds
+resemblances
+reservist
+resigned
+resonates
+respiration
+retainer
+revolutionizes
+rhetoricians
+rhinestone
+ridging
+riding
+righteousness
+rivaling
+roast
+robustest
+rock
+romancing
+romanticizes
+roofing
+rotunds
+roughhouse
+rouging
+ruminates
+rustproofs
+sahibs
+sanability
+sandpapering
+sands
+satiny
+scalars
+scaling
+scams
+scared
+scars
+scavenge
+scenting
+schizoid
+schnauzers
+scorpion
+scoundrelish
+scow
+scrambler
+screech
+scuppers
+scurvier
+scuttles
+secretariats
+sectionalism
+secularizing
+segment
+sellouts
+selvage
+selvaging
+semifinalist
+seminaries
+sensational
+sentinel
+septic
+served
+sessions
+settling
+sever
+severance
+sewers
+shamans
+shamrocks
+sheathing
+shekel
+shellacked
+shields
+shindig
+shires
+shockers
+shore
+shoring
+shortbread
+shortening
+showboats
+showgirls
+showplaces
+shrinking
+shuns
+sibyl
+sickenings
+sidelines
+simmering
+sites
+sixth
+sizable
+skier
+skippering
+skit
+skivvies
+slacker
+slanderer
+slight
+slipknots
+sloppiness
+slowly
+slumlord
+smirch
+smit
+smock
+smoothest
+smudgiest
+snapshot
+snazzier
+snuffle
+snuggle
+soupier
+sowing
+spangled
+spareribs
+spasming
+spectrums
+speeders
+spiderier
+spontaneously
+spurting
+squabbling
+squared
+stack
+staggering
+staph
+status
+staving
+sterned
+stiff
+stigmatizes
+stinger
+stockings
+stodgier
+stoics
+storied
+stouter
+stragglier
+stratagems
+streakiest
+stream
+stressed
+strip
+striping
+striven
+strobe
+strobes
+substrata
+suffocating
+sulk
+sunlit
+sunnier
+superstructure
+surgery
+surlier
+surprised
+surrenders
+swampy
+swatches
+swats
+sycophantic
+synagogue
+taboo
+tangerine
+tap
+tapering
+targeting
+tarragon
+tartly
+tasteless
+tattled
+teacher
+teasers
+technician
+technique
+temperate
+tempestuousness
+tended
+tensely
+tenuous
+textiles
+textural
+the
+threads
+threshed
+thrilled
+tigers
+tipple
+toileting
+tolerantly
+toms
+tonal
+touring
+tourism
+traitorous
+tramp
+tranquillizes
+transfigured
+translate
+transparencies
+trapdoor
+travelogue
+triple
+trolleys
+troubling
+truest
+tubas
+tunneling
+turniping
+turnouts
+tusks
+twinging
+uglied
+unanticipated
+unclassified
+uncorroborated
+uncoupling
+undemanding
+undergrowth
+understaffed
+unequal
+uneventful
+unicorns
+unorganized
+unsaddle
+unsanitary
+unseal
+unseemly
+unsuccessfully
+unsuitably
+unveiling
+upholstering
+upstreamed
+urges
+usage
+vainest
+vaporizing
+vapors
+vegetarianism
+vestibules
+vibrancy
+vicarages
+vichyssoise
+vigil
+vindications
+vinyl
+visited
+visitor
+vitalizing
+volleyball
+voodoos
+waltzes
+want
+wantonly
+ware
+wasteful
+waterline
+wavelengths
+wend
+westerly
+westernize
+wheatens
+wheelbarrow
+wheeled
+whelping
+whiffing
+whiner
+whisked
+wholesaled
+whooshing
+wiggled
+willies
+willingness
+windbags
+windfall
+windowsills
+windsocks
+winners
+wino
+wintertime
+wispy
+wither
+wobbled
+woke
+woofing
+wordings
+workers
+wrathing
+wreathes
+wretcheder
+wrist
+yahoo
+your
+yuk
+zap
+zeniths
+zodiac
+zoned

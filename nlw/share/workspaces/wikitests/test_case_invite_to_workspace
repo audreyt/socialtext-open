@@ -1,0 +1,78 @@
+| *Comment* | Test Case: Invite to Workspace |
+
+| *Comment* | Test Case: Invite to Workspace SETUP |  |
+| set | domain | xndev.com |
+| set | ws | invite-ws-%%start_time%% |
+| set | emailok | matt%%start_time%%@%%domain%% |
+| set | eemailok | matt%%start_time%%\@%%domain%% |
+| set | emailok2 | matt-two-%%start_time%%@%%domain%% |
+| set | eemailok2 | matt-two-%%start_time%%\@%%domain%% |
+| set | emailbad | ken%%start_time%%@baddomain.com |
+| set | eemailbad | ken%%start_time%%\@baddomain.com |
+| set | emailbad2 | mark%%start_time%%@baddonmain.com |
+| set | eemailbad2 | mark%%start_time%%\@baddonmain.com |
+
+| st-admin | create-workspace --empty --name %%ws%% --title %%ws%% | was created |
+| st-admin | add-member --email %%username%% --workspace %%ws%% | %%username%% now has the role of 'member' in the %%ws%% workspace. |
+
+| *Comment* | Test Case: Invite to Workspace Non-Admin has no invite link |  |
+| open_ok | /%%ws%% |  |
+| wait_for_element_visible_ok | link=Settings |  |
+| click_and_wait | link=Settings |  |
+| wait_for_element_visible_ok | link=My Settings | 30000 |
+| wait_for_element_visible_ok | link=My Workspaces | 30000 |
+| wait_for_text_not_present_ok | Invite New Users | 30000 |
+
+| *Comment* | Test Case: Invite to Workspace Admin has straight invite link |  |
+| st-admin | add-workspace-admin --e %%username%% --w %%ws%% | %%username%% is now a workspace admin of the %%ws%% workspace |
+| open_ok | /%%ws%% |  |
+| wait_for_element_visible_ok | link=Settings |  |
+| click_and_wait | link=Settings |  |
+| wait_for_element_visible_ok | link=My Settings | 30000 |
+| wait_for_element_visible_ok | link=My Workspaces | 30000 |
+| wait_for_element_visible_ok | link=Invite New Users | 30000 |
+| click_and_wait | link=Invite New Users |  |
+| wait_for_element_visible_ok | -savelink | 30000 |
+| wait_for_element_visible_ok | append_invitation | 30000 |
+| type_ok | users_new_ids | %%emailok%% |
+| click_and_wait | -savelink |  |
+| wait_for_text_present_ok | Your request to invite the following users has been sent | 30000 |
+| text_like | //body | qr/Your request to invite the following users has been sent\s+%%eemailok%%/ |
+
+| *Comment* | Test Case: Invite to Workspace Restricted Workspace Restricts out-of-domain invites |  |
+| st-admin | set-workspace-config -w %%ws%% invitation_filter %%domain%% | The workspace config for %%ws%% has been updated. |
+| open_ok | /%%ws%% |  |
+| wait_for_element_visible_ok | link=Settings |  |
+| click_and_wait | link=Settings |  |
+| wait_for_element_visible_ok | link=My Settings | 30000 |
+| wait_for_element_visible_ok | link=My Workspaces | 30000 |
+| wait_for_element_visible_ok | link=Invite New Users | 30000 |
+| click_and_wait | link=Invite New Users |  |
+| wait_for_element_visible_ok | -savelink | 30000 |
+| wait_for_element_visible_ok | append_invitation | 30000 |
+| type_ok | users_new_ids | %%emailok2%%\n%%emailbad2%% |
+| click_and_wait | -savelink | 30000 |
+| wait_for_text_present_ok | Your request to invite the following users has been sent |
+| text_like | qr/Your request to invite the following users has been sent\s+%%eemailok2%%/ |  |
+| text_like | qr/The following email addresses were invalid\s+%%eemailbad2%%/ |  |
+
+| *Comment* | Test Case: Invite to Workspace NEWLY un-restricted Workspace ALLOWS out-of-domain invites |  |
+| st-admin | set-workspace-config -w %%ws%% invitation_filter '' | The workspace config for %%ws%% has been updated. |
+| open_ok | /%%ws%% |  |
+| wait_for_element_visible_ok | link=Settings |  |
+| click_and_wait | link=Settings |  |
+| wait_for_element_visible_ok | link=My Settings | 30000 |
+| wait_for_element_visible_ok | link=My Workspaces | 30000 |
+| wait_for_element_visible_ok | link=Invite New Users | 30000 |
+| click_and_wait | link=Invite New Users |  |
+| wait_for_element_visible_ok | -savelink | 30000 |
+| wait_for_element_visible_ok | append_invitation | 30000 |
+| type_ok | users_new_ids | %%emailbad2%% |
+| click_and_wait | -savelink | 30000 |
+| wait_for_text_present_ok | Your request to invite the following users has been sent |
+| text_like | qr/Your request to invite the following users has been sent\s+%%eemailbad2%%/ |  |
+
+| *Comment* | Test Case: Invite to Workspace TEARDOWN |
+| st-admin | delete-workspace --workspace %%ws%% --no-export | has been deleted |
+
+| *Comment* | Test Case: Invite to Workspace COMPLETED |

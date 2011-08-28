@@ -1,0 +1,222 @@
+This page sets a cookie in your browser that will temporarily set the repository skin server-wide for you.
+
+*Add a skin to this page* by putting the NEWSKIN in the skins repository or at nlw/share/skin/ in your dev env, then adding the line
+
+'NEWSKIN',
+
+to the skins array below.
+
+^^^ Custom Skins to Test
+
+* fixed width right & left margins (instead of % width): addleshaw emersol
+* custom js that changes layout: clifbar, dreyfus, euriki, hayesknight, hospira, icrossing, prodrive, tenacity
+
+.html
+<table id="skin_list" style="border-collapse: collapse;" options="" border="1" class="formatter_table">
+    <tr>
+        <th>Skin</th>
+        <th></th>
+    </tr>
+    <tr>
+        <td>Default</td>
+        <td><a href="javascript:set_skin()">Set</a></td>
+    </tr>
+</table>
+
+<script>
+var expiration = new Date(
+    new Date().getTime() + 25 * 365 * 24 * 60 * 60 * 1000
+).toGMTString();
+function set_skin (skin) {
+    if (skin) {
+        document.cookie = 'socialtext-skin=skin/' + escape(skin) + 
+                          '; expires=' + expiration +
+                          '; path=/';
+    }
+    else {
+        document.cookie = 'socialtext-skin=; path=/';
+    }
+    document.location.reload();
+}
+ 
+(function ($) {
+    var skins = [
+        'aclcorporate',
+        'acs',
+        'addleshaw',
+        'aha',
+        'algonquin',
+        'altosventures',
+        'amg',
+        'angel',
+        'angelivr',
+        'atsu',
+        'avd-ict',
+        'bailliegifford',
+        'bmbc',
+        'brainware',
+        'cab',
+        'caci',
+        'cae',
+        'cafas',
+        'califor',
+        'capgemini',
+        'cfia',
+        'chep',
+        'chronicle',
+        'cisco',
+        'clifbar',
+        'climateproject',
+        'coactive',
+        'cookmed',
+        'corus',
+        'cpa',
+        'dau',
+        'davies',
+        'denalisoft',
+        'dfj',
+        'dfjnetwork',
+        'dhs-ice',
+        'dimensiondata',
+        'discovery',
+        'disney',
+        'dreyfus',
+        'dutchminag',
+        'dymo',
+        'elarts',
+        'elsevier',
+        'emersol',
+        'engine',
+        'equitytrust',
+        'euriki',
+        'evergreen',
+        'expion',
+        'expion-applegold',
+        'expion-smbizcol',
+        'fei',
+        'fona',
+        'ge',
+        'gehealth',
+        'gelp',
+        'genworth',
+        'getronics',
+        'gettyimages',
+        'gettyimages-istockphoto',
+        'gluelondon',
+        'greenmountain',
+        'greenmountain-purple',
+        'greenmountain-test',
+        'gtnexus',
+        'gtnexus-external',
+        'hanover',
+        'hastie',
+        'hayesknight',
+        'hbo',
+        'headshift',
+        'hmea',
+        'hospira',
+        'humanity',
+        'huron',
+        'icrossing',
+        'infocube',
+        'instanttax',
+        'irc-nl',
+        'isobar',
+        'iss',
+        'jboye',
+        'joulz',
+        'jso',
+        'kohler',
+        'lp',
+        'mapleton',
+        'mccannworldgroup',
+        'mcgraw-hill',
+        'mckesson',
+        'meredith',
+        'merz',
+        'mktg-fan',
+        'momentum',
+        'mosaic',
+        'mtcsc',
+        'mywash',
+        'naag',
+        'netel',
+        'netsuite',
+        'ogilvybayer',
+        'ogilvymather',
+        'ohiostem',
+        'omega',
+        'omidyar',
+        'omidyar-archive',
+        'on24',
+        'osbornetrans',
+        'oxunpr',
+        'plan',
+        'plannivea',
+        'prodrive',
+        'qualcomm',
+        'radian6',
+        'rbd',
+        'recall',
+        'redcross',
+        'ryker',
+        'sadp',
+        'samg',
+        'santaclaravhh',
+        'scalevp',
+        'securian',
+        'sedulo',
+        'seriesa',
+        'sharepoint',
+        'sift',
+        'slovenia',
+        'sonybmg',
+        'spacesaver',
+        'stanycorp',
+        'stern',
+        'sternsecondary',
+        'strategyxxi',
+        'swdtest',
+        'swinerton',
+        'symantec',
+        'tcgadvisors',
+        'tenacity',
+        'tetrapak',
+        'thomaspub',
+        'thomaspubfixedwidth',
+        'thrivent',
+        'topforce',
+        'transunion',
+        'trialskin',
+        'ufl',
+        'uofyork',
+        'usgbc',
+        'vh-hr',
+        'voce',
+        'washcost',
+        'wcsr',
+        'whatif',
+        'wikinomics',
+        'wmg',
+        'youtube',
+        'zehnder',
+        'zynga',
+    ];
+
+    for (i=0; i<skins.length; i++) {
+        var skin = skins[i];
+        $('#skin_list').append(
+            $('<tr></tr>').append(
+                $('<td></td>').html(skin),
+                $('<td></td>').append(                
+                    $('<a></a>')
+                        .html("Set")
+                        .attr('href', 'javascript:set_skin("' + skin + '")')
+                )
+            )
+        );
+    }
+})(jQuery);
+</script>
+.html
+

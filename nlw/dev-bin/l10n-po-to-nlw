@@ -1,0 +1,71 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use 5.12.0;
+use autodie;
+use warnings;
+use open qw(:std :utf8);
+use Getopt::Long;
+use FindBin '$RealBin';
+use lib "$RealBin/../lib";
+use Socialtext::l10n::DevUtils;
+
+if (!@ARGV) {
+    push @ARGV, glob("share/l10n/new/*.po");
+    die << "." unless @ARGV;
+*** No files matching share/l10n/new/*.po
+    Usage: $0 [po-files].
+.
+}
+
+for my $po (@ARGV) {
+    open my $in, '<', $po;
+
+    local $/ = "\n\n";
+    while (<$in>) {
+        next if /^msgid ""\nmsgstr ""/m;
+
+        my ($comments, $id, $str) = split(/\n(?=msg)/, "\n$_");
+        if (is_key($id)) {
+            # Great. Do nothing.
+        }
+        elsif (is_key($str)) {
+            warn "*** Using msgstr as key: $str";
+            ($str, $id) = ($id, $str);
+        }
+        elsif (!is_key($id)) {
+            next;
+        }
+
+        $id =~ s/^msg(?:str|id) "(.*)"/$1/;
+        $id =~ s/^"(.*)"$/$1/gem;
+        $id =~ s/\n//g;
+        $str =~ s/^msg(?:str|id) "(.*)"/$1/;
+        $str =~ s/^"(.*)"$/$1/gem;
+        $str =~ s/\n//g;
+
+        my ($re, $re2) = str_to_regex($str);
+
+        $comments =~ /#: (.+)/ or next;
+
+        my $files = $1;
+        my %seen;
+        while ($files =~ s/(\S+):(\d+)//) {
+            local $/;
+            my $file = $1;
+            next if $seen{$file}++;
+            next if $file eq 'share/skin/wikiwyg/javascript/widget_resource.js';
+
+            open my $fh, '<', $file;
+            my $content = <$fh>;
+            close $fh;
+
+            die "$file\n$re\n" unless $content =~ s/$re/$id/g
+                or $content =~ s/$re2/$id/g;
+
+            open my $out, '>', $file;
+            print $out $content;
+            close $out;
+        }
+    }
+    say "*** Merged: $po";
+}

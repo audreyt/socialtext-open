@@ -1,0 +1,102 @@
+| *Comment* | Test Case: People Search |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: People Search SETUP |  |
+| set | ws | people-searchws-%%start_time%% |
+| set | acct | people-search-acct%%start_time%% |
+| set | diffacct | diff-acct%%start_time%% |
+| set | diffws | diff-ws%%start_time%% |
+
+| create-account | %%acct%% |  |
+| create-account | %%diffacct%% |  |
+| create-workspace | %%ws%% | %%acct%% |
+| create-workspace | %%diffws%% | %%diffacct%% |
+
+| *Comment* | Test Case: People Search User 1 and 2 are in same acct/ws |  |  |
+| set | userone | user-one%%start_time%% |  |
+| set | euserone | `%%userone%%@ken.socialtext.net` |  |
+| create-user | %%euserone%% | %%password%% | %%acct%% |
+| add-member | %%euserone%% | %%ws%% |  |
+
+| set | usertwo | user-two%%start_time%% |  |
+| set | eusertwo | `%%usertwo%%@ken.socialtext.net` |  |
+| create-user | %%eusertwo%% | %%password%% | %%acct%% |
+| add-member | %%eusertwo%% | %%ws%% |  |
+
+| *Comment* | Test Case: People Search User 3 is in same acct, different ws |  |  |
+| set | userthree | user-three%%start_time%% |  |
+| set | euserthree | `%%userthree%%@ken.socialtext.net` |  |
+| create-user | %%euserthree%% | %%password%% | %%acct%% |
+| add-member | %%euserthree%% | %%diffws%% |  |
+
+| *Comment* | Test Case: People Search User 4 is in different acct, overlapping ws |  |  |
+| set | userfour | user-four%%start_time%% |  |
+| set | euserfour | `%%userfour%%@ken.socialtext.net` |  |
+| create-user | %%euserfour%% | %%password%% | %%diffacct%% |
+| add-member | %%euserfour%% | %%ws%% |  |
+
+| *Comment* | Test Case: People Search User 5 is in different acct, different ws |  |  |
+| set | userfive | user-five%%start_time%% |  |
+| set | euserfive | `%%userfive%%@ken.socialtext.net` |  |
+| create-user | %%euserfive%% | %%password%% | %%diffacct%% |
+| add-member | %%euserfive%% | %%diffws%% |  |
+
+| *Comment* | Test Case: People Search Edit and search FIVE Profiles |  |
+| st-logoutin | %%euserone%% | %%password%% |
+| set | current_user | %%euserone%% |
+| set | location | Monterey, CA |
+| set | default_field | default-one |
+| set | first | James |
+| set | last | Mcguire |
+| include | [Test Case: People Search Edit A Profile] |  |
+| include | [Test Case: People Search Field Search] |  |
+
+| st-logoutin | %%eusertwo%% | %%password%% |
+| set | current_user | %%eusertwo%% |
+| set | location | Palo Alto, CA |
+| set | default_field | default-two |
+| set | first | James |
+| set | last | Bach |
+| include | [Test Case: People Search Edit A Profile] |  |
+| include | [Test Case: People Search Field Search] |  |
+
+| st-logoutin | %%euserthree%% | %%password%% |
+| set | current_user | %%euserthree%% |
+| set | location | Grand Rapids, MI |
+| set | default_field | default-three |
+| set | first | Michael |
+| set | last | Bolton |
+| include | [Test Case: People Search Edit A Profile] |  |
+| include | [Test Case: People Search Field Search] |  |
+
+| st-logoutin | %%euserfour%% | %%password%% |
+| set | current_user | %%euserfour%% |
+| set | location | South Bend, IN |
+| set | default_field | default-four |
+| set | first | Markus |
+| set | last | Gaertner |
+| include | [Test Case: People Search Edit A Profile] |  |
+| include | [Test Case: People Search Field Search] |  |
+
+| st-logoutin | %%euserfive%% | %%password%% |
+| set | current_user | %%euserfive%% |
+| set | first | Joe |
+| set | last | Harter |
+| set | default_field | default-five |
+| set | location | Oshkosh, WI |
+| include | [Test Case: People Search Edit A Profile] |  |
+| include | [Test Case: People Search Field Search] |  |
+
+| *Comment* | Test Case: People Search Login as User 1 |  |
+| st-logoutin | %%euserone%% | %%password%% |
+| include | [Test Case: People Search Execute Search] |  |
+
+| *Comment* | Test Case: People Search TEARDOWN |
+| st-process-jobs |  |  |
+| st-admin | delete-workspace --workspace %%ws%% --no-export | has been deleted |
+| st-admin | delete-workspace --workspace %%diffws%% --no-export | has been deleted |
+| delete-account | %%acct%% |  |
+| delete-account | %%diffacct%% |  |
+
+| *Comment* | Test Case: People Search COMPLETED |

@@ -1,0 +1,115 @@
+* Fixture: WebHook
+
+| standard-test-setup | foo                   |     |                |
+| standard-test-setup | bar                   |     |                |
+
+| new-webhook-testcase | Create a page, verify no webhooks fired |     |                |
+| edit-page            | %%bar_workspace%%                       | Bar | Sample Content |
+| watch-page           | %%bar_workspace%%                       | Bar |                |
+| unwatch-page         | %%bar_workspace%%                       | Bar |                |
+| job-count            | WebHook                                 | 0   |                |
+
+| new-webhook-testcase  | page.watch should fire for a page being watched, but not page.unwatched             |               |                                         |
+| add-webhook           | page.watch                                                                          | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%"} |
+| add-webhook           | page.unwatch                                                                        | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%"} |
+| edit-page             | %%bar_workspace%%                                                                   | Foo           | Sample Content                          |
+| job-count             | WebHook                                                                             | 0             |                                         |
+| watch-page            | %%bar_workspace%%                                                                   | Foo           |                                         |
+| job-count             | WebHook                                                                             | 1             |                                         |
+| st-process-jobs       |                                                                                     |               |                                         |
+| job-count             | WebHook                                                                             | 0             |                                         |
+| webhook-payload-parse |                                                                                     |               |                                         |
+| json-like             | [{"class":"page.watch"}]                                                              |               |                                         |
+| json-like             | [{"actor":{"id":%%user_id%%,"best_full_name":"bar user %%start_time%%"}}]             |               |                                         |
+| json-like             | [{"object":{"editor":{"id":%%user_id%%,"best_full_name":"bar user %%start_time%%"}}}] |               |                                         |
+| json-like             | [{"object":{"workspace":{"title":"%%bar_workspace%%","name":"%%bar_workspace%%"}}}]   |               |                                         |
+| json-like             | [{"object":{"id":"foo"}}]                                                             |               |                                         |
+| json-like             | [{"object":{"name":"Foo"}}]                                                           |               |                                         |
+| json-like             | [{"object":{"uri":"%%browser_url%%/%%bar_workspace%%/foo"}}]                |               |                                         |
+| json-like             | [{"object":{"edit_summary":""}}]                                                      |               |                                         |
+| json-like             | [{"object":{"tags":[]}}]                                                              |               |                                         |
+| json-like             | [{"object":{"tags_added":[]}}]                                                        |               |                                         |
+| json-like             | [{"object":{"tags_deleted":[]}}]                                                      |               |                                         |
+| json-like             | [{"object":{"type":"wiki"}}]                                                          |               |                                         |
+| json-like             | [{"object":{"revision_count":"1"}}]                                                   |               |                                         |
+| webhook-like          | "revision_id":"\d+\.\d+"                                                                 |               |                                         |
+| webhook-like          | "edit_time"                                                                         |               |                                         |
+| webhook-like          | "create_time"                                                                       |               |                                         |
+
+| new-webhook-testcase  | page.unwatch should fire for a page being unwatched, but not page.watch             |               |                                         |
+| add-webhook           | page.unwatch                                                                        | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%"} |
+| edit-page             | %%bar_workspace%%                                                                   | Foo           | Sample Content                          |
+| job-count             | WebHook                                                                             | 0             |                                         |
+| watch-page            | %%bar_workspace%%                                                                   | Foo           |                                         |
+| job-count             | WebHook                                                                             | 0             |                                         |
+| add-webhook           | page.watch                                                                          | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%"} |
+| unwatch-page          | %%bar_workspace%%                                                                   | Foo           |                                         |
+| job-count             | WebHook                                                                             | 1             |                                         |
+| st-process-jobs       |                                                                                     |               |                                         |
+| job-count             | WebHook                                                                             | 0             |                                         |
+| webhook-payload-parse |                                                                                     |               |                                         |
+| json-like             | [{"class":"page.unwatch"}]                                                             |               |                                         |
+| json-like             | [{"actor":{"id":%%user_id%%,"best_full_name":"bar user %%start_time%%"}}]            |               |                                         |
+| json-like             | [{"object":{"editor":{"id":%%user_id%%,"best_full_name":"bar user %%start_time%%"}}}]|               |                                         |
+| json-like             | [{"object":{"workspace":{"title":"%%bar_workspace%%","name":"%%bar_workspace%%"}}}]  |               |                                         |
+| json-like             | [{"object":{"id":"foo"}}]                                                            |               |                                         |
+| json-like             | [{"object":{"name":"Foo"}}]                                                          |               |                                         |
+| json-like             | [{"object":{"uri":"%%browser_url%%/%%bar_workspace%%/foo"}}]               |               |                                         |
+| json-like             | [{"object":{"edit_summary":""}}]                                                     |               |                                         |
+| json-like             | [{"object":{"tags":[]}}]                                                             |               |                                         |
+| json-like             | [{"object":{"tags_added":[]}}]                                                       |               |                                         |
+| json-like             | [{"object":{"tags_deleted":[]}}]                                                     |               |                                         |
+| json-like             | [{"object":{"type":"wiki"}}]                                                         |               |                                         |
+| json-like             | [{"object":{"revision_count":"2"}}]                                                  |               |                                         |
+| webhook-like          | "revision_id":"\d+\.\d+"                                                                 |               |                                         |
+| webhook-like          | "edit_time"                                                                         |               |                                         |
+| webhook-like          | "create_time"                                                                       |               |                                         |
+
+| new-webhook-testcase | watch a watched page doesn't fire a webhook |     |                        |
+| watch-page           | %%bar_workspace%%                           | Foo | |
+| job-count            | WebHook                                     | 0   |                        |
+
+| new-webhook-testcase          | Watch a page in a different workspace         |                    |                |
+| set              | ws2                                         | ws2-%%start_time%% |                |
+| create-workspace | %%ws2%%                                     |                    |                |
+| add-member       | %%bar_email_address%%                       | %%ws2%%            |                |
+| edit-page        | %%ws2%%                                     | Foo2               | Sample Content |
+| watch-page       | %%ws2%%                                     | Foo2               | |
+| unwatch-page       | %%ws2%%                                     | Foo2               | |
+| job-count        | WebHook                                     | 0                  |                |
+
+| new-webhook-testcase | Use a page_id filtered webhook |               |                                                                       |
+| add-webhook          | page.watch                     | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%","details":{"page_id":"tarvu"}} |
+| add-webhook          | page.unwatch                   | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%","details":{"page_id":"tarvu"}} |
+| edit-page            | %%bar_workspace%%              | Tarvu         | Tarvu is the best!                                                    |
+| watch-page           | %%bar_workspace%%              | Tarvu         |                                                                       |
+| unwatch-page         | %%bar_workspace%%              | Tarvu         |                                                                       |
+| edit-page            | %%bar_workspace%%              | Barvu         | Barvu is the best!                                                    |
+| watch-page           | %%bar_workspace%%              | Barvu         |                                                                       |
+| unwatch-page         | %%bar_workspace%%              | Barvu         |                                                                       |
+| job-count            | WebHook                        | 2             |                                                                       |
+| st-process-jobs      |                                |               |                                                                       |
+| job-count            | WebHook                        | 0             |                                                                       |
+| webhook-like         | tarvu                          |               |                                                                       |
+| webhook-unlike       | barvu                          |               |                                                                       |
+
+| new-webhook-testcase | Use a page_tag filtered webhook     |                              |                             |                   |
+| set-business-admin   | %%bar_email_address%%               | 1                            |                             |                   |
+| add-webhook          | page.watch                          | http://tou.ch                | {"details":{"tag":"fubar"}} |                   |
+| add-webhook          | page.unwatch                        | http://tou.ch                | {"details":{"tag":"fubar"}} |                   |
+| edit-page            | %%bar_workspace%%                   | New page without tag         | New content                 |                   |
+| watch-page           | %%bar_workspace%%                   | New page without tag         |                             |                   |
+| unwatch-page         | %%bar_workspace%%                   | New page without tag         |                             |                   |
+| edit-page            | %%bar_workspace%%                   | New page with matching tag   | New content                 | fubar, blizzaz    |
+| watch-page           | %%bar_workspace%%                   | New page with matching tag   |                             |                   |
+| unwatch-page         | %%bar_workspace%%                   | New page with matching tag   |                             |                   |
+| edit-page            | %%bar_workspace%%                   | New page with different tags | New content                 | flizbluz, blizzaz |
+| watch-page           | %%bar_workspace%%                   | New page with different tags |                             |                   |
+| unwatch-page         | %%bar_workspace%%                   | New page with different tags |                             |                   |
+| job-count            | WebHook                             | 2                            |                             |                   |
+| st-process-jobs      |                                     |                              |                             |                   |
+| job-count            | WebHook                             | 0                            |                             |                   |
+| webhook-like         | "name":"New page with matching tag" |                              |                             |                   |
+
+# For other filter tests, see t/wikitests/webhooks/page.tag.wiki
+# The code flow is the same, so these tests are omitted

@@ -1,0 +1,16 @@
+fixtures:
+  - db
+  - help
+
+workspaces:
+  sale:
+    title: Sale
+    extra_pages: 1
+    extra_users:
+      admin: [tester@socialtext.com]
+      member: [chester@socialtext.com]
+
+  exchange:
+    title: Exchange
+    extra_pages: 1
+    permission_set_name: public-join-to-edit

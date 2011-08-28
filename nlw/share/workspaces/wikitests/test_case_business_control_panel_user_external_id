@@ -1,0 +1,82 @@
+
+| *Comment* | Test Case: Business Control Panel User External Id Setup |  |
+| set | user_fname | Davey |
+| set | user_lname | Jones |
+| set | user_email | davey-jones-%%start_time%%@ken.socialtext.net |
+| set | user_password | %%password%% |
+| set | external_id | %%start_time%% |
+| st-admin | create-user --email %%user_email%% --first_name %%user_fname%% --last_name %%user_lname%% --password %%user_password%% | was created |
+| set-user-id | user_id | %%user_email%% |
+
+| *Comment* | Test Case: Business Control Panel User External Id No External Id |  |
+| open-ok | /nlw/control/user/%%user_id%% |  |
+| text-like | //body | External ID is not set |
+
+| *Comment* | Test Case: Business Control Panel User External Id Set External Id for User |  |
+| st-admin | set-external-id --email %%user_email%% --external-id %%external_id%% | External ID for |
+| open-ok | /nlw/control/user/%%user_id%% |  |
+| text-like | //body | External ID: %%external_id%% |
+
+| *Comment* | Test Case: Business Control Panel User External Id Clear External Id |  |
+| open-ok | /nlw/control/user/%%user_id%% |  |
+| wait-for-element-visible-ok | submit-clear-external-id | 30000 |
+| click-and-wait | submit-clear-external-id |  |
+| text-like | //body | External ID cleared for |
+| text-like | //body | External ID is not set |
+
+| *Comment* | Test Case: Business Control Panel User External ID /can/ login |  |
+| open_ok | /st/dashboard |  |
+| st-logoutin | %%user_email%% | %%user_password%% |
+| open_ok | /st/dashboard |  |
+| wait_for_text_present_ok | Welcome, New User | 30000 |
+
+| *Comment* | Test Case: Business Control Panel User External Id add require_external_id restriction |  |
+| st-logoutin | %%username%% | %%password%% |
+| open-ok | /nlw/control/user/%%user_id%% |  |
+| text-like | External ID is not set |  |
+| wait-for-element-visible-ok | submit-require-external-id | 30000 |
+| click-and-wait | submit-require-external-id |  |
+| text-like | External ID requirement added |  |
+| text-like | Requires External ID |  |
+
+| *Comment* | Test Case: Business Control Panel User External ID /can't/ login with regrestion required |  |
+| open_ok | /st/dashboard |  |
+| st-logoutin | %%user_email%% | %%user_password%% |
+| wait_for_text_present_ok | Log in to Socialtext | 30000 |
+| text_unlike | //body | Welcome |
+
+| *Comment* | Test Case: Business Control Panel User External ID restore ID, can login |  |
+| st-login | %%username%% | %%password%% |
+| st-admin | set-external-id --email %%user_email%% --external-id %%external_id%% | External ID for |
+| open-ok | /st/dashboard |  |
+| st-login | %%user_email%% | %%user_password%% |
+| open_ok | /st/dashboard |  |
+| wait_for_text_present_ok | Welcome, New User | 30000 |
+
+| *Comment* | Test Case: Business Control Panel User External ID Now clear the ID |  |
+| st-logoutin | %%username%% | %%password%% |
+| open-ok | /nlw/control/user/%%user_id%% |  |
+| wait-for-element-visible-ok | submit-clear-external-id | 30000 |
+| click-and-wait | submit-clear-external-id |  |
+| text-like | //body | External ID cleared for |
+| wait_for_text_present_ok | Requires External ID | 30000 |
+
+| *Comment* | Test Case: Business Control Panel User External Id remove require_external_id restriction |  |
+| open-ok | /nlw/control/user/%%user_id%% |  |
+| text-like | Requires External ID |  |
+| wait-for-element-visible-ok | submit-remove-external-id-requirement | 30000 |
+| click-and-wait | submit-remove-external-id-requirement |  |
+| text-like | External ID requirement removed |  |
+| text-like | External ID is not set |  |
+| text-unlike | //body | Requires External ID |
+
+| *Comment* | Test Case: Business Control Panel User External Id with restriction gone, user /can/ login |  |
+| open_ok | /st/dashboard |  |
+| st-logoutin | %%user_email%% | %%user_password%% |
+| open_ok | /st/dashboard |  |
+| wait_for_text_present_ok | Welcome, New User | 30000 |
+
+| *Comment* | Test Case: Business Control Panel User External Id TEARDOWN |  |
+| st-admin | deactivate-user --e %%user_email%% | removed |
+
+| *Comment* | Test Case: Business Control Panel User External Id COMPLETED |  |

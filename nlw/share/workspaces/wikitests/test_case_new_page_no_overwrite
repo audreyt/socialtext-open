@@ -1,0 +1,105 @@
+| *Comment* | Test Case: New Page No Overwrite |  |
+
+| *Comment* | Test Case: New Page No Overwrite: Create a new page with a unique name |  |
+| st-admin | update-page --workspace %%workspace%% --email %%email%% --page "%%start_time%% npno 1" < %%wikitest_client_files%%wikitest.txt |
+
+| *Comment* | Test Case: New Page No Overwrite: title already in use |  |
+| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text |  |
+| type_ok | st-newpage-pagename-edit | %%start_time%% npno 1 |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| click_ok | st-save-button-link |  |
+
+| *Comment* | Test Case: New Page No Overwrite save with existing title should fail |  |
+| wait_for_element_visible_ok | st-newpage-duplicate-pagename | 30000 |
+| text_like | st-newpage-duplicate-emphasis | already a page |
+| check_ok | st-newpage-duplicate-option-append |  |
+| click_and_wait | st-newpage-duplicate-okbutton |  |
+| *Comment* | Test Case: New Page No Overwrite append should succeed |  |
+| wait_for_element_visible_ok | st-page-titletext | 30000 |
+| text_like | st-page-titletext | %%start_time%% npno 1 |
+
+| *Comment* | Test Case: New Page No Overwrite: save Untitled Page |  |
+| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| click_ok | st-save-button-link |  |
+
+| *Comment* | Test Case: New Page No Overwrite: Untitled Page should fail |  |
+| *Comment* | save with an existing page title |  |
+| wait_for_element_visible_ok | st-newpage-save-pagename | 30000 |
+| type_ok | st-newpage-save-pagename | %%start_time%% npno 1 |
+| wait_for_element_visible_ok | st-newpage-save-savebutton | 30000 |
+| click_ok | st-newpage-save-savebutton |  |
+
+| *Comment* | Test Case: New Page No Overwrite save should fail, use different name instead |  |
+| wait_for_element_visible_ok | st-newpage-duplicate-option-different | 30000 |
+| check_ok | st-newpage-duplicate-option-different |  |
+| type_ok | st-newpage-duplicate-pagename | %%start_time%% npno 2 |
+
+| *Comment* | Test Case: New Page No Overwrite write to npno 2 |  |
+| wait_for_element_visible_ok | st-newpage-duplicate-okbutton | 30000 |
+| clickAndWait | st-newpage-duplicate-okbutton |  |
+
+| *Comment* | Test Case: New Page No Overwrite write should succeed |  |
+| wait_for_element_visible_ok | st-page-titletext | 30000 |
+| text_like | st-page-titletext | %%start_time%% npno 2 |
+
+| *Comment* | Test Case: New Page No Overwrite: test Save Page As cancel |  |
+| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| click_ok | st-save-button-link |  |
+| wait_for_element_visible_ok | st-newpage-save-cancelbutton | 30000 |
+| click_ok | st-newpage-save-cancelbutton |  |
+
+| *Comment* | Test Case: New Page No Overwrite: test Page Already Exists cancel |  |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| click_ok | st-save-button-link |  |
+| type_ok | st-newpage-save-pagename | %%start_time%% npno 1 |
+| wait_for_element_visible_ok | st-newpage-save-savebutton | 30000 |
+| click_ok | st-newpage-save-savebutton |  |
+| wait_for_element_visible_ok | st-newpage-duplicate-cancelbutton | 30000 |
+| click_ok | st-newpage-duplicate-cancelbutton | clickAndWait does not work for cancel button |
+
+| *Comment* | Test Case: New Page No Overwrite: Overwrite should fail - try append instead |  |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| click_ok | st-save-button-link |  |
+| wait_for_element_visible_ok | st-newpage-save-pagename | 30000 |
+| type_ok | st-newpage-save-pagename | %%start_time%% npno 1 |
+| wait_for_element_visible_ok | st-newpage-save-savebutton | 30000 |
+| click_ok | st-newpage-save-savebutton |  |
+| wait_for_element_visible_ok | st-newpage-duplicate-option-append | 30000 |
+| check_ok | st-newpage-duplicate-option-append |  |
+| wait_for_element_visible_ok | st-newpage-duplicate-okbutton | 30000 |
+| clickAndWait | st-newpage-duplicate-okbutton |  |
+
+| *Comment* | Test Case: New Page No Overwrite: append should succeed |  |
+| wait_for_element_visible_ok | st-page-titletext | 30000 |
+| text_like | st-page-titletext | %%start_time%% npno 1 |
+
+| *Comment* | Test Case: New Page No Overwrite: Overwrite should fail - take suggested name instead |  |
+| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
+| wait_for_element_present_ok | st-newpage-pagename-edit | 30000 |
+| type_ok | st-newpage-pagename-edit | %%start_time%% npno 1 |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| click_ok | st-save-button-link |  |
+| wait_for_element_visible_ok | st-newpage-duplicate-option-suggest | 30000 |
+| check_ok | st-newpage-duplicate-option-suggest |  |
+| wait_for_element_visible_ok | st-newpage-duplicate-okbutton | 30000 |
+| clickAndWait | st-newpage-duplicate-okbutton |  |
+
+| *Comment* | Test Case: New Page No Overwrite: suggestion should succeed |  |
+| wait_for_element_visible_ok | st-page-titletext | 30000 |
+| text_like | st-page-titletext | : %%start_time%% npno 1 |
+
+| *Comment* | Test Case: New Page No Overwrite Teardown |  |
+| st-admin | purge-page --workspace %%workspace%% --page %%start_time%%_npno_2 | was purged |
+| st-admin | purge-page --workspace %%workspace%% --page %%start_time%%_npno_1 | was purged |
+
+| *Comment* | Test Case: New Page No Overwrite COMPLETED |  |

@@ -1,0 +1,34 @@
+0.14  2006-03-31
+
+- Added DOM.Ready.onDOMDone(). See the docs for this and for
+onIdReady() for reasons why this is useful. Added a test for this,
+"done.t.html" but it is not run with the others tests via index.html,
+as it does not work when the run via a frame.
+
+
+0.13  2005-09-24
+
+- BUG: If the timer fired before the DOM was ready, then callbacks
+would never be executed.
+
+
+0.12  2005-09-10
+
+- You can now set the timer interval via DOM.Ready.timerInterval.
+
+- Default timer interval is now 50 milliseconds instead of 250.
+
+- You can explicitly tell DOM.Ready to run all callbacks which are
+ready by calling DOM.Ready.runCallbacks().
+
+
+0.11  2005-08-27
+
+- If used along with something that extended object (like prototype),
+then attempting to run id-based callbacks caused an error.
+
+
+0.10  2005-08-25
+
+- Initial release
+

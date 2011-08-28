@@ -1,0 +1,189 @@
+| *Comment* | Test Case: Show Direct Reports |
+
+| *Comment* | Test Case: Show Direct Reports - Create Account, Users |  |
+| set | acct | directreportacct%%start_time%% |
+| st-admin | create-account --name %%acct%% | was created |
+| st-admin | enable-plugin --plugin dashboard --account %%acct%% |  |
+
+| set | user1_short | subordinate01%%start_time%% |
+| set | user1 | %%user1_short%%@matt.socialtext.net |
+| set | user2_short | subordinate02%%start_time%% |
+| set | user2 | %%user2_short%%@matt.socialtext.net |
+| set | user3_short | subordinate03%%start_time%% |
+| set | user3 | %%user3_short%%@matt.socialtext.net |
+| set | user4_short | subordinate04%%start_time%% |
+| set | user4 | %%user4_short%%@matt.socialtext.net |
+| set | user5_short | subordinate05%%start_time%% |
+| set | user5 | %%user5_short%%@matt.socialtext.net |
+
+| set | user6_short | subordinate06%%start_time%% |
+| set | user6 | %%user6_short%%@matt.socialtext.net |
+| set | user7_short | subordinate07%%start_time%% |
+| set | user7 | %%user7_short%%@matt.socialtext.net |
+| set | user8_short | subordinate08%%start_time%% |
+| set | user8 | %%user8_short%%@matt.socialtext.net |
+| set | user9_short | subordinate09%%start_time%% |
+| set | user9 | %%user9_short%%@matt.socialtext.net |
+| set | user10_short | subordinate10%%start_time%% |
+| set | user10 | %%user10_short%%@matt.socialtext.net |
+
+| set | user11_short | subordinate11%%start_time%% |
+| set | user11 | %%user11_short%%@matt.socialtext.net |
+| set | user12_short | subordinate12%%start_time%% |
+| set | user12 | %%user12_short%%@matt.socialtext.net |
+
+| set | manager_short | managerwithdirects%%start_time%% |
+| set | manager | %%manager_short%%@matt.socialtext.net |
+
+| *Comment* | Test Case: Show Direct Reports Create Users. |  |
+| st-admin | create-user --e %%user1%% --p %%password%% --account %%acct%% | was created |
+| st-admin | create-user --e %%user2%% --p %%password%% --account %%acct%% | was created |
+| st-admin | create-user --e %%user3%% --p %%password%% --account %%acct%% | was created |
+| st-admin | create-user --e %%user4%% --p %%password%% --account %%acct%% | was created |
+| st-admin | create-user --e %%user5%% --p %%password%% --account %%acct%% | was created |
+| st-admin | create-user --e %%user6%% --p %%password%% --account %%acct%% | was created |
+| st-admin | create-user --e %%user7%% --p %%password%% --account %%acct%% | was created |
+| st-admin | create-user --e %%user8%% --p %%password%% --account %%acct%% | was created |
+| st-admin | create-user --e %%user9%% --p %%password%% --account %%acct%% | was created |
+| st-admin | create-user --e %%user10%% --p %%password%% --account %%acct%% | was created |
+| st-admin | create-user --e %%user11%% --p %%password%% --account %%acct%% | was created |
+| st-admin | create-user --e %%user12%% --p %%password%% --account %%acct%% | was created |
+
+| st-admin | create-user --e %%manager%% --p %%password%% --account %%acct%% | was created |
+| st-process-jobs |  |  |
+| pause | 10000 |  |
+
+| *Comment* | Test Case: Show Direct Reports - Login as Manager, see no manager or peers |  |
+| st-logoutin | %%manager%% | %%password%% |
+| wait_for_element_visible_ok | link=%%manager_short%% | 30000 |
+| click_and_wait | link=%%manager_short%% |  |
+| wait_for_text_not_present_ok | Manager: | 30000 |
+| wait_for_text_not_present_ok | Peers: | 30000 |
+| wait_for_element_not_present_ok | link=Show all | 30000 |
+
+| *Comment* | Test Case: Show Direct Reports - Edit Manager field for the users |  |
+| st-logoutin | %%user1%% | %%password%% |
+| call | [st-add-manager] | manager_short=%%manager_short%% |
+| st-logoutin | %%user2%% | %%password%% |
+| call | [st-add-manager] | manager_short=%%manager_short%% |
+| st-logoutin | %%user3%% | %%password%% |
+| call | [st-add-manager] | manager_short=%%manager_short%% |
+| st-logoutin | %%user4%% | %%password%% |
+| call | [st-add-manager] | manager_short=%%manager_short%% |
+| st-logoutin | %%user5%% | %%password%% |
+| call | [st-add-manager] | manager_short=%%manager_short%% |
+| st-logoutin | %%user6%% | %%password%% |
+| call | [st-add-manager] | manager_short=%%manager_short%% |
+| st-logoutin | %%user7%% | %%password%% |
+| call | [st-add-manager] | manager_short=%%manager_short%% |
+| st-logoutin | %%user8%% | %%password%% |
+| call | [st-add-manager] | manager_short=%%manager_short%% |
+| st-logoutin | %%user9%% | %%password%% |
+| call | [st-add-manager] | manager_short=%%manager_short%% |
+| st-logoutin | %%user10%% | %%password%% |
+| call | [st-add-manager] | manager_short=%%manager_short%% |
+| st-logoutin | %%user11%% | %%password%% |
+| call | [st-add-manager] | manager_short=%%manager_short%% |
+| st-logoutin | %%user12%% | %%password%% |
+| call | [st-add-manager] | manager_short=%%manager_short%% |
+
+| st-process-jobs |  |  |
+
+| *Comment* | Test Case: Show Direct Reports - Login as Manager, see direct reports |  |
+| st-logoutin | %%manager%% | %%password%% |
+| wait_for_element_visible_ok | link=%%manager_short%% | 30000 |
+| click_and_wait | link=%%manager_short%% |  |
+| wait_for_text_present_ok | Activities | 30000 |
+| wait_for_text_present_ok | Employees | 30000 |
+| wait_for_element_visible_ok | link=%%user1_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user2_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user3_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user4_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user5_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user6_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user7_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user8_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user9_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user10_short%% | 30000 |
+| text_unlike | //body | %%user11_short%% |
+| text_unlike | //body | %%user12_short%% |
+| text_unlike | //body | Show less |
+
+| *Comment* | Test Case: Show Direct Reports - Test Show All/Show Less |  |
+| wait_for_element_visible_ok | link=Show all | 30000 |
+| click_ok | link=Show all |  |
+| wait_for_element_visible_ok | link=%%user11_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user12_short%% | 30000 |
+| wait_for_element_visible_ok | link=Show less | 30000 |
+| click_ok | link=Show less | 30000 |
+| text_unlike | //body | %%user11_short%% |
+| text_unlike | //body | %%user12_short%% |
+| text_unlike | //body | Show less |
+| text_like | //body | Show all |
+
+| *Comment* | Test Case: Show Direct Reports - Click on a direct report, see peer list |  |
+| click_and_wait | link=%%user1_short%% |  |
+| wait_for_text_present_ok | Manager | 30000 |
+| wait_for_text_present_ok | Peers | 30000 |
+| wait_for_element_visible_ok | link=%%manager_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user2_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user3_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user4_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user5_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user6_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user7_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user8_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user9_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user10_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user11_short%% | 30000 |
+| wait_for_element_not_visible_ok | link=%%user12_short%% | 30000 |
+| text_unlike | //body | Show less |
+| wait_for_element_visible_ok | link=Show all | 30000 |
+| click_ok | link=Show all |  |
+| wait_for_element_visible_ok | link=%%user12_short%% | 30000 |
+| wait_for_element_visible_ok | link=Show less | 30000 |
+| click_ok | link=Show less | 30000 |
+| text_unlike | //body | %%user12_short%% |
+| text_unlike | //body | Show less |
+| text_like | //body | Show all |
+
+| *Comment* | Test Case: Show Direct Reports - deactivate manager, user1 has no manager or peers |  |
+| st-logout |  |  |
+| st-admin | deactivate-user --email %%manager%% | been deactivated |
+| st-process-jobs |  |  |
+| st-login | %%user1%% | %%password%% |
+| open_ok | /st/profile |  |
+| wait_for_text_present_ok | Organization | 30000 |
+| wait_for_text_not_present_ok | Manager: | 30000 |
+| wait_for_text_not_present_ok | Peers: | 30000 |
+| wait_for_element_not_present_ok | link=Show all | 30000 |
+| wait_for_element_not_present_ok | link=%%manager_short%% | 30000 |
+| wait_for_element_not_present_ok | link=%%user2_short%% | 30000 |
+| wait_for_element_not_present_ok | link=%%user3_short%% | 30000 |
+| wait_for_element_not_present_ok | link=%%user4_short%% | 30000 |
+| wait_for_element_not_present_ok | link=%%user5_short%% | 30000 |
+| wait_for_element_not_present_ok | link=%%user6_short%% | 30000 |
+| wait_for_element_not_present_ok | link=%%user7_short%% | 30000 |
+| wait_for_element_not_present_ok | link=%%user8_short%% | 30000 |
+| wait_for_element_not_present_ok | link=%%user9_short%% | 30000 |
+| wait_for_element_not_present_ok | link=%%user10_short%% | 30000 |
+| wait_for_element_not_present_ok | link=%%user11_short%% | 30000 |
+| wait_for_element_not_present_ok | link=%%user12_short%% | 30000 |
+
+| *Comment* | Test Case: Show Direct Reports TEARDOWN |  |
+| st-process-jobs |  |  |
+| st-admin | deactivate-user --e %%user1%% |  |
+| st-admin | deactivate-user --e %%user2%% |  |
+| st-admin | deactivate-user --e %%user3%% |  |
+| st-admin | deactivate-user --e %%user4%% |  |
+| st-admin | deactivate-user --e %%user5%% |  |
+| st-admin | deactivate-user --e %%user6%% |  |
+| st-admin | deactivate-user --e %%user7%% |  |
+| st-admin | deactivate-user --e %%user8%% |  |
+| st-admin | deactivate-user --e %%user9%% |  |
+| st-admin | deactivate-user --e %%user10%% |  |
+| st-admin | deactivate-user --e %%user11%% |  |
+| st-admin | deactivate-user --e %%user12%% |  |
+| delete-account | %%acct%% |  |
+
+| *Comment* | Test Case: Show Direct Reports COMPLETED |  |

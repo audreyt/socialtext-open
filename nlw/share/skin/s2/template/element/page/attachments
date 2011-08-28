@@ -1,0 +1,25 @@
+[% ns = 'st-attachments' %]
+<div id="[% ns %]" class="st-page-box">
+    <div id="[% ns %]-title" class="st-page-box-title">[% loc('Attachments') %]</div>
+    <form onsubmit="return false;">
+    [% INCLUDE element/jst/template id='st-attachments-listtemplate', jst='attachment/name' %]
+    [% INCLUDE element/jst/template id='st-attachments-managetable', jst='attachment/managetable' %]
+    </form>
+    <ul id="[% ns %]-listing" class="st-page-box-listing">
+    [% FOREACH attachments %]
+    <li class="[% ns %]-line st-page-box-listing-entry"><a href="[% uri %]" class="[% ns %]-link" title="[% loc("Uploaded by $uploader") %]">[% name %]</a></li>
+    [% END %]
+    </ul>
+    [% IF checker.check_permission('attachments') %]
+    <table id="[% ns %]-buttons">
+        <tr>
+            <td id="[% ns %]-buttons-uploadbutton">
+              [% INCLUDE element/button id="${ns}-uploadbutton", tooltip=loc("Click this button to add a file to the page"), label=loc("Upload files") %]
+            </td>
+            <td id="[% ns %]-buttons-managebutton">
+              [% INCLUDE element/button id="${ns}-managebutton", tooltip=loc("Click this button to manage files attached to the page"), label=loc("Manage files") %]
+            </td>
+        </tr>
+    </table>
+    [% END %]
+</div>

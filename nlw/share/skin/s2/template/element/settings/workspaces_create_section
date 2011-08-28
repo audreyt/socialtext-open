@@ -1,0 +1,41 @@
+[%# @COPYRIGHT@ -%]
+[% save_button_value = loc('Create') %]
+[% PROCESS element/settings/start %]
+<tr>
+  <td>
+    <div class="workspace-entry-header">[% loc('Workspace Title') %]</div>
+    <div class="workspace-entry">
+      <div class="workspace-entry-p">
+        [% loc('This is the title of your workspace. It may be changed later if you want.') %]
+      </div>
+      <div class="settings-help">([% loc('required') %])</div>
+      <input type="text" name="title" value="[% title %]" size="50" />
+      <div class="settings-comment">[% loc('Example: Acme Widgets Product Development') %]</div>
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <td>
+    <div class="workspace-entry-header">[% loc('Workspace Name') %]</div>
+    <div class="workspace-entry">
+      <div class="workspace-entry-p">
+        [% loc("This is a short unique identifier used as part of your workspace's web address and email address.") %] 
+        [% loc('It must consist of 3-30 lowercase letters, numbers, underscores or dashes.') %]
+      </div>
+      <div class="settings-help">([% loc('required') %])</div>
+      <input type="text" name="name" value="[% name %]" size="30" />
+      <div class="settings-comment">
+        <p>
+          [% loc('Example: acme-product-dev creates this workspace address:') %]
+          http://[% appconfig.web_hostname %]/acme-product-dev
+        </p>
+        <p>
+          [% loc('and this email address:') %]
+          <span class="clear-line block-element">acme-product-dev@[% appconfig.email_hostname %]</span>
+        </p>
+      </div>
+    </div>
+  </td>
+</tr>
+[% PROCESS element/settings/end %]

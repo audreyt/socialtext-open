@@ -1,0 +1,115 @@
+Test case to make sure that group photos have good cache-control headers.
+
+* Fixture: SocialRest
+
+| standard-test-setup |
+| set | gid | %%group_id%% |
+| add-user-to-group | %%user_id%% | %%gid%% | admin |
+| http-user-pass-and-cookie | %%username%% | %%password%% |
+
+The initial request of a photo (wether the user has set one or not) will prime
+the disk cache.  Subsequent requests will be served from the cache.  It
+shouldn't matter what URI form the request is done under.
+
+| Comment    | initial GET primes cache         |              |
+| get        | /data/groups/%%gid%%/photo       |              |
+| code-is    | 200                              |              |
+| has-header | Cache-Control                    | qr/no-cache/ |
+| has-header | Pragma                           | qr/no-cache/ |
+
+| Comment    | initial GET primes cache (small) |              |
+| get        | /data/groups/%%gid%%/small_photo |              |
+| code-is    | 200                              |              |
+| has-header | Cache-Control                    | qr/no-cache/ |
+| has-header | Pragma                           | qr/no-cache/ |
+
+Get it again and check that they're cache hits.
+
+| Comment | subsequent GET uses cache  |
+| get     | /data/groups/%%gid%%/photo |
+| code-is | 200                        |
+
+| header-is  | X-Cache        | HIT from group-photo |
+| has-header | Content-Length |                      |
+| has-header | Cache-Control  | qr/public/           |
+| has-header | Cache-Control  | qr/must-revalidate/  |
+| has-header | Cache-Control  | qr/max-age=0/        |
+| has-header | Cache-Control  | qr/pre-check=30/     |
+| has-header | Cache-Control  | qr/post-check=0/     |
+| has-header | Last-Modified  |                      |
+
+| set-from-header | last_mod | Last-Modified |
+
+| Comment | subsequent GET uses cache (small) |
+| get     | /data/groups/%%gid%%/small_photo  |
+| code-is | 200                               |
+
+| header-is  | X-Cache        | HIT from group-photo |
+| has-header | Content-Length |                      |
+| has-header | Cache-Control  | qr/public/           |
+| has-header | Cache-Control  | qr/must-revalidate/  |
+| has-header | Cache-Control  | qr/max-age=0/        |
+| has-header | Cache-Control  | qr/pre-check=30/     |
+| has-header | Cache-Control  | qr/post-check=0/     |
+| has-header | Last-Modified  |                      |
+
+| set-from-header | small_last_mod | Last-Modified |
+
+
+Doing a conditional request should return 304s.  IMS = If-Modified-Since
+
+If-None-Match is not supported by nginx it seems.
+
+| Comment  | IMS re-request              |           |              |
+| cond-get | /data/groups/%%gid%%/photo | image/png | %%last_mod%% |
+| code-is  | 304                         |           |              |
+
+| Comment  | Bare re-request             |           |
+| cond-get | /data/groups/%%gid%%/photo | image/png |
+| code-is  | 200                         |           |
+
+| Comment  | IMS re-request (small)      |           |              |
+| cond-get | /data/groups/%%gid%%/small_photo | image/png | %%small_last_mod%% |
+| code-is  | 304                         |           |              |
+
+| Comment  | Bare re-request (small)     |           |
+| cond-get | /data/groups/%%gid%%/small_photo | image/png |
+| code-is  | 200                         |           |
+
+
+Test that POSTing an avatar (off of the web) changes the Last-Modified header.  Sleep is so that it gets a different timestamp than the above.
+
+| sleep | 2 |
+
+| Comment     | post a new photo                  |
+| upload-file | share/skin/common/images/logo.png |
+| PUT-json | /data/groups/%%gid%% | {"name":"awesome","permission_set":"private","photo_id":"%%upload_id%%"} |
+| code-is | 202 |
+
+| sleep | 1 |
+
+| Comment | next GET shows update and is from cache |
+| get     | /data/groups/%%gid%%/photo              |
+| code-is | 200                                     |
+
+| has-header  | Content-Length |                      |
+| has-header  | Cache-Control  | qr/public/           |
+| has-header  | Cache-Control  | qr/must-revalidate/  |
+| has-header  | Cache-Control  | qr/max-age=0/        |
+| has-header  | Cache-Control  | qr/pre-check=30/     |
+| has-header  | Cache-Control  | qr/post-check=0/     |
+| header-isnt | Last-Modified  | %%last_mod%%         |
+| header-is   | X-Cache        | HIT from group-photo |
+
+
+| Comment | generic photo is 404, noncacheable |
+| get     | /data/groups/-1/photo                   |
+| code-is | 404                                     |
+
+| header-is   | Content-Type  | image/png            |
+| has-header  | Cache-Control | qr/no-cache/         |
+| has-header  | Cache-Control | qr/no-store/         |
+| has-header  | Pragma        | qr/no-cache/         |
+| header-isnt | X-Cache       | HIT from group-photo |
+
+

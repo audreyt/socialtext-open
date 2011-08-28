@@ -1,0 +1,89 @@
+| *Comment* | Test Case: Canadien Français (Groups) |  |
+
+| *Comment* | Test Case: Canadien Français (Groups) - Create Account, User |  |
+| set | acct | acctcfw%%start_time%% |
+| set | user | usercfg%%start_time%%@matt.socialtext.net |
+| st-admin | create-account --name %%acct%% | was created |
+| st-admin | create-user --e %%user%% --p %%password%% --account %%acct%% | was created |
+| st-admin | give-accounts-admin --e %%user%% | now has accounts admin access |
+| set | groupAA | aardvark%%start_time%% |
+| set | groupA | Ångström%%start_time%% |
+| set | groupL | LOLCat%%start_time%% |
+| set | groupM | ḿegashark%%start_time%% |
+| set | groupN | nunmanuma%%start_time%% |
+| set | groupX | Xylophone%%start_time%% |
+
+| *Comment* | Test Case: Canadien Français (Groups) Create Groups |  |  |
+| create-group | %%groupAA%% | %%acct%% |  |
+| st-admin | set-permissions --g %%group_id%% --p self-join | have been changed to self-join |  |
+| set | groupaa_id | %%group_id%% |  |
+
+| create-group | %%groupA%% | %%acct%% |  |
+| st-admin | set-permissions --g %%group_id%% --p self-join | have been changed to self-join |  |
+| set | groupa_id | %%group_id%% |  |
+
+| create-group | %%groupL%% | %%acct%% |  |
+| st-admin | set-permissions --g %%group_id%% --p self-join | have been changed to self-join |  |
+| set | groupl_id | %%group_id%% |  |
+
+| create-group | %%groupM%% | %%acct%% |  |
+| st-admin | set-permissions --g %%group_id%% --p self-join | have been changed to self-join |  |
+| set | groupm_id | %%group_id%% |  |
+
+| create-group | %%groupN%% | %%acct%% |  |
+| st-admin | set-permissions --g %%group_id%% --p self-join | have been changed to self-join |  |
+| set | groupn_id | %%group_id%% |  |
+
+| create-group | %%groupX%% | %%acct%% |  |
+| st-admin | set-permissions --g %%group_id%% --p self-join | have been changed to self-join |  |
+| set | groupx_id | %%group_id%% |  |
+
+| *Comment* | Test Case: Canadien Français (Groups) Test Sorting for Groups in Dropdown (TOD: How?) |  |
+| st-process-jobs |  |  |
+| pause | 5000 |  |  |
+| st-logoutin | %%user%% | %%password%% |
+
+
+| *Comment* | Test Case: Canadien Français (Groups) Test Sorting for Groups-To-Join in Groups Directory |  |
+| wait_for_element_present_ok | link=Group Directory | 30000 |
+| click_and_wait | link=Group Directory |  |
+| pause | 10000 |  |
+| wait_for_element_visible_ok | link=%%groupA%% | 30000 |
+| pause | 10000 |  |
+| select_frame | widget_1 |  |
+| text_like | //body | qr/All Available Groups.+%%groupAA%%.+%%groupA%%.+%%groupL%%.+%%groupM%%.+%%groupN%%.+%%groupX%%/ |
+| select_frame | relative=parent |  |
+
+| *Comment* | Test Case: Canadien Français (Groups) Test Sorting for Groups-I-Belong-To in Groups Directory |  |
+| st-admin | add-member --g %%groupaa_id%% --e %%user%% | is now a member of the |
+| st-admin | add-member --g %%groupa_id%% --e %%user%% | is now a member of the |
+| st-admin | add-member --g %%groupl_id%% --e %%user%% | is now a member of the |
+| st-admin | add-member --g %%groupm_id%% --e %%user%% | is now a member of the |
+| st-admin | add-member --g %%groupn_id%% --e %%user%% | is now a member of the |
+| st-admin | add-member --g %%groupx_id%% --e %%user%% | is now a member of the |
+| st-process-jobs |  |  |
+| st-logoutin | %%user%% | %%password%% |
+| wait_for_element_present_ok | link=Group Directory | 30000 |
+| click_and_wait | link=Group Directory |  |
+| wait_for_element_visible_ok | link=%%groupA%% | 10000 |
+| pause | 10000 |  |
+| select_frame | widget_0 |  |
+| text_like | //body | qr/%%groupAA%%.+%%groupA%%.+%%groupL%%.+%%groupM%%.+%%groupN%%.+%%groupX%%/ |
+| select_frame | relative=parent |  |
+
+| *Comment* | Test Case: Canadien Français (Groups) TODO Test Sorting for Groups in Control Panel |  |
+| *Comment* | Test Case: Canadien Français (Groups) (/CP is multi-paged and current lacks search capability. Stinks.) |  |
+
+| *Comment* | Test Case: Canadien Français (Groups) TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%user%% |  |
+| st-admin | delete-group --g %%groupaa_id%% | Deleted group id: |
+| st-admin | delete-group --g %%groupa_id%% | Deleted group id: |
+| st-admin | delete-group --g %%groupl_id%% | Deleted group id: |
+| st-admin | delete-group --g %%groupm_id%% | Deleted group id: |
+| st-admin | delete-group --g %%groupn_id%% | Deleted group id: |
+| st-admin | delete-group --g %%groupx_id%% | Deleted group id: |
+| delete-account | %%acct%% |  |
+
+
+| *Comment* | Test Case: Canadien Français (Groups) COMPLETED |  |

@@ -1,0 +1,95 @@
+| *Comment* | STARTING Test Case: Command Line Tests ACCOUNTS |  |
+| set | cli_user | `cli-%%start_time%%@ken.socialtext.net` |
+| set | cli_user_escaped | `cli-%%start_time%%\@ken.socialtext.net` |
+| st-admin | create-user --email %%cli_user%% --password d3vnu11l |  |
+
+| *Comment* | Test Case: Command Line Tests ACCOUNTS create-account |  |
+| st-admin | create-account | The command you called (create-account) requires a name to be specified with the --name option. |
+| set | account | %%start_time%%-account |
+| st-admin | create-account --name %%account%% | A new account named "%%account%%" was created. |
+| st-admin | create-account --name %%account%% | The account name you provided, "%%account%%", is already in use. |
+
+| *Comment* | Test Case: Command Line Tests ACCOUNTS give-accounts-admin |  |
+| st-admin | give-accounts-admin | qr/ The command you called \(give-accounts-admin\) requires a user to be specified.+A user can be identified by username \(--username\) or email address \(--email\)\./ |
+| st-admin | give-accounts-admin --email bad-%%start_time%%@socialtext.com | No user with the email address "bad-%%start_time%%@socialtext.com" could be found. |
+| st-admin | give-accounts-admin --email %%cli_user%% | %%cli_user%% now has accounts admin access. |
+
+| *Comment* | Test Case: Command Line Tests ACCOUNTS remove-accounts-admin |  |
+| st-admin | remove-accounts-admin | qr/ The command you called \(remove-accounts-admin\) requires a user to be specified.+A user can be identified by username \(--username\) or email address \(--email\)\./ |
+| st-admin | remove-accounts-admin --email bad-%%start_time%%@socialtext.com | No user with the email address "bad-%%start_time%%@socialtext.com" could be found. |
+| st-admin | remove-accounts-admin --email %%cli_user%% | %%cli_user%% no longer has accounts admin access. |
+
+| *Comment* | Test Case: Command Line Tests ACCOUNTS give-system-admin |  |
+| st-admin | give-system-admin | qr/ The command you called \(give-system-admin\) requires a user to be specified.+A user can be identified by username \(--username\) or email address \(--email\)\./ |
+| st-admin | give-system-admin --email bad-%%start_time%%@socialtext.com | No user with the email address "bad-%%start_time%%@socialtext.com" could be found. |
+| st-admin | give-system-admin --email %%cli_user%% | %%cli_user%% now has system admin access. |
+
+| *Comment* | Test Case: Command Line Tests ACCOUNTS remove-system-admin |  |
+| st-admin | remove-system-admin | qr/ The command you called \(remove-system-admin\) requires a user to be specified.+A user can be identified by username \(--username\) or email address \(--email\)\./ |
+| st-admin | remove-system-admin --email bad-%%start_time%%@socialtext.com | No user with the email address "bad-%%start_time%%@socialtext.com" could be found. |
+| st-admin | remove-system-admin --email %%cli_user%% | %%cli_user%% no longer has system admin access. |
+
+| *Comment* | Test Case: Command Line Tests ACCOUNTS create and list |  |
+| st-admin | create-account | qr/The command you called \(create-account\) requires a name to be specified with the --name option./ |
+| st-admin | create-account --name | qr/The command you called \(create-account\) requires a name to be specified with the --name option./ |
+| st-admin | create-account --name account%%start_time%% | A new account named "account%%start_time%%" was created. |
+
+| st-admin | list-accounts | qr/account%%start_time%%/ |
+
+ set-user-account [--username or --email] --account
+get-user-account [--username or --email]
+
+| *Comment* | Test Case: Command Line Tests ACCOUNTS set user and default |  |
+| st-admin | set-user-account | qr/ The command you called \(set-user-account\) requires a user to be specified.+A user can be identified by username \(--username\) or email address \(--email\)\./ |
+| st-admin | set-user-account --email | qr/ The command you called \(set-user-account\) requires a user to be specified.+A user can be identified by username \(--username\) or email address \(--email\)\./ |
+| st-admin | set-user-account --email %%cli_user%% | qr/The command you called \(set-user-account\) requires an account to be specified/ |
+| st-admin | set-user-account --email %%cli_user%% --account account%%start_time%% | User "%%cli_user%%" was updated. |
+| st-admin | get-user-account | qr/ The command you called \(get-user-account\) requires a user to be specified.+A user can be identified by username \(--username\) or email address \(--email\)\./ |
+| st-admin | get-user-account --email %%cli_user%% | Primary account for "%%cli_user%%" is account%%start_time%% |
+
+| st-admin | set-default-account | qr/The command you called \(set-default-account\) requires an account to be specified/ |
+| st-admin | set-default-account --account account%%start_time%% | The default account is now account%%start_time%% |
+| st-admin | get-default-account | The default account is account%%start_time%% |
+
+| *Comment* | Test Case: Command Line Tests ACCOUNTS set default account back to normal so later tests pass |  |
+| st-admin | set-default-account --account "%%defaultaccount%%" | The default account is now %%hostname%% |
+| st-admin | get-default-account | The default account is %%defaultaccount%% |
+
+| *Comment* | Test Case: Command Line Tests ACCOUNTS export and import |  |
+| st-admin | export-account | qr/The command you called \(export-account\) requires an account to be specified/ |
+| st-admin | export-account --account account%%start_time%% | qr/account%%start_time%% account exported to \/tmp\/account%%start_time%%\.id-\d+\.export/ |
+| st-admin | create-workspace --empty --name ws%%start_time%% --title ws%%start_time%% --account account%%start_time%% | A new workspace named "ws%%start_time%%" was created |
+| st-admin | export-account --account account%%start_time%% | qr/Error - export directory \/tmp\/account%%start_time%%\.id-\d+\.export already exists!/ |
+| st-admin | export-account --account account%%start_time%% --force | qr/Exporting account account%%start_time%% \.\.\..+Exporting workspace ws%%start_time%% /././..+account%%start_time%% account exported to \/tmp\/account\.id-\d+\.export/ |
+
+| *Comment* | Test Case: Command Line Tests ACCOUNTS don't test import until {bz: 1640} is fixed and "this story"<http://https://www2.socialtext.net/dev-tasks/index.cgi?story_add_rename_account_to_st_admin> is implemented |  |
+
+ import-account --directory [--overwrite] [--name] [--noindex]
+
+| st-admin | set-account-config | qr/The command you called \(set-account-config\) requires an account to be specified/ |
+
+| *Comment* | Test Case: Command Line Tests ACCOUNTS see {bz: 1649} |  |
+| st-admin | set-account-config --account account%%start_time%% skin_name s3 | The account config for account%%start_time%% has been updated |
+| st-admin | show-account-config --account account%%start_time%% | qr/skin_name.+s3/ |
+| st-admin | set-account-config --account account%%start_time%% skin_name s3 | The account config for account%%start_time%% has been updated |
+| st-admin | show-account-config --account account%%start_time%% | qr/skin_name.+s3/ |
+
+| st-admin | reset-account-skin | qr/he command you called \(reset-account-skin\) requires an account to be specified/ |
+| st-admin | reset-account-skin --account account%%start_time%% | reset-account-skin requires --skin parameter |
+| st-admin | reset-account-skin --account account%%start_time%% --skin s3 | The skin for account account%%start_time%% and its workspaces has been updated |
+| st-admin | show-account-config --account account%%start_time%% | qr/skin_name.+s3/ |
+| st-admin | reset-account-skin --account account%%start_time%% --skin s3 | The skin for account account%%start_time%% and its workspaces has been updated |
+| st-admin | show-account-config --account account%%start_time%% | qr/skin_name.+s3/ |
+
+| *Comment* | Test Case: Command Line Tests ACCOUNTS need to deal with the file for mass-add of users |  |
+| st-admin | mass-add-users --csv foo.csv | The file you provided could not be read. No users were added. |
+| st-admin | mass-add-users --csv foo.csv --restriction foo | unknown restriction type, 'foo' |
+| st-admin | mass-add-users --csv foo.csv --restriction password_change | The file you provided could not be read. No users were added. |
+
+| *Comment* | Test Case: Command Line Tests ACCOUNTS TEARDOWN |  |
+| st-process-jobs |  |  |
+| st-admin | delete-workspace --w ws%%start_time%% --no-export | has been deleted |
+| delete-account | %%account%% |  |
+| delete-account | account%%start_time%% |  |
+
+| *Comment* | Test Case: Command Line Tests ACCOUNTS COMPLETED |  |

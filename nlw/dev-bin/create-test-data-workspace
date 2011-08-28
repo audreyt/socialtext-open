@@ -1,0 +1,85 @@
+#!/bin/bash
+# @COPYRIGHT@
+set -e
+
+# Parse command line options.
+case "$1" in
+    --dry-run)
+        DRYRUN=1
+        shift
+        ;;
+    --help)
+        echo "Usage: $0 [--dry-run] [tarball to import]"
+        exit 1
+        ;;
+esac
+
+# Add DIRNAME and DIRNAME/../bin to PATH, so this works in dev-envs.
+DIRNAME=$(dirname $0)
+export PATH="$DIRNAME:$DIRNAME/../bin:$PATH"
+
+THISHOST=`hostname --fqdn`
+
+# Useful for clarity in output, that's the only reason it is here.
+function abs_path() { perl -MCwd -le "print Cwd::abs_path(shift)" $1; }
+
+# Get the tarball and puzzle out the workspace name from it.
+TARBALL=$1
+if  [ -z "$TARBALL" ] || [ "$TARBALL" == "hosaka.1.tar.gz" ]; then
+    
+    if [ "$TARBALL" == "hosaka.1.tar.gz" ]; then
+       TARBALL="hosaka.1.tar.gz"
+    else
+       TARBALL="/tmp/$$/test-data.1.tar.gz"
+    fi 
+    echo "Fetching $TARBALL"
+    fetch-test-data-tarball $TARBALL
+fi
+TARBALL=$(abs_path $TARBALL)
+WS_NAME=$(echo `basename $TARBALL` | cut -f 1 -d .)
+
+echo "Preparing to update workspace $WS_NAME."
+
+# Make sure the tarball exists
+if [ ! -r $TARBALL ]; then 
+    echo "File does not exist or is not readable: $TARBALL"; 
+    exit 1;
+fi
+
+# Construct commands to execute
+STADMIN=$(abs_path `which st-admin`)
+DELETE="$STADMIN delete-workspace --workspace $WS_NAME --no-export --ceqlotron"
+IMPORT="$STADMIN import-workspace --tarball $TARBALL"
+ENABLESC="$STADMIN enable-plugin --p socialcalc --workspace $WS_NAME"
+SETACCT="$STADMIN set-workspace-config --workspace $WS_NAME account_name $THISHOST"
+
+# Check that we found the st-admin command.
+if [ ! -x "$STADMIN" ]; then
+    echo "Could not find st-admin command";
+    exit 1;
+fi
+
+# Turn commands into echos if --dry-run was given.
+if [ -n "$DRYRUN" ]; then
+    DELETE="echo $DELETE"
+    IMPORT="echo $IMPORT"
+    ENABLESC="echo $ENABLESC"
+    SETACCT="echo $SETACCT"
+fi
+
+echo "Deleting workspace $WS_NAME."
+$DELETE || /bin/true
+
+echo "Importing $(basename $TARBALL) as workspace $WS_NAME."
+$IMPORT
+
+rm $TARBALL
+
+echo "Enabling Socialcalc for $WS_NAME."
+$ENABLESC
+
+echo "Setting account to $THISHOST for $WS_NAME."
+$SETACCT
+
+echo "Done updating workspace $WS_NAME."
+exit 0

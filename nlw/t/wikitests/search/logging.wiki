@@ -1,0 +1,32 @@
+* Fixture: Search
+
+| set              | search_name     | search%%start_time%%                         |
+| create-workspace | %%search_name%% |                                              |
+| set              | search_id       | %%workspace_id%%                             |
+| set              | other_name      | other%%start_time%%                          |
+| create-workspace | %%other_name%%  |                                              |
+| set              | other_id        | %%workspace_id%%                             |
+| create-workspace | %%other_name%%  |                                              |
+| set              | user_name       | search-user%%start_time%%@ken.socialtext.net |
+| create-user      | %%user_name%%   | password                                     |
+| add-member       | %%user_name%%   | %%search_name%%                              |
+| add-member       | %%user_name%%   | %%other_name%%                               |
+
+| http-user-pass | %%user_name%%   | password |                            |
+| edit-page      | %%search_name%% | the page | the couch is in the corner |
+| code-is        | 201             |          |                            |
+
+## This Workspace search log
+| *Comment*    | This Workspace search log                                                 |
+| st-clear-log |                                                                           |
+| GET          | /%%search_name%%/?action=search&scope=&search_term=couch+and+corner       |
+| code-is      | 200                                                                       |
+| log-like     | SEARCH,SOLR,ACTOR_ID:%%user_id%%                                          |
+| log-like     | "q":"couch AND corner"                                                    |
+| log-like     | "fq":\["\(doctype:attachment OR doctype:page\) AND \(w:%%search_id%%\)"\] |
+| log-like     | "start":0                                                                 |
+| log-like     | "qt":"standard"                                                           |
+| log-like     | "sort":"score desc, date desc, id desc"                                   |
+| log-like     | "timer":"[\.\d]+"                                                         |
+| log-like     | "hits":\d+                                                              |
+| log-like     | "raw_query":"couch and corner"                                            |

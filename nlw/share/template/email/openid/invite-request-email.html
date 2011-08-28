@@ -1,0 +1,33 @@
+[%# @COPYRIGHT@ -%]
+<html>
+    <head>
+         <title>[% loc('email.invitation-request') %]</title>
+     </head>
+
+     <body>
+         [% loc('email.hello') %]
+         <p>
+[% loc('email.request-invite=user,wiki:', inviting_user, workspace_title) %]
+</p>
+<p>
+
+[% FOREACH user = invited_users %]
+[% user %]<br /> [% END %]
+</p>
+
+
+[% IF extra_text %]
+<p>
+[% extra_text %]
+</p>
+[% END %]
+<p>
+[% loc('email.to-invite-users-visit-wiki-invite-page-link:') %]
+</p>
+
+<p>
+[% url %]
+</p>
+
+[% PROCESS 'email/standard-footer.html',
+   support_link = 0 %]

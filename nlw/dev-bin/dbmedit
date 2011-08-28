@@ -1,0 +1,30 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use IO::All;
+use Data::Dumper;
+$Data::Dumper::Terse = 1;
+
+my $tempfile = io('dbmedit.' . $$);
+my $dbfile = io(shift || exit);
+my $backup = "$dbfile.bak.$$";
+`cp $dbfile $backup`;
+
+$dbfile->dbm('DB_File')->rdonly;
+
+$tempfile->print(Dumper \%$dbfile)->close;
+$dbfile->close;
+
+my $editor = $ENV{EDITOR} ||
+    die "please set your EDITOR environment variable\n";
+system "$editor $tempfile";
+
+my $hash = eval $tempfile->all;
+die $@ if $@;
+$tempfile->unlink;
+
+my $new_dbfile = io($dbfile . ".new.$$")->dbm('DB_File')->rdwr;
+%$new_dbfile = %$hash;
+$new_dbfile->close;
+$new_dbfile->rename($dbfile);

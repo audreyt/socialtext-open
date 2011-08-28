@@ -1,0 +1,9 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+
+# We don't want to do an expensive filesystem sweep here, so we'd rather error
+# on the side of creating extra (useless) jobs.
+
+exit 0;

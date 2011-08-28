@@ -1,0 +1,40 @@
+<html>
+<head>
+<title>09handler</title>
+<script type="text/javascript" src="lib/JSAN.js" charset="UTF-8"></script>
+<script type="text/javascript" src="lib/Test/Builder.js" charset="UTF-8"></script>
+<script type="text/javascript" src="../lib/Widget/Lightbox.js"></script>
+</head>
+<body>
+<p>Hello</p>
+
+<pre id="test"></pre>
+</body>
+<script type="text/javascript"><!--
+JSAN.use("Effect.RoundedCorners");
+
+var t = new Test.Builder();
+t.plan({tests: 1});
+
+
+var mydiv = document.createElement('div');
+mydiv.innerHTML = "<p id=\"testbox\">Hello world</p><p>Click grey background to close this box</p><a href=\"#\">Click here for an alert</a><p>If the alert is not showing, this test is failed.</p><p>Yes, this is a manual test</p>";
+
+var box = new Widget.Lightbox();
+var thep = mydiv.getElementsByTagName("a")[0];
+thep.onclick = function() {
+    alert("Yo");
+    box.hide();
+    t.ok(1, "Alert is showing, the onclick handler is preserved.");
+    t.endAsync();
+}
+
+box.config.clickBackgroundToHide = false;
+box.content(mydiv);
+box.show();
+t.beginAsync(600000);
+
+//--></script>
+
+</html>
+

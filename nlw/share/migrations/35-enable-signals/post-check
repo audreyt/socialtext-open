@@ -1,0 +1,17 @@
+#!/usr/bin/env perl
+#@COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_singlevalue/;
+
+my $signals = sql_singlevalue(
+    q{SELECT COUNT(*) FROM account_plugin WHERE plugin = 'signals'}
+);
+my $people = sql_singlevalue(
+    q{SELECT COUNT(*) FROM account_plugin WHERE plugin = 'people'}
+);
+if ($signals != $people) {
+    warn "There are $people accounts with people enabled and $signals accounts with signals enabled";
+    exit 1;
+}
+exit 0;

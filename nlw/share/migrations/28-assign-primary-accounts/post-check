@@ -1,0 +1,38 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::Account;
+use Socialtext::User;
+use Socialtext::SQL qw/sql_singlevalue/;
+
+my $st_account_id = Socialtext::Account->Socialtext->account_id();
+
+my $sql = q{
+    SELECT primary_account_id
+      FROM "UserMetadata"
+      JOIN "UserId" ON "UserMetadata".user_id = "UserId".system_unique_id
+      JOIN "User" ON "User".user_id = "UserId".driver_unique_id
+     WHERE "User".username = ?
+};
+
+my $system_user_acct_id = sql_singlevalue($sql, 'system-user');
+my $guest_user_acct_id  = sql_singlevalue($sql, 'guest');
+
+unless ( ($system_user_acct_id == $st_account_id)
+    and ($guest_user_acct_id == $st_account_id) ) {
+    print "System user and guest user not assigned to the correct account.\n";
+    exit 1;
+}
+
+# Check all users have a primary account
+my $count = sql_singlevalue(<<EOT);
+SELECT COUNT(*) FROM "UserMetadata" WHERE primary_account_id IS NULL
+EOT
+if ($count == 0) {
+    print "All users now have primary accounts.\n";
+    exit 0;
+}
+
+print "Error - not all users have primary accounts!\n";
+exit 1;

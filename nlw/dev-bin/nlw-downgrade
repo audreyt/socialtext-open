@@ -1,0 +1,25 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+my $path = '/var/www/socialtext/workspace/';
+my $filename = 'config.yaml';
+my $extension = 'pre-skin';
+
+opendir PATH, $path
+    or die "Cannot open $path for working: $!\n";
+
+for my $ws (grep !/^\.\.?$/, readdir PATH) {
+
+    my $rollback_file = "$path$ws/$filename.$extension";
+    my $overwrite_file = "$path$ws/$filename";
+
+    if (-f $rollback_file) {
+	warn "unable to rollback $overwrite_file: $!" unless
+           system('cp', $rollback_file, $overwrite_file) == 0;
+    }
+}
+
+closedir PATH;

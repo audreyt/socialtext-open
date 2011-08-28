@@ -1,0 +1,102 @@
+Addresses Bugs {bz: 3708} and {bz: 3717} , where we saw the CP looking up Users by "username" instead of "user_id".
+
+When we had Users that had an _all numeric_ username, that *could* conflict with the user_id of another User in the system, and the CP would inadvertently display data for or perform operations against the wrong User.
+
+| *Comment* | Test Case: Business Control Panel USER: Lookup by User Id |  |
+
+| set | accountTable | `//div[@id='accountTable']/table` |
+| set | workspaceTable | `//div[@id='workspaceTable']/table` |
+
+| *Comment* | Test Case: Business Control Panel USER: Lookup by User Id set up accounts and users |  |
+| set | acct_one | acct_one_%%start_time%% |
+| st-admin | create-account --name '%%acct_one%%' | was created |
+| set | ws_one | ws_one_%%start_time%% |
+| st-admin | create-workspace --empty --name %%ws_one%% --title %%ws_one%% --empty --account %%acct_one%% | was created |
+
+| set | acct_two | acct_two_%%start_time%% |
+| st-admin | create-account --name '%%acct_two%%' | was created |
+| set | ws_two | ws_two_%%start_time%% |
+| st-admin | create-workspace --empty --name %%ws_two%% --title %%ws_two%% --empty --account %%acct_two%% | was created |
+
+| set | user_one_firstname | John |
+| set | user_one_lastname | Doe |
+| set | user_one_email | john-doe-%%start_time%%@ken.socialtext.net |
+| st-admin | create-user --email %%user_one_email%% --first-name %%user_one_firstname%% --last-name %%user_one_lastname%% --account %%acct_one%% --password abc123 | was created |
+| st-admin | add-member --workspace %%ws_one%% --email %%user_one_email%% |
+| set-user-id | user_one_id | %%user_one_email%% |
+
+| set | user_two_firstname | Jane |
+| set | user_two_lastname | Smith |
+| set | user_two_email | jane-smith-%%start_time%%@ken.socialtext.net |
+| set | user_two_username | 000%%user_one_id%% |
+| st-admin | create-user --username %%user_two_username%% --email %%user_two_email%% --first-name %%user_two_firstname%% --last-name %%user_two_lastname%% --account %%acct_two%% --password abc123 | was created |
+| st-admin | add-member --workspace %%ws_two%% --email %%user_two_email%% |
+| set-user-id | user_two_id | %%user_two_email%% |
+
+# Bug 3708; Viewing User shows the correct WS list for that User
+# ... User One shows their Account/WS list
+
+| *Comment* | Test Case: Business Control Panel USER: Lookup by User Id User One shows their Account/WS list |  |
+| open-ok | /nlw/control/user/%%user_one_id%% |  |
+| wait_for_text_present_ok | %%user_one_email%% | 30000 |
+| wait-for-element-visible-ok | %%accountTable%% | 30000 |
+| wait_for_text_present_ok | %%acct_one%% | 30000 |
+| text-like | %%accountTable%% | %%acct_one%% |
+| wait-for-element-visible-ok | workspaceTable | 30000 |
+| wait_for_text_present_ok | %%ws_one%% | 30000 |
+| text-like | workspaceTable | %%ws_one%% |
+
+# ... and User Two shows their Account/WS list
+
+| *Comment* | Test Case: Business Control Panel USER: Lookup by User Id and User Two shows their Account/WS list |  |
+| open-ok | /nlw/control/user/%%user_two_id%% |  |
+| wait_for_text_present_ok | %%user_two_email%% | 30000 |
+| wait-for-element-visible-ok | %%accountTable%% | 30000 |
+| wait_for_text_present_ok | %%acct_two%% | 30000 |
+| text-like | %%accountTable%% | %%acct_two%% |
+| wait-for-element-visible-ok | workspaceTable | 30000 |
+| wait_for_text_present_ok | %%ws_two%% | 30000 |
+| text-like | workspaceTable | %%ws_two%% |
+
+# Bug 3717; Changing Primary Account acts against the correct User
+# ... create a new Acct and make both test Users a member via a WS
+
+| *Comment* | Test Case: Business Control Panel USER: Lookup by User Id create a new Acct and make both test Users a member via a WS |  |
+| set | acct_three | acct_three_%%start_time%% |
+| st-admin | create-account --name '%%acct_three%%' | was created |
+| set | ws_three | ws_three_%%start_time%% |
+| st-admin | create-workspace --empty --name %%ws_three%% --title %%ws_three%% --empty --account %%acct_three%% | was created |
+| st-admin | add-member --workspace %%ws_three%% --email %%user_one_email%% | now has the role |
+| st-admin | add-member --workspace %%ws_three%% --email %%user_two_email%% | now has the role |
+
+# ... give User Two that new Acct as her Primary Acct, and double-check that we didn't accidentally re-assign User One
+
+| *Comment* | Test Case: Business Control Panel USER: Lookup by User Id give User Two that new Acct as her Primary Acct, and double-check |  |
+| open-ok | /nlw/control/user/%%user_two_id%% |  |
+| wait-for-element-visible-ok | %%accountTable%% | 30000 |
+| wait_for_text_present_ok | Primary Account | 30000 |
+| text-like | %%accountTable%% | qr/Primary Account.+Via.+Workspace.+%%ws_two%%/ism |
+
+| *Comment* | Test Case: Business Control Panel USER: Lookup by User Id swap primary account |  |
+| wait-for-element-visible-ok | accountTable-radio-2-0 | 30000 |
+| click-ok | accountTable-radio-2-0 |  |
+
+| pause | 10000 | wait for AJAX request to save+reload Primary Account change |
+
+| wait-for-element-visible-ok | %%accountTable%% | 30000 |
+| wait_for_text_present_ok | Primary Account | 30000 |
+| text-like | %%accountTable%% | qr/Primary Account.+Via.+Workspace.+%%ws_three%%/ism |
+
+| *Comment* | Test Case: Business Control Panel USER: Lookup by User Id TEARDOWN |  |
+
+| st-process-jobs |  |  |
+| deactivate-user | %%user_one_email%% |  |
+| deactivate-user | %%user_two_email%% |  |
+| st-admin | delete-workspace --no-export --w %%ws_one%% | deleted |
+| st-admin | delete-workspace --no-export --w %%ws_two%% | deleted |
+| st-admin | delete-workspace --no-export --w %%ws_three%% | deleted |
+| delete-account | %%acct_one%% |  |
+| delete-account | %%acct_two%% |  |
+| delete-account | %%acct_three%% |  |
+
+| *Comment* | Test Case: Business Control Panel USER: Lookup by User Id COMPLETED |  |

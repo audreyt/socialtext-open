@@ -1,0 +1,11 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+# NOTE: Test::Socialtext now cleans up all ceq jobs after each run.
+
+use strict;
+use warnings;
+use lib "$ENV{NLW_DIR}/lib";
+use Socialtext::Jobs;
+
+eval { Socialtext::Jobs->clear_jobs() };

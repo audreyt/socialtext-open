@@ -1,0 +1,342 @@
+Note: Heavily dependent on the default content of current test-data workspace
+
+| *Comment* | Test case: Functional Search Tests easy searches |  |
+| st-search | =Jabber | Pages matching 'title:Jabber' |
+| select_and_wait | sort-picker | label=Revisions |
+| select_and_wait | sort-picker | label=Relevance |
+| st-result | 1 total |  |
+| st-result | jabber |  |
+| st-search | tag: carroll | Pages matching 'tag: carroll' |
+| st-result | 5 total |  |
+| st-result | jabber |  |
+| st-result | Jabberwocky |  |
+| st-result | The Vorpal Sword |  |
+| st-result | Wock |  |
+| st-search | 1.2 | Pages matching '1.2' |
+| st-result | 3 total |  |
+| st-result | jabber |  |
+| st-result | Wock |  |
+| st-result | beamish boy |  |
+| st-search | 100% | Pages matching '100%' |
+| st-result | 6 total |  |
+| st-result | jabber |  |
+| st-result | Canonical Test Data Set |  |
+| st-result | Jabberwocky |  |
+| st-result | Project Plans |  |
+| st-result | Credit Card Payment |  |
+| st-result | Sample Excel 2007 file.xlsx |  |
+| st-search | jabber |  |
+| st-result | 5 total |
+
+| *Comment* | Test case: Functional Search Word, Two tests because sometimes beamish and stemming swap relevance |  |
+| text_like | //body | qr/jabber.+The Vorpal Sword.+Stemming test page 2.+Jabberwocky/ |
+| text_like | //body | qr/jabber.+The Vorpal Sword.+beamish boy.+Jabberwocky/ |
+
+| *Comment* | Test case: Functional Search Word, Excel, PPT 2007 format |  |
+| st-search | lorem AND ipsum |  |
+| st-result | 3 total |  |
+| st-result | Boilerplate PPT File.pptx |  |
+| st-result | Sample Excel 2007 file.xlsx |  |
+| st-result | In the Beginning was a word document.docx |  |
+| st-search | boilerplate |  |
+| st-result | Boilerplate PPT File.pptx |  |
+| st-result | 1 total |  |
+
+| *Comment* | Test case: Functional Search partial match |  |
+| st-search | jab | Pages matching 'jab' |
+| st-result | 0 results |  |
+| st-search | jab* | Pages matching 'jab*' |
+| st-result | 5 total |  |
+| st-result | Jabberwocky |  |
+| st-result | beamish boy |  |
+| st-result | jabber |  |
+| st-result | The Vorpal Sword |  |
+| st-result | Stemming test page 2 |  |
+| text_like | qr/Jabberwocky.+beamish boy.+jabber.+The Vorpal Sword.+Stemming test page 2/ |
+| st-search | vorp | Pages matching 'vorp' |
+| st-result | 0 results |  |
+| st-search | vorp* | Pages matching 'vorp*' |
+| st-result | 2 total |  |
+| st-result | Jabberwocky |  |
+| st-result | The Vorpal Sword |  |
+| st-search | jab* OR vorp* | Pages matching 'jab* OR vorp*' |
+| st-result | 5 total |  |
+| st-result | Jabberwocky |  |
+| st-result | beamish boy |  |
+| st-result | jabber |  |
+| st-result | The Vorpal Sword |  |
+| st-result | Stemming test page 2 |  |
+
+| *Comment* | Test case: Functional Search tag match and partial |  |
+| st-search | tag:carr | Pages matching 'tag:carr' |
+| st-result | 0 results |  |
+| *Comment* | Test case: Functional Search tag match and partial |  |
+| st-search | tag:carr* | Pages matching 'tag:carr*' |
+| st-result | 5 total |  |
+| st-result | Jabberwocky |  |
+| st-result | beamish boy |  |
+| st-result | jabber |  |
+| st-result | The Vorpal Sword |  |
+| st-result | Wock |  |
+
+| *Comment* | Test case: Functional Search title match and partial |  |
+| st-search | title:Woc | Pages matching 'title:Woc' |
+| st-result | 0 results |  |
+| *Comment* | Test case: Functional Search tag match and partial |  |
+| st-search | title:Woc* | Pages matching 'title:Woc*' |
+| st-result | 1 total |  |
+| st-result | Wock |  |
+
+*AND searches:*
+
+Title searches
+
+| *Comment* | Test case: Functional Search Tests AND title searches |  |
+| st-search | =Jabber AND brillig | Pages matching 'title:Jabber AND brillig' |
+| st-result | 1 total |  |
+| st-result | jabber |  |
+| st-search | =Jabber AND NOT brillig | Pages matching 'title:Jabber AND NOT brillig' |
+| st-result | 0 results |  |
+| st-search | =Jabber AND tag:carroll | Pages matching 'title:Jabber AND tag:carroll' |
+| st-result | 1 total |  |
+| st-result | jabber |  |
+| st-search | =Jabber AND NOT tag:carroll | Pages matching 'title:Jabber AND NOT tag:carroll' |
+| st-result | 0 results |  |
+| st-search | =Jabber AND -tag:carroll | Pages matching 'title:Jabber AND -tag:carroll' |
+| st-result | 0 results |  |
+| st-search | ="beamish boy" AND tag:"carroll's poem" | Pages matching 'title:"beamish boy" AND tag:"carroll's poem"' |
+| st-result | 1 total |  |
+| st-result | beamish boy |  |
+| *Comment* | Use equal sign and title as second component of search |  |
+| st-search | tag:carrol AND title:beamish | Pages matching 'tag:carrol AND title:beamish' |
+| st-result | 1 total |  |
+| st-result | beamish boy |  |
+| st-search | tag:carrol AND title:beamish | Pages matching 'tag:carrol AND title:beamish' |
+| st-result | 1 total |  |
+| st-result | beamish boy |  |
+
+| *Comment* | Test case: Functional Search Tests AND tag searches |  |
+| st-search | brillig AND tag:Carroll | Pages matching 'brillig AND tag:Carroll' |
+| st-result | 2 total |  |
+| st-result | jabber |  |
+| st-result | Jabberwocky |  |
+| st-search | tag:carroll AND tag:jabber | Pages matching 'tag:carroll AND tag:jabber' |
+| st-result | 4 total |  |
+| st-result | jabber |  |
+| st-result | Jabberwocky |  |
+| st-result | The Vorpal Sword |  |
+| st-search | tag:carroll AND tag:foobar | Pages matching 'tag:carroll AND tag:foobar' |
+| st-result | 0 results |  |
+| st-search | tag:carroll AND tag:jabber AND tag:foobar | Pages matching 'tag:carroll AND tag:jabber AND tag:foobar' |
+| st-result | 0 results |  |
+| st-search | tag:"carroll's poem" AND tag:jabber | Pages matching 'tag:"carroll's poem" AND tag:jabber' |
+| st-result | 2 total |  |
+| st-result | Jabberwocky |  |
+| st-result | beamish boy |  |
+
+| *Comment* | Test case: Functional Search Tests AND token searches |  |
+| st-search | tag:carroll AND 1.2 | Pages matching 'tag:carroll AND 1.2' |
+| st-result | 3 total |  |
+| st-result | jabber |  |
+| st-result | Wock |  |
+| st-result | beamish boy |  |
+| st-search | brillig AND 1.2 | Pages matching 'brillig AND 1.2' |
+| st-result | 1 total |  |
+| st-result | jabber |  |
+| st-search | 100% AND 1.2 | Pages matching '100% AND 1.2' |
+| st-result | 1 total |  |
+| st-result | jabber |  |
+| st-search | tag:"carroll's poem" AND 1.4 | Pages matching 'tag:"carroll's poem" AND 1.4' |
+| st-result | 1 total |  |
+| st-result | Jabberwocky |  |
+
+| *Comment* | Test case: Functional Search Tests OR title searches |  |
+| st-search | =jabberwocky OR brillig | Pages matching 'title:jabberwocky OR brillig' |
+| st-result | 2 total |  |
+| st-result | jabber |  |
+| st-result | Jabberwocky |
+| st-search | slithy OR title:jabber | Pages matching 'slithy OR title:jabber' |
+| st-result | 4 total |  |
+| st-result | jabber |  |
+| st-result | Jabberwocky |
+| st-result | Slithy |  |
+| st-result | Wock |  |
+| st-search | ="beamish boy" OR tag:"carroll's poem" | Pages matching 'title:"beamish boy" OR tag:"carroll's poem"' |
+| st-result | 2 total |  |
+| st-result | Jabberwocky |  |
+| st-result | beamish boy |  |
+
+| *Comment* | Test case: Functional Search Tests OR tag searches |  |
+| st-search | slithy OR tag:carroll | Pages matching 'slithy OR tag:carroll' |
+| st-result | 6 total |  |
+| st-result | jabber |  |
+| st-result | Jabberwocky |
+| st-result | The Vorpal Sword |
+| st-result | Slithy |  |
+| st-result | Wock |  |
+| st-result | beamish boy |  |
+| st-search | tag:carroll OR tag:jabber | Pages matching 'tag:carroll OR tag:jabber' |
+| st-result | 6 total |  |
+| st-result | beamish boy |  |
+| st-result | jabber |  |
+| st-result | Jabberwocky |  |
+| st-result | The Vorpal Sword |  |
+| st-result | Stemming test page 2 |  |
+| st-result | Wock |  |
+| st-search | stem OR tag:carroll OR tag:jabber | Pages matching 'stem OR tag:carroll OR tag:jabber' |
+| st-result | 7 total |  |
+| st-result | Stemming test page 1 |  |
+| st-result | beamish boy |  |
+| st-result | jabber |  |
+| st-result | Jabberwocky |  |
+| st-result | The Vorpal Sword |  |
+| st-result | Stemming test page 2 |  |
+| st-result | Wock |  |
+| text_like | //body | qr/jabber.+The Vorpal Sword.+beamish boy.+Stemming test page 2.+Jabberwocky.+Wock.+Stemming test page 1/ |
+| st-search | tag:"carroll's poem" OR tag:jabber | Pages matching 'tag:"carroll's poem" OR tag:jabber' |
+| st-result | 5 total |  |
+| st-result | Jabberwocky |  |
+| st-result | beamish boy |  |
+| st-result | The Vorpal Sword |  |
+| st-result | jabber |  |
+| st-result | Stemming test page 2 |  |
+
+| *Comment* | Test case: Functional Search Tests OR token searches |  |
+| st-search | 1.2 OR 1.5 | Pages matching '1.2 OR 1.5' |
+| st-result | 3 total |  |
+| st-result | jabber |  |
+| st-result | Wock |  |
+| st-result | beamish boy |  |
+
+| st-search | 1.2 OR 100% | Pages matching '1.2 OR 100%' |
+| st-result | 8 total |  |
+| st-result | jabber |  |
+| st-result | beamish boy |  |
+| st-result | Canonical Test Data Set |  |
+| st-result | Jabberwocky |  |
+| st-result | Wock |  |
+| st-result | Project Plans |  |
+| st-result | Sample Excel 2007 file.xlsx |  |
+| st-result | Credit Card Payment |  |
+| text_like | //body | qr/jabber.+Canonical Test Data Set/ |
+| text_like | //body | qr/jabber.+beamish boy/ |
+| text_like | //body | qr/jabber.+Project Plans/ |
+| text_like | //body | qr/jabber.+Wock/ |
+| text_like | //body | qr/jabber.+Credit Card Payment/ |
+| text_like | //body | qr/jabber.+Sample Excel 2007 file.xlsx/ |
+
+
+| st-search | =jabber OR 1.2 | Pages matching 'title:jabber OR 1.2' |
+| st-result | 3 total |  |
+| st-result | jabber |  |
+| st-result | Wock |  |
+| st-result | beamish boy |  |
+
+| st-search | =jabber OR 100% | Pages matching 'title:jabber OR 100%' |
+| st-result | 6 total |  |
+| st-result | jabber |  |
+| st-result | Canonical Test Data Set |  |
+| st-result | Jabberwocky |  |
+| st-result | Project Plans |  |
+| st-result | Credit Card Payment |  |
+| st-result | Sample Excel 2007 file.xlsx |  |
+| text_like | //body | qr/jabber.+Canonical Test Data Set/ |
+| text_like | //body | qr/jabber.+Jabberwocky/ |
+| text_like | //body | qr/jabber.+Project Plans/ |
+| text_like | //body | qr/jabber.+Sample Excel 2007 file.xlsx/ |
+| text_like | //body | qr/jabber.+Credit Card Payment/ |
+
+| st-result | Credit Card Payment |  |
+
+| st-search | tag:"carroll's poem" OR 1.2 | Pages matching 'tag:"carroll's poem" OR 1.2' |
+| st-result | 4 total |  |
+| st-result | Jabberwocky |  |
+| st-result | beamish boy |  |
+| st-result | jabber |  |
+| st-result | wock |  |
+
+| *Comment* | Test case: Functional Search Tests NOT title searches |  |
+| st-search | title:jabber AND NOT slithy | Pages matching 'title:jabber AND NOT slithy' |
+| st-result | 1 total |  |
+| st-result | jabber |  |
+| st-search | title:jabber OR slithy | Pages matching 'title:jabber OR slithy' |
+| st-result | 4 total |  |
+| st-result | jabber |  |
+| st-result | Jabberwocky |  |
+| st-result | Slithy |  |
+| st-result | Wock |  |
+| st-search | slithy AND NOT title:jabber | Pages matching 'slithy AND NOT title:jabber' |
+| st-result | 3 total |  |
+| st-result | Jabberwocky |  |
+| st-result | Slithy |  |
+| st-result | wock |  |
+| st-search | ="vorpal sword" AND NOT tag:"carroll's poem" | Pages matching 'title:"vorpal sword" AND NOT tag:"carroll's poem"' |
+| st-result | 1 total |  |
+| st-result | The Vorpal Sword |  |
+
+| *Comment* | Test case: Functional Search Tests NOT tag searches |  |
+| st-search | tag:carroll AND -slithy | Pages matching 'tag:carroll AND -slithy' |
+| st-result | 3 total |  |
+| st-result | jabber |  |
+| st-result | The Vorpal Sword |  |
+| st-search | tag:carroll AND NOT slithy | Pages matching 'tag:carroll AND NOT slithy' |
+| st-result | 3 total |  |
+| st-result | jabber |  |
+| st-result | The Vorpal Sword |  |
+| st-search | slithy AND -tag:carroll | Pages matching 'slithy AND -tag:carroll' |
+| st-result | 1 total |  |
+| st-result | Slithy |  |
+| st-search | slithy AND NOT tag:carroll | Pages matching 'slithy AND NOT tag:carroll' |
+| st-result | 1 total |  |
+| st-result | Slithy |  |
+| st-search | tag:"carroll's poem" AND NOT tag:jabber | Pages matching 'tag:"carroll's poem" AND NOT tag:jabber' |
+| st-result | 0 results |  |
+
+| *Comment* | Test case: Functional Search Tests NOT token searches |  |
+| st-search | 1.2 AND NOT 1.5 | Pages matching '1.2 AND NOT 1.5' |
+| st-result | 3 total |  |
+| st-result | jabber |  |
+| st-result | Wock |  |
+| st-result | beamish boy |  |
+
+| st-search | 1.2 AND NOT =jabber | Pages matching '1.2 AND NOT title:jabber' |
+| st-result | 2 total |  |
+| st-result | Wock |  |
+| st-result | beamish boy |  |
+
+| st-search | 1.2 AND NOT jabber | Pages matching '1.2 AND NOT jabber' |
+| st-result | 1 total |  |
+| st-result | Wock |  |
+| st-search | tag:"carroll's poem" AND NOT 1.2 | Pages matching 'tag:"carroll's poem" AND NOT 1.2' |
+| st-result | 1 total |  |
+| st-result | Jabberwocky |  |
+
+| *Comment* | Test case: Functional Search Tests Phrase title searches |  |
+| st-search | ="beamish boy" | Pages matching 'title:"beamish boy"' |
+| st-result | 1 total |  |
+| st-result | beamish boy |  |
+| st-search | title:"beamish boy" | Pages matching 'title:"beamish boy"' |
+| st-result | 1 total |  |
+| st-result | beamish boy |  |
+
+| *Comment* | Test case: Functional Search Tests Phrase tag searches |  |
+| st-search | tag:"stemming test" | Pages matching 'tag:"stemming test"' |
+| st-result | 2 total |  |
+| st-result | Stemming test page 1 |  |
+| st-result | Stemming test page 2 |  |
+
+| *Comment* | Test case: Functional Search Tests Phrase token searches |  |
+| st-search | "has thou slain the jabberwock" | Pages matching '"has thou slain the jabberwock"' |
+| st-result | 2 total |  |
+| st-result | Jabberwocky |  |
+| st-result | beamish boy |  |
+| st-search | "has thou slain the jabberwock" | Pages matching '"has thou slain the jabberwock"' |
+| st-result | 2 total |  |
+| st-result | Jabberwocky |  |
+| st-result | beamish boy |  |
+
+| *Comment* | Test case: Functional Search Tests COMPLETED |  |
+
+----
+
+[Scratch Test Plan]

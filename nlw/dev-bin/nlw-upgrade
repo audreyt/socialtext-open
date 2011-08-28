@@ -1,0 +1,59 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+# These settings are the 1.9 rollout
+#
+
+my $text = <<EOF;
+
+workspace_title_below_logo: 1
+header_logo_static_path: images/new-design/logo-bar-26.gif
+
+custom_css_path:
+- base/css/new-design
+
+custom_css_files:
+- new-design.css
+ 
+custom_image_path:
+- new-design
+ 
+EOF
+
+my $path = '/var/www/socialtext/workspace/';
+my $filename = 'config.yaml';
+my $extension = 'pre-skin';
+
+opendir PATH, $path
+    or die "Cannot open $path for working: $!\n";
+
+for my $ws (grep !/^\./, readdir PATH) {
+
+    my $file = "$path$ws/$filename";
+
+    unless (open FILE, $file) {
+	warn "No config found for $ws: $!\n";
+	next;
+    }
+
+    if (! grep /^custom_(template|css|image)/, <FILE>) {
+        close FILE;
+
+        warn "Couldn't copy $filename for $ws: $!\n"
+	    unless system("cp", "$file", "$file.$extension") == 0;
+
+        if (open FILE, ">> $file") {
+            print FILE $text;
+        } else {
+	    warn "Could not open $file for writing: $!\n";
+        }
+    }
+
+    close FILE;
+
+}
+
+closedir PATH;

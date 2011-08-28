@@ -1,0 +1,59 @@
+* Fixture: SocialRest
+
+| standard-test-setup |
+
+# Set up our Business Admin
+
+| set                | badmin     | badmin%%start_time%%@ken.socialtext.net |
+| create-user        | %%badmin%% | password                                |
+| set-business-admin | %%badmin%% | 1                                       |
+| http-user-pass     | %%badmin%% | password                                |
+
+# Create a new Group, add some Users
+
+| set               | group_name     | group%%start_time%%                    |              |
+| create-group      | %%group_name%% | %%account%%                            | %%username%% |
+| set               | jules          | jules%%start_time%%@ken.socialtext.net |              |
+| create-user       | %%jules%%      | password                               |              |
+| add-user-to-group | %%jules%%      | %%group_id%%                           |              |
+| set               | jonas          | jonas%%start_time%%@ken.socialtext.net |              |
+| create-user       | %%jonas%%      | password                               |              |
+| add-user-to-group | %%jonas%%      | %%group_id%%                           |              |
+| set | jacob | jacob%%start_time%%@ken.socialtext.net |
+| create-user       | %%jacob%%      | password                               |              |
+# Make sure that we're seeing what we're supposed to see
+
+| GET             | /data/groups/%%group_id%%/users?all=1 |         |
+| code-is         | 200                                   |         |
+| header-like     | Cache-Control                         | private |
+| json-parse      |                                       |         |
+| json-array-size | 3                                     |         |
+| body-like       | %%jules%%                             |         |
+| body-like       | %%jonas%%                             |         |
+
+# Delete us some Users
+
+| DELETE          | /data/groups/%%group_id%%/users/%%jonas%% |         |
+| code-is         | 204                                       |         |
+| GET             | /data/groups/%%group_id%%/users?all=1     |         |
+| code-is         | 200                                       |         |
+| header-like     | Cache-Control                             | private |
+| json-parse      |                                           |         |
+| json-array-size | 2                                         |         |
+| body-like       | %%jules%%                                 |         |
+| body-unlike     | %%jonas%%                                 |         |
+
+
+# Check Error conditions
+
+| *Comment* | User is not in Group |
+| DELETE    | /data/groups/%%group_id%%/users/%%jacob%% |
+| code-is   | 400                            |
+
+| *Comment* | No Such User |
+| DELETE  | /data/groups/%%group_id%%/users/nosuchuser |
+| code-is | 404                                        |
+
+| *Comment* | No Such Group                  |
+| DELETE    | /data/groups/0/users/%%jules%% |
+| code-is   | 404                            |

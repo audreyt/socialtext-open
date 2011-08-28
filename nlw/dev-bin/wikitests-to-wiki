@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Create the wikitests workspace, and populate it with content from the branch
+
+PORT=`perl -e 'print $> + 20000'`
+SERVER=http://`hostname`:$PORT
+DIR=$ST_CURRENT/nlw/share/workspaces/wikitests
+
+echo "Creating rescue tarball at $DIR in case you have outstanding work in /wikitests"
+
+$ST_CURRENT/nlw/bin/st-admin delete-workspace --workspace wikitests --dir $DIR
+$ST_CURRENT/nlw/bin/st-admin create-workspace --title 'Wikitests' --name wikitests --empty
+$ST_CURRENT/nlw/bin/st-admin add-workspace-admin  --email devnull1@socialtext.com --workspace wikitests
+
+$ST_CURRENT/nlw/bin/st-admin  create-user --e tester@ken.socialtext.net --p wikitest
+$ST_CURRENT/nlw/bin/st-admin add-member  --e tester@ken.socialtext.net --w wikitests
+
+$ST_CURRENT/nlw/dev-bin/fast-import-pages --workspace wikitests --from $DIR
+
+# get rid of superfluous ceq indexing then index
+$ST_CURRENT/nlw/bin/ceq-rm Index
+sleep 2
+$ST_CURRENT/nlw/bin/st-admin index-workspace --w wikitests --sync
+
+# get rid of superfluous ceq indexing AGAIN
+$ST_CURRENT/nlw/bin/ceq-rm Index
+
+echo
+echo "Wikitests are now available at: $SERVER/wikitests"
+echo "Rescue tarball at $DIR in case you had outstanding work in /wikitests"
+echo
+

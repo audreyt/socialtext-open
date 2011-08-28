@@ -1,0 +1,75 @@
+Test /data/users via the REST API
+
+* Fixture: SocialRest
+
+| comment | create test accounts |
+| reset-plugins | | |
+| set | acct_a | %%start_time%%a |
+| set | acct_b | %%start_time%%b |
+| set | acct_c | %%start_time%%c |
+| st-admin | create-account --name '%%acct_a%%' |
+| st-admin | create-account --name '%%acct_b%%' |
+| st-admin | create-account --name '%%acct_c%%' |
+
+| comment | create some users |
+| set | user_a | %%start_time%%a@ken.socialtext.com |
+| set | user_b | %%start_time%%b@ken.socialtext.com |
+| set | user_c | %%start_time%%c@ken.socialtext.com |
+| st-admin | create-user --account %%acct_a%% --email %%user_a%% --password password |
+| st-admin | create-user --account %%acct_b%% --email %%user_b%% --password password |
+| st-admin | create-user --account %%acct_c%% --email %%user_c%% --password password |
+| http-user-pass | %%user_a%% | password |
+| st-admin | enable-plugin --account %%acct_a%% --plugin signals                     |
+| st-admin | show-account-config --account %%acct_a%%                                |
+| st-admin | enable-plugin --account %%acct_b%% --plugin signals                     |
+| st-admin | show-account-config --account %%acct_b%%                                |
+| st-admin | enable-plugin --account %%acct_c%% --plugin csskit                      |
+| st-admin | show-account-config --account %%acct_c%%                                |
+
+| comment | add user_a to workspace in acct_b, add user_b to ws in acct_c |
+| set              | ws1        | %%start_time%%ws1 |
+| set              | ws2        | %%start_time%%ws2 |
+| create-workspace | %%ws1%%    | %%acct_b%%        |
+| create-workspace | %%ws2%%    | %%acct_c%%        |
+| add-member       | %%user_a%% | %%ws1%%           |
+| add-member       | %%user_b%% | %%ws2%%           |
+
+| comment    | get our user's info    |                  |
+| get        | /data/users/%%user_a%% | application/json |
+| code-is    | 200                    |                  |
+| comment | we should see signals enabled in both acct_a and acct_b, but should not see the test plugin |
+| body-like | qr/"account_name":"%%acct_a%%".+"plugins_enabled":\["people","signals","widgets"\]/ |
+| body-unlike | qr/csskit/ |
+
+| comment | we can't see the /data/users for other users unless we're an admin |
+| get         | /data/users/%%user_b%% | application/json |
+| code-is     | 200                    |                  |
+| body-like   | %%user_b%%             |                  |
+| body-like   | %%acct_b%%             |                  |
+| body-unlike | %%acct_c%%             |                  |
+
+| comment | admins do not see all accounts unless ?all=1 |
+| st-admin  | give-accounts-admin --email %%user_a%% |                  |
+| get       | /data/users/%%user_b%%                 | application/json |
+| code-is   | 200                                    |                  |
+| body-like | "email_address":"%%user_b%%"           |                  |
+| body-like | %%user_b%%                             |                  |
+| body-like | %%acct_b%%                             |                  |
+| body-unlike | %%acct_c%%                             |                  |
+| body-unlike | qr/csskit/                             |                  |
+| st-admin  | give-accounts-admin --email %%user_a%% |                  |
+| get       | /data/users/%%user_b%%?all=1           | application/json |
+| code-is   | 200                                    |                  |
+| body-like | "email_address":"%%user_b%%"           |                  |
+| body-like | qr/csskit/                             |                  |
+| body-like | %%user_b%%                             |                  |
+| body-like | %%acct_b%%                             |                  |
+| body-like | %%acct_c%%                             |                  |
+
+
+| comment | log in as user b and check you can see plugins in acct_c |
+| http-user-pass | %%user_b%%             | password         |
+| get            | /data/users/%%user_b%% | application/json |
+| code-is        | 200                    |                  |
+| body-like | qr/"account_name":"%%acct_b%%".+"plugins_enabled":\["people","signals","widgets"\]/ |
+| body-like | qr/"accounts":\[.*?\{.*?"account_name":"%%acct_c%%".+\["csskit"\]/ |

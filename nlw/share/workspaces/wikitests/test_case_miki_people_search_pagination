@@ -1,0 +1,162 @@
+| *Comment* | STARTING Test Case: Miki People Search Pagination |  |
+
+| *Comment* | Test Case: Miki People Search Pagination Create new account, workspace, user, add user |  |
+| set | mikiacctsrch | mikiacct-%%start_time%% |
+| set | mikiusersrch | `mikiuser%%start_time%%@matt.socialtext.net` |
+| set | short_mikiusersrch | mikiuser%%start_time%% |
+
+| create_account | %%mikiacctsrch%% |  |  |
+| enable_acct_plugin | dashboard | %%mikiacctsrch%% |  |
+| enable_acct_plugin | people | %%mikiacctsrch%% |  |
+| enable_acct_plugin | signals | %%mikiacctsrch%% |  |
+| create_user | %%mikiusersrch%% | %%password%% | %%mikiacctsrch%% |
+
+| st-logoutin | %%mikiusersrch%% | %%password%% |
+
+| *Comment* | Test case: Miki People Search Pagination Open global nav, should be signals |  |
+| open_ok | /st/dashboard/ |  |
+| wait_for_element_visible_ok | link=Mobile | 30000 |
+| click_and_wait | link=Mobile |  |
+| wait_for_element_visible_ok | link=Workspaces | 30000 |
+| wait_for_element_visible_ok | link=Activity | 30000 |
+
+
+| *Comment* | Test Case: Miki People Search Pagination Create Extra Users |  |  |
+| set | base_user_name_srch | bbbbasemiki%%start_time%% |  |
+| create_user | %%base_user_name_srch%%01@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%02@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%03@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%04@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%05@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%06@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%07@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%08@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%09@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%10@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%11@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%12@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%13@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%14@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%15@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%16@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%17@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%18@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%19@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%20@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%21@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%22@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%23@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%24@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%25@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%26@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%27@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%28@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%29@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%30@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%31@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%32@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%33@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%34@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%35@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%36@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%37@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%38@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%39@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%40@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%41@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%42@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%43@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%44@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%45@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%46@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%47@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%48@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%49@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%50@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%51@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%52@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%53@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%54@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%55@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%56@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%57@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%58@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%59@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%60@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%61@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+| create_user | %%base_user_name_srch%%62@ken.socialtext.net | %%password%% | %%mikiacctsrch%% |
+
+| *Comment* | Test case: Miki People Search Pagination - Test Search Button |  |
+| st_process_jobs | PersonIndex |  |
+| wait_for_element_visible_ok | link=People | 30000 |
+| click_and_wait | link=People |  |
+| wait_for_element_visible_ok | st-search-text | 30000 |
+| wait_for_element_visible_ok | st-search-submit | 30000 |
+| type_ok | st-search-text | %%base_user_name_srch%% |
+| click_and_wait | st-search-submit | 30000 |
+
+| *Comment* | Test case: Miki People Search Pagination - First Page |  |
+| wait_for_element_visible_ok | link=%%base_user_name_srch%%01 | 30000 |
+| wait_for_element_visible_ok | link=%%base_user_name_srch%%05 | 30000 |
+| wait_for_element_visible_ok | link=%%base_user_name_srch%%06 | 30000 |
+| wait_for_element_visible_ok | link=%%base_user_name_srch%%07 | 30000 |
+| wait_for_element_visible_ok | link=%%base_user_name_srch%%20 | 30000 |
+| wait_for_element_not_present_ok | link=%%base_user_name_srch%%21 | 5000 |
+| wait_for_element_not_present_ok | link=%%base_user_name_srch%%41 | 5000 |
+| wait_for_element_visible_ok | mobile-paging-next | 5000 |
+| wait_for_element_not_present_ok | mobile-paging-previous | 5000 |
+| wait_for_element_not_present_ok | mobile-paging-first | 5000 |
+
+
+| *Comment* | Test case: Miki People Search Pagination - Page Two |  |
+| click_and_pause | mobile-paging-next |  |
+| wait_for_element_visible_ok | link=%%base_user_name_srch%%21 | 30000 |
+| wait_for_element_visible_ok | link=%%base_user_name_srch%%30 | 30000 |
+| wait_for_element_visible_ok | link=%%base_user_name_srch%%35 | 30000 |
+| wait_for_element_visible_ok | link=%%base_user_name_srch%%40 | 30000 |
+| wait_for_element_not_present_ok | link=%%base_user_name_srch%%41 | 5000 |
+| wait_for_element_visible_ok | mobile-paging-first | 5000 |
+| wait_for_element_visible_ok | mobile-paging-previous | 5000 |
+| wait_for_element_visible_ok | mobile-paging-next | 5000 |
+
+| *Comment* | Test case: Miki People Search Pagination - Page Three And Four |  |
+| click_and_pause | mobile-paging-next |  |
+| wait_for_element_visible_ok | link=%%base_user_name_srch%%41 | 30000 |
+| wait_for_element_not_present_ok | link=%%base_user_name_srch%%61 | 30000 |
+| wait_for_element_visible_ok | mobile-paging-first | 5000 |
+| wait_for_element_visible_ok | mobile-paging-previous | 5000 |
+| wait_for_element_visible_ok | mobile-paging-next | 5000 |
+| click_and_pause | mobile-paging-next |  |
+| wait_for_element_visible_ok | link=%%base_user_name_srch%%61 | 30000 |
+| wait_for_element_visible_ok | mobile-paging-first | 5000 |
+| wait_for_element_visible_ok | mobile-paging-previous | 5000 |
+| wait_for_element_not_present_ok | mobile-paging-next | 5000 |
+| click_and_pause | mobile-paging-previous |  |
+
+| *Comment* | Test case: Miki People Search Pagination - Back to Page 2 |  |
+| wait_for_element_visible_ok | mobile-paging-previous | 30000 |
+| click_and_pause | mobile-paging-previous |  |
+| wait_for_element_visible_ok | link=%%base_user_name_srch%%21 | 30000 |
+| wait_for_element_visible_ok | link=%%base_user_name_srch%%30 | 30000 |
+| wait_for_element_visible_ok | link=%%base_user_name_srch%%35 | 30000 |
+| wait_for_element_visible_ok | link=%%base_user_name_srch%%40 | 30000 |
+| wait_for_element_visible_ok | mobile-paging-first | 5000 |
+| wait_for_element_visible_ok | mobile-paging-previous | 5000 |
+| wait_for_element_visible_ok | mobile-paging-next | 5000 |
+
+| *Comment* | Test case: Miki People Search Pagination - Back to page 1 |  |
+| click_and_pause | mobile-paging-previous |  |
+| wait_for_element_visible_ok | link=%%base_user_name_srch%%01 | 30000 |
+| wait_for_element_visible_ok | link=%%base_user_name_srch%%05 | 30000 |
+| wait_for_element_visible_ok | link=%%base_user_name_srch%%06 | 30000 |
+| wait_for_element_visible_ok | link=%%base_user_name_srch%%07 | 30000 |
+| wait_for_element_visible_ok | link=%%base_user_name_srch%%20 | 30000 |
+| wait_for_element_not_present_ok | link=%%base_user_name_srch%%21 | 5000 |
+| wait_for_element_not_present_ok | link=%%base_user_name_srch%%41 | 5000 |
+| wait_for_element_visible_ok | mobile-paging-next | 5000 |
+| wait_for_element_not_present_ok | mobile-paging-previous | 5000 |
+| wait_for_element_not_present_ok | mobile-paging-first | 5000 |
+
+
+| *Comment* | Test case: Miki People Search Pagination - No teardown needed - no workspaces! |  |
+| *Comment* | Test case: Miki People Search Pagination - COMPLETED |  |

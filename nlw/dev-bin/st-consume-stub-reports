@@ -1,0 +1,10 @@
+#!/bin/bash
+
+REPORTS=$ST_SRC_BASE/current/socialtext-reports
+source $REPORTS/dev-env-vars
+
+#perl $REPORTS/bin/st-reports-consume-access-log test_access.log
+perl $REPORTS/bin/st-reports-import-nlw-data /tmp/$USER/test_nlw.log >& /dev/null
+# delete logreader cache, so we can consume test_nlw.log, per ltc, 3/09  
+rm ~/.nlw/cache/logreader/*
+perl $REPORTS/bin/st-reports-consume-nlw-log /tmp/$USER/test_nlw.log

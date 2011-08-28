@@ -1,0 +1,15 @@
+[%# @COPYRIGHT@ -%]
+[% PROCESS lite/header.html %]
+
+    <div>
+        <p>[% loc('edit.contention') %]
+        [% loc('page.latest=uri', page.uri) %]
+        [% loc('edit.view-unsaved:') %]</p>
+    <div>
+        <pre>
+[% content | html %]
+        </pre>
+    </div>
+
+[% PROCESS lite/footer.html %]
+

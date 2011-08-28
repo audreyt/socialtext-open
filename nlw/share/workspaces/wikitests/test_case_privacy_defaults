@@ -1,0 +1,14 @@
+| *Comment* | Test Case: Privacy Defaults |
+
+| *Comment* | Checks to see whether appliance has self-join Setting OFF. |  |
+| *Comment* | It may not succeed if the appliance has had any use or testing. |  |
+| *Comment* | It should always succeed on a newly-built appliance. |  |
+
+
+| open_ok | /nlw/control/settings |  |
+| wait_for_element_visible_ok | self_join | 30000 |
+| is_checked_ok | //input[@name='self_join' and @value='0'] |  |
+| wait_for_element_visible_ok | group_create | 30000 |
+| is_checked_ok | //input[@name='group_create' and @value='1'] |  |
+
+| *Comment* | Test Case: Privacy Defaults COMPLETED |

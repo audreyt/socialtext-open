@@ -1,0 +1,96 @@
+| *Comment* | Test Case: Preferences UI User 5 |  |
+
+| set | new_account | userPrefs.%%start_time%%.5 |
+| set | new_ws | userprefs-%%start_time%%-5 |
+| set | new_user | userPrefs5.%%start_time%%@ken.socialtext.net |
+| set | new_name | userPrefs5 %%start_time%% |
+| include | [Test Case: Preferences UI User Setup] |  |
+
+| *Comment* | Test Case: Preferences UI User 5. Page Editing: double-click to edit |  |
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=Page Editing |  |
+
+| *Comment* | Test Case: Preferences UI User 5. default is on. Turn it off. |  |
+| text_like | contentContainer | Double-click to edit a page? |
+| value_is | wikiwyg__wikiwyg_double | on |
+| uncheck_ok | wikiwyg__wikiwyg_double |  |
+| value_is | wikiwyg__wikiwyg_double | off |
+| click_and_wait | link=Save |  |
+| text_like | qr/Preferences Saved/i |  |
+| value_is | wikiwyg__wikiwyg_double | off |
+
+| *Comment* | Test Case: Preferences UI User 5. Is it off? Turn it on. |  |
+| value_is | wikiwyg__wikiwyg_double | off |
+| check_ok | wikiwyg__wikiwyg_double |  |
+| value_is | wikiwyg__wikiwyg_double | on |
+| click_and_wait | link=Save |  |
+| text_like | qr/Preferences Saved/i |  |
+| value_is | wikiwyg__wikiwyg_double | on |
+
+| *Comment* | Test Case: Preferences UI User 5. Is it on? Save without changing value. |  |
+| value_is | wikiwyg__wikiwyg_double | on |
+| click_and_wait | link=Save |  |
+| text_like | qr/Preferences Saved/i |  |
+| value_is | wikiwyg__wikiwyg_double | on |
+
+| *Comment* | Test Case: Preferences UI User 5. Page Editing. Cancel chooses previous values |  |
+| uncheck_ok | wikiwyg__wikiwyg_double |  |
+| value_is | wikiwyg__wikiwyg_double | off |
+| click_ok | link=Cancel |  |
+| value_is | wikiwyg__wikiwyg_double | on |
+
+| *Comment* | Test Case: Preferences UI User 5. Page Editing. Navigate away, return, verify value |  |
+| click_and_wait | link=My Settings |  |
+| click_and_wait | link=Page Editing |  |
+| text_like | contentContainer | Double-click to edit a page? |
+| value_is | wikiwyg__wikiwyg_double | on |
+
+| *Comment* | Test Case: Preferences UI User 5. My Settings. Reset name and pwd |  |
+| click_and_wait | link=My Settings |  |
+| text_like | contentContainer | qr/First Name:/i |
+| text_like | contentContainer | qr/New password:/i |
+| type_ok | first_name | First %%start_time%% |
+| type_ok | middle_name | Middle %%start_time%% |
+| type_ok | last_name | Last %%start_time%% |
+| type_ok | old_password | 123456 |
+| type_ok | new_password | 654321 |
+| type_ok | new_password_retype | 654321 |
+| click_and_wait | link=Save |  |
+| text_like | qr/Saved/i |  |
+
+| *Comment* | Test Case: Preferences UI User 5. login with new name and pwd |  |
+| st-logoutin | %%new_user%% | 654321 |
+| open_ok | /%%new_ws%% |  |
+| wait_for_element_visible_ok | link=Settings | 30000 |
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=My Settings |  |
+| verifyValue | first_name | First %%start_time%% |
+| verifyValue | middle_name | Middle %%start_time%% |
+| verifyValue | last_name | Last %%start_time%% |
+
+| *Comment* | Test Case: Preferences UI User 5. Set name with existing values. |  |
+| click_and_wait | link=Save |  |
+| text_like | qr/Saved/i |  |
+| verifyValue | first_name | First %%start_time%% |
+| verifyValue | middle_name | Middle %%start_time%% |
+| verifyValue | last_name | Last %%start_time%% |
+
+| *Comment* | Test Case: Preferences UI User 5. My Settings. Cancel chooses previous values |  |
+| type_ok | first_name | Cancel First %%start_time%% |
+| type_ok | middle_name | Cancel Middle %%start_time%% |
+| type_ok | last_name | Cancel Last %%start_time%% |
+| click_ok | link=Cancel |  |
+| verifyValue | first_name | First %%start_time%% |
+| verifyValue | middle_name | Middle %%start_time%% |
+| verifyValue | last_name | Last %%start_time%% |
+
+| *Comment* | Test Case: Preferences UI User 5. My Settings. Navigate away, return, verify value |  |
+| click_and_wait | link=Page Editing |  |
+| click_and_wait | link=My Settings |  |
+| verifyValue | first_name | First %%start_time%% |
+| verifyValue | middle_name | Middle %%start_time%% |
+| verifyValue | last_name | Last %%start_time%% |
+
+| include | [Test Case: Preferences UI User Teardown] |  |
+
+| *Comment* | Test Case: Preferences UI User 5 COMPLETED |  |

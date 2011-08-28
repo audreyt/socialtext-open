@@ -1,0 +1,11 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+use File::Basename qw(dirname);
+
+my $dir = dirname($0);
+
+system( "$dir/diffs-since $ARGV[0] | vim-pager" );

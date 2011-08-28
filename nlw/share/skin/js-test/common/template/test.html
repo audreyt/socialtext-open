@@ -1,0 +1,18 @@
+[% USE date %]
+[% d = date.format(format = '%s') %]
+<!-- @COPYRIGHT@ -->
+<html>
+<head>
+    <script type="text/javascript">
+        window.testBaseCurrentScript = '[% test_file %]';
+    </script>
+    <script type="text/javascript" src="lib/Test/Builder.js?[% d %]"></script>
+    <script type="text/javascript" src="lib/Test/Base.js?[% d %]"></script>
+[% FOR lib = import_libs -%]
+    <script type="text/javascript" src="[% lib %]?[% d %]"></script>
+[% END -%]
+</head>
+<body>
+    <script type="text/javascript" src="[% test_file %]?[% d %]"></script>
+</body>
+</html>

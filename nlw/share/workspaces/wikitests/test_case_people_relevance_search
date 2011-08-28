@@ -1,0 +1,88 @@
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: People Relevance Search |  |
+| set | acct | relevant-people-%%start_time%% |
+| st-admin | create-account --name %%acct%% | was created |
+
+| *Comment* | Test Case: People Relevance Search User 1 is Caroline Kennedy; login as Caroline |  |
+| set | userone | user-one-%%start_time%% |
+| set | euserone | `%%userone%%@ken.socialtext.net` |
+| st-admin | create-user --e %%euserone%% --p %%password%% --account %%acct%% --first-name Caroline --last-name Kennedy | was created |
+| st-logoutin | %%euserone%% | %%password%% |
+
+| *Comment* | Test Case: People Relevance Search User 2 has Kennedy is his email address |  |
+| set | usertwo | user-two-%%start_time%% |
+| set | eusertwo | `%%usertwo%%@kennedy.socialtext.net` |
+| st-admin | create-user --e %%eusertwo%% --p %%password%% --account %%acct%% | was created |
+
+| *Comment* | Test Case: People Relevance Search User 3 is Arnold, tagged Kennedy |  |
+| set | userthree | arnoldschwarzenegger%%start_time%% |
+| set | euserthree | `%%userthree%%@ken.socialtext.net` |
+| st-admin | create-user --e %%euserthree%% --p %%password%% --account %%acct%% | was created |
+
+| *Comment* | Test Case: People Relevance Search Tag Arnold |  |
+| st-process-jobs |  |  |
+| st-find-user | %%userthree%% |  |
+| wait_for_element_visible_ok | new_tag | 30000 |
+| type_ok | new_tag | Kennedy |
+| click_ok | //input[@value='Add Tag'] |  |
+| wait_for_element_visible_ok | link=Kennedy | 30000 |
+
+| *Comment* | Test Case: People Relevance Search User 4 worked for Kennedy International Airport |  |
+| set | userfour | user-four-%%start_time%% |
+| set | euserfour | `%%userfour%%@ken.socialtext.net` |
+| st-admin | create-user --e %%euserfour%% --p %%password%% --account %%acct%% | was created |
+
+| st-logoutin | %%euserfour%% | %%password%% |
+| open_ok | /st/edit_profile |  |
+| wait_for_element_visible_ok | field_company | 30000 |
+| type_ok | field_company | Kennedy International Airport |
+| wait_for_element_visible_ok | update_profile | 30000 |
+| click_and_wait | update_profile | 30000 |
+
+| *Comment* | Test Case: People Relevance Search User 5 has a friendlyname of Bobby Kennedy |  |
+| set | userfive | user-five-%%start_time%% |
+| set | euserfive | `%%userfive%%@ken.socialtext.net` |
+| st-admin | create-user --e %%euserfive%% --p %%password%% --account %%acct%% | was created |
+
+| st-logoutin | %%euserfive%% | %%password%% |
+| open_ok | /st/edit_profile |  |
+| wait_for_element_visible_ok | field_preferred_name | 30000 |
+| type_ok | field_preferred_name | Bobby Kennedy |
+| wait_for_element_visible_ok | update_profile | 30000 |
+| click_and_wait | update_profile | 30000 |
+
+| *Comment* | Test Case: People Relevance Search User 6 is assistant to Caroline Kennedy |  |
+| set | usersix | user-six-%%start_time%% |
+| set | eusersix | `%%usersix%%@ken.socialtext.net` |
+| st-admin | create-user --e %%eusersix%% --p %%password%% --account %%acct%% | was created |
+
+| st-logoutin | %%eusersix%% | %%password%% |
+| open_ok | /st/edit_profile |  |
+| wait_for_element_visible_ok | field_supervisor | 30000 |
+| type-lookahead-ok | xpath=//div[@id='field_supervisor']/input[@class='relationship'] | Caroline |
+| wait-for-element-present-ok | link=Caroline Kennedy |  |
+| click-ok | link=Caroline Kennedy |  |
+| wait_for_element_visible_ok | update_profile | 30000 |
+| st-pause-click | 5000 | update_profile |
+
+| *Comment* | Test Case: People Relevance Search: relevance order: Names then relationships then tags then other fields |  |
+| st-process-jobs |  |  |
+| st-logoutin | %%euserone%% | %%password%% |
+| open_ok | /st/dashboard |  |
+| st-search-for | Search People: | Kennedy |
+| wait_for_text_present_ok | People matching 'Kennedy' | 30000 |
+| wait_for_text_present_ok | Showing 1 - 6 of 6 total. | 30000 |
+| text-like | `qr/Caroline Kennedy.*Bobby Kennedy.*%%usersix%%.*%%userthree%%.*%%usertwo%%.*%%userfour%%/` |  |
+
+| *Comment* | Test Case: People Relevance Search TEARDOWN |  |
+| st-process-jobs |  |  |
+| st-admin | deactivate-user --e %%euserone%% |  |
+| st-admin | deactivate-user --e %%eusertwo%% |  |
+| st-admin | deactivate-user --e %%euserthree%% |  |
+| st-admin | deactivate-user --e %%euserfour%% |  |
+| st-admin | deactivate-user --e %%euserfive%% |  |
+| st-admin | deactivate-user --e %%eusersix%% |  |
+| delete-account | %%acct%% | Recklessly deleting |
+
+| *Comment* | Test Case: People Relevance Search COMPLETED |  |

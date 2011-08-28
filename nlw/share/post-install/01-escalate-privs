@@ -1,0 +1,5 @@
+#!/bin/bash
+set -e
+
+# Escalate our DB privileges, so we can do more elaborate DB migrations
+st-db escalate_privs

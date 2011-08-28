@@ -1,0 +1,34 @@
+[%# @COPYRIGHT@ -%]
+[%- SET escaped_title = workspace.title | html -%]
+[%- SET escaped_uri   = watchlist_preference_uri | html -%]
+[%- SET watchlist_uri = workspace.uri _ '?action=watchlist' -%]
+<html>
+<head>
+  <title>[% loc('email.watchlist-update-for=wiki', escaped_title) %]</title>
+</head>
+
+<body>
+
+<p>
+  [% user.guess_real_name | html %],
+</p>
+
+<p>
+  [% loc('email.following-pages-in-watchlist-have-recently-changed=watchlist,wiki,uri,date,time', watchlist_uri, escaped_title, workspace.uri, email_date, email_time) %]
+</p>
+
+<ul>
+  [%- FOR page = pages %]
+    [% PROCESS 'email/page-details.html' %]
+  [%- END %]     
+</ul>
+
+<hr />
+<p>
+  [% loc('email.change-watchlist-preferences-at=wiki,uri',  escaped_title, escaped_uri) %]
+</p>
+
+[% PROCESS 'email/standard-footer.html' support_link = 0 %]
+
+</body>
+</html>

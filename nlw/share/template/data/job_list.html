@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <title>[% collection_name %]</title>
+    </head>
+    <body>
+        <style type="text/css">
+[% INCLUDE data/jobs.css %]
+        </style>
+        <p>
+        Jobs in roughly the order that ceqlotron will process them (limited to the first 1000). Hint: use <a href="?verbose=1">?verbose=1</a> to also show job arguments.
+            <a href="?accept=json">Display as JSON.</a>
+            <a href="?accept=text/plain">Display as YAML.</a>
+            <a href="/data/jobs">Go up to summary</a>
+        </p>
+        <table class="jobs joblist">
+            <thead>
+                <tr class="jobsheader">
+                    [% FOREACH hdr IN columns %]
+                    <th>
+                    [%- SWITCH hdr -%]
+                       [%- CASE 'jobid'%][% loc('job.id') -%]
+                       [%- CASE 'uniqkey'%][% loc('job.key') -%]
+                       [%- CASE 'priority'%][% loc('job.prio') -%]
+                       [%- CASE 'insert_time'%][% loc('job.created') -%]
+                       [%- CASE 'run_after'%][% loc('job.run-after') -%]
+                       [%- CASE 'grabbed_until'%][% loc('job.grabbed-until') -%]
+                       [%- CASE 'coalesce'%][% loc('job.coalesce') -%]
+                       [%- CASE 'arg'%][% loc('job.args') -%]
+                       [%- CASE %][% hdr -%]
+                    [%- END -%]
+                    </th>
+                    [% END %]
+                </tr>
+            </thead>
+            <tbody>
+                [% FOREACH job IN jobs %]
+                [% SET delay = job.delayed ? "jobdelay" : "" %]
+                <tr class="jobrow [%delay%]">
+                    [% FOREACH col IN columns -%]
+                    <td class="jobcol[%col%]" [% IF col == 'arg' %]width="*"[% END %]>
+                    [%- IF col == 'jobid' %]
+                        <a name="job[% job.jobid %]"></a>
+                        <a href="/data/jobs/job/[% job.jobid %]">
+                            [%- job.jobid %]</a>
+                    [% ELSIF col == 'arg' %]
+                        [%- job.arg -%]
+                    [% ELSE %]
+                        [%- job.$col |html -%]
+                    [% END -%]
+                    </td>
+                    [%- END -%]
+                </tr>
+                [% END %]
+            </tbody>
+        </table>
+    </body>
+</html>

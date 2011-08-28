@@ -1,0 +1,33 @@
+=head1 NAME
+
+YAML - YAML Serialization of JavaScript Data
+
+=head1 SYNOPSIS
+
+    var yaml = YAML.dump(node);
+
+=head1 DESCRIPTION
+
+This module exposes a C<YAML.dump()> function for serializing an object in
+YAML. This module does not yet have a facility for parsing/loading YAML.
+
+=head1 CAUTION
+
+This module is extremely young. It will loop on recursive data. It has
+only been tested on FireFox. Etc. Don't even bother using it yet.
+Seriously.
+
+=head1 AUTHORS
+
+Ingy döt Net <ingy@cpan.org>
+
+=head1 COPYRIGHT
+
+Copyright (c) 2007. Ingy döt Net. All rights reserved.
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+See L<http://www.perl.com/perl/misc/Artistic.html>
+
+=cut

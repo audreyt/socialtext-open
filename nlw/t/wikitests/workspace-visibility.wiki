@@ -1,0 +1,159 @@
+## Basic visibility tests for workspaces. This test does not attempt to test
+## each and every permission granted to each and every role for each and every
+## workspace type, it's merely a smoke test that could point out a larger problem
+## with workspace visibility.
+
+* Fisture: SocialRest
+
+# Two accounts, main is where we'll do work, other is for "outsiders"
+| set            | main_acct      | main-acct%%start_time%%  |
+| create-account | %%main_acct%%  |                          |
+| set            | main_acct_id   | %%account_id%%           |
+| set            | other_acct     | other-acct%%start_time%% |
+| create-account | %%other_acct%% |                          |
+| set            | other_acct_id  | %%account_id%%           |
+
+# Create users for each role that one can have in a workspace, Guest is not needed
+| set         | auth_user        | auth-user%%start_time%%@ken.socialtext.net    |                |
+| create-user | %%auth_user%%    | password                                      | %%other_acct%% |
+| set         | auth_user_id     | %%user_id%%                                   |                |
+| set         | account_user     | account-user%%start_time%%@ken.socialtext.net |                |
+| create-user | %%account_user%% | password                                      | %%main_acct%%  |
+| set         | account_user_id  | %%user_id%%                                   |                |
+| set         | member           | member%%start_time%%@ken.socialtext.net       |                |
+| create-user | %%member%%       | password                                      | %%main_acct%%  |
+| set         | member_id        | %%user_id%%                                   |                |
+| set         | admin            | admin%%start_time%%@ken.socialtext.net        |                |
+| create-user | %%admin%%        | password                                      | %%main_acct%%  |
+| set         | admin_id         | %%user_id%%                                   |                |
+
+# Create a member-only workspace
+| set              | member_only         | member_only%%start_time%% |        |
+| create-workspace | %%member_only%%     | %%main_acct%%    |        |
+| set              | member_only_id      | %%workspace_id%% |        |
+| add-member       | %%member%% | %%member_only%%           | member |
+| add-member       | %%admin%%  | %%member_only%%           | admin  |
+
+| Comment | Guest can't read member-only workspace |
+| http-user-pass |                                            |
+| GET            | /%%member_only%%/%%member_only%% |
+| code-is        | 302                                        |
+
+| Comment | Authenticated User can't read member-only workspace |
+| http-user-pass | %%auth_user%%                              | password |
+| GET            | /%%member_only%%/%%member_only%% |          |
+| code-is        | 302                                        |          |
+
+| Comment | Account User can't read member-only workspace |
+| http-user-pass | %%account_user%%                           | password |
+| GET            | /%%member_only%%/%%member_only%% |          |
+| code-is        | 302                                        |          |
+
+| Comment | Member can read member-only workspace |
+| http-user-pass | %%member%%                                 | password |
+| GET            | /%%member_only%%/%%member_only%% |          |
+| code-is        | 200                                        |          |
+
+| Comment | Admin can read member-only workspace |
+| http-user-pass | %%admin%%                                  | password |
+| GET            | /%%member_only%%/%%member_only%% |          |
+| code-is        | 200                                        |          |
+
+# Create a self-join workspace
+| set                      | self_join     | self_join%%start_time%% |        |
+| create-workspace         | %%self_join%% | %%main_acct%%           |        |
+| set                      | self_join_id  | %%workspace_id%%        |        |
+| workspace-permission-set | %%self_join%% | self-join               |        |
+| add-member               | %%member%%    | %%self_join%%           | member |
+| add-member               | %%admin%%     | %%self_join%%           | admin  |
+
+| Comment | Guest can't read self-join workspace |
+| http-user-pass |                                        |
+| GET            | /%%self_join%%/%%self_join%% |
+| code-is        | 302                                    |
+
+| Comment | Authenticated User can't read self-join workspace |
+| http-user-pass | %%auth_user%%                          | password |
+| GET            | /%%self_join%%/%%self_join%% |          |
+| code-is        | 302                                    |          |
+
+| Comment | Account User can read self-join workspace |
+| http-user-pass | %%account_user%%                       | password |
+| GET            | /%%self_join%%/%%self_join%% |          |
+| code-is        | 200                                    |          |
+
+| Comment | Member can read self-join workspace |
+| http-user-pass | %%member%%                             | password |
+| GET            | /%%self_join%%/%%self_join%% |          |
+| code-is        | 200                                    |          |
+
+| Comment | Admin can read self-join workspace |
+| http-user-pass | %%admin%%                              | password |
+| GET            | /%%self_join%%/%%self_join%% |          |
+| code-is        | 200                                    |          |
+
+# Create an authenticated-user-only workspace
+| set                      | auth_user_only     | auth_user_only%%start_time%% |        |
+| create-workspace         | %%auth_user_only%% | %%main_acct%%                |        |
+| set                      | auth_user_only_id  | %%workspace_id%%             |        |
+| workspace-permission-set | %%auth_user_only%% | authenticated-user-only      |        |
+| add-member               | %%member%%         | %%auth_user_only%%           | member |
+| add-member               | %%admin%%          | %%auth_user_only%%           | admin  |
+
+| Comment | Guest can't read authenticated-user-only workspace |
+| http-user-pass |                                                  |
+| GET            | /%%auth_user_only%%/%%auth_user_only%% |
+| code-is        | 302                                              |
+
+| Comment | Authenticated User can read authenticated-user-only workspace |
+| http-user-pass | %%auth_user%%                                    | password |
+| GET            | /%%auth_user_only%%/%%auth_user_only%% |          |
+| code-is        | 200                                              |          |
+
+| Comment | Account User can read authenticated-user-only workspace |
+| http-user-pass | %%account_user%%                                 | password |
+| GET            | /%%auth_user_only%%/%%auth_user_only%% |          |
+| code-is        | 200                                              |          |
+
+| Comment | Member can read authenticated-user-only workspace |
+| http-user-pass | %%member%%                                       | password |
+| GET            | /%%auth_user_only%%/%%auth_user_only%% |          |
+| code-is        | 200                                              |          |
+
+| Comment | Admin can read authenticated-user-only workspace |
+| http-user-pass | %%admin%%                                        | password |
+| GET            | /%%auth_user_only%%/%%auth_user_only%% |          |
+| code-is        | 200                                              |          |
+
+# Create an public-read-only workspace
+| set                      | public_read_only     | public_read_only%%start_time%% |        |
+| create-workspace         | %%public_read_only%% | %%main_acct%%                  |        |
+| set                      | public_read_only_id  | %%workspace_id%%               |        |
+| workspace-permission-set | %%public_read_only%% | public-read-only               |        |
+| add-member               | %%member%%           | %%public_read_only%%           | member |
+| add-member               | %%admin%%            | %%public_read_only%%           | admin  |
+
+| Comment | Guest can read public-read-only workspace |
+| http-user-pass |                                                      |
+| GET            | /%%public_read_only%%/%%public_read_only%% |
+| code-is        | 200                                                  |
+
+| Comment | Authenticated User can read public-read-only workspace |
+| http-user-pass | %%auth_user%%                                        | password |
+| GET            | /%%public_read_only%%/%%public_read_only%% |          |
+| code-is        | 200                                                  |          |
+
+| Comment | Account User can read public-read-only workspace |
+| http-user-pass | %%account_user%%                                     | password |
+| GET            | /%%public_read_only%%/%%public_read_only%% |          |
+| code-is        | 200                                                  |          |
+
+| Comment | Member can read public-read-only workspace |
+| http-user-pass | %%member%%                                           | password |
+| GET            | /%%public_read_only%%/%%public_read_only%% |          |
+| code-is        | 200                                                  |          |
+
+| Comment | Admin can read public-read-only workspace |
+| http-user-pass | %%admin%%                                            | password |
+| GET            | /%%public_read_only%%/%%public_read_only%% |          |
+| code-is        | 200                                                  |          |

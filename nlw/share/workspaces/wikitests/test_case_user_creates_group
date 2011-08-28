@@ -1,0 +1,213 @@
+
+| *Comment* | Test Case: User Creates Group |
+| *Comment* | Avatar will be uploaded from %%wikitest_client_files%% |
+
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: User Creates Group Setup |  |
+| set | groupname | %%start_time%%-ucg-group |
+| set | group_prefix | %%start_time%% |
+| set | group_suffix | `-ucg-group` |
+| set | groupuser | ucg_user_%%start_time%% |
+| set | short_groupuser | ucg user %%start_time%% |
+| set | groupemail | %%groupuser%%@ken.socialtext.net |
+
+| *Comment* | Test Case: User Creates Group these groups will be used later to test pagination of a list |  |
+| set | group_1 | %%start_time%%-ucg-group-1 |
+| set | group_2 | %%start_time%%-ucg-group-2 |
+| set | group_3 | %%start_time%%-ucg-group-3 |
+| set | group_4 | %%start_time%%-ucg-group-4 |
+| set | group_5 | %%start_time%%-ucg-group-5 |
+| set | group_6 | %%start_time%%-ucg-group-6 |
+| set | group_7 | %%start_time%%-ucg-group-7 |
+| set | group_8 | %%start_time%%-ucg-group-8 |
+| set | group_9 | %%start_time%%-ucg-group-9 |
+| set | group_10 | %%start_time%%-ucg-group-10 |
+
+| create-user | %%groupemail%% | %%password%% |
+
+| *Comment* | Test Case: User Creates Group enabled, create group |  |
+| st-admin | enable-plugin --plugin groups --all-accounts |  |
+
+| st-logoutin | %%groupemail%% | %%password%% |
+
+| *Comment* | Test Case: User Creates Group enabled, check group popup buttons |  |
+| wait_for_element_present_ok | link=Create Group... | 30000 |
+| click_ok | link=Create Group... |  |
+| wait_for_element_visible_ok | st-create-group-next | 30000 |
+| wait_for_element_visible_ok | st-lightbox-cancel-create-group | 30000 |
+| click_ok | st-lightbox-cancel-create-group | 30000 |
+| wait_for_element_not_present_ok | st-create-group-next | 30000 |
+| wait_for_element_not_present_ok | st-lightbox-cancel-create-group | 30000 |
+
+| *Comment* | Test Case: User Creates Group enabled, create group |  |
+| wait_for_element_present_ok | link=Create Group... | 30000 |
+| click_ok | link=Create Group... |  |
+| wait_for_element_visible_ok | st-create-group-next | 30000 |
+| wait_for_element_visible_ok | st-lightbox-cancel-create-group | 30000 |
+| click_and_wait | st-create-group-next |  |
+| wait_for_element_visible_ok | link=? | 30000 |
+| wait_for_element_visible_ok | create-group | 30000 |
+| text_like | //body | Create a Group |
+
+| *Comment* | Test Case: User Creates Group. Actually Create a Group |  |
+| st-name-widget | 1 | create_group |
+| st-select-widget-frame | create_group |  |
+| wait_for_element_visible_ok | name | 30000 |
+| wait_for_element_visible_ok | description | 30000 |
+| wait_for_element_visible_ok | upload | 30000 |
+| wait_for_element_visible_ok | reset | 30000 |
+| type_ok | name | %%groupname%% |
+| type_ok | description | Russian letters really suck and mess with everything |
+| type_ok | upload | %%wikitest_files%%wikitest.jpg |
+| include | [Test Case: User Creates Group Image Uploaded] |  |
+| select-frame | relative=parent |  |
+
+| wait_for_element_visible_ok | create-group | 30000 |
+| click_and_wait | create-group |  |
+| get_id_from_url | group_id_0 |  |
+
+| *Comment* | Test Case: User Creates Group. Inspect New Group Page |  |
+| wait_for_text_present_ok | %%groupname%% | 30000 |
+| st-name-widget | 1 | information_widget |
+| st-widget-title-like | information_widget | Information |
+| st-select-widget-frame | information_widget |  |
+| text_like | //body | Administrators |
+| text_like | //body | %%short_groupuser%% |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: User Creates Group. Inspect New Group Page Workspaces |  |
+| st-name-widget | 2 | workspaces_widget |
+| st-widget-title-like | workspaces_widget | Workspaces |
+| st-select-widget-frame | workspaces_widget |  |
+| wait_for_text_present_ok | This group is not a member of any workspaces | 30000 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: User Creates Group. Inspect New Group Page Activities Widget |  |
+| st-name-widget | 4 | activity_widget |
+| st-widget-title-like | activity_widget | Activities |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: User Creates Group. Inspect New Group Page Membership |  |
+| st-name-widget | 3 | people_widget |
+| st-widget-title-like | people_widget | Membership |
+| st-select-widget-frame | people_widget |  |
+| wait_for_element_visible_ok | //a[contains(@href,'?profile')] | 30000 |
+| wait_for_text_present_ok | %%short_groupuser%% | 30000 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: User Creates Group create 10 more groups to test pagination of existing group lookahead in Create Group window |  |  |
+| create-group | %%group_1%% |  | %%groupemail%% |
+| set | group_id_1 | %%group_id%% |  |
+| create-group | %%group_2%% |  | %%groupemail%% |
+| set | group_id_2 | %%group_id%% |  |
+| create-group | %%group_3%% |  | %%groupemail%% |
+| set | group_id_3 | %%group_id%% |  |
+| create-group | %%group_4%% |  | %%groupemail%% |
+| set | group_id_4 | %%group_id%% |  |
+| create-group | %%group_5%% |  | %%groupemail%% |
+| set | group_id_5 | %%group_id%% |  |
+| create-group | %%group_6%% |  | %%groupemail%% |
+| set | group_id_6 | %%group_id%% |  |
+| create-group | %%group_7%% |  | %%groupemail%% |
+| set | group_id_7 | %%group_id%% |  |
+| create-group | %%group_8%% |  | %%groupemail%% |
+| set | group_id_8 | %%group_id%% |  |
+| create-group | %%group_9%% |  | %%groupemail%% |
+| set | group_id_9 | %%group_id%% |  |
+| create-group | %%group_10%% |  | %%groupemail%% |
+| set | group_id_10 | %%group_id%% |  |
+
+| *Comment* | Test Case: User Creates Group test existing group lookahead |  |
+| open_ok | /st/dashboard |  |
+| wait_for_element_present_ok | link=Create Group... | 30000 |
+| click_ok | link=Create Group... |  |
+
+| *Comment* | Test Case: User Creates Group lookahead fails if you go too fast |  |
+| *Comment* | Test Case: User Creates Group check all elements while JS is loading |  |
+| wait_for_text_present_ok | Before creating a group, you can search names and descriptions for existing groups. | 30000 |
+| wait_for_element_visible_ok | //input[@class='lookahead-prompt'] | 10000 |
+| wait_for_element_visible_ok | //input[@id='self-join-radio'] | 10000 |
+| wait_for_element_visible_ok | //input[@id='private-radio'] | 10000 |
+| wait_for_element_visible_ok | //a[@id='st-create-group-next'] | 10000 |
+| wait_for_element_visible_ok | //a[@id='st-lightbox-cancel-create-group'] | 10000 |
+| pause | 3000 | wait for JS anyway |
+| type_lookahead_ok | //input[@class='lookahead-prompt'] | %%group_prefix%% |
+| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%group_suffix%%')] | 30000 |
+| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'Show all results...')] | 30000 |
+| click_and_wait | //div[@class='lookaheadItem']/a[contains(text(),'Show all results...')] |  |
+| wait_for_text_present_ok | Group names and descriptions matching '%%group_prefix%% OR %%group_prefix%%*' | 30000 |
+
+| *Comment* | Test Case: User Creates Group. Create Identical Group Name |  |
+| open_ok | /st/dashboard |  |
+| wait_for_element_present_ok | link=Create Group... | 30000 |
+| click_ok | link=Create Group... |  |
+| wait_for_element_visible_ok | st-create-group-next | 30000 |
+| wait_for_element_visible_ok | st-lightbox-cancel-create-group | 30000 |
+| click_and_wait | st-create-group-next |  |
+| wait_for_element_visible_ok | link=? | 30000 |
+| wait_for_element_visible_ok | create-group | 30000 |
+| st-name-widget | 1 | create_group |
+| st-select-widget-frame | create_group |  |
+| wait_for_element_visible_ok | name | 30000 |
+| wait_for_element_visible_ok | description | 30000 |
+| type_ok | name | %%groupname%% |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: User Creates Group. Create Identical Group Name, see error |  |
+| wait_for_element_visible_ok | create-group | 30000 |
+| click_ok | create-group |  |
+| wait_for_text_present_ok | group already exists | 10000 |
+
+| *Comment* | Test Case: User Creates Group. Test the cancel button, go to Dashboard |  |
+| wait_for_element_present_ok | link=Create Group... | 30000 |
+| click_ok | link=Create Group... |  |
+| wait_for_element_visible_ok | st-create-group-next | 30000 |
+| wait_for_element_visible_ok | st-lightbox-cancel-create-group | 30000 |
+| click_and_wait | st-create-group-next |  |
+| wait_for_element_visible_ok | link=? | 30000 |
+| wait_for_element_visible_ok | create-group | 30000 |
+| wait_for_element_visible_ok | st-cancel-create-group | 30000 |
+| click_and_wait | st-cancel-create-group |  |
+| text_like | Welcome |  |
+
+| *Comment* | Test Case: User Creates Group. Try UTF-8 group name |  |
+| set | groupname | tårn-%%start_time%% |
+
+| *Comment* | Test Case: User Creates Group named %%groupname%%. |  |  |
+| create-group | %%groupname%% |  | %%groupemail%% |
+| set | group_id_11 | %%group_id%% |  |
+
+| *Comment* | Test Case: User Creates Group. Create Identical Group Name |  |
+| open | /?create_group |  |
+| wait_for_element_visible_ok | link=? | 30000 |
+| wait_for_element_visible_ok | create-group | 30000 |
+| st-name-widget | 1 | create_group |
+| st-select-widget-frame | create_group |  |
+| wait_for_element_visible_ok | name | 30000 |
+| wait_for_element_visible_ok | description | 30000 |
+| type_ok | name | %%groupname%% |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: User Creates Group. Create Identical Group Name %%groupname%%, see error |  |
+| wait_for_element_visible_ok | create-group | 30000 |
+| click_ok | create-group |  |
+| wait_for_text_present_ok | group already exists | 10000 |
+
+| *Comment* | Test Case: User Creates Group TEARDOWN |  |
+| st-admin | deactivate-user --email %%groupemail%% |  |
+| delete-group | %%group_id_0%% | Recklessly deleting |
+| delete-group | %%group_id_1%% | Recklessly deleting |
+| delete-group | %%group_id_2%% | Recklessly deleting |
+| delete-group | %%group_id_3%% | Recklessly deleting |
+| delete-group | %%group_id_4%% | Recklessly deleting |
+| delete-group | %%group_id_5%% | Recklessly deleting |
+| delete-group | %%group_id_6%% | Recklessly deleting |
+| delete-group | %%group_id_7%% | Recklessly deleting |
+| delete-group | %%group_id_8%% | Recklessly deleting |
+| delete-group | %%group_id_9%% | Recklessly deleting |
+| delete-group | %%group_id_10%% | Recklessly deleting |
+| delete-group | %%group_id_11%% | Recklessly deleting |
+
+| *Comment* | Test Case: User Creates Group COMPLETED |

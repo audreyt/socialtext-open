@@ -1,0 +1,43 @@
+dn: cn=Motorhead,dc=example,dc=com
+objectClass: posixGroup
+cn: Motorhead
+gidNumber: 123
+memberUid: lemmy
+memberUid: phil
+memberUid: eddie
+
+dn: uid=lemmy,dc=example,dc=com
+objectClass: inetOrgPerson
+objectClass: posixAccount
+uid: lemmy
+mail: lemmy@example.com
+gn: Lemmy
+sn: Kilmister
+cn: Lemmy Kilmister
+uidNumber: 12345
+gidNumber: 12345
+homeDirectory: /home/lemmy
+
+dn: uid=phil,dc=example,dc=com
+objectClass: inetOrgPerson
+objectClass: posixAccount
+uid: phil
+mail: phil@example.com
+gn: Phil
+sn: Taylor
+cn: Phil Taylor
+uidNumber: 12346
+gidNumber: 12346
+homeDirectory: /home/phil
+
+dn: uid=eddie,dc=example,dc=com
+objectClass: inetOrgPerson
+objectClass: posixAccount
+uid: eddie
+mail: eddie@example.com
+gn: Eddie
+sn: Clarke
+cn: Eddie Clarke
+uidNumber: 12347
+gidNumber: 12347
+homeDirectory: /home/eddie

@@ -1,0 +1,22 @@
+#!/usr/bin/env perl
+
+use 5.12.0;
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+
+use Test::Socialtext::DotProve qw(load );
+
+my $days = shift @ARGV or die "usage: list-tests-failed-since <days ago>";
+my $sec = $days * 24 * 60 * 60;
+
+my $prove = load(".prove");
+
+
+while (my ($k, $v) = each %{$prove->{tests}}) {
+    if ($v->{last_fail_time} > $sec) {
+        print $k, "\n";
+    }
+}
+
+

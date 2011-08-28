@@ -1,0 +1,10 @@
+fixtures:
+  - db
+  - help
+
+workspaces:
+  public:
+    extra_pages: 1
+
+conflicts:
+  - public

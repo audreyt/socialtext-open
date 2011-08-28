@@ -1,0 +1,76 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use File::Slurp qw(slurp);
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::System 'shell_run';
+
+my $migration_dir = "$ENV{HOME}/src/st/socialtext/nlw/etc/socialtext/db";
+chdir $migration_dir or die "Can't chdir to $migration_dir: $!";
+
+sub usage {
+    my $msg = shift;
+    warn "$msg\n" if $msg;
+    die <<EOT;
+USAGE: $0 <start> <num_to_bump>
+
+    start: The first schema migration you want to move (Example: 37-to-38)
+
+    num_to_bump: Number of migrations to bump by (Default: 1)
+
+EXAMPLES:
+
+    Lets say we have 1-to-2 2-to-3 and 3-to-4
+
+    `$0 1-to-2` would do this:
+    mv 1-to-2 2-to-3
+    mv 2-to-3 3-to-4
+    mv 3-to-4 4-to-5
+    
+    `$0 1-to-2 3` would do this:
+    mv 1-to-2 4-to-5
+    mv 2-to-3 5-to-6
+    mv 3-to-4 6-to-7
+
+EOT
+}
+
+sub to_num {
+    my $migration = shift;
+    my ($from,$to) = $migration =~ /^(\d+)-to-(\d+)$/;
+    usage("invalid format: $migration") unless $from and $to;
+    return $to;
+}
+
+sub filename {
+    my $schema = shift || die 'schema required';
+    my $prev = $schema - 1;
+    return "socialtext-$prev-to-$schema.sql";
+}
+
+my $start = to_num(shift || usage("start required"));
+my $bump = shift || 1;
+
+my ($max) = sort { $b <=> $a }
+             map { /socialtext-\d+-to-(\d+).sql/ }
+            glob "socialtext-*-to-*.sql";
+
+#for (my $i=$max; $i>=$start; $i--) {
+for (my $i=$max; $i>=$start; $i--) {
+    my $from = filename($i);
+    my $target_num = $i + $bump;
+    my $target = filename($target_num);
+    shell_run "git mv $from $target";
+
+    my $content = slurp($target);
+    $content =~ s{(
+        UPDATE\s"System"\s*
+           SET\svalue\s=\s')\d+('\s*
+         WHERE\sfield\s=\s'socialtext-schema-version';
+    )}{$1$target_num$2}xs or die "Can't bump version number in $target!";
+
+    open my $fh, '>', $target or die $!;
+    print $fh $content;
+}

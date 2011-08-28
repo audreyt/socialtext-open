@@ -1,0 +1,10 @@
+| *Comment* | A testset solely for the purpose of disabling LDAP from other testsets |  |
+| *Comment* | NOTE: THIS REMOVES ALL LDAP USERS FROM THE SYSTEM WHICH MAY HAVE UNINTENDED SIDE EFFECTS! |  |
+
+| *Comment* | Disable LDAP: stop and clear LDAP |  |
+| st-ldap | stop |  |
+| st-ldap | status | not running |
+| st-process-jobs | PersonIndex |  |
+| clear-ldap-users |  |  |
+
+| *Comment* | Disable LDAP: COMPLETED |  |

@@ -1,0 +1,40 @@
+[%# @COPYRIGHT@ -%]
+
+[% IF extra_text %]
+[% extra_text -%]
+[% END %]
+
+[% SET escaped_str_1 =  workspace_title | html %]
+[% SET escaped_str_2 =  workspace_uri | html %]
+[% SET escaped_str_3 =  username | html %]
+<p>
+[% loc('email.hi') %]
+</p>
+
+<p>
+[% loc("email.inviting-you-to-join=wiki",  escaped_str_1) %]
+
+[% UNLESS requires_confirmation %]
+[% loc('email.sign-in-using-information-below:') %]
+<p>
+[% loc('email.web-address:') %] <a href="[% escaped_str_2 %]">[% escaped_str_2 %]</a><br />
+[% loc('email.username:') %] [% escaped_str_3 %]
+</p>
+
+[% loc('email.sign-in-with-openid-now') %]
+
+<p>
+[% loc('email.keep-this-for-future-reference') %]
+</p>
+[% END %]
+
+<p>
+[% loc('email.thanks') %]
+</p>
+
+<p>
+[% inviting_user %]
+</p>
+
+[% PROCESS 'email/standard-footer.html'
+   support_link = 1 %]

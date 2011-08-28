@@ -1,0 +1,61 @@
+See also: [FormattingTest] | [FormattingToDo] | WikiwygFormattingTest | [WikiwygFormattingToDo]
+
+{wikiwyg_formatting_test_run_all}
+
+.wikiwyg_formatting_test
+This is <span style="font-weight: bold;">bold</span> <span style="font-style:
+italic;">italic</span> <span style="text-decoration: line-through;">strike</span> <span style="font-weight: bold; font-style: italic; text-decoration: line-through;">mish-mash</span> yo<br>
+~~
+This is *bold* _italic_ -strike- -*_mish-mash_*- yo
+.wikiwyg_formatting_test
+
+.wikiwyg_formatting_test
+<a href="/public/index.cgi?shy">burger</a>
+~~
+[burger]
+.wikiwyg_formatting_test
+
+.wikiwyg_formatting_test
+<a href="/public/index.cgi?shame"><!-- wiki-renamed-link -->burger</a>
+~~
+"burger"[shame]
+.wikiwyg_formatting_test
+
+.wikiwyg_formatting_test
+a &nbsp; b
+~~
+a b
+.wikiwyg_formatting_test
+
+.wikiwyg_formatting_test
+<table><tr><td><p>Hey d00d</p></td></tr></table>
+~~
+| Hey d00d |
+.wikiwyg_formatting_test
+
+.wikiwyg_formatting_test
+<h2>foo</h2>
+<h2>&nbsp;</h2>
+<h2>bar</h2>
+~~
+^^ foo
+
+^^ bar
+.wikiwyg_formatting_test
+
+^^^ {rt 14784}
+Regardless of what's in the bulleted list item, no blank line should go
+between the `* ` line and the `** ` line.
+.wikiwyg_formatting_test
+<div class="wiki">
+<ul>
+<li>Get <strong>behind</strong> me</li>
+
+<ul>
+<li>Satan!</li>
+</ul></ul>
+<br/></div>
+~~~
+* Get *behind* me
+** Satan!
+.wikiwyg_formatting_test

@@ -1,0 +1,24 @@
+#!/bin/bash
+user=$1
+shift
+
+for db in $@; do
+    echo "Testing login to DB $db as user $user.";
+    if psql -U $user -q -c \\q $db >/dev/null 2>&1; then
+        echo "OK.  Logged into the DB $db as user $user";
+        exit 0;
+    else
+    cat <<DOC
+
+#############################################################################
+
+ERROR: Unable to login to DB $db as user $user.
+
+Have you allowed access?  See INSTALL and docs/INSTALL.postgres files.
+
+#############################################################################
+
+DOC
+    exit 1;
+    fi
+done

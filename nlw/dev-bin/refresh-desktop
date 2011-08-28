@@ -1,0 +1,79 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+use LWP::Simple 'getstore';
+use FindBin '$RealBin';
+use File::Slurp 'read_file';
+use subs qw( git download commit version_from );
+
+chdir "$RealBin/..";
+
+my $Local  = './share/desktop';
+
+my %Remotes = (
+    'update.xml' => 'http://topaz.socialtext.net/desktop',
+    'flair-update.xml' => 'http://topaz.socialtext.net/~audreyt/flairSignals',
+);
+
+my %Editions = (
+    'update.xml' => 'SocialtextDesktop-%s.air',
+    'flair-update.xml' => 'flairSignals-%s.air',
+);
+
+while (my ($update_file, $air_filespec) = each %Editions) {
+    my $local_version = version_from $update_file or next;
+    my $remote_url = $Remotes{$update_file};
+
+    download $remote_url, $update_file;
+
+    my $remote_version = version_from $update_file;
+
+    if ($local_version eq $remote_version) {
+        print "... not updated ($local_version), skipping update.\n";
+        next;
+    }
+
+    my $local_air  = sprintf $air_filespec, $local_version;
+    my $remote_air = sprintf $air_filespec, $remote_version;
+
+    download $remote_url, $remote_air;
+
+    git rm  => $local_air if -f "$Local/$local_air";
+    git add => $remote_air;
+    git add => $update_file;
+
+    commit "* Update $remote_air from version $local_version.";
+}
+
+sub version_from {
+    my ( $update_file ) = @_;
+    return unless -f "$Local/$update_file";
+
+    read_file( "$Local/$update_file" ) =~ m{<version>(.+)</version>}
+      or die "No version seen in Update XML file";
+    return $1;
+}
+
+sub download {
+    my ( $remote_url, $file ) = @_;
+
+    local $| = 1;
+    print "Downloading $file... ";
+
+    getstore("$remote_url/$file" => "$Local/$file") =~ /^[23]/
+      or die "Cannot download $remote_url/$file - aborted.\n";
+
+    print "done.\n";
+}
+
+sub git {
+    my ( $cmd, $file ) = @_;
+    system git => $cmd => "$Local/$file";
+}
+
+sub commit {
+    my ( $msg ) = @_;
+    system git => commit => -q => -m => $msg;
+}

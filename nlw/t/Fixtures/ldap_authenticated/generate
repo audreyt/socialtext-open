@@ -1,0 +1,46 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+use lib "$ENV{NLW_DIR}/lib";
+use Socialtext::AppConfig;
+
+my $ldap_yaml = <<EOY;
+---
+id: 0deadbeef0
+name: First
+host: localhost
+port: 389
+base: dc=foo,dc=bar
+bind_user: cn=First Last,dc=example,dc=com
+bind_password: abc123
+attr_map:
+  user_id: dn
+  username: cn
+  email_address: mail
+  first_name: gn
+  last_name: sn
+---
+id: 1deadbeef1
+name: Second
+host: localhost
+port: 389
+base: dc=foo,dc=bar
+bind_user: cn=First Last,dc=example,dc=com
+bind_password: abc123
+attr_map:
+  user_id: dn
+  username: cn
+  email_address: mail
+  first_name: gn
+  last_name: sn
+EOY
+
+my $cfgdir  = Socialtext::AppConfig->config_dir();
+my $cfgfile = File::Spec->catfile($cfgdir, 'ldap.yaml');
+
+open LDAP, ">$cfgfile" || die "I just can't! $!\n";
+print LDAP $ldap_yaml;
+close LDAP;
+

@@ -1,0 +1,32 @@
+# These dependencies are all optional.  They are used by check-optional-tools
+# to see if they exist, and if not, to let the user know.
+#
+# https://www2.socialtext.net/dev-tasks/index.cgi?stringify_plugins_release_contract
+Microsoft Word documents:
+    program: wvText
+    package: wv
+PDF documents:
+    program: pdftotext
+    package: xpdf-utils
+Postscript documents:
+    program: ps2ascii
+    package: gs-common
+Microsoft Excel documents:
+    program: xls2csv
+    package: catdoc
+zip files:
+    program: unzip
+    package: unzip
+'MPEG-3 audio files':
+    CPAN: 'MP3::Tag'
+HTML documents:
+    program: lynx
+    package: lynx
+RTF documents:
+    program: unrtf
+    package: unrtf
+XML documents:
+    CPAN: 'XML::SAX'
+Unknown document types:
+    program: strings
+    package: binutils

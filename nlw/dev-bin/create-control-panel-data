@@ -1,0 +1,87 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Getopt::Long;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::Account;
+use Socialtext::Workspace;
+
+my %p = (
+    accounts => 105,
+    workspaces => 105,
+    users => 105,
+);
+GetOptions( \%p,
+    'accounts=s',
+) or usage();
+
+usage() unless $p{accounts};
+
+# Add a bunch of accounts
+for (1 .. $p{accounts}) {
+    my $name = "test-$_";
+    if (Socialtext::Account->new( name => $name )) {
+        warn "Account $name already exists.\n";
+        next;
+    }
+    print "Creating account $name\n";
+    Socialtext::Account->create( name => $name );
+}
+
+# Add a bunch of workspaces into account test-1
+my $acc = Socialtext::Account->new( name => "test-1");
+for (1 .. $p{workspaces}) {
+    my $name = "wksp-$_";
+    if (Socialtext::Workspace->new( name => $name)) {
+        warn "Workspace $name already exists.\n";
+        next;
+    }
+    print "Creating Workspace $name\n";
+    Socialtext::Workspace->create( 
+        name => $name, 
+        title => $name,
+        account_id => $acc->account_id,
+    );
+}
+
+# Add a bunch of users into wksp-1
+my $wksp = Socialtext::Workspace->new( name => "wksp-1");
+for (1 .. $p{users}) {
+    my $email = "user-$_\@example.com";
+    if (Socialtext::User->new( email_address => $email)) {
+        warn "User $email already exists.\n";
+        next;
+    }
+    print "Creating user $email\n";
+    my $u = Socialtext::User->create( 
+        email_address => $email, 
+        username => $email, 
+    );
+    $wksp->assign_role_to_user(
+        user => $u,
+        role => Socialtext::Role->Member,
+    );
+}
+
+# Add a user to every workspace
+print "adding a user to all workspaces...\n";
+my $user = Socialtext::User->new( email_address => 'user-1@example.com' );
+for (1 .. $p{workspaces}) {
+    my $name = "wksp-$_";
+    my $w = Socialtext::Workspace->new( name => $name);
+    $w->assign_role_to_user(
+        user => $user,
+        role => Socialtext::Role->Member,
+    );
+}
+
+exit;
+
+sub usage {
+    die <<EOT;
+USAGE: $0 --accounts <num>
+EOT
+}
+

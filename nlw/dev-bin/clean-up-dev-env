@@ -1,0 +1,29 @@
+#!/bin/bash
+
+clean_out_st_test_tree() {
+    rm -rf $1/nlw/t/tmp/
+}
+clean_out_dot_nlw() {
+    PIDDIR=~/.nlw/run
+
+    # stop ST if its running
+    nlwctl stop
+    setup-supervisors stop
+    st-bootstrap-openldap stop
+
+    # nuke ~/.nlw/ directory
+    rm -rf ~/.nlw/
+}
+drop_test_databases() {
+    MY_TEST_DATABASES=`psql -l | grep NLW_${USER}_testing | awk '{ print $1 }'`
+    for DB in $MY_TEST_DATABASES; do
+        echo "Dropping $DB"
+        dropdb $DB 2>/dev/null;
+    done
+}
+
+clean_out_dot_nlw
+clean_out_st_test_tree ~/src/st/socialtext
+clean_out_st_test_tree ~/stci/socialtext
+drop_test_databases
+true

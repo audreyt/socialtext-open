@@ -1,0 +1,41 @@
+Tests for deleting a Workspace via the ReST API
+
+* Fixture: SocialRest
+
+| standard-test-setup |
+| set | wksp | workspace_%%start_time%% |
+
+| *Comment* | DELETE of non-existent Workspace fails   |         |
+| st-admin  | give-accounts-admin --email %%username%% | now has |
+| DELETE    | /data/workspaces/%%wksp%%                |         |
+| code-is   | 404                                      |         |
+
+| *Comment*        | DELETE Workspace by non-admin fails        |             |
+| create-workspace | %%wksp%%                                   | %%account%% |
+| st-admin         | remove-accounts-admin --email %%username%% | no longer   |
+| st-admin         | remove-system-admin --email %%username%%   | no longer   |
+| DELETE           | /data/workspaces/%%wksp%%                  |             |
+| code-is          | 403                                        |             |
+| purge-workspace  | %%wksp%%                                   |             |
+
+| *Comment*        | DELETE Workspace by System Admin works     |             |
+| create-workspace | %%wksp%%                                   | %%account%% |
+| st-admin         | remove-accounts-admin --email %%username%% | no longer   |
+| st-admin         | give-system-admin --email %%username%%     | now has     |
+| DELETE           | /data/workspaces/%%wksp%%                  |             |
+| code-is          | 204                                        |             |
+
+| *Comment*        | DELETE Workspace by Accounts Admin works |             |
+| create-workspace | %%wksp%%                                 | %%account%% |
+| st-admin         | give-accounts-admin --email %%username%% | now has     |
+| st-admin         | remove-system-admin --email %%username%% | no longer   |
+| DELETE           | /data/workspaces/%%wksp%%                |             |
+| code-is          | 204                                      |             |
+
+| *Comment*        | DELETE Workspace by Workspace Admin works                     |             |
+| create-workspace | %%wksp%%                                                      | %%account%% |
+| st-admin         | remove-accounts-admin --email %%username%%                    | no longer   |
+| st-admin         | remove-system-admin --email %%username%%                      | no longer   |
+| st-admin         | add-workspace-admin --email %%username%% --workspace %%wksp%% | now has     |
+| DELETE           | /data/workspaces/%%wksp%%                                     |             |
+| code-is          | 204                                                           |             |

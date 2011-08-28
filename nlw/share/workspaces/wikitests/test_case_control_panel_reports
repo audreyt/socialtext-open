@@ -1,0 +1,211 @@
+| *Comment* | STARTING Test case: Control Panel Reports |  |
+
+| *Comment* | Test case: Control Panel Reports pre-reqs: |
+| *Comment* | cd into dev-bin directory |
+| *Comment* | run ./st-populate-reports-db to populate the data |
+
+| *Comment* | Test case: Control Panel Reports - Setup |  |
+| st-admin | remove-accounts-admin --email %%email%% | %%username%% no longer has accounts admin access |
+| st-admin | give-accounts-admin --email %%email%% | %%username%% now has accounts admin access |
+
+| set_default | testingwrkspace | growth_report_test |
+
+| *Comment* | Test case: Control Panel Reports - Open Control Panel and Navigate |  |
+| open_ok | /nlw/control |  |
+| wait_for_element_visible_ok | link=Workspaces | 20000 |
+| click_and_wait | link=Workspaces |  |
+| type_ok | name | %%testingwrkspace%% |
+| st-submit |  |  |
+| click_and_wait | link=%%testingwrkspace%% |  |
+| click_and_wait | link=Usage Reports |  |
+
+| *Comment* | Test Case: Control Panel Reports page text tests |  |
+| text_like | Usage ending midnight of: |  |
+| text_like | %%testingwrkspace%% Workspace Usage Report |  |
+
+| *Comment* | Test Case: Control Panel Reports check select boxes |  |
+| select_ok | report_month | January |
+| select_ok | report_month | December |
+| select_ok | report_month | March |
+| select_ok | report_day | 1 |
+| select_ok | report_day | 31 |
+| select_ok | report_day | 25 |
+| select_ok | report_year | 2006 |
+| select_ok | report_year | 2008 |
+| select_ok | report_duration | 1 Week |
+| select_ok | report_duration | 1 Month |
+| select_ok | report_duration | 1 Quarter |
+| select_ok | report_day | 25 |
+
+| *Comment* | Test Case: Control Panel Reports check export buttons |  |
+| text_like | report-link | Printer Friendly Report |
+| text_like | report-summary-link | Export summary data as CSV |
+| text_like | report-detail-link | Export user data as CSV |
+
+| *Comment* | Test Case: Control Panel Reports create report with Create button |  |
+| click_and_wait | //input[@value='Create'] |  |
+
+| selectFrame | report-iframe |  |  |
+| text_like | Usage By Workspace - %%testingwrkspace%% |  |  |
+| text_like | qr/Total unique contributors: \d+/ |  |  |
+| text_like | qr/Total unique visitors: \d+/ |  |  |
+| text_like | qr/Total members \(current\): \d+/ |  |  |
+| text_like | Collaborativeness: |  |  |
+| text_like | (unique contributors as a percent of unique visitors) |  |  |
+| text_like | Total unique contributors: 4 |  |  |
+| text_like | Total unique visitors: 8 |  |  |
+| text_like | Total members (current): 8 |  |  |
+| text_like | Collaborativeness: 50% (unique contributors as a percent of unique visitors) |  |  |
+| text_like | qr/devnull1\@socialtext.net\s*16\s*8/ |  |  |
+| selectFrame | relative=top |  |  |
+
+| *Comment* | Test case: Control Panel Reports - Workspace Growth |  |
+| set_default | testingwrkspace | growth_report_test |
+| st_qa_setup_reports |  |  |
+| open_ok | /nlw/control |  |
+
+| click_and_wait | link=Workspaces |  |
+| type_ok | name | %%testingwrkspace%% |
+| st-submit |  |  |
+| click_and_wait | link=%%testingwrkspace%% |  |
+
+| click_and_wait | link=Growth Reports |  |
+| *Comment* | Test Case: Control Panel Reports - Workspace Growth page text tests |  |
+| text_like | %%testingwrkspace%% Workspace Growth Report |  |
+| text_like | Printer Friendly Report |  |
+| text_like | //a[contains(@href,'download=1')] | Export data as CSV |
+| text_like | Export data as CSV |  |
+
+| *Comment* | Test Case: Control Panel Reports - Workspace Growth page body exists |  |
+| selectFrame | report-iframe |  |
+| text_like | Workspace Growth - %%testingwrkspace%% |  |
+| text_like | qr/Date\s*Unique Members\s*Unique\s*Visitors\s*Unique\s*Contributors\s*Pages\s*Page\s*Views\s*Contributions/i |  |
+
+| *Comment* | Test Case: Control Panel Reports - Workspace Growth page Data Tests |  |
+| text_like | qr/Date\s*Unique members\s*Unique Visitors\s*Unique contributors\s*Pages\s*Page views\s*Contributions/i |  |
+| text_like | qr/Mar\s*2008\s*8\s*8\s*4\s*0\s*24\s*5/ |  |
+| text_like | qr/Feb\s*2008\s*7\s*7\s*3\s*0\s*22\s*4/ |  |
+| text_like | qr/Jan\s*2008\s*4\s*4\s*2\s*0\s*14\s*3/ |  |
+| text_like | qr/Dec\s*2007\s*1\s*1\s*1\s*0\s*4\s*2/ |  |
+| text_like | qr/\w\w\w\s*\d\d\d\d\s*\d+\s*\d+\s*\d+\s*\d+\s*\d+\s*\d+/ |  |
+
+| *Comment* | Test Case: Control Panel Reports - Workspace Growth Printer Friendly |  |
+| selectFrame | relative=top |  |
+| click_and_wait | link=Printer Friendly Report |  |
+| text_like | Workspace Growth - %%testingwrkspace%% |  |
+| text_like | qr/Date\s*Unique\s*members\s*Unique Visitors\s*Unique\s*contributors\s*Pages\s*Page\s*views\s*Contributions/i |  |
+| text_like | qr/Mar 2008\s*8\s*8\s*4\s*0\s*24\s*5/ |  |
+| text_like | qr/Feb 2008\s*7\s*7\s*3\s*0\s*22\s*4/ |  |
+| text_like | qr/Jan 2008\s*4\s*4\s*2\s*0\s*14\s*3/ |  |
+| text_like | qr/Dec\s*2007\s*1\s*1\s*1\s*0\s*4\s*2/ |  |
+| text_like | qr/\w\w\w\s*\d\d\d\d\s*\d+\s*\d+\s*\d+\s*\d+\s*\d+\s*\d+/ |  |
+
+TODO: Add this to slideshow?
+open_ok | /nlw/reports/workspace_growth.csv?workspace=growth_report_test&download=1 | pause | 20000 |
+
+| *Comment* | Test Case: Control Panel Reports (Account-Level, Growth) Setup |  |
+| set_default | testingwrkspace | growth_report_test |
+| set_default | testingaccount | test_stub_account |
+
+| *Comment* | Test Case: Control Panel Reports (Account-level, Growth Report) |  |
+| open_ok | /nlw/control |  |
+| click_and_wait | link=Accounts |  |
+| wait_for_element_visible_ok | st-search-by-name | 30000 |
+| type_ok | st-search-by-name | %%testingaccount%% |
+| wait_for_element_visible_ok | st-submit-search-by-name | 30000 |
+| click_and_wait | st-submit-search-by-name |  |
+| wait_for_element_visible_ok | link=%%testingaccount%% |  |
+| click_and_wait | link=%%testingaccount%% |  |
+| click_and_wait | link=Growth Reports |  |
+
+| *Comment* | Test Case: Control Panel Reports (Account-level, Growth Report) text tests |  |
+| text_like | %%testingaccount%% Account Growth Report |  |
+| text_like | Printer Friendly Report |  |
+| text_like | //a[contains(@href,'download=1')] | Export data as CSV |
+| text_like | Export data as CSV |  |
+
+| *Comment* | Test Case: Control Panel Reports (Account-level, Growth) page body exists |  |
+| selectFrame | report-iframe |  |
+| text_like | Account Growth - %%testingaccount%% |  |
+| text_like | qr/Date\s*Unique members\s*Unique Visitors\s*Unique contributors\s*Personalized Dashboards\s*Personalized Profiles\s*People Views\s*Dashboard Views\s*Signals Sent\s*Workspaces\s*Pages\s*Page views\s*Workspace Contributions/i |  |
+| text_like | qr/Mar\s*2010\s*6\s*0\s*0\s*6\s*0\s*0\s*0\s*0\s*2\s*7\s*0\s*0/ |  |
+| text_like | qr/Feb\s*2010\s*6\s*1\s*1\s*6\s*0\s*0\s*0\s*0\s*2\s*7\s*0\s*1/ |  |
+| text_like | qr/Jan\s*2010\s*4\s*6\s*5\s*6\s*0\s*0\s*36\s*0\s*2\s*36\s*228\s*85/ |  |
+| text_like | qr/Dec\s*2009\s*2\s*4\s*3\s*4\s*0\s*0\s*12\s*0\s*2\s*2\s*70\s*18/ |  |
+
+| *Comment* | Test Case: Control Panel Reports (Account-level, Growth) Printer Friendly |  |
+| selectFrame | relative=top |  |
+| click_and_wait | link=Printer Friendly Report |  |
+| text_like | qr/Mar\s*2010\s*6\s*0\s*0\s*6\s*0\s*0\s*0\s*0\s*2\s*7\s*0\s*0/ |  |
+| text_like | qr/Feb\s*2010\s*6\s*1\s*1\s*6\s*0\s*0\s*0\s*0\s*2\s*7\s*0\s*1/ |  |
+| text_like | qr/Jan\s*2010\s*4\s*6\s*5\s*6\s*0\s*0\s*36\s*0\s*2\s*36\s*228\s*85/ |  |
+| text_like | qr/Dec\s*2009\s*2\s*4\s*3\s*4\s*0\s*0\s*12\s*0\s*2\s*2\s*70\s*18/ |  |
+
+| *Comment* | Test case: Control Panel Reports (Account-level) Get Usage |  |
+| open_ok | /nlw/control |  |
+| click_and_wait | link=Accounts |  |
+| wait_for_element_visible_ok | st-search-by-name | 30000 |
+| type_ok | st-search-by-name | %%testingaccount%% |
+| wait_for_element_visible_ok | st-submit-search-by-name | 30000 |
+| click_and_wait | st-submit-search-by-name |  |
+| wait_for_element_visible_ok | link=%%testingaccount%% |  |
+| click_and_wait | link=%%testingaccount%% |  |
+| click_and_wait | link=Usage Reports |  |
+
+| *Comment* | Test Case: Control Panel Reports page text tests |  |
+| text_like | Usage ending midnight of: |  |
+| text_like | %%testingaccount%% Account Usage Report |  |
+
+| *Comment* | Test Case: Control Panel Reports check select boxes |  |
+| select_ok | report_month | January |
+| select_ok | report_month | March |
+| select_ok | report_month | August |
+| select_ok | report_month | March |
+| select_ok | report_day | 1 |
+| select_ok | report_day | 31 |
+| select_ok | report_day | 25 |
+| select_ok | report_day | 5 |
+| select_ok | report_year | 2006 |
+| select_ok | report_year | 2010 |
+| select_ok | report_duration | 1 Week |
+| select_ok | report_duration | 1 Month |
+| select_ok | report_duration | 1 Quarter |
+| select_ok | report_day | 1 |
+
+| *Comment* | Test Case: Control Panel Reports check export buttons |  |
+| text_like | report-link | Printer Friendly Report |
+| text_like | report-summary-link | Export summary data as CSV |
+| text_like | report-detail-link | Export user data as CSV |
+
+| *Comment* | Test Case: Control Panel Reports create report with Create button |  |
+| click_and_wait | //input[@value='Create'] |  |
+
+| selectFrame | report-iframe |  |
+| text_like | Usage By Account - %%testingaccount%% |  |
+| text_like | qr/Total unique contributors: 6+/ |  |
+| text_like | qr/Total unique visitors: 6/ |  |
+| text_like | qr/Total members \(current\): 6/ |  |
+| text_like | Collaborativeness: |  |
+| text_like | (unique contributors as a percent of unique visitors) |  |
+| text_like | Total unique contributors: 6 |  |
+| text_like | Total unique visitors: 6 |  |
+| text_like | Total members (current): 6 |  |
+| text_like | Collaborativeness: 100% (unique contributors as a percent of unique visitors) |  |
+| text_like | qr/Username\s*Dashboard\s*Views\s*Dashboard\s*/ |  |
+
+text_like | Username\s*Dashboard Views\s*Dashboard Personalizations\s*People Views\s*People Contributions\s*Signals Sent\s*Page Views\s*Page Contributions | |
+
+| text_like | qr/t_stub01\@socialtext.com\s*10\s*10\s*0\s*0\s*0\s*70\s*67/ |  |
+| text_like | qr/t_stub02\@socialtext.com\s*10\s*10\s*0\s*0\s*0\s*50\s*1/ |  |
+| text_like | qr/t_stub03\@socialtext.com\s*8\s*8\s*0\s*0\s*0\s*\s*56\s*9/ |  |
+| text_like | qr/t_stub04\@socialtext.com\s*8\s*8\s*0\s*0\s*0\s*\s*44\s*1/ |  |
+| text_like | qr/t_stub05\@socialtext.com\s*6\s*6\s*0\s*0\s*0\s*\s*42\s*22/ |  |
+| text_like | qr/t_stub06\@socialtext.com\s*6\s*6\s*0\s*0\s*0\s*\s*36\s*4/ |  |
+| selectFrame | relative=top |  |
+
+| open_ok | /nlw/reports |  |
+| wait_for_element_visible_ok | duration |  |
+| wait_for_element_visible_ok | start_date |  |
+| text_like | Reports Dashboard |  |
+
+| *Comment* | Test Case: Control Panel Reports COMPLETED |  |

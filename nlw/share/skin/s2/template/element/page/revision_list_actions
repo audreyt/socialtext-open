@@ -1,0 +1,11 @@
+<div id="st-pagetools-revision-compare">
+    <ul class="st-revision-menu">
+        <li class="st-last">
+            [% INCLUDE element/ws_link
+                href = "${script_name}?${page_uri}",
+                id   = "st-back-to-current-revision-link",
+                name = loc("Back To Current Revision")
+            %]
+        </li>
+    </ul>
+</div>

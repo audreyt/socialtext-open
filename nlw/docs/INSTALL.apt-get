@@ -1,0 +1,146 @@
+INSTALL.apt-get -- Instructions for using the Socialtext apt repository
+
+@COPYRIGHT@
+
+Socialtext Open has dependencies on over 150 different Perl modules,
+and not all of them are packaged by the Debian or Ubuntu projects.
+We've created a repository of packages to help speed installation.
+
+This document is not a tutorial on using apt-get.  It just covers
+how to use Socialtext's repository with apt-get.
+
+=== Add the repository to sources.list ===
+
+Your Debian or Ubuntu system has a list of repositories it checks
+for packages in the file /etc/apt-get/sources.list.  Add the following
+line to your sources.list file:
+
+    deb http://open.socialtext.net/apt socialtext-open main
+
+This tells your apt-get to check our repository for distributions
+
+=== Test that you're checking the repo ===
+
+Now run "apt-get update" to verify that your apt-get is checking our repo.
+
+    $ apt-get update
+    Get: 1 http://open.socialtext.net socialtext-open Release.gpg [189B]
+    Get: 2 http://security.ubuntu.com dapper-security Release.gpg [189B]
+    ...
+    W: GPG error: http://open.socialtext.net socialtext-open Release: \
+      The following signatures couldn't be verified because the public \
+      key is not available: NO_PUBKEY 291AC87373B9F51C
+    ...
+
+That line with the GPG error is a good thing.  (It may also not be
+the last line of output) You shouldn't yet have our public keys,
+so it shows that you're correctly checking our repository.
+
+=== Install our keyring ===
+
+Fetch and install the keyring for verifying future installs.  Of
+course, some of the numbers and dates will be different, but the
+output should look roughly like this.
+
+    $ sudo apt-get install socialtext-keyring
+    Reading package lists... Done
+    Building dependency tree... Done
+    The following NEW packages will be installed
+      socialtext-keyring
+    0 upgraded, 1 newly installed, 0 to remove and 15 not upgraded.
+    Need to get 3282B of archives.
+    After unpacking 49.2kB of additional disk space will be used.
+    WARNING: The following packages cannot be authenticated!
+      socialtext-keyring
+    Install these packages without verification [y/N]?
+
+It's a bit of a catch-22, that you can't verify the install of the
+keyring because you don't have a keyring.  You'll need to answer
+"y" to continue:
+
+    Get: 1 http://open.socialtext.net socialtext-open/main socialtext-keyring 20060901-1 [3282B]
+    Fetched 3282B in 0s (13.4kB/s)
+    Selecting previously deselected package socialtext-keyring.
+    (Reading database ... 95307 files and directories currently installed.)
+    Unpacking socialtext-keyring (from .../socialtext-keyring_20060901-1_all.deb) ...
+    Setting up socialtext-keyring (20060901-1) ...
+    OK
+
+Finally, update the package lists one last time.
+
+    $ apt-get update
+
+=== Installing Socialtext Open's Perl dependencies ===
+
+Once you've got the keyring set up, installing dependencies is simple:
+
+    $ sudo apt-get install st-perl-deps
+    Reading package lists... Done
+    Building dependency tree... Done
+    The following extra packages will be installed:
+      libapache-reload-perl libapache-request-perl
+      ...
+      ...
+    0 upgraded, 121 newly installed, 0 to remove and 1 not upgraded.
+    Need to get 6411kB of archives.
+    After unpacking 31.3MB of additional disk space will be used.
+    Do you want to continue [Y/n]?
+
+Answer "Y" and let your machine crank for a few minutes.  When it's done,
+you should be ready for running configure on your Socialtext Open install
+as described in the main INSTALL document.
+
+
+=== Install individual distributions ===
+
+You're now set to install new distributions.
+
+=== Ubuntu Dapper and Breezy ===
+
+Dapper and Breezy (both with packages from Universe) include a number of
+packages which can make installing Socialtext easier.  To make sure you have
+Universe packages enabled, add or uncomment these lines in your
+/etc/apt/sources.list file (change dapper to breezy if appropriate):
+
+    deb http://us.archive.ubuntu.com/ubuntu dapper universe
+    deb-src http://us.archive.ubuntu.com/ubuntu dapper universe
+
+Once you have Universe in your sources.list run the following command first:
+
+    # Use build/pkg-lists/breezy if you're running Breezy
+    sudo apt-get install `cat build/pkg-lists/dapper`
+
+As always please review the packages to be installed before continuing.
+As the install proceeds you'll get warnings about apache-perl and
+postgresql-7.4 or postgres-8.0.  These can both be ignored for now.
+When the install is done it will say apache-perl failed to install.
+Run this:
+
+    sudo apt-get install apache-perl
+
+It will try to configure apache-perl again and should succeed this time.  Once
+that is done you can proceed with the normal Perl install.  However, before
+you install the software system wide make sure that you've got Postgres
+configured so the Apache user can connect as "nlw" to the "NLW" database, see
+the section on Postgres above.
+
+If you don't want to install all of our suggested packages and would rather
+pull most things from CPAN then just install the following:
+
+    perl
+    perl-modules
+    perl-doc
+    apache-dev
+    apache-perl
+    postgresql
+    build-essential
+
+These packages will get you the three most important things: Perl,
+Apache with mod_perl, and Postgres.  build-essential is helpful so you
+can compile the various things that need building from CPAN.
+
+You may also consider installing the "imagemagick" and "perlmagick"
+package as well.  These are the ImageMagick image manipulation
+programs, and the Perl bindings to them, respectively.  Installing
+ImageMagick and the Perl bindings manually can be somewhat tricky,
+so using the package is the way to go.

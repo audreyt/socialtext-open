@@ -1,0 +1,31 @@
+#!/usr/bin/env perl
+#@COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::Workspace;
+use Socialtext::SQL qw/sql_singlevalue/;
+use Socialtext::Pages;
+use Socialtext::Hub;
+
+my $workspaces = Socialtext::Workspace->All;
+my $failures = 0;
+while (my $wksp = $workspaces->next) {
+    my $name = $wksp->name;
+    my $count = sql_singlevalue(
+        'SELECT COUNT(*) FROM page WHERE workspace_id = ?',
+        $wksp->workspace_id,
+    );
+    my $hub = Socialtext::Hub->new(current_workspace => $wksp);
+    my @page_ids = Socialtext::Pages->new(hub => $hub)->all;
+    if ($count != @page_ids) {
+        warn "Found $count pages in database, but " . @page_ids . " on disk "
+            . "for workspace $name";
+        $failures++;
+        next;
+    }
+}
+if ($failures) {
+    warn "$failures workspaces failed to populate the DB\n";
+    exit $failures;
+}
+exit 0;

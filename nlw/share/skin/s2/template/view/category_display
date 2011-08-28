@@ -1,0 +1,43 @@
+[%# @COPYRIGHT@ -%]
+[% WRAPPER layout/html content_id = 'st-listview' box_javascript = 0 actions = 'element/listview/actionbar' subnav = 'element/wiki/subnav-listview' %]
+<form id="st-listview-form" method="get" action="index.cgi">
+<input id="st-listview-action" name="action" value="" type="hidden">
+<input id="st-listview-filename" name="filename" value="" type="hidden">
+
+<div id="st-list-title">
+    [% display_title | html %]
+    [% IF hub.current_workspace.enable_unplugged %]
+    [% IF unplug_uri %]
+        <a title="[% unplug_phrase %]" href="[% unplug_uri %]"><img border="0" src="[% wiki.skin_uri('s2') %]/images/unplug-icon.png"/></a>
+    [% END %]
+    [% END %]
+</div>
+<div id="st-actions-bar-spacer-clear">&nbsp;</div>
+[% PROCESS view_as_welog %]
+
+<div>
+[% PROCESS post_by_email %]
+[% INCLUDE element/listview/actions %]
+<div id="st-actions-bar-spacer-clear">&nbsp;</div>
+</div>
+<div id="st-category-display">
+  [% PROCESS element/listview/pages %]
+</div>
+</form>
+[% END %]
+
+[% BLOCK view_as_welog %]
+  <div id="category-display-weblog-view">
+    [% loc("View") %]
+    <a href="[% script_name %]?action=weblog_display;category=[% uri_escaped_category %]">[% loc("[_1] as a weblog", html_escaped_category) %]</a>
+  </div>
+[% END %]
+
+[% BLOCK post_by_email %]
+  <div id="category-display-post-email">
+    [% IF checker.check_permission('email_in') AND email_category_address %]
+    [% loc("Post to this tag by email:") %]
+    <a href="mailto:[% email_category_address %]">[% html_escaped_category %]</a>
+    [% END %]
+  </div>
+[% END %]

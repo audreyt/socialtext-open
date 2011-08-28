@@ -1,0 +1,20 @@
+#!/bin/bash
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+COLUMN=skin_name
+PREVIOUS=st
+
+# Set default workspae_template to 's2'
+SQL="SELECT name FROM \"Workspace\" WHERE \"$COLUMN\" = '$PREVIOUS'"
+
+OUT=$(psql -U $DB_USER -d $DB -t -c "$SQL" 2>&1)
+
+if [ -z "$OUT" ]; then
+    echo No workspaces have $COLUMN set to $PREVIOUS
+    exit 0
+else
+    echo Some workspaces still have $COLUMN set to $PREVIOUS:
+    echo "$OUT"
+    exit 1
+fi

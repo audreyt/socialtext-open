@@ -1,0 +1,118 @@
+*NOTE*: This test depends on the content of the socialtext-demo account, which is imported during st-setup-wikitests
+
+| set | wiki | global-time-wiki-%%start_time%% |
+| set | acct | global-time-account-%%start_time%% |
+| set | user | global.time.user.%%start_time%%@david.socialtext.net |
+| set | demo_user | socialtextdemo1@gmail.com |
+| set | demo_pass | socialtext |
+| set | demo_user_2 | socialtextdemo2@gmail.com |
+
+
+| create-account | %%acct%% |  |  |
+| create-workspace | %%wiki%% | %%acct%% |  |
+| create-user | %%user%% | %%password%% | %%acct%% |
+| st-admin | add-member --email %%user%% --workspace %%wiki%% | now has the role |  |
+| st-logoutin | %%user%% | %%password%% |
+
+| *Comment* | Test Case: Global Time | initialize, don't assume fresh installation |
+| include | [Default Global Timezone Values] |  |
+| call | [st default global timezone] | tech_admin=%%user%% |
+
+| *Comment* | Test Case: Global Time check the navigation to the timezone page |  |
+| open_ok | /?action=workspaces_listall |  |
+| wait_for_element_visible_ok | link=Settings | 30000 |
+| click_and_wait | link=Settings |  |
+| wait_for_element_visible_ok | link=Time | 30000 |
+| click_and_wait | link=Time |  |
+| wait_for_text_present_ok | What time zone | 30000 |
+| location_like | /?action=preferences_settings;preferences_class_id=timezone |  |
+
+| *Comment* | Test Case: Global Time check the contents of Time page |  |
+| wait_for_text_present_ok | What time zone should times be displayed in? | 30000 |
+| wait_for_text_present_ok | How should Daylight Savings/Summer Time be handled? | 30000 |
+| wait_for_text_present_ok | How should displayed dates be formatted? | 30000 |
+| wait_for_text_present_ok | Should times be displayed in 12-hour or 24-hour format? | 30000 |
+| wait_for_text_present_ok | Should seconds be included on displayed times? | 30000 |
+| wait_for_element_visible_ok | timezone__timezone | 30000 |
+| wait_for_element_visible_ok | timezone__dst | 30000 |
+| wait_for_element_visible_ok | timezone__date_display_format | 30000 |
+| wait_for_element_visible_ok | timezone__time_display_12_24 | 30000 |
+| wait_for_element_visible_ok | timezone__time_display_seconds | 30000 |
+
+| *Comment* | Test Case: Global Time check for global default settings - see [st default global timezone] |  |
+| is_selected_ok | timezone__timezone | label=%%default_timezone%% |
+| is_selected_ok | timezone__dst | label=%%default_dst%% |
+| is_selected_ok | timezone__date_display_format | value=%%default_date_display_format%% |
+| is_selected_ok | timezone__time_display_12_24 | value=%%default_time_display_12_24%% |
+| verifyValue | //input[@name='timezone__time_display_seconds'] | %%default_time_display_seconds%% |
+
+| *Comment* | Test Case: Global Time login as AnyCorp user, verify default value of a random timestamp |  |
+| st-logoutin | %%demo_user%% | %%demo_pass%% |
+| open_ok | /rykerengineering/ryker_engineering |  |
+
+| *Comment* | *NOTE*: If this step fails, the AnyCorp account has non-default time settings |  |
+| wait_for_text_present_ok | Jun 24, 2010 1:03pm | 30000 |
+
+| *Comment* | Test Case: Global Time change the time settings for %%demo_user%% |  |
+| open_ok | /?action=preferences_settings;preferences_class_id=timezone |  |
+| wait_for_element_visible_ok | timezone__timezone | 30000 |
+| select_ok | timezone__timezone | label=+0330 Iran |
+| is_selected_ok | timezone__timezone | label=+0330 Iran |
+| select_ok | timezone__date_display_format | value=yyyy_mm_dd |
+| is_selected_ok | timezone__date_display_format | value=yyyy_mm_dd |
+| select_ok | timezone__time_display_12_24 | value=24 |
+| is_selected_ok | timezone__time_display_12_24 | value=24 |
+| check_ok | timezone__time_display_seconds |  |
+| is_checked_ok | timezone__time_display_seconds |  |
+| click_and_wait | -savelink |  |
+| wait_for_text_present_ok | Preferences saved | 30000 |
+
+| *Comment* | Test Case: Global Time check all timestamp locations for new timezone %%demo_user%% |  |
+| open_ok | /rykerengineering/ryker_engineering |  |
+| wait_for_text_present_ok | 2010-06-25 00:33:45 | 30000 |
+| text_like | contentLeft | 2010-06-25 00:33:45 |
+| text_like | //span[@class='st-updatedate'] | 2010-06-25 00:33:45 |
+| open_ok | /rykerengineering/?action=recent_changes |  |
+| wait_for_text_present_ok | 2010-11-22 15:31:10 | 30000 |
+| open_ok | /rykerengineering/?action=breadcrumbs_list |  |
+| wait_for_text_present_ok | 2010-03-03 09:29:28 | 30000 |
+| open_ok | /rykerengineering/?action=orphans_list |  |
+| wait_for_text_present_ok | 2010-09-13 15:30:52 | 30000 |
+| open_ok | /rykerengineering/?action=changes&changes=all |  |
+| wait_for_text_present_ok | 2010-06-24 02:59:11 | 30000 |
+| open_ok | /rykerengineering/?action=attachments_listall |  |
+| wait_for_text_present_ok | 2008-09-12 22:46:57 | 30000 |
+| open_ok | /rykerengineering/?action=blog_display |  |
+| wait_for_text_present_ok | 2010-11-15 15:31:21 | 30000 |
+| open_ok | /rykerengineering/?action=search_workspace&search_term=q4 |  |
+| wait_for_text_present_ok | 2009-07-09 08:57:27 | 30000 |
+| open_ok | /rykerengineering/?action=search_workspaces&search_term=q4 |  |
+| wait_for_text_present_ok | 2009-07-09 08:54:21 | 30000 |
+| open_ok | /rykerengineering/?action=search_signals&search_term=ryker |  |
+| wait_for_element_visible_ok | link=2010-10-29 02:21:23 | 30000 |
+| open_ok | /m/page/rykerengineering/ |  |
+| wait_for_text_present_ok | 2010-06-25 00:33:45 | 30000 |
+
+| *Comment* | Test Case: Global Time log in as %%demo_user_2%%, see that time settings are still at global default |  |
+| st-logoutin | %%demo_user_2%% | %%demo_pass%% |
+| open_ok | /?action=preferences_settings;preferences_class_id=timezone |  |
+| wait_for_element_visible_ok | timezone__timezone | 30000 |
+| is_selected_ok | timezone__timezone | label=%%default_timezone%% |
+| is_selected_ok | timezone__dst | label=%%default_dst%% |
+| is_selected_ok | timezone__date_display_format | value=%%default_date_display_format%% |
+| is_selected_ok | timezone__time_display_12_24 | value=%%default_time_display_12_24%% |
+| verifyValue | //input[@name='timezone__time_display_seconds'] | %%default_time_display_seconds%% |
+| open_ok | /rykerengineering/ryker_engineering |  |
+| wait_for_text_present_ok | Jun 24, 2010 1:03pm | 30000 |
+
+| *Comment* | Test Case: Global Time return %%demo_user%% to default settings |  |
+| st-logoutin | %%demo_user%% | %%demo_pass%% |
+| call | [st default timezone] | user=%%demo_user%% |
+
+| *Comment* | Test Case: Global Time TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%user%% |  |
+| delete-workspace | %%wiki%% | Recklessly deleting |
+| delete-account | %%acct%% | Recklessly deleting |
+
+| *Comment* | Test Case: Global Time COMPLETED |  |

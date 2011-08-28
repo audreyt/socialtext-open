@@ -1,0 +1,25 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+use Socialtext::Account;
+use Socialtext::SQL qw(sql_singlevalue);
+
+my $deleted_acct         = Socialtext::Account->Deleted();
+my $num_users_w_roles    = $deleted_acct->user_count(direct => 1, show_hidden => 1);
+my $num_users_w_pri_acct = sql_singlevalue( qq{
+    SELECT COUNT(*) FROM "UserMetadata"
+      WHERE primary_account_id = ?
+      AND is_system_created = 'f' 
+    }, $deleted_acct->account_id
+);
+
+if ($num_users_w_roles == $num_users_w_pri_acct) {
+    print "all Deleted Users have a Role in the Deleted Account; skipping migration.\n";
+    exit 1;
+}
+
+print "some Deleted Users missing Role in Deleted Account; fixing.\n";
+exit 0;

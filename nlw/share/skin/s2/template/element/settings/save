@@ -1,0 +1,12 @@
+[%# @COPYRIGHT@ -%]
+<div id="st-settings-save">
+  [% SET save_button_value = loc('Save') UNLESS save_button_value %]
+  [% PROCESS standard_form_buttons.html submit_button_value = save_button_value %]
+  <div class="message">[% message %]</div>
+  [% FOREACH warning = warnings %] 
+    <div class="error-message">[% loc('warning:') %] [% warning %]</div>
+  [% END %]
+  [% FOREACH error = errors %] 
+    <div class="error-message">[% loc('error:') %] [% error %]</div>
+  [% END %]
+</div>

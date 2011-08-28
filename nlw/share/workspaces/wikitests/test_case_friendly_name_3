@@ -1,0 +1,68 @@
+| *Comment* | Test Case: Friendly Name 3 |  |
+
+* Fixture: SocialWidgets
+
+| include | [Test Case: Friendly Name Setup] |
+
+| *Comment* | Test Case: Friendly Name 3 check People directory sorting |  |
+| open_ok | /nlw/submit/logout |  |
+| st-login | %%fname_checker%% | %%password%% |
+| open_ok | /?action=people |  |
+| wait_for_element_visible_ok | link=%%fname%% |  |
+| text_like | contentContainer | qr/%%fname_user_regexp%%.+%%fname_checker_regexp%%/ |
+
+| *Comment* | Test Case: Friendly Name 3 check non-workspace Search |  |
+| wait_for_element_visible_ok | st-search-term | 30000 |
+| type_ok | st-search-term | %%first_name%% |
+| wait_for_element_visible_ok | st-search-submit | 30000 |
+| click_and_wait | st-search-submit |  |
+| wait_for_element_visible_ok | link=%%fname%% | 30000 |
+| wait_for_element_visible_ok | st-search-term | 30000 |
+| type_ok | st-search-term | %%fname%% |
+| wait_for_element_visible_ok | st-search-submit | 30000 |
+| click_and_wait | st-search-submit |  |
+| wait_for_element_visible_ok | link=%%fname%% | 30000 |
+
+| *Comment* | Test Case: Friendly Name 3 check workspace Search |  |
+| open_ok | /%%fname_wiki%%/index.cgi?%%fname_wiki%% |  |
+| wait_for_element_visible_ok | st-search-action | 30000 |
+| select_ok | st-search-action | label=Search People: |
+| wait_for_element_visible_ok | st-search-term | 30000 |
+| type_ok | st-search-term | %%first_name%% |
+| wait_for_element_visible_ok | st-search-submit | 30000 |
+| click_and_wait | st-search-submit |  |
+| wait_for_element_visible_ok | link=%%fname%% | 30000 |
+| open_ok | /%%fname_wiki%%/index.cgi?%%fname_wiki%% |  |
+| wait_for_element_visible_ok | st-search-action | 30000 |
+| select_ok | st-search-action | label=Search People: |
+| wait_for_element_visible_ok | st-search-term | 30000 |
+| type_ok | st-search-term | %%fname%% |
+| wait_for_element_visible_ok | st-search-submit | 30000 |
+| click_and_wait | st-search-submit |  |
+| wait_for_element_visible_ok | link=%%fname%% | 30000 |
+
+| *Comment* | Test Case: Friendly Name 3 check people dropdown |  |
+| open_ok | /?action=people |  |
+| wait_for_element_visible_ok | link=%%fname%% | 30000 |
+| click_and_wait | link=%%fname%% |  |
+| wait_for_element_visible_ok | link=Follow this person | 60000 |
+| pause | 5000 | needed for IE7 |
+| click_ok | link=Follow this person |  |
+| wait_for_element_visible_ok | link=Stop following this person | 60000 |
+| open_ok | /%%fname_wiki%%/index.cgi?%%fname_wiki%% |  |
+| wait_for_element_present_ok | link=%%fname%% | 30000 |
+
+| *Comment* | Test Case: Friendly Name 3 use console to change friendly name |  |
+| st-admin | set-user-profile | The command you called (set-user-profile) requires a user to be specified. |
+| st-admin | set-user-profile --email %%fname_user%% preferred_name %%fname2%% | Profile field 'preferred_name' set to '%%fname2%%' for User '%%fname_user%%' |
+
+| *Comment* | Test Case: Friendly Name 3 check for new name |  |
+| open_ok | /%%fname_wiki%%/index.cgi?%%fname_page%% |  |
+| wait_for_text_present_ok | comment text | 30000 |
+| text_like | st-page-content | qr/user wafl.+%%fname2%%.+contributed by.+%%fname2%%/ |
+| text_like | create-attribution | qr/Created by.+%%fname2%%/ |
+| text_like | update-attribution | qr/Updated by.+%%fname2%%/ |
+
+| include | [Test Case: Friendly Name Teardown] |
+
+| *Comment* | Test Case: Friendly Name 3 COMPLETED |

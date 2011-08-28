@@ -1,0 +1,37 @@
+<html>
+
+<head>
+ <script type="text/javascript" src="lib/JSAN.js"></script>
+ <script type="text/javascript">
+  JSAN.addRepository("lib", "../lib");
+  JSAN.errorLevel = "die";
+  JSAN.use("Test.More");
+  JSAN.use("DOM.Ready");
+ </script>
+ <script type="text/javascript">
+  DOM.Ready._resetClass();
+
+  DOM.Ready.onDOMDone( DOM.Ready._stopTimer );
+ </script>
+</head>
+<body>
+
+ <p>
+ This test simply will not run properly when run with the other tests
+ in the suite via Test.Harness.
+ </p>
+
+ <pre style="white-space: pre" id="test"><script>
+  plan({ tests: 1 });
+
+  var async_id = beginAsync();
+
+  DOM.Ready.onDOMDone( function () {
+      ok( 1, "onDOMDone from body works" );
+  } );
+
+  DOM.Ready.onDOMDone( function () { endAsync(async_id) } );
+</script></pre>
+
+</body>
+</html>

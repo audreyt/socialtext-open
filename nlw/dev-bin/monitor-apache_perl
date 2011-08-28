@@ -1,0 +1,177 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+$ENV{PATH} = "/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin";
+# Script assumes it is run from cron as root, e.g:
+#
+#     monitor-apache-perl 20 700
+#
+# Makes use of mail(1) for sending email.  Output is also saved in /var/log
+# and warned to STDERR, which should cause cron to send the output to the
+# sysadmin.
+#
+# Subroutines that start with SNAP_ are used to gather snapshot data of the
+# system.  They are all located at the bottom of this script and each one
+# returns a string.  The output is aggregated together and that's the data for
+# a single snapshot.
+#
+# The various programs used by the SNAP_ routines don't have to be installed.
+# If they're missing it'll generate a harmless warning to STDERR.
+#
+# To restart apache we simply use the init.d script.  If that gives an error
+# we use killall -9 and then attempt to do a start, using the init.d script.
+
+our $DO_RESTART = 0;
+our $SUPPORT_ADDRESS = 'support@socialtext.com';
+
+my $max_load = shift || die "Usage: $0 max_load min_memory\n";
+my $min_mem = shift || die "Usage: $0 max_load min_memory\n";
+die "Bad max load: $max_load\n" unless $max_load =~ /^\d+$/;
+die "Bad min memory: $min_mem\n" unless $min_mem =~ /^\d+$/;
+
+restart_apache() if system_is_in_trouble() and $DO_RESTART;
+exit 0;
+
+sub restart_apache {
+    system_snapshot();
+    system( "/etc/init.d/apache-perl", "restart" );
+    if ($?) {
+        warn "Failed to restart apache-perl, attempting killall -9\n";
+        system( "killall", "-9", "apache-perl" );
+        warn "killall -9 apache-perl failed.\n" if $?;
+        warn "Attempting to start apache-perl\n";
+        system( "/etc/init.d/apache-perl", "start" );
+        warn "Starting apache-perl failed.\n" if $?;
+    }
+}
+
+sub system_is_in_trouble {
+    return load_is_too_high() || memory_is_too_low();
+}
+
+sub memory_is_too_low {
+    chomp( my $mem = `free -m | awk '{print \$4}' | head -n 3 | tail -n 1` );
+    my $low = $mem <= $min_mem;
+    warn "$0: memory is too low: $mem <= $min_mem\n" if $low;
+    return $low;
+}
+
+sub load_is_too_high {
+    chomp( my $load = `uptime | awk '{print \$10}' | cut -f 1 -d,` );
+    if ( $load =~ /average/) {
+        chomp ($load = `uptime | awk '{print \$11}' | cut -f 1 -d,` );
+    }
+    my $high = $load >= $max_load;
+    warn "$0: load is too high: $load >= $max_load\n" if $high;
+    return $high;
+}
+
+sub system_snapshot {
+    my $snapshot = take_snapshot();
+    warn "$snapshot\n";
+    save_snapshot($snapshot);
+    email_snapshot($snapshot);
+}
+
+sub take_snapshot {
+    no strict;
+    my $snapshot = "";
+    for my $sub ( sort keys %{::} ) {
+        if ( $sub =~ /^SNAP_/ ) {
+            $snapshot .= "\n====== $sub =====\n";
+            $snapshot .= &$sub || "(no output)\n";
+        }
+    }
+    return $snapshot;
+}
+
+sub save_snapshot {
+    my $snapshot = shift;
+    my $file     = "/var/log/monitor-apache_perl." . time();
+    if ( open( my $fh, ">" . $file ) ) {
+        print $fh $snapshot;
+        close($fh);
+    }
+    else {
+        warn "Could not open $file for writing: $!\n";
+    }
+}
+
+sub email_snapshot {
+    my $snapshot = shift;
+    my $subject  = "$0 Snapshot " . scalar( localtime() );
+    if ( open( my $mail, "|mail -s \"$subject\" $SUPPORT_ADDRESS" ) ) {
+        print $mail $snapshot;
+        close($mail);
+    }
+    else {
+        warn "Could not mail snapshot: $!\n";
+    }
+}
+
+
+# ===========================================================================
+# Subroutines that begin with SNAP_* do whatever poking around they want and
+# return it as a string.
+# ===========================================================================
+
+sub SNAP_free { return `free` }
+sub SNAP_ifconfig { return `ifconfig` }
+sub SNAP_load { return `uptime` }
+sub SNAP_lsof { return `lsof` }
+sub SNAP_ps { return `ps aux` }
+sub SNAP_top { return `top -c -b -n 1` }
+
+sub SNAP_proc_fd {
+    my $out  = "";
+    my @pids = `ps aux | grep apache-perl | awk '{print \$2}' | sort`;
+    chomp(@pids);
+
+    for my $pid (@pids) {
+        my $cmd = "ls -l /proc/$pid/fd 2>/dev/null";
+        $out .= $cmd . "\n";
+        $out .= `$cmd`;
+        $out .= "\n";
+    }
+
+    return $out;
+}
+
+sub SNAP_just_mem {
+    my $out = "";
+    my @data;
+
+    chomp( my @top = `env COLUMNS=1000 top -b -c -n 1` );
+    my $in_list = 0;
+    for my $line (@top) {
+        next if $line =~ /^\s*$/;
+        if ( not $in_list ) {
+            $in_list = 1 if $line =~ /PID\s+USER/;
+            next;
+        }
+        my @parts = split /\s+/, $line;
+        my $cmd = join " ", @parts[11..$#parts];
+
+        # Make m into millions of KBs
+        for my $n (4 .. 6) {
+            if ($parts[$n] =~ /m/) {
+                $parts[$n] =~ s/m$//;
+                $parts[$n] *= 1024;
+            }
+        }
+
+        push @data, [@parts[4 .. 6], $cmd];
+    }
+
+    @data = sort {$b->[1] <=> $a->[1]} @data;
+    for my $item (@data) {
+        my ($virt, $rss, $shr, $cmd) = @$item;
+        $out .= sprintf "virt: %6s rss: %6s shr: %6s COMMAND: %s\n", $virt, $rss, $shr, $cmd;
+        #$out .= "virt: $virt, rss: $rss, shr: $shr, COMMAND: $cmd\n";
+    }
+
+    return $out;
+}

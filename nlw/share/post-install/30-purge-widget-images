@@ -1,0 +1,4 @@
+#!/bin/bash
+set -e
+
+st-run-as-web-user st-purge-widget-images

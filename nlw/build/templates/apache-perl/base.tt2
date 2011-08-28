@@ -1,0 +1,44 @@
+# This is the base httpd.conf file for the backend content-generating Apache.  
+
+# Load modules
+
+[%- IF config.apache_status %]
+LoadModule  status_module [% config.module_dir %]/mod_status.so
+ExtendedStatus On
+[%- END %]
+
+ClearModuleList
+
+# DSO modules
+# AddModule mod_actions.c
+# AddModule mod_status.c
+
+# statically-compiled modules
+AddModule mod_env.c
+AddModule mod_log_config.c
+AddModule mod_mime.c
+AddModule mod_negotiation.c
+AddModule mod_dir.c
+AddModule mod_cgi.c
+AddModule mod_asis.c
+AddModule mod_alias.c
+AddModule mod_rewrite.c
+AddModule mod_access.c
+AddModule mod_auth.c
+AddModule mod_expires.c
+AddModule mod_headers.c
+AddModule mod_so.c
+AddModule mod_setenvif.c
+AddModule mod_perl.c
+
+# What ports are we listening on?  
+Port   [% config.backend_ports.http %]
+Listen 127.0.0.1:[% config.backend_ports.http %]
+Listen 127.0.0.1:[% config.backend_ports.https %]
+
+[%- PROCESS 'shared/common.tt2' %]
+
+Include [% config.apache_perl_etc_dir %]/auto-generated.d/*.conf
+[%- IF !config.is_dev %]
+Include [% config.apache_perl_etc_dir %]/conf.d/*.conf
+[%- END %]

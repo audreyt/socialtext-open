@@ -1,0 +1,23 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_singlevalue/;
+
+my $has_account_user_perms = sql_singlevalue(q{
+    SELECT COUNT(*)
+      FROM "WorkspaceRolePermission"
+     WHERE role_id IN (
+           SELECT role_id
+             FROM "Role"
+            WHERE name = 'account_user'
+     )
+});
+
+if ($has_account_user_perms != 0) {
+    print "Account User already has perms, skipping\n";
+    exit 1; # don't need the migration
+}
+
+print "Adding permissions for Account Users...\n";
+exit 0; # run migration

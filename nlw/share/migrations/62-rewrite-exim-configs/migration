@@ -1,0 +1,66 @@
+#!/bin/bash
+
+CONF=/etc/exim4/conf.d
+
+# This file will exist, ensure that the value is set and correct.
+FILE=/etc/default/exim4
+INTERVAL=$(grep QUEUEINTERVAL $FILE | cut -d '=' -f 2)
+if [ "$INTERVAL" != "'1m'" ]; then
+    
+    if [ -n "$(grep QUEUEINTERVAL $FILE)" ]; then
+        perl -pi.bak -e "s/QUEUEINTERVAL='\d+.'/QUEUEINTERVAL='1m'/" $FILE
+    else
+        cp $FILE $FILE.bak
+        echo "QUEUEINTERVAL='1m'" >> $FILE
+    fi
+fi
+
+
+# This file will exist, ensure that the value is set and correct.
+FILE=$CONF/transport/30_exim4-config_remote_smtp
+MAX=$(grep connection_max_messages $FILE | awk '{print $3}')
+if [ "$MAX" != "15" ]; then
+    if [ -n "$(grep connection_max_messages $FILE)" ]; then
+        perl -pi.bak -e 's/(connection_max_messages)\s*=\s*\d+/$1 = 15/' $FILE
+    else
+        cp $FILE $FILE.bak
+        echo '  connection_max_messages = 15' >> $FILE
+    fi
+fi
+
+# This file will exist, ensure that the value is set and correct.
+FILE=$CONF/transport/30_exim4-config_remote_smtp_smarthost
+MAX=$(grep connection_max_messages $FILE | awk '{print $3}')
+if [ "$MAX" != "15" ]; then
+    if [ -n "$(grep connection_max_messages $FILE)" ]; then
+        perl -pi.bak -e 's/(connection_max_messages)\s*=\s*\d+/$1 = 15/' $FILE
+    else
+        cp $FILE $FILE.bak
+        echo '  connection_max_messages = 15' >> $FILE
+    fi
+fi
+
+# Create the file if it doesn't exist, ensure correct values if it does.
+FILE=$CONF/main/04_exim4-config_socialtext
+if [ ! -f $FILE ]; then
+
+    cat - <<MAIN > $FILE
+queue_only
+queue_run_max = 5
+MAIN
+
+else
+    cp $FILE $FILE.bak
+    if [ -z "$(grep queue_only $FILE)" ]; then
+        echo 'queue_only' >> $FILE
+    fi
+
+    if [ -n "$(grep queue_run_max $FILE)" ]; then
+        perl -pi.bak -e 's/(queue_run_max)\s*=\s*\d+/$1 = 5/' $FILE
+    else
+        echo 'queue_run_max = 5' >> $FILE
+    fi
+fi
+
+# Update configs.
+update-exim4.conf

@@ -1,0 +1,10 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::Migration::Utils qw/ensure_socialtext_schema
+                                    create_job_for_each_workspace
+                                    create_job/;
+
+create_job_for_each_workspace('FixAttachmentMimeTypes');
+exit 0;

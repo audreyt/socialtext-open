@@ -1,0 +1,82 @@
+INSTALL.dependencies -- Installing Socialtext's dependencies
+
+@COPYRIGHT@
+
+=== Optional helper programs ===
+
+The Socialtext indexer can take advantage of external programs to
+enable file attachments to be indexed.  For example, with the program
+wvText installed, Socialtext can index your Microsoft Word file
+attachments.  The configure program will let you know if there are
+any of these you can install.  You can also run the
+build/bin/check-optional-tools.
+
+=== Optional CPAN Dependencies ===
+
+Socialtext Open uses the Perl bindings to the ImageMagick to resize
+uploaded logos. If you do not have ImageMagick and its Perl bindings
+installed, you can still upload logos, but they will not be resized.
+
+Socialtext Open uses the Apache::SizeLimit module to kill apache+mod_perl
+processes that grow too large, because searching a very large wiki 
+can cause the process to grow quite large. Since Apache::SizeLimit 
+does not work on all platforms, this dependency is optional.
+
+=== CPAN Dependencies ===
+
+./configure will tell you if you're missing any prerequistes (and trust
+me, you are).  Since CPAN.pm (and by extension, the CPAN) doesn't
+always deal with dependency management nicely it might take you a
+few cycles to get everything installed.  The best advice I can offer
+is to try and install the prebuilt packages for your OS if you can't
+get a particular CPAN module to install.  Some packages may need
+to be force installed because they have harmless failing tests.
+
+If you're using Debian or Ubuntu, we have packages created for these
+dependencies.  For details, see docs/INSTALL.apt-get.  It will make your
+life much easier.
+
+The ./configure will prompt you to install missing dependencies
+from CPAN, unfortunately not all of our dependencies are available
+from Dapper.  The CPAN modules won't ask lots of questions, mostly
+you will just be prompted if as to whether or not you want to install
+dependencies of other packages.  Always select yes.
+
+== CPAN dependencies that fail ==
+
+Not all the CPAN modules will pass their tests.
+
+XML::Atom claims that XML::XPath and XML::LibXML are optional, but
+it won't install without them.  You may also have to install
+XML::LibXML before XML::Atom, instead of letting the XML::Atom
+install it by itself.
+
+Eventually, after a lot of bouncing on the Enter key, you will reach a
+fixed point.  Some subset of the dependencies will fail to install and
+you'll keep ending back up at a menu that looks like this:
+
+    The following modules are missing, or you may have older versions:
+
+      XML::Atom 0.22
+      XML::Feed 0.05
+      REST::Application 0.94
+
+    Install these missing dependencies from CPAN [y]?
+
+The exact list of modules will change, but the list should be relatively short
+and you'll reach this point after having installed lots of other modules.
+These are modules which failed to pass their tests or in some way blew up on
+install.  We'll have to force install them, but again, your exact list may
+differ.   For example:
+
+    sudo cpan
+    cpan> force install Name::Of::Module::You::Are::Forcing
+
+Repeat for each module.  Hopefully, without too much trouble you'll be able to
+push through to the other side continue with the main install.  Once the
+dependencies are installed Makefile.PL be runnable without throwing any
+warnings.  Continue to "make" and "sudo make install".
+
+You'll want to make sure Postgres is configured for access as mentioned above,
+otherwise the install will fail.
+

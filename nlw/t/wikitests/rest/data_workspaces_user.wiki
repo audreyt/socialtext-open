@@ -1,0 +1,53 @@
+
+* Fixture: SocialRest
+
+| standard-test-setup |
+
+| set              | awesome     | awesome%%start_time%% |
+| create-workspace | %%awesome%% |                       |
+
+| set-business-admin | %%username%% | 1            |
+| http-user-pass     | %%username%% | %%password%% |
+
+| set         | user1     | user1%%start_time%%@q.q |
+| set         | user2     | user2%%start_time%%@q.q |
+| create-user | %%user1%% | password                |
+| create-user | %%user2%% | password                |
+| add-member  | %%user1%% | %%awesome%%             |
+| add-member  | %%user2%% | %%awesome%%             |
+
+| GET-json     | /data/workspaces/%%awesome%%/users?all=1 |           |
+| code-is      | 200                                      |           |
+| json-parse   |                                          |           |
+| json-path-is | $[0].email_address                       | %%user1%% |
+| json-path-is | $[0].role_name                           | member    |
+| json-path-is | $[1].email_address                       | %%user2%% |
+| json-path-is | $[1].role_name                           | member    |
+
+| PUT-json | /data/workspaces/%%awesome%%/users/%%user1%% | {"role_name":"admin"} |
+| code-is | 204 |
+
+| GET-json     | /data/workspaces/%%awesome%%/users?all=1 |           |
+| code-is      | 200                                      |           |
+| json-parse   |                                          |           |
+| json-path-is | $[0].email_address                       | %%user1%% |
+| json-path-is | $[0].role_name                           | admin     |
+| json-path-is | $[1].email_address                       | %%user2%% |
+| json-path-is | $[1].role_name                           | member    |
+
+| DELETE  | /data/workspaces/%%awesome%%/users/%%user2%% |
+| code-is | 204                                          |
+
+| GET-json        | /data/workspaces/%%awesome%%/users?all=1 |           |
+| code-is         | 200                                      |           |
+| json-parse      |                                          |           |
+| json-array-size | 1                                        |           |
+| json-path-is    | $[0].email_address                       | %%user1%% |
+| json-path-is    | $[0].role_name                           | admin     |
+
+| set-business-admin | %%username%% | 0 |
+
+| PUT-json | /data/workspaces/%%awesome%%/users/%%user1%% | {"role_name":"member"} |
+| code-is  | 403                                          |                        |
+| DELETE   | /data/workspaces/%%awesome%%/users/%%user1%% |                        |
+| code-is  | 403                                          |                        |

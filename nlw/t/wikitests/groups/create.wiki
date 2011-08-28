@@ -1,0 +1,192 @@
+* Fixture: SocialRest
+
+Tests to create groups via REST and CLI.
+
+| standard-test-setup   |
+| delete-all-groups     |
+| st-config | set users_can_create_groups 1 |                                |
+
+Set up a second account, but no users.
+
+| set            | account_a_id  | %%account_id%%        |
+| set            | account_b     | acct-b-%%start_time%% |
+| create-account | %%account_b%% |                       |
+| set            | account_b_id  | %%account_id%%        |
+| set            | account_id    | %%account_a_id%%      |
+
+* Create a group using the default account & user
+* Make sure that user count is 0: SystemUser shouldn't added as an admin
+
+| set      | g1                         | g1-%%start_time%%                                              |
+| st-admin | create-group --name %%g1%% --account %%account_b%% --email %%username%% | %%g1%% Group has been created (Group Id:                       |
+| st-admin | list-groups                | qr/%%g1%% .\s+0 .\s+0 .\s+%%account_b%% . [\d-]+ .\s+%%username%%/ |
+
+* Can't create a group with a duplicate name
+
+| st-admin | create-group --name %%g1%% --account %%account_b%% --email %%username%% | The %%g1%% Group has already been added to the system. |
+
+* Create with a specific account
+
+| set | g2 | g2-%%start_time%% |
+| st-admin | create-group --name %%g2%% --account %%account%% --email %%username%% | %%g2%% Group has been created (Group Id:                        |
+| st-admin | list-groups                                      | qr/%%g2%% .\s+0 .\s+0 .\s+%%account%% . [\d-]+ .\s+%%username%%/ |
+
+* Create with a specific user
+# This time, the user count is 1 because %%username%% is not system created, and thus should be added as an admin to the group
+
+| set | g3 | g3-%%start_time%% |
+| st-admin | create-group --name %%g3%% --email %%username%% --account %%account_b%% | %%g3%% Group has been created (Group Id:                     |
+| st-admin | list-groups                                     | qr/%%g3%% .\s+0 .\s+1 .\s+%%account_b%% . [\d-]+ .\s+user-%%start_time%%/ |
+
+
+* Create a group via REST
+
+# Should get 401 as the guest user
+| http-user-pass |              |                                                 |
+| set            | g4           | g4-%%start_time%%                               |
+| POST_json      | /data/groups | {"account_id":"%%account_id%%","name":"%%g4%%"} |
+| code-is        | 401          |                                                 |
+
+# All other users should be able to create groups
+| http-user-pass     | %%username%% | %%password%% |
+| set-business-admin | %%username%% | 0            |
+
+# This time, the user count is 1 because %%username%% is not system created, and thus should be added as an admin to the group
+
+| POST_json          | /data/groups         | {"account_id":"%%account_id%%","name":"%%g4%%"}                         |
+| code-is            | 201                  |                                                                         |
+| st-admin           | list-groups          | qr/%%g4%% .\s+0 .\s+1 .\s+%%account%% . [\d-]+ .\s+user-%%start_time%%/ |
+
+| POST_json          | /data/groups         | {"account_id":"%%account_id%%","name":"%%g4%%"}                         |
+| code-is            | 400                  |                                                                         |
+| body-like          | group already exists |                                                                         |
+| POST_json          | /data/groups         | {"account_id"                                                           |
+| code-is            | 400                  |                                                                         |
+| body-like          | bad json             |                                                                         |
+
+* Create a group via REST with a description
+
+| set              | g5                                       | g5-%%start_time%%                                                           |
+| POST_json        | /data/groups                             | {"account_id":"%%account_id%%","name":"%%g5%%","description":"Hello World"} |
+| code-is          | 201                                      |                                                                             |
+| json-parse |
+| set-from-content | group_id                                 | qr/"group_id":"(\d+)"/                                                      |
+| GET-json         | /data/groups/%%group_id%%                |                                                                             |
+| code-is          | 200                                      |                                                                             |
+| body-like        | "description":"Hello World"              |                                                                             |
+
+# Make sure that %%username%% was added as an admin
+| GET-json   | /data/groups/%%group_id%%/users                   |
+| code-is    | 200                                               |
+| json-parse |                                                   |
+| json-like  | [{"role_name":"admin","username":"%%username%%"}] |
+
+
+## Create a couple of workspaces, user is _not_ an admin
+| set              | erosional      | erosional%%start_time%%  |
+| create-workspace | %%erosional%%  |                          |
+| set              | erosional_id   | %%workspace_id%%         |
+| set              | solutional     | solutional%%start_time%% |
+| create-workspace | %%solutional%% |                          |
+| set              | solutional_id  | %%workspace_id%%         |
+| set              | g6             | g6-%%start_time%%        |
+| set              | g6_id          | %%group_id%%             |
+
+## Create a new, non business admin
+| set            | non_admin     | non_admin%%start_time%%@ken.socialtext.net |             |
+| create-user    | %%non_admin%% | password                                   | %%account%% |
+| http-user-pass | %%non_admin%% | password                                   |             |
+
+## Cannot create a group because we can't admin the workspaces
+| *Comment* | can't admin workspaces |                                                                                                           |
+| POST-json | /data/groups           | {"name":"%%g6%%","workspaces":[{"workspace_id":"%%erosional_id%%"},{"workspace_id":"%%solutional_id%%"}]} |
+| code-is   | 401                    |                                                                                                           |
+
+## Make the user an admin of the workspaces
+| add-member | %%non_admin%% | %%erosional%%  | admin |
+| add-member | %%non_admin%% | %%solutional%% | admin |
+
+## Create a private group with member-only workspace memberships
+| *Comment* | Create a private group with member-only workspace memberships |
+| POST-json | /data/groups | {"name":"%%g6%%","workspaces":[{"workspace_id":"%%erosional_id%%","role":"admin"},{"workspace_id":"%%solutional_id%%"}]} |
+| code-is   | 201          |                                                                                                                          |
+
+## Cannot create a self-join group with a member-only workspaces
+| *Comment* | Cannot create a self-join group with member-only workspaces |
+| set | sj1 | sj1-%%start_time%% |
+| POST-json | /data/groups | {"name":"%%sj1%%","permission_set":"self-join","workspaces":[{"workspace_id":"%%solutional_id%%"}]} |
+| code-is   | 400          |                                                                                                     |
+
+## Cannot create a private group with non-private workspaces
+| *Comment* | Cannot create a private group with non-private workspaces |
+| set                | pubws1        | pubws1-%%start_time%% |       |
+| create-workspace   | %%pubws1%%    |                       |       |
+| set                | pubws1_id     | %%workspace_id%%      |       |
+| add-member         | %%non_admin%% | %%pubws1%%            | admin |
+| set-ws-permissions | %%pubws1%%    | public                |       |
+| set                | privg1        | privg-%%start_time%%  |       |
+| POST-json | /data/groups | {"name":"%%privg1%%","permission_set":"private","workspaces":[{"workspace_id":"%%pubws1_id%%"}]} |
+| code-is   | 400          |                                                                                                  |
+
+## Can create a self-join group with self-join workspaces
+| *Comment* | Can create a self-join group with self-join workspaces |
+| set                | sjws          | sjws-%%start_time%% |       |
+| create-workspace   | %%sjws%%      |                     |       |
+| set                | sjws_id       | %%workspace_id%%    |       |
+| add-member         | %%non_admin%% | %%sjws%%            | admin |
+| set-ws-permissions | %%sjws%%      | self-join           |       |
+| set                | sjg           | sjg-%%start_time%%  |       |
+| POST-json | /data/groups | {"name":"%%sjg%%","permission_set":"self-join","workspaces":[{"workspace_id":"%%sjws_id%%"}]} |
+| code-is   | 201          |                                                                                            |
+
+## Get a couple of users to add to a group
+| set         | bowline          | bowline%%start_time%%@ken.socialtext.net      |             |
+| create-user | %%bowline%%      | password                                      | %%account%% |
+| set         | bowline_id       | %%user_id%%                                   |             |
+| set         | figure_eight     | figure-eight%%start_time%%@ken.socialtext.net |             |
+| create-user | %%figure_eight%% | password                                      | %%account%% |
+| set         | figure_eight_id  | %%user_id%%                                   |             |
+| set         | g7               | g7-%%start_time%%                             |             |
+
+## Create a group with users
+| *Comment* | Create a group with users |
+| POST-json | /data/groups | {"name":"%%g7%%","users":[{"username":"%%bowline%%"},{"user_id":"%%figure_eight_id%%","role":"admin"}]} |
+| code-is | 201 |
+| json-parse |
+| json-path-is | $.user_count | 3 |
+
+## Set up a group and some workspace aliases
+| set | g8          | g8-%%start_time%%          |
+| set | clove_hitch | clove-hitch-%%start_time%% |
+| set | butterfly   | butterfly-%%start_time%%   |
+
+## Create a group, create workspaces at the same time.
+| *Comment* | Create a group, create workspaces at the same time |
+| POST-json | /data/groups | {"name":"%%g8%%","new_workspaces":[{"name":"%%clove_hitch%%","title":"Clove Hitch"},{"name":"%%butterfly%%","title":"Butterfly"}]} |
+| code-is      | 201               |   |
+| json-parse   |                   |   |
+| json-path-is | $.workspace_count | 2 |
+| json-path-is | $.user_count      | 1 |
+
+| set | g9 | g9-%%start_time%% |
+| set | ws_g9a | ws-g9a-%%start_time%% |
+
+## Create a self-join group with a new workspace
+| *Comment* | Create a self-join group with a new workspace |
+| POST-json | /data/groups/ | {"name":"%%g9%%","permission_set":"self-join","new_workspaces":[{"name":"%%ws_g9a%%","title":"WS(a) for Group 9"}]} |
+| code-is      | 201                         |           |
+| json-parse   |                             |           |
+| json-path-is | $.workspace_count           | 1         |
+| GET-json     | /data/workspaces/%%ws_g9a%% |           |
+| json-parse   |                             |           |
+| json-path-is | $.permission_set            | self-join |
+
+
+####################################
+# Test the `users_can_create_groups` option
+
+| Comment   | Create a group as a user when users_can_create_groups is 0 |
+| st-config | set users_can_create_groups 0 |                                |
+| POST_json | /data/groups                  | {"name":"fail %%start_time%%"} |
+| code-is   | 401                           |                                |
+| st-config | set users_can_create_groups 1 |                                |

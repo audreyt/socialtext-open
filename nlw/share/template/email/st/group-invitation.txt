@@ -1,0 +1,32 @@
+[% extra_text -%]
+[% UNLESS requires_confirmation %]
+
+--
+[% END %]
+[% IF requires_confirmation -%]
+[% loc('email.hi') %]
+
+[% loc("email.inviting-you-to-join=group", group_name) %] [% UNLESS requires_confirmation %][% loc('email.sign-in-using-information-below:') %][% END %]
+
+[% loc("email.click-to-confirm-email:") %] [% confirmation_uri | html %]
+
+[% loc("email.once-confirmed-you-will-receive-second-email-with-login-details") %]
+
+[% loc('email.thanks') %]
+
+[% inviting_user %]
+[% ELSE -%]
+[% user.best_full_name %],
+
+[% SET acct_name = group_name | html -%]
+[% loc('email.added-you-to-group=user,group', inviting_user, group_name) %] 
+
+[% loc("email.as-member-you-can-send-signals-to-group-and-use-any-of-group-wikis") %]
+
+[% loc('email.go-to')%] [% group_name %] [% loc('email.home-page') %]: [% group_uri %]
+
+[% group_name %] [% loc('email.is-group-on=host', host) %]
+[% END -%]
+
+[% PROCESS 'email/standard-footer.txt'
+   support_link = 1 %]

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Each of these uses a templating system to just test the cost of filling out a
+# template within that system.  The template and data are the same in every
+# case.  Try comparing them with each other by doing: sh ./README
+
+for n in tt mas interpolation cs; do
+    echo -n $n...
+    time perl $n.pl 25000 > /dev/null
+done

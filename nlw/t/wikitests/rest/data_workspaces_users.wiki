@@ -1,0 +1,266 @@
+* Fixture: SocialRest
+
+| standard-test-setup |
+
+| set | admin | admin%%start_time%%@q.q |
+| create-user | %%admin%% | password | %%account%% |
+| add-member | %%admin%% | %%workspace%% | admin |
+| set | peon | peon%%start_time%%@q.q |
+| create-user | %%peon%% | password | %%account%% |
+| add-member | %%peon%% | %%workspace%% | member |
+
+| http-user-pass | %%admin%% | password |
+| GET | /data/workspaces/%%workspace%%/users | application/json|
+| code-is | 200 |
+| json-parse |
+| json-array-size | 3 |
+| json-like | [{"username":"%%username%%","role_name":"admin"},{"username":"%%admin%%","role_name":"admin"},{"username":"%%peon%%","role_name":"member","roles":["member"]}] |
+
+* Add peon to some group
+* Add that group to workpace A with role admin
+
+| set                    | group         | %%start_time%% group! |                 |
+| create-group           | %%group%%     |                       |                 |
+| set                    | group_id1     | %%group_id%%          |                 |
+| add-group-to-workspace | %%group_id1%% | %%workspace%%         | admin |
+| add-user-to-group      | %%peon%%      | %%group_id1%%         |                 |
+
+| http-user-pass | %%admin%% | password |
+| GET | /data/workspaces/%%workspace%%/users | application/json|
+| code-is | 200 |
+| json-parse |
+| json-array-size | 3 |
+| json-like | [{"username":"%%username%%","role_name":"admin"},{"username":"%%admin%%","role_name":"admin"},{"username":"%%peon%%","role_name":"admin","roles":["member","admin"]}] |
+
+| remove-member | %%peon%% | %%workspace%% |
+| add-member | %%peon%% | %%workspace%% | impersonator |
+
+| http-user-pass | %%admin%% | password |
+| GET | /data/workspaces/%%workspace%%/users | application/json|
+| code-is | 200 |
+| json-parse |
+| json-array-size | 3 |
+| json-like | [{"username":"%%username%%","role_name":"admin"},{"username":"%%admin%%","role_name":"admin"},{"username":"%%peon%%","role_name":"impersonator","roles":["admin","impersonator"]}] |
+
+| remove-member | %%peon%% | %%workspace%% |
+
+| http-user-pass | %%admin%% | password |
+| GET | /data/workspaces/%%workspace%%/users | application/json|
+| code-is | 200 |
+| json-parse |
+| json-array-size | 3 |
+| json-like | [{"username":"%%username%%","role_name":"admin"},{"username":"%%admin%%","role_name":"admin"},{"username":"%%peon%%","role_name":"admin","roles":["admin"]}] |
+
+| add-member             | %%peon%% | %%workspace%% |
+| remove-user-from-group | %%peon%% | %%group_id1%%     |
+
+| http-user-pass | %%admin%% | password |
+| GET | /data/workspaces/%%workspace%%/users | application/json|
+| code-is | 200 |
+| json-parse |
+| json-array-size | 3 |
+| json-like | [{"username":"%%username%%","role_name":"admin"},{"username":"%%admin%%","role_name":"admin"},{"username":"%%peon%%","role_name":"member","roles":["member"]}] |
+
+| set                    | group2     | %%start_time%% group two! |              |
+| create-group           | %%group2%% |                           |              |
+| set                    | group_id2  | %%group_id%%              |              |
+| add-group-to-workspace | %%group_id2%% | %%workspace%%             | impersonator |
+| add-user-to-group      | %%peon%%   | %%group_id1%%                 |              |
+| add-user-to-group      | %%peon%%   | %%group_id2%%                |              |
+
+| http-user-pass | %%admin%% | password |
+| GET | /data/workspaces/%%workspace%%/users | application/json|
+| code-is | 200 |
+| json-parse |
+| json-array-size | 3 |
+| json-like | [{"username":"%%username%%","role_name":"admin"},{"username":"%%admin%%","role_name":"admin"},{"username":"%%peon%%","role_name":"impersonator","roles":["member","admin","impersonator"]}] |
+
+| remove-group-from-workspace | %%group_id2%% | %%workspace%% |
+| remove-user-from-group | %%peon%% | %%group_id1%%     |
+
+| http-user-pass | %%admin%% | password |
+| GET | /data/workspaces/%%workspace%%/users | application/json|
+| code-is | 200 |
+| json-parse |
+| json-array-size | 3 |
+| json-like | [{"username":"%%username%%","role_name":"admin"},{"username":"%%admin%%","role_name":"admin"},{"username":"%%peon%%","role_name":"member","roles":["member"]}] |
+
+| *Comment*   | Set-up for more ReST tests                     |                              |             |
+| set         | member                                         | member%%start_time%%@q.q     |             |
+| create-user | %%member%%                                     | password                     | %%account%% |
+| add-member  | %%member%%                                     | %%workspace%%                | member      |
+| set         | accounts_admin                                 | acct_admin%%start_time%%@q.q |             |
+| create-user | %%accounts_admin%%                             | password                     | %%account%% |
+| st-admin    | give-accounts-admin --email %%accounts_admin%% | now has                      |             |
+| set         | system_admin                                   | sys_admin%%start_time%%@q.q  |             |
+| create-user | %%system_admin%%                               | password                     | %%account%% |
+| st-admin    | give-system-admin --email %%system_admin%%     | now has                      |             |
+
+| *Comment*      | Workspace Admin can add a User to a Workspace |                               |                                                                                  |
+| remove-member  | %%peon%%                                      | %%workspace%%                 |                                                                                  |
+| http-user-pass | %%admin%%                                     | password                      |                                                                                  |
+| POST           | /data/workspaces/%%workspace%%/users          | Content-Type=application/json | { "username":"%%peon%%", "role_name":"member", "send_confirmation_invitation":0 } |
+| code-is        | 201                                           |                               |                                                                                  |
+
+| *Comment*      | Accounts Admin can add a User to a Workspace |                               |                                                                                  |
+| remove-member  | %%peon%%                                     | %%workspace%%                 |                                                                                  |
+| http-user-pass | %%accounts_admin%%                           | password                      |                                                                                  |
+| POST           | /data/workspaces/%%workspace%%/users         | Content-Type=application/json | { "username":"%%peon%%", "role_name":"member", "send_confirmation_invitation":0 } |
+| code-is        | 201                                          |                               |                                                                                  |
+
+| *Comment*      | System Admin can add a User to a Workspace |                               |                                                                                  |
+| remove-member  | %%peon%%                                   | %%workspace%%                 |                                                                                  |
+| http-user-pass | %%system_admin%%                           | password                      |                                                                                  |
+| POST           | /data/workspaces/%%workspace%%/users       | Content-Type=application/json | { "username":"%%peon%%", "role_name":"member", "send_confirmation_invitation":0 } |
+| code-is        | 201                                        |                               |                                                                                  |
+
+| *Comment*      | Non-Admin *cannot* add a User to a Workspace |                               |                                                                                  |
+| remove-member  | %%peon%%                                     | %%workspace%%                 |                                                                                  |
+| http-user-pass | %%member%%                                   | password                      |                                                                                  |
+| POST           | /data/workspaces/%%workspace%%/users         | Content-Type=application/json | { "username":"%%peon%%", "role_name":"member", "send_confirmation_invitation":0 } |
+| code-is        | 403                                          |                               |                                                                                  |
+
+| *Comment*      | Adding User to Workspace requires data |                               |     |
+| http-user-pass | %%admin%%                              | password                      |     |
+| POST           | /data/workspaces/%%workspace%%/users   | Content-Type=application/json | { } |
+| code-is        | 400                                    |                               |     |
+
+| *Comment*      | Workspace Admin can promote an existing Member to a WS Admin |                               |                                               |
+| add-member     | %%peon%%                                                     | %%workspace%%                 |                                               |
+| http-user-pass | %%admin%%                                                    | password                      |                                               |
+| POST           | /data/workspaces/%%workspace%%/users                         | Content-Type=application/json | { "username":"%%peon%%", "role_name":"admin" } |
+| code-is        | 201                                                          |                               |                                               |
+
+| *Comment*      | Workspace Admin can remove a User from a Workspace |               |
+| add-member     | %%peon%%                                           | %%workspace%% |
+| http-user-pass | %%admin%%                                          | password      |
+| DELETE         | /data/workspaces/%%workspace%%/users/%%peon%%      |               |
+| code-is        | 204                                                |               |
+
+| *Comment*      | Accounts Admin can remove a User from a Workspace |               |
+| add-member     | %%peon%%                                          | %%workspace%% |
+| http-user-pass | %%accounts_admin%%                                | password      |
+| DELETE         | /data/workspaces/%%workspace%%/users/%%peon%%     |               |
+| code-is        | 204                                               |               |
+
+| *Comment*      | System Admin can remove a User from a Workspace |               |
+| add-member     | %%peon%%                                        | %%workspace%% |
+| http-user-pass | %%system_admin%%                                | password      |
+| DELETE         | /data/workspaces/%%workspace%%/users/%%peon%%   |               |
+| code-is        | 204                                             |               |
+
+| *Comment*      | User can remove himself from a Workspace      |               |
+| add-member     | %%peon%%                                      | %%workspace%% |
+| http-user-pass | %%peon%%                                      | password      |
+| DELETE         | /data/workspaces/%%workspace%%/users/%%peon%% |               |
+| code-is        | 204                                           |               |
+
+| *Comment*      | Non-Admin *cannot* remove a User from a Workspace |               |
+| add-member     | %%peon%%                                          | %%workspace%% |
+| http-user-pass | %%member%%                                        | password      |
+| DELETE         | /data/workspaces/%%workspace%%/users/%%peon%%     |               |
+| code-is        | 403                                               |               |
+
+| *Comment*      | Can't remove a User that isn't in the Workspace |               |
+| remove-member  | %%peon%%                                        | %%workspace%% |
+| http-user-pass | %%admin%%                                       | password      |
+| DELETE         | /data/workspaces/%%workspace%%/users/%%peon%%   |               |
+| code-is        | 404                                             |               |
+
+| *Comment*      | Can't query a User who isn't in the Workspace |               |
+| remove-member  | %%peon%%                                      | %%workspace%% |
+| http-user-pass | %%admin%%                                     | password      |
+| GET            | /data/workspaces/%%workspace%%/users/%%peon%% |               |
+| code-is        | 405                                           |               |
+
+# test Pageable collections
+
+| set              | awesome     | awesome%%start_time%% |
+| create-workspace | %%awesome%% | %%account%%           |
+
+| create-user | user1%%start_time%%@q.q | password | %%account%% |
+| create-user | user2%%start_time%%@q.q | password | %%account%% |
+| create-user | user3%%start_time%%@q.q | password | %%account%% |
+| create-user | user4%%start_time%%@q.q | password | %%account%% |
+| create-user | user5%%start_time%%@q.q | password | %%account%% |
+| create-user | user6%%start_time%%@q.q | password | %%account%% |
+| create-user | user7%%start_time%%@q.q | password | %%account%% |
+| create-user | user8%%start_time%%@q.q | password | %%account%% |
+| create-user | user9%%start_time%%@q.q | password | %%account%% |
+
+| add-member | user1%%start_time%%@q.q | %%awesome%% | admin |
+| add-member | user2%%start_time%%@q.q | %%awesome%% |       |
+| add-member | user3%%start_time%%@q.q | %%awesome%% |       |
+| add-member | user4%%start_time%%@q.q | %%awesome%% |       |
+| add-member | user5%%start_time%%@q.q | %%awesome%% |       |
+| add-member | user6%%start_time%%@q.q | %%awesome%% |       |
+| add-member | user7%%start_time%%@q.q | %%awesome%% |       |
+| add-member | user8%%start_time%%@q.q | %%awesome%% |       |
+| add-member | user9%%start_time%%@q.q | %%awesome%% |       |
+
+| set-business-admin | user1%%start_time%%@q.q | 1        |
+| http-user-pass     | user1%%start_time%%@q.q | password |
+
+| *Comment*              | Test passing direct=1   |                     |
+| set                    | shiny                   | shiny%%start_time%% |
+| create-group           | %%shiny%%               |                     |
+| add-user-to-group      | user1%%start_time%%@q.q | %%group_id%%        |
+| add-user-to-group      | user2%%start_time%%@q.q | %%group_id%%        |
+| add-user-to-group      | user3%%start_time%%@q.q | %%group_id%%        |
+| create-workspace       | %%shiny%%               |                     |
+| add-group-to-workspace | %%group_id%%            | %%shiny%%           |
+| add-member             | user4%%start_time%%@q.q | %%shiny%%           |
+| add-member             | user5%%start_time%%@q.q | %%shiny%%           |
+| add-member             | user6%%start_time%%@q.q | %%shiny%%           |
+
+| GET       | /data/workspaces/%%shiny%%/users |
+| body-like | user1%%start_time%%@q.q          |
+| body-like | user2%%start_time%%@q.q          |
+| body-like | user3%%start_time%%@q.q          |
+| body-like | user4%%start_time%%@q.q          |
+| body-like | user5%%start_time%%@q.q          |
+| body-like | user6%%start_time%%@q.q          |
+
+| GET         | /data/workspaces/%%shiny%%/users?direct=1 |
+| body-unlike | user1%%start_time%%@q.q                   |
+| body-unlike | user2%%start_time%%@q.q                   |
+| body-unlike | user3%%start_time%%@q.q                   |
+| body-like   | user4%%start_time%%@q.q                   |
+| body-like   | user5%%start_time%%@q.q                   |
+| body-like   | user6%%start_time%%@q.q                   |
+
+| *Comment* | Business admin can see private data |
+| set-business-admin | user1%%start_time%%@q.q |
+| st-admin | set-external-id --email user1%%start_time%%@q.q --external-id %%start_time%%user1 |
+| http-user-pass | user1%%start_time%%@q.q | password |
+| GET-json    | /data/workspaces/%%shiny%%/users?want_private_fields=1 |
+| json-response-is | 200 | 6 |
+| json-path-is | $[0].email_address | user1%%start_time%%@q.q |
+| json-path-is | $[0].private_external_id | %%start_time%%user1 |
+
+| *Comment*         | Pageable Data                                           |                         |
+| GET-json          | /data/workspaces/%%awesome%%/users?startIndex=3&count=2 |                         |
+| code-is           | 200                                                     |                         |
+| json-parse        |                                                         |                         |
+| json-path-is      | $.startIndex                                            | 3                       |
+| json-path-is      | $.itemsPerPage                                          | 2                       |
+| json-path-is      | $.totalResults                                          | 9                       |
+| json-path-is      | $.entry[0].email_address                                | user4%%start_time%%@q.q |
+| json-path-is      | $.entry[1].email_address                                | user5%%start_time%%@q.q |
+| json-path-missing | $.entry[2]                                              |                         |
+
+| *Comment*       | count still works without paging           |
+| GET-json        | /data/workspaces/%%awesome%%/users?count=2 |
+| code-is         | 200                                        |
+| json-parse      |                                            |
+| json-array-size | 2                                          |
+
+## PUT updates user roles
+| *Comment* | PUT updates user roles |
+| PUT-json | /data/workspaces/%%awesome%%/users | [{"username":"user2%%start_time%%@q.q","role_name":"admin"}] |
+| code-is  | 204                                |                                                              |
+
+## PUT cannot delete last admin
+| *Comment* | PUT cannot delete last admin       |                                                                                                                           |
+| PUT-json  | /data/workspaces/%%awesome%%/users | [{"username":"user2%%start_time%%@q.q","role_name":"member"},{"username":"user1%%start_time%%@q.q","role_name":"member"}] |
+| code-is   | 409                                |                                                                                                                           |

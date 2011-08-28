@@ -1,0 +1,17 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+use Socialtext::Migration::Utils qw/ensure_socialtext_schema/;
+use Socialtext::SQL qw/sql_singlevalue/;
+
+ensure_socialtext_schema(30);
+
+my $num_signals = eval { sql_singlevalue(q{SELECT COUNT(*) FROM signal}) };
+if (defined($num_signals) && $num_signals == 0) {
+    print "Skipping signal events migration: no signals have been sent";
+    exit 1;
+}
+
+print "Running migration to clean up signal events ($num_signals signals)";
+exit 0;

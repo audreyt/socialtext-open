@@ -1,0 +1,179 @@
+* Fixture: SocialRest
+Tests that changes to group permission sets properly cascades to workspaces the group is a member of. (And properly fails to cascade when not allowed).
+
+* Group G0
+** is Member of no workspaces, user is NOT admin of group -> 403 
+| set          | group0     | %%start_time%%group0 |
+| create-group | %%group0%% |                      |
+| set          | group0_id  | %%group_id%%         |
+
+| set               | nonadmin     | %%start_time%%nonadmin@socialtext.net |
+| create-user       | %%nonadmin%% | password                              |
+| add-user-to-group | %%nonadmin%% | %%group0_id%%                         |
+
+| http-user-pass | %%nonadmin%%                                  | password |
+| put-json| /data/groups/%%group0_id%% | {"permission_set":"self-join"} |
+| code-is | 403 |
+
+
+* Group G1
+** is Member of no workspaces, user is admin of group -> 202 
+| set               | group1       | %%start_time%%group1 |       |
+| create-group      | %%group1%%   |                      |       |
+| set               | group1_id    | %%group_id%%         |       |
+| add-user-to-group | %%username%% | %%group1_id%%        | admin |
+
+| http-user-pass | %%username%%                                  | %%password%% |
+| get-json | /data/groups/%%group1_id%% |
+| json-parse |
+| json-like | {"permission_set":"private"} |
+
+| put-json| /data/groups/%%group1_id%% | {"name":"%%group1%%", "permission_set":"self-join"} |
+| code-is | 202 |
+
+| get-json | /data/groups/%%group1_id%% |
+| json-parse |
+| json-like | {"permission_set":"self-join"} |
+
+
+
+* Group G2
+** is Member of two workspaces, only member of each workspace, user is admin of all -> 202 
+| set               | group2       | %%start_time%%group2 |       |
+| create-group      | %%group2%%   |                      |       |
+| set               | group2_id    | %%group_id%%         |       |
+| add-user-to-group | %%username%% | %%group2_id%%        | admin |
+
+| set                    | wkspc20       | %%start_time%%wkspc20 |
+| create-workspace       | %%wkspc20%%   |                       |
+| add_workspace_admin    | %%username%%  | %%wkspc20%%           |
+| add_group_to_workspace | %%group2_id%% | %%wkspc20%%           |
+
+| set                    | wkspc21       | %%start_time%%wkspc21 |
+| create-workspace       | %%wkspc21%%   |                       |
+| add_workspace_admin    | %%username%%  | %%wkspc21%%           |
+| add_group_to_workspace | %%group2_id%% | %%wkspc21%%           |
+
+| http-user-pass | %%username%%                                  | %%password%% |
+| get-json       | /data/groups/%%group2_id%%?can_update_perms=1 |              |
+| json-parse     |                                               |              |
+| json-like      | {"can_update_perms":1}                        |              |
+
+These next two tests are here just in case the fixture or defaults change so the test doesn't silently or mysteriously succeed or fail. In other words, make test's assumptions about current behavior explicit. If these two tests fail, then the rest of the tests in this file probably need fixing up.
+
+| get-json | /data/groups/%%group2_id%% |
+| json-parse |
+| json-like | {"permission_set":"private"} |
+
+| get-json | /data/workspaces/%%wkspc21%% |
+| json-parse |
+| json-like | {"permission_set":"member-only"} |
+
+
+| *Comment* | Change perms on group to self-join |
+| put-json| /data/groups/%%group2_id%% | {"name":"%%group2%%", "permission_set":"self-join"} |
+| code-is | 202 |
+
+| *Comment* | Check group perm is changed |
+| get-json | /data/groups/%%group2_id%% |
+| json-parse |
+| json-like | {"permission_set":"self-join"} |
+
+| *Comment* | Check secondary workspace permission changed to self-join |
+| get-json | /data/workspaces/%%wkspc21%% |
+| json-parse |
+| json-like | {"permission_set":"self-join"} |
+
+* Group G2 (reverse)
+Then, change it *back* to "member-only/private" so we can watch it work in the other direction
+
+| *Comment* | Change perms on group to private |
+| put-json| /data/groups/%%group2_id%% | {"name":"%%group2%%", "permission_set":"private"} |
+| code-is | 202 |
+
+| *Comment* | Check group perm is changed |
+| get-json | /data/groups/%%group2_id%% |
+| json-parse |
+| json-like | {"permission_set":"private"} |
+
+| *Comment* | Check secondary workspace permission changed to member-only |
+| get-json | /data/workspaces/%%wkspc21%% |
+| json-parse |
+| json-like | {"permission_set":"member-only"} |
+
+* Group G3
+** is Member of two workspaces, other members in one of those, user is admin of all -> 403
+
+| set                    | group3         | %%start_time%%group3  |       |
+| create-group           | %%group3%%     |                       |       |
+| set                    | group3_id      | %%group_id%%          |       |
+| add-user-to-group      | %%username%%   | %%group3_id%%         | admin |
+| set                    | group31        | %%start_time%%group31 |       |
+| create-group           | %%group31%%    |                       |       |
+| set                    | group31_id     | %%group_id%%          |       |
+| set                    | wkspc30        | %%start_time%%wkspc30 |       |
+| create-workspace       | %%wkspc30%%    |                       |       |
+| add_workspace_admin    | %%username%%   | %%wkspc30%%           |       |
+| add_group_to_workspace | %%group3_id%%  | %%wkspc30%%           |       |
+| add_group_to_workspace | %%group31_id%% | %%wkspc30%%           |       |
+| set                    | wkspc31        | %%start_time%%wkspc31 |       |
+| create-workspace       | %%wkspc31%%    |                       |       |
+| add_workspace_admin    | %%username%%   | %%wkspc31%%           |       |
+| add_group_to_workspace | %%group3_id%%  | %%wkspc31%%           |       |
+
+| http-user-pass | %%username%%                                  | %%password%% |
+| *Comment* | Change perms on group to self-join |
+| put-json| /data/groups/%%group3_id%% | {"name":"%%group3%%", "permission_set":"self-join"} |
+| code-is | 403 |
+
+| *Comment* | Check group perm is not changed |
+| get-json | /data/groups/%%group3_id%% |
+| json-parse |
+| json-like | {"permission_set":"private"} |
+
+| *Comment* | Check secondary group perm is not changed |
+| get-json | /data/groups/%%group31_id%% |
+| json-parse |
+| json-like | {"permission_set":"private"} |
+
+| *Comment* | Check secondary workspace permission is not changed |
+| get-json | /data/workspaces/%%wkspc31%% |
+| json-parse |
+| json-like | {"permission_set":"member-only"} |
+
+
+
+* Group G4
+** is Member of two workspaces, user is not admin of one of the workspaces -> 403 
+
+| set               | group4       | %%start_time%%group4 |       |
+| create-group      | %%group4%%   |                      |       |
+| set               | group4_id    | %%group_id%%         |       |
+| add-user-to-group | %%username%% | %%group4_id%%        | admin |
+
+| set                    | wkspc40       | %%start_time%%wkspc40 |
+| create-workspace       | %%wkspc40%%   |                       |
+| add_workspace_admin    | %%username%%  | %%wkspc40%%           |
+| add_group_to_workspace | %%group4_id%% | %%wkspc40%%           |
+
+| set                    | wkspc41       | %%start_time%%wkspc41 |
+| create-workspace       | %%wkspc41%%   |                       |
+| add_group_to_workspace | %%group4_id%% | %%wkspc41%%           |
+
+| http-user-pass | %%username%%                                  | %%password%% |
+| *Comment* | Change perms on group to self-join |
+| put-json| /data/groups/%%group4_id%% | {"name":"%%group4%%", "permission_set":"self-join"} |
+| code-is | 403 |
+
+| *Comment* | Check group perm is not changed |
+| get-json | /data/groups/%%group4_id%% |
+| json-parse |
+| json-like | {"permission_set":"private"} |
+
+| *Comment* | Check secondary workspace permission is not changed |
+| get-json | /data/workspaces/%%wkspc41%% |
+| json-parse |
+| json-like | {"permission_set":"member-only"} |
+
+*TODO*
+All the perm changes in this test are from private TO self-join... Probably shuld test the opposite direction (though currently the code is agnostic about which direction its going.. it just has to be "matching")

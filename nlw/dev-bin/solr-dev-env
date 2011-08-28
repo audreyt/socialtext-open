@@ -1,0 +1,14 @@
+#!/bin/bash
+set -e
+
+st-config set search_factory_class Socialtext::Search::Solr::Factory
+nlwctl restart
+
+st-admin remove-member --e devnull1@socialtext.com --w sale
+st-admin remove-member --e devnull1@socialtext.com --w public
+st-admin remove-member --e devnull1@socialtext.com --w exchange
+st-admin remove-member --e devnull1@socialtext.com --w auth-to-edit
+
+st-admin index-workspace --sync --w help-en
+st-admin index-workspace --sync --w admin
+st-admin index-workspace --sync --w foobar

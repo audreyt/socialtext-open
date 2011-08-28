@@ -1,0 +1,58 @@
+[%# @COPYRIGHT@ -%]
+
+[% IF extra_text %]
+[% extra_text -%]
+[% END %]
+
+<p>
+[% loc('email.hi') %]
+</p>
+
+<p>
+[% SET acct_name = account_name | html %]
+[% loc("invite.join=account,host", acct_name, host) %]
+[% UNLESS requires_confirmation %]
+[% loc('email.sign-in-using-information-below:') %]
+[% END %]
+</p>
+
+[% IF requires_confirmation %]
+<p>
+[% SET confirm_uri = confirmation_uri | html %]
+[% loc('invite.click-to-confirm-email=uri', confirm_uri) %]
+</p>
+
+<p>
+[% loc('invite.login-details-after-confirmation') %]
+</p>
+[% ELSE %]
+<p>
+[% loc('email.web-address:') %] <a href="[% account_uri | html %]">[% account_uri | html %]</a><br />
+[% loc('email.username:') %] [% username | html %]
+</p>
+
+[% IF appconfig.is_default('user_factories') %]
+[% IF app_name; a = 'a'; ELSE; a = 'an'; END %]
+<p>
+[% loc("email.same-password-as-existing-account=a,app,app", a, app_name, app_name) %]
+[% loc("email.follow-link-to-select-password:") %]
+[% forgot_password_uri %]
+
+
+</p>
+[% END %]
+<p>
+[% loc('email.keep-this-for-future-reference') %]
+</p>
+[% END %]
+
+<p>
+[% loc('email.thanks') %]
+</p>
+
+<p>
+[% inviting_user %]
+</p>
+
+[% PROCESS 'email/standard-footer.html'
+   support_link = 1 %]

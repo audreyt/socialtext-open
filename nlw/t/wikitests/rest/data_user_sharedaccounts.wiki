@@ -1,0 +1,105 @@
+Test cases for the "shared accounts" ReST API.
+
+`/data/user/:username/shared_accounts/:other_username` should show the subset of accounts both :username and :other_username are a member of.
+
+* Fixture: SocialRest
+
+| Comment | set up users and accounts |
+
+| set | JSON | application/json |
+
+| set              | acct1     | %%start_time%%acct1 |
+| set              | ws1       | %%start_time%%ws1   |
+| set              | acct2     | %%start_time%%acct2 |
+| set              | ws2       | %%start_time%%ws2   |
+| set              | acct3     | %%start_time%%acct3 |
+| create-account   | %%acct1%% |                     |
+| create-workspace | %%ws1%%   | %%acct1%%           |
+| create-account   | %%acct2%% |                     |
+| create-workspace | %%ws2%%   | %%acct2%%           |
+| create-account   | %%acct3%% |                     |
+
+| set | user_a | asdf-%%start_time%%-a@ken.socialtext.com |
+| set | user_b | zxcv-%%start_time%%-b@ken.socialtext.com |
+| set | user_c | zxcv-%%start_time%%-c@ken.socialtext.com |
+
+| create-user | %%user_a%% | password | %%acct1%% | |
+| create-user | %%user_b%% | password | %%acct1%% | |
+| create-user | %%user_c%% | password | %%acct3%% | |
+
+| set-user-id | user_a_id | %%user_a%% |
+| set-user-id | user_b_id | %%user_b%% |
+| set-user-id | user_c_id | %%user_c%% |
+
+| Comment    | User a is a member of both workspaces |
+| add-member | %%user_a%% | %%ws1%% |
+| add-member | %%user_a%% | %%ws2%% |
+| Comment    | User a is a member of one workspaces |
+| add-member | %%user_b%% | %%ws1%% |
+| Comment    | User a is a member of none |
+
+| Comment        | User a can see all three accounts, one shared     |          |
+| http-user-pass | %%user_a%%                                        | password |
+| GET            | /data/users/%%user_a%%                            | %%JSON%% |
+| code-is        | 200                                               |          |
+| body-like      | "account_name":"%%acct1%%"                        |          |
+| body-like      | "account_name":"%%acct2%%"                        |          |
+| body-unlike    | "account_name":"%%acct3%%"                        |          |
+| GET            | /data/users/%%user_a%%/shared_accounts/%%user_b%% | %%JSON%% |
+| code-is        | 200                                               |          |
+| body-like      | "account_name":"%%acct1%%"                        |          |
+| body-unlike    | "account_name":"%%acct2%%"                        |          |
+| body-unlike    | "account_name":"%%acct3%%"                        |          |
+| GET            | /data/users/%%user_a%%/shared_accounts/%%user_c%% | %%JSON%% |
+| code-is        | 200                                               |          |
+| body-unlike    | "account_name":"%%acct1%%"                        |          |
+| body-unlike    | "account_name":"%%acct2%%"                        |          |
+| body-unlike    | "account_name":"%%acct3%%"                        |          |
+| GET            | /data/users/%%user_b%%/shared_accounts/%%user_a%% | %%JSON%% |
+| code-is        | 401                                               |          |
+| GET            | /data/users/%%user_c%%/shared_accounts/%%user_a%% | %%JSON%% |
+| code-is        | 401                                               |          |
+
+| Comment        | User a can see all three accounts, one shared     |          |
+| http-user-pass | %%user_b%%                                        | password |
+| GET            | /data/users/%%user_b%%                            | %%JSON%% |
+| code-is        | 200                                               |          |
+| body-like      | "account_name":"%%acct1%%"                        |          |
+| body-unlike    | "account_name":"%%acct2%%"                        |          |
+| body-unlike    | "account_name":"%%acct3%%"                        |          |
+| GET            | /data/users/%%user_b%%/shared_accounts/%%user_a%% | %%JSON%% |
+| code-is        | 200                                               |          |
+| body-like      | "account_name":"%%acct1%%"                        |          |
+| body-unlike    | "account_name":"%%acct2%%"                        |          |
+| body-unlike    | "account_name":"%%acct3%%"                        |          |
+| GET            | /data/users/%%user_b%%/shared_accounts/%%user_c%% | %%JSON%% |
+| code-is        | 200                                               |          |
+| body-unlike    | "account_name":"%%acct1%%"                        |          |
+| body-unlike    | "account_name":"%%acct2%%"                        |          |
+| body-unlike    | "account_name":"%%acct3%%"                        |          |
+| GET            | /data/users/%%user_a%%/shared_accounts/%%user_a%% | %%JSON%% |
+| code-is        | 401                                               |          |
+| GET            | /data/users/%%user_c%%/shared_accounts/%%user_a%% | %%JSON%% |
+| code-is        | 401                                               |          |
+
+| Comment        | User a can see all three accounts, one shared     |          |
+| http-user-pass | %%user_c%%                                        | password |
+| GET            | /data/users/%%user_c%%                            | %%JSON%% |
+| code-is        | 200                                               |          |
+| body-unlike    | "account_name":"%%acct1%%"                        |          |
+| body-unlike    | "account_name":"%%acct2%%"                        |          |
+| body-like      | "account_name":"%%acct3%%"                        |          |
+| GET            | /data/users/%%user_c%%/shared_accounts/%%user_a%% | %%JSON%% |
+| code-is        | 200                                               |          |
+| body-unlike    | "account_name":"%%acct1%%"                        |          |
+| body-unlike    | "account_name":"%%acct2%%"                        |          |
+| body-unlike    | "account_name":"%%acct3%%"                        |          |
+| GET            | /data/users/%%user_c%%/shared_accounts/%%user_b%% | %%JSON%% |
+| code-is        | 200                                               |          |
+| body-unlike    | "account_name":"%%acct1%%"                        |          |
+| body-unlike    | "account_name":"%%acct2%%"                        |          |
+| body-unlike    | "account_name":"%%acct3%%"                        |          |
+| GET            | /data/users/%%user_a%%/shared_accounts/%%user_c%% | %%JSON%% |
+| code-is        | 401                                               |          |
+| GET            | /data/users/%%user_b%%/shared_accounts/%%user_c%% | %%JSON%% |
+| code-is        | 401                                               |          |

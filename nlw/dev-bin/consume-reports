@@ -1,0 +1,5 @@
+#!/bin/bash
+
+REPORTS=$ST_SRC_BASE/current/socialtext-reports
+source $REPORTS/dev-env-vars
+perl $REPORTS/bin/st-reports-consume-access-log ~/.nlw/log/apache-perl/nlw-access.log

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+COLUMN=workspace_template
+
+SQL="ALTER TABLE \"Workspace\" DROP COLUMN $COLUMN" 
+
+echo $SQL;
+psql -U $DB_USER -d $DB -t -c "$SQL"
+

@@ -1,0 +1,67 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+
+use Socialtext::Permission;
+use Socialtext::Role;
+use Socialtext::SQL qw/get_dbh/;
+use Socialtext::Workspace;
+
+
+my $dbh = get_dbh();
+my $member_perms_sth = $dbh->prepare( <<'EOF' );
+SELECT wrp.permission_id
+  FROM "WorkspaceRolePermission" AS wrp,
+       "Role" as r
+ WHERE wrp.workspace_id = ?
+   AND wrp.role_id = r.role_id
+   AND r.name = 'member'
+EOF
+
+my $has_perms_sth = $dbh->prepare( <<'EOF' );
+SELECT COUNT(*)
+  FROM "WorkspaceRolePermission" AS wrp
+ WHERE wrp.workspace_id = ?
+   AND wrp.role_id = ?
+EOF
+
+my $insert_perms_sth = $dbh->prepare( <<'EOF' );
+INSERT INTO "WorkspaceRolePermission"
+            (workspace_id, role_id, permission_id)
+     VALUES (?, ?, ?)
+EOF
+
+my $impersonate_id = Socialtext::Permission->new( name => 'impersonate' )->permission_id();
+my $impersonator_id = Socialtext::Role->Impersonator()->role_id();
+
+my $workspaces = Socialtext::Workspace->All();
+
+while ( my $ws = $workspaces->next() ) {
+    my $ws_id = $ws->workspace_id();
+
+    $has_perms_sth->execute( $ws_id, $impersonator_id );
+
+    my $has_perms = $has_perms_sth->fetchrow_arrayref()->[0];
+    if ($has_perms) {
+        print "Skipping ", $ws->name(), ", it already has acls for the impersonator role\n";
+        next;
+    }
+    else {
+        print "Updating impersonator acls for ", $ws->name(), "\n";
+    }
+
+    $member_perms_sth->execute($ws_id);
+
+    for my $perm_id (
+        ( map { $_->[0] } @{ $member_perms_sth->fetchall_arrayref } ),
+        $impersonate_id
+        ) {
+
+        $insert_perms_sth->execute( $ws_id, $impersonator_id, $perm_id );
+    }
+}

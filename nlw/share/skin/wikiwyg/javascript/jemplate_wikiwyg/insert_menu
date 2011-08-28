@@ -1,0 +1,67 @@
+ <div id="st-page-editing-widget-menu">
+  <ul id="st-editing-insert-menu">
+   <li><a onclick="return false" href="#">[% loc("do.insert") %]</a>
+    <ul>
+     <li><a do="do_widget_image" onclick="return false;" href="#">[% loc("insert.image") %]</a></li>
+     <li><a do="do_widget_video" onclick="return false;" href="#">[% loc("insert.video") %]</a></li>
+     <li><a do="do_table" onclick="return false;" href="#">[% loc("insert.table") %]</a></li>
+     <li><a do="do_hr" onclick="return false;" href="#">[% loc("insert.hr") %]</a></li>
+     <li><a onclick="return false" href="#" class="daddy">[% loc("insert.link-to") %]</a>
+      <ul>
+       <li><a do="do_widget_file" onclick="return false;" href="#">[% loc("insert.file") %]</a></li>
+       <li><a do="do_widget_link2_section" onclick="return false;" href="#">[% loc("insert.link2-section") %]</a></li>
+       <li><a do="do_widget_link2" onclick="return false;" href="#">[% loc("insert.link2") %]</a></li>
+       <li><a do="do_widget_blog" onclick="return false;" href="#">[% loc("insert.blog") %]</a></li>
+       <li><a do="do_widget_tag" onclick="return false;" href="#">[% loc("insert.tag") %]</a></li>
+       <li><a do="do_widget_link2_hyperlink" onclick="return false;" href="#">[% loc("insert.link2-hyperlink") %]</a></li>
+      </ul>
+     </li>
+     <li>
+      <a onclick="return false" href="#" class="daddy">[% loc("insert.from-wikis") %]</a>
+      <ul>
+       <li><a do="do_widget_include" onclick="return false;" href="#">[% loc("insert.include") %]</a></li>
+       <li><a do="do_widget_ss" onclick="return false;" href="#">[% loc("insert.ss") %]</a></li>
+       <li><a do="do_widget_tag_list" onclick="return false;" href="#">[% loc("insert.tag-list") %]</a></li>
+       <li><a do="do_widget_recent_changes" onclick="return false;" href="#">[% loc("insert.recent-changes") %]</a></li>
+       <li><a do="do_widget_blog_list" onclick="return false;" href="#">[% loc("insert.blog-list") %]</a></li>
+       <li><a do="do_widget_search" onclick="return false;" href="#">[% loc("insert.search") %]</a></li>
+      </ul>
+     </li>
+     <li><a onclick="return false" href="#" class="daddy">[% loc("insert.from-the-web") %]</a>
+      <ul>
+       <li><a do="do_widget_googlesearch" onclick="return false;" href="#">[% loc("insert.googlesearch") %]</a></li>
+       <li><a do="do_widget_fetchrss" onclick="return false;" href="#">[% loc("insert.fetchrss") %]</a></li>
+       <li><a do="do_widget_fetchatom" onclick="return false;" href="#">[% loc("insert.atom-feed-items") %]</a></li>
+      </ul>
+     </li>
+     <li><a onclick="return false" href="#" class="daddy">[% loc("insert.organizing-your-page") %]</a>
+      <ul>
+       <li><a do="do_widget_toc" onclick="return false;" href="#">[% loc("insert.toc") %]</a></li>
+       <li><a do="do_widget_section" onclick="return false;" href="#">[% loc("insert.section") %]</a></li>
+      </ul>
+     </li>
+     <li><a onclick="return false" href="#" class="daddy">[% loc("insert.communicating") %]</a>
+      <ul>
+      <li><a do="do_widget_skype" onclick="return false;" href="#">[% loc("insert.skype") %]</a></li>
+      <li><a do="do_widget_aim" onclick="return false;" href="#">[% loc("insert.aim") %]</a></li>
+      <li><a do="do_widget_yahoo" onclick="return false;" href="#">[% loc("insert.yahoo") %]</a></li>
+     </ul>
+    </li>
+    <li><a onclick="return false" href="#" class="daddy">[% loc("insert.name-and-date") %]</a>
+     <ul>
+      <li><a do="do_widget_user" onclick="return false;" href="#">[% loc("insert.user") %]</a></li>
+      <li><a do="do_widget_date" onclick="return false;" href="#">[% loc("insert.date") %]</a></li>
+     </ul>
+    </li>
+    <li><a do="do_opensocial_gallery" onclick="return false;" href="#">[% loc("insert.widget") %]</a></li>
+    <li><a do="do_widget_pre" onclick="return false;" href="#">[% loc("insert.pre") %]</a></li>
+    <li><a do="do_widget_asis" onclick="return false;" href="#">[% loc("insert.asis") %]</a></li>
+[%- IF hub.current_workspace.allows_html_wafl -%]
+    <li><a do="do_widget_html" onclick="return false;" href="#">[% loc("insert.html") %]</a></li>
+[%- END -%]
+    <li><a do="do_widget_code" onclick="return false;" href="#">[% loc("insert.code") %]</a></li>
+   </ul>
+  </li>
+ </ul>
+ <div style="clear: both;" id="menu-style-reset"/>
+ </div>

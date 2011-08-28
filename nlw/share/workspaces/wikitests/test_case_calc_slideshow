@@ -1,0 +1,339 @@
+* Fixture: SocialCalc
+
+| *Comment* | Test Case: Calc Slideshow |  |
+
+| set_default | wiki | %%workspace%% | defaults to the test workspace |
+| set_default | pt | 5000 | defaults to five seconds |
+| set_default | popup | 8000 | cancel popups in 8 seconds |
+| set_default | wikititle | Canonical Test Data Set | defaults to the test workspace |
+
+| *Comment* | Test Case: Calc Slideshow - Create a forumla, a number, and some text |  |
+| open_ok | /%%workspace%%/index.cgi?action=display;page_type=spreadsheet;page_name=calc%20slideshow%20%%start_time%%#edit |  |
+| wait_for_element_visible_ok | st-save-button-link |  |
+| pause | 5000 | I hate pause; needed for entire page load |
+
+* Populate a formula, number, and straight text
+
+| click_ok | st-spreadsheet-formular-input |  |
+| type_ok | st-spreadsheet-formular-input | =3*3 |
+| sc_right_cursor |  |  |
+| click_ok | st-spreadsheet-formular-input |  |
+| type_ok | st-spreadsheet-formular-input | =9 |
+| sc_right_cursor |  |  |
+| click_ok | st-spreadsheet-formular-input |  |
+| type_ok | st-spreadsheet-formular-input | 'Slideshow test. See formula, number, text |
+| sc_right_cursor |  |  |
+| *Comment* | SlideShow Calc Slideshow: SEE 9, 9, and some text |  |
+| pause | %%pt%% |  |
+
+* Demo Bold, Italic, Justification, Borders and Combinations
+
+| *Comment* | Test Case: Calc Slideshow - Demo bold, italic, justification, borders, and combinations |  |
+| click_ok | st-bold-button-link |  |
+| click_ok | st-spreadsheet-formular-input |  |
+| type_ok | st-spreadsheet-formular-input | 'This should become bold |
+| sc_right_cursor |  |  |
+
+| click_ok | st-italic-button-link |  |
+| click_ok | st-spreadsheet-formular-input |  |
+| type_ok | st-spreadsheet-formular-input | 'This should become italic |
+| sc_right_cursor |  |  |
+
+| click_ok | st-wiki-text-button-link |  |
+| click_ok | st-spreadsheet-formular-input |  |
+| type_ok | st-spreadsheet-formular-input | '[bar] [Car Loan] |  |
+| sc_right_cursor |  |  |
+
+| click_ok | st-right-button-link |  |
+| click_ok | st-spreadsheet-formular-input |  |
+| type_ok | st-spreadsheet-formular-input | 'Right J. |  |
+| sc_right_cursor |  |  |
+| *Comment* | SlideShow Calc Slideshow: SEE Bold, Italic, Right Justified |  |
+| pause | %%pt%% |  |
+
+| click_ok | st-cell-borders-button-link |  |
+| click_ok | st-spreadsheet-formular-input |  |
+| type_ok | st-spreadsheet-formular-input | 'Borders |
+| sc_right_cursor |  |  |
+
+| click_ok | st-bold-button-link |  |
+| click_ok | st-italic-button-link |  |
+| click_ok | st-wiki-text-button-link |  |
+| click_ok | st-right-button-link |  |
+| click_ok | st-cell-borders-button-link |  |
+| click_ok | st-spreadsheet-formular-input |  |
+| type_ok | st-spreadsheet-formular-input | 'B, I, [Car Loan] wtext, R, Brds |  |
+| sc_right_cursor |  |  |
+
+| click_ok | st-cell-settings-button-link |  |
+| pause | 2000 |  |
+| select_ok | SocialCalc-cfontfamily-dd | Verdana |
+| select_ok | SocialCalc-cfontsize-dd | 24pt |
+| click_ok | st-cell-settings-button-link |  |
+| pause | 2000 |  |
+| click_ok | st-spreadsheet-formular-input |  |  |
+| type_ok | st-spreadsheet-formular-input | 'Font Size |
+| sc_right_cursor |  |  |
+| *Comment* | SlideShow Calc Slideshow: See borders, all toolbuttons, and a big font |  |
+| pause | %%pt%% |  |
+| sc_down_arrow |  |  |
+
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+
+* Setup Sort (actual sort not yet implemented as slideshow. Wikitests can't select multiple cells ... yet.)
+
+| *Comment* | Test Case: Calc Slideshow Setup Sort |
+| click_ok | st-spreadsheet-formular-input |  |
+| type_ok | st-spreadsheet-formular-input | =6 |
+| sc_right_cursor |  |  |
+| click_ok | st-spreadsheet-formular-input |  |
+| type_ok | st-spreadsheet-formular-input | =4 |
+| sc_right_cursor |  |  |
+| click_ok | st-spreadsheet-formular-input |  |
+| type_ok | st-spreadsheet-formular-input | =2 |
+| sc_right_cursor |  |  |
+| click_ok | st-spreadsheet-formular-input |  |
+| type_ok | st-spreadsheet-formular-input | =1 |
+| sc_right_cursor |  |  |
+| click_ok | st-spreadsheet-formular-input |  |  |
+| type_ok | st-spreadsheet-formular-input | =3 |
+| sc_right_cursor |  |  |
+| click_ok | st-spreadsheet-formular-input |  |  |
+| type_ok | st-spreadsheet-formular-input | =5 |
+| sc_right_cursor |  |  |
+
+| *Comment* | Test Case: Calc Slideshow Perform Sort |
+| click_ok | st-sort-button-link |  |
+| pause | 1000 |
+| click_ok | st-sort-button-link |  |
+
+* Add a comment to a cell, test forground/background colors
+
+| *Comment* | Test Case: Calc Slideshow Add Comment |
+| click_ok | st-spreadsheet-formular-input |  |  |
+| type_ok | st-spreadsheet-formular-input | 'I am adding a comment |
+| sc_right_cursor |  |  |
+| sc_left_cursor |  |  |
+
+| click_ok | st-comment-button-link |  |
+| click_ok | st-spreadsheet-comment-input |  |
+| type_ok | st-spreadsheet-comment-input | I am leaving a comment |
+| click_ok | st-spreadsheet-comment-save |  |
+| sc_right_cursor |  |  |
+
+| *Comment* | Test Case: Calc Slideshow - Demo Foreground/Background Color |  |
+| click_ok | st-color-button-link |  |
+| click_ok | st-color-660000 |  |
+| click_ok | st-spreadsheet-formular-input |  |
+| type_ok | st-spreadsheet-formular-input | 'Dark Red Foreground |
+| sc_right_cursor |  |  |
+
+| click_ok | st-bgcolor-button-link |  |
+| click_ok | st-bgcolor-ff6666 |  |
+| click_ok | st-spreadsheet-formular-input |  |
+| type_ok | st-spreadsheet-formular-input | 'Light Red Background |
+| sc_right_cursor |  |  |
+| *Comment* | SlideShow Calc Slideshow: SEE Comment red tick, Forground/Background colors |  |
+| pause | %%pt%% |  |
+
+| sc_down_arrow |  |  |
+
+| *Comment* | Test Case: Calc Slideshow Back the cursor up |
+
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+
+* Include Cell, Named Range, Include a Spreadsheet
+
+| *Comment* | Test Case: Calc Slideshow Include a cell |  |
+| click_ok | st-spreadsheet-formular-input |  |
+| type_ok | st-spreadsheet-formular-input | 'Includes and sums will error, then get recalced |
+| sc_right_cursor |  |  |
+| click_ok | st-spreadsheet-formular-input |  |  |
+| type_ok | st-spreadsheet-formular-input | ="[calc slideshow %%start_time%%]"!A1 |
+| sc_right_cursor |  |  |
+
+| *Comment* | Test Case: Calc Slideshow Sum a range |  |
+| click_ok | st-spreadsheet-formular-input |  |
+| type_ok | st-spreadsheet-formular-input | =SUM(A2:F2) |  |
+| sc_right_cursor |  |  |
+
+| *Comment* | Test Case: Calc Slideshow Make a named range |
+| click_ok | st-name-button-link |
+| click_ok | st-spreadsheet-range-name |  |
+| type_ok | st-spreadsheet-range-name | sample |
+| click_ok | st-spreadsheet-range-description |  |
+| type_ok | st-spreadsheet-range-description | A sample range for slideshow |
+| click_ok | st-spreadsheet-range-value |  |
+| type_ok | st-spreadsheet-range-value | A2:F2 |
+| click_ok | st-spreadsheet-range-save |  |
+
+| *Comment* | Test Case: Calc Slideshow Sum a named range |
+| click_ok | st-spreadsheet-formular-input |  |  |
+| type_ok | st-spreadsheet-formular-input | =SUM(sample) |  |
+| sc_right_cursor |  |  |
+| *Comment* | SlideShow Calc Slideshow: SEE 9, 21, error message |  |
+| pause | %%pt%% |  |
+
+| *Comment* | Test Case: Calc Slideshow Include a spreadsheet |
+
+| click_ok | st-spreadsheet-formular-input |  |  |
+| type_ok | st-spreadsheet-formular-input | '{ss: [Car Loan]} |  |
+| sc_right_cursor |  |  |
+| sc_left_cursor |  |  |
+| click_ok | st-wiki-text-button-link |
+| *Comment* | SlideShow Calc Slideshow: SEE Carl Loan included |  |
+| pause | %%pt%% |  |
+
+| *Comment* | Test Case: Calc Slideshow - Save and re-edit |  |
+| pause | 5000 |  |
+| st-page-save |  |  |
+| wait_for_element_visible_ok | st-edit-button-link |  |
+| click_ok | st-edit-button-link |  |
+| wait_for_element_visible_ok | st-save-button-link |
+| *Comment* | SlideShow Calc Slideshow: SEE error message is gone thanks to save |  |
+| pause | %%pt%% |  |
+
+* Copy, Paste, Cut, Paste, Undo/Redo
+
+| *Comment* | Test Case: Calc Slideshow Copy, Paste, Cut, Paste, Undo, Redo |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+
+| click_ok | st-spreadsheet-formular-input |  |  |
+| type_ok | st-spreadsheet-formular-input | =10 |  |
+| sc_right_cursor |  |  |
+| sc_left_cursor |  |  |
+| click_ok | st-copy-button-link |  |
+| sc_right_cursor |  |  |
+| click_ok | st-paste-button-link |  |
+| *Comment* | SlideShow Calc Slideshow: SEE 10, then copy/pasted |  |
+| pause | %%pt%% |  |
+
+| sc_right_cursor |  |  |
+| click_ok | st-spreadsheet-formular-input |  |  |
+| type_ok | st-spreadsheet-formular-input | =12 |  |
+| sc_right_cursor |  |  |
+| sc_left_cursor |  |  |
+| *Comment* | SlideShow Calc Slideshow: SEE 12 |  |
+| pause | %%pt%% |  |
+
+| *Comment* | Test Case: Calc Slideshow CUT |  |
+| pause | 1000 |  |
+| click_ok | st-cut-button-link |  |
+| *Comment* | SlideShow Calc Slideshow: SEE 12 is CUT! |  |
+| pause | %%pt%% |  |
+
+| sc_right_cursor |  |  |
+| click_ok | st-paste-button-link |  |
+| *Comment* | SlideShow Calc Slideshow: SEE 12 is PASTED! |  |
+| pause | %%pt%% |  |
+
+| sc_right_cursor |  |  |
+| click_ok | st-spreadsheet-formular-input |  |
+| type_ok | st-spreadsheet-formular-input | =14 |
+| sc_right_cursor |  |  |
+| click_ok | st-spreadsheet-formular-input |  |
+| type_ok | st-spreadsheet-formular-input | =16 |
+| sc_right_cursor |  |  |
+| click_ok | st-spreadsheet-formular-input |  |
+| type_ok | st-spreadsheet-formular-input | =18 |
+| *Comment* | SlideShow Calc Slideshow: SEE 14,16,18 |  |
+| pause | %%pt%% |  |
+| *Comment* | Test Case: Calc Slideshow UNDO |  |
+| click_ok | st-undo-button-link |  |
+| click_ok | st-undo-button-link |  |
+| click_ok | st-undo-button-link |  |
+| *Comment* | SlideShow Calc Slideshow: SEE 14,16,18 UNDONE |  |
+| pause | %%pt%% |  |
+
+| *Comment* | Test Case: Calc Slideshow REDO |  |
+| click_ok | st-redo-button-link |  |
+| click_ok | st-redo-button-link |  |
+| click_ok | st-redo-button-link |  |
+| *Comment* | SlideShow Calc Slideshow: SEE 14,16,18 REDONE |  |
+| pause | %%pt%% |  |
+
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+| sc_left_cursor |  |  |
+
+* Number Formatting
+
+| *Comment* | Test Case: Calc Slideshow SEE Number Formatting |  |
+| click_ok | st-spreadsheet-formular-input |  |  |
+| type_ok | st-spreadsheet-formular-input | =9876543.21 |  |
+| sc_right_cursor |  |  |
+| sc_left_cursor |  |  |
+| select_ok | st-spreadsheet-cell-number-format | 1,234 |
+| *Comment* | SlideShow Calc Slideshow: SEE 9,876,543 |  |
+| pause | %%pt%% |  |
+
+| select_ok | st-spreadsheet-cell-number-format | 1,234.5 |
+| *Comment* | SlideShow Calc Slideshow: SEE 9,876,543.2 |  |
+| pause | %%pt%% |  |
+
+| select_ok | st-spreadsheet-cell-number-format | 1,234.56 |
+| *Comment* | SlideShow Calc Slideshow: SEE 9,876,543.21 |  |
+| pause | %%pt%% |  |
+
+| select_ok | st-spreadsheet-cell-number-format | 1,234.567 |
+| *Comment* | SlideShow Calc Slideshow: SEE 9,876,543.210 |  |
+| pause | %%pt%% |  |
+
+| select_ok | st-spreadsheet-cell-number-format | 1,234% |
+| *Comment* | SlideShow Calc Slideshow: SEE 987,654,321 |  |
+| pause | %%pt%% |  |
+
+| select_ok | st-spreadsheet-cell-number-format | $1,234.56 |
+| *Comment* | SlideShow Calc Slideshow: SEE $9,876,543.21 |  |
+| pause | %%pt%% |  |
+
+* Insert Rol/Col, Delete Row/Col
+
+| *Comment* | Test Case: Calc Slideshow SEE inserted row/col |  |
+| click_ok | st-insert-col-button-link |  |
+| click_ok | st-insert-row-button-link |  |
+| *Comment* | SlideShow Calc Slideshow: SEE Inserted Row/Col |  |
+| pause | %%pt%% |  |
+
+| *Comment* | Test Case: Calc Slideshow SEE deleted row/col, then 2nd delete row/col |  |
+| click_ok | st-delete-row-button-link |  |
+| click_ok | st-delete-col-button-link |  |
+| click_ok | st-delete-row-button-link |  |
+| click_ok | st-delete-col-button-link |  |
+| *Comment* | SlideShow Calc Slideshow: SEE delete row/cols |  |
+| pause | %%pt%% |  |
+| st-page-save |  |  |
+| wait_for_element_visible_ok | st-edit-button-link |  |
+| pause | 10000 |  |
+
+| *Comment* | Test Case: Calc Slideshow Teardown |  |
+| st-admin | purge-page --w %%workspace%% --page calc_slideshow_%%start_time%% | was purged |
+
+| *Comment* | Test Case: Calc Slideshow COMPLETED |  |

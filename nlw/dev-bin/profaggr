@@ -1,0 +1,55 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+
+# Aggregate dprofpp output from multiple runs into a single summary.
+# Right now, this just produces averages which look just like normal dprofpp
+# output, but we may expand this in the future to provide more data.
+
+my %sums;
+my %avgs;
+my $num_files = scalar @ARGV;
+
+sum_inputs();
+aggregate();
+print_output();
+
+
+sub sum_inputs {
+    foreach my $file (@ARGV) {
+        open F, $file or die "$file: $!";
+
+        while (<F>) {
+            next unless /^\s*\d/;
+            chomp;
+            my(@F) = split;
+            my $sub = pop @F;
+            $sums{$sub} = [] unless exists $sums{$sub};
+            for (my $ii = 0; $ii <= $#F; ++$ii) {
+                $sums{$sub}->[$ii] += $F[$ii];
+            }
+        }
+    }
+}
+
+sub aggregate {
+    foreach my $sub (keys %sums) {
+        $avgs{$sub} = [ map { $_ / $num_files } @{ $sums{$sub} } ];
+    }
+}
+
+sub print_output {
+    print '%Time ExclSec CumulS #Calls sec/call Csec/c  Name', "\n";
+
+    foreach my $sub ( sort { $avgs{$b}->[0] <=> $avgs{$a}->[0] } keys %avgs ) {
+        printf "%5.2f %7.3f %6.3f %6d %8.4f %6.4f  $sub\n", @{ $avgs{$sub} };
+    }
+}
+
+__END__
+How the output from dprofpp looks:
+
+%Time ExclSec CumulS #Calls sec/call Csec/c  Name
+12.45 123.567 12.456 123456 123.5678 1.3456  %s
+ 2.80   8.274  8.274    100   0.0827 0.0827  File::Spec::Unix::_cwd

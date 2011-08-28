@@ -1,0 +1,373 @@
+# @COPYRIGHT@
+msgid ""
+msgstr ""
+"Project-Id-Version: Socialtext i18n\n"
+"PO-Revision-Date: 2011-05-13 00:08-0700\n"
+"Language-Team: Socialtext i18n team\n"
+"Last-Translator: Socialtext i18n team\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "error.html-report-not-implemented"
+msgstr "HTML 报告未实作"
+
+msgid "error.invalid-report=module,message"
+msgstr "无效报告：%1（%2）"
+
+msgid "error.report-account_id-required"
+msgstr "必须要有 account_id"
+
+msgid "error.report-wiki-required"
+msgstr "必须要有 workspace"
+
+msgid "error.reports-account-id-required!"
+msgstr "必须要有 Account ID！"
+
+msgid "error.reports-current-user-required"
+msgstr "此报表必须要指定现行用户"
+
+msgid "error.reports-date-required!"
+msgstr "该报告需要日期！"
+
+msgid "error.reports-duration-required!"
+msgstr "必须提供持续时间！"
+
+msgid "error.reports-invalid=user"
+msgstr "'%1' 不是正确的用户"
+
+msgid "error.reports-no-account=name"
+msgstr "找不到名为 %1 的帐户"
+
+msgid "error.reports-no-group=id"
+msgstr "找不到编号为 %1 的群组"
+
+msgid "error.reports-no-growth-data-available"
+msgstr "目前没有增长用量数据。"
+
+msgid "error.reports-no-wiki=name"
+msgstr "找不到名为 %1 的工作区"
+
+msgid "error.reports-start_time-required!"
+msgstr "必须提供开始时间！"
+
+msgid "error.reports-username-required!"
+msgstr "必须要有用户名称！"
+
+msgid "error.reports-wiki-and-page_id-required"
+msgstr "必须要有工作区和页面名称！"
+
+msgid "error.reports-wiki-required!"
+msgstr "必须要有工作区！"
+
+msgid "error.reports-wiki-required-specify-on-url"
+msgstr "必须要有工作区！请在网址列填上 workspace=名称"
+
+msgid "error.unknown-report=type"
+msgstr "未知的报表（%1）"
+
+msgid "heading.account_id"
+msgstr "帐户ID"
+
+msgid "heading.action"
+msgstr "操作"
+
+msgid "heading.actor"
+msgstr "操作者"
+
+msgid "heading.contributions"
+msgstr "贡献者"
+
+msgid "heading.count"
+msgstr "数量"
+
+msgid "heading.detail_headings"
+msgstr "标题详情"
+
+msgid "heading.gadget_id"
+msgstr "小工具ID"
+
+msgid "heading.page_id"
+msgstr "页面ID"
+
+msgid "heading.page_views"
+msgstr "页面检视"
+
+msgid "heading.pages"
+msgstr "页面"
+
+msgid "heading.period"
+msgstr "周期"
+
+msgid "heading.period_start"
+msgstr "周期始于"
+
+msgid "heading.tally"
+msgstr "总数"
+
+msgid "heading.title"
+msgstr "标题"
+
+msgid "heading.unique_contributors"
+msgstr "独立贡献者"
+
+msgid "heading.unique_members"
+msgstr "独立成员"
+
+msgid "heading.unique_visitors"
+msgstr "独立访客"
+
+msgid "heading.user_id"
+msgstr "用户ID"
+
+msgid "heading.username"
+msgstr "用户名"
+
+msgid "heading.views"
+msgstr "检视"
+
+msgid "heading.workspace"
+msgstr "工作区"
+
+msgid "heading.workspaces"
+msgstr "工作区"
+
+msgid "reports.account-growth"
+msgstr "帐户增长"
+
+msgid "reports.actions-by-wiki"
+msgstr "按工作区显示操作"
+
+msgid "reports.audience-by-user"
+msgstr "按用户显示受众"
+
+msgid "reports.available-reports:"
+msgstr "可用报告："
+
+msgid "reports.cgi=options"
+msgstr "CGI选项：%1"
+
+msgid "reports.coeditors-by-user"
+msgstr "按用户显示合作者"
+
+msgid "reports.collaborativeness:"
+msgstr "合作方："
+
+msgid "reports.comments-per-wiki"
+msgstr "每个工作区的评论次数"
+
+msgid "reports.contributions"
+msgstr "贡献者"
+
+msgid "reports.dashboard"
+msgstr "显示板"
+
+msgid "reports.dashboard-views"
+msgstr "显示板视图"
+
+msgid "reports.dashboard=user"
+msgstr "%1 用户显示板"
+
+msgid "reports.dashboard=wiki"
+msgstr "%1 工作区显示板"
+
+msgid "reports.date"
+msgstr "日期"
+
+msgid "reports.date-supplied-but-this-report-needs-none!"
+msgstr "已提供日期，但该报告不需要日期！"
+
+msgid "reports.duration:"
+msgstr "持续时间："
+
+msgid "reports.edits-by-user"
+msgstr "被用户编辑"
+
+msgid "reports.edits-pages-read-by-these-people=user:"
+msgstr "%1 编辑页面被下列人员阅读过："
+
+msgid "reports.edits-pages-with-these-people=user:"
+msgstr "%1 与下列人员合作编辑过页面："
+
+msgid "reports.edits-per-wiki"
+msgstr "各工作区的编辑次数"
+
+msgid "reports.example-actions-today-1month-txt"
+msgstr "范例：/actions/today/-1month.txt"
+
+msgid "reports.from-through=start,end"
+msgstr "从%1到%2"
+
+msgid "reports.generate!"
+msgstr "制表！"
+
+msgid "reports.healthy"
+msgstr "健全"
+
+msgid "reports.healthy-csv"
+msgstr "健全 CSV"
+
+msgid "reports.healthy-wikis"
+msgstr "健全工作区"
+
+msgid "reports.in-past-week=name"
+msgstr "过去一周的%1"
+
+msgid "reports.loading-report"
+msgstr "正在加载报告..."
+
+msgid "reports.mean"
+msgstr "平均值"
+
+msgid "reports.median"
+msgstr "中间值"
+
+msgid "reports.no-user-stats-for-this-period"
+msgstr "这段时期没有可用的用户状态。"
+
+msgid "reports.other-csv"
+msgstr "其他 CSV"
+
+msgid "reports.other-wikis"
+msgstr "其他工作区"
+
+msgid "reports.others"
+msgstr "其他"
+
+msgid "reports.page"
+msgstr "页面"
+
+msgid "reports.page-views"
+msgstr "页面视图"
+
+msgid "reports.pages"
+msgstr "页面"
+
+msgid "reports.people"
+msgstr "人员"
+
+msgid "reports.people-views"
+msgstr "人员检视"
+
+msgid "reports.personalizations"
+msgstr "个人化"
+
+msgid "reports.personalized-dashboards"
+msgstr "个人化的显示板"
+
+msgid "reports.personalized-profiles"
+msgstr "个人化的用户信息页面"
+
+msgid "reports.reads-pages-edited-by-these-people=user:"
+msgstr "这些用户编辑了 %1 阅读页面："
+
+msgid "reports.report-duration:"
+msgstr "报告持续时间："
+
+msgid "reports.report-start-date:"
+msgstr "报告开始日期："
+
+msgid "reports.report-start-time:"
+msgstr "报告开始时间："
+
+msgid "reports.report-starting-on:"
+msgstr "报告开始于："
+
+msgid "reports.reports-dashboard"
+msgstr "报告显示板"
+
+msgid "reports.sent"
+msgstr "已发送"
+
+msgid "reports.signals"
+msgstr "讯息"
+
+msgid "reports.signals-sent"
+msgstr "已发送讯息"
+
+msgid "reports.stddev"
+msgstr "标准差"
+
+msgid "reports.submit"
+msgstr "提交"
+
+msgid "reports.time-of-first-action"
+msgstr "第一次行动时间"
+
+msgid "reports.total-members-current:"
+msgstr "完整成员（当前）："
+
+msgid "reports.total-unique-contributors:"
+msgstr "完整独立贡献者："
+
+msgid "reports.total-unique-visitors:"
+msgstr "完整独立访客："
+
+msgid "reports.unique-contributors"
+msgstr "独立贡献者"
+
+msgid "reports.unique-contributors-as-percent-of-unique-visitors"
+msgstr "（独立贡献者在独立访客中所占比率）"
+
+msgid "reports.unique-members"
+msgstr "独立成员"
+
+msgid "reports.unique-visitors"
+msgstr "独立访客"
+
+msgid "reports.up-to-main-dashboard"
+msgstr "退回主显示板"
+
+msgid "reports.url-format-report-name-start-time-duration-type"
+msgstr "网址格式： /&lt;report_name&gt;/&lt;start_time&gt;/&lt;duration&gt;.&lt;type&gt;"
+
+msgid "reports.usage-by-account"
+msgstr "按帐户显示用量"
+
+msgid "reports.usage-by-wiki"
+msgstr "按工作区显示用量"
+
+msgid "reports.user"
+msgstr "用户"
+
+msgid "reports.username"
+msgstr "用户名"
+
+msgid "reports.views"
+msgstr "查看"
+
+msgid "reports.views-by-page"
+msgstr "按页面查看"
+
+msgid "reports.views-by-user"
+msgstr "按用户查看"
+
+msgid "reports.views-by-wiki"
+msgstr "按工作区查看"
+
+msgid "reports.views-per-wiki"
+msgstr "每工作区查看"
+
+msgid "reports.wiki-actions"
+msgstr "工作区操作"
+
+msgid "reports.wiki-analytics"
+msgstr "维基分析"
+
+msgid "reports.wiki-contributions"
+msgstr "工作区贡献者"
+
+msgid "reports.wiki-edits-by-user"
+msgstr "工作区被用户编辑"
+
+msgid "reports.wiki-growth"
+msgstr "工作区增长报告"
+
+msgid "reports.wiki-total"
+msgstr "工作区总量"
+
+msgid "reports.wiki-views-by-user"
+msgstr "按用户查看工作区"
+
+msgid "reports.wikis"
+msgstr "工作区"

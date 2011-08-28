@@ -1,0 +1,142 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Getopt::Long;
+use Pod::Usage;
+use Socialtext::LDAP;
+use Socialtext::LDAP::Config;
+use Net::LDAP::Util qw/escape_filter_value/;
+
+###############################################################################
+# Read in our command line arguments.
+my ($help, $man);
+my $email;
+my $username;
+GetOptions(
+    'help|?'        => \$help,
+    'man'           => \$man,
+    'email=s'       => \$email,
+    'username=s'    => \$username,
+) || pod2usage(1);
+pod2usage(1) if ($help);
+pod2usage( -verbose=>2, -exitstatus=>0 ) if ($man);
+
+unless ($email || $username) {
+    die "must provide one of --email or --username\n";
+}
+if ($email && $username) {
+    die "--email and --username are mutually exclusive\n";
+}
+
+###############################################################################
+# Look for this User in all of the known LDAP servers.
+my @configs = Socialtext::LDAP::Config->load();
+foreach my $cfg (@configs) {
+    # connect to LDAP
+    my $ldap = Socialtext::LDAP->new( $cfg->id );
+    next unless $ldap;
+
+    # build an appropriate filter for this LDAP server
+    my $attr_map  = $ldap->config->attr_map;
+    my $attribute = $email ? $attr_map->{email_address} : $attr_map->{username};
+    my $value     = escape_filter_value($email ? $email : $username);
+    my $filter    = "($attribute=$value)";
+
+    my %opts = (
+        base    => $cfg->base,
+        scope   => 'sub',
+        filter  => $filter,
+        attrs   => ['*'],
+    );
+    delete $opts{base} unless defined $cfg->base;
+
+    # search for this User in LDAP
+    my $mesg = $ldap->search(%opts);
+    unless ($mesg) {
+        die "unable to query LDAP";
+    }
+    if ($mesg->is_error()) {
+        die "unable to query User in LDAP; " . $mesg->error() . "\n";
+    }
+
+    # dump the info from all of the results
+    foreach my $result ($mesg->all_entries) {
+        print "=" x 70 . "\n";
+        print "SERVER NAME: " . $cfg->name . "\n";
+        foreach my $attr ($result->attributes) {
+            my $val_ref = $result->get_value( $attr, asref => 1 );
+            foreach my $val (@$val_ref) {
+                print "$attr: $val\n";
+            }
+        }
+    }
+}
+
+=head1 NAME
+
+st-dump-ldap-user - Dump all of the LDAP attributes for a User
+
+=head1 SYNOPSIS
+
+  st-dump-ldap-user [options]
+
+  Options:
+    --email <email>         Email address of User to dump
+    --username <username>   Username of User to dump
+    --help/-?               Brief help message
+    --man                   Full documentation
+
+  Example:
+    st-dump-ldap-user --email some.user@example.com
+
+=head1 DESCRIPTION
+
+C<st-dump-ldap-user> is a command line utility to help dump all of the
+available information on a User from the LDAP Directories.
+
+When run, C<st-dump-ldap-user> will attempt to find the user in all of the
+configured LDAP Directories, and will then display all of the B<LDAP
+attributes and values> for that User.  This displayed information is B<NOT>
+the information stored withing Socialtext, but is the LDAP attributes directly
+from the LDAP directory.
+
+=head1 OPTIONS
+
+=over
+
+=item B<--email E<lt>emailE<gt>>
+
+Specifies the e-mail address (as mapped via the Socialtext LDAP configuration
+and the attribute map) for the User to find/dump.
+
+One of C<--email> or C<--username> is required.
+
+=item B<--username E<lt>usernameE<gt>>
+
+Specifies the Username (as mapped via the Socialtext LDAP configuration and
+the attribute map) for the User to find/dump.
+
+One of C<--email> or C<--username> is required.
+
+=item B<--help/-?>
+
+Displays a brief help message.
+
+=item B<--man>
+
+Displays the full documentation.
+
+=back
+
+=head1 AUTHOR
+
+Socialtext, Inc. C<< <code@socialtext.com> >>
+
+=head1 COPYRIGHT
+
+Copyright 2008 Socialtext, Inc., All Rights Reserved.
+
+=cut

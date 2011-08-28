@@ -1,0 +1,90 @@
+* Fixture: WebHook
+
+This is a test of the WebHook system.
+
+| *Comment*           | Create us a workspace, account and user           |                  |
+| standard-test-setup | joe                                               |                  |
+| st-admin            | give-accounts-admin --email %%joe_email_address%% |                  |
+| standard-test-setup | bob                                               |                  |
+| http-user-pass      | %%joe_username%%                                  | %%joe_password%% |
+| st-clear-jobs       |                                                   |                  |
+
+| *Comment*         | Show that we have no hooks |                  |
+| st-clear-webhooks |                            |                  |
+| GET               | /data/webhooks             | application/json |
+| code-is           | 200                        |                  |
+| body-is           | []                         |                  |
+
+| *Comment*       | Create a Signal hook                                 |                                                    |
+| POST_json       | /data/webhooks                                       | {"class":"signal.create","url":"http://example-hook-url"} |
+| code-is         | 201                                                  |                                                    |
+| set-from-header | hook_uri                                             | Location                                           |
+| GET             | %%hook_uri%%                                         |                                                    |
+| code-is         | 200                                                  |                                                    |
+| json-parse      |                                                      |                                                    |
+| json-like       | {"class":"signal.create","url":"http://example-hook-url"}   |                                                    |
+| GET             | /data/webhooks                                       | application/json                                   |
+| code-is         | 200                                                  |                                                    |
+| json-parse      |                                                      |                                                    |
+| json-like       | [{"class":"signal.create","url":"http://example-hook-url"}] |                                                    |
+
+| *Comment*       | Trigger the Signal Hook without account filter |                                                              |
+| clear-webhook   |                                                |                                                              |
+| set             | signal                                         | Hello from %%joe_username%%                                  |
+| post-json       | /data/signals                                  | {"signal":"%%signal%%","account_ids":["%%joe_account_id%%"]} |
+| code-is         | 201                                            |                                                              |
+| st-process-jobs |                                                |                                                              |
+| webhook-like    | %%signal%%                                     |                                                              |
+
+| *Comment*       | Trigger the Signal Hook without account filter from bob user |                                                              |
+| clear-webhook   |                                                              |                                                              |
+| http-user-pass  | %%bob_username%%                                             | %%bob_password%%                                             |
+| set             | signal                                                       | Hello from %%bob_username%%                                  |
+| post-json       | /data/signals                                                | {"signal":"%%signal%%","account_ids":["%%bob_account_id%%"]} |
+| code-is         | 201                                                          |                                                              |
+| st-process-jobs |                                                              |                                                              |
+| webhook-like    | %%signal%%                                                   |                                                              |
+| http-user-pass  | %%joe_username%%                                             | %%joe_password%%                                             |
+
+
+| *Comment* | Delete a webhook |                  |
+| DELETE    | %%hook_uri%%     |                  |
+| code-is   | 204              |                  |
+| GET       | /data/webhooks   | application/json |
+| code-is   | 200              |                  |
+| body-is   | []               |                  |
+
+Now some tests filtering the account_id.  First we'll need some more test setup.
+
+| *Comment*       | Create a Signal hook with account_id |                                                                                      |
+| POST_json        | /data/webhooks                       | {"class":"signal.create","url":"http://example-hook-url","account_id":"%%joe_account_id%%"} |
+| code-is         | 201                                  |                                                                                      |
+| set-from-header | hook_uri                             | Location                                                                             |
+
+| *Comment*       | Signal to account filter works |                                                              |
+| clear-webhook   |                                |                                                              |
+| set             | signal                         | account %%joe_account_id%% %%start_time%%                    |
+| post-json       | /data/signals                  | {"signal":"%%signal%%","account_ids":["%%joe_account_id%%"]} |
+| code-is         | 201                            |                                                              |
+| st-process-jobs |                                |                                                              |
+| webhook-like    | %%signal%%                     |                                                              |
+
+| *Comment*       | Signal to bob account filter works |                                                              |
+| clear-webhook   |                                    |                                                              |
+| http-user-pass  | %%bob_username%%                   | %%bob_password%%                                             |
+| set             | signal                             | account %%bob_account_id%% %%start_time%%                    |
+| post-json       | /data/signals                      | {"signal":"%%signal%%","account_ids":["%%bob_account_id%%"]} |
+| code-is         | 201                                |                                                              |
+| st-process-jobs |                                    |                                                              |
+| webhook-unlike  | %%signal%%                         |                                                              |
+| http-user-pass  | %%joe_username%%                   | %%joe_password%%                                             |
+
+
+Try to create a webhook when not a Business Admin.
+
+| st-admin          | remove-accounts-admin --email %%joe_email_address%% |                                                    |
+| st-clear-webhooks |                                                     |                                                    |
+| POST_json         | /data/webhooks                                      | {"class":"signal.create","url":"http://example-hook-url"} |
+| code-is           | 403                                                 |                                                    |
+| GET               | /data/webhooks                                      | application/json                                   |
+| code-is           | 200                                                 |                                                    |

@@ -1,0 +1,280 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+
+use Cwd;
+use FindBin;
+use IO::File;
+use lib "$FindBin::Bin/../lib";
+
+BEGIN {
+    # Avoid using local::lib
+    delete $ENV{PERL5LIB};
+}
+
+use Getopt::Long;
+use Socialtext::AppConfig;
+use Socialtext::ApacheDaemon;
+use Socialtext::System;
+
+sub usage {
+    print <<END_OF_HELP;
+
+Usage: nlwctl [-h|--help|help]
+       nlwctl [OPTIONS] [VERB [VERB [...]]]
+
+Verbs: (start is the default verb if none is specified)
+  hup           send SIGHUP
+  ports         display all port numbers on STDOUT
+  start         start the server, or send SIGHUP if it's already running
+  stop          stop the server
+  restart       stop, then start
+
+Options:
+  -1                operate only on nlw-psgi service
+  -a                operate only on appliance console service
+  -c                operate only on ceqlotron service
+  -p                operate only on the json proxy service
+  -n/-2             operate only on nginx service
+  -u                operate only on the pushd service
+  -s                operate only on the userd service
+
+  -t, --test        operate on live-test server rather than devel. server
+  -v, --verbose     extra verbosity
+
+If none of the service options are specified, the verb acts on all services.
+END_OF_HELP
+    exit 1;
+}
+
+my (%nginx_command, %nlw_psgi_command, %ceqlotron_command, %appliance_command, %pushd_command,
+    %userd_command, %jsonproxy_command, $nginx, $apache_perl);
+
+# Options
+my $use_test_server  = 0;
+my $nlw_psgi_please  = 0;
+my $nginx_please     = 0;
+my $ceqlotron_please = 0;
+my $jsonproxy_please = 0;
+my $appliance_please = 0;
+my $pushd_please = 0;
+my $userd_please = 0;
+
+my %OPTSPEC = (
+    'test|t'    => \$use_test_server,
+    'help|h'    => \&usage,
+    'verbose|v' => \$Socialtext::ApacheDaemon::Verbose,
+    a           => \$appliance_please,
+    c           => \$ceqlotron_please,
+    p           => \$jsonproxy_please,
+    1           => \$nlw_psgi_please,
+    2           => \$nginx_please,
+    n           => \$nginx_please,
+    u           => \$pushd_please,
+    s           => \$userd_please,
+);
+
+Getopt::Long::Configure('bundling');
+GetOptions(%OPTSPEC) or usage();
+
+usage() if grep { $_ eq 'help' } @ARGV;
+
+# start will HUP if already running.
+my @verbs = @ARGV ? @ARGV : ('start');
+
+# If you don't specify any of -c, -1, or -2, you get them all.
+$appliance_please = $ceqlotron_please = $nginx_please = $nlw_psgi_please
+    = $jsonproxy_please = $pushd_please = $userd_please = 1
+    unless ( $ceqlotron_please
+          || $appliance_please
+          || $nginx_please
+          || $nlw_psgi_please
+          || $pushd_please
+          || $userd_please
+          || $jsonproxy_please );
+
+# These servers don't run in test mode
+if ($use_test_server) {
+    # XXX: does jsonproxy belong here too?
+    $ceqlotron_please = $appliance_please = $pushd_please = $userd_please = 0
+}
+
+my @apaches;
+if ( $nginx_please ) {
+    $nginx     = Socialtext::ApacheDaemon->new( name => 'nginx' );
+    push @apaches, $nginx;
+}
+my $master_apache = $apaches[0];
+
+_update_conf_file_for_tests($_) foreach @apaches;
+dispatch();
+
+sub dispatch {
+    init_commands();
+
+    $master_apache->output_urls
+        if $master_apache;
+    foreach my $verb ( @verbs ) {
+        if ( my $cmd = $nginx_command{$verb} ) {
+            $cmd->($_) for @apaches;
+            local $Socialtext::System::SILENT_RUN = 1;
+            $ceqlotron_command{$verb}->() if $ceqlotron_please;
+            $appliance_command{$verb}->() if $appliance_please;
+            $pushd_command{$verb}->() if $pushd_please;
+            $userd_command{$verb}->() if $userd_please;
+            $jsonproxy_command{$verb}->() if $jsonproxy_please;
+            $nlw_psgi_command{$verb}->() if $nlw_psgi_please;
+        }
+        else {
+            warn "nlwctl: Skipping unknown command '$verb'.\n";
+            warn "        Known verbs: @{[ sort keys %nlw_psgi_command ]}\n";
+        }
+    }
+}
+
+sub _update_conf_file_for_tests {
+    my $apache = shift;
+
+    my $conf_suffix
+        = 'etc/' . $apache->name . '/' . $apache->conf_filename;
+    my $conf_file =
+        $use_test_server
+        ? Socialtext::AppConfig->test_dir() . "/$conf_suffix"
+        : "$ENV{HOME}/.nlw/$conf_suffix";
+
+    if ( ! -r $conf_file ) {
+        print "Conf file $conf_file not found.\n";
+        exit 0;
+    }
+    $apache->conf_file($conf_file);
+}
+
+sub init_commands {
+    %nginx_command = (
+        start   => sub { $_[0]->start },
+        stop    => sub { $_[0]->stop },
+        hup     => sub { $nginx_command{$_}->(@_) for qw( stop start ) },
+        restart => sub { $nginx_command{$_}->(@_) for qw( stop start ) },
+        ports   => sub {
+            foreach my $port ($_[0]->ports) {
+                print "$port\n";
+            }
+        }
+    );
+
+    my $nlw_psgi_svc_dir = "$ENV{ST_CURRENT}/nlw";
+    %nlw_psgi_command = (
+        start => sub {
+            print "Starting nlw-psgi server.\n";
+            shell_run("svc -u $nlw_psgi_svc_dir");
+        },
+        stop => sub {
+            print "Stopping nlw-psgi server.\n";
+            shell_run("svc -d $nlw_psgi_svc_dir");
+        },
+        hup     => sub { },
+        restart => sub { $nlw_psgi_command{$_}->(@_) for qw( stop start ) },
+        ports   => sub { },
+    );
+    %ceqlotron_command = (
+        start   => sub {
+            $ceqlotron_command{stop}->(@_);
+            print "Starting ceqlotron.\n";
+            system "$FindBin::Bin/../bin/ceqlotron" and exit $?;
+        },
+        stop    => sub {
+            print "Stopping ceqlotron.\n";
+            # XXX: killall --wait is non-portable. Should we kill
+            # the pid represented in the ceqloton pid_file?
+            if (my $ceqlotron_pid = _ceqlotron_pid()) {
+                my $kill_count = kill 15, $ceqlotron_pid;
+                print "Unable to kill ceqlotron\n" unless $kill_count;
+                print "Pid file said pid $ceqlotron_pid\n";
+            }
+            else {
+                print "Ceqlotron was already stopped.\n";
+            }
+        },
+        hup     => sub { },
+        restart => sub { $ceqlotron_command{$_}->(@_) for qw( stop start ) },
+        ports   => sub { },
+    );
+
+    my $appliance_svc_dir
+        = "$ENV{ST_CURRENT}/appliance/libsocialtext-appliance-perl/service";
+    %appliance_command = (
+        start => sub {
+            print "Starting appliance console.\n";
+            shell_run("svc -u $appliance_svc_dir");
+        },
+        stop => sub {
+            print "Stopping appliance console.\n";
+            shell_run("svc -d $appliance_svc_dir");
+        },
+        hup     => sub { },
+        restart => sub { $appliance_command{$_}->(@_) for qw( stop start ) },
+        ports   => sub { },
+    );
+
+    my $pushd_svc_dir
+        = "$ENV{ST_CURRENT}/plugins/push/service";
+    %pushd_command = (
+        start => sub {
+            print "Starting pushd service.\n";
+            shell_run("svc -u $pushd_svc_dir");
+        },
+        stop => sub {
+            print "Stopping pushd service.\n";
+            shell_run("svc -d $pushd_svc_dir");
+        },
+        hup     => sub { },
+        restart => sub { $pushd_command{$_}->(@_) for qw( stop start ) },
+        ports   => sub { },
+    );
+
+    my $userd_svc_dir
+        = "$ENV{ST_CURRENT}/nlw/service/st-userd";
+    %userd_command = (
+        start => sub {
+            print "Starting userd service.\n";
+            shell_run("svc -u $userd_svc_dir");
+        },
+        stop => sub {
+            print "Stopping userd service.\n";
+            shell_run("svc -d $userd_svc_dir");
+        },
+        hup     => sub { },
+        restart => sub { $userd_command{$_}->(@_) for qw( stop start ) },
+        ports   => sub { },
+    );
+
+    my $jsonproxy_svc_dir
+        = "$ENV{ST_CURRENT}/plugins/widgets/service";
+    %jsonproxy_command = (
+        start => sub {
+            print "Starting jsonproxy service.\n";
+            shell_run("svc -u $jsonproxy_svc_dir");
+        },
+        stop => sub {
+            print "Stopping jsonproxy service.\n";
+            shell_run("svc -d $jsonproxy_svc_dir");
+        },
+        hup     => sub { },
+        restart => sub { $jsonproxy_command{$_}->(@_) for qw( stop start ) },
+        ports   => sub { },
+    );
+}
+
+# returns undef if there is no pid
+sub _ceqlotron_pid {
+    # If this called gen config should already have run, meaning
+    # Socialtext::AppConfig should survive without complaining.
+    require Socialtext::Paths;
+    my $pid_file = Socialtext::Paths::pid_file('ceqlotron');
+    my $fh = new IO::File;
+    $fh->open($pid_file) || return;
+    my $pid = $fh->getline;
+    chomp $pid;
+    return $pid;
+}

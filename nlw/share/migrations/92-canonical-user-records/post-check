@@ -1,0 +1,20 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_execute/;
+
+my $sth = sql_execute(qq{
+    SELECT array_accum(user_id)
+      FROM users
+  GROUP BY driver_username
+    HAVING COUNT(user_id) > 1
+});
+
+my $rows = $sth->fetchall_arrayref();
+if (scalar(@$rows) > 0) {
+    print "Duplicate users still exist in the `users` table.\n";
+    exit 1;
+}
+
+exit 0;

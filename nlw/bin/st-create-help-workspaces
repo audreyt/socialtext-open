@@ -1,0 +1,27 @@
+#!/bin/bash
+set -e
+
+DIR=`dirname $0`
+SHAREDIR=${1:-"$DIR/../share/l10n/help/"}
+
+if [ ! -d "$SHAREDIR" ]; then
+    echo "$SHAREDIR does not exist.  Could not find help files."
+    exit 1;
+fi
+
+echo "Searching $SHAREDIR for help documentation."
+for help in $SHAREDIR/help-*.tar.gz; do
+    if [ -e "$help" ]; then
+        help_file=`basename $help`
+        echo "========== $help_file =========="
+        JUMPSTART=`(echo "$help_file" | grep "^help-jumpstart") >/dev/null; echo $?`
+        if [ "$JUMPSTART" == "0" ]; then
+            ACCT="`$DIR/st-default-account`"
+	    $DIR/st-create-help-workspace --account "$ACCT" $help
+        else
+	    $DIR/st-create-help-workspace $help
+	fi
+    fi
+done
+
+exit 0;

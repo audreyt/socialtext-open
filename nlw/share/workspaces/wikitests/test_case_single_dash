@@ -1,0 +1,32 @@
+ *Comment* | Test Case: Single Dash | Should work |
+
+Link text for a widget that contains a single dash should work.
+See Test Case: Nasty Double Dashes
+e.g. `"Hello - World"{link: help [Socialtext Documentation]}`
+Set test_string to such a string, then make a widget with that as the link text, then test it.
+
+| set | test_string | `Hello - World %%start_time%%` |
+| set | test_string_escaped | `Hello \- World %%start_time%%` |
+
+| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+
+| *Comment* | put the string in as widget link text |  |
+| type_ok | wikiwyg_wikitext_textarea | `"%%test_string%%"{link: help [Socialtext Documentation]}` |
+| type_ok | st-newpage-pagename-edit | Single Dash %%start_time%% |
+| click_ok | link=Rich Text |  |
+| pause | 5000 | wait for the Rich Text editor to load |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| st-page-save |  |  |
+
+| *Comment* | The last line of the page should contain only %%test_string%% |  |
+| text_like | st-page-content | qr/^\s*%%test_string_escaped%%\s*$/m |
+
+| *Comment* | Test Case: Single Dash TEARDOWN |  |
+| st-process-jobs | PageIndex | %%workspace%% |
+| st-admin | purge-page --w %%workspace%% --p single_dash_%%start_time%% | was purged |
+
+| *Comment* | Test Case: Single Dash COMPLETED |  |

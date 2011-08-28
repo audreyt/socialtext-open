@@ -1,0 +1,8 @@
+[%# @COPYRIGHT@ -%]
+[% WRAPPER layout/html id='st-revision' actions='element/page/revision_view_actions' box_javascript = '0' title = "${display_title}: ${display_title_decorator}" subnav = 'element/wiki/subnav-default' %]
+<div id="st-page-wiki-title">[% wiki.title %]</div>
+<div id="st-page-title">[% display_title %][% IF display_title_decorator %]: <span class="st-page-title-decorator">[% display_title_decorator %]</span>[% END %]</div>
+<div id="st-source-view">
+  [% print %]
+</div>
+[% END %]

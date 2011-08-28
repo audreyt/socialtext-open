@@ -1,0 +1,2447 @@
+# @COPYRIGHT@
+msgid ""
+msgstr ""
+"Project-Id-Version: Socialtext i18n\n"
+"PO-Revision-Date: 2011-06-28 09:47-0700\n"
+"Language-Team: Socialtext i18n team\n"
+"Last-Translator: Socialtext i18n team\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: share/skin/s3/template/layout/html:66 share/skin/s3/template/layout/simple_html:54 share/skin/s3/template/layout/user_frame:71
+msgid "about.keywords"
+msgstr "wiki, business wiki, document management, enterprise wiki, intranet wiki, knowledge management, online collaboration, open source wiki, portal wiki, hosted wiki, collaboration, social software, social networking, dashboard, project collaboration, team collaboration, wiki appliance, wiki software, community"
+
+#: share/skin/s3/template/element/main_nav/subnav/people:8
+msgid "about.people"
+msgstr "is a people directory with robust social networking features. You can find contact information for your colleagues, discover people with expertise and common interests, and find valuable information through your social connections."
+
+#: share/skin/s3/template/element/main_nav/subnav/signals:8
+msgid "about.signals"
+msgstr "provides social messaging integrated with Socialtext's enterprise collaboration platform. While it provides a lot of the same great benefits of other micro-sharing tools like Twitter&#0153;, Socialtext Signals also provides additional benefits because the messaging occurs in the context of people within an organization working transparently and collaborating on common goals."
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:77
+msgid "about.unplugged"
+msgstr "Socialtext Unplugged allows users to read and edit workspace pages while offline. Users can \"unplug\" one or more pages to read and edit. Changes can be synchronized with the workspace."
+
+#. (user_count)
+#: share/skin/s3/template/element/listview_account_filter:13 share/skin/s3/template/element/listview_account_filter:22
+msgid "account.count=people"
+msgstr "%*(%1,Person,People)"
+
+#: share/skin/s3/template/lite/page_list.html:13 share/skin/s3/template/view/page/display:14
+msgid "ago.1day"
+msgstr "one day ago"
+
+#: share/skin/s3/template/lite/page_list.html:9
+msgid "ago.1hour"
+msgstr "one hour ago"
+
+#: share/skin/s3/template/lite/page_list.html:7
+msgid "ago.1min"
+msgstr "one min. ago"
+
+#: share/skin/s3/template/view/page/display:8
+msgid "ago.1minute"
+msgstr "one minute ago"
+
+#: share/skin/s3/template/view/page/display:7
+msgid "ago.<1minute"
+msgstr "less than a minute ago"
+
+#: share/skin/s3/template/view/page/display:15
+msgid "ago.about-1day"
+msgstr "about one day ago"
+
+#: share/skin/s3/template/view/page/display:10
+msgid "ago.about-1hour"
+msgstr "about one hour ago"
+
+#. (days)
+#: share/skin/s3/template/lite/page_list.html:16 share/skin/s3/template/view/page/display:18
+msgid "ago.days=count"
+msgstr "%*(%1,day) ago"
+
+#. (hours)
+#: share/skin/s3/template/lite/page_list.html:12 share/skin/s3/template/view/page/display:13
+msgid "ago.hours=count"
+msgstr "%*(%1,hour) ago"
+
+#. (minutes)
+#: share/skin/s3/template/lite/page_list.html:8
+msgid "ago.mins=count"
+msgstr "%1 min. ago"
+
+#. (minutes)
+#. (data.minutes_ago)
+#: share/skin/s3/javascript/s3.js:694 share/skin/s3/template/view/page/display:9
+msgid "ago.minutes=count"
+msgstr "%*(%1,minute) ago"
+
+#: share/skin/s3/template/view/weblog:108
+msgid "blog.archives"
+msgstr "Blog Archives"
+
+#: share/skin/s3/template/view/weblog:7
+msgid "blog.blog"
+msgstr "Blog"
+
+#: share/skin/s3/template/layout/html:146 share/skin/s3/template/layout/user_frame:151 share/skin/s3/template/view/settings:66
+msgid "blog.blogs"
+msgstr "Blogs"
+
+#: share/skin/s3/template/element/settings/weblog_create:5
+msgid "blog.create"
+msgstr "Create A Blog"
+
+#: share/skin/s3/template/view/weblog:78
+msgid "blog.edit"
+msgstr "Edit this post"
+
+#: share/skin/s3/template/view/weblog:17
+msgid "blog.go:"
+msgstr "Go to:"
+
+#: share/skin/s3/template/element/settings/weblog_create:7
+msgid "blog.naming"
+msgstr "Please give your blog a name. If the name you provide does not end with \"Blog\", the system will add \"Blog\" to the name you provide. After you click \"Create\", you'll be taken right to the new blog."
+
+#: share/skin/s3/template/view/weblog:91
+msgid "blog.navigation"
+msgstr "Blog Navigation"
+
+#: share/skin/s3/template/view/settings:68
+msgid "blog.new"
+msgstr "Create New Blog"
+
+#: share/skin/s3/template/view/weblog:0 share/skin/s3/template/view/weblog:138
+msgid "blog.newer"
+msgstr "Newer entries"
+
+#: share/skin/s3/template/view/weblog:0 share/skin/s3/template/view/weblog:141
+msgid "blog.older"
+msgstr "Older entries"
+
+#: share/skin/s3/template/view/weblog:82
+msgid "blog.permalink"
+msgstr "Permalink"
+
+#: share/skin/s3/template/element/settings/weblog_create:10
+msgid "blog.sample"
+msgstr "Sample Blog"
+
+#. (html_escaped_category)
+#: share/skin/s3/template/element/category_display/action_weblog_view:3
+msgid "blog.show=tag"
+msgstr "%1 as a blog"
+
+#: share/skin/s3/template/view/weblog:9
+msgid "blog.subscribe"
+msgstr "Subscribe to Feed"
+
+#: share/skin/s3/template/view/weblog:12
+msgid "blog.unplug"
+msgstr "Save the 50 most recent pages"
+
+#: share/skin/s3/template/view/weblog:65
+msgid "blog.updated-by"
+msgstr "Updated by"
+
+#: share/skin/s3/template/element/category_display/action_weblog_view:2
+msgid "blog.view"
+msgstr "View"
+
+#: share/skin/s3/template/lite/page/display.html:31
+msgid "comment.add:"
+msgstr "Add your own comment:"
+
+#: share/skin/s3/template/lite/page/display.html:39
+msgid "comment.save"
+msgstr "Save comment"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:28
+msgid "comment.signal-to"
+msgstr "Signal this comment to"
+
+#: share/skin/s3/javascript/lightbox/comment.js:417
+msgid "comment.type-link"
+msgstr "type link text here"
+
+#: share/skin/s3/template/view/settings:31
+msgid "config.all-users"
+msgstr "Manage All Users"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:55
+msgid "config.blog-sort"
+msgstr "Workspace Blog Sort Order"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:61
+msgid "config.blog:"
+msgstr "This blog:"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:33
+msgid "config.email-notify"
+msgstr "Workspace Email Notify Setting"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:5
+msgid "config.email-receive"
+msgstr "Workspace Email Receive Setting"
+
+#: share/skin/s3/template/element/page/display/attachments:53
+msgid "config.files"
+msgstr "Manage Files"
+
+msgid "config.first-name:"
+msgstr "First name:"
+
+#: share/skin/s3/template/element/settings/users_settings_section:68
+msgid "config.immutable-name-password"
+msgstr "Your user name and password cannot be changed using My Settings."
+
+#: share/skin/s3/template/element/settings/users_listall_section:7
+msgid "config.membership"
+msgstr "Manage Workspace Membership"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:50
+msgid "config.no"
+msgstr "No"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:16
+msgid "config.private"
+msgstr "Private"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:23
+msgid "config.public"
+msgstr "Public"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:35
+msgid "config.registered-users"
+msgstr "registered users"
+
+#. (workspace.title)
+#: share/skin/s3/template/workspaces_created_section.html:21
+msgid "config.review-settings=wiki:"
+msgstr "Review or change the settings for %1:"
+
+#: share/skin/s3/template/element/settings/users_listall_section:15 share/skin/s3/template/element/settings/users_listall_section:80 share/skin/s3/template/view/settings:25
+msgid "config.users"
+msgstr "Users"
+
+#: share/skin/s3/template/view/settings:53
+msgid "config.wiki"
+msgstr "This Workspace"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:21
+msgid "config.wiki-custom"
+msgstr "this workspace has custom permissions."
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:16
+msgid "config.wiki-private"
+msgstr "users need to be invited by an admin and must log in to see pages."
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:23
+msgid "config.wiki-public"
+msgstr "users can see pages without logging in."
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:43
+msgid "config.yes"
+msgstr "Yes"
+
+#: share/skin/s3/javascript/lightbox/attachment.tt2:28 share/skin/s3/javascript/lightbox/email.tt2:28
+msgid "do.add"
+msgstr "Add"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:5
+msgid "do.bold"
+msgstr "Bold"
+
+#: share/skin/s3/javascript/lightbox/attachment.tt2:30 share/skin/s3/javascript/lightbox/attachment.tt2:55 share/skin/s3/javascript/lightbox/comment.tt2:24 share/skin/s3/javascript/lightbox/copy.tt2:39 share/skin/s3/javascript/lightbox/create_content.tt2:51 share/skin/s3/javascript/lightbox/delete.tt2:23 share/skin/s3/javascript/lightbox/duplicate.tt2:34 share/skin/s3/javascript/lightbox/email.tt2:71 share/skin/s3/javascript/lightbox/rename.tt2:31 share/skin/s3/javascript/lightbox/self_join_workspace.tt2:16 share/skin/s3/template/element/settings/start:22 share/skin/s3/template/element/settings/stop:12 share/skin/s3/template/lite/subnav.html:46
+msgid "do.cancel"
+msgstr "Cancel"
+
+#: share/skin/s3/javascript/lightbox/simple.tt2:8
+msgid "do.close"
+msgstr "Close"
+
+#: share/skin/s3/template/view/page_revision_list:98
+msgid "do.compare-revisions"
+msgstr "Compare Revisions"
+
+#: share/skin/s3/javascript/lightbox/copy.tt2:34
+msgid "do.copy"
+msgstr "Copy"
+
+#: share/skin/s3/javascript/lightbox/create_content.tt2:46
+msgid "do.create"
+msgstr "Create"
+
+#: share/skin/s3/javascript/lightbox/attachment.tt2:54 share/skin/s3/javascript/lightbox/delete.tt2:18
+msgid "do.delete"
+msgstr "Delete"
+
+#: share/skin/s3/javascript/lightbox/attachment.tt2:40
+msgid "do.done"
+msgstr "Done"
+
+#: share/skin/s3/javascript/lightbox/duplicate.tt2:29 share/skin/s3/javascript/lightbox/duplicate.tt2:8
+msgid "do.duplicate"
+msgstr "Duplicate"
+
+#: share/skin/s3/template/view/page/display:79
+msgid "do.email"
+msgstr "Email"
+
+#: share/skin/s3/template/view/listview:21
+msgid "do.export"
+msgstr "Export"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:15
+msgid "do.file"
+msgstr "Attachment Link"
+
+#: share/skin/s3/javascript/people-avatar.js:40
+msgid "do.follow"
+msgstr "Follow this person"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:8
+msgid "do.h1"
+msgstr "Heading 1"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:9
+msgid "do.h2"
+msgstr "Heading 2"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:10
+msgid "do.h3"
+msgstr "Heading 3"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:16
+msgid "do.image"
+msgstr "Image"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:14
+msgid "do.indent"
+msgstr "More Indented"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:6
+msgid "do.italic"
+msgstr "Italic"
+
+#: share/skin/s3/javascript/lightbox/self_join_workspace.tt2:13
+msgid "do.join"
+msgstr "Join"
+
+#: share/skin/s3/javascript/lightbox/self_join_workspace.tt2:3
+msgid "do.join-to-edit"
+msgstr "Join To Edit"
+
+#: share/skin/s3/javascript/like-indicator.js:134
+msgid "do.like"
+msgstr "Like"
+
+#: share/skin/s3/javascript/like-indicator.js:134
+msgid "do.like=count"
+msgstr "(%1) Like"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:12
+msgid "do.ol"
+msgstr "Numbered List"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:13
+msgid "do.outdent"
+msgstr "Less Indented"
+
+#: share/skin/s3/template/view/page/display:77 share/skin/s3/template/view/weblog:10
+msgid "do.print"
+msgstr "Print"
+
+#: share/skin/s3/template/layout/html:198 share/skin/s3/template/layout/html:94 share/skin/s3/template/layout/user_frame:203 share/skin/s3/template/layout/user_frame:99
+msgid "do.register"
+msgstr "Register"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:41 share/skin/s3/template/element/settings/users_listall_section:24
+msgid "do.remove"
+msgstr "Remove"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:42
+msgid "do.remove-all"
+msgstr "Remove All"
+
+#: share/skin/s3/javascript/lightbox/rename.tt2:26
+msgid "do.rename"
+msgstr "Rename"
+
+#: share/skin/s3/javascript/lightbox/attachment.tt2:29
+msgid "do.replace"
+msgstr "Replace"
+
+#: share/skin/s3/template/view/page/revision:34
+msgid "do.source-view"
+msgstr "Source View"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:7
+msgid "do.strike"
+msgstr "Strike Through"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:19
+msgid "do.table"
+msgstr "Create Table"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:11
+msgid "do.ul"
+msgstr "Bulleted List"
+
+#: share/skin/s3/javascript/people-avatar.js:39
+msgid "do.unfollow"
+msgstr "Stop following this person"
+
+#: share/skin/s3/javascript/like-indicator.js:134
+msgid "do.unlike"
+msgstr "Unlike"
+
+#: share/skin/s3/javascript/like-indicator.js:134
+msgid "do.unlike=count"
+msgstr "(%1) Unlike"
+
+#: share/skin/s3/template/element/settings/workspaces_unsubscribe_section:7 share/skin/s3/template/view/settings:49
+msgid "do.unsubscribe"
+msgstr "Unsubscribe"
+
+#. (workspace.name)
+#: share/skin/s3/template/element/settings/workspaces_unsubscribe_section:12
+msgid "do.unsubscribe=wiki"
+msgstr "Unsubscribe from the %1 workspace"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:33
+msgid "do.upload"
+msgstr "Upload"
+
+#: share/skin/s3/javascript/s3.js:929 share/skin/s3/template/view/empty_watchlist:39 share/skin/s3/template/view/page/display:74
+msgid "do.watch"
+msgstr "Watch"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:18
+msgid "do.weblink"
+msgstr "Web Link"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:17
+msgid "do.wikilink"
+msgstr "Wiki Link"
+
+#: share/skin/s3/javascript/s3.js:1196
+msgid "draft.?"
+msgstr "?"
+
+#: share/skin/s3/javascript/s3.js:1180
+msgid "draft.discard"
+msgstr "Discard"
+
+#: share/skin/s3/javascript/s3.js:1184
+msgid "draft.discard?"
+msgstr "Are you sure you want to discard the draft?"
+
+#: share/skin/s3/javascript/s3.js:1177
+msgid "draft.or"
+msgstr "&nbsp;or&nbsp;"
+
+#: share/skin/s3/javascript/s3.js:1174
+msgid "draft.resume"
+msgstr "Resume"
+
+#. (draft.page_title, draft.workspace_title, draft.workspace_id)
+#: share/skin/s3/javascript/s3.js:1170
+msgid "draft.unsaved=page,wiki,wiki-id:"
+msgstr "You have an unsaved draft of \"%1\" in the \"%2\" (%3) workspace:"
+
+#: share/skin/s3/javascript/lightbox/self_join_many.tt2:1
+msgid "edit.choose-group"
+msgstr "You must be a member of one of the groups that have access to this workspace. Please select which group(s) you want to join below."
+
+#: share/skin/s3/template/lite/page/contention.html:5
+msgid "edit.contention"
+msgstr "Somebody else made changes to the page while you were editing it."
+
+#. (type)
+#: share/skin/s3/template/view/edit_contention:15
+msgid "edit.contention=type"
+msgstr "Somebody else made changes to the %1 while you were editing it."
+
+#: share/skin/s3/javascript/s3.js:156
+msgid "edit.copy-your-changes"
+msgstr "Please copy your changes, and click Cancel to return to the page."
+
+#: share/skin/s3/javascript/s3.js:890
+msgid "edit.expand"
+msgstr "Expand"
+
+#: share/skin/s3/javascript/lightbox/edit_check.tt2:9
+msgid "edit.force"
+msgstr "Edit Anyway"
+
+#: share/skin/s3/template/view/page/display:55
+msgid "edit.loading"
+msgstr "Loading..."
+
+#: share/skin/s3/javascript/s3.js:866
+msgid "edit.normal"
+msgstr "Normal"
+
+#. (tag)
+#: share/skin/s3/javascript/s3.js:305
+msgid "edit.remove=tag"
+msgstr "Remove %1 from the queue"
+
+#: share/skin/s3/javascript/lightbox/edit_check.tt2:10
+msgid "edit.return-to-page-view"
+msgstr "Return to Page View"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:23 share/skin/s3/template/element/settings/start:16 share/skin/s3/template/element/settings/start:8 share/skin/s3/template/element/settings/stop:6 share/skin/s3/template/lite/page/edit.html:10 share/skin/s3/template/lite/page/edit.html:15
+msgid "edit.save"
+msgstr "Save"
+
+#: share/skin/s3/javascript/s3.js:139
+msgid "edit.saved"
+msgstr "(Your edit was successfully saved.)"
+
+#. ('<a target="_blank" href="/st/group/' + group.group_id + '">' + group.name + '</a>')
+#. ("<a target=\"_blank\" href=\"/st/group/' + group.group_id + '\">' + group.name + '</a>")
+#: share/skin/s3/javascript/lightbox/self_join_single.tt2:1 share/skin/s3/javascript/lightbox/self_join_single.tt2:2
+msgid "edit.self-join=group?"
+msgstr "You must be a member of %1 Group to edit or comment on this page. Would you like to join now?"
+
+#. (type)
+#: share/skin/s3/template/view/edit_contention:17
+msgid "edit.view-contention=type:"
+msgstr "The %1 you just edited is shown below. You can copy and paste your changes from here:"
+
+#: share/skin/s3/template/view/page_locked:17
+msgid "edit.view-locked"
+msgstr "The raw wikitext of your changes are below. You can copy your changes from here."
+
+#: share/skin/s3/template/lite/page/contention.html:7 share/skin/s3/template/lite/page/page_locked.html:7
+msgid "edit.view-unsaved:"
+msgstr "The text you just edited is shown below. You can copy your changes from here:"
+
+#: share/skin/s3/javascript/lightbox/edit_check.tt2:2
+msgid "edit.warning"
+msgstr "Edit Warning"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:40
+msgid "email.add-all"
+msgstr "Add All Members"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:49
+msgid "email.add-note?"
+msgstr "Add this note at the front of the email?"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:25
+msgid "email.address-or-name"
+msgstr "Type an email address or user name"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:23 share/skin/s3/template/element/settings/users_invite_section:69
+msgid "email.another-example"
+msgstr "another.friend@example.com"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:58
+msgid "email.copy-self?"
+msgstr "Send me a copy?"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:49
+msgid "email.customize"
+msgstr "(You can customize the note below.)"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:11
+msgid "email.from"
+msgstr "From"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:46
+msgid "email.message"
+msgstr "Message"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:50
+msgid "email.page-link:"
+msgstr "Hello, this is a page from the workspace that I wanted you to see. This page is also available for viewing or editing on the web at:"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:8
+msgid "email.position?"
+msgstr "If there is already an existing page with that title, where should the body of the email be added?"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:35
+msgid "email.recipient-box"
+msgstr "Use the Recipients box above to add"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:36
+msgid "email.recipient-box-continued"
+msgstr "recipients to this list"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:23
+msgid "email.recipients"
+msgstr "Recipients"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:66
+msgid "email.send"
+msgstr "Send"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:17
+msgid "email.subject"
+msgstr "Subject"
+
+#: share/skin/s3/template/element/settings/users_listall_section:61
+msgid "error.cannot-reset-pasword"
+msgstr "This user's password cannot be reset"
+
+#: share/skin/s3/javascript/lightbox/self_join_workspace.js:58
+msgid "error.choose-group"
+msgstr "Please choose one or more groups"
+
+#: share/skin/s3/template/lite/html_begin.html:66
+msgid "error.css-disabled"
+msgstr "Warning: Stylesheets are not enabled in your mobile device. In order to properly view Socialtext Mobile, you will need to enable stylesheets in your browser options."
+
+#: share/skin/s3/template/view/page/display:105
+msgid "error.email-spreadsheet"
+msgstr "Sorry, this feature is not available for spreadsheets"
+
+#: share/skin/s3/javascript/lightbox/attachment.js:195
+msgid "error.filename-too-long"
+msgstr "Filename is too long after URL encoding."
+
+#: share/skin/s3/template/element/settings/users_invited_section:10 share/skin/s3/template/element/settings/users_invited_section:5
+msgid "error.groups-member-exists=count:"
+msgstr "The following %*(%1,user already has,users already have) roles in the following Groups:"
+
+#. (new_title)
+#: share/skin/s3/javascript/st-lightbox.js:86
+msgid "error.invalid-page-name=title"
+msgstr "The page name you selected, \"%1\", is not allowed.  Please enter or change the page name."
+
+#. (val)
+#: share/skin/s3/javascript/lightbox/email.js:97
+msgid "error.invalid=email"
+msgstr "\"%1\" is not a valid email address."
+
+#: share/skin/s3/template/element/main_nav/subnav/signals:6
+msgid "error.is-guest"
+msgstr "You must register or be logged in to use this feature."
+
+#. (new_title)
+#: share/skin/s3/javascript/st-lightbox.js:91
+msgid "error.long-page-name=title"
+msgstr "The page name you selected, \"%1\", is too long after URL encoding."
+
+#. ($(this.input)
+#: share/skin/s3/javascript/lookahead.js:361
+msgid "error.no-match=lookahead"
+msgstr "No matches for '%1'"
+
+#: share/skin/s3/javascript/s3.js:832
+msgid "error.no-page-doc"
+msgstr "You must check at least one page in order to create a Word document."
+
+#: share/skin/s3/javascript/s3.js:820
+msgid "error.no-page-pdf"
+msgstr "You must check at least one page in order to create a PDF."
+
+#. (template)
+#: share/skin/s3/javascript/lightbox/create_content.js:244
+msgid "error.no-page=template"
+msgstr "No page named '%1' exists"
+
+#. (loc("page.type-"+type)
+#: share/skin/s3/javascript/lightbox/create_content.js:73
+msgid "error.no-page=type,tag"
+msgstr "No %1 pages tagged '%2' could be found"
+
+#: share/skin/s3/javascript/lightbox/email.js:126
+msgid "error.no-recipient"
+msgstr "Error: To send email, you must specify a recipient."
+
+#: share/skin/s3/template/view/listview:40
+msgid "error.no-search-results"
+msgstr "Your search returned 0 results."
+
+#: share/skin/s3/template/element/settings/workspaces_cannot_create_section:23
+msgid "error.non-admin-create-group"
+msgstr "Your appliance is configured so that only account administrators can create new groups."
+
+#. (new_title, button)
+#: share/skin/s3/javascript/st-lightbox.js:81
+msgid "error.page-exists=title,button"
+msgstr "The new page name you selected, \"%1\", is already in use.  Please choose a different name.  If you are sure you wish to overwrite the existing \"%1\" page, please press \"%2\" again."
+
+#: share/skin/s3/javascript/lookahead.js:662
+msgid "error.parsing-data"
+msgstr "Error parsing data"
+
+#. (new_title)
+#: share/skin/s3/javascript/st-lightbox.js:96
+msgid "error.same-page-name=title"
+msgstr "The page name you selected, \"%1\", is the same as the page's current title.  Please enter a new page name."
+
+#: share/skin/s3/template/view/page_revision_list:84
+msgid "error.same-revision"
+msgstr "You cannot compare a revision to itself."
+
+#: share/skin/s3/javascript/lightbox/comment.js:91 share/skin/s3/javascript/s3.js:160
+msgid "error.save-failed"
+msgstr "Saving failed due to server error; please try again later."
+
+#: share/skin/s3/javascript/lightbox/email.js:143
+msgid "error.send-failed"
+msgstr "Error: Failed to send email."
+
+#. (template,                        self.selected_visible_type()
+#: share/skin/s3/javascript/lightbox/create_content.js:239
+msgid "error.type-mismatch=template,type"
+msgstr "'%1' exists, but is not a %2"
+
+#: share/skin/s3/javascript/people-avatar.js:195
+msgid "error.user-data"
+msgstr "Error retreiving user data"
+
+#. (users_already_present.size)
+#: share/skin/s3/template/element/settings/users_invited_section:5 share/skin/s3/template/element/settings/users_invited_section:6
+msgid "error.wiki-member-exists=count:"
+msgstr "The following %*(%1,user was already a member,users were already members) of this Workspace:"
+
+#: share/skin/s3/template/element/settings/weblog_create:13
+msgid "example.blog"
+msgstr "Example: Sales Team Blog"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:37
+msgid "example.logo"
+msgstr "Example: C:\\My Pictures\\socialtext-logo-30.gif"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:29
+msgid "example.logo-url"
+msgstr "Example: http://www.socialtext.com/images/socialtext-logo-30.gif"
+
+#: share/skin/s3/template/element/settings/workspace_clone_section:20 share/skin/s3/template/element/settings/workspaces_create_section:14 share/skin/s3/template/element/settings/workspaces_settings_appearance_section:13
+msgid "example.title"
+msgstr "Example: Acme Widgets Product Development"
+
+#: share/skin/s3/template/element/settings/workspace_clone_section:37 share/skin/s3/template/element/settings/workspaces_create_section:31
+msgid "example.wiki-email:"
+msgstr "and this email address:"
+
+#: share/skin/s3/template/element/settings/workspace_clone_section:35 share/skin/s3/template/element/settings/workspaces_create_section:29
+msgid "example.wiki-url:"
+msgstr "Example: acme-product-dev creates this workspace address:"
+
+#: share/skin/s3/template/view/page/display:113
+msgid "export.html"
+msgstr "Export as HTML"
+
+#: share/skin/s3/template/view/listview:24 share/skin/s3/template/view/page/display:116
+msgid "export.pdf"
+msgstr "Export to PDF"
+
+#: share/skin/s3/template/view/listview:26 share/skin/s3/template/view/page/display:118
+msgid "export.word"
+msgstr "Export to Word"
+
+#. (filename, match.size, match.uploader_name, match.local_date)
+#: share/skin/s3/javascript/lightbox/attachment.js:239
+msgid "file.add-or-replace=name,size,user,date?"
+msgstr "There is already a file named \"%1\" (%2 uploaded by %3 on %4) attached to this page. You can <span class=\"emphasis\">Add</span> another version of the file or <span class=\"emphasis\">Replace</span> the existing version with this one. What would you like to do?"
+
+#. (filename)
+#: share/skin/s3/javascript/lightbox/attachment.js:229
+msgid "file.add-or-replace=name?"
+msgstr "There is already a file named \"%1\" attached to this page. You can <span class=\"emphasis\">Add</span> another version of the file or <span class=\"emphasis\">Replace</span> the existing version with this one. What would you like to do?"
+
+#: share/skin/s3/template/element/listview_tabs:22 share/skin/s3/template/view/empty_watchlist:21
+msgid "file.all"
+msgstr "All Files"
+
+#: share/skin/s3/template/view/attachmentslist:58
+msgid "file.attached-to"
+msgstr "attached to"
+
+#: share/skin/s3/template/view/listview:145
+msgid "file.attached-to-page"
+msgstr "attached to page"
+
+#: share/skin/s3/javascript/lightbox/attachment.js:186
+msgid "file.browse"
+msgstr "Please click browse and select a file to upload."
+
+#: share/skin/s3/javascript/template/attachment-listing.tt2:20
+msgid "file.by"
+msgstr "by"
+
+#. (local_time(file.date)
+#. (local_time(file.date), user(file.uploader))
+#: share/skin/s3/template/element/page/display/attachments:43
+msgid "file.by=date,user"
+msgstr "%1 by %2"
+
+#: share/skin/s3/javascript/lightbox/attachment.tt2:49
+msgid "file.delete"
+msgstr "Delete Attachment"
+
+#: share/skin/s3/template/view/attachmentslist:76
+msgid "file.delete-selected"
+msgstr "Delete Selected Attachments"
+
+#: share/skin/s3/javascript/template/attachment-listing.tt2:15 share/skin/s3/javascript/template/attachment-listing.tt2:16 share/skin/s3/template/element/page/display/attachments:34 share/skin/s3/template/element/page/display/attachments:37 share/skin/s3/template/element/page/display/attachments:38
+msgid "file.delete-this"
+msgstr "Delete this attachment"
+
+#. (selected_attachment)
+#: share/skin/s3/javascript/lightbox/attachment.tt2:50
+msgid "file.delete=name?"
+msgstr "Are you sure you want to delete the attachment '%1' from this page?"
+
+#: share/skin/s3/template/element/page/display/attachments:13
+msgid "file.drop-here-to-upload"
+msgstr "Drop files here to upload."
+
+#: share/skin/s3/javascript/lightbox/attachment.js:367 share/skin/s3/javascript/lightbox/attachment.tt2:65
+msgid "file.duplicate-files"
+msgstr "Duplicate Files"
+
+#: share/skin/s3/javascript/template/attachment-listing.tt2:7 share/skin/s3/javascript/template/attachment-listing.tt2:8 share/skin/s3/template/element/page/display/attachments:28 share/skin/s3/template/element/page/display/attachments:29
+msgid "file.extract"
+msgstr "Extract this attachment"
+
+#: share/skin/s3/javascript/lightbox/copy.tt2:27 share/skin/s3/javascript/lightbox/duplicate.tt2:21 share/skin/s3/javascript/lightbox/rename.tt2:19
+msgid "file.keep"
+msgstr "Keep attachments"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:55
+msgid "file.keep?"
+msgstr "Keep attachments?"
+
+#: share/skin/s3/javascript/lightbox/attachment.tt2:13
+msgid "file.max-size"
+msgstr "Maximum file size: 50MB"
+
+#: share/skin/s3/template/view/attachmentslist:29
+msgid "file.name"
+msgstr "Filename"
+
+#. (matches.length, match.size, match.uploader_name, match.local_date)
+#: share/skin/s3/javascript/lightbox/attachment.js:233
+msgid "file.replace=count,size,user,date"
+msgstr "There are <span class=\"emphasis\">%1 previous versions</span> of this file (most recently: %2, uploaded by %3 at %4). If you click <em>Replace</em>, you will <em>delete all other versions</em>."
+
+#: share/skin/s3/template/view/attachmentslist:33
+msgid "file.size"
+msgstr "Size"
+
+#: share/skin/s3/javascript/lightbox/attachment.tt2:6 share/skin/s3/template/element/page/display/attachments:51
+msgid "file.upload"
+msgstr "Upload Files"
+
+#: share/skin/s3/javascript/lightbox/attachment.js:146
+msgid "file.upload-complete"
+msgstr "Upload Complete"
+
+#: share/skin/s3/template/view/attachmentslist:59
+msgid "file.uploaded-by"
+msgstr "Uploaded by"
+
+#: share/skin/s3/javascript/lightbox/attachment.js:175
+msgid "file.uploaded:"
+msgstr "Uploaded files:"
+
+#. (basename)
+#: share/skin/s3/javascript/lightbox/attachment.js:209
+msgid "file.uploading=name"
+msgstr "Uploading %1..."
+
+#: share/skin/s3/template/element/listview_account_filter:5
+msgid "group.all"
+msgstr "All Groups"
+
+#: share/skin/s3/template/element/settings/users_listall_section:79
+msgid "group.name"
+msgstr "Group name"
+
+#: share/skin/s3/javascript/im.js:54
+msgid "im.away"
+msgstr "Away"
+
+#: share/skin/s3/javascript/im.js:56
+msgid "im.be-right-back"
+msgstr "Be right back"
+
+#: share/skin/s3/javascript/im.js:55
+msgid "im.busy"
+msgstr "Busy"
+
+#: share/skin/s3/javascript/im.js:61
+msgid "im.do-not-disturb"
+msgstr "Do not disturb"
+
+#: share/skin/s3/javascript/im.js:62
+msgid "im.do-not-disturb-but-allowed"
+msgstr "Do not disturb but allowed"
+
+#: share/skin/s3/javascript/im.js:63
+msgid "im.idle-online"
+msgstr "Idle online"
+
+#: share/skin/s3/javascript/im.js:58
+msgid "im.lunch"
+msgstr "Lunch"
+
+#: share/skin/s3/javascript/im.js:59
+msgid "im.meeting"
+msgstr "Meeting"
+
+#: share/skin/s3/javascript/im.js:53
+msgid "im.offline"
+msgstr "Offline"
+
+#: share/skin/s3/javascript/im.js:57
+msgid "im.on-phone"
+msgstr "On the phone"
+
+#: share/skin/s3/javascript/im.js:52
+msgid "im.online"
+msgstr "Online"
+
+#: share/skin/s3/javascript/im.js:60
+msgid "im.out-of-office"
+msgstr "Out of office"
+
+#: share/skin/s3/javascript/im.js:70
+msgid "im.requires-internet-explorer"
+msgstr "(requires Internet Explorer)"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:32
+msgid "image.upload"
+msgstr "Upload An Image"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:24
+msgid "image.web"
+msgstr "Image Already On The Web"
+
+#: share/skin/s3/javascript/lightbox/duplicate.tt2:24
+msgid "info.after-duplicate"
+msgstr "The main window will navigate to the new page name after you click \"Duplicate\"."
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:57
+msgid "info.blog-sort"
+msgstr "You can choose to sort blog entries by the date an entry is updated, or by the date an entry was first posted."
+
+#: share/skin/s3/javascript/lightbox/attachment.tt2:9
+msgid "info.browse"
+msgstr "Click \"Browse\" and select an image or file to upload."
+
+#. (workspace.title)
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:45
+msgid "info.central=wiki"
+msgstr "When users click on the title of a workspace, they go to the central page of the workspace. This page has the same title as the workspace (\"%1\")."
+
+#: share/skin/s3/template/element/page/display/comment-button:5
+msgid "info.comment"
+msgstr "Click this button to add a comment to the page"
+
+#: share/skin/s3/template/element/main_nav/subnav/people:10 share/skin/s3/template/element/main_nav/subnav/signals:10
+msgid "info.contact-link"
+msgstr "If this link does not work for you, contact"
+
+#. (user.driver_name)
+#: share/skin/s3/template/element/settings/users_settings_section:69
+msgid "info.contact=admin"
+msgstr "Check with your %1 administrator."
+
+#: share/skin/s3/javascript/lightbox/create_content.tt2:37
+msgid "info.copy"
+msgstr "Copy an existing page..."
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:21
+msgid "info.default-logo"
+msgstr "If you don't select an image, a Socialtext logo will be used instead."
+
+#: share/skin/s3/javascript/lightbox/attachment.tt2:11
+msgid "info.done"
+msgstr "Click \"Done\" to close this window."
+
+#: share/skin/s3/template/element/page/display/edit-button:12 share/skin/s3/template/element/page/display/edit-button:6
+msgid "info.edit"
+msgstr "Click this button to edit the page"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:31
+msgid "info.edit-summary-signal-visibility"
+msgstr "Only members with permission to view this page will receive the signal."
+
+#: share/skin/s3/javascript/lightbox/email.tt2:7 share/skin/s3/template/view/page/display:79
+msgid "info.email-page"
+msgstr "Email this page"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:7
+msgid "info.email-to-page"
+msgstr "When the workspace receives an email, the subject of the email becomes the title of a page, and the body of the email becomes the body of the page."
+
+#: share/skin/s3/template/element/settings/start:31
+msgid "info.error:"
+msgstr "error:"
+
+#: share/skin/s3/javascript/s3.js:890
+msgid "info.expand-view"
+msgstr "Expand edit area to fill browser window"
+
+#: share/skin/s3/template/element/page/display/attachments:9
+msgid "info.files"
+msgstr "Attachments"
+
+#: share/skin/s3/template/element/main_nav/subnav/people:6
+msgid "info.following"
+msgstr "...lists the people you are following. You must register or be logged in to use this feature."
+
+#. ('<b>' _ user.best_full_name _ '</b>')
+#. ("<b>' _ user.best_full_name _ '</b>")
+#: share/skin/s3/template/lite/workspace_list/user_info:6
+msgid "info.hello=user"
+msgstr "Hello, %1"
+
+#: share/skin/s3/template/view/listview:150
+msgid "info.in"
+msgstr "in"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:33
+msgid "info.invite-admin-groups"
+msgstr "Use the form below to invite users to one of this workspace's managing groups. Anyone who is a member of one of these groups has access to this workspace. If, instead, you would like to grant access to a specific individual, you can uncheck the \"invite users to selected group(s)\" checkbox below."
+
+#. (restrict_domain)
+#: share/skin/s3/template/element/settings/users_invite_search_section:10 share/skin/s3/template/element/settings/users_invite_section:58
+msgid "info.invite-filter=domain"
+msgstr "You can only invite people who share the \"%1\" email domain with you."
+
+#: share/skin/s3/template/element/settings/users_invite_section:9
+msgid "info.invite-member-groups"
+msgstr "Use the form below to invite users to one of this workspace's groups. Anyone who is a member of one of these groups has access to this workspace. If, instead, you would like to grant the individual access to the workspace without inviting them to the group, you can uncheck the \"invite users to selected group(s)\" checkbox below. Adding a user via a group is strongly recommended."
+
+#. ('<b>' _ user.username _ '</b>')
+#. ("<b>' _ user.username _ '</b>")
+#: share/skin/s3/template/view/workspace_list:16
+msgid "info.logged-in=name"
+msgstr "You are logged in as %1"
+
+#: share/skin/s3/template/view/listview:43
+msgid "info.no-search-results"
+msgstr "Please make sure your query is spelled correctly and try again:"
+
+#: share/skin/s3/javascript/s3.js:866
+msgid "info.normal-view"
+msgstr "Return edit area to normal view"
+
+#: share/skin/s3/template/view/attachmentslist:61 share/skin/s3/template/view/listview:158 share/skin/s3/template/view/listview:160 share/skin/s3/template/view/page/revision_compare:64 share/skin/s3/template/view/weblog:53 share/skin/s3/template/view/weblog:55 share/skin/s3/template/view/weblog:64 share/skin/s3/template/view/weblog:65 share/skin/s3/template/view/weblog:67
+msgid "info.on"
+msgstr "on"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:25 share/skin/s3/template/element/settings/workspaces_settings_appearance_section:33
+msgid "info.optional"
+msgstr "optional"
+
+#: share/skin/s3/template/view/weblog:33
+msgid "info.post"
+msgstr "Click this button to create a new blog post"
+
+#: share/skin/s3/template/view/weblog:39
+msgid "info.post-by-email"
+msgstr "or post by email"
+
+#. (support_address)
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:11
+msgid "info.public-wiki"
+msgstr "If you need public workspaces that can be viewed by users without logging in, please contact <a href=\"%1\">Socialtext Support</a>."
+
+#: share/skin/s3/template/element/settings/users_settings_section:43
+msgid "info.relogin"
+msgstr "Use your email address and new password to log in again."
+
+#: share/skin/s3/template/element/settings/weblog_create:11 share/skin/s3/template/element/settings/workspace_clone_section:17 share/skin/s3/template/element/settings/workspace_clone_section:32 share/skin/s3/template/element/settings/workspaces_create_section:11 share/skin/s3/template/element/settings/workspaces_create_section:26 share/skin/s3/template/element/settings/workspaces_settings_appearance_section:10
+msgid "info.required"
+msgstr "required"
+
+#. (offset + 1, last, pager.total_entries)
+#: share/skin/s3/template/view/attachmentslist:92 share/skin/s3/template/view/listview:199
+msgid "info.showing=from,to,total"
+msgstr "Showing %1 - %2 of %3 total."
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:8
+msgid "info.skin"
+msgstr "Socialtext can create a skin to customize the look and feel of your workspace. You can use the default skin supplied by Socialtext or a customized skin."
+
+#: share/skin/s3/template/layout/html:173 share/skin/s3/template/layout/user_frame:178
+msgid "info.socialtext"
+msgstr "Socialtext: Enterprise Social Software"
+
+#: share/skin/s3/javascript/lightbox/simple.js:30
+msgid "info.success"
+msgstr "Success"
+
+#: share/skin/s3/template/view/page/display:278 share/skin/s3/template/view/page/display:279
+msgid "info.unplugged"
+msgstr "Click this button to save this page to your computer for offline use."
+
+#: share/skin/s3/template/element/settings/workspace_clone_section:28 share/skin/s3/template/element/settings/workspaces_create_section:22
+msgid "info.valid-wiki-name"
+msgstr "It must consist of 3-30 lowercase letters, numbers, underscores or dashes."
+
+#: share/skin/s3/template/element/settings/start:28
+msgid "info.warning:"
+msgstr "warning:"
+
+#. ('<b>' _ user.username _ '</b>')
+#. ("<b>' _ user.username _ '</b>")
+#: share/skin/s3/template/layout/html:78 share/skin/s3/template/layout/user_frame:83
+msgid "info.welcome=user"
+msgstr "Welcome %1"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:46
+msgid "info.wiki-as-blog"
+msgstr "You can also configure the workspace link to display as a blog."
+
+#: share/skin/s3/template/element/settings/workspaces_cannot_create_section:11
+msgid "info.wiki-group"
+msgstr "You can create a new Group, or add a workspace to an existing Group."
+
+#: share/skin/s3/template/element/settings/workspace_clone_section:27 share/skin/s3/template/element/settings/workspaces_create_section:21
+msgid "info.wiki-id"
+msgstr "This is a short unique identifier used as part of your workspace's web address and email address."
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:20
+msgid "info.wiki-logo"
+msgstr "You can choose an image to use as the workspace logo. You may enter the web address of an image already on the web, or you may upload an image from your computer."
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:8
+msgid "info.wiki-private"
+msgstr "Workspaces are private by default. All users need to log in to view pages. Only workspace admins can invite new users."
+
+#: share/skin/s3/template/element/settings/workspace_clone_section:13 share/skin/s3/template/element/settings/workspaces_create_section:7 share/skin/s3/template/element/settings/workspaces_settings_appearance_section:6
+msgid "info.wiki-title"
+msgstr "This is the title of your workspace. It may be changed later if you want."
+
+#: share/skin/s3/template/element/main_nav/subnav/workspaces:4
+msgid "info.wikis"
+msgstr "...lists the workspaces you belong to. You must be logged in to see your list."
+
+#. (no_role_in_group.size)
+#: share/skin/s3/template/element/settings/users_invited_section:14 share/skin/s3/template/element/settings/users_invited_section:5
+msgid "invite.added-to-groups=users:"
+msgstr "The following %*(%1,user was,users were) invited to the following Groups:"
+
+#. (users_invited.size)
+#: share/skin/s3/template/element/settings/users_invited_section:26 share/skin/s3/template/element/settings/users_invited_section:5
+msgid "invite.added-to-wiki=users:"
+msgstr "The following %*(%1,user was,users were) invited into this Workspace:"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:126 share/skin/s3/template/element/settings/users_invite_section:81
+msgid "invite.append?"
+msgstr "Append the personal message below?"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:131 share/skin/s3/template/element/settings/users_invite_section:86
+msgid "invite.click-edit"
+msgstr "If you see something you'd like to add to or change, click the \"Edit\" link at the top of each page."
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:131 share/skin/s3/template/element/settings/users_invite_section:86
+msgid "invite.edit-save"
+msgstr "Make your contributions in the text box, then click \"Save\"."
+
+#: share/skin/s3/template/element/settings/users_invite_section:70
+msgid "invite.email-template"
+msgstr "Firstname Lastname &lt;u01234@example.com&gt;"
+
+#: share/skin/s3/template/element/settings/users_invite_section:11
+msgid "invite.enter-email-list"
+msgstr "Enter a list of email addresses (one address per line) of people you would like to invite to this Workspace."
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:133 share/skin/s3/template/element/settings/users_invite_section:88
+msgid "invite.entering-text"
+msgstr "When you're entering text, just type in paragraphs."
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:24
+msgid "invite.example"
+msgstr "example"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:22 share/skin/s3/template/element/settings/users_invite_section:68
+msgid "invite.example-address"
+msgstr "your.friend@example.com"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:25
+msgid "invite.example-domain"
+msgstr "example.com"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:19 share/skin/s3/template/element/settings/users_invite_section:67
+msgid "invite.example:"
+msgstr "Example:"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:21
+msgid "invite.friend"
+msgstr "friend"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:35 share/skin/s3/template/element/settings/users_invite_section:14
+msgid "invite.group"
+msgstr "Group"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:123 share/skin/s3/template/element/settings/users_invite_section:78
+msgid "invite.include-personal-message"
+msgstr "If you wish, you can include a personal message in the invitation email. You can edit the message to say anything you want."
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:7
+msgid "invite.lookahead"
+msgstr "Enter part of a user's first or last name, or email address."
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:135 share/skin/s3/template/element/settings/users_invite_section:90
+msgid "invite.make-wikilink"
+msgstr "To make a link to another page (even if it doesn't exist yet), put square brackets around a word or phrase."
+
+#: share/skin/s3/template/view/settings:33
+msgid "invite.new-users"
+msgstr "Invite New Users"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:133 share/skin/s3/template/element/settings/users_invite_section:88
+msgid "invite.no-worries"
+msgstr "And don't worry about breaking anything - previous versions of the page are saved, so there's always a backup copy of the page you're working on."
+
+#: share/skin/s3/template/element/settings/users_invite_section:7
+msgid "invite.other-users"
+msgstr "Invite Other Users"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:122 share/skin/s3/template/element/settings/users_invite_section:77
+msgid "invite.personal-message"
+msgstr "Personal Message"
+
+#. (users_invited.size)
+#: share/skin/s3/template/element/settings/users_invited_section:30 share/skin/s3/template/element/settings/users_invited_section:5
+msgid "invite.request-sent=users:"
+msgstr "Your request to invite the following %*(%1,user) has been sent:"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:6
+msgid "invite.search-users"
+msgstr "Search for Users to Invite"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:61 share/skin/s3/template/element/settings/users_invite_section:42
+msgid "invite.to-groups"
+msgstr "Invite users to selected group(s)"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:129 share/skin/s3/template/element/settings/users_invite_section:84
+msgid "invite.using-wiki"
+msgstr "The Workspace is easy to use. Click links to browse through the pages."
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:141 share/skin/s3/template/element/settings/users_invite_section:96
+msgid "invite.welcome-email:"
+msgstr "New users will be sent the following welcome email:"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:140 share/skin/s3/template/element/settings/users_invite_section:95
+msgid "invite.welcome-message"
+msgstr "Standard Welcome Message"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:20
+msgid "invite.your"
+msgstr "your"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:147 share/skin/s3/template/element/settings/users_invite_search_section:153 share/skin/s3/template/element/settings/users_invite_section:102 share/skin/s3/template/element/settings/users_invite_section:108
+msgid "invite.your-personal-message"
+msgstr "<Your personal message goes here.>"
+
+#: share/skin/s3/javascript/template/like-indicator.tt2:7
+msgid "like.all-people"
+msgstr "All People"
+
+#: share/skin/s3/javascript/like-indicator.js:137
+msgid "like.like=count"
+msgstr "%quant(%1,like)"
+
+#: share/skin/s3/javascript/like-indicator.js:157
+msgid "like.liked-this.page.not-you=followed"
+msgstr "%quant(%1,person you follow has liked this page,people you follow have liked this page,None of the people you follow have liked this page)."
+
+#: share/skin/s3/javascript/like-indicator.js:160
+msgid "like.liked-this.page.not-you=others"
+msgstr "%quant(%1,person has liked this page,people have liked this page,Nobody has liked this page yet)."
+
+#: share/skin/s3/javascript/like-indicator.js:149
+msgid "like.liked-this.page.only-you"
+msgstr "Only you have liked this page."
+
+#: share/skin/s3/javascript/like-indicator.js:149
+msgid "like.liked-this.page.you=followed"
+msgstr "You and %quant(%1,person you follow,people you follow) have liked this page."
+
+#: share/skin/s3/javascript/like-indicator.js:152
+msgid "like.liked-this.page.you=others"
+msgstr "You and %quant(%1,other person,other people) have liked this page."
+
+#: share/skin/s3/javascript/like-indicator.js:157
+msgid "like.liked-this.revision.not-you=followed"
+msgstr "%quant(%1,person you follow has liked this revision,people you follow have liked this revision,None of the people you follow have liked this revision)."
+
+#: share/skin/s3/javascript/like-indicator.js:160
+msgid "like.liked-this.revision.not-you=others"
+msgstr "%quant(%1,person has liked this revision,people have liked this revision,Nobody has liked this revision yet)."
+
+#: share/skin/s3/javascript/like-indicator.js:149
+msgid "like.liked-this.revision.only-you"
+msgstr "Only you have liked this revision."
+
+#: share/skin/s3/javascript/like-indicator.js:149
+msgid "like.liked-this.revision.you=followed"
+msgstr "You and %quant(%1,person you follow,people you follow) have liked this revision."
+
+#: share/skin/s3/javascript/like-indicator.js:152
+msgid "like.liked-this.revision.you=others"
+msgstr "You and %quant(%1,other person,other people) have liked this revision."
+
+#: share/skin/s3/javascript/like-indicator.js:157
+msgid "like.liked-this.signal.not-you=followed"
+msgstr "%quant(%1,person you follow has liked this signal,people you follow have liked this signal,None of the people you follow have liked this signal)."
+
+#: share/skin/s3/javascript/like-indicator.js:160
+msgid "like.liked-this.signal.not-you=others"
+msgstr "%quant(%1,person has liked this signal,people have liked this signal,Nobody has liked this signal yet)."
+
+#: share/skin/s3/javascript/like-indicator.js:149
+msgid "like.liked-this.signal.only-you"
+msgstr "Only you have liked this signal."
+
+#: share/skin/s3/javascript/like-indicator.js:149
+msgid "like.liked-this.signal.you=followed"
+msgstr "You and %quant(%1,person you follow,people you follow) have liked this signal."
+
+#: share/skin/s3/javascript/like-indicator.js:152
+msgid "like.liked-this.signal.you=others"
+msgstr "You and %quant(%1,other person,other people) have liked this signal."
+
+#: share/skin/s3/javascript/template/like-indicator.tt2:30
+msgid "like.page:"
+msgstr "page:"
+
+#: share/skin/s3/javascript/template/like-indicator.tt2:6
+msgid "like.people-i-follow"
+msgstr "People I Follow"
+
+#: share/skin/s3/template/lite/paging.html:4 share/skin/s3/template/lite/paging.html:6 share/skin/s3/template/lite/paging.html:8
+msgid "lite.first-page"
+msgstr "First page"
+
+#: share/skin/s3/template/lite/paging.html:17 share/skin/s3/template/lite/paging.html:19
+msgid "lite.next-page"
+msgstr "Next page"
+
+#: share/skin/s3/template/lite/paging.html:12 share/skin/s3/template/lite/paging.html:14
+msgid "lite.previous-page"
+msgstr "Previous page"
+
+#: share/skin/s3/template/view/settings:80
+msgid "loc.language"
+msgstr "Language"
+
+#: share/skin/s3/template/element/settings/language_settings_section:5 share/skin/s3/template/view/settings:82
+msgid "loc.settings"
+msgstr "Language Settings"
+
+#: share/skin/s3/template/lite/login/nologin.html:6
+msgid "login.is-disabled"
+msgstr "Login is Disabled"
+
+#: share/skin/s3/template/lite/login/login.html:6
+msgid "login.title"
+msgstr "Socialtext Login"
+
+#: share/skin/s3/javascript/lookahead.js:269
+msgid "lookahead.all-results"
+msgstr "Show all results..."
+
+#: share/skin/s3/template/lite/globalnav.html:44 share/skin/s3/template/lite/globalnav.html:46
+msgid "nav.activity"
+msgstr "Activity"
+
+#: share/skin/s3/template/lite/event_list_nav.html:30 share/skin/s3/template/lite/event_list_nav.html:32
+msgid "nav.all"
+msgstr "All"
+
+#: share/skin/s3/template/layout/html:179 share/skin/s3/template/layout/user_frame:184
+msgid "nav.community"
+msgstr "Community"
+
+#: share/skin/s3/template/layout/html:88 share/skin/s3/template/layout/user_frame:93
+msgid "nav.control-panel"
+msgstr "Control Panel"
+
+#: share/skin/s3/template/lite/event_list_nav.html:38 share/skin/s3/template/lite/event_list_nav.html:40
+msgid "nav.conversations"
+msgstr "My Conversations"
+
+#: share/skin/s3/template/view/listview:24
+msgid "nav.create-pdf"
+msgstr "Create PDF document from checked pages"
+
+#: share/skin/s3/template/view/listview:26
+msgid "nav.create-word"
+msgstr "Create Word document from checked pages"
+
+#: share/skin/s3/template/view/weblog:64 share/skin/s3/template/view/weblog:67
+msgid "nav.created-by"
+msgstr "Created by"
+
+#: share/skin/s3/template/element/main_nav/standard:3
+msgid "nav.dashboard"
+msgstr "Dashboard"
+
+#: share/skin/s3/javascript/template/nav-list.tt2:12
+msgid "nav.default"
+msgstr "Default"
+
+#: share/skin/s3/template/layout/html:8 share/skin/s3/template/layout/user_frame:13
+msgid "nav.desktop"
+msgstr "Desktop"
+
+#: share/skin/s3/javascript/lightbox/simple.js:25 share/skin/s3/template/view/error:3 share/skin/s3/template/view/error:7
+msgid "nav.error"
+msgstr "Error"
+
+#: share/skin/s3/template/element/listview_account_filter:3
+msgid "nav.filter:"
+msgstr "Filter By:"
+
+#: share/skin/s3/template/view/paging:5 share/skin/s3/template/view/paging:8
+msgid "nav.first"
+msgstr "First"
+
+#: share/skin/s3/template/view/paging:8
+msgid "nav.first-page"
+msgstr "First Page"
+
+#: share/skin/s3/template/lite/event_list_nav.html:46 share/skin/s3/template/lite/event_list_nav.html:48
+msgid "nav.following"
+msgstr "People I follow"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:37 share/skin/s3/template/element/settings/users_invite_section:16 share/skin/s3/template/element/settings/users_listall_section:72
+msgid "nav.groups"
+msgstr "Groups"
+
+#: share/skin/s3/template/layout/html:193 share/skin/s3/template/layout/html:90 share/skin/s3/template/layout/user_frame:198 share/skin/s3/template/layout/user_frame:95
+msgid "nav.help"
+msgstr "Help"
+
+#: share/skin/s3/javascript/s3.js:346 share/skin/s3/template/view/page/display:131
+msgid "nav.hide"
+msgstr "hide"
+
+#: share/skin/s3/template/element/main_nav/subnav/history:2
+msgid "nav.history"
+msgstr "My History"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:105 share/skin/s3/template/element/settings/users_invite_search_section:79 share/skin/s3/template/element/settings/users_invite_section:3
+msgid "nav.invite"
+msgstr "Invite"
+
+#: share/skin/s3/template/element/main_nav/subnav/invite:2
+msgid "nav.invite!"
+msgstr "Invite!"
+
+#: share/skin/s3/template/view/paging:24 share/skin/s3/template/view/paging:27
+msgid "nav.last"
+msgstr "Last"
+
+#: share/skin/s3/template/view/paging:27
+msgid "nav.last-page"
+msgstr "Last Page"
+
+#: share/skin/s3/template/layout/html:196 share/skin/s3/template/layout/html:201 share/skin/s3/template/layout/html:93 share/skin/s3/template/layout/html:96 share/skin/s3/template/layout/user_frame:101 share/skin/s3/template/layout/user_frame:201 share/skin/s3/template/layout/user_frame:206 share/skin/s3/template/layout/user_frame:98 share/skin/s3/template/lite/globalnav.html:12 share/skin/s3/template/lite/globalnav.html:14
+msgid "nav.login"
+msgstr "Log in"
+
+#: share/skin/s3/template/layout/html:204 share/skin/s3/template/layout/html:99 share/skin/s3/template/layout/user_frame:104 share/skin/s3/template/layout/user_frame:209 share/skin/s3/template/lite/globalnav.html:22 share/skin/s3/template/view/workspace_list:19
+msgid "nav.logout"
+msgstr "Log out"
+
+#: share/skin/s3/template/lite/login/login.html:12
+msgid "nav.lost-password"
+msgstr "I don't know my password."
+
+#: share/skin/s3/template/lite/event_list_nav.html:22 share/skin/s3/template/lite/event_list_nav.html:24
+msgid "nav.mine"
+msgstr "Mine"
+
+#: share/skin/s3/template/layout/html:187 share/skin/s3/template/layout/html:81 share/skin/s3/template/layout/user_frame:192 share/skin/s3/template/layout/user_frame:86
+msgid "nav.mobile"
+msgstr "Mobile"
+
+#: share/skin/s3/template/element/main_nav/subnav/history:4
+msgid "nav.my-recently-viewed"
+msgstr "All My Recently Viewed"
+
+#: share/skin/s3/template/view/settings:29
+msgid "nav.my-settings"
+msgstr "My Settings"
+
+#: share/skin/s3/template/layout/html:144 share/skin/s3/template/layout/user_frame:149
+msgid "nav.my-watchlist"
+msgstr "My Watchlist"
+
+#: share/skin/s3/template/lite/workspace_list/my_workspaces:5 share/skin/s3/template/view/settings:41
+msgid "nav.my-wikis"
+msgstr "My Workspaces"
+
+#: share/skin/s3/template/element/listview_tabs:5 share/skin/s3/template/layout/html:142 share/skin/s3/template/layout/user_frame:147 share/skin/s3/template/lite/subnav.html:14 share/skin/s3/template/lite/subnav.html:16 share/skin/s3/template/view/empty_watchlist:8 share/skin/s3/template/view/page/display:224
+msgid "nav.news"
+msgstr "What's New"
+
+#: share/skin/s3/template/view/paging:23 share/skin/s3/template/view/paging:26
+msgid "nav.next"
+msgstr "Next"
+
+#: share/skin/s3/template/view/paging:26
+msgid "nav.next-page"
+msgstr "Next Page"
+
+#: share/skin/s3/javascript/nav-list.js:80
+msgid "nav.no-followers"
+msgstr "Currently, you are not following any people."
+
+#: share/skin/s3/template/element/main_nav/subnav/workspaces:27
+msgid "nav.no-wikis"
+msgstr "Currently, you are not a member of any workspaces."
+
+#: share/skin/s3/template/view/paging:17
+msgid "nav.page"
+msgstr "Page"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:38
+msgid "nav.page-locking"
+msgstr "Page Locking"
+
+#: share/skin/s3/template/element/main_nav/subnav/people:3
+msgid "nav.people"
+msgstr "People"
+
+#: share/skin/s3/javascript/nav-list.js:71
+msgid "nav.people-directory"
+msgstr "People Directory"
+
+#: share/skin/s3/template/element/settings/preferences_settings_section:5 share/skin/s3/template/view/settings:72
+msgid "nav.preferences"
+msgstr "Preferences"
+
+#: share/skin/s3/template/view/paging:6 share/skin/s3/template/view/paging:9
+msgid "nav.previous"
+msgstr "Previous"
+
+#: share/skin/s3/template/view/paging:9
+msgid "nav.previous-page"
+msgstr "Previous Page"
+
+#: share/skin/s3/template/lite/event_list_nav.html:4
+msgid "nav.recent-activities"
+msgstr "Recent Activities"
+
+#: share/skin/s3/template/lite/changes/changes.html:5 share/skin/s3/template/view/weblog:20
+msgid "nav.recent-changes"
+msgstr "Recent Changes"
+
+#: share/skin/s3/template/element/listview_tabs:7 share/skin/s3/template/view/empty_watchlist:9 share/skin/s3/template/view/page/display:241
+msgid "nav.recently-viewed"
+msgstr "Recently Viewed"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:3 share/skin/s3/template/lite/search/search.html:12 share/skin/s3/template/lite/subnav.html:28 share/skin/s3/template/lite/subnav.html:30
+msgid "nav.search"
+msgstr "Search"
+
+#. (ws.title)
+#: share/skin/s3/template/lite/search/search.html:4
+msgid "nav.search=wiki"
+msgstr "Search %1"
+
+#: share/skin/s3/template/view/page_revision_list:42
+msgid "nav.select"
+msgstr "Select"
+
+#: share/skin/s3/template/layout/html:192 share/skin/s3/template/layout/html:86 share/skin/s3/template/layout/user_frame:197 share/skin/s3/template/layout/user_frame:91 share/skin/s3/template/view/settings:22
+msgid "nav.settings"
+msgstr "Settings"
+
+#: share/skin/s3/javascript/s3.js:346 share/skin/s3/template/view/page/display:131
+msgid "nav.show"
+msgstr "show"
+
+#: share/skin/s3/template/view/listview:79
+msgid "nav.show:"
+msgstr "Show:"
+
+#: share/skin/s3/template/element/main_nav/subnav/signals:3
+msgid "nav.signals"
+msgstr "Signals"
+
+#: share/skin/s3/template/layout/html:74 share/skin/s3/template/layout/user_frame:79
+msgid "nav.socialtext"
+msgstr "Socialtext"
+
+#: share/skin/s3/template/element/main_nav/subnav/people:8
+msgid "nav.socialtext-people"
+msgstr "Socialtext People"
+
+#: share/skin/s3/template/element/main_nav/subnav/signals:8
+msgid "nav.socialtext-signals"
+msgstr "Socialtext Signals"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:76
+msgid "nav.socialtext-unplugged"
+msgstr "Socialtext Unplugged"
+
+#: share/skin/s3/template/view/listview:154
+msgid "nav.summary"
+msgstr "Edit summary"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:99
+msgid "nav.toggle-all"
+msgstr "Select/Deselect All"
+
+#: share/skin/s3/template/view/page/display:81
+msgid "nav.tools"
+msgstr "Tools"
+
+#: share/skin/s3/template/element/main_nav/subnav/people:9
+msgid "nav.try-people"
+msgstr "Try Socialtext People"
+
+#: share/skin/s3/template/element/main_nav/subnav/signals:9
+msgid "nav.try-signals"
+msgstr "Try Socialtext Signals"
+
+#: share/skin/s3/template/view/attachmentslist:32
+msgid "nav.uploaded-date"
+msgstr "Date Uploaded"
+
+#: share/skin/s3/template/element/listview_tabs:16 share/skin/s3/template/view/empty_watchlist:17
+msgid "nav.view:"
+msgstr "View:"
+
+#: share/skin/s3/template/layout/html:134 share/skin/s3/template/layout/user_frame:139
+msgid "nav.wiki"
+msgstr "Workspace"
+
+#: share/skin/s3/template/element/main_nav/subnav/workspaces:1 share/skin/s3/template/element/settings/workspaces_listall_section:4 share/skin/s3/template/lite/globalnav.html:60 share/skin/s3/template/lite/globalnav.html:62 share/skin/s3/template/view/settings:39
+msgid "nav.wikis"
+msgstr "Workspaces"
+
+#: share/skin/s3/template/view/page/display:183
+msgid "page.add-tag"
+msgstr "&nbsp;+"
+
+#: share/skin/s3/template/element/listview_tabs:18 share/skin/s3/template/view/empty_watchlist:19
+msgid "page.all"
+msgstr "All Pages"
+
+#. (escaped_str)
+#: share/skin/s3/template/lite/changes/changes.html:15
+msgid "page.all=wiki"
+msgstr "All Pages in %1"
+
+#. (type)
+#: share/skin/s3/template/view/page_locked:19
+msgid "page.back=type"
+msgstr "Click here to return to the %1."
+
+#. (page.uri)
+#: share/skin/s3/template/lite/page/page_locked.html:6
+msgid "page.back=uri"
+msgstr "Click <a href=\"%1\">here</a> to return to the page."
+
+#: share/skin/s3/javascript/lightbox/create_content.tt2:23
+msgid "page.blank"
+msgstr "Blank"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:22
+msgid "page.bottom"
+msgstr "Bottom of page"
+
+#: share/skin/s3/template/element/page/display/comment-button:6 share/skin/s3/template/view/weblog:73
+msgid "page.comment"
+msgstr "Comment"
+
+#: share/skin/s3/template/view/page/display:88
+msgid "page.copy"
+msgstr "Copy Page to Workspace"
+
+#. (page_title)
+#: share/skin/s3/javascript/lightbox/copy.tt2:8
+msgid "page.copy=title?"
+msgstr "Copy the page %1 to another workspace?"
+
+#. (page.revisions)
+#: share/skin/s3/template/view/page/display:295
+msgid "page.count=revision"
+msgstr "%*(%1,revision)"
+
+#. (page.views)
+#: share/skin/s3/template/view/page/display:296
+msgid "page.count=view"
+msgstr "%*(%1,view)"
+
+#: share/skin/s3/javascript/lightbox/create_content.tt2:4
+msgid "page.create"
+msgstr "Create Content"
+
+#. (create_author, create_date)
+#: share/skin/s3/template/view/page/display:289
+msgid "page.created=author,date"
+msgstr "Created by %1 on %2."
+
+#: share/skin/s3/template/view/listview:158
+msgid "page.creator"
+msgstr "Originally <strong>created</strong> by"
+
+#: share/skin/s3/javascript/lightbox/delete.tt2:7 share/skin/s3/template/view/page/display:91
+msgid "page.delete"
+msgstr "Delete Page"
+
+#: share/skin/s3/template/view/page/delete_epilogue:17
+msgid "page.delete-epilogue"
+msgstr "Did you delete this page in error? If so, you can restore the page."
+
+#: share/skin/s3/javascript/pageview.js:160 share/skin/s3/javascript/pageview.js:161 share/skin/s3/template/view/page/display:161 share/skin/s3/template/view/page/display:163
+msgid "page.delete-tag"
+msgstr "Delete this tag"
+
+#. (page_title)
+#: share/skin/s3/javascript/lightbox/delete.tt2:12
+msgid "page.delete=title?"
+msgstr "Are you sure you want to delete \"%1\"?"
+
+#. (revision)
+#: share/skin/s3/template/view/page_revision_list:116
+msgid "page.deleted=revision"
+msgstr "Deleted: Revision %1"
+
+#: share/skin/s3/template/view/page/display:84
+msgid "page.duplicate"
+msgstr "Duplicate Page"
+
+#. (Socialtext.page_title)
+#: share/skin/s3/javascript/lightbox/duplicate.js:12
+msgid "page.duplicate=title"
+msgstr "Duplicate of %1"
+
+#: share/skin/s3/template/element/page/display/edit-button:13 share/skin/s3/template/element/page/display/edit-button:7 share/skin/s3/template/lite/subnav.html:40 share/skin/s3/template/view/weblog:98
+msgid "page.edit"
+msgstr "Edit"
+
+#. (page.title)
+#: share/skin/s3/template/lite/page/edit.html:2
+msgid "page.edit=title"
+msgstr "Edit %1"
+
+#. (ago_text(page.edit_in_progress.minutes_ago)
+#. (ago_text(page.edit_in_progress.minutes_ago))
+#: share/skin/s3/template/view/page/display:142
+msgid "page.editing=ago"
+msgstr "opened this page for editing %1."
+
+#: share/skin/s3/template/view/page/display:105 share/skin/s3/template/view/page/display:107
+msgid "page.email-to-this"
+msgstr "Email To This Page"
+
+#: share/skin/s3/template/lite/page/display.html:49
+msgid "page.files:"
+msgstr "Attachments for this page:"
+
+#: share/skin/s3/template/view/page/display:203
+msgid "page.incoming-links"
+msgstr "Incoming Links"
+
+#: share/skin/s3/template/lite/page/page_locked.html:5 share/skin/s3/template/view/page/display:28
+msgid "page.is-locked"
+msgstr "This page is locked and can only be edited by a workspace administrator."
+
+#: share/skin/s3/template/element/page/display/edit-button:18 share/skin/s3/template/lite/subnav.html:42
+msgid "page.join-to-edit"
+msgstr "Join to edit"
+
+#: share/skin/s3/template/element/page/display/edit-button:18
+msgid "page.join-to-edit!"
+msgstr "Join now to edit this page!"
+
+#: share/skin/s3/template/view/listview:160
+msgid "page.last-updated"
+msgstr "Last <strong>updated</strong> by"
+
+#. (time, author)
+#: share/skin/s3/template/lite/page/display.html:46
+msgid "page.last-updated=time,author"
+msgstr "Page Last Updated: %1 by %2"
+
+#. (type)
+#: share/skin/s3/template/view/edit_contention:16
+msgid "page.latest=type"
+msgstr "Click here to go to the latest version of the %1."
+
+#. (page.uri)
+#: share/skin/s3/template/lite/page/contention.html:6
+msgid "page.latest=uri"
+msgstr "Click <a href=\"%1\">here</a> to go to the latest version of the page."
+
+#: share/skin/s3/template/view/page/display:96
+msgid "page.lock"
+msgstr "Lock Page"
+
+#. (type)
+#: share/skin/s3/template/view/page_locked:15
+msgid "page.locked=type"
+msgstr "An administrator has locked this %1 since you opened it for editing. You will not be able to save it."
+
+#: share/skin/s3/template/layout/html:154 share/skin/s3/template/layout/user_frame:159
+msgid "page.new"
+msgstr "New Page"
+
+#: share/skin/s3/javascript/lightbox/copy.tt2:19 share/skin/s3/javascript/lightbox/duplicate.tt2:13 share/skin/s3/javascript/lightbox/rename.tt2:11
+msgid "page.new-name"
+msgstr "New page name"
+
+#: share/skin/s3/template/view/page/display:212
+msgid "page.no-backlinks"
+msgstr "There are no pages that link to this page yet."
+
+#: share/skin/s3/javascript/pageview.js:173 share/skin/s3/template/view/page/display:169
+msgid "page.no-tags"
+msgstr "There are no tags for this page."
+
+#. (user_link, time_ago)
+#: share/skin/s3/javascript/lightbox/edit_check.tt2:4
+msgid "page.opened-for-edit=user,ago"
+msgstr "%1 has opened this page for editing %2."
+
+#: share/skin/s3/template/element/listview_tabs:11 share/skin/s3/template/view/empty_watchlist:13
+msgid "page.orphaned"
+msgstr "Orphaned Pages"
+
+#: share/skin/s3/template/view/page/display:77
+msgid "page.print"
+msgstr "Print this page"
+
+#: share/skin/s3/javascript/lightbox/create_content.js:166
+msgid "page.prompt-name"
+msgstr "Start typing a page name..."
+
+#: share/skin/s3/template/view/page/display:85
+msgid "page.rename"
+msgstr "Rename Page"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:28
+msgid "page.replace"
+msgstr "Replace existing page"
+
+#: share/skin/s3/template/view/page/delete_epilogue:26
+msgid "page.restore"
+msgstr "Restore Page"
+
+#. (human_readable_revision)
+#: share/skin/s3/template/view/page/revision:41
+msgid "page.restore=revision"
+msgstr "Restore Revision %1"
+
+#: share/skin/s3/template/view/page_revision_list:43
+msgid "page.revision"
+msgstr "Revision"
+
+#. (revision)
+#: share/skin/s3/template/view/page_revision_list:119
+msgid "page.revision=revision"
+msgstr "Revision %1"
+
+#. (row.revision_count)
+#. (page.revisions)
+#. (data.revision_count)
+#: share/skin/s3/javascript/pageview.js:96 share/skin/s3/template/view/listview:161 share/skin/s3/template/view/page/display:63
+msgid "page.revisions=count"
+msgstr "%*(%1,Revision)"
+
+#: share/skin/s3/template/view/page/display:69
+msgid "page.signal-this!"
+msgstr "Signal This!"
+
+#: share/skin/s3/template/view/listview:82 share/skin/s3/template/view/listview:85
+msgid "page.summaries"
+msgstr "Summaries"
+
+#: share/skin/s3/template/view/attachmentslist:30
+msgid "page.title"
+msgstr "Page Title"
+
+#: share/skin/s3/template/view/listview:81 share/skin/s3/template/view/listview:84
+msgid "page.titles"
+msgstr "Titles"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:16
+msgid "page.top"
+msgstr "Top of page"
+
+msgid "page.type-spreadsheet"
+msgstr "Spreadsheet"
+
+#: share/skin/s3/javascript/lightbox/create_content.js:9
+msgid "page.type-wiki"
+msgstr "Page"
+
+#: share/skin/s3/template/view/page/display:96
+msgid "page.unlock"
+msgstr "Unlock Page"
+
+#: share/skin/s3/javascript/s3.js:1073 share/skin/s3/javascript/s3.js:15
+msgid "page.untitled"
+msgstr "Untitled Page"
+
+#. (update_author, update_date)
+#: share/skin/s3/template/view/page/display:292
+msgid "page.updated=user,date"
+msgstr "Updated by %1 on %2."
+
+#: share/skin/s3/javascript/lightbox/create_content.tt2:29
+msgid "page.use-template:"
+msgstr "Use a template:"
+
+#: share/skin/s3/template/element/settings/users_settings_section:58
+msgid "password.again:"
+msgstr "Type new Password again:"
+
+#: share/skin/s3/template/element/settings/users_settings_section:40
+msgid "password.change"
+msgstr "Change Password"
+
+#: share/skin/s3/template/element/settings/users_settings_section:46
+msgid "password.current:"
+msgstr "Current password:"
+
+#: share/skin/s3/template/element/settings/users_settings_section:42
+msgid "password.minimum-length"
+msgstr "New passwords must be at least 6 characters long."
+
+#: share/skin/s3/template/element/settings/users_settings_section:52
+msgid "password.new:"
+msgstr "New password:"
+
+#: share/skin/s3/template/element/settings/users_listall_section:29
+msgid "password.reset"
+msgstr "Reset Password"
+
+#: share/skin/s3/template/view/weblog:53 share/skin/s3/template/view/weblog:55
+msgid "post.by"
+msgstr "Posted by"
+
+#: share/skin/s3/template/element/category_display/action_post_by_email:3
+msgid "post.by-email:"
+msgstr "Post to this tag by email:"
+
+#: share/skin/s3/template/view/weblog:33
+msgid "post.new"
+msgstr "New Post"
+
+#: share/skin/s3/template/view/page/revision:21 share/skin/s3/template/view/page/revision_compare:21
+msgid "revision.all"
+msgstr "All Revisions"
+
+#. (display_title)
+#: share/skin/s3/template/view/page_revision_list:5
+msgid "revision.all=page"
+msgstr "%1: All Revisions"
+
+#: share/skin/s3/template/view/page/revision_compare:66
+msgid "revision.begin-quote"
+msgstr "saying \""
+
+#: share/skin/s3/template/view/page/revision_compare:63
+msgid "revision.by:"
+msgstr "By:"
+
+#: share/skin/s3/template/view/page/revision_compare:32
+msgid "revision.color"
+msgstr "Color View (Unformatted)"
+
+#: share/skin/s3/template/view/page/revision_compare:49
+msgid "revision.compare"
+msgstr "Revision Compare"
+
+#: share/skin/s3/template/view/page/revision:11 share/skin/s3/template/view/page/revision_compare:11 share/skin/s3/template/view/page_revision_list:26
+msgid "revision.current"
+msgstr "Back To Current Revision"
+
+#: share/skin/s3/template/view/page_revision_list:45
+msgid "revision.date"
+msgstr "Date"
+
+#: share/skin/s3/template/view/page_revision_list:44
+msgid "revision.edited-by"
+msgstr "Edited By"
+
+#: share/skin/s3/template/view/page/revision_compare:66
+msgid "revision.end-quote"
+msgstr "\""
+
+#: share/skin/s3/template/view/page/revision:26
+msgid "revision.next"
+msgstr "Next Revision"
+
+#: share/skin/s3/template/view/page/revision_compare:26
+msgid "revision.next-compare"
+msgstr "Next Compare"
+
+#: share/skin/s3/template/view/page/revision:32
+msgid "revision.normal-view"
+msgstr "Normal View"
+
+#: share/skin/s3/template/view/page/revision:16
+msgid "revision.previous"
+msgstr "Previous Revision"
+
+#: share/skin/s3/template/view/page/revision_compare:16
+msgid "revision.previous-compare"
+msgstr "Previous Compare"
+
+#. (edit_summary)
+#: share/skin/s3/template/view/page/revision:62
+msgid "revision.quote=summary"
+msgstr "\"%1\""
+
+#: share/skin/s3/template/view/page_revision_list:46
+msgid "revision.summary"
+msgstr "Edit Summary"
+
+#: share/skin/s3/template/view/page/revision:60 share/skin/s3/template/view/page/revision_compare:60
+msgid "revision.tags:"
+msgstr "Tags:"
+
+#: share/skin/s3/template/view/page/revision_compare:34
+msgid "revision.view"
+msgstr "View Formatted"
+
+#: share/skin/s3/template/view/listview:44 share/skin/s3/template/view/listview:57
+msgid "search.be-more-specific"
+msgstr "Please use more specific words or add more search terms."
+
+#: share/skin/s3/template/lite/search/search.html:15
+msgid "search.error:"
+msgstr "Error:"
+
+#. (appconfig.search_warning_threshold)
+#: share/skin/s3/template/view/listview:41
+msgid "search.limit=count"
+msgstr "Searches are limited to %1 results."
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:111
+msgid "search.no-results"
+msgstr "Your search returned no results."
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:73
+msgid "search.results"
+msgstr "Search Results"
+
+#: share/skin/s3/template/view/listview:54
+msgid "search.too-general"
+msgstr "The search you have entered is too general."
+
+#. (too_many)
+#: share/skin/s3/template/view/listview:38
+msgid "search.too-many=count"
+msgstr "The search you have entered is too general; %1 pages and/or attachments matched your query."
+
+#: share/skin/s3/javascript/s3.js:1074 share/skin/s3/javascript/s3.js:16
+msgid "sheet.untitled"
+msgstr "Untitled Spreadsheet"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:32
+msgid "skin.browse"
+msgstr "Browse ..."
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:21
+msgid "skin.customized"
+msgstr "Customized Skin."
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:20
+msgid "skin.default"
+msgstr "Default Skin."
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:54
+msgid "skin.file"
+msgstr "File"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:47
+msgid "skin.files"
+msgstr "Customized Skin Files"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:49
+msgid "skin.remove-existing"
+msgstr "Remove&nbsp;Existing&nbsp;Files"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:31
+msgid "skin.select-file:"
+msgstr "Select the ZIP or TGZ file that contains the customized skin files:"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:18
+msgid "skin.select:"
+msgstr "Select a workspace skin:"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:55
+msgid "skin.size"
+msgstr "Size (bytes)"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:12
+msgid "skin.support"
+msgstr "Custom Skin Support"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:14
+msgid "skin.unsupported"
+msgstr "Uploaded skins are not supported. Skin upload is only for development and testing of custom skins. Contact sales@socialtext.com for information on supported custom skins."
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:56
+msgid "skin.uploaded"
+msgstr "Uploaded"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:71
+msgid "sort.by-created"
+msgstr "Sort entries by first posted time"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:65
+msgid "sort.by-updated"
+msgstr "Sort entries by last updated time"
+
+#: share/skin/s3/template/view/attachmentslist:27 share/skin/s3/template/view/listview:95
+msgid "sort.by:"
+msgstr "Sort by:"
+
+#: share/skin/s3/template/view/listview:109
+msgid "sort.created"
+msgstr "Date Created"
+
+#: share/skin/s3/template/view/listview:106
+msgid "sort.creator"
+msgstr "Created By"
+
+#: share/skin/s3/template/view/listview:108
+msgid "sort.edited"
+msgstr "Date Last Edited"
+
+#: share/skin/s3/template/view/listview:105
+msgid "sort.last-edited"
+msgstr "Last Edited By"
+
+#: share/skin/s3/template/view/listview:98
+msgid "sort.relevance"
+msgstr "Relevance"
+
+#: share/skin/s3/template/view/listview:110
+msgid "sort.revisions"
+msgstr "Revisions"
+
+#: share/skin/s3/template/view/listview:100
+msgid "sort.title"
+msgstr "Title"
+
+#: share/skin/s3/template/view/attachmentslist:31
+msgid "sort.uploader"
+msgstr "Uploaded By"
+
+#: share/skin/s3/template/view/listview:102
+msgid "sort.wiki"
+msgstr "Workspace"
+
+#: share/skin/s3/template/view/page/display:175
+msgid "tag.add"
+msgstr "Add Tag"
+
+#: share/skin/s3/template/element/listview_tabs:20 share/skin/s3/template/view/empty_watchlist:20
+msgid "tag.all"
+msgstr "All Tags"
+
+#. (ws.title)
+#: share/skin/s3/template/lite/tag/tag.html:5
+msgid "tag.all=wiki"
+msgstr "All tags"
+
+#: share/skin/s3/javascript/lightbox/copy.tt2:23 share/skin/s3/javascript/lightbox/duplicate.tt2:17 share/skin/s3/javascript/lightbox/rename.tt2:15
+msgid "tag.keep"
+msgstr "Keep tags"
+
+#: share/skin/s3/template/view/taglistview:25
+msgid "tag.pages"
+msgstr "Pages"
+
+#: share/skin/s3/template/view/page/display:192
+msgid "tag.suggestions:"
+msgstr "Suggestions:"
+
+#: share/skin/s3/javascript/lightbox/create_content.js:59
+msgid "tag.template"
+msgstr "template"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:90
+msgid "unplugged.disabled"
+msgstr "Socialtext Unplugged disabled"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:84
+msgid "unplugged.enabled"
+msgstr "Socialtext Unplugged enabled"
+
+#: share/skin/s3/template/element/settings/users_listall_section:27
+msgid "user.admin"
+msgstr "Admin"
+
+#: share/skin/s3/template/element/settings/users_settings_section:8
+msgid "user.email"
+msgstr "Email"
+
+#: share/skin/s3/template/element/settings/users_listall_section:26
+msgid "user.email-address"
+msgstr "Email Address"
+
+#: share/skin/s3/template/element/settings/users_settings_section:17 share/skin/s3/template/element/settings/users_settings_section:26
+msgid "user.first-name:"
+msgstr "First name:"
+
+#: share/skin/s3/template/element/settings/users_settings_section:13 share/skin/s3/template/element/settings/users_settings_section:34
+msgid "user.last-name:"
+msgstr "Last name:"
+
+#: share/skin/s3/template/view/settings:31
+msgid "user.list-all"
+msgstr "List All Users"
+
+#: share/skin/s3/template/element/settings/users_settings_section:21 share/skin/s3/template/element/settings/users_settings_section:30
+msgid "user.middle-name:"
+msgstr "Middle name:"
+
+#: share/skin/s3/template/element/settings/users_settings_section:6
+msgid "user.name"
+msgstr "Name"
+
+#: share/skin/s3/template/element/settings/users_listall_section:81
+msgid "user.role"
+msgstr "Role"
+
+#: share/skin/s3/template/view/empty_watchlist:42
+msgid "watch.click"
+msgstr "on a page you want to watch and then click on it to add the page to your Watchlist."
+
+#: share/skin/s3/template/view/empty_watchlist:34
+msgid "watch.current-page"
+msgstr "Pages You're Watching"
+
+#: share/skin/s3/template/element/listview_tabs:9 share/skin/s3/template/view/empty_watchlist:11
+msgid "watch.list"
+msgstr "Your Watchlist"
+
+#: share/skin/s3/template/view/empty_watchlist:37
+msgid "watch.look-for"
+msgstr "Look for"
+
+#: share/skin/s3/javascript/s3.js:941 share/skin/s3/template/view/listview:166 share/skin/s3/template/view/page/display:72
+msgid "watch.stop"
+msgstr "Stop Watching"
+
+msgid "widget.preview"
+msgstr "Preview"
+
+msgid "widget.push-all"
+msgstr "Push to all dashboards"
+
+#: share/skin/s3/template/element/main_nav/subnav/workspaces:12
+msgid "wiki.all"
+msgstr "All My Workspaces"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:31
+msgid "wiki.anyone-can-email"
+msgstr "Anyone can send email to this workspace."
+
+#: share/skin/s3/template/view/settings:56 share/skin/s3/template/workspaces_created_section.html:23
+msgid "wiki.appearance"
+msgstr "Workspace Appearance"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:54
+msgid "wiki.central-page"
+msgstr "Central page"
+
+#: share/skin/s3/template/element/settings/workspace_clone_section:6
+msgid "wiki.clone"
+msgstr "Clone Workspace"
+
+#. (workspace.title)
+#: share/skin/s3/template/element/settings/workspace_clone_section:7
+msgid "wiki.clone-and-invite-members=wiki"
+msgstr "Make a clone of the %1 workspace, including all pages, tags, and attachments. Next, you will need to invite members into the new workspace."
+
+#: share/skin/s3/template/view/settings:44
+msgid "wiki.clone-this"
+msgstr "Clone This Workspace"
+
+#. (workspace.title)
+#: share/skin/s3/template/element/settings/workspace_clone_section:16
+msgid "wiki.clone=wiki"
+msgstr "Clone of %1"
+
+#: share/skin/s3/template/element/settings/workspaces_unsubscribe_section:9
+msgid "wiki.confirm-unsubscribe"
+msgstr "Only Click the button below if you wish to be unsubscribed from this workspace. After clicking you will no longer have access to this workspace unless you are resubscribed by a Workspace administrator at a later time."
+
+#: share/skin/s3/template/element/settings/workspaces_cannot_create_section:4 share/skin/s3/template/view/settings:43 share/skin/s3/template/view/settings:46
+msgid "wiki.create"
+msgstr "Create New Workspace"
+
+#: share/skin/s3/template/workspaces_created_section.html:7
+msgid "wiki.created!"
+msgstr "Congratulations!"
+
+#: share/skin/s3/template/workspaces_created_section.html:14
+msgid "wiki.created:"
+msgstr "You're ready to jump to your new workspace, if you want to. Choose your next step:"
+
+#. (workspace.title, workspace_address)
+#: share/skin/s3/template/workspaces_created_section.html:11
+msgid "wiki.created=title,uri"
+msgstr "You have just created \"%1\", a brand new Socialtext Workspace. You are the administrator. The web address of the new workspace is %2."
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:21
+msgid "wiki.custom-permission"
+msgstr "Custom"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:45
+msgid "wiki.disable-locking"
+msgstr "Disable page locking. Any member who can edit pages can edit any page. If any pages were previously locked, those pages will be unlocked."
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:28
+msgid "wiki.email-senders?"
+msgstr "Who can send email to this workspace?"
+
+#: share/skin/s3/template/view/page/display:102
+msgid "wiki.email-to-this"
+msgstr "Email To This Workspace"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:36
+msgid "wiki.enable-email-notifications?"
+msgstr "Enable email notifications for this workspace?"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:41
+msgid "wiki.enable-page-locking"
+msgstr "Enable page locking. A workspace administrator can choose to lock any page, and only admins will be able to edit the locked page. Use carefully, since workspaces gain more participation if members can easily edit pages."
+
+#: share/skin/s3/template/view/settings:57 share/skin/s3/template/workspaces_created_section.html:24
+msgid "wiki.feature"
+msgstr "Workspace Features"
+
+#: share/skin/s3/template/element/settings/workspaces_cannot_create_section:7
+msgid "wiki.group-required"
+msgstr "In order to create a workspace, the Workspace must belong to a Group."
+
+#. (workspace.name, workspace.title)
+#: share/skin/s3/template/workspaces_created_section.html:18
+msgid "wiki.home=name,title"
+msgstr "<a href=\"/%1/\">Go to</a> the %2 home page."
+
+#: share/skin/s3/template/layout/html:148 share/skin/s3/template/layout/user_frame:153
+msgid "wiki.invite"
+msgstr "Add Members"
+
+#. (workspace.name, workspace.title)
+#: share/skin/s3/template/workspaces_created_section.html:19
+msgid "wiki.invite=name,title"
+msgstr "<a href=\"/%1/?action=users_invitation\">Invite</a> other people to %2."
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:43
+msgid "wiki.link"
+msgstr "Workspace Link"
+
+#: share/skin/s3/template/element/workspace_list/my_workspaces:5
+msgid "wiki.list:"
+msgstr "Workspaces you belong to:"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:19
+msgid "wiki.logo"
+msgstr "Workspace Logo Image"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:35
+msgid "wiki.members"
+msgstr "workspace members"
+
+#: share/skin/s3/template/element/settings/workspace_clone_section:25 share/skin/s3/template/element/settings/workspaces_create_section:19 share/skin/s3/template/element/settings/workspaces_listall_section:13
+msgid "wiki.name"
+msgstr "Workspace Name"
+
+#: share/skin/s3/javascript/lightbox/copy.tt2:14
+msgid "wiki.new"
+msgstr "New workspace"
+
+#: share/skin/s3/template/element/settings/users_listall_section:75
+msgid "wiki.no-groups"
+msgstr "There are no groups directly associated with this workspace."
+
+#: share/skin/s3/template/element/settings/users_listall_section:19
+msgid "wiki.no-members"
+msgstr "There are no users directly associated with this workspace."
+
+#. (people_role)
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:36
+msgid "wiki.only-email-from=role"
+msgstr "Only %1 can send email to this workspace."
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:13
+msgid "wiki.permission-type:"
+msgstr "Do you want to set up this workspace as:"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:6 share/skin/s3/template/view/settings:61 share/skin/s3/template/workspaces_created_section.html:25
+msgid "wiki.privacy"
+msgstr "Workspace Privacy"
+
+#: share/skin/s3/template/lite/workspace_list/public_workspaces:5
+msgid "wiki.public"
+msgstr "Public workspaces"
+
+#: share/skin/s3/template/element/workspace_list/public_workspaces:5
+msgid "wiki.public:"
+msgstr "You have free access to view and contribute to any of these public wikis:"
+
+#: share/skin/s3/template/element/search_form:23
+msgid "wiki.search-all:"
+msgstr "Search My Workspaces:"
+
+#: share/skin/s3/template/element/search_form:14 share/skin/s3/template/element/search_form:21
+msgid "wiki.search:"
+msgstr "Search This Workspace:"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:35
+msgid "wiki.send-email-notifications?"
+msgstr "Should users of this workspace receive email notifications of changes to this workspace?"
+
+#. (invitation_filter)
+#: share/skin/s3/template/element/settings/users_invite_search_section:14 share/skin/s3/template/element/settings/users_invite_section:62
+msgid "wiki.set=filter"
+msgstr "A filter has been set on this workspace. All candidate email addresses must match this pattern: <span style=\"color: red\"> %1 </span>"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:6 share/skin/s3/template/view/settings:59
+msgid "wiki.skin"
+msgstr "Workspace Skin"
+
+#: share/skin/s3/template/view/taglistview:24
+msgid "wiki.tag"
+msgstr "Tag"
+
+#. (escaped_str)
+#: share/skin/s3/template/lite/tag/tag.html:15
+msgid "wiki.tag=tag"
+msgstr "Tag: %1"
+
+#: share/skin/s3/template/lite/subnav.html:21 share/skin/s3/template/lite/subnav.html:23 share/skin/s3/template/view/page/display:153
+msgid "wiki.tags"
+msgstr "Tags"
+
+#: share/skin/s3/template/element/settings/workspace_clone_section:11 share/skin/s3/template/element/settings/workspaces_create_section:5 share/skin/s3/template/element/settings/workspaces_listall_section:10 share/skin/s3/template/element/settings/workspaces_settings_appearance_section:5
+msgid "wiki.title"
+msgstr "Workspace Title"
+
+#: share/skin/s3/template/element/settings/workspaces_cannot_create_section:15
+msgid "wiki.to-existing-group"
+msgstr "<em>To add a workspace to an <strong>existing group,</strong></em> go to the <a href=\"/st/groups\">\"Group Directory\"</a> under the Groups pulldown in the main navigation above, go to your chosen group, click \"Edit\" and create the workspace."
+
+#: share/skin/s3/template/element/settings/workspaces_cannot_create_section:19
+msgid "wiki.to-new-group"
+msgstr "<em>To add a workspace to a <strong>new group,</strong></em> go to <a href=\"#\" onclick=\"showCreateGroupLightbox(); return false\">\"Create Group\"</a> under the Groups pulldown in the main navigation above. From there, use the \"Workspaces\" section to create your workspace."
+
+#. (workspace.title)
+#: share/skin/s3/template/workspaces_created_section.html:31
+msgid "wiki.visit-later=wiki"
+msgstr "Or you may continue to work in this workspace, and visit \"%1\" later."

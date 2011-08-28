@@ -1,0 +1,17 @@
+* Fixture: SocialRest
+
+# Make sure user is logged out
+| http-user-pass |
+
+# Setup Challenger, need to sleep because setup changes the challenger and we
+# get into a race condition if we don't.
+| sleep | 2 |
+| st-config | set challenger NoLogin |
+
+| GET | /challenge |
+| code-is | 302 |
+| header-like | Location | /nlw/nologin.html |
+
+| GET | /challenge/?/m |
+| code-is | 302 |
+| header-like | Location | /m/nologin |

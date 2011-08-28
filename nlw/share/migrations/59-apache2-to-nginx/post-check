@@ -1,0 +1,12 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+# Make sure nginx is up and running.
+my $web_proc = qx(netstat -apt | grep *:www);
+if ($web_proc =~ m/nginx/) {
+    print "Looks like nginx is running on port 80, this is good.\n";
+    exit 0;
+}
+
+print "Cannot see nginx running on port 80, something is wrong.\n";
+exit 1;

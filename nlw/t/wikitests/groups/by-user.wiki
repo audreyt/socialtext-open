@@ -1,0 +1,143 @@
+Tests for [Story: Groups ReST API]
+
+* Fixture: SocialRest
+
+| standard-test-setup |
+
+# Lookup groups for a user
+
+| GET             | /data/users/%%user_id%%/groups |             |
+| set             | main_user_id                   | %%user_id%% |
+| code-is         | 200                            |             |
+| header-like     | Cache-Control                  | private     |
+| json-parse      |                                |             |
+| json-array-size | 1                              |             |
+
+# Create a new group, and put a User in it
+
+| set               | group1_name     | group%%start_time%% |              |
+| create-group      | %%group1_name%% | %%account%%         | %%username%% |
+| set               | group1_id      | %%group_id%%        |              |
+
+| set               | dave     | dave%%start_time%%@ken.socialtext.net |
+| create-user       | %%dave%% | password                              |
+| set               | dave_id  | %%user_id%%                           |
+| add-user-to-group | %%dave%% | %%group1_id%%                         |
+
+# regular Users viewing their own data see _all_ of the Groups that they are a member of
+
+| GET-json          | /data/users/%%user_id%%/groups |                 |
+| code-is           | 200                            |                 |
+| header-like       | Cache-Control                  | private         |
+| json-parse        |                                |                 |
+| json-array-size   | 1                              |                 |
+| json-path-is      | $[0].group_id                  | %%group1_id%%   |
+| json-path-is      | $[0].name                      | %%group1_name%% |
+| json-path-is      | $[0].user_count                | 2               |
+| json-path-is      | $[0].workspace_count           | 0               |
+| json-path-missing | $[0].members                   |                 |
+
+# Create a new group, with a different user in it.
+
+| set          | group2_name     | group2%%start_time%% |              |
+| create-group | %%group2_name%% | %%account%%          | %%username%% |
+| set          | group2_id       | %%group_id%%         |              |
+
+| set               | jane     | jane%%start_time%%@ken.socialtext.net |
+| create-user       | %%jane%% | password                              |
+| set               | jane_id  | %%user_id%%                           |
+| add-user-to-group | %%jane%% | %%group2_id%%                         |
+
+# The creator should be able to see jane in the group2
+
+| GET-json          | /data/users/%%jane%%/groups |                 |
+| code-is           | 200                         |                 |
+| header-like       | Cache-Control               | private         |
+| json-parse        |                             |                 |
+| json-array-size   | 1                           |                 |
+| json-path-is      | $[0].group_id               | %%group2_id%%   |
+| json-path-is      | $[0].name                   | %%group2_name%% |
+| json-path-is      | $[0].user_count             | 2               |
+| json-path-is      | $[0].workspace_count        | 0               |
+| json-path-missing | $[0].members                |                 |
+
+## And again, with ?show_members=1
+| GET-json        | /data/users/%%jane%%/groups?show_members=1 |                 |
+| code-is         | 200                                        |                 |
+| header-like     | Cache-Control                              | private         |
+| json-parse      |                                            |                 |
+| json-array-size | 1                                          |                 |
+| json-path-is    | $[0].group_id                              | %%group2_id%%   |
+| json-path-is    | $[0].name                                  | %%group2_name%% |
+| json-path-is    | $[0].user_count                            | 2               |
+| json-path-is    | $[0].workspace_count                       | 0               |
+| json-path-is    | $[0].members[0].username                   | %%jane%%        |
+
+# Regular Users see only the Groups that they share in common with the requested User.
+# Jane should be able to see %%group2%% but *not* %%group1%% (as she's only
+# been added to %%group2%%).  As a result, Jane *can't* see Dave
+
+| http-user-pass  | %%jane%%                            | password      |
+| GET-json        | /data/users/%%main_user_id%%/groups |               |
+| code-is         | 200                                 |               |
+| header-like     | Cache-Control                       | private       |
+| json-parse      |                                     |               |
+| json-array-size | 1                                   |               |
+| json-path-is    | $[0].group_id                       | %%group2_id%% |
+
+# main user is a member of groups 1 and 2, jane should only see group 1.
+| GET-json        | /data/users/%%main_user_id%%/groups?show_members=1 |         |
+| code-is         | 200                                                |         |
+| header-like     | Cache-Control                                      | private |
+| json-parse      |                                                    |         |
+| json-array-size | 1                                                  |         |
+| json-path-is | $[0].group_id | %%group2_id%% |
+| json-path-exists | $[0].members |
+
+# Business Admin sees _any_ User's data and _all_ of the Groups the User is a member of
+| set            | badmin     | badmin%%start_time%%@ken.socialtext.net |
+| create-user    | %%badmin%% | password                                |
+| http-user-pass | %%badmin%% | password                                |
+
+# User can't see any of jane's groups.
+| GET                | /data/users/%%jane%%/groups |         |
+| header-like        | Cache-Control               | private |
+| code-is            | 200                         |         |
+| json-parse         |                             |         |
+| json-array-size    | 0                           |         |
+
+# User is now a business admin, can all jane's groups.
+| set-business-admin | %%badmin%%                  | 1               |
+| GET-json           | /data/users/%%jane%%/groups |                 |
+| code-is            | 200                         |                 |
+| header-like        | Cache-Control               | private         |
+| json-parse         |                             |                 |
+| json-array-size    | 1                           |                 |
+| json-path-is       | $[0].group_id               | %%group2_id%%   |
+| json-path-is       | $[0].name                   | %%group2_name%% |
+| json-path-is       | $[0].user_count             | 2               |
+| json-path-is       | $[0].workspace_count        | 0               |
+| json-path-missing  | $[0].members                |                 |
+
+# a user_id that doesn't exist == 404
+| GET     | /data/users/9999999/groups |
+| code-is | 404                        |
+
+# group ordering is case-insensitive alphabetical in json
+| set          | sort_user     | sort-user%%start_time%%@ken.socialtext.net |               |
+| create-user  | %%sort_user%% | password                                   |               |
+| set          | third         | bbb%%start_time%%                          |               |
+| create-group | %%third%%     |                                            | %%sort_user%% |
+| set          | second        | AAB%%start_time%%                          |               |
+| create-group | %%second%%    |                                            | %%sort_user%% |
+| set          | first         | aaa%%start_time%%                          |               |
+| create-group | %%first%%     |                                            | %%sort_user%% |
+
+| http-user-pass | %%sort_user%% | password |
+| GET-json        | /data/users/%%sort_user%%/groups |            |
+| code-is         | 200                              |            |
+| json-parse      |                                  |            |
+| json-array-size | 3                                |            |
+| json-path-is    | $[0].name                        | %%first%%  |
+| json-path-is    | $[1].name                        | %%second%% |
+| json-path-is    | $[2].name                        | %%third%%  |

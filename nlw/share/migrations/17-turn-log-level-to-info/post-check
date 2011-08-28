@@ -1,0 +1,8 @@
+#!/bin/bash -e
+
+log=$(st-config get syslog_level | awk '{print $2}');
+
+if [ $log == "debug" ]; then
+  echo "system_log is not updated. Aborting."
+  exit 1
+fi

@@ -1,0 +1,45 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_execute/;
+
+# XXX: TODO - return a '1' to skip the migration if every account already has 
+# the right field with the right type
+my $sth = sql_execute(q{
+    SELECT DISTINCT(account_id)
+      FROM profile_field AS outr
+      WHERE NOT EXISTS (
+            SELECT account_id, name
+              FROM profile_field AS innr
+             WHERE name = 'communicator_sn' AND
+                   field_class = 'contact' AND
+                   innr.account_id = outr.account_id
+       )
+      ORDER BY account_id;
+});
+
+my $nonexistings = $sth->fetchall_arrayref({});
+unless (@$nonexistings) {
+    exit 1; # there are no existing accounts without communicator_sn field
+};
+
+
+# OK, we need to check if there are existing communicator_sn fields with the
+# wrong type
+$sth = sql_execute(q{
+    SELECT account_id, name
+      FROM profile_field
+     WHERE name = 'communicator_sn'
+           AND field_class <> 'contact'
+});
+
+my $existings = $sth->fetchall_arrayref({});
+if (@$existings) {
+    my $badaccounts = join(",", map { $_->{account_id} } @$existings);
+    print "The following accounts already have the communicator_sn field, but not as an profile contact: $badaccounts. Either rename the field or change the field type to 'contact'\n";
+    exit -1;    # abort
+}
+else {
+    exit 0;     # go ahead and add where needed
+}

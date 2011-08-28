@@ -1,0 +1,62 @@
+| *Comment* | Test Case: True Microblogging |  |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: True Microblogging. use a well-known static account defined in Signals Only Setup |  |
+
+| set | wna | Well Known Account |
+| set | wnw | well-known-account |
+| set | tctmacct | TCTM%%start_time%% |
+| set | tctmauw | tctm%%start_time%% |
+
+| *Comment* | Test Case: True Microblogging No Dashboard, redirected to workspace list |  |
+| location_like | /?action=workspace_list |  |
+| text_unlike | mainNav | Dashboard |
+| text_like | mainNav | Signals |
+| text_like | mainNav | People |
+| text_like | mainNav | Groups |
+| text_like | mainNav | Workspaces |
+| text_like | Workspaces you belong to |  |
+
+| *Comment* | Test Case: True Microblogging Signals is Home |  |
+| open_ok | /nlw/submit/logout |  |
+| open_ok | / |  |
+
+| *Comment* | Test Case: True Microblogging login directly |  |
+| wait_for_text_present_ok | Log in to Socialtext | 30000 |
+| wait_for_element_visible_ok | username | 10000 |
+| wait_for_element_visible_ok | password | 10000 |
+| type_ok | username | %%username%% |
+| type_ok | password | %%password%% |
+| click_and_wait | login_btn |  |
+
+| *Comment* | Test Case: True Microblogging Signals after login |  |
+| location_like | /st/signals |  |
+| text_unlike | mainNav | Dashboard |
+| text_like | mainNav | Signals |
+| text_like | mainNav | People |
+| text_like | mainNav | Groups |
+| text_like | mainNav | Workspaces |
+| text_like | controls | Signals |
+
+| *Comment* | Test Case: True Microblogging new account got AUW automagically |  |
+| st-admin | create-account --name %%tctmacct%% | A new account named "%%tctmacct%%" was created. |
+| st-admin | add-member --u %%username%% --account %%tctmacct%% | now has the role of 'member' |
+| open-ok | /%%tctmauw%% |  |
+| wait_for_element_visible_ok | link=Settings |  |
+| click_and_wait | link=Settings |  |
+| wait_for_element_visible_ok | link=List All Users |  |
+| click_and_wait | link=List All Users |  |
+| text_like | All users from the %%tctmacct%% account are also members of this "all users" workspace. |  |
+
+| *Comment* | Test Case: True Microblogging existing account has AUW automagically |  |
+| st-admin | create-account --name "%%wna%%" | The account name you provided, "%%wna%%", is already in use. |
+| st-admin | add-member --u %%username%% --w %%wnw%% | has the role of 'member' |
+| open_ok | /%%wnw%% |  |
+| text_like | st-page-titletext | Well Known Account |
+
+| *Comment* | Test Case: True Microblogging TEARDOWN |  |
+| st-admin | remove-member --u %%username%% --w %%wnw%% |  |
+| st-admin | remove-member --u %%username%% --account %%tctmacct%% |  |
+
+| *Comment* | Test Case: True Microblogging COMPLETED |  |

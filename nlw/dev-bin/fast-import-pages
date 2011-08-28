@@ -1,0 +1,42 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use lib "$FindBin::Bin/..";
+use Test::Socialtext;
+use Socialtext::User;
+use Getopt::Long;
+use Socialtext::File;
+use Socialtext::JSON qw/decode_json/;
+
+my $workspace;
+my $from_dir;
+GetOptions(
+    'from=s'        => \$from_dir,
+    'w|workspace=s' => \$workspace,
+);
+
+my $hub = new_hub($workspace);
+load_pages_from_disk();
+exit;
+
+
+sub load_pages_from_disk {
+    my @files = glob("$from_dir/*.json");
+    for my $f (@files) {
+        my $data = decode_json(Socialtext::File::get_contents_utf8($f));
+        (my $content_file = $f) =~ s/\.json$//;
+        my $content = Socialtext::File::get_contents_utf8($content_file);
+
+        print "  Creating $data->{name}\n";
+        Socialtext::Page->new(hub => $hub)->create(
+            title => $data->{name},
+            content => $content,
+            creator => Socialtext::User->SystemUser,
+            categories => $data->{tags},
+        );
+    }
+}
+

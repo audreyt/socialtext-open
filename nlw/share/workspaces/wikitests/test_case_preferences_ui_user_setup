@@ -1,0 +1,22 @@
+| *Comment* | Test Case: Preferences UI User Setup |  |
+
+| *Comment* | START Test Case: Preferences UI User Setup |  |
+| set_default | new_account | userPrefs.%%start_time%% |
+| set_default | new_ws | userprefs-%%start_time%% |
+| set_default | new_user | userPrefs.%%start_time%%@ken.socialtext.net |
+| set_default | new_name | userPrefs %%start_time%% |
+
+| *Comment* | Test Case: Preferences UI User Setup create acct/ws/member |  |  |  |
+| create_account | %%new_account%% |  |  |  |
+| create_user | %%new_user%% | 123456 | %%new_account%% | %%new_name%% |
+| create_workspace | %%new_ws%% | %%new_account%% |  |  |
+| workspace-config | %%new_ws%% | email_notify_is_enabled | 1 |  |
+
+| *Comment* | Test Case: Preferences UI User Setup. use st-admin to avoid workspace administration |  |
+| st-admin | add_member --e %%new_user%% --w %%new_ws%% | now has the role of 'member' in the |
+
+| *Comment* | Test Case: Preferences UI User Setup login to %%new_ws%% |  |
+| st-logoutin | %%new_user%% | 123456 |
+| open_ok | /%%new_ws%% |  |
+
+| *Comment* | Test Case: Preferences UI User Setup COMPLETED |  |

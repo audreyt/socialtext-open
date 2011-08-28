@@ -1,0 +1,150 @@
+*This test sporadically fails very rarely. 30 Second pause seems to be enough 90% of the time.*
+
+| *Comment* | Test Case: Signals Video Link |  |
+
+| set | video_user | video_user_%%start_time%%@david.socialtext.net |  |
+| set | all_video_user | all_video_user_%%start_time%%@david.socialtext.net |  |
+| set | video_acct | v_a_%%start_time%% |  |
+| set | youtube_link | http://www.youtube.com/watch?v=lH4lcrxP8mo |  |
+| set | youtube_title | Ross Mayfield Extended Version |  |
+| set | vimeo_link | http://www.vimeo.com/1224265 |  |
+| set | vimeo_title | Ross Mayfield |  |
+| set | slide_link | http://www.slideshare.net/alikhan_nazeer80/better-software-classic-testing-mistakes-presentation |  |
+| set | slide_title | Better Software Classic Testing Mistakes |  |
+| set | google_link | http://video.google.com/videoplay?docid=-7217908732685686389 |  |
+| set | google_title | SocialText announces SocialText 3.0 |  |
+| st-admin | create-account --name %%video_acct%% | created |  |
+| create-user | %%video_user%% | %%password%% | %%video_acct%% |
+| create-user | %%all_video_user%% | %%password%% | %%video_acct%% |
+
+| *Comment* | Test Case: Signals Video Link Send vimeo signal |  |
+| st-logoutin | %%video_user%% | %%password%% |
+| open_ok | /st/signals |  |
+| wait_for_element_visible_ok | //a[@title='Add a video link'] | 30000 |
+| click_ok | //a[@title='Add a video link'] |  |
+| wait_for_text_present_ok | Copy and paste the URL for the video below. We support embedding video from YouTube, Vimeo, SlideShare and Google Video. | 30000 |
+| wait_for_element_visible_ok | //input[@name='video_url'] | 30000 |
+| type_ok | //input[@name='video_url'] | %%vimeo_link%% |
+| pause | 30000 |  |
+| verifyValue | //input[@name='video_title'] | qr/%%vimeo_title%%/ |
+| click_ok | //a[@class='btn done'] |  |
+| pause | 3000 |  |
+| wait_for_element_visible_ok | link=Post | 5000 |
+| click_ok | link=Post |  |
+| wait_for_text_present_ok | By you | 30000 |
+| wait_for_text_present_ok | %%vimeo_title%% | 30000 |
+
+| *Comment* | Test Case: Signals Video Link send youtube signal |  |
+| open_ok | /st/signals |  |
+| wait_for_element_visible_ok | //a[@title='Add a video link'] | 30000 |
+| click_ok | //a[@title='Add a video link'] |  |
+| wait_for_text_present_ok | Copy and paste the URL for the video below. We support embedding video from YouTube, Vimeo, SlideShare and Google Video. | 30000 |
+| wait_for_element_visible_ok | //input[@name='video_url'] | 30000 |
+| type_ok | //input[@name='video_url'] | %%youtube_link%% |
+| pause | 30000 |  |
+| verifyValue | //input[@name='video_title'] | qr/%%youtube_title%%/ |
+| click_ok | //a[@class='btn done'] |  |
+| pause | 3000 |  |
+| wait_for_element_visible_ok | link=Post | 5000 |
+| click_ok | link=Post |  |
+| wait_for_text_present_ok | By you | 30000 |
+| wait_for_text_present_ok | %%youtube_title%% | 30000 |
+
+| *Comment* | Test Case: Signals Video Link send slideshare signal |  |
+| open_ok | /st/signals |  |
+| wait_for_element_visible_ok | //a[@title='Add a video link'] | 30000 |
+| click_ok | //a[@title='Add a video link'] |  |
+| wait_for_text_present_ok | Copy and paste the URL for the video below. We support embedding video from YouTube, Vimeo, SlideShare and Google Video. | 30000 |
+| wait_for_element_visible_ok | //input[@name='video_url'] | 30000 |
+| type_ok | //input[@name='video_url'] | %%slide_link%% |
+| pause | 30000 |  |
+| verifyValue | //input[@name='video_title'] | qr/%%slide_title%%/ |
+| click_ok | //a[@class='btn done'] |  |
+| pause | 3000 |  |
+| wait_for_element_visible_ok | link=Post | 5000 |
+| click_ok | link=Post |  |
+| wait_for_text_present_ok | By you | 30000 |
+| wait_for_text_present_ok | %%slide_title%% | 30000 |
+
+| *Comment* | Test Case: Signals Video Link send google signal |  |
+| open_ok | /st/signals |  |
+| wait_for_element_visible_ok | //a[@title='Add a video link'] | 30000 |
+| click_ok | //a[@title='Add a video link'] |  |
+| wait_for_text_present_ok | Copy and paste the URL for the video below. We support embedding video from YouTube, Vimeo, SlideShare and Google Video. | 30000 |
+| wait_for_element_visible_ok | //input[@name='video_url'] | 30000 |
+| type_ok | //input[@name='video_url'] | %%google_link%% |
+| pause | 30000 |  |
+| verifyValue | //input[@name='video_title'] | qr/%%google_title%%/ |
+| click_ok | //a[@class='btn done'] |  |
+| pause | 3000 |  |
+| wait_for_element_visible_ok | link=Post | 5000 |
+| click_ok | link=Post |  |
+| wait_for_text_present_ok | By you | 30000 |
+| wait_for_text_present_ok | %%google_title%% | 30000 |
+
+| *Comment* | Test Case: Signals Video Link check bad signal |  |
+| open_ok | /st/signals |  |
+| wait_for_element_visible_ok | //a[@title='Add a video link'] | 30000 |
+| click_ok | //a[@title='Add a video link'] |  |
+| wait_for_text_present_ok | Copy and paste the URL for the video below. We support embedding video from YouTube, Vimeo, SlideShare and Google Video. | 30000 |
+| wait_for_element_visible_ok | //input[@name='video_url'] | 30000 |
+| type_ok | //input[@name='video_url'] | http://www.nosuch.com/ |
+| pause | 10000 |  |
+| verifyValue | //input[@name='video_title'] | qr/Sorry/ |
+
+| *Comment* | Test Case: Signals Video Link check for all signals |  |
+| open_ok | /st/signals |  |
+| wait_for_element_visible_ok | link=%%vimeo_title%% | 30000 |
+| wait_for_element_visible_ok | link=%%youtube_title%% | 30000 |
+| wait_for_element_visible_ok | link=%%slide_title%% | 30000 |
+| wait_for_element_visible_ok | link=%%google_title%% | 30000 |
+
+| *Comment* | Test Case: Signals Video Link post all videos in same signal |  |
+| st-logoutin | %%all_video_user%% | %%password%% |
+| open_ok | /st/signals |  |
+| wait_for_element_visible_ok | //a[@title='Add a video link'] | 30000 |
+| click_ok | //a[@title='Add a video link'] |  |
+| wait_for_text_present_ok | Copy and paste the URL for the video below. We support embedding video from YouTube, Vimeo, SlideShare and Google Video. | 30000 |
+| wait_for_element_visible_ok | //input[@name='video_url'] | 30000 |
+| type_ok | //input[@name='video_url'] | %%vimeo_link%% |
+| wait_for_element_visible_ok | //a[@class='btn done'] | 30000 |
+| click_ok | //a[@class='btn done'] |  |
+| pause | 3000 |  |
+| wait_for_element_visible_ok | //a[@title='Add a video link'] | 30000 |
+| click_ok | //a[@title='Add a video link'] |  |
+| wait_for_text_present_ok | Copy and paste the URL for the video below. We support embedding video from YouTube, Vimeo, SlideShare and Google Video. | 30000 |
+| wait_for_element_visible_ok | //input[@name='video_url'] | 30000 |
+| type_ok | //input[@name='video_url'] | %%youtube_link%% |
+| wait_for_element_visible_ok | //a[@class='btn done'] | 30000 |
+| click_ok | //a[@class='btn done'] |  |
+| pause | 3000 |  |
+| wait_for_element_visible_ok | //a[@title='Add a video link'] | 30000 |
+| click_ok | //a[@title='Add a video link'] |  |
+| wait_for_text_present_ok | Copy and paste the URL for the video below. We support embedding video from YouTube, Vimeo, SlideShare and Google Video. | 30000 |
+| wait_for_element_visible_ok | //input[@name='video_url'] | 30000 |
+| type_ok | //input[@name='video_url'] | %%slide_link%% |
+| wait_for_element_visible_ok | //a[@class='btn done'] | 30000 |
+| click_ok | //a[@class='btn done'] |  |
+| pause | 3000 |  |
+| wait_for_element_visible_ok | //a[@title='Add a video link'] | 30000 |
+| click_ok | //a[@title='Add a video link'] |  |
+| wait_for_text_present_ok | Copy and paste the URL for the video below. We support embedding video from YouTube, Vimeo, SlideShare and Google Video. | 30000 |
+| wait_for_element_visible_ok | //input[@name='video_url'] | 30000 |
+| type_ok | //input[@name='video_url'] | %%google_link%% |
+| wait_for_element_visible_ok | //a[@class='btn done'] | 30000 |
+| click_ok | //a[@class='btn done'] |  |
+| pause | 3000 |  |
+| wait_for_element_visible_ok | link=Post | 5000 |
+| click_ok | link=Post |  |
+| wait_for_text_present_ok | By you | 30000 |
+| open_ok | /st/signals |  |
+| wait_for_element_visible_ok | link=%%vimeo_title%% | 30000 |
+| wait_for_element_visible_ok | link=%%youtube_title%% | 30000 |
+| wait_for_element_visible_ok | link=%%slide_title%% | 30000 |
+| wait_for_element_visible_ok | link=%%google_title%% | 30000 |
+
+| *Comment* | Test Case: Signals Video Link TEARDOWN |  |
+| st-admin | deactivate-user --email %%video_user%% |  |
+| st-admin | deactivate-user --email %%all_video_user%% |  |
+
+| *Comment* | Test Case: Signals Video Link COMPLETED |  |

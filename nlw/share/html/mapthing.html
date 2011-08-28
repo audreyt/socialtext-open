@@ -1,0 +1,465 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>Google Maps JavaScript API Example</title>
+    <style>
+.wikidiv {
+    font-size: 75%;
+    font-family: Helvetica, Arial, sans-serif;
+}
+#pages {
+    float: right;
+}
+    </style>
+
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAwvFhEUtSIa3VRWVU970fZRQWuRYjDMpwodndWJHmI843AUA5-BSaHFNxc5FkKXipNaKomS8XnrW1Jg"
+      type="text/javascript"></script>
+  <script src="/static/javascript/restify.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+    //<![CDATA[
+
+    function MPload() {
+      if (GBrowserIsCompatible()) {
+          var mapthing = new MapThing();
+          mapthing.go();
+      }
+    }
+
+    if (! this.MapThing) MapThing = function () {};
+    mproto = MapThing.prototype; // needed?
+
+mproto.listChanges = function() {
+    var self = this;
+    var uri = this.wiki.page_list_uri() + '?order=newest;count=30';
+    this.listCollection(document.getElementById('pages'), uri, {
+            mouseover : function(ev) {
+                this.style.backgroundColor = 'yellow';
+                var name = this.innerHTML;
+                var mark = self.markers[name];
+                if (mark && mark.marker.wikiname) {
+                    mark.marker.openInfoWindowHtml(name);
+                }
+            },
+            mouseout : function(ev) {
+                this.style.backgroundColor = 'white';
+                var name = this.innerHTML;
+                var mark = self.markers[name];
+                if (mark && mark.marker.wikiname) {
+                    self.map.closeInfoWindow();
+                }
+            },
+            mousedown : function(ev) {
+                self.dragObject = this;
+                self.mouseOffset = self.getMouseOffset(this, ev);
+            }
+        }
+    );
+}
+
+mproto.getMouseOffset = function(target, ev) {
+    ev = ev || window.event;
+    var documentPosition = this.getPosition(target);
+    var mousePos = this.mouseCoords(ev);
+    return {x:mousePos.x - documentPosition.x, y:mousePos.y - documentPosition.y};
+}
+
+mproto.getPosition = function(e) {
+    var left = 0;
+    var top = 0;
+    while (e.offsetParent) {
+        left += e.offsetLeft;
+        top += e.offsetTop;
+        e = e.offsetParent;
+    }
+    left += e.offsetLeft;
+    top  += e.offsetTop;
+
+    return {x:left, y:top};
+}
+    // get this out of the args or anchor or some such?
+    mproto.workspace = function() {
+        return 'admin';
+    }
+
+// Dragging learned from
+// http://www.webreference.com/programming/javascript/mk/column2/index.html
+
+    mproto.setUpDragging = function() {
+        var self = this;
+        document.onmousemove = function(ev) {
+            ev = ev || window.event;
+            var mousePos = self.mouseCoords(ev);
+            //self.reportMousePos(mousePos);
+            if (self.dragObject) {
+                self.dragObject.style.position = 'absolute';
+                self.dragObject.style.zIndex = 9999;
+                var top = mousePos.y - self.mouseOffset.y;
+                var left = mousePos.x - self.mouseOffset.x;
+                self.reportMousePos({x:left,y:top});
+                self.dragObject.style.top = top + 'px';
+                self.dragObject.style.left = left + 'px';
+            }
+        };
+        document.onmouseup = function(ev) {
+            ev = ev || window.event;
+            var target = ev.target || ev.srcElement;
+
+            if (target = self.dragObject) {
+                var mousePos = self.mouseCoords(ev);
+                // assumes map is rooted at 0,0 left,top
+                var size = self.map.getSize();
+                if (
+                        (mousePos.x > 0) &&
+                        (mousePos.x < size.width) &&
+                        (mousePos.y > 0) &&
+                        (mousePos.y < size.height)
+                    ) {
+                        self.dropTitle(mousePos);
+                }
+                self.dragObject.style.position = 'static';
+                self.dragObject = null;
+            }
+        };
+    }
+
+mproto.dropTitle = function(mousePos) {
+    var pagename = this.dragObject.innerHTML;
+    var point = this.map.fromContainerPixelToLatLng(new GPoint(mousePos.x, mousePos.y));
+    var marker = new GMarker(point, {title:pagename});
+    marker.wikiname = pagename;
+    this.markers[pagename] = {};
+    this.markers[pagename].marker = marker;
+    this.dropMarker(pagename);
+    this.updateTags(pagename, marker.getPoint().toString());
+}
+
+mproto.reportMousePos = function(position) {
+    var mousehole = document.getElementById('mousepos');
+    mousehole.innerHTML = position['x'] + ', ' + position['y'];
+}
+
+mproto.mouseCoords = function(ev) {
+    if (ev.pageX || ev.pageY) {
+        return { x:ev.pageX, y:ev.pageY};
+    }
+    return {
+      x:ev.clientX + document.body.scrollLeft - document.body.clientLeft,
+      y:ev.clientY + document.body.scrollTop - document.body.clientTop
+    };
+}
+
+    mproto.go = function() {
+        this.setUpDragging();
+        this.map = new GMap2(document.getElementById("map"));
+        new GKeyboardHandler(this.map);
+        this.wiki = new STJS();
+        this.wiki.workspace = this.workspace();
+        this.listChanges();
+        this.markers = {};
+        this.markers['Socialtext Map Thing'] = {
+            'marker': new GMarker(new GLatLng(37.44293846488013, -122.16111302375793), {title:'Socialtext Map Thing'})
+        };
+        this.editformdiv = document.getElementById('editform');
+        this.editform = document.forms['editformform'];
+        this.map.addControl(new GSmallMapControl());
+        var self = this;
+        GEvent.addListener(this.map, "moveend", function() {
+              var center = self.map.getCenter();
+              document.getElementById("longlatinfo").innerHTML =
+                center.toString();
+        });
+        GEvent.addListener(this.map, "dblclick", function(marker, point) {
+            if (!marker) {
+                var marker = new GMarker(point);
+                self.map.addOverlay(marker);
+                self.makeWindow(marker);
+            }
+            return true;
+        });
+        GEvent.addListener(this.map, "click", function(marker, point) {
+            if (marker && marker.wikiname) {
+                self.makeWindow(marker);
+            }
+            return true;
+        });
+        this.map.setCenter(this.pickCenter(), 16);
+        for (var name in this.markers) {
+            this.dropMarker(name);
+        }
+        this.getTaggedPages();
+    }
+
+    mproto.dropMarker = function(name) {
+        var marker = this.markers[name].marker;
+        this.map.addOverlay(marker);
+        marker.wikiname = name;
+    }
+
+    mproto.pickCenter = function() {
+        return new GLatLng(37.44293846488013, -122.16111302375793);
+    }
+
+mproto.makeWindow = function(marker) {
+    var point = marker.getPoint();
+    var name = marker.wikiname;
+    var wikidiv = document.createElement('div');
+    wikidiv.setAttribute('class', 'wikidiv');
+    var self = this;
+
+    if (name) {
+        this.getInfo(marker, wikidiv, name);
+        this.showInfo(marker, wikidiv, name);
+    } else {
+        var textinput = document.createElement('form');
+        textinput.innerHTML = "<input name='name' size='40'/>";
+        wikidiv.appendChild(textinput);
+        textinput.onsubmit = function() {
+            var name = this.elements['name'].value;
+            self.updateMarkerPage(marker, wikidiv, name);
+            return false;
+        }; 
+        this.showInfo(marker, wikidiv, name);
+    }
+
+}
+
+mproto.showInfo = function(marker, wikidiv, name) {
+    var tabs = [
+        new GInfoWindowTab(name, wikidiv),
+        new GInfoWindowTab('meta', '<h3>Coming Soon</h3>'),
+        new GInfoWindowTab('edit', this.editformdiv)
+            ];
+    marker.openInfoWindowTabs(tabs);
+}
+
+mproto.updateMarkerPage = function(marker, wikidiv, name) {
+    marker.wikiname = name;
+    this.markers[name] = {
+        'marker': marker
+    };
+    this.updateTags(name, marker.getPoint().toString());
+    this.getInfo(marker, wikidiv, name);
+    this.showInfo(marker, wikidiv, name);
+}
+
+mproto.getInfo = function(marker, wikidiv, name) {
+    var self = this;
+    var page = encodeURIComponent(name);
+    var uri = '/data/workspaces/' + this.workspace() + '/pages/' + page;
+    // maybe synch this?
+    wikidiv.innerHTML = 'updating';
+    this.displayPage( wikidiv, uri );
+    //var wikitext = this.getWikitextPage(uri);
+    //this.fillEditform(wikitext, name, marker, wikidiv);
+    this.getWikitextPage(uri, 
+        function(response) {
+            if (response.status == '404') {
+                response.text = '';
+            }
+            self.fillEditform(response.text, name, marker, wikidiv);
+        }
+    );
+}
+
+mproto.fillEditform = function(wikitext, name, marker, wikidiv) {
+    var self = this;
+    var form = self.editform;
+    form.elements['wikitext'].value = wikitext;
+    form.onsubmit = function() {
+        self.putPage(name, this.elements['wikitext'].value,
+                function(response) {
+                    self.getInfo(marker, wikidiv, name);
+                    self.showInfo(marker, wikidiv, name);
+                    self.listChanges();
+                }
+            );
+        self.map.closeInfoWindow();
+        return false;
+    }
+}
+mproto.putPage = function(pageName, wikitext, onComplete) {
+    var uri = this.wiki.page_list_uri() + '/' + encodeURIComponent(pageName);
+    Ajax.put(uri,
+        wikitext,
+        onComplete,
+        {'contentType' : 'text/x.socialtext-wiki'}
+    );
+}
+
+
+mproto.listCollection = function(infobox, uri, params) {
+    var self = this;
+    Ajax.get(
+        uri,
+        function(response) {
+            var content = response.text;
+            var json = eval (content);
+            var list = document.createElement('ul');
+            infobox.replaceChild(list, infobox.childNodes[0]);
+            var items = [];
+            for (var i = 0; i < json.length ;i++) {
+                var item = document.createElement('li');
+                var text = document.createTextNode(json[i].name);
+                items.push({'item': item, 'json': json[i]});
+                item.appendChild(text);
+                for (var key in params) {
+                    //item.attachEvent(key, params[key]);
+                    item.addEventListener(key, params[key], true);
+                }
+                list.appendChild(item);
+            }
+        },
+        { "contentType": 'application/json' }
+    );
+    return true;
+}
+
+mproto.getWikitextPage = function(uri, onComplete) {
+    Ajax.get( uri,
+            onComplete,
+            {'contentType' :'text/x.socialtext-wiki'});
+}
+
+mproto.displayPageSynch = function(wikidiv, uri) {
+    var response = 
+ response = Ajax.get( uri,
+         null,
+        {'contentType' :'text/html'});
+    var content = response.text;
+    var status = response.status;
+    if (status == '404') {
+        content = '';
+    }
+    if (content.length) {
+        wikidiv.innerHTML = '';
+        var interior = document.createElement('div');
+        interior.innerHTML = content;
+        var links = interior.getElementsByTagName('a');
+        for (var i = 0; i < links.length; i++) {
+            var link = links[i];
+            var href = link.getAttribute('href');
+            var matches;
+            if (href) {
+                if (href.match('^[^#/]+$') && !href.match('mailto')) {
+                    link.setAttribute('href', '/' + this.workspace() +
+                            '/index.cgi?' + href);
+                    link.setAttribute('target', "_wiki");
+                }
+                else if (matches = href.match('^/data/workspaces/([^/]+)/pages/([^/]+$)')) {
+                    link.setAttribute('href', '/' + matches[1] +
+                            '/index.cgi?' + matches[2]);
+                    link.setAttribute('target', "_wiki");
+                }
+            }
+        }
+        wikidiv.appendChild(interior);
+    }
+}
+
+mproto.displayPage = function(wikidiv, uri) {
+ var self = this;
+ Ajax.get( uri,
+         function(response) {
+            var content = response.text;
+            var status = response.status;
+            if (status == '404') {
+                content = '';
+            }
+            if (content.length) {
+                wikidiv.innerHTML = '';
+                var interior = document.createElement('div');
+                interior.innerHTML = content;
+                var links = interior.getElementsByTagName('a');
+                for (var i = 0; i < links.length; i++) {
+                    var link = links[i];
+                    var href = link.getAttribute('href');
+                    var matches;
+                    if (href) {
+                        if (href.match('^[^#/]+$') && !href.match('mailto')) {
+                            link.setAttribute('href', '/' + self.workspace() +
+                                    '/index.cgi?' + href);
+                            link.setAttribute('target', "_wiki");
+                        }
+                        else if (matches = href.match('^/data/workspaces/([^/]+)/pages/([^/]+$)')) {
+                            link.setAttribute('href', '/' + matches[1] +
+                                    '/index.cgi?' + matches[2]);
+                            link.setAttribute('target', "_wiki");
+                        }
+                    }
+                }
+                wikidiv.appendChild(interior);
+            }
+         },
+        {'contentType' :'text/html'}
+    );
+}
+
+mproto.updateTags = function(name, locationString) {
+    var page = encodeURIComponent(name);
+    var tag = 'mapthing:' + encodeURIComponent(locationString);
+    var uribase = '/data/workspaces/' + this.workspace() + '/pages/';
+    Ajax.put(uribase + page + '/tags/' + tag, '', function(response) {true});
+    tag = 'mapthing';
+    Ajax.put(uribase + page + '/tags/' + tag, '', function(response) {true});
+}
+
+mproto.getTaggedPages = function() {
+    var self = this;
+    Ajax.get(
+        '/data/workspaces/' + this.workspace() + '/tags/mapthing/pages',
+        function(response) { 
+            var pages = eval(response.text);
+            for (var j = 0; j < pages.length ;j++) {
+                var pagename = pages[j].name;
+                var response2 = Ajax.get(
+                    '/data/workspaces/' + self.workspace() + '/pages/' + 
+                    encodeURIComponent(pagename) +
+                    '/tags?order=newest;filter=^mapthing:',
+                    null,
+                    {'contentType' : 'application/json'}
+                );
+                var json = eval(response2.text);
+                for (var i = 0; i < json.length; i++) {
+                    var pointString =
+                    json[i].name.replace("mapthing:\(", "")
+                        .replace("\)", "");
+                    var pointArray = pointString.split(', ');
+                    var marker = new GMarker(
+                        new GLatLng(pointArray[0], pointArray[1]),
+                        {title:pagename});
+                    marker.wikiname = pagename
+                    self.markers[pagename] = {};
+                    self.markers[pagename].marker = marker;
+                    self.dropMarker(pagename);
+                }
+            }
+        },
+        {'contentType' : 'application/json'}
+    );
+}
+
+                
+        
+                
+                
+
+    //]]>
+    </script>
+  </head>
+  <body onload="MPload()" onunload="GUnload()">
+      <div id="pages">
+      </div>
+    <div id="map" style="width: 800px; height: 600px"></div>
+    <div id="longlatinfo"></div>
+    <div id="mousepos"></div>
+    <div id="editform" style="display: block">
+        <form name="editformform">
+            <textarea name="wikitext" rows="10" cols="40"></textarea><br/>
+            <input type="submit" name="submit" value="save">
+        </form>
+
+  </body>
+</html>

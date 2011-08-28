@@ -1,0 +1,352 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use lib 'lib';
+use Socialtext::Migration::Utils qw/ensure_socialtext_schema socialtext_schema_version/;
+use Socialtext::UserSet qw/:const/;
+use Socialtext::SQL qw/get_dbh/;
+
+use constant COMMIT_BATCH => 200; # MUST be >= 1
+
+# the tables we need are getting deleted in schema 99
+if (socialtext_schema_version() >= 99) {
+    print STDERR <<EOM;
+
+ERROR: The tables required to do the user-set migration have already been deleted.
+Please contact Socialtext Support for a recovery solution.
+
+EOM
+    exit 1;
+}
+
+ensure_socialtext_schema(95);
+
+
+my $mig_state;
+my $affiliate_id;
+my $member_id;
+my %tsize;
+my @size_order;
+my $fast_track = '';
+
+my %pg_offset_for_column = (
+    user_id      => PG_USER_OFFSET,
+    group_id     => PG_GROUP_OFFSET,
+    workspace_id => PG_WKSP_OFFSET,
+    account_id   => PG_ACCT_OFFSET,
+);
+
+my %offset_for_column = (
+    user_id      => USER_OFFSET,
+    group_id     => GROUP_OFFSET,
+    workspace_id => WKSP_OFFSET,
+    account_id   => ACCT_OFFSET,
+);
+
+my %tables = (
+   user_account_role    => [qw(user_id  account_id)],
+   group_account_role   => [qw(group_id account_id)],
+   group_workspace_role => [qw(group_id workspace_id)],
+   user_group_role      => [qw(user_id  group_id)],
+   user_workspace_role  => [qw(user_id  workspace_id)],
+);
+
+
+my $dbh = get_dbh();
+my $uset = Socialtext::UserSet->new;
+local $dbh->{RaiseError} = 1;
+
+load_migration_state();
+if ($mig_state == 0) {
+    fast_track();
+    set_migration_state($mig_state+1);
+}
+if ($mig_state == 1) {
+    generate_group_primary_account_roles();
+    set_migration_state($mig_state+1);
+}
+if ($mig_state == 2) {
+    for my $table (keys %tables) {
+        next if $table eq $fast_track;
+        migrate_table($table);
+    }
+    set_migration_state($mig_state+1);
+}
+if ($mig_state == 3) {
+    # must happen after the migrate_table() phase
+    generate_user_primary_account_roles();
+    set_migration_state($mig_state+1);
+}
+if ($mig_state == 4) {
+    # could happen before the user_primary_account_roles phase
+    generate_workspace_account_roles();
+    set_migration_state($mig_state+1);
+}
+if ($mig_state == 5) {
+    print "Migration complete!\n";
+}
+else {
+    die "migration failed.\n";
+}
+
+exit 0;
+
+sub load_migration_state {
+    # increase memory usage while we do some heavy lifting
+    $dbh->do(q{SET work_mem TO 32768}); # 32 MiB
+    $dbh->do(q{SET maintenance_work_mem TO 524288}); # 512 MiB
+
+    ($mig_state) = $dbh->selectrow_array(qq{
+        SELECT value FROM "System" WHERE field = 'migration-56'
+    });
+    if (!$mig_state) {
+        $dbh->do(qq{
+            INSERT INTO "System" (field,value) VALUES ('migration-56',0)
+        });
+        $mig_state = 0;
+    }
+    print "Migration phase: $mig_state\n";
+
+    my $ids = $dbh->selectcol_arrayref(q{
+        SELECT role_id FROM "Role" WHERE name = 'member'
+        UNION ALL
+        SELECT role_id FROM "Role" WHERE name = 'affiliate'
+    });
+    ($member_id, $affiliate_id) = @$ids;
+
+    unless ($affiliate_id) {
+        warn "affiliate role not found, using -1 as a fake default";
+        $affiliate_id = -1;
+    }
+
+    for my $table (keys %tables) {
+        my ($count) = $dbh->selectrow_array(qq{
+            SELECT COUNT(1) FROM $table WHERE role_id <> $affiliate_id
+        });
+        $tsize{$table} = $count;
+    }
+
+    @size_order = sort {$tsize{$b} <=> $tsize{$a}} keys %tsize;
+
+    $uset->_create_insert_temp($dbh,'bulk');
+}
+
+sub set_migration_state {
+    my $new_state = shift;
+    $dbh->do(qq{
+        UPDATE "System" SET value = ? WHERE field = 'migration-56'
+    }, {}, $new_state);
+    $mig_state = $new_state;
+    print "Migration phase: $mig_state\n";
+}
+
+sub fast_track {
+    print "tables in order of size: ".join(',',@size_order)."\n";
+    # need to apply a special fix to group_account_role
+    $fast_track = (grep {$_ ne 'group_account_role' } @size_order)[0];
+    my @columns = @{$tables{$fast_track}};
+    my @pg_offsets = map { $pg_offset_for_column{$_} } @columns;
+
+    print "Fast-tracking $fast_track\n";
+    $dbh->begin_work;
+
+    print "... includes\n";
+    $dbh->do(qq{
+        INSERT INTO user_set_include (from_set_id, into_set_id, role_id)
+        SELECT 
+            $columns[0] + $pg_offsets[0] AS from_set_id,
+            $columns[1] + $pg_offsets[1] AS into_set_id,
+            role_id
+        FROM $fast_track
+        WHERE role_id <> $affiliate_id
+    });
+
+    print "... paths\n";
+    $dbh->do(qq{
+        INSERT INTO user_set_path
+            (from_set_id, into_set_id, role_id, vlist)
+        SELECT from_set_id,
+            into_set_id,
+            role_id,
+            ARRAY[from_set_id,into_set_id]::int[] AS vlist
+        FROM user_set_include
+    });
+
+    print "... cleanup\n";
+    $dbh->do(qq{
+        DELETE FROM $fast_track
+        WHERE role_id <> $affiliate_id
+    });
+
+    print "... committing\n";
+    $dbh->commit;
+    print "Done fast-track of $fast_track\n";
+}
+
+sub generate_group_primary_account_roles {
+    my $missing_accts_sql = q{
+        SELECT DISTINCT g.group_id, primary_account_id
+          FROM groups g
+          LEFT JOIN group_account_role gar ON (g.group_id = gar.group_id AND g.primary_account_id = gar.account_id)
+         WHERE gar.account_id IS NULL
+    };
+
+    $dbh->begin_work;
+
+    $dbh->do("DELETE FROM group_account_role WHERE role_id = $affiliate_id");
+
+    my ($count) = $dbh->selectrow_array(
+        "SELECT COUNT(*) FROM ($missing_accts_sql) q");
+    return $dbh->rollback unless $count;
+    print "$count Groups need roles in their primary account\n";
+
+    my $inserted = $dbh->do(qq{
+        INSERT INTO group_account_role (group_id, account_id, role_id)
+        SELECT group_id, primary_account_id, $member_id
+        FROM ($missing_accts_sql) q
+    });
+    die "inserted less GARs than expected?!" if ($inserted != $count);
+    print "Inserted $inserted GARs\n";
+
+    # update the table size so it gets migrated in migrate_table()
+    $tsize{group_account_role} += $inserted;
+    $dbh->commit;
+}
+
+sub migrate_table {
+    my $table = shift;
+    my @columns = @{$tables{$table}};
+    my @pg_offsets = map { $pg_offset_for_column{$_} } @columns;
+    my @offsets = map { $offset_for_column{$_} } @columns;
+
+    my $count = $tsize{$table};
+    return unless $count;
+
+    my $next_sth = $dbh->prepare(qq{
+        SELECT $columns[0], $columns[1], role_id
+        FROM $table
+        WHERE role_id <> $affiliate_id 
+        ORDER BY $columns[0] ASC, $columns[1] ASC
+        LIMIT }.COMMIT_BATCH
+    );
+    my $del_sth = $dbh->prepare(qq{
+        DELETE FROM $table WHERE $columns[0] = ? AND $columns[1] = ?
+    });
+
+    print "Migrating $table, $count rows to convert\n";
+    my $ticker = time;
+
+    while ($count > 0) {
+        my @edge = (undef,undef,undef);
+        my @to_delete = (undef,undef);
+        my $row;
+
+        $dbh->begin_work;
+        $next_sth->execute();
+        while ($row = $next_sth->fetchrow_arrayref) {
+            $count--;
+
+            $edge[0] = $row->[0] + $offsets[0];
+            $edge[1] = $row->[1] + $offsets[1];
+            $edge[2] = $row->[2];
+
+            $uset->_insert($dbh,@edge,'bulk');
+            $del_sth->execute(@$row[0,1]);
+        }
+
+        $dbh->commit;
+
+        my $now = time;
+        if ($count && ($now - $ticker > 5)) {
+            $ticker = $now;
+            print "... $count rows remaining\n";
+        }
+    }
+
+    print "Done $table.\n";
+}
+
+sub generate_workspace_account_roles {
+    my $base_q = q{
+        FROM "Workspace" w
+        JOIN "Account" a USING (account_id)
+        LEFT JOIN user_set_include usi ON
+            (from_set_id = w.user_set_id AND into_set_id = a.user_set_id)
+        WHERE usi.from_set_id IS NULL
+    };
+
+    my $count = $dbh->selectrow_array(q{ SELECT COUNT(DISTINCT w.user_set_id) }.$base_q);
+    return unless $count;
+
+    # find workspaces that haven't already been migrated:
+    my $sth = $dbh->prepare(q{
+        SELECT w.user_set_id, a.user_set_id
+        }.$base_q.q{
+        ORDER BY w.user_set_id ASC, a.user_set_id ASC
+        LIMIT }.COMMIT_BATCH
+    );
+
+    print "Generating workspace-account roles, $count workspaces left\n";
+    my $ticker = time;
+
+    while ($count > 0) {
+        $dbh->begin_work;
+
+        my $row_count = $sth->execute();
+        die "unexpected end of workspaces?"
+            unless ($row_count >= 1);
+
+        my $row;
+        while ($row = $sth->fetchrow_arrayref) {
+#             print "... row $row->[0] $row->[1] $member_id\n";
+            $uset->_insert($dbh,@$row,$member_id,'bulk');
+            $count--;
+        }
+        $sth->finish;
+        $dbh->commit;
+
+        my $now = time;
+        if ($count && ($now - $ticker > 5)) {
+            $ticker = $now;
+            print "... $count workspaces left\n";
+        }
+    }
+
+    print "Done generating workspace-account roles\n";
+}
+
+sub generate_user_primary_account_roles {
+    my $base_q = q{
+        FROM "UserMetadata" um
+        JOIN "Account" a ON (um.primary_account_id = a.account_id)
+        LEFT JOIN user_set_include usi ON
+            (from_set_id = um.user_id AND into_set_id = a.user_set_id)
+        WHERE usi.from_set_id IS NULL
+    };
+
+    my $count = $dbh->selectrow_array(q{ SELECT COUNT(DISTINCT um.user_id) }.$base_q);
+    return unless $count;
+
+    print "Generating user-account roles\n";
+    $dbh->begin_work;
+
+    print "... paths\n";
+    $dbh->do(qq{
+        INSERT INTO user_set_path
+        (from_set_id, into_set_id, role_id, vlist)
+        SELECT um.user_id, a.user_set_id, $member_id,
+            ARRAY[um.user_id, a.user_set_id]::int[]
+        $base_q
+    });
+
+    print "... includes\n";
+    $dbh->do(qq{
+        INSERT INTO user_set_include (from_set_id, into_set_id, role_id)
+        SELECT um.user_id, a.user_set_id, $member_id
+        $base_q
+    });
+
+    $dbh->commit;
+    print "Done generating user-account roles\n";
+}

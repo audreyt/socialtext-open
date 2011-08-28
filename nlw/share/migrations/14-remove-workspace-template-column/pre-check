@@ -1,0 +1,16 @@
+#!/bin/bash
+
+COLUMN=workspace_template
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+
+output=$(psql -U $DB_USER -d $DB -t -c '\d "Workspace"' | grep $COLUMN)
+
+if [ "$output" == "" ]; then
+    echo "$COLUMN has already been removed from $TABLE"
+    exit 1
+fi
+
+echo "$COLUMN column still exists in table $TABLE!"
+exit 0

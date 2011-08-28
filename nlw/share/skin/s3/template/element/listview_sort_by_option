@@ -1,0 +1,4 @@
+<option [% IF sortby == field %]selected="selected"[% END %] value="sortby=[% field %];direction=[% sortdir.$field %]">[% name %]</option>
+[% IF sortby == field %]
+<option value="sortby=[% field %];direction=[% direction == 'asc' ? 'desc' : 'asc' %]">[% name %] [% direction == 'asc' ? '(&darr;)' : '(&uarr;)' %]</option>
+[% END %]

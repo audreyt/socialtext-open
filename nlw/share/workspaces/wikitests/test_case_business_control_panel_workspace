@@ -1,0 +1,100 @@
+| *Comment* | Test case: Business Control Panel Workspace |  |
+
+| set | new_acct | acct-wstest-%%start_time%% |
+| set | new_workspace | wksp-test%%start_time%% |
+| set | cli_user | cli_test%%start_time%%@ken.socialtext.net |
+| set | cli_user_prefix | cli |
+| set | cli_user_suffix | test%%start_time%% |
+
+| create-account | %%new_acct%% |  |
+| st-admin | create-workspace --empty --name %%new_workspace%% --title %%new_workspace%% --account '%%new_acct%%' |  |
+| st-admin | create-user --email %%cli_user%% --password %%password%% |  |
+
+| *Comment* | Test case: Business Control Panel Workspace Verify workspace in account |  |
+
+| st-admin | give-accounts-admin --u %%cli_user%% |  |
+| open_ok | /nlw/submit/logout |  |
+| st-login | %%cli_user%% | %%password%% |
+| open_ok | /nlw/control |  |
+| wait_for_element_visible_ok | link=Accounts | 3000 |
+| click_and_wait | link=Accounts |  |
+| wait_for_element_visible_ok | st-search-by-name | 30000 |
+| type_ok | st-search-by-name | %%new_acct%% |
+| click_and_wait | st-submit-search-by-name |  |
+| click_and_wait | link=%%new_acct%% |  |
+| wait_for_element_visible_ok | link=%%new_workspace%% | 30000 |
+| click_and_wait | link=%%new_workspace%% |  |
+| text_like | %%new_workspace%% workspace |  |
+
+| *Comment* | Test case: Business Control Panel Workspace Socialtext Search Accounts |  |
+| open_ok | /nlw/control/account |  |
+| wait_for_element_visible_ok | st-search-by-name | 30000 |
+| type_ok | st-search-by-name | Socialtext |
+| click_and_wait | st-submit-search-by-name |  |
+| text_like | link=Socialtext | Socialtext |
+| type_ok | st-search-by-name | %%new_acct%% |
+| click_and_wait | st-submit-search-by-name |  |
+| text_like | link=%%new_acct%% | %%new_acct%% |
+
+
+| *Comment* | Test case: Business Control Panel Workspace Create workspace |  |
+| open_ok | /nlw/control/workspace |  |
+| set | wstitle | wstitle_%%start_time%% |
+| wait_for_element_visible_ok | //input[@value='Create New Workspace'] | 30000 |
+| click_ok | //input[@value='Create New Workspace'] | 30000 |
+| wait_for_element_visible_ok | workspace_title | 30000 |
+| type_ok | workspace_title | %%wstitle%% |
+| wait_for_element_visible_ok | addUserLookahead | 30000 |
+| type-lookahead-ok | addUserLookahead | %%cli_user_prefix%% |
+| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%cli_user_suffix%%')] | 30000 |
+| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%cli_user_suffix%%')] |  |
+| wait_for_element_visible_ok | link=%%cli_user%% | 30000 |
+| wait_for_element_visible_ok | userTable-dropdown-2-0 | 30000 |
+| select_ok | userTable-dropdown-2-0 | label=Admin |
+| pause | 8000 | nothing to reliably wait on |
+| verifyValue | userTable-dropdown-2-0 | admin |
+
+| wait_for_element_visible_ok | id=create | 30000 |
+| click_and_wait | id=create |  |
+| wait_for_text_present_ok | %%wstitle%% workspace | 30000 |
+
+| *Comment* | Test case: Business Control Panel Workspace Change new workspace account to Socialtext |  |
+| open_ok | /nlw/control/workspace |  |
+| wait_for_element_visible_ok | name | 30000 |
+| type_ok | name | %%new_workspace%% |
+| st-submit |  |  |
+| click_and_wait | link=%%new_workspace%% |  |
+| text_like | %%new_workspace%% |  |
+| wait_for_element_visible_ok | account_id | 30000 |
+| select_ok | account_id | Socialtext |
+| wait_for_element_visible_ok | st-assign-to-account-submit | 30000 |
+| click_and_wait | st-assign-to-account-submit |  |
+| text_like | The %%new_workspace%% workspace is now part of the Socialtext account. |  |
+| wait_for_element_visible_ok | name | 30000 |
+| type_ok | name | %%new_workspace%% |
+| st-submit |  |  |
+| wait_for_element_visible_ok | link=%%new_workspace%% | 30000 |
+| click_and_wait | link=%%new_workspace%% |  |
+| text_like | qr/Account:\s+Socialtext/ism |  |
+
+| *Comment* | Test case: Business Control Panel Workspace Search for a non-existent workspace |  |
+| click_and_wait | //a[@name='workspaces'] |  |
+| wait_for_element_visible_ok | name | 30000 |
+| type_ok | name | zildjian |
+| st-submit |  |  |
+| text_like | Showing 0 - 0 of 0 total. |  |
+
+| *Comment* | Test case: Business Control Panel Workspace search for an existing workspace |  |
+| type_ok | name | %%new_workspace%% |
+| st-submit |  |  |
+| text_like | Showing 1 - 1 of 1 total. |  |
+| wait_for_element_visible_ok | link=%%new_workspace%% | 30000 |
+
+| *Comment* | Test case: Business Control Panel Workspace TEARDOWN |  |
+| st-process-jobs |  |  |
+| st-admin | delete-workspace --workspace %%new_workspace%% --no-export | has been deleted |
+| st-admin | delete-workspace --workspace %%wstitle%% --no-export | has been deleted |
+| st-admin | deactivate-user --email %%cli_user%% | has been removed |
+| delete-account | %%new_acct%% | has been deleted |
+
+| *Comment* | Test case: Business Control Panel Workspace COMPLETED |  |

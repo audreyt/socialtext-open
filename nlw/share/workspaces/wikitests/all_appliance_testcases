@@ -1,0 +1,48 @@
+*As many Appliance testcases as possible are run here*.
+Firefox is required because we run File Testcases
+Socialcalc enabled is required because we run Calc Testcases
+
+The Privacy Defaults testcase checks to see whether a newly built appliance has self-join setting OFF. It will only succeed if the appliance has been newly built.
+
+* [Disable Google Analytics]
+* [Test Case: Privacy Defaults]
+
+*It is possible to run Firefox testcases as the default LDAP user*
+*if you first run `xwt enable_ldap` to get LDAP enabled so the default LDAP user may successfully login.*
+
+* [Test Case: A Enable LDAP]
+
+* [Control Panel Testcases]
+* [Core Testcases]
+* [User Groups UI Testcases]
+* [Signals Testcases]
+* [Calc Testcases]
+* [File Testcases]
+* [Localization Testcases]
+* [Test Case: RSS Icons]
+* [Test Case: Table Info]
+
+LDAP Testcases will Enable LDAP and use a known LDAP user instead of a Default user where required
+
+* [LDAP Testcases]
+
+Default User Testcases will Disable LDAP so it can test wiki functions that only work for the Default user
+It will re-enable LDAP when it finishes.
+
+* [Default User Testcases]
+
+People and Dasboard plugin tests. Keep these two cases together in alpha order.
+
+* [Test Case: People Dashboard Plugins]
+* [Test Case: People Dashboard Plugins Reset]
+
+People tests
+
+* [Profile Testcases]
+* [Test Case: People Search]
+
+* [Dashboard Testcases]
+
+Appliance testcases are run last because they use appliance-only features or code
+
+* [Appliance Testcases]

@@ -1,0 +1,45 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+use File::Basename 'basename';
+use LWP::Simple qw( head getstore );
+use FindBin '$RealBin';
+use subs qw( git download commit version_from );
+
+chdir "$RealBin/../../appliance/libsocialtext-appliance-perl/static/";
+
+my @Files = qw(
+    http://airdownload.adobe.com/air/lin/download/latest/AdobeAIRInstaller.bin
+    http://airdownload.adobe.com/air/win/download/latest/AdobeAIRInstaller.exe
+    http://airdownload.adobe.com/air/mac/download/latest/AdobeAIR.dmg
+);
+
+for my $url (@Files) {
+    my $file = basename($url);
+    print "Getting info for $file...\n";
+    my (undef, $document_length) = head $url
+        or die "...cannot file document length of: $url, aborting!\n";
+
+    if ($document_length == -s $file) {
+        print "...not modified, skipping.\n";
+        next;
+    }
+
+    getstore($url => $file) =~ /^[23]/
+      or die "Cannot download $url - aborted.\n";
+
+    git add => $file;
+    commit "* Update $file to latest release from Adobe.";
+}
+
+sub git {
+    my ( $cmd, $file ) = @_;
+    system git => $cmd => $file;
+}
+
+sub commit {
+    my ( $msg ) = @_;
+    system git => commit => -q => -m => $msg;
+}

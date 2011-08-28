@@ -1,0 +1,61 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Try::Tiny;
+use Socialtext::JobCreator;
+use Socialtext::SQL qw/sql_execute/;
+
+foreach_attachment(sub {
+    my $att = shift;
+    Socialtext::JobCreator->insert( 'Socialtext::Job::FixMimeType' => {
+        workspace_id => $att->{workspace_id},
+        page_id => $att->{page_id},
+        id => $att->{id},
+        job => { priority => '-65' },
+    });
+});
+
+exit;
+################################################################################
+
+sub foreach_attachment {
+    my $coderef = shift;
+
+    my $sth = attachment_sth();
+    my $rows = $sth->rows;
+
+    return unless $rows;
+
+    my $inc = 0;
+    my $created = 0;
+
+    print "Creating jobs for $rows attachments...\n";
+    while (my $row = $sth->fetchrow_hashref) {
+
+        print "... $inc jobs created... \n" if $inc && $inc % 500 == 0;
+        try {
+            $coderef->($row);
+            $created++;
+        }
+        catch {
+            my $id = $row->{attachment_id};
+            warn "couldn't update attachment $id: $_\n";
+        };
+        $inc++;
+    }
+    print "... Done, $created jobs created.\n";
+}
+
+sub attachment_sth {
+    return sql_execute(qq{
+        SELECT page_id,
+               workspace_id,
+               attachment_id,
+               id
+          FROM page_attachment pa
+          JOIN attachment a USING (attachment_id)
+         WHERE mime_type = 'application/binary'
+           AND NOT deleted
+    });
+}

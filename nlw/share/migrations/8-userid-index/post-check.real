@@ -1,0 +1,16 @@
+#!/bin/bash -e
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+
+# check schema of "UserId"
+
+expected_userid_sum=b970c51a99ee18a3be8a200b54a08712
+
+userid_sum=`psql -U $DB_USER -d $DB -c '\d "UserId"' | awk '{print $1}' | md5sum | awk '{print $1}'`
+
+if [ "$userid_sum" != "$expected_userid_sum" ] ; then
+    echo "UserId table looks wrong.  Call the police!"
+    exit 1
+fi
+

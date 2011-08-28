@@ -1,0 +1,266 @@
+* Fixture: EmailJob
+
+| standard-test-setup | | no-group |
+| st-clear-jobs |
+| clear-email |
+
+| Comment | This test needs fixing, run a single test to guarantee passage |
+| Job-count | ENOSUCHJOB | 0 |
+
+    | st-admin | set-workspace-config -w %%workspace%% email_notify_is_enabled 1 |
+    | set-user-id | theuser_id | %%username%% |
+
+    | set | pref_prefix | action=preferences_settings&preferences_class_id=email_notify&email_notify__notify_frequency |
+    | set | pref_suffix | email_notify__links_only=condensed&email_notify__sort_order=name&Button=save                 |
+
+
+    | Comment | System pages should not get emailed out |
+
+    | set             | noreply         | noreply@socialtext.com      |       |
+    | delete-user     | %%noreply%%     |                             |       |
+    | create-user     | %%noreply%%     | password                    |       |
+    | add-member      | %%noreply%%     | %%workspace%%               |       |
+    | http-user-pass  | %%noreply%%     | password                    |       |
+    | edit_page       | %%workspace%%   | SystemPage                  | O hai |
+    | http-user-pass  | %%username%%    | password                    |       |
+    | job-count       | EmailNotify     | 1                           |       |
+    | job-exists      | EmailNotify     | %%workspace_id%%-systempage |       |
+    | st-process-jobs |                 |                             |       |
+    | job-count       | EmailNotify     | 0                           |       |
+    | job-count       | EmailNotifyUser | 0                           |       |
+    | remove-member   | %%noreply%%     | %%workspace%%               |       |
+
+    ----
+
+    | Comment | Edit two pages check for notify jobs |
+
+    | clear-email |                 |                      |       |
+    | edit_page   | %%workspace%%   | Foo                  | O hai |
+    | edit_page   | %%workspace%%   | Bar                  | zomg  |
+    | job-count   | EmailNotify     | 2                    |       |
+    | job-exists  | EmailNotify     | %%workspace_id%%-foo |       |
+    | job-exists  | EmailNotify     | %%workspace_id%%-bar |       |
+    | email-like  | __NO CONTENT!__ |                      |       |
+
+    | Comment | process jobs and check that we have notifications for the future |
+
+    | st-process-jobs |                 |                              |
+    | job-count       | EmailNotify     | 0                            |
+    | job-count       | EmailNotifyUser | 1                            |
+    | job-exists      | EmailNotifyUser | %%workspace_id%%-%%theuser_id%% |
+    | email-like      | __NO CONTENT!__ |                              |
+
+    | Comment | move time to just before the user pref interval |
+
+    | st-fast-forward-jobs | 1439            |   |
+    | st-process-jobs      |                 |   |
+    | job-count            | EmailNotifyUser | 1 |
+    | email-like           | __NO CONTENT!__ |   |
+
+    | Comment | move time to process the user jobs |
+
+    | st-fast-forward-jobs | 1               |   |
+    | st-process-jobs      |                 |   |
+    | job-count            | EmailNotifyUser | 1 |
+
+    | email-like   | To: %%user_name_and_email%%                        |
+    | email-like   | Subject: Recent Changes In %%workspace%% Workspace |
+    | email-like   | From: "%%workspace%%" <noreply@socialtext.com>     |
+    | email-like   | Foo                                                |
+    | email-like   | /%%workspace%%/?foo                                |
+    | email-like   | Bar                                                |
+    | email-like   | /%%workspace%%/?bar                                |
+    | email-like   | qr/created by.+you/                                |
+    | email-like   | %%workspace%%/emailprefs                           |
+    | email-unlike | SystemPage                                         |
+    | email-like   | Foo                                                |
+    | email-like   | Bar                                                |
+    | email-like   | qr/created by.+you/                                |
+
+    | Comment | A "gap protector" job is filed to prevent missed pages |
+
+    | job-count  | EmailNotifyUser | 1                            |
+    | job-exists | EmailNotifyUser | %%workspace_id%%-%%theuser_id%% |
+
+    | Comment | Edit another page to exercise the gap protector |
+
+    | clear-email     |                 |                              |       |
+    | edit_page       | %%workspace%%   | BING                         | bzong |
+    | job-count       | EmailNotify     | 1                            |       |
+    | job-exists      | EmailNotify     | %%workspace_id%%-bing        |       |
+    | job-count       | EmailNotifyUser | 1                            |       |
+    | job-exists      | EmailNotifyUser | %%workspace_id%%-%%theuser_id%% |       |
+
+    | st-process-jobs |                 |                              |
+    | job-count       | EmailNotifyUser | 1                            |
+    | job-exists      | EmailNotifyUser | %%workspace_id%%-%%theuser_id%% |
+    | job-count       | EmailNotify     | 0                            |
+    | email-like      | __NO CONTENT!__ |                              |
+
+    | Comment | process the gap protector |
+
+    | st-fast-forward-jobs | 1500            |                              |
+    | st-process-jobs      |                 |                              |
+    | job-count            | EmailNotify     | 0                            |
+    | job-count            | EmailNotifyUser | 1                            |
+    | job-exists           | EmailNotifyUser | %%workspace_id%%-%%theuser_id%% |
+    | email-like           | BING            |                              |
+
+    | Comment | no gap protector after the next run; no modified pages found |
+
+    | clear-email          |                 |   |
+    | st-fast-forward-jobs | 1500            |   |
+    | st-process-jobs      |                 |   |
+    | job-count            | EmailNotify     | 0 |
+    | job-count            | EmailNotifyUser | 0 |
+    | email-like           | __NO CONTENT!__ |   |
+
+    ----
+
+    | Comment | Edit a page, then change notify pref to 0 BEFORE EmailNotifyUser |
+
+    This also tests the email notify sort order and the display details prefs.
+
+    | clear-email   |
+    | st-clear-jobs |
+
+    | edit_page       | %%workspace%%   | Foo                          | O hai |
+    | job-count       | EmailNotify     | 1                            |       |
+    | job-exists      | EmailNotify     | %%workspace_id%%-foo         |       |
+    | st-process-jobs |                 |                              |       |
+    | job-count       | EmailNotifyUser | 1                            |       |
+    | job-exists      | EmailNotifyUser | %%workspace_id%%-%%theuser_id%% |       |
+
+    | post-form | /%%workspace%%/index.cgi | %%pref_prefix%%=0&%%pref_suffix%% |
+    | code-is   | 200                      |                                   |
+    | body-like | Preferences saved        |                                   |
+    | job-count | EmailNotifyUser          | 0                                 |
+
+    | Comment | Reset pref to a day |
+
+    | post-form | /%%workspace%%/index.cgi | %%pref_prefix%%=1440&%%pref_suffix%% |
+    | code-is   | 200                      |                                      |
+    | body-like | Preferences saved        |                                      |
+
+    ----
+
+    | Comment | Edit a page, then change notify pref to 4320 after EmailNotifyUser |
+
+    | clear-email   |
+    | st-clear-jobs |
+
+    | edit_page       | %%workspace%%   | Foo                             | O hai |
+    | edit_page       | %%workspace%%   | Aaaa                            | O hai |
+    | sleep           | 1               |                                 |       |
+    | job-count       | EmailNotify     | 2                               |       |
+    | job-exists      | EmailNotify     | %%workspace_id%%-foo            |       |
+    | job-exists      | EmailNotify     | %%workspace_id%%-aaaa           |       |
+    | st-process-jobs |                 |                                 |       |
+    | job-count       | EmailNotifyUser | 1                               |       |
+    | job-exists      | EmailNotifyUser | %%workspace_id%%-%%theuser_id%% |       |
+
+    | post-form  | /%%workspace%%/index.cgi | %%pref_prefix%%=4320&%%pref_suffix%% |
+    | code-is    | 200                      |                                      |
+    | body-like  | Preferences saved        |                                      |
+    | job-count  | EmailNotifyUser          | 1                                    |
+    | email-like | __NO CONTENT!__          |                                      |
+
+    job doesn't run yet:
+
+    | st-fast-forward-jobs | 1500            |                              |
+    | st-process-jobs      |                 |                              |
+    | job-count            | EmailNotifyUser | 1                            |
+    | job-exists           | EmailNotifyUser | %%workspace_id%%-%%theuser_id%% |
+    | email-like           | __NO CONTENT!__ |                              |
+
+    but after another few days or so:
+
+    | clear-email          |                    |   |
+    | st-fast-forward-jobs | 3500               |   |
+    | st-process-jobs      |                    |   |
+    | email-like           | qr/(?s)Aaaa.+Foo/  |   |
+    | email-unlike         | qr/created by/     |   |
+
+    and there's a "gap protector" job too:
+
+    | job-count            | EmailNotifyUser | 1 |
+    | clear-email          |                 |   |
+    | st-fast-forward-jobs | 5000            |   |
+    | st-process-jobs      |                 |   |
+    | job-count            | EmailNotifyUser | 0 |
+    | email-like           | __NO CONTENT!__ |   |
+
+    Set things back to "normal"
+
+    | post-form | /%%workspace%%/index.cgi | %%pref_prefix%%=1440&%%pref_suffix%% |
+    | code-is   | 200                      |                                      |
+    | body-like | Preferences saved        |                                      |
+
+    ----
+
+    | Comment | Set the notify_freq shorter |
+
+    | clear-email   |
+    | st-clear-jobs |
+
+    | edit_page       | %%workspace%%   | Foo                          | O hai |
+    | job-count       | EmailNotify     | 1                            |       |
+    | job-exists      | EmailNotify     | %%workspace_id%%-foo         |       |
+    | st-process-jobs |                 |                              |       |
+    | job-count       | EmailNotifyUser | 1                            |       |
+    | job-exists      | EmailNotifyUser | %%workspace_id%%-%%theuser_id%% |       |
+
+    | post-form  | /%%workspace%%/index.cgi | %%pref_prefix%%=15&%%pref_suffix%% |
+    | code-is    | 200                      |                                   |
+    | body-like  | Preferences saved        |                                   |
+    | job-count  | EmailNotifyUser          | 1                                 |
+    | email-like | __NO CONTENT!__          |                                   |
+
+    job doesn't run yet:
+
+    | job-count            | EmailNotifyUser | 1                            |
+    | st-fast-forward-jobs | 3               |                              |
+    | st-process-jobs      |                 |                              |
+    | job-count            | EmailNotifyUser | 1                            |
+    | job-exists           | EmailNotifyUser | %%workspace_id%%-%%theuser_id%% |
+    | email-like           | __NO CONTENT!__ |                              |
+
+    but after another 15 mins or so:
+
+    | st-fast-forward-jobs | 15              |   |
+    | st-process-jobs      |                 |   |
+    | job-count            | EmailNotifyUser | 1 |
+    | email-like           | qr/Foo/         |   |
+    | email-unlike         | qr/created by/  |   |
+
+    and do the "gap protector" job too:
+
+    | clear-email          |                 |   |
+    | st-fast-forward-jobs | 15              |   |
+    | st-process-jobs      |                 |   |
+    | job-count            | EmailNotifyUser | 0 |
+    | email-like           | __NO CONTENT!__ |   |
+
+    Set things back to "normal"
+
+    | post-form | /%%workspace%%/index.cgi | %%pref_prefix%%=1440&%%pref_suffix%% |
+    | code-is   | 200                      |                                      |
+    | body-like | Preferences saved        |                                      |
+
+    ----
+
+    | Comment | Users removed from workspace should not get notifications | |
+    | clear-email |                 |                      |       |
+    | edit_page   | %%workspace%%   | Foo                  | O hai |
+    | job-count   | EmailNotify     | 1                    |       |
+    | job-exists  | EmailNotify     | %%workspace_id%%-foo |       |
+    | st-process-jobs |                 |                              |
+    | job-count       | EmailNotify     | 0                            |
+    | job-count       | EmailNotifyUser | 1                            |
+    | job-exists      | EmailNotifyUser | %%workspace_id%%-%%theuser_id%% |
+    | remove-member | %%email_address%% | %%workspace%% |
+    | st-fast-forward-jobs | 1500            |   |
+    | st-process-jobs      |                 |   |
+    | job-count            | EmailNotifyUser | 0 |
+    | email-like           | __NO CONTENT!__ |   |
+    | add-member | %%email_address%% | %%workspace%% |

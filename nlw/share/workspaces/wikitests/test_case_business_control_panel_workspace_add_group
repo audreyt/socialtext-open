@@ -1,0 +1,63 @@
+| *Comment* | Test Case: Business Control Panel Workspace Add Group |  |
+
+| *Comment* | Test Case: Business Control Panel Workspace Add Group SETUP |  |  |
+| st-admin | give-accounts-admin --username %%username%% |  |  |
+| set | acct | bcpwagacct%%start_time%% |  |
+| st-admin | create-account --name %%acct%% |  |  |
+| set | group | groupbcpwag%%start_time%% |  |
+| create-group | %%group%% | %%acct%% | %%username%% |
+| set | testuser | testuserwag%%start_time%%@ken.socialtext.net |  |
+| create-user | %%testuser%% | %%password%% |  |
+| add-user-to-group | %%testuser%% | %%group_id%% |  |
+| set | ws | bcpwad%%start_time%% |  |
+| create-workspace | %%ws%% | %%acct%% |  |
+
+| *Comment* | Test Case: Business Control Panel Workspace Add Group Go to Workspace |  |
+| open_ok | /nlw/control/workspace |  |
+| wait_for_element_visible_ok | name |  |
+| type_ok | name | %%ws%% |
+| wait_for_element_visible_ok | st-ws-search-submit | 30000 |
+| click_and_wait | st-ws-search-submit |  |
+| wait_for_element_visible_ok | link=%%ws%% | 30000 |
+| click_and_wait | link=%%ws%% |  |
+
+| *Comment* | Test Case: Business Control Panel Workspace Add Group Add the Group |  |
+| wait_for_element_visible_ok | //a[contains(text(),'Add Group')] | 30000 |
+| wait_for_text_present_ok | Groups (0) | 30000 |
+| click_and_wait | //a[contains(text(),'Add Group')] |  |
+| wait_for_element_visible_ok | send-invite-message | 30000 |
+| uncheck_ok | send-invite-message |  |
+| text_like | //body | qr/Add Group To Workspace/ism |
+| text_like | //body | Send invitation email |
+| wait_for_element_visible_ok | group_id | 30000 |
+| select-ok | group_id | Default,%%group%% |
+| click_and_wait | //input[@value='Add to Workspace'] |  |
+
+| *Comment* | Test Case: Business Control Panel Workspace Add Group Verify the add |  |
+| wait_for_text_present_ok | Group '%%group%%' now has the role of member in the %%ws%% | 30000 |
+| wait_for_text_present_ok | Groups (1) | 30000 |
+| wait_for_text_present_ok | Users (0) | 30000 |
+| wait_for_element_visible_ok | link=%%group%% | 30000 |
+| st-admin | list-groups -w %%ws%% | %%group%% |
+
+| *Comment* | Test Case: Business Control Panel Workspace Add Group - try to remove it |  |
+| wait_for_element_visible_ok | groupTable-select-0 | 30000 |
+| click_ok | groupTable-select-0 |  |
+| wait_for_element_visible_ok | //input[@id='groupTable-action-0' and @value="Remove from Workspace"] | 30000 |
+| click_ok | //input[@id='groupTable-action-0' and @value="Remove from Workspace"] |  |
+| confirmation_like | qr/Remove the selected.+group/ism |  |
+| wait_for_text_present_ok | Workspaces need to include at least one admin | 30000 |
+
+| *Comment* | Test Case: Business Control Panel Workspace Add Group - give WS admin so group can be removed |  |
+| st-admin | add-workspace-admin --w %%ws%% --u %%username%% | now has the role of 'admin' |
+| click_ok | groupTable-select-0 |  |
+| wait_for_element_visible_ok | //input[@id='groupTable-action-0' and @value="Remove from Workspace"] | 30000 |
+| click_ok | //input[@id='groupTable-action-0' and @value="Remove from Workspace"] |  |
+| confirmation_like | qr/Remove the selected.+group/ism |  |
+| wait_for_text_present_ok | Workspace role changes were successful | 30000 |
+
+| *Comment* | Test Case: Business Control Panel Workspace Add Group TEARDOWN |  |
+| st-admin | delete-workspace --workspace %%ws%% --no-export | has been deleted |
+| delete-account | %%acct%% | has been deleted |
+
+| *Comment* | Test Case: Business Control Panel Workspace Add Group COMPLETED |  |

@@ -1,0 +1,211 @@
+* Fixture: EmailJob
+
+| standard-test-setup |
+| st-clear-jobs       |
+| clear-email         |
+
+| set-user-id | user_id | %%username%% |
+
+| st-admin | set-workspace-config -w %%workspace%% email_notify_is_enabled 1 |
+
+| Comment | Turn off regular email notify to simplify testing |
+| post-form | /%%workspace%%/index.cgi | action=preferences_settings&preferences_class_id=email_notify&email_notify__notify_frequency=0&email_notify__links_only=condensed&email_notify__sort_order=name&Button=save |
+| code-is   | 200               |
+| body-like | Preferences saved |
+
+| set | pref_prefix | action=preferences_settings&preferences_class_id=watchlist&Button=save&watchlist__watchlist_notify_frequency |
+
+| Comment | Watch 2 pages |
+| edit_page | %%workspace%% | Foo | initial edit |
+| edit_page | %%workspace%% | Baz | initial edit |
+| edit_page | %%workspace%% | Bar | initial edit |
+
+| GET     | /%%workspace%%/index.cgi?action=add_to_watchlist;page=foo |
+| code-is | 200                                                       |
+| GET     | /%%workspace%%/index.cgi?action=add_to_watchlist;page=bar |
+| code-is | 200                                                       |
+
+edit a page, wait, get an email
+
+| Comment | Edit two pages check for notify jobs |
+
+| clear-email |                 |                      |                  |
+| edit_page   | %%workspace%%   | Foo                  | O hai            |
+| edit_page   | %%workspace%%   | Baz                  | not on watchlist |
+| edit_page   | %%workspace%%   | Bar                  | zomg             |
+| job-count   | WatchlistNotify | 3                    |                  |
+| job-exists  | WatchlistNotify | %%workspace_id%%-foo |                  |
+| job-exists  | WatchlistNotify | %%workspace_id%%-baz |                  |
+| job-exists  | WatchlistNotify | %%workspace_id%%-bar |                  |
+| job-count   | WatchlistNotifyUser | 0                    |                  |
+
+| Comment | process jobs and check that we have notifications for the future |
+
+| st-process-jobs |                     |                              |
+| job-count       | WatchlistNotify     | 0                            |
+| job-count       | WatchlistNotifyUser | 1                            |
+| job-exists      | WatchlistNotifyUser | %%workspace_id%%-%%user_id%% |
+| email-like      | __NO CONTENT!__     |                              |
+
+
+| Comment | move time to just before the user pref interval |
+
+| st-fast-forward-jobs | 1439                |   |
+| st-process-jobs      |                     |   |
+| job-count            | WatchlistNotifyUser | 1 |
+| email-like           | __NO CONTENT!__     |   |
+
+
+| Comment | move time to process the user jobs |
+
+Note that a "gap protector" job gets filed.
+
+| st-fast-forward-jobs | 1                   |   |
+| st-process-jobs      |                     |   |
+| job-count            | WatchlistNotifyUser | 1 |
+| email-like           | Foo                 |   |
+| email-like           | Bar                 |   |
+| email-unlike         | Baz                 |   |
+
+| Comment | Process the "gap protector" job |
+
+| clear-email          |                     |   |
+| st-fast-forward-jobs | 1500                |   |
+| st-process-jobs      |                     |   |
+| job-count            | WatchlistNotifyUser | 0 |
+| email-like           | __NO CONTENT!__     |   |
+
+
+
+| Comment | Edit a page, then change watchlist notify pref to 0 BEFORE WatchlistNotifyUser |
+
+This also tests the email notify sort order and the display details prefs.
+
+| clear-email   |
+| st-clear-jobs |
+
+| edit_page       | %%workspace%%       | Foo                          | O hai |
+| job-count       | WatchlistNotify     | 1                            |       |
+| job-exists      | WatchlistNotify     | %%workspace_id%%-foo         |       |
+| st-process-jobs |                     |                              |       |
+| job-count       | WatchlistNotifyUser | 1                            |       |
+| job-exists      | WatchlistNotifyUser | %%workspace_id%%-%%user_id%% |       |
+| email-like      | __NO CONTENT!__     |                              |       |
+
+| post-form  | /%%workspace%%/index.cgi | %%pref_prefix%%=0 |
+| code-is    | 200                      |                   |
+| body-like  | Preferences saved        |                   |
+| job-count  | WatchlistNotifyUser      | 0                 |
+| email-like | __NO CONTENT!__          |                   |
+
+| Comment | Reset pref to a day |
+
+| post-form | /%%workspace%%/index.cgi | %%pref_prefix%%=1440 |
+| code-is   | 200                      |                      |
+| body-like | Preferences saved        |                      |
+
+
+
+| Comment | Edit a page, then change notify pref to 4320 after WatchlistNotifyUser |
+
+| clear-email   |
+| st-clear-jobs |
+
+| edit_page       | %%workspace%%       | Foo                          | O hai |
+| edit_page       | %%workspace%%       | Aaaa                         | O hai |
+| job-count       | WatchlistNotify     | 2                            |       |
+| job-exists      | WatchlistNotify     | %%workspace_id%%-foo         |       |
+| job-exists      | WatchlistNotify     | %%workspace_id%%-aaaa        |       |
+| st-process-jobs |                     |                              |       |
+| job-count       | WatchlistNotifyUser | 1                            |       |
+| job-exists      | WatchlistNotifyUser | %%workspace_id%%-%%user_id%% |       |
+| email-like      | __NO CONTENT!__     |                              |       |
+
+| post-form  | /%%workspace%%/index.cgi | %%pref_prefix%%=4320 |
+| code-is    | 200                      |                      |
+| body-like  | Preferences saved        |                      |
+| job-count  | WatchlistNotifyUser      | 1                    |
+| email-like | __NO CONTENT!__          |                      |
+
+| Comment | job doesn't run yet |
+
+| st-fast-forward-jobs | 1500                |                              |
+| st-process-jobs      |                     |                              |
+| job-count            | WatchlistNotifyUser | 1                            |
+| job-exists           | WatchlistNotifyUser | %%workspace_id%%-%%user_id%% |
+| email-like           | __NO CONTENT!__     |                              |
+
+| Comment | but after another few days or so... |
+| clear-email   |
+
+| st-fast-forward-jobs | 3500                |   |
+| st-process-jobs      |                     |   |
+| job-count            | WatchlistNotifyUser | 1 |
+| email-like           | Foo                 |   |
+| email-unlike         | Aaaa                |   |
+| email-unlike         | qr/created by/      |   |
+
+| Comment | Process the "gap protector" job |
+
+| clear-email          |                     |   |
+| st-fast-forward-jobs | 5000                |   |
+| st-process-jobs      |                     |   |
+| job-count            | WatchlistNotifyUser | 0 |
+| email-like           | __NO CONTENT!__     |   |
+
+Set things back to "normal"
+
+| post-form | /%%workspace%%/index.cgi | %%pref_prefix%%=1440 |
+| code-is   | 200                      |                      |
+| body-like | Preferences saved        |                      |
+
+
+
+| Comment | Set the notify_freq shorter |
+
+| clear-email   |
+| st-clear-jobs |
+
+| edit_page       | %%workspace%%       | Foo                          | O hai |
+| job-count       | WatchlistNotify     | 1                            |       |
+| job-exists      | WatchlistNotify     | %%workspace_id%%-foo         |       |
+| st-process-jobs |                     |                              |       |
+| job-count       | WatchlistNotifyUser | 1                            |       |
+| job-exists      | WatchlistNotifyUser | %%workspace_id%%-%%user_id%% |       |
+| email-like      | __NO CONTENT!__     |                              |       |
+
+| post-form  | /%%workspace%%/index.cgi | %%pref_prefix%%=15 |
+| code-is    | 200                      |                   |
+| body-like  | Preferences saved        |                   |
+| job-count  | WatchlistNotifyUser      | 1                 |
+| email-like | __NO CONTENT!__          |                   |
+
+| Comment | job doesn't run yet |
+
+| st-fast-forward-jobs | 3                   |                              |
+| st-process-jobs      |                     |                              |
+| job-count            | WatchlistNotifyUser | 1                            |
+| job-exists           | WatchlistNotifyUser | %%workspace_id%%-%%user_id%% |
+| email-like           | __NO CONTENT!__     |                              |
+
+| Comment | but after another 15 mins or so |
+
+| st-fast-forward-jobs | 15                  |   |
+| st-process-jobs      |                     |   |
+| job-count            | WatchlistNotifyUser | 1 |
+| email-like           | qr/Foo/             |   |
+| email-unlike         | qr/created by/      |   |
+
+| Comment | Process the "gap protector" job |
+
+| clear-email          |                     |   |
+| st-fast-forward-jobs | 15                  |   |
+| st-process-jobs      |                     |   |
+| job-count            | WatchlistNotifyUser | 0 |
+| email-like           | __NO CONTENT!__     |   |
+
+Set things back to "normal"
+
+| post-form | /%%workspace%%/index.cgi | %%pref_prefix%%=1440 |
+| code-is   | 200                      |                      |
+| body-like | Preferences saved        |                      |

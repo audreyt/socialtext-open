@@ -1,0 +1,37 @@
+[%# @COPYRIGHT@ -%]
+<html>
+<head>
+ <title>
+ [% IF target_workspace %]
+ [% loc('email.welcome-confirm-email-to-join')%]
+ [% ELSE %]
+ [% loc('email.welcome-confirm-email-to-join=account', account_name) %]
+ [% END %]
+ </title>
+</head>
+
+        
+<body>
+
+<p>
+[% loc('email.welcome-to')%] [% IF target_workspace %][% loc("email.wiki-in-group-at=wiki,group", target_workspace.title, account_name) %][% END %][% PROCESS system_name %].
+</p>
+
+<p>
+[% IF target_workspace %]
+[% loc('email.your-profile-has-been-added-to-directory=account', account_name) %]
+[% ELSE %]
+[% loc('email.your-profile-has-been-added-to-people-directory') %]
+[% END %]
+[% loc('email.follow-link-to-confirm-email-and-update-your-info=uri', confirmation_uri) %]
+</p>
+
+[% BLOCK system_name -%]
+[% IF appconfig.is_appliance %]Socialtext Appliance[% ELSE %]Socialtext[% END %]
+[%- END %]
+
+[% PROCESS 'email/standard-footer.html'
+   support_link = 1 %]
+
+</body>
+</html>

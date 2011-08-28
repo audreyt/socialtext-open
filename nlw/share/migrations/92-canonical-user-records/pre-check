@@ -1,0 +1,13 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use Socialtext::Migration::Utils qw/socialtext_schema_version/;
+
+if (socialtext_schema_version() < 141) {
+    print "running migration\n";
+    exit 0;
+}
+else {
+    print "migration has run, skipping\n";
+    exit 1;
+}

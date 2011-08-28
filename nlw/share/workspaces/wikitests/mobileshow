@@ -1,0 +1,21 @@
+| *Comment* | MobileShow. Mobile slideshow in iphonetester.com |  |
+| *Comment* | MobileShow expects to already be logged in |  |
+| *Comment* | URL is %%browser_url%% |  |
+
+| set_default | pt | 5000 | defaults to five seconds |
+
+| open_ok | http://iphonetester.com/ |  |
+
+| wait_for_element_visible_ok | link=Change Orientation | 5000 |
+| click_ok | link=Change Orientation |  |
+
+| wait_for_element_visible_ok | id=url | 30000 |
+| type_ok | url | %%browser_url%%/m |
+| click_ok | id=go |  |
+| selectFrame | id=iframe |  |
+
+| include | [MikiShow] |  |
+
+| selectFrame | relative=parent |  |
+
+| *Comment* | MobileShow COMPLETED |  |

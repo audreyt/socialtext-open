@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+
+DIR="/var/tmp"
+TEMPLATE="??????.??????.tmp"
+
+# Find all files in /var/tmp, but not its subdirs, which match htmldoc's
+# template pattern and were last accessed two or more days ago.  Delete those
+# files.  
+#
+# We delimate find output w/ null bytes and have xargs split on nullbytes,
+# just to be extra paranoid of spaces or weird characters.
+find "$DIR" -maxdepth 1 -type f -atime +1 -name "$TEMPLATE" -print0 | \
+xargs --null rm -f
+
+exit 0

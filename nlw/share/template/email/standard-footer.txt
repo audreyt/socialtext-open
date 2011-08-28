@@ -1,0 +1,5 @@
+-- 
+[% IF support_link %]
+[% loc('email.questions-about-email-contact-support=uri', appconfig.support_address) %]
+[% END %]
+[% loc('invite.socialtext-footer') %]

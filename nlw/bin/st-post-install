@@ -1,0 +1,61 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::Build qw(get_build_setting);
+use Socialtext::Log qw/st_timed_log/;
+use Socialtext::User;
+use Socialtext::System qw(shell_run);
+use Socialtext::System::TraceTo '/var/log/st-update.log';
+use Socialtext::Timer;
+use Socialtext::File;
+use Socialtext::AppConfig;
+use File::Spec::Functions qw(catfile);
+
+my $script_dir = get_build_setting("sharedir") . "/post-install";
+die "Could not find directory: $script_dir\n" unless -d $script_dir;
+
+# Use the same dumpfile for all updates. See ST::Schema::dump
+unless ( $ENV{ST_DB_DUMPFILE} ) {
+    my $dump_dir = Socialtext::File::catdir(
+        Socialtext::AppConfig->data_root_dir(), 'storage', 'db-backups' );
+    my $time = time;
+
+    $ENV{ST_DB_DUMPFILE} = Socialtext::File::catfile(
+        $dump_dir, "NLW-dump.$time.sql");
+}
+
+run_scripts($script_dir);
+exit;
+
+sub run_scripts {
+    my $dir = shift;
+    $Socialtext::System::SILENT_RUN = 1;
+    for my $script ( get_scripts($dir) ) {
+        (my $name = $script) =~ s#.+/##;
+        Socialtext::Timer->Continue($name);
+        shell_run($script);
+        Socialtext::Timer->Pause($name);
+    }
+    st_timed_log('info', 'POSTINST', 'st-post-install',
+        Socialtext::User->SystemUser(),
+        undef,
+        Socialtext::Timer->Report(),
+    );
+}
+
+sub get_scripts {
+    my $dir = shift;
+    opendir( my $dh, $dir) || die "Could not open $dir: $!\n";
+    my @scripts = grep { -x $_ && -r _ }
+                  map { catfile($dir, $_->[1]) }
+                  sort { $a->[0] <=> $b->[0] }
+                  map { /^(\d+)/; [$1, $_] }
+                  grep { /^\d+/ }
+                  readdir $dh;
+    closedir($dh) || die "Could not close $dir: $!\n";
+    return @scripts;
+}

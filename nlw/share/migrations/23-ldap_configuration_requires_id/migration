@@ -1,0 +1,39 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::AppConfig;
+use Socialtext::LDAP::Config;
+use Socialtext::SQL qw(sql_execute);
+
+# load YAML file
+my $ldap_yaml = Socialtext::LDAP::Config->config_filename();
+my @entries   = YAML::LoadFile($ldap_yaml);
+
+# update data
+foreach my $config (@entries) {
+    unless ($config->{id}) {
+        # create new unique driver id
+        my $id = Socialtext::LDAP::Config->generate_driver_id();
+
+        # set the driver id into the config
+        $config->{id} = $id;
+
+        # update any existing entries in the db
+        sql_execute(
+            qq(UPDATE "UserId" SET driver_key=? WHERE driver_key=?),
+            "LDAP:$id",
+            "LDAP",
+        );
+
+        # update "user_factories" to note driver id
+        my @factories = 
+            map { s/^LDAP$/LDAP:$id/; $_ }
+            split /;/, Socialtext::AppConfig->user_factories();
+        Socialtext::AppConfig->set( 'user_factories' => join(';',@factories) );
+        Socialtext::AppConfig->write();
+    }
+}
+
+# save YAML back out
+YAML::DumpFile($ldap_yaml, @entries);

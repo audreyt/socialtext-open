@@ -1,0 +1,50 @@
+[%# @COPYRIGHT@ -%]
+<table class="sortable query-results-content">
+  <tr class="sortable-cwheadertable-links query-results-header-row">
+    [% FOREACH column = table.columns %]
+      <th class="sortable-header">
+        [%
+          IF column.header;
+            PROCESS header_link page_uri = page_uri,
+                                action   = hub.action,
+                                sort     = loop.count,
+                                reverse  = column.reverse,
+                                id       = id,
+                                js       = table.js,
+                                header   = column.header;
+          END;
+        %]
+      </th>
+    [% END %]
+  </tr>
+  [% FOREACH row = table.rows %]
+    <tr class="[% IF loop.count % 2 %]sortable-row-odd w-st-odd-row[% ELSE %]w-st-even-row[% END %] query-results-row">
+      [% SET i = 0 %]
+      [% FOREACH elem = row %]
+      <td class="sortable-row-cell">
+          [% IF table.columns.$i.action;
+            PROCESS item_link page_uri = page_uri,
+                              action   = table.columns.$i.action,
+                              id       = table.columns.$i.id,
+                              elem     = elem;
+          %]
+          [% ELSE %]
+            [% elem.value || elem %]
+          [% END %]
+
+      </td>
+
+      [% i = i + 1 %]
+      [% END %]
+    </tr>
+  [% END %]
+</table>
+
+[% BLOCK item_link %]
+  <a class="sortable-row-cell-link" href="[% script_name %]?page_name=[% page_uri %];action=[% action %];[% id %]=[% elem %]">[% elem %]</a>
+[% END %]
+
+
+[% BLOCK header_link %]
+  <a class="sortable-header-link" href="[% script_name %]?page_name=[% page_uri %];action=[% action %];sort=[% sort %];reverse=[% reverse %];id=[% id %];js=[% js %]">[% header %]</a>
+ [% END %]

@@ -1,0 +1,99 @@
+* Fixture: SocialRest
+
+# XXX: Test 16, `| body-like | qr/\Q<a id="st-home-link" href="\/">Dashboard<\/a>\E/ |`
+# appears to be flaky and should be fixed in the near future.
+
+| set              | account       | account%%start_time%%                 |             |
+| create-account   | %%account%%   |                                       |             |
+| set              | workspace     | wksp%%start_time%%                    |             |
+| create-workspace | %%workspace%% | %%account%%                           |             |
+| set              | username      | user%%start_time%%@ken.socialtext.net |             |
+| create-user      | %%username%%  | password                              | %%account%% |
+| add-member       | %%username%% | %%workspace%% |
+
+| Comment   | Admin puts a workspace name in the default_workspace field of socialtext.conf (or `st-config`) |
+| st-config | set default_workspace %%workspace%%                                                            |
+
+| Comment            | User's primary account has dashboard enabled (is by default)                                                       |                |
+| Comment            | ... the default workspace is public. Guest User navigates to $servername and is navigated to the default workspace |                |
+| http-user-pass     |                                                                                                                    |                |
+| set-ws-permissions | %%workspace%%                                                                                                      | public         |
+| get                | /                                                                                                                  |                |
+| code-is            | 302                                                                                                                |                |
+| header-is          | Location                                                                                                           | /%%workspace%% |
+
+| Comment            | ... the default workspace is private. user logs in. they navigate to the default workspace |                 |
+| set-ws-permissions | %%workspace%%                                                                              | member-only     |
+| get                | /                                                                                          |                 |
+| code-is            | 302                                                                                        |                 |
+| header-is          | Location                                                                                   | /%%workspace%%  |
+| get                | /%%workspace%%/%%workspace%%                                                     |                 |
+| code-is            | 302                                                                                        |                 |
+| header-like        | Location                                                                                   | /nlw/login.html |
+| http-user-pass     | %%username%%                                                                               | password        |
+| get                | /%%workspace%%/%%workspace%%                                                     |                 |
+| code-is            | 200                                                                                        |                 |
+
+| Comment     | ... user clicks "home" - they navigate to dashboard |             |
+| get         | /st/dashboard                                         |             |
+| code-is     | 200                                                 |             |
+
+| Comment            | User's primary account has dashboard disabled.                                                                |                   |
+| st-admin           | disable-plugin --plugin dashboard --account %%account%%                                                       |                   |
+| Comment            | ... the default workspace is public. user navigates to $servername and is navigated to the default workspace. |                   |
+| http-user-pass     |                                                                                                               |                   |
+| set-ws-permissions | %%workspace%%                                                                                                 | public            |
+| get                | /                                                                                                             |                   |
+| code-is            | 302                                                                                                           |                   |
+| header-is          | Location                                                                                                      | /%%workspace%%    |
+
+| Comment            | ... the default workspace is private. user logs in. they navigate to the default workspace |                 |
+| set-ws-permissions | %%workspace%%                                                                              | member-only     |
+| get                | /                                                                                          |                 |
+| code-is            | 302                                                                                        |                 |
+| header-is          | Location                                                                                   | /%%workspace%%  |
+| get                | /%%workspace%%/%%workspace%%                                                     |                 |
+| code-is            | 302                                                                                        |                 |
+| header-like        | Location                                                                                   | /nlw/login.html |
+| http-user-pass     | %%username%%                                                                               | password        |
+| get                | /%%workspace%%/%%workspace%%                                                     |                 |
+| code-is            | 200                                                                                        |                 |
+
+| Comment   | ... user clicks home. they navigate to the default workspace |                |
+| body-like | <a id="st-home-link" href="/">Dashboard</a>              |                |
+| get       | /                                                            |                |
+| code-is   | 302                                                          |                |
+| header-is | Location                                                     | /%%workspace%% |
+
+| Comment   | Set up a default_workspace that doesn't exist |                   |
+| set       | bad_wksp                                      | %%workspace%%-bad |
+| st-config | set default_workspace %%bad_wksp%%            |                   |
+
+| Comment  | Dashboard is disabled.                                  |
+| st-admin | disable-plugin --plugin dashboard --account %%account%% |
+
+| Comment     | bad workspace: User sent to workspace list upon login. |                              |
+| get         | /%%bad_wksp%%/                                |                              |
+| code-is     | 302                                                    |                              |
+| header-like | Location                                               | qr/\?action=workspace_list$/ |
+
+| Comment     | root: user sent to workspace list |                              |
+| get         | /                                 |                              |
+| code-is     | 302                               |                              |
+| header-like | Location                          | qr/\?action=workspace_list$/ |
+
+| Comment  | Dashboard is enabled.                                  |
+| st-admin | enable-plugin --plugin dashboard --account %%account%% |
+
+| Comment     | bad workspace: user sent to workspace list |                              |
+| get         | /%%bad_wksp%%/                    |                              |
+| code-is     | 302                                        |                              |
+| header-like | Location                                   | qr/\?action=workspace_list$/ |
+
+| Comment | root: user sent to dashboard, no default workspace redirect |
+| get     | /                                                           |
+| code-is | 302                                                         |
+| header-is | Location                                   | /st/dashboard |
+
+| Comment   | CLEANUP: un-set `default_workspace` |
+| st-config | set default_workspace ''            |

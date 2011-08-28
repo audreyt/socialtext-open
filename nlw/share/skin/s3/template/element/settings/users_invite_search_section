@@ -1,0 +1,162 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[% save_button_value = loc('nav.search') %]
+[% INCLUDE element/settings/start %]
+<dl class="form">
+  <dt><label>[% loc('invite.search-users') %]</label></dt>
+  <dd>[% loc("invite.lookahead") %]</dd>
+
+  [% IF restrict_domain %]
+    [% loc('info.invite-filter=domain', restrict_domain) %]
+  [% END %]
+  [% IF restrict_domain && invitation_filter %]<br />[% END %]
+  [% IF invitation_filter %]
+    [% loc('wiki.set=filter', invitation_filter) %]
+  [% END %]
+
+  <dd><input type="text" size="40" name="user_search" value="[% user_search %]"/></dd>
+  <dd>
+    [% loc('invite.example:') %]
+    <pre>[% loc('invite.your') %]
+[% loc('invite.friend') %]
+[% loc('invite.example-address') %]
+[% loc('email.another-example') %]
+[% loc('invite.example') %]
+[% loc('invite.example-domain') %]
+    </pre>
+  </dd>
+</dl>
+
+[% IF search_performed %]
+<dl class="form">
+  [% IF users.size and groups.size and is_admin %]
+  <dd>[% loc('info.invite-admin-groups') %]</dd>
+    [% IF groups.size == 1 %]
+      <dd><p><strong>[% loc('invite.group') %]:</strong> <a href="/st/group/[% groups.0.group_id %]" target="_blank">[% groups.0.display_name %]</a><input type="hidden" name="invite_to_group" value="[% groups.0.group_id %]"></p></dd>
+    [% ELSIF groups.size > 1 %]
+      <dd><strong>[% loc('nav.groups') %]: </strong>
+      <ul>
+      [% FOR group IN groups %] 
+      <li>
+      <input name="invite_to_group" type="checkbox" value="[% group.group_id %]" checked="1"><a href="/st/groups/[% group.group_id %]" target="_blank">[% group.display_name %]</a>
+      </li>
+
+      [% END %]
+    </ul>
+    </dd>
+    <script language="Javascript">
+      jQuery("input[name=invite_to_group]").click(function() {
+        var checkedgroups= jQuery("input[name=invite_to_group]:checked");
+        jQuery("#group_invite_checkbox").attr('checked', (checkedgroups.size() > 0));
+        if (checkedgroups.size() > 0) {
+             jQuery("#group_invite_checkbox").removeAttr('disabled');
+        } else {
+             jQuery("#group_invite_checkbox").attr('disabled', true);
+        }
+      });
+    </script>
+    [% END %]
+    <dd>
+      <input id="group_invite_checkbox" name="group_invite" type="checkbox" value="1" checked="1" />
+      [% loc('invite.to-groups') %] 
+    </dd>
+    <script language="Javascript">
+        jQuery("input[name=group_invite]").click(function() {
+          if (jQuery(this).attr('checked')) {
+            jQuery("input[name=invite_to_group]").removeAttr('disabled');
+          } else {
+            jQuery("input[name=invite_to_group]").attr('disabled', true);
+          }
+        });
+    </script>
+  [% END %]
+  <dt><label>[% loc('search.results') %]</label></dt>
+  [% IF users.size %]
+  <dd>
+    [% IF users.size > 20 %]
+      <ul class="formButtons">
+        <li class="flexButton">
+          <a class="genericOrangeButton" href="#" onclick="jQuery('input[name=Button]').val('Invite'); jQuery('form[name=settings]').submit(); return false">[% loc('nav.invite') %]</a>
+        </li>
+      </ul>
+      <br />
+    [% END %]
+<script language="Javascript">
+function toggle_all() {
+    var field = document.settings.email_addresses;
+    var toggler = document.settings.all;
+    if (!field.length) {
+        field.checked = toggler.checked;
+    } else {
+        for (var i=0; i < field.length; i++) {
+            field[i].checked = toggler.checked;
+        }
+    }
+    return true;
+};
+
+</script>
+        <input type="checkbox" name="all" onclick="toggle_all()"/>[% loc('nav.toggle-all') %]<br />
+    [% FOREACH user = users %]
+        <input type="checkbox" name="email_addresses" value="[% user.email_address %]"/> [% user.name_and_email | html %]<br/>
+    [% END %]
+        <ul class="formButtons">
+          <li class="flexButton">
+            <a class="genericOrangeButton" href="#" onclick="jQuery('input[name=Button]').val('Invite'); jQuery('form[name=settings]').submit(); return false">[% loc('nav.invite') %]</a>
+          </li>
+        </ul>
+  </dd>
+  [% ELSE %]
+  <dd>
+      [% loc('search.no-results') %]
+  </dd>
+  [% END %]
+</dl>
+[% ELSE %]
+      <input type="hidden" name="email_addresses" value="0"/>
+[% END %]
+
+
+[% IF hub.checker.check_permission('admin_workspace') %]
+<dl class="form">
+  <dt><label>[% loc('invite.personal-message') %]</label></dt>
+  <dd>[% loc('invite.include-personal-message') %]</dd>
+  <dd>
+    <input name="append_invitation" type="checkbox" value="1" />
+    [% loc('invite.append?') %]
+  </dd>
+  <dd>
+    <textarea name="invitation_text" rows="8" cols="50" class="clear-line">[% loc('invite.using-wiki') %]
+
+[% loc("invite.click-edit") %] [% loc('invite.edit-save') %]
+
+[% loc("invite.entering-text") %] [% loc("invite.no-worries") %]
+
+[% loc("invite.make-wikilink") %]</textarea>
+  </dd>
+</dl> 
+
+<dl class="form">
+  <dt><label>[% loc('invite.welcome-message') %]</label></dt>
+  <dd>[% loc('invite.welcome-email:') %]</dd>
+  <dd>
+    <div class="messageBox">
+      <div class="messageBoxRight">
+        <div class="messageBoxBottomRight">
+          <div class="messageBoxBottomLeft">
+             [% INCLUDE $workspace_invitation_body
+              workspace_title     => hub.current_workspace.title,
+              user          => 'invitee@example.com',
+              requires_confirmation => 1,
+              inviting_user     => hub.current_user.best_full_name,
+              confirmation_uri    => ''
+              extra_text      => loc('invite.your-personal-message'),
+            %]
+          </div><!-- messageBoxBottomLeft -->
+        </div><!-- messageBoxBottomRight -->
+      </div><!-- messageBoxRight END -->
+    </div><!-- messageBox END -->
+  </dd>
+</dl>
+[% END %]
+[% INCLUDE element/settings/stop %]

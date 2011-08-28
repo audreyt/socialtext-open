@@ -1,0 +1,80 @@
+| *Comment* | Test Case: Active Members Widget |  |
+
+* Fixture: SocialWidgets
+
+| set | am_acct_one | active-memb-1-%%start_time%% |
+| set | am_acct_two | active-memb-2-%%start_time%% |
+| set | members_email_1 | members-email-1%%start_time%%@ken.socialtext.net |
+| set | members_user_1 | members email 1%%start_time%% |
+| set | members_email_2 | mem2rs-email-2%%start_time%%@ken.socialtext.net |
+| set | members_user_2 | mem2rs email 2%%start_time%% |
+| set | members_email_3 | mem3rs-email-3%%start_time%%@ken.socialtext.net |
+| set | members_user_3 | mem3rs email 3%%start_time%% |
+
+| set | view_edit_email | view-edit-%%start_time%%@ken.socialtext.net |
+| set | view_edit_user | view edit %%start_time%% |
+| set | createme_page1 | members page 1 %%start_time%% |
+| set | createme_page2 | members page 2 %%start_time%% |
+| set | am_ws_1 | active-memb-ws-1-%%start_time%% |
+| set | am_ws_2 | active-memb-ws-2-%%start_time%% |
+
+| include | [Test Case: Active Members Setup] |  |
+
+| *Comment* | Test Case: Active Members Widget catchup logs and clear json cache |  |
+| st-catchup-logs |  |  |
+| st-clear-json-cache |  |  |
+
+| *Comment* | Test Case: Active Members Widget ADD THE WIDGET |  |
+| st_single_widget_in_dashboard | gallery-widget-Active People |  |
+| st-name-widget | 1 | active_members |
+| st-widget-title-like | active_members | Active People |
+| st-widget-settings | active_members |  |
+| wait_for_element_visible_ok | account | 30000 |
+| uncheck_ok | rotate |  |
+| select_ok | account | %%am_acct_one%% |
+| select_ok | view | Viewed Profiles |
+| click_ok | st-savebutton-%%active_members%% |  |
+| wait_for_element_not_visible_ok | account | 30000 |
+
+| *Comment* | Test Case: Active Members Widget Different Accounts Details don't show up |  |
+| *Comment* | Test Case: Active Members Widget this test is bogus - where are these pages? |  |
+| text_unlike | //body | test page 1 |
+| text_unlike | //body | test page 2 |
+| text_unlike | //body | test page 3 |
+
+| *Comment* | Test Case: Active Members Widget Test Account Combo Box |  |
+| st-name-widget | 1 | active_members |
+| st-widget-title-like | active_members | Active People |
+| st-widget-settings | active_members |  |
+| wait_for_element_visible_ok | account | 30000 |
+| select_ok | account | %%am_acct_two%% |
+| select_ok | view | Viewed Profiles |
+| uncheck_ok | rotate |  |
+| click_ok | st-savebutton-%%active_members%% |  |
+| wait_for_element_not_visible_ok | account | 30000 |
+
+| wait_for_element_visible_ok | link=Edits | 30000 |
+| text_like | //body | Viewed |
+| text_unlike | //body | Active Content Edit %%start_time%% |
+| text_unlike | //body | Active Content Tag %%start_time%% |
+| text_unlike | //body | Active Content Comment %%start_time%% |
+| text_unlike | //body | Active Content Emailed %%start_time%% |
+| text_unlike | //body | Active Content Watch %%start_time%% |
+| wait_for_element_visible_ok | link=%%members_user_1%% | 30000 |
+| wait_for_element_visible_ok | link=%%members_user_2%% | 30000 |
+| wait_for_element_visible_ok | link=%%members_user_3%% | 30000 |
+
+| *Comment* | Test case: Active Members Widget TEARDOWN |  |
+| st-process-jobs |  |  |
+| st-admin | delete-workspace --w %%am_ws_1%% --no-export | has been deleted |
+| st-admin | delete-workspace --w %%am_ws_2%% --no-export | has been deleted |
+
+| st-admin | deactivate-user --e %%members_email_1%% |  |
+| st-admin | deactivate-user --e %%members_email_2%% |  |
+| st-admin | deactivate-user --e %%members_email_3%% |  |
+| st-admin | deactivate-user --e %%view_edit_email%% |  |
+
+| delete-account | %%am_acct_one%% |  |
+| delete-account | %%am_acct_two%% |  |
+
+| *Comment* | Test case: Active Members Widget COMPLETED |  |

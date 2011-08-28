@@ -1,0 +1,113 @@
+=head1 NAME
+
+DOM.Ready - set up callbacks to run when the DOM is ready instead of using onLoad
+
+=head1 SYNOPSIS
+
+  DOM.Ready.onDOMReady( myFunction );
+  DOM.Ready.onIdReady( "an_id", myOtherFunction );
+
+=head1 DESCRIPTION
+
+It's a very common case to want to run one or more functions when the
+document loads.  The simplest option is to use the window.onLoad to
+trigger these functions.
+
+This has several problems.  First, window.onLoad may not happen until
+well after the document is mostly loaded, due to delays in fetching
+images or other dependencies.  Second, there is no built-in API for
+stacking multiple onLoad callbacks.
+
+This module provides several simple functions to register callbacks
+that should be run, either when the DOM/document is ready or when a
+specific element (found by id) is ready.  This is done through the use
+of a recurring interval that checks to see if the callbacks should be
+run.
+
+=head1 PROPERTIES
+
+The DOM.Ready class has the following settable properties:
+
+=over 4
+
+=item * DOM.Ready.timerInterval = milliseconds
+
+The number of milliseconds to wait between each readiness check.
+Defaults to 50.
+
+=item * DOM.Ready.finalTimeout = seconds
+
+The number of seconds before the recurring readiness checks stop
+running.  Defaults to 15 seconds.
+
+=back
+
+=head1 METHODS
+
+DOM.Ready provides the following functions.  None of these are
+exportable.
+
+=over 4
+
+=item * onDOMReady( callback )
+
+Provide a callback function to be called once the DOM is ready.  If
+the DOM is ready when C<onDOMReady()> is called, then the callback
+will be called immediately.
+
+=item * onDOMDone( callback )
+
+Provide a callback function to be called once the DOM is complete.  If
+the DOM is done when C<onDOMDone()> is called, then the callback
+will be called immediately.
+
+The DOM is done when all the elements in the DOM have been processed,
+but this does not wait for external images to load.
+
+=item * onIdReady( id, callback )
+
+Provide a callback to be called when the given id is found (using
+document.getElementById).  The callback will be called with the
+element object as its only argument.  If the element is available when
+C<onIdReady()> is called, then the callback will be called immediately.
+
+Note that an element might be ready but it's children may not yet have
+been inserted. This can lead to intermittent problems where your
+callback is called and the element's children do not yet exist. If
+this is a problem, use C<onDOMDone()> instead.
+
+=item * runCallbacks()
+
+Explicitly run all callbacks that can be run.  This can be used to run
+all the callbacks at a known time, for example just before the close
+of a document's C<< </body> >> tag.
+
+=back
+
+=head1 KNOWN ISSUES
+
+If C<onIdReady()> is called after the final timeout has passed and the
+specified element is not ready, then the callback will never be
+called.
+
+This code has not seen a lot of production use, so be wary of bugs.
+
+=head1 AUTHOR
+
+Dave Rolsky, <autarch@urth.org>.
+
+=head1 CREDITS
+
+This library was inspired by Brother Cake's domFunction, though it
+is entirely new code.
+
+=head1 COPYRIGHT
+
+Copyright (c) 2005-2006 Dave Rolsky.  All rights reserved.
+
+This module is free software; you can redistribute it and/or modify it
+under the same terms as the Perl programming language (your choice of
+GPL or the Perl Artistic license).
+
+
+=cut

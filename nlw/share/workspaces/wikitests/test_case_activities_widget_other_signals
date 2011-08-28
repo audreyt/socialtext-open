@@ -1,0 +1,85 @@
+| *Comment* | Test Case: Activities Widget Other Signals |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Activities Widget Other Signals SETUP |  |  |
+| set | acct | ossignalsacct%%start_time%% |  |
+| set | signalsuser | ossignalsuser%%start_time%%@matt.socialtext.net |  |
+| set | otheruser | otheruser%%start_time%%@matt.socialtext.net |  |
+| set | ws | osbasicsignals%%start_time%%ws |  |
+| create-account | %%acct%% |  |  |
+| create-user | %%signalsuser%% | %%password%% | %%acct%% |
+| create-user | %%otheruser%% | %%password%% | %%acct%% |
+| create-workspace | %%ws%% | %%acct%% |  |
+| add-member | %%signalsuser%% | %%ws%% |  |
+| add-member | %%otheruser%% | %%ws%% |  |
+
+| st-admin | enable-plugin --account %%acct%% --p signals |  |  |
+
+| *Comment* | Test Case: Activities Widget Other Signals. Login as %%otheruser%%, do basic events signals |
+
+| *Comment* | Test Case: Activities Widget Other Signals. Create one edit summary from signal |  |
+| st-logoutin | %%otheruser%% | %%password%% |
+| open_ok | /%%ws%%/index.cgi?Edit Summary Signal %%start_time%% |  |
+| wait_for_element_visible_ok | st-edit-button-link | 30000 |
+| click_ok | st-edit-button-link |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| wait_for_element_present_ok | st-edit-summary-text-area | 30000 |
+| click_ok | st-edit-summary-text-area |  |
+| type_ok | st-edit-summary-text-area | Other User Summary signal %%start_time%% |
+| click_ok | st-edit-summary-signal-checkbox |  |
+| st-page-save |  |  |
+
+| *Comment* | Test Case: Activities Widget Other Signals. Send four signals |  |
+| http-user-pass | %%otheruser%% | %%password%% |
+| post-signal | woke up %%start_time%% |  |
+| post-signal | fell out of bed %%start_time%% |  |
+| post-signal | dragged a comb across my head %%start_time%% |  |
+| post-signal | found my way downstairs and drank a cup, and looking, I noticed I was late %%start_time%% |  |
+
+| *Comment* | Test Case: Activities Widget Other Signals. Process jobs |  |
+| st_process_jobs | SignalIndex |  |
+| st-logoutin | %%signalsuser%% | %%password%% |
+
+| *Comment* | Test Case: Activities Widget Others Signals |  |
+| st_single_widget_in_dashboard | gallery-widget-Activities |  |
+
+| *Comment* | Test Case: Activities Widget Others Signals. Back at Dashboard with widget |  |
+| wait_for_text_present_ok | Welcome | 30000 |
+| text_like | st-editing-tools-edit | Welcome |
+| wait_for_text_present_ok | Activities | 30000 |
+
+| st-name-widget | 1 | activities_widget |
+| st-widget-title-like | activities_widget | Activities |
+| st-widget-settings | activities_widget |  |
+| wait_for_element_visible_ok | limit | 30000 |
+| select_ok | limit | 25 |
+| click_ok | st-savebutton-%%activities_widget%% |  |
+| wait_for_element_not_visible_ok | limit | 30000 |
+
+| *Comment* | Test Case: Activities Widget Others Signals. Signals in Dashboard Activities widget. |  |
+| wait_for_element_present_ok | link=signals | 10000 |
+| click_ok | link=signals |  |
+| open_ok | /st/dashboard |  |
+
+| *Comment* | Test Case: Activities Widget Other Signals. Verify those signals. |  |
+| wait_for_text_present_ok | woke up %%start_time%% | 30000 |
+| wait_for_text_present_ok | fell out of bed %%start_time%% | 30000 |
+| wait_for_text_present_ok | dragged a comb across my head %%start_time%% | 30000 |
+| wait_for_text_present_ok | found my way downstairs and drank a cup, and looking, I noticed I was late %%start_time%% | 30000 |
+| wait_for_text_present_ok | Other User Summary signal %%start_time%% | 30000 |
+
+| *Comment* | Test Case: Activities widget Other Signals. Wait for automatic refresh to 2 minutes ago in Activity |  |
+| wait_for_text_present_ok | 2 minutes ago | 180000 |
+
+| *Comment* | Test Case: Activities Widget Other Signals TEARDOWN |  |
+| st-process-jobs |  |  |
+| delete-workspace | %%ws%% |  |
+| deactivate-user | %%signalsuser%% | was deactivated |
+| deactivate-user | %%otheruser%% | was deactivated |
+| delete-account | %%acct%% |  |
+
+| *Comment* | Test Case: Activities Widget Other Signals COMPLETED |

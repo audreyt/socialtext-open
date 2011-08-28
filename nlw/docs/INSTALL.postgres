@@ -1,0 +1,166 @@
+INSTALL.postgres -- How to install PostgreSQL for Socialtext
+
+@COPYRIGHT@
+
+== Overview ==
+
+Socialtext Open uses the PostgreSQL database engine for its back end.  
+
+== Installing Postgres ==
+
+Unless you have specific needs to build from source, you'll want
+to install a pre-built package for Postgres.  These packages vary
+depending on who's built them and their target distribution, but
+typically there may be a dozen or more packages called
+"postgres-something", or "postgres-8-something".  The functionality
+you need is usually in packages named something like:
+
+    * postgres -- core libraries
+    * postgres-server -- The database server itself
+    * postgres-client -- Client libraries and applications
+    * postgres-devel -- Headers and libraries for building modules
+
+For specific package names, check the build/pkg-lists directory to
+see if your distribution has a list of packages to install.
+
+The typical Socialtext installation runs Postgres on the same machine
+as the Apache web server.  This is not a requirement, however, and
+if you set up on different machines, then your package needs will
+be different.
+
+
+== Running Postgres ==
+
+Instructions on running Postgres are beyond the scope of this
+document, but www.postgresql.org is a great place to start.
+
+The important thing to remember is that Postgres needs to run all
+the time, as a service.  Just as your Apache has to be configured
+via startup scripts to run at boot time, so does Postgres.  Socialtext
+Open can do nothing without Postgres running.
+
+
+== Setting up access privileges ==
+
+Postgres will need to be configured so the Apache user can be
+authenticated as the nlw user to the Socialtext database.  This
+section assumes that you a Postgres server installed and running,
+and that you also have the client libraries necessary on the box.
+The specifics of how to do that are beyond the scope of this document.
+
+If you do not properly allow access for the Apache user to authenticate
+as nlw to the NLW database then the install will fail.  Have a look
+at pg_hba.conf in Postgres' configuration directory.  It will tell you
+about how Postgres is configured for access.
+
+    # For Debian and Ubuntu
+    sudo $EDITOR /etc/postgresql/7.4/main/pg_hba.conf
+    or
+    sudo $EDITOR /etc/postgresql/8.1/main/pg_hba.conf
+
+    # For CentOS/RHEL/etc
+    sudo $EDITOR /var/lib/pgsql/data/pg_hba.conf
+
+    # For other distros, the pg_hba.conf may be in any number of different
+    # places.  Please check docs/INSTALL.* for your distro for details.
+    # If you use "locate" to find it, you may need to run it under sudo
+    # because pg_hba.conf is typically in a protected directory.
+
+By default, the name of the database used by Socialtext Open is "NLW",
+and we connect to the database as the user "nlw".  The "nlw" user also
+needs to connect to the "template1" DB.  To allow the user to connect
+to these database, you need to edit the pg_hba.conf file.
+
+    # TYPE  DATABASE    USER   CIDR-ADDRESS      METHOD
+    local   template1   nlw                      trust
+    local   NLW         nlw                      trust
+
+Note that these lines must come _before_ this line in the standard Debian
+pg_hba.conf:
+
+    local   all         all                      ident sameuser
+
+Note that this allows _any_ logged-in user to connect to the "NLW" and
+"template1" databases without a password.
+
+And then restart your postgres database.
+
+    sudo /etc/init.d/postgresql stop
+    sudo /etc/init.d/postgresql start
+
+Finally, create the nlw user and database:
+
+    # Create the "nlw" user, without any super privileges
+    # Allow it to create new databases, but not new users
+    sudo -u postgres createuser --superuser --createdb --no-createrole nlw
+
+    # Add the plpgsql language to the database
+    # We specify the template1 database, so that all subsequent databases
+    # get the plpgsql language.  You could replace template1 with nlw
+    # if you have already created the database.
+    sudo -u postgres psql template1 -c 'CREATE LANGUAGE plpgsql'
+
+    # Create the "NLW" database, owned by "nlw"
+    sudo -u postgres createdb -O nlw NLW
+
+Verify that the database was created by accessing it from the
+Postgres shell.
+
+    $ psql -U nlw -d NLW
+
+This should give you:
+
+    Welcome to psql 8.0.3, the PostgreSQL interactive terminal.
+
+    Type:  \copyright for distribution terms
+           \h for help with SQL commands
+           \? for help with psql commands
+           \g or terminate with semicolon to execute query
+           \q to quit
+
+If you get an error about "authentication failed", something isn't
+set properly in the configuration above, or postgres didn't get
+restarted.
+
+If you're going to run "make test", and you should, then you'll
+need to create testing DB for them.  In these examples, replace
+"yourname" with whatever your login name is.
+
+    # Create a user for the person doing the install,
+    # without any super privileges
+    sudo -u postgres createuser $USER
+
+    sudo -u postgres createdb -O $USER NLW_${USER}_testing
+
+Then, the user that Apache runs as needs to access the NLW database.
+By default this access is through a local UNIX socket but that can be
+configured in /etc/socialtext/socialtext.conf.
+
+Also note that some distributions of Postgresql 8.0 run on port 5433 by
+default, instead of 5432.  Socialtext expects to run on 5432.  You may
+need to modify your postgres.conf.
+
+== Tuning Postgres ==
+
+Once you've got things set up, you may want to take some time to tune
+Postgres for better performance. Here are some example values in the
+/etc/postgresql/8.1/main/postgresql.conf
+
+max_connections = 40
+shared_buffers = 10000
+work_mem = 8192
+maintenance_work_mem = 32768
+checkpoint_segments = 12
+max_fsm_pages = 200000
+effective_cache_size = 10000
+random_page_cost = 3
+stats_row_level = on
+
+When you have made these changes, you will need to run
+'/etc/init.d/postgresql restart' as the root user.
+
+NOTE: the default kernel settings for shared memory may not allow us
+to set the shared_buffers value so high. If that is the case,
+you may need to adjust the 'kernel.shmmax' value in your /etc/sysctl.conf
+file. We needed to set ours to 134217728. Once that is set,
+you will need to run 'sysctl -p' as the root user.

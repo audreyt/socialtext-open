@@ -1,0 +1,30 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+# Monkey patch Socialtext::Workspace to remove the magic "help workspace" code
+# from new().  This should give access to the workspace actually named "help",
+# so we can delete it.  We have to do this before we enter package main below.
+package Socialtext::Workspace;
+use strict;
+use warnings;
+use lib './lib', '../lib';
+require Socialtext::Workspace;
+
+no warnings 'redefine', 'once';
+*Socialtext::Workspace::new = sub { shift->_new(@_) };
+
+# The main body of the code.  Call "st-admin delete-workspace"
+package main;
+use strict;
+use warnings;
+use Socialtext::CLI;
+
+{
+    local @ARGV = (
+        "delete-workspace",
+        "--workspace" => "help",
+        "--no-export"
+    );
+    Socialtext::CLI->new(argv => \@ARGV)->run();
+    exit 0;
+}

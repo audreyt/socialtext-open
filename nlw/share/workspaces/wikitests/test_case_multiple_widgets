@@ -1,0 +1,105 @@
+| *Comment* | Test Case: Multiple Widgets |  |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Multiple Widgets Add Image Widget |  |
+| st-single-widget-in-dashboard | gallery-widget-Image |  |
+
+| st-name-widget | 1 | image_widget |
+| st-widget-title-like | image_widget | Image |
+| st-widget-settings | image_widget |  |
+| wait_for_element_visible_ok | src | 30000 |
+| wait_for_element_visible_ok | title | 30000 |
+| type_ok | src | `http://www.socialtext.com/images/people/r-mayfield.jpg` |
+| type_ok | title | Chairman |
+| wait_for_element_visible_ok | st-savebutton-%%image_widget%% | 30000 |
+| click_ok | st-savebutton-%%image_widget%% |  |
+| wait_for_element_not_visible_ok | title | 5000 |
+
+| *Comment* | Test Case: Multiple Widgets Add Wiki Page Widget |  |
+| wait_for_element_visible_ok | link=Add Widget | 30000 |
+| click_and_wait | link=Add Widget |  |
+| wait_for_element_visible_ok | gallery-widget-Wiki Page | 30000 |
+| click_and_wait | gallery-widget-Wiki Page |  |
+| wait_for_element_visible_ok | link=Add Widget | 30000 |
+
+| *Comment* | Test Case: Multiple Widgets Image is now 2nd widget, right? |  |
+| st-name-widget | 2 | image_widget |
+| st-widget-title-like | image_widget | Chairman |
+
+| *Comment* | Test Case: Multiple Widgets Add My Workspaces Widget |  |
+| wait_for_element_visible_ok | link=Add Widget | 30000 |
+| click_and_wait | link=Add Widget |  |
+| wait_for_element_visible_ok | //a[contains(@id,'gallery-widget-Workspaces')] | 30000 |
+| click_and_wait | //a[contains(@id,'gallery-widget-Workspaces')] |  |
+| wait_for_element_visible_ok | link=Add Widget | 30000 |
+
+| *Comment* | Test Case: Multiple Widgets Wiki Page is now 2nd Widget, Images are 3rd, right? |  |
+| st-name-widget | 3 | image_widget |
+| st-widget-title-like | image_widget | Chairman |
+| st-name-widget | 2 | wiki_page |
+
+| wait_for_element_visible_ok | workspace_name | 30000 |
+| wait_for_element_visible_ok | //input[contains(@name,'page_title')] | 30000 |
+| select_ok | workspace_name | label=%%title%% |
+| type_ok | //input[contains(@name,'page_title')] | jabberwocky |
+| wait_for_element_visible_ok | st-savebutton-%%wiki_page%% | 30000 |
+| click_ok | st-savebutton-%%wiki_page%% |  |
+| wait_for_element_not_visible_ok | //input[contains(@name,'page_title')] | 30000 |
+
+| st-select-widget-frame | wiki_page |  |
+| wait_for_element_present_ok | link=Edit | 30000 |
+| wait_for_element_present_ok | link=View | 30000 |
+| wait_for_text_present_ok | Beware the Jabberwock, my son! | 30000 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Multiple Widgets Add Workspace Tags, everything shifts by 1 |  |
+| click_and_wait | link=Add Widget |  |
+| wait_for_element_visible_ok | gallery-widget-Workspace Tags | 30000 |
+| click_and_wait | gallery-widget-Workspace Tags |  |
+| wait_for_element_visible_ok | link=Add Widget | 30000 |
+
+| *Comment* | Test Case: Multiple Widgets Image widget again |  |
+| st-name-widget | 4 | image_widget |
+| st-widget-title-like | image_widget | Chairman |
+
+| *Comment* | Test Case: Multiple Widgets wiki page widget again |  |
+| st-name_widget | 3 | wiki_page |
+| st-select-widget-frame | wiki_page |  |
+| wait_for_element_present_ok | link=Edit | 30000 |
+| wait_for_element_present_ok | link=View | 30000 |
+| wait_for_text_present_ok | Beware the Jabberwock, my son! | 30000 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Multiple Widgets workspaces widget again |  |
+| st-name-widget | 2 | workspaces_widget |
+| st-widget-title-like | workspaces_widget | Workspaces |
+| st-select-widget-frame | workspaces_widget |  |
+| wait_for_element_present_ok | link=new page | 30000 |
+| wait_for_element_present_ok | link=%%title%% | 30000 |
+| text_like | //body | changes |
+| text_like | //body | views |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Multiple Widgets Workspace Tags again |  |
+| st-name-widget | 1 | workspace-tags |
+| st-widget-title-like | workspace-tags | Tags for help-en |
+| st-select-widget-frame | workspace-tags |  |
+| wait_for_element_visible_ok | link=Glossary | 30000 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Add RSS Viewer everything shifts by 1 |  |
+| click_and_wait | link=Add Widget |  |
+| wait_for_element_visible_ok | gallery-widget-RSS Viewer | 30000 |
+| click_and_wait | gallery-widget-RSS Viewer |  |
+| wait_for_text_present_ok | Enterprise Social Software Blog | 30000 |
+
+| *Comment* | Add All People Tags everything shifts by 1 |  |
+| click_and_wait | link=Add Widget |  |
+| wait_for_element_visible_ok | gallery-widget-All People Tags | 30000 |
+| click_and_wait | gallery-widget-All People Tags |  |
+| wait_for_text_present_ok | All People Tags | 30000 |
+
+| *Comment* | Test Case: Multiple Widgets TEARDOWN |  |
+
+| *Comment* | Test Case: Multiple Widgets COMPLETED |  |

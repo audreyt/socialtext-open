@@ -1,0 +1,430 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::Jobs;
+use Socialtext::File qw/get_contents/;
+use Socialtext::Log 'st_log', 'st_timed_log';
+use Socialtext::Paths;
+use Socialtext::SQL qw/get_dbh sql_execute invalidate_dbh disconnect_dbh/;
+use Socialtext::Timer;
+use Socialtext::Cache;
+use Getopt::Long;
+use Pod::Usage;
+use Parallel::ForkManager;
+use POSIX qw(setsid _exit floor);
+use Time::HiRes qw/sleep/;
+use Socialtext::DaemonUtil;
+
+# don't run as root
+Socialtext::DaemonUtil->Check_and_drop_privs();
+
+my $PID_FILE = Socialtext::Paths::pid_file('ceqlotron');
+my $ProcManager;
+
+# Factor for "how many of our max procs should be allowed to run long-running
+# jobs?"
+my $FactorLongRunningProcs = 0.25;
+
+# Number of child processes we have running, and how many of those are allowed
+# to process long-running Jobs?
+my $RunningChildren = 0;
+my %PidOfChildrenRunningLongJobs;
+
+# Whether or not an exit has been requested.
+my $ExitPlease = 0;
+
+# Run through the whole queue once, only fork one worker.
+my $OnceMode = 0;
+
+# Initialize and parse command-line switches.
+my ( $WantHelp, $RunInForeground, $OutputTo ) = ( 0, 0, '' );
+my $PrintPid;
+my $Kick;
+Getopt::Long::Configure('bundling');
+GetOptions(
+    'help|h'       => \$WantHelp,
+    'foreground|f' => \$RunInForeground,
+    'output|O=s'   => \$OutputTo,
+    'once|o'       => \$OnceMode,
+    'pid'          => \$PrintPid,
+    'kick'         => \$Kick,
+) or exit 1;
+
+pod2usage(verbose => 1) if $WantHelp;
+
+if ($PrintPid) {
+    exit 0 unless -e $PID_FILE;
+    my $pid = get_contents($PID_FILE);
+    chomp $pid;
+    print "$pid\n";
+    exit 0;
+}
+
+if ($Kick) {
+    print "This action will reset grabbed status for jobs.\n"
+        . "You should not do this while jobs are currently being run.\n"
+        . "\nType 'yes' to continue...\n";
+    my $ans = <STDIN>; chomp $ans;
+    if ($ans eq 'yes') {
+        print "Updating jobs ...\n";
+        sql_execute('UPDATE job SET grabbed_until = 0');
+    }
+    else {
+        print "Not updating jobs ...\n";
+    }
+    exit 0;
+}
+
+exit_if_already_running();
+redirect_output();
+maybe_run_in_background();
+write_pid_file();
+
+st_log->notice("ceqlotron starting");
+
+install_parent_signal_handlers();
+load_jobs();
+
+st_log->notice("ceqlotron loaded");
+
+start_proc_manager();
+main_loop();
+wait_for_all_children();
+exit_gracefully();
+
+
+
+sub install_parent_signal_handlers {
+    $SIG{INT} = $SIG{TERM} = sub {
+        st_log->notice("Ceqlotron master: caught SIGTERM or SIGINT.");
+        kill HUP => -$$;
+        $ExitPlease = 1;
+        $ProcManager->set_max_procs(0);
+    };
+    $SIG{HUP} = 'IGNORE';
+}
+
+sub exit_gracefully {
+    unless ($OnceMode) {
+        unlink $PID_FILE or die "Cannot unlink $PID_FILE: $!";
+    }
+    st_log->notice("Ceqlotron master: exiting");
+    exit 0;
+}
+
+sub wait_for_all_children {
+    return unless $RunningChildren;
+    kill HUP => -$$ unless $OnceMode;
+    st_log->notice("Ceqlotron master: waiting for $RunningChildren children to exit");
+    $ProcManager->wait_all_children;
+}
+
+sub write_pid_file {
+    return if $OnceMode;
+
+    open my $pid_fh, '>', $PID_FILE or die "$PID_FILE: $!";
+    $pid_fh->print("$$\n") or die "write $PID_FILE: $!";
+    close $pid_fh or die "close $PID_FILE: $!";
+}
+
+sub main_loop {
+    disconnect_dbh();
+    Socialtext::Cache->clear();
+
+    while (!$ExitPlease) {
+
+        # If "max_procs" in P::FM is zero, start() will pretend that the
+        # parent is actually a child.  This should only ever happen when we
+        # enter the ExitPlease state.
+        #
+        # This call otherwise blocks until a child-slot is available.
+        check_if_next_worker_can_run_long_jobs();
+        my $started = $ProcManager->start;
+
+        if ($started) {
+            last if $ExitPlease;
+            return if $OnceMode;
+            st_log->debug("Ceqlotron master: waiting after spawn");
+            sleep (Socialtext::AppConfig->ceqlotron_period / 4);
+
+            # Re-evaluate how many children to run.
+            $ProcManager->set_max_procs(get_max_procs()) unless $ExitPlease;
+        }
+        else {
+            $0 = 'ceqlotron: worker process' unless $RunInForeground;
+            if (!$ExitPlease) {
+                st_log->debug("Ceqlotron worker: starting");
+
+                worker_can_run_long_jobs()
+                    ? Socialtext::Jobs->can_do_all
+                    : Socialtext::Jobs->can_do_short_jobs;
+                start_worker();
+
+                st_log->notice("Ceqlotron worker: exiting");
+            }
+            $ProcManager->finish();
+        }
+    }
+}
+
+sub start_worker {
+    $SIG{HUP} = $SIG{INT} = $SIG{TERM} = sub {
+        $ExitPlease = 1;
+        st_log->debug("Ceqlotron worker: caught hangup");
+    };
+
+    my $loops = eval { Socialtext::AppConfig->ceqlotron_worker_loops } || 10;
+    eval {
+        do_work($loops);
+    };
+    if ($@) {
+        st_log->error("Ceqlotron worker: Error $@");
+    }
+}
+
+sub do_work {
+    my $jobs_remaining = shift;
+    $jobs_remaining = 1 unless ($jobs_remaining && $jobs_remaining > 0);
+    my $num_processed = 0;
+
+    $0 = 'ceqlotron: worker [idle, fresh]';
+    while ($jobs_remaining && !$ExitPlease) {
+        my $sleep_for;
+
+        if (my $job = Socialtext::Jobs->find_job_for_workers()) {
+            (my $shortname = $job->funcname) =~ s/^Socialtext::Job:://;
+            $0 = "ceqlotron: worker [processing $shortname #".$job->jobid.']';
+            Socialtext::Timer->Reset();
+            Socialtext::Timer->Continue('work_once');
+            Socialtext::Jobs->work_once($job);
+            $num_processed++;
+            Socialtext::Timer->Pause('work_once');
+
+            my $result = log_job($job);
+            $0 = 'ceqlotron: worker [idle, ran '.$num_processed.']';
+            die "Job encountered failures" unless ($result eq 'finished');
+
+            next if $OnceMode;
+            $jobs_remaining--;
+            $sleep_for = Socialtext::AppConfig->ceqlotron_period;
+        }
+        else {
+            return if $OnceMode;
+            # st_log->debug("Ceqlotron worker: no jobs");
+            $sleep_for = Socialtext::AppConfig->ceqlotron_polling_period;
+        }
+
+        # if we're going to loop again...
+        if ($jobs_remaining && !$ExitPlease) {
+            # st_log->debug("Ceqlotron worker: sleeping");
+            Socialtext::Cache->clear();
+            invalidate_dbh();
+            sleep $sleep_for;
+        }
+    }
+}
+
+sub log_job {
+    my $job = shift;
+
+    my $verb = 'finished';
+    my ($ex, $msg) = Socialtext::Jobs->get_last_status($job);
+    if (defined $ex && $ex == 0) {
+        $msg = '';
+    }
+    else {
+        $verb = (defined $ex) ? 'failed' : 'tempfailed';
+        $msg ||= '';
+    }
+
+    my $msg_summary;
+    if ($msg) {
+        $msg =~ s/^\s+//sg;
+        ($msg_summary = $msg) =~ s/\n.+//sg;
+    }
+
+    st_timed_log(
+        'info', 'CEQ', "worker $verb " . $job->funcname,
+        Socialtext::User->SystemUser(),
+        {
+            %{$job->arg},
+            jobid => $job->jobid,
+            run_after => $job->run_after ? $job->run_after : 'none',
+            ($msg ? (failures => [$msg_summary]) : ()),
+        },
+        Socialtext::Timer->Report()
+    );
+    st_log()->error('Full error for last job: '.$msg) if $msg;
+
+    return $verb;
+}
+
+sub redirect_output {
+    open STDIN, '<', '/dev/null';
+    if ($OutputTo) {
+        my $oldfh = select;
+        open STDOUT, '>>', $OutputTo or die "STDOUT > $OutputTo: $!";
+        select STDOUT; $| = 1;
+        open STDERR, '>>', $OutputTo or die "STDERR > $OutputTo: $!";
+        select STDERR; $| = 1;
+        select $oldfh;
+    }
+    elsif (!$RunInForeground) {
+        open STDOUT, '>', '/dev/null';
+        open STDERR, '>', '/dev/null';
+    }
+}
+
+sub maybe_run_in_background {
+    return if $RunInForeground;
+
+    my $child_pid = fork;
+
+    if (! defined $child_pid) {
+        die "fork: $!";
+    }
+    elsif ($child_pid != 0) {
+        _exit(0); # ... the terminal-attached parent
+    }
+    $0 = "ceqlotron: master process $0";
+    setsid();
+}
+
+sub exit_if_already_running {
+    return if ($RunInForeground && $OnceMode);
+    return unless -e $PID_FILE;
+    my $pid = get_contents($PID_FILE);
+    my $alive = $pid && kill 0 => $pid;
+    exit 1 if $alive;
+}
+
+sub load_jobs {
+    require DBD::Pg;
+    require Socialtext::SQL;
+    require Socialtext::Search::AbstractFactory;
+    require Socialtext::Search::Solr::Factory;
+    require Socialtext::User;
+    require Socialtext::Workspace;
+
+    require Socialtext::File::Stringify;
+    Socialtext::File::Stringify->PreLoad();
+
+    # `require` the Jobs, but don't register them yet
+    Socialtext::Jobs->load_all_jobs();
+}
+
+sub get_max_procs {
+    my $max = Socialtext::AppConfig->ceqlotron_max_concurrency;
+    $max = 1 if (!$max || $max <= 0);
+    return $max;
+}
+
+sub get_max_long_job_procs {
+    # How many procs are allowed to handle long-running Jobs?  All workers are
+    # allowed to handle short-lived jobs, but only _some_ are allowed to take
+    # care of longer lived jobs (so the long lived ones don't clog up the
+    # queue).
+    #
+    my $max      = get_max_procs();
+    my $max_long = floor($max * $FactorLongRunningProcs);
+    $max_long = 1 if (!$max_long || ($max_long <= 0));
+    return $max_long;
+}
+
+{
+    my $WorkerCanRunLongJobs = 0;
+    sub check_if_next_worker_can_run_long_jobs {
+        my $num_running_long_jobs = scalar keys %PidOfChildrenRunningLongJobs;
+        $WorkerCanRunLongJobs = ($num_running_long_jobs < get_max_long_job_procs()) ? 1 : 0;
+        return $WorkerCanRunLongJobs;
+    }
+    sub worker_can_run_long_jobs {
+        return $WorkerCanRunLongJobs;
+    }
+}
+sub start_proc_manager {
+    $ProcManager = Parallel::ForkManager->new(
+        get_max_procs()
+    );
+
+    $ProcManager->run_on_finish( sub {
+        my $pid = shift;
+        $RunningChildren--;
+        delete $PidOfChildrenRunningLongJobs{$pid};
+        check_if_next_worker_can_run_long_jobs();
+        return if $ExitPlease;
+        st_log->debug("Ceqlotron master: join, concurrency now $RunningChildren");
+    } );
+    $ProcManager->run_on_start( sub { 
+        my $pid = shift;
+        $RunningChildren++;
+        $PidOfChildrenRunningLongJobs{$pid}++ if worker_can_run_long_jobs();
+        return if $ExitPlease;
+        st_log->debug("Ceqlotron master: fork, concurrency now $RunningChildren");
+    } );
+    $ProcManager->run_on_wait( sub { 
+        return if $ExitPlease;
+        st_log->debug("Ceqlotron master: waiting, concurrency is $RunningChildren");
+    } );
+}
+
+=head1 NAME
+
+ceqlotron - Execute asynchronous jobs.
+
+=head1 SYNOPSIS
+
+B<ceqlotron> [ OPTIONS ]
+
+=head1 DESCRIPTION
+
+C<ceqlotron> processes all "asynchronous" jobs on a Socialtext system.
+
+Unless given the C<-f> or C<--foreground> options, C<ceqlotron> forks and runs
+as a daemon.  C<ceqlotron> runs until sent a signal and writes its PID in
+C</var/run/socialtext/ceqlotron.pid>.
+
+C<ceqlotron> has several tuning varialbes in L<Socialtext::AppConfig>.  These
+can be changed while C<ceqlotron> is running and will take effect immediately.
+
+C<ceqlotron> operates by pre-forking a number of worker processes.  Each
+worker will scan for available jobs, process a job and then sleep until
+there's more work to do.  After a configurable number of jobs, the worker will
+exit (to prevent run-away memory leaks) and the main C<ceqlotron> process will
+fork another worker to take its place.
+
+=head1 Once Mode
+
+The C<--once> option will run C<ceqlotron> in "Once Mode".  This is most useful when combined with the C<--foreground> option.
+
+In Once Mode C<ceqlotron> will run through the entire queue once and will only
+pre-fork one worker.  The worker will not sleep or exit until all the work is
+done.
+
+C<ceqlotron> will not write a PID file in this mode.
+
+This mode is useful for testing and potentially harmful in production.  Use
+with caution.
+
+=head1 OPTIONS
+
+    -f,--foreground         Run in the foreground; do not daemonize.
+    -o,--once               This causes ceqlotron to run in L<Once Mode>.
+    --kick                  Reset the grabbed time for all jobs.
+    --pid                   Print the current daemon pid (if running).
+    -O,--output=FILE        Redirect stdout and stderr to FILE.
+    -h,--help               Show help.
+
+=head1 SIGNALS
+
+    TERM, INT   exit gracefully as soon as all children
+                have exited
+
+=head1 SEE ALSO
+
+L<Socialtext::AppConfig>, L<nlw(1)>, L<ceq-stat(1)>, L<ceq-read(1)>
+
+=cut

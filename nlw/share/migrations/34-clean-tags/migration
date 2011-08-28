@@ -1,0 +1,86 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+use Socialtext::SQL qw/sql_execute sql_singlevalue/;
+use Socialtext::Workspace;
+use Socialtext::User;
+use Socialtext::Hub;
+use Socialtext::Page;
+use Socialtext::DaemonUtil;
+use Socialtext::Migration::Utils qw/ensure_socialtext_schema/;
+
+# 26 has a recent change to the page table.
+ensure_socialtext_schema(29);
+
+# Need to run as www-data when modifying files on the system.
+Socialtext::DaemonUtil->Check_and_drop_privs();
+
+Remove_duplicate_tags: {
+    my $sth = sql_execute(<<EOT);
+    SELECT workspace_id, page_id, lower(tag) AS tag
+        FROM page_tag JOIN (
+            SELECT workspace_id, page_id, lowertag FROM (
+                SELECT workspace_id, page_id, lower(tag) AS lowertag, 
+                       count(lower(tag)) AS count 
+                  FROM page_tag 
+                  GROUP BY workspace_id, page_id, lower(tag)
+            ) AS foo 
+            WHERE count > 1 
+            ORDER BY count DESC
+        ) AS bar USING (workspace_id, page_id) 
+        WHERE lower(tag) = lowertag
+        GROUP BY workspace_id, page_id, lower(tag)
+EOT
+
+    my $dups = $sth->fetchall_arrayref({});
+    print "Removing duplicate tags ...\n" if @$dups;
+    for my $row (@$dups) {
+        my $tag_sth = sql_execute('
+            SELECT tag FROM page_tag
+                WHERE workspace_id = ? 
+                  AND page_id = ?
+                  AND lower(tag) = ?
+            ',
+            $row->{workspace_id}, $row->{page_id},
+            $row->{tag},
+        );
+
+        my @tags_to_rm = sort map { $_->[0] } 
+                   @{ $tag_sth->fetchall_arrayref };
+        my $to_keep = shift @tags_to_rm;
+
+        print "  Keeping tag '$to_keep' ($row->{workspace_id}, $row->{page_id}),"
+              . " dropping: " . join(', ', map {"'$_'"} @tags_to_rm) . "\n";
+
+       # Clean the tags from the page
+        my $hub = Socialtext::Hub->new(
+            current_workspace => Socialtext::Workspace->new(
+                workspace_id => $row->{workspace_id}
+            ),
+            current_user => Socialtext::User->SystemUser,
+        );
+
+        my $page = Socialtext::Page->new(
+            hub => $hub, id => $row->{page_id},
+        );
+        my @page_tags = @{ $page->metadata->{Category} || [] };
+        for my $tag (@tags_to_rm) {
+            @page_tags = grep { $_ ne $tag } @page_tags;
+        }
+        $page->metadata->{Category} = \@page_tags;
+        $page->store( user => $hub->current_user );
+    }
+}
+
+Remove_empty_tags: {
+    my $count = sql_singlevalue(
+        'SELECT count(*) FROM page_tag WHERE length(tag) = 0',
+    );
+    if ($count) {
+        print "Removing $count empty tags.\n";
+        sql_execute(
+            'DELETE FROM page_tag WHERE length(tag) = 0',
+        );
+    }
+}

@@ -1,0 +1,65 @@
+Tests for setting a user's primary account.
+
+* Fixture: SocialRest
+
+| Standard-test-setup |              |                          |
+| set                 | orig_acct    | %%account%%              |
+| set                 | orig_acct_id | %%account_id%%           |
+| set                 | uri          | /data/users/%%username%% |
+
+| GET       | %%uri%%                                 | application/json |
+| code-is   | 200                                     |                  |
+| body-like | "primary_account_name":"%%orig_acct%%"  |                  |
+| body-like | "primary_account_id":"%%orig_acct_id%%" |                  |
+
+* Now change the primary account id (as non-business admin)
+
+| set            | new_acct     | acct2-%%start_time%% |
+| create-account | %%new_acct%% |                      |
+| set            | new_acct_id  | %%account_id%%       |
+| set      | acct_json | {"primary_account_id":"%%new_acct_id%%"} |
+
+| PUT_json | %%uri%%   | %%acct_json%%                         |
+| code-is  | 403       |                                       |
+
+| set-business-admin | %%username%% | 1             |
+| PUT_json           | %%uri%%      | %%acct_json%% |
+| code-is            | 204          |               |
+
+| GET       | %%uri%%                                | application/json |
+| code-is   | 200                                    |                  |
+| body-like | "primary_account_name":"%%new_acct%%"  |                  |
+| body-like | "primary_account_id":"%%new_acct_id%%" |                  |
+
+| GET-json | %%uri%%?minimal=1 |
+| code-is  | 200 |
+| body-like | "primary_account_id":"%%new_acct_id%%" |                  |
+| body-unlike | "primary_account_name":"%%new_acct%%"  |                  |
+
+# Rainy day tests
+
+* no such user
+| PUT_json  | /data/users/super-man | %%acct_json%% |
+| code-is   | 400                   |               |
+| body-like | No such user          |               |
+
+* bad json
+| PUT_json  | %%uri%%                       | {"blah" |
+| code-is   | 400                           |         |
+| body-like | Content should be a JSON hash |         |
+
+* not a JSON hash
+| PUT_json  | %%uri%%                       | [] |
+| code-is   | 400                           |    |
+| body-like | Content should be a JSON hash |    |
+
+* no primary account
+| PUT_json  | %%uri%%           | {} |
+| code-is   | 400               |    |
+| body-like | Nothing to Update |    |
+
+* bad account_id
+| PUT_json  | %%uri%%            | {"primary_account_id":"999999"} |
+| code-is   | 400                |                                 |
+| body-like | Invalid account ID |                                 |
+

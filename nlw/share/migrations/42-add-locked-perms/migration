@@ -1,0 +1,60 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::Migration::Utils qw/ensure_socialtext_schema/;
+use Socialtext::SQL qw/:exec :txn/;
+
+ensure_socialtext_schema( 59 );
+
+my $role_id = sql_singlevalue(qq{
+ SELECT role_id
+   FROM "Role"
+  WHERE name = 'workspace_admin'
+});
+
+# Ensure we have a lock permission before grabbing it.
+sql_execute(qq{
+INSERT INTO "Permission" ( permission_id, name )
+SELECT nextval('"Permission___permission_id"'), 'lock'
+ WHERE NOT EXISTS(
+           SELECT 1 FROM "Permission" WHERE name = 'lock' LIMIT 1
+       )
+});
+
+my $permission_id = sql_singlevalue(qq{
+ SELECT permission_id
+   FROM "Permission"
+  WHERE name = 'lock'
+});
+
+# All workspace_ids where admins don't have 'lock' perms.
+my $sth = sql_execute(qq{
+SELECT w.workspace_id
+FROM "Workspace" w
+WHERE
+  w.workspace_id NOT IN (
+   SELECT workspace_id FROM "WorkspaceRolePermission" WHERE
+  role_id = ? AND permission_id = ?)
+}, $role_id, $permission_id);
+
+
+my $txn = sql_in_transaction();
+sql_begin_work() unless $txn;
+eval {
+    for my $ws ( @{ $sth->fetchall_arrayref } ) {
+        sql_execute(qq{
+            INSERT INTO "WorkspaceRolePermission" 
+                   ( role_id, permission_id, workspace_id )
+            VALUES ( ?, ?, ? )
+        }, $role_id, $permission_id, $ws->[0]);
+    }
+};
+if (my $error = $@) {
+    sql_rollback() unless $txn;
+    print "$error\n";
+    exit 1;
+}
+sql_commit() unless $txn;
+
+exit 0;

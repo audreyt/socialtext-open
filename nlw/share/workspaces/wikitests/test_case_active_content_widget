@@ -1,0 +1,118 @@
+| *Comment* | Test Case: Active Content Widget |  |
+
+* Fixture: SocialWidgets
+
+| set | conv_email | my-conv-%%start_time%%@ken.socialtext.net |
+| set | conv_user | my conv %%start_time%% |
+| set | acw | active-content-%%start_time%% |
+| set | acwnoresults | acw-noresults-%%start_time%% |
+
+| include | [Test Case: Active Content Setup] |  |
+
+| *Comment* | Test Case: Active Content Widget catchup logs and clear json cache |  |
+| st-catchup-logs |  |  |
+| st-clear-json-cache |  |  |
+
+| *Comment* | Test Case: Active Content Widget ADD THE WIDGET |  |
+| st_single_widget_in_dashboard | gallery-widget-Active Content |  |
+| st-name-widget | 1 | active_content |
+| st-widget-settings | active_content |  |
+| wait_for_element_visible_ok | workspace | 30000 |
+| uncheck_ok | rotate |  |
+| select_ok | workspace | %%acw%% |
+| click_ok | st-savebutton-%%active_content%% |  |
+| wait_for_element_not_visible_ok | workspace | 30000 |
+
+| *Comment* | Test Case: Active Content Widget Check the content of Viewed |  |
+| wait_for_element_visible_ok | link=Edited | 30000 |
+| wait_for_element_visible_ok | link=Watched | 30000 |
+| wait_for_element_visible_ok | link=Emailed | 30000 |
+| text_like | //body | Viewed |
+
+| *Comment* | Test Case: Active Content Widget Use text_like //body to print contents of widget without crashing entire test. |  |
+| wait_for_element_visible_ok | link=Active Content Watch %%start_time%% | 20000 |
+| text_like | //body | Active Content Watch %%start_time%% |
+| wait_for_element_visible_ok | link=Active Content Emailed %%start_time%% | 20000 |
+| text_like | //body | Active Content Emailed %%start_time%% |
+| wait_for_element_visible_ok | link=Active Content Edit %%start_time%% | 20000 |
+| text_like | //body | Active Content Edit %%start_time%% |
+| wait_for_element_visible_ok | link=Active Content Tag %%start_time%% | 20000 |
+| text_like | //body | Active Content Tag %%start_time%% |
+| wait_for_element_visible_ok | link=Active Content Comment %%start_time%% | 20000 |
+| text_like | //body | Active Content Comment %%start_time%% |
+
+| *Comment* | Test Case: Active Content Widget. Verify link inside widget, not in Workspaces menu |  |
+| is_element_present_ok | //div[@class='inlineWidget'] | link=active-content-%%start_time%% |
+
+| *Comment* | Test Case: Active Content Widget Check the content of Edited |  |
+| click_ok | link=Edited |  |
+| wait_for_element_visible_ok | link=Viewed | 30000 |
+| text_like | //body | Edited |
+| wait_for_element_visible_ok | link=Watched | 30000 |
+| wait_for_element_visible_ok | link=Emailed | 30000 |
+| wait_for_element_visible_ok | link=Active Content Edit %%start_time%% | 30000 |
+| wait_for_element_visible_ok | link=Active Content Tag %%start_time%% | 30000 |
+| wait_for_element_visible_ok | link=Active Content Comment %%start_time%% | 30000 |
+| wait_for_element_visible_ok | link=Active Content Emailed %%start_time%% | 30000 |
+| wait_for_element_visible_ok | link=Active Content Watch %%start_time%% | 30000 |
+| text_like | //body | Active Content Watch %%start_time%% |
+
+| *Comment* | Test Case: Active Content Widget Check the content of Watched |  |
+| click_ok | link=Watched |  |
+| wait_for_element_visible_ok | link=Viewed | 30000 |
+| wait_for_element_visible_ok | link=Edited | 30000 |
+| text_like | //body | Watched |
+| wait_for_element_visible_ok | link=Emailed | 30000 |
+| text_unlike | //body | Active Content Edit %%start_time%% |
+| text_unlike | //body | Active Content Tag %%start_time%% |
+| text_unlike | //body | Active Content Comment %%start_time%% |
+| text_unlike | //body | Active Content Emailed %%start_time%% |
+| wait_for_element_visible_ok | link=Active Content Watch %%start_time%% | 30000 |
+
+| *Comment* | Test Case: Active Content Widget Check the content of Emailed |  |
+| click_ok | link=Emailed |  |
+| wait_for_element_visible_ok | link=Viewed | 30000 |
+| wait_for_element_visible_ok | link=Edited | 30000 |
+| wait_for_element_visible_ok | link=Watched | 30000 |
+| text_unlike | //body | Active Content Edit %%start_time%% |
+| text_unlike | //body | Active Content Tag %%start_time%% |
+| text_unlike | //body | Active Content Comment %%start_time%% |
+| wait_for_element_visible_ok | link=Active Content Emailed %%start_time%% | 30000 |
+| text_unlike | //body | Active Content Watch %%start_time%% |
+
+| *Comment* | Test Case: Active Content Widget Different workspace doesn't show up |  |
+| open_ok | /?dashboard |  |
+| wait_for_element_visible_ok | link=Edited | 30000 |
+| text_like | //body | Viewed |
+| text_unlike | //body | test page 1 |
+| text_unlike | //body | test page 2 |
+| text_unlike | //body | test page 3 |
+
+| *Comment* | Test Case: Active Content Widget Test Workspace Combo Box |  |
+| st-name-widget | 1 | active_content |
+| st-widget-settings | active_content |  |
+| wait_for_element_visible_ok | workspace | 30000 |
+| select_ok | workspace | %%acwnoresults%% |
+| uncheck_ok | rotate |  |
+| select_ok | view | Viewed Pages |
+| click_ok | st-savebutton-%%active_content%% |  |
+| wait_for_element_not_visible_ok | workspace | 30000 |
+| st-select-widget-frame | active_content |  |
+| wait_for_element_visible_ok | link=Edited | 30000 |
+| text_like | //body | Viewed |
+| text_unlike | //body | Active Content Edit %%start_time%% |
+| text_unlike | //body | Active Content Tag %%start_time%% |
+| text_unlike | //body | Active Content Comment %%start_time%% |
+| text_unlike | //body | Active Content Emailed %%start_time%% |
+| text_unlike | //body | Active Content Watch %%start_time%% |
+| wait_for_element_visible_ok | link=test page 1 | 30000 |
+| wait_for_element_visible_ok | link=test page 2 | 30000 |
+| wait_for_element_visible_ok | link=test page 3 | 30000 |
+
+| *Comment* | Test case: Active Content Widget TEARDOWN |  |
+| select-frame | relative=parent |  |
+| st-empty-container |  |  |
+| st-admin | delete-workspace --w %%acw%% --no-export | has been deleted |
+| st-admin | delete-workspace --w %%acwnoresults%% --no-export | has been deleted |
+
+| *Comment* | Test case: Active Content Widget COMPLETED |  |

@@ -1,0 +1,268 @@
+Tests for [Story: Groups ReST API]
+
+* Fixture: SocialRest
+
+| standard-test-setup |
+
+# Create a new group, make sure it shows up
+
+| set          | group_name     | group%%start_time%%                    |              |
+| create-group | %%group_name%% | %%account%%                            | %%username%% |
+| set          | jenny          | jenny%%start_time%%@ken.socialtext.net |              |
+| create-user  | %%jenny%%      | password                               |              |
+| set-user-id | jenny_id | %%jenny%% |
+
+| *Comment*   | Get the default group with the default user |
+
+| GET         | /data/groups/%%group_id%% |         |
+| code-is     | 200                       |         |
+| header-like | Cache-Control             | private |
+| json-parse  |                           |         |
+| json-like   | {"group_id":"%%group_id%%"} |         |
+| json-like   | {"name":"%%group_name%%"}   |         |
+| json-like   | {"user_count":"1"}          |         |
+| json-like   | {"workspace_count":"0"}     |         |
+| body-unlike | "members"                 |         |
+
+## visible by Group Creator (Creator sees Groups he created or is a member of)
+
+| *Comment*   | Group is visible to group creator |
+
+| add-user-to-group | %%jenny%% | %%group_id%% |
+
+| GET         | /data/groups/%%group_id%% |         |
+| code-is     | 200                       |         |
+| header-like | Cache-Control             | private |
+| json-parse  |                           |         |
+| json-like   | {"group_id":"%%group_id%%"} |         |
+| json-like   | {"name":"%%group_name%%"}   |         |
+| json-like   | {"user_count":"2"}          |         |
+| json-like   | {"workspace_count":"0"}     |         |
+| body-unlike | "members"                 |         |
+
+| *Comment*   | Group's users are visible to group creator |
+
+| GET             | /data/groups/%%group_id%%/users |         |
+| code-is         | 200                             |         |
+| header-like     | Cache-Control                   | private |
+| json-parse      |                                 |         |
+| json-array-size | 2                               |         |
+| body-like       | %%jenny%%                       |         |
+
+# Fetching a non-existent group = 404
+
+| *Comment* | Bogus group id |
+
+| GET             | /data/groups/2342343434/users |         |
+| code-is         | 404                             |         |
+| header-like     | Cache-Control                   | private |
+
+## ... visible by Business Admin (Business Admin can see all Groups)
+
+| *Comment* | Business Admins can see all groups |
+
+| set            | badmin     | badmin%%start_time%%@ken.socialtext.net |
+| create-user    | %%badmin%% | password                                |
+| set            | badmin_id  | %%user_id%%                             |
+| http-user-pass | %%badmin%% | password                                |
+
+| set-business-admin | %%badmin%%                            | 1       |
+| GET                | /data/groups/%%group_id%%/users?all=1 |         |
+| code-is            | 200                                   |         |
+| header-like        | Cache-Control                         | private |
+| json-parse         |                                       |         |
+| json-array-size    | 2                                     |         |
+| body-like          | %%jenny%%                             |         |
+
+| set-business-admin | %%badmin%%                | 0       |
+| GET                | /data/groups/%%group_id%%/users |         |
+| header-like        | Cache-Control             | private |
+| code-is            | 404                       |         |
+
+## visible by Group Members (Members see Groups they are members of)
+## *not* visible by other Users (can't see Groups you have no relationship to)
+
+| *Comment* | Group members can see a group they're in |
+
+| set            | jane     | jane%%start_time%%@ken.socialtext.net |
+| create-user    | %%jane%% | password                              |
+| http-user-pass | %%jane%% | password                              |
+
+| GET             | /data/groups/%%group_id%%/users |         |
+| code-is         | 404                       |         |
+| header-like     | Cache-Control             | private |
+
+| add-user-to-group | %%jane%%                        | %%group_id%% |
+| GET               | /data/groups/%%group_id%%/users |              |
+| code-is           | 200                             |              |
+| header-like       | Cache-Control                   | private      |
+| json-parse        |                                 |              |
+| json-array-size   | 3                               |              |
+| body-like | %%jenny%% |
+| body-like | %%jane%% |
+
+
+## Add Users to Groups via ReST
+
+| set-business-admin | %%badmin%%        | 1           |              |
+| http-user-pass     | %%badmin%%        | password    |              |
+| create-group       | add%%start_time%% | %%account%% | %%username%% |
+
+| *Comment*   | Create the User, Add User to Group with defaults |                                        |
+| set         | jimmy                                            | jimmy%%start_time%%@ken.socialtext.net |
+| create-user | %%jimmy%%                                        | password                               |
+| set         | jimmy_id                                         | %%user_id%%                            |
+| POST-json   | /data/groups/%%group_id%%/users                  | {"username":"%%jimmy%%"}               |
+| code-is     | 202                                              |                                        |
+
+## Verify that the user's role was created with the correct attrs
+| *Comment* | Verify that the user's role was created with the correct attrs |
+| GET-json  | /data/events/groups/%%group_id%%                               |
+| code-is   | 200                                                            |
+| body-like | qr/%%badmin_id%%.+added.+%%jimmy_id%%/s                        |
+
+| *Comment*   | Create the User, Add User to Group with explicit role_name |                                               |
+| set         | jorge                                                      | jorge%%start_time%%@ken.socialtext.net        |
+| create-user | %%jorge%%                                                  | password                                      |
+| POST_json   | /data/groups/%%group_id%%/users                            | {"username":"%%jorge%%","role_name":"member"} |
+| code-is     | 202                                                        |                                               |
+
+| *Comment*   | Create the User, Add User to Group with defaults |                                                                        |
+| set         | bill                                             | bill%%start_time%%@ken.socialtext.net                                  |
+| create-user | %%bill%%                                         | password                                                               |
+| set         | ted                                              | ted%%start_time%%@ken.socialtext.net                                   |
+| create-user | %%ted%%                                          | password                                                               |
+| set-user-id | ted_id                                           | %%ted%%                                                                |
+| POST_json   | /data/groups/%%group_id%%/users                  | [{"username":"%%bill%%"},{"user_id":"%%ted_id%%","role_name":"admin"}] |
+| code-is     | 202                                              |                                                                        |
+
+## Ted is an Admin, make sure he can invite users to the group w/rest.
+
+| *Comment*      | Group Admin invites a User to the Group |                                        |
+| http-user-pass | %%ted%%                                 | password                               |
+| set            | jonas                                   | jonas%%start_time%%@ken.socialtext.net |
+| create-user    | %%jonas%%                               | password                               |
+| POST_json      | /data/groups/%%group_id%%/users         | {"username":"%%jonas%%"}               |
+| code-is        | 202                                     |                                        |
+
+## Error conditions
+
+| *Comment*   | Group doesn't exist  |                                               |
+| set         | jamie                | jamie%%start_time%%@ken.socialtext.net        |
+| create-user | %%jamie%%            | password                                      |
+| POST_json   | /data/groups/0/users | {"username":"%%jamie%%","role_name":"member"} |
+| code-is     | 404                  |                                               |
+
+| http-user-pass | %%username%% | password |
+
+| *Comment* | Add User to Group with bad json |    |
+| POST_json | /data/groups/%%group_id%%/users | {} |
+| code-is   | 400                             |    |
+
+| *Comment* | Add User to Group with bad username |                                       |
+| POST_json | /data/groups/%%group_id%%/users     | {"username":"nosuchuser@example.com"} |
+| code-is   | 400                                 |                                       |
+
+| *Comment* | Add User to Group with bad role_name |                                                        |
+| POST_json | /data/groups/%%group_id%%/users      | {"username":"%%jorge%%","role_name":"workspace_admin"} |
+| code-is   | 400                                  |                                                        |
+
+## Alternate invite format
+
+| *Comment*   | Add more users to invite |                                         |
+| set         | hank                     | hank%%start_time%%@ken.socialtext.net   |
+| create-user | %%hank%%                 | password                                |
+| set         | hank_id                  | %%user_id%%                             |
+| set         | harley                   | harley%%start_time%%@ken.socialtext.net |
+| create-user | %%harley%%               | password                                |
+
+| *Comment*     | Alternate invite format         |                                                                                                            |
+| st-clear-jobs |                                 |                                                                                                            |
+| POST_json     | /data/groups/%%group_id%%/users | {"users":[{"username":"%%harley%%"},{"user_id":"%%hank_id%%"}],"send_message":1,"additional_message":"hi"} |
+| code-is       | 202                             |                                                                                                            |
+| job-count     | GroupInvite                     | 2                                                                                                          |
+
+## Verify Users were added to Group
+
+| *Comment*       | Verify Users are in Group       |         |
+| GET             | /data/groups/%%group_id%%/users |         |
+| code-is         | 200                             |         |
+| header-like     | Cache-Control                   | private |
+| json-parse      |                                 |         |
+| json-array-size | 8                               |         |
+| body-like       | %%jonas%%                       |         |
+| body-like       | %%jimmy%%                       |         |
+| body-like       | %%jorge%%                       |         |
+| body-like       | %%bill%%                        |         |
+| body-like       | %%ted%%                         |         |
+| body-like       | %%harley%%                      |         |
+| body-like       | %%hank%%                        |         |
+
+## GET Users, pageable. 
+## Actual paging is tested in t/wikitests/rest/data/workspaces_groups.wiki,
+## so we'll only check the result here.
+| *Comment*        | GET Users, pageable, 8 results               |    |
+| GET-json         | /data/groups/%%group_id%%/users?startIndex=0 |    |
+| code-is          | 200                                          |    |
+| json-parse       |                                              |    |
+| json-path-is     | $.startIndex                                 | 0  |
+| json-path-is     | $.itemsPerPage                               | 25 |
+| json-path-is     | $.totalResults                               | 8  |
+| json-path-exists | $.entry[0]                                   |    |
+| json-path-exists | $.entry[7]                                   |    |
+
+## Create users to test PUT
+| *Comment*   | Create users to test PUT |                                         |
+| set         | haile                    | haile%%start_time%%@ken.socialtext.net  |
+| create-user | %%haile%%                | password                                |
+| set         | haile_id                 | %%user_id%%                             |
+| set         | hakim                    | hakim%%start_time%%@ken.socialtext.net  |
+| create-user | %%hakim%%                | password                                |
+| set         | hakim_id                 | %%user_id%%                             |
+| set         | halden                   | halden%%start_time%%@ken.socialtext.net |
+| create-user | %%halden%%               | password                                |
+| set         | halden_id                | %%user_id%%                             |
+
+| st-clear-jobs |                                 |                                                           |
+
+## PUT one to users
+
+| *Comment*   | PUT one user |
+| PUT-json      | /data/groups/%%group_id%%/users | {"entry":[{"username":"%%haile%%","role_name":"member"}]} |
+| code-is       | 202                             |                                                           |
+| job-count     | GroupInvite                     | 0                                                         |
+
+## PUT many to users
+| *Comment*     | PUT many to users               |                                                                                                                              |
+| st-clear-jobs |                                 |                                                                                                                              |
+| PUT-json      | /data/groups/%%group_id%%/users | {"send_message":"1","entry":[{"user_id":"%%hakim_id%%","role_name":"admin"},{"username":"%%halden%%","role_name":"member"}]} |
+| code-is       | 202                             |                                                                                                                              |
+| job-count     | GroupInvite                     | 2                                                                                                                            |
+
+## PUT dies
+| *Comment* | PUT dies, with bad entry        |                                                  |
+| PUT-json  | /data/groups/%%group_id%%/users | {"entry":[{"group_id":"0","role_name":"admin"}]} |
+| code-is   | 403                             |                                                  |
+
+| *comment* | business admins can see all details of users in self-join groups |
+
+Test for {bz: 3959} - biz admins & self-join (biz-admin-ness should take precedence over self-join-ness for purposes of displaying details of users in the user list)
+
+| http-user-pass         | %%badmin%%                            | password              |            |           |           |
+| set                    | algroup                               | %%start_time%%algroup |            |           |           |
+| create-group           | %%algroup%%                           | %%account%%           | %%badmin%% | self-join | self-join |
+| set                    | algroup_id                            | %%group_id%%          |            |           |           |
+| add-user-to-group      | %%badmin%%                            | %%algroup_id%%        | admin      |           |           |
+| add-user-to-group      | %%jenny%%                             | %%algroup_id%%        | admin      |           |           |
+| remove-user-from-group | %%badmin%%                            | %%algroup_id%%        |            |           |           |
+| GET                    | /data/groups/%%group_id%%/users?all=1 |                       |            |           |           |
+| json-parse             |                                       |                       |            |           |           |
+| json-array-size        | 1                                     |                       |            |           |           |
+| body-like              | %%jenny%%                             |                       |            |           |           |
+
+| *Comment* | Business admins can see private fields |
+| st-admin | set-external-id --email %%jenny%% --external-id %%jenny%% |
+| GET-json | /data/groups/%%group_id%%/users?want_private_fields=1;all=1 |
+| json-response-is | 200 | 1 |
+| json-path-is | $[0].email_address       | %%jenny%% |
+| json-path-is | $[0].private_external_id | %%jenny%% |

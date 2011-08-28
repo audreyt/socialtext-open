@@ -1,0 +1,29 @@
+| *Comment* | Test Case: Replies Includer. Start |  |
+
+| *Comment* | Test Case: Replies Includer. These vars may come in from the ENV where wikitest is executed using `export selenium_var_shared_account=Ken1` |  |
+| set_default | shared_account | Replies-%%start_time%% |
+
+| *Comment* | Test Case: Replies Includer. Setup and login to %%shared_account%% after [Test Case: Replies Seeder] has run |  |
+| set | my_acct | %%shared_account%% |
+| set | my_user | `%%my_acct%%-replier@ken.socialtext.net` |
+
+| st-admin | create-user --account %%my_acct%% --e %%my_user%% --p %%password%% | was created |
+| st-process-jobs |  |  |
+| st-logoutin | %%my_user%% | %%password%% |
+
+| *Comment* | Test Case: Replies Includer. Open Signals, get ready to reply. NOTE: need three seed replies from Reply Seeder |  |
+| open_ok | /st/signals |  |
+
+| *Comment* | Test Case: Replies Includer. Open the Accordion |  |
+| wait_for_element_visible_ok | `//div[@class='older'][last()]` | 30000 |
+| click_ok | `//div[@class='older'][last()]` |  |
+
+| *Comment* | Test Case: Replies Includer. Use [Test Case: Replies Include] N times |  |
+
+| set | i | 1 |
+| include | [Test Case: Replies Include] |  |
+
+| set | i | 2 |
+| include | [Test Case: Replies Include] |  |
+
+| *Comment* | Test Case: Replies Includer COMPLETED |  |

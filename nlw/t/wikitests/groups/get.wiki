@@ -1,0 +1,97 @@
+Tests for [Story: Groups ReST API]
+
+* Fixture: SocialRest
+
+| standard-test-setup | | no-group |
+
+# Create a new group, make sure it shows up
+
+| set          | group_name     | group%%start_time%% |              |
+| create-group | %%group_name%% | %%account%%         | %%username%% |
+
+# Group shows up in list
+| GET | /data/groups |
+| code-is | 200 |
+| header-like | Cache-Control | private |
+| json-parse | |
+| json-like | [{"group_id":"%%group_id%%"}] |
+| json-like | [{"name":"%%group_name%%"}] |
+| json-like | [{"uri":"/data/groups/%%group_id%%"}] |
+| json-like | [{"user_count":"1"}] |
+| json-like | [{"workspace_count":"0"}] |
+# Just check to make sure fields are present
+| Body-like | "creation_date": |
+| Body-like | "created_by_user_id": |
+| Body-like | "created_by_username":" |
+| Body-like | "primary_account_id": |
+| Body-like | "primary_account_name":"%%account%% |
+| Body-like | "description":" |
+
+## visible by Group Creator (Creator sees Groups he created or is a member of)
+
+| GET | /data/groups/%%group_id%% |
+| code-is | 200 |
+| header-like | Cache-Control | private |
+| json-parse | |
+| json-like | {"group_id":"%%group_id%%"} |
+| json-like | {"name":"%%group_name%%"} |
+| json-like | {"user_count":"1"} |
+| json-like | {"workspace_count":"0"} |
+| body-unlike | "members" |
+# Just check to make sure fields are present
+| Body-like | "creation_date": |
+| Body-like | "created_by_user_id": |
+| Body-like | "created_by_username":" |
+| Body-like | "primary_account_id": |
+| Body-like | "primary_account_name":"%%account%%" |
+| Body-like | "description":" |
+
+# Show members
+
+| GET | /data/groups/%%group_id%%?show_members=1 |
+| code-is | 200 |
+| header-like | Cache-Control | private |
+| json-parse | |
+| json-like | {"group_id":"%%group_id%%"} |
+| json-like | {"name":"%%group_name%%"} |
+| json-like | {"user_count":"1"} |
+| json-like | {"workspace_count":"0"} |
+| json-like | {"members":[]} |
+
+## ... visible by Business Admin (Business Admin can see all Groups)
+
+| set            | badmin     | badmin%%start_time%%@ken.socialtext.net |
+| create-user    | %%badmin%% | password                                |
+| http-user-pass | %%badmin%% | password                                |
+
+| set-business-admin | %%badmin%%                | 1       |
+| GET                | /data/groups/%%group_id%% |         |
+| code-is            | 200                       |         |
+| header-like        | Cache-Control             | private |
+| json-parse         |                           |         |
+| json-like          | {"group_id":"%%group_id%%"}          |         |
+
+| set-business-admin | %%badmin%%                | 0       |
+| GET                | /data/groups/%%group_id%% |         |
+| header-like        | Cache-Control             | private |
+| code-is            | 404                       |         |
+
+## visible by Group Members (Members see Groups they are members of)
+## *not* visible by other Users (can't see Groups you have no relationship to)
+
+| set            | jane     | jane%%start_time%%@ken.socialtext.net |
+| create-user    | %%jane%% | password                              |
+| http-user-pass | %%jane%% | password                              |
+
+| GET             | /data/groups/%%group_id%% |         |
+| code-is         | 404                       |         |
+| header-like     | Cache-Control             | private |
+
+| add-user-to-group | %%jane%%                  | %%group_id%% |
+| GET               | /data/groups/%%group_id%%              |              |
+| code-is           | 200                       |              |
+| header-like       | Cache-Control             | private      |
+| json-parse        |                           |              |
+| json-like         | {"group_id":"%%group_id%%"} |              |
+| json-like         | {"user_count":"2"}          |              |
+

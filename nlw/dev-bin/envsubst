@@ -1,0 +1,8 @@
+#!/usr/bin/env perl -p
+use strict;
+# @COPYRIGHT@
+
+# Filter to replace occurences of $ENV_VARI_ABLE with the value
+# of the given environment variable.
+
+s/\$([A-Z_]+)/$ENV{$1}/g

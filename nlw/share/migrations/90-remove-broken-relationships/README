@@ -1,0 +1,7 @@
+A relationship field can be set to any user that shares an account with the
+profile user. If a user is removed from an account, no check was done to
+remove that user from any profile relationships where the two users no longer
+share an account. This migration will delete any relationship records where
+the two users do not share an account.
+
+This is the data clean-up phase of {bz 5251}.

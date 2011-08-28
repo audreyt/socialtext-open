@@ -1,0 +1,114 @@
+ServerRoot      [% config.base_dir %]
+LockFile        [% config.lock_dir %]/[% config.app_prefix %][% config.apache_short_name %].lock
+PidFile         [% config.pid_dir %]/[% config.app_prefix %][% config.apache_short_name %].pid
+ScoreBoardFile  [% config.pid_dir %]/[% config.app_prefix %][% config.apache_short_name %].scoreboard
+Timeout 90
+TraceEnable off
+
+# NOTE: KeepAlives *need* to be enabled on *both* the front-end and the
+# back-end.  ST::InitHandler will disable them in the back-end by default, but
+# in such a way that they _could_ be re-enabled as needed (e.g. for NTLM Auth)
+KeepAlive               On
+MaxKeepAliveRequests    [% config.servers.keep_alive_max_req %]
+KeepAliveTimeout        [% config.servers.keep_alive_timeout %]
+
+# Process limits
+MinSpareServers     [% config.servers.min_spare %]
+MaxSpareServers     [% config.servers.max_spare %]
+StartServers        [% config.servers.start %]
+MaxClients          [% config.servers.max_clients %]
+MaxRequestsPerChild [% config.servers.max_requests_per_child %]
+
+User [% config.user %]
+Group [% config.group %]
+
+<Directory />
+    Options Includes FollowSymLinks MultiViews
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</Directory>
+
+AccessFileName .htaccess
+
+<Files ~ "^\.ht">
+    Order allow,deny
+    Deny from all
+</Files>
+
+UseCanonicalName [% config.use_canonical_name %]
+TypesConfig /etc/mime.types
+DefaultType text/plain
+HostnameLookups Off
+
+# Logging
+LogLevel warn
+LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %T %v" full
+LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %P %T" debug
+LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
+LogFormat "%h %l %u %t \"%r\" %>s %b" common
+LogFormat "%{Referer}i -> %U" referer
+LogFormat "%{User-agent}i" agent
+
+[%- IF config.is_dev %]
+CustomLog [% config.log_dir %]/[% config.app_prefix %]access.log debug
+ErrorLog [% config.log_dir %]/[% config.app_prefix %]error.log
+[%- ELSE %]
+CustomLog [% config.log_dir %]/access.log debug
+ErrorLog [% config.log_dir %]/error.log
+[%- END %]
+
+ServerSignature On
+
+<IfModule mod_mime.c>
+    AddEncoding x-compress Z
+    AddEncoding x-gzip gz tgz
+    AddLanguage da .dk
+    AddLanguage nl .nl
+    AddLanguage en .en
+    AddLanguage et .ee
+    AddLanguage fr .fr
+    AddLanguage de .de
+    AddLanguage el .el
+    AddLanguage it .it
+    AddLanguage ja .ja
+    AddCharset ISO-2022-JP .jis
+    AddLanguage pl .po
+    AddCharset ISO-8859-2 .iso-pl
+    AddLanguage pt .pt
+    AddLanguage pt-br .pt-br
+    AddLanguage ltz .lu
+    AddLanguage ca .ca
+    AddLanguage es .es
+    AddLanguage sv .se
+    AddLanguage cz .cz
+    <IfModule mod_negotiation.c>
+        LanguagePriority en da nl et fr de el it ja pl pt pt-br ltz ca es sv
+    </IfModule>
+    AddType application/x-httpd-php .php
+    AddType application/x-tar .tgz
+    AddType image/bmp .bmp
+    AddType text/x-hdml .hdml
+    AddType application/json .json
+</IfModule>
+
+AddDefaultCharset utf-8
+
+<IfModule mod_setenvif.c>
+    BrowserMatch "Mozilla/2" nokeepalive
+    BrowserMatch "MSIE 4\.0b2;" nokeepalive downgrade-1.0 force-response-1.0
+    BrowserMatch "RealPlayer 4\.0" force-response-1.0
+    BrowserMatch "Java/1\.0" force-response-1.0
+    BrowserMatch "JDK/1\.0" force-response-1.0
+
+    # Detect mobile browsers and set appropriate ENV var that is used later on
+    # both in the Apache config and within the application.
+    BrowserMatch "^BlackBerry"      NLW_MOBILE_BROWSER
+    BrowserMatch "^Nokia"           NLW_MOBILE_BROWSER
+    BrowserMatch "Palm"             NLW_MOBILE_BROWSER
+    BrowserMatch "SymbianOS"        NLW_MOBILE_BROWSER
+    BrowserMatch "Windows CE"       NLW_MOBILE_BROWSER
+    BrowserMatch "^hiptop"          NLW_MOBILE_BROWSER
+    BrowserMatch "iPhone"           NLW_MOBILE_BROWSER
+    BrowserMatch "Android"          NLW_MOBILE_BROWSER
+</IfModule>

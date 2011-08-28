@@ -1,0 +1,108 @@
+* Fixture: SocialRest
+
+| set         | admin     | %%start_time%%admin@socialtext.net |
+| create-user | %%admin%% | password                           |
+
+| set         | nonadmin     | %%start_time%%nonadmin@socialtext.net |
+| create-user | %%nonadmin%% | password                              |
+
+* Group G0
+** is Member of no workspaces, user is NOT admin of group -> cup 0
+| set               | group0       | %%start_time%%group0 |
+| create-group      | %%group0%%   |                      |
+| set               | group0_id    | %%group_id%%         |
+| add-user-to-group | %%nonadmin%% | %%group0_id%%        |
+
+| http-user-pass | %%nonadmin%%                                  | password |
+| get-json       | /data/groups/%%group0_id%%?can_update_perms=1 |          |
+| json-parse     |                                               |          |
+| json-like      | {"can_update_perms":0}                        |          |
+
+
+* Also test that cup is not present if not requested 
+| get-json    | /data/groups/%%group0_id%% |
+| body-unlike | can_update_perms           |
+
+* Group G1
+** is Member of no workspaces, user is admin of group -> cup 1
+
+| set               | group1     | %%start_time%%group1 |       |
+| create-group      | %%group1%% |                      |       |
+| set               | group1_id  | %%group_id%%         |       |
+| add-user-to-group | %%admin%%  | %%group1_id%%        | admin |
+
+| http-user-pass | %%admin%%                                     | password |
+| get-json       | /data/groups/%%group1_id%%?can_update_perms=1 |          |
+| json-parse     |                                               |          |
+| json-like      | {"can_update_perms":1}                        |          |
+
+
+* Group G2
+** is Member of two workspaces, only member of each workspace, user is admin of all -> cup 1
+| set               | group2       | %%start_time%%group2 |       |
+| create-group      | %%group2%%   |                      |       |
+| set               | group2_id    | %%group_id%%         |       |
+| add-user-to-group | %%admin%% | %%group2_id%%        | admin |
+
+| set                    | wkspc20       | %%start_time%%wkspc20 |
+| create-workspace       | %%wkspc20%%   |                       |
+| add_workspace_admin    | %%admin%%  | %%wkspc20%%           |
+| add_group_to_workspace | %%group2_id%% | %%wkspc20%%           |
+
+| set                    | wkspc21       | %%start_time%%wkspc21 |
+| create-workspace       | %%wkspc21%%   |                       |
+| add_workspace_admin    | %%admin%%  | %%wkspc21%%           |
+| add_group_to_workspace | %%group2_id%% | %%wkspc21%%           |
+
+| http-user-pass | %%admin%%                                     | password |
+| get-json       | /data/groups/%%group2_id%%?can_update_perms=1 |          |
+| json-parse     |                                               |          |
+| json-like      | {"can_update_perms":1}                        |          |
+
+
+* Group G3
+** is Member of two workspaces, other members in one of those, user is admin of all -> cup 0
+
+| set                    | group3         | %%start_time%%group3  |       |
+| create-group           | %%group3%%     |                       |       |
+| set                    | group3_id      | %%group_id%%          |       |
+| add-user-to-group      | %%admin%%      | %%group3_id%%         | admin |
+| set                    | group31        | %%start_time%%group31 |       |
+| create-group           | %%group31%%    |                       |       |
+| set                    | group31_id     | %%group_id%%          |       |
+| set                    | wkspc30        | %%start_time%%wkspc30 |       |
+| create-workspace       | %%wkspc30%%    |                       |       |
+| add_workspace_admin    | %%admin%%      | %%wkspc30%%           |       |
+| add_group_to_workspace | %%group3_id%%  | %%wkspc30%%           |       |
+| add_group_to_workspace | %%group31_id%% | %%wkspc30%%           |       |
+| set                    | wkspc31        | %%start_time%%wkspc31 |       |
+| create-workspace       | %%wkspc31%%    |                       |       |
+| add_workspace_admin    | %%admin%%      | %%wkspc31%%           |       |
+| add_group_to_workspace | %%group3_id%%  | %%wkspc31%%           |       |
+
+| http-user-pass | %%admin%%                                     | password |
+| get-json       | /data/groups/%%group3_id%%?can_update_perms=1 |          |
+| json-parse     |                                               |          |
+| json-like      | {"can_update_perms":0}                        |          |
+
+* Group G4
+** is Member of two workspaces, user is not admin of one of the workspaces -> cup 0
+
+| set               | group4     | %%start_time%%group4 |       |
+| create-group      | %%group4%% |                      |       |
+| set               | group4_id  | %%group_id%%         |       |
+| add-user-to-group | %%admin%%  | %%group4_id%%        | admin |
+
+| set                    | wkspc40       | %%start_time%%wkspc40 |
+| create-workspace       | %%wkspc40%%   |                       |
+| add_workspace_admin    | %%admin%%     | %%wkspc40%%           |
+| add_group_to_workspace | %%group4_id%% | %%wkspc40%%           |
+
+| set                    | wkspc41       | %%start_time%%wkspc41 |
+| create-workspace       | %%wkspc41%%   |                       |
+| add_group_to_workspace | %%group4_id%% | %%wkspc41%%           |
+
+| http-user-pass | %%admin%%                                     | password |
+| get-json       | /data/groups/%%group4_id%%?can_update_perms=1 |          |
+| json-parse     |                                               |          |
+| json-like      | {"can_update_perms":0}                        |          |

@@ -1,0 +1,28 @@
+#!/bin/bash
+
+TABLE=$1
+COLUMN=$2
+DEFAULT=$3
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+
+SQL_REMOVE_NULL="UPDATE \"$TABLE\" SET \"$COLUMN\" = $DEFAULT WHERE \"$COLUMN\" IS NULL;"
+
+SQL="ALTER TABLE \"$TABLE\" ALTER COLUMN \"$COLUMN\" SET NOT NULL"
+
+echo $SQL_REMOVE_NULL;
+psql -U $DB_USER -d $DB -t -c "$SQL_REMOVE_NULL"
+echo $SQL;
+psql -U $DB_USER -d $DB -t -c "$SQL"
+
+IS_NOT_NULL=`psql --no-align --tuples-only -U $DB_USER -d $DB -t -c "select count(1) from pg_class as c, pg_attribute as a where relname = '$TABLE' and c.oid = a.attrelid and a.attname = '$COLUMN' and a.attnotnull = 't'"` 
+
+if [ "$IS_NOT_NULL" == "1" ]; then
+    echo "$TABLE.$COLUMN is set NOT NULL"
+    exit 0;
+fi
+
+echo "$TABLE.$COLUMN is *not* set NOT NULL"
+exit 1;
+

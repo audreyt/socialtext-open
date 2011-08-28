@@ -1,0 +1,21 @@
+#!/usr/bin/env perl
+
+use 5.12.0;
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+
+use Test::Socialtext::DotProve qw(load );
+
+my $sec = shift @ARGV or die "usage: list-tests-faster-than seconds";
+
+my $prove = load(".prove");
+
+
+while (my ($k, $v) = each %{$prove->{tests}}) {
+    if ($v->{elapsed} < $sec) {
+        print $k, "\n";
+    }
+}
+
+

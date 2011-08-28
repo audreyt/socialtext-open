@@ -1,0 +1,53 @@
+Test case to verify that deleting an LDAP user from their LDAP store removes all effective access.
+
+* Fixture: OpenLDAP
+
+Bug 365: Logged in LDAP user still has access when account is deleted
+
+This test case assumes the following:
+
+* OpenLDAP fixture has been bootstrapped and is running
+* test workspace has been configured as "member-only"
+
+Also, you need base_dn.ldif in your wikitest_client_files directory.
+
+| *Comment* | Test Case: LDAP Deleted User |  |
+
+| *Comment* | Setup: turn LDAP caching off, otherwise this test takes forever to run |  |
+| ldap-config | ttl | 0 |
+
+| *Comment* | Setup: add framework to LDAP store; create arbitrary user in LDAP |  |
+| add-ldif-data | %%wikitest_client_files%%base_dn.ldif |  |
+| set | test_user | user_%%start_time%% |
+| add-ldap-user | %%test_user%% |  |
+| set | test_email | %%test_user%%@example.com |
+| set | test_username | %%test_user%% LdapUser |
+| set | test_password | ldapd3v |
+
+| *Comment* | Setup: add the user to the workspace and create a page to test against |  |
+| st-admin | add-member --email %%test_email%% --workspace %%workspace%% |  |
+
+| *Comment* | Test case: LDAP user can login |  |
+| st-login | %%test_username%% | %%test_password%% |
+
+| *Comment* | Test case: user is treated as being logged in; "Edit" button is present, and so is "Logout" link |  |
+| open_ok | /%%workspace%%/index.cgi?action=recent_changes |  |
+| text_like | Changes in Last |  |
+| wait_for_element_visible_ok | st-wikinav-logout | 30000 |
+
+| *Comment* | DELETE user from LDAP directory |  |
+| remove-ldap-user | %%test_user%% |  |
+
+| *Comment* | Test case: now deleted user should be treated as *not* logged in |  |
+| refresh |  |  |
+| wait_for_page_to_load_ok | 30000 |  |
+| wait-for-element-present-ok | st-login-form | 1000 |
+
+| *Comment* | Test case: should not be able to log in as now deleted LDAP user |  |
+| st-login | %%test_username%% | %%test_password%% |
+| st-message | Login has been disabled |  |
+
+| *Comment* | Teardown: remove the user and the new page we created |  |
+| st-admin | remove-member --email %%test_email%% --workspace %%workspace%% | no longer has the role of 'member' |
+
+| *Comment* | Test Case: LDAP Deleted User COMPLETED |  |

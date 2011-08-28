@@ -1,0 +1,18 @@
+[%# @COPYRIGHT@ -%]
+[% PROCESS lite/header.html %]
+[% PROCESS tag_link %]
+<div data-role="header" data-inline="true" data-position="inline" data-theme="d">
+<h4>[% loc("nav.recent-changes") %]</h4>
+</div>
+[% PROCESS lite/page_list.html %]
+[% PROCESS lite/footer.html %]
+
+[% BLOCK tag_link %]
+<div>
+    [% IF tag %]
+    <a href="/m/tag/[% ws.name %]/[% tag | uri |html %]">
+        [% loc('page.all=wiki', tag) |html %]
+    </a>
+    [% END %]
+</div>
+[% END %]

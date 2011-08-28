@@ -1,0 +1,408 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use File::Basename qw/dirname/;
+use File::Copy qw/copy move/;
+use File::Path qw/mkpath/;
+use List::MoreUtils qw/all/;
+use Socialtext::AppConfig;
+use Socialtext::Log qw/st_log/;
+use Socialtext::System qw/shell_run/;
+use Sys::Hostname;
+use Term::ANSIColor;
+use Getopt::Long;
+use Pod::Usage;
+
+my $VERBOSE = $ENV{VERBOSE};
+
+if (Socialtext::AppConfig->is_appliance() && $>) {
+    error("Must run this command as root.");
+}
+
+st_log->info('ST-LOGIN-SETUP: '. join(' ', @ARGV));
+
+my $cmd = shift;
+pod2usage(1) unless $cmd;
+
+my %Commands = (
+    'default'     => \&default,
+    'ssl'         => \&ssl,
+    'client-auth' => \&client_auth,
+    'help'        => sub { pod2usage(-exitstatus=>0, -verbose=>2) },
+);
+
+my $todo = $Commands{$cmd};
+error("Unknown command: '$cmd'") unless $todo;
+
+$todo->();
+
+exit;
+################################################################################
+
+sub default {
+    my $port;
+    GetOptions('http-port=s'=>\$port);
+
+    update_config(
+        credentials_extractors => 'BasicAuth:Cookie:Guest',
+        challenger             => 'STLogin',
+        ssl_only               => 0,
+        ($port ? (custom_http_port=>$port) : ()),
+    );
+
+    clear_ssl_files();
+    reconfigure();
+    success();
+}
+
+sub ssl {
+    with_ssl_setup(
+        needed_certs => [qw/key cert/],
+        configs => {
+            credentials_extractors => 'BasicAuth:Cookie:Guest',
+            challenger             => 'STLogin',
+        },
+        switches => {
+            optional => sub {my $v=shift; return (ssl_only => !$v);},
+        },
+    );
+}
+
+sub client_auth {
+    my $cac   = 0;
+    my $mixed = 0;
+    with_ssl_setup(
+        needed_certs => [qw/key cert ca/],
+        configs => {
+            ssl_only => 1,
+            allow_network_invitation => 0,
+        },
+        switches => {
+            cac   => sub { $cac   = shift; return () },
+            mixed => sub { $mixed = shift; return () },
+        },
+        more => {
+            message => sub {
+                my $msg = shift;
+                if ($msg) {
+                    error("Message file '$msg' does not exist") unless -f $msg;
+                }
+                return (login_message_file => $msg);
+            },
+            _switches => sub {
+                my $main_ce    = $cac   ? 'CAC'          : 'SSLCertificate';
+                my $other_ce   = $mixed ? 'Cookie:Guest' : 'Guest';
+                my $challenger = $mixed ? 'STLogin'      : 'NoLogin';
+                return (
+                    challenger             => $challenger,
+                    credentials_extractors => "$main_ce:$other_ce",
+                );
+            },
+        },
+    );
+}
+
+sub with_ssl_setup {
+    my %param = @_;
+    my $needed   = delete $param{needed_certs};
+    my $switches = delete $param{switches} || {};
+    my $more     = delete $param{more} || {};
+    my $configs  = delete $param{configs} || {};
+
+    my $collated = collate_certs($needed);
+
+    my $certs = $collated->{needed};
+    my $on_off = { map { $_ => '' } keys %$switches };
+    my $addtl = {map { $_ => '' } keys %$more},
+    my ($http_port,$https_port); # these are always optional.
+    GetOptions(
+        'https-port=s' => \$https_port,
+        'http-port=s'  => \$http_port,
+        (map { $_."=s" => \$certs->{$_} } keys %$certs),
+        (map { $_ => \$on_off->{$_} } keys %$on_off),
+        (map { $_."=s" => \$addtl->{$_} } keys %$addtl),
+    );
+
+    error("Cannot find required certs\n.. Try `$0 help` for more.")
+        unless all { $certs->{$_} && -f $certs->{$_} } keys %$certs;
+
+    # Hard to express simply, but $switches->{$_} returns a coderef
+    # that takes one arg, $on_off->{$_}. The ref munges that code into
+    # a key/value pair that can be passed to update_config.
+    my %options = map { $switches->{$_}->($on_off->{$_}) } keys %$switches;
+    my %addtl = map { $more->{$_}->($addtl->{$_}) } keys %$more;
+
+    update_config(
+        %$configs,
+        %options,
+        %addtl,
+        ($http_port ? (custom_http_port=>$http_port) : ()),
+        ($https_port ? (ssl_port=>$https_port) : ()),
+    );
+
+    my @to_clear = keys %{$collated->{excluded}};
+    clear_ssl_files(@to_clear) if @to_clear;
+    write_ssl_files(%$certs);
+    reconfigure();
+    success();
+}
+
+sub collate_certs {
+    my $needed = shift;
+    my $all = list_ssl_files();
+   
+    my %mapped = map { $_ => 1 } @$needed;
+    my $collated = {needed => {}, excluded => {}};
+    for my $ix (keys %$all) {
+        my $key = $mapped{$ix} ? 'needed' : 'excluded';
+        $collated->{$key}{$ix} = $all->{$ix};
+    }
+
+    return $collated;
+}
+
+sub clear_ssl_files {
+    my @ixs = @_;
+    my $files = list_ssl_files();
+
+    my $appliance = Socialtext::AppConfig->is_appliance;
+    my @to_clear = @ixs ? @ixs : keys %$files;
+    for my $ix (@to_clear) {
+        my $v = $files->{$ix};
+        next unless -f $v;
+
+        message("Clear SSL: '$ix' => '$v'", 'magenta') if $VERBOSE;
+        message("$v will be regenerated, so this is a no-op", 'yellow')
+            unless $appliance || $ix eq 'ca';
+
+        move($v, "$v.old");
+    }
+}
+
+sub write_ssl_files {
+    my %param = @_;
+    my $files = list_ssl_files();
+
+    for my $ix (keys %param) {
+        my $src  = $param{$ix};
+        my $dest = $files->{$ix};
+
+        if ($src eq $dest) { # file is already in place.
+            message("Write SSL: skipping '$ix' => '$dest'", 'magenta') if $VERBOSE;
+            next;
+        }
+        error("No SSL destination for $src ($ix)") unless $dest;
+
+        message("Write SSL: '$ix' => '$dest'", 'magenta') if $VERBOSE;
+        mkpath(dirname($dest)) unless -d dirname($dest);
+        copy($src, $dest) or error("Copy: $src => $dest: $!");
+    }
+}
+
+sub list_ssl_files {
+    my @ixs = @_;
+
+    my $config = Socialtext::AppConfig->new();
+    my $path = $config->is_appliance
+        ? '/etc/ssl' : $ENV{HOME} . '/.nlw/etc/ssl';
+    my $name = $config->web_hostname;
+
+    my $ssl_files = {
+        cert => "$path/certs/$name.crt",
+        key  => "$path/private/$name.key",
+        ca   => "$path/certs/$name.client.crt",
+    };
+
+    my @to_list = @ixs ? @ixs : keys %$ssl_files;
+    return {
+        map { $_ => $ssl_files->{$_} } @to_list
+    };
+}
+
+sub update_config {
+    my %to_update = @_;
+
+    my $config = Socialtext::AppConfig->new();
+    for my $ix (keys %to_update) {
+        next unless $ix;
+        my $v = $to_update{$ix};
+        message("Update Config: '$ix' => '$v'", 'magenta') if $VERBOSE;
+        $config->set($ix, $to_update{$ix});
+    }
+    $config->write();
+}
+
+sub success {
+    my $restart = Socialtext::AppConfig->is_appliance()
+        ? 'sudo st-appliance-ctl' : 'nlwctl';
+
+    message("\nDone. Run `$restart restart` to restart services.\n", 'green');
+}
+
+sub reconfigure {
+    if (Socialtext::AppConfig->is_appliance()) {
+        shell_run('dpkg-reconfigure st-webserver');
+    }
+    else { # dev-env
+        shell_run('gen-config');
+    }
+}
+
+sub error {
+    my $error = shift;
+    message("Error: $error", 'red');
+    exit 1;
+}
+
+sub message {
+    my $message = shift;
+    my $color = shift;
+
+    print color($color) if $color;
+    print "$message\n";
+    print color('reset') if $color;
+}
+
+=head1 NAME
+
+st-login-setup - Quick setup of common login configurations
+
+=head1 SYNOPSIS
+
+  st-login-setup <command> [options]
+
+  Commands:
+    default             Default login configuration
+        --http-port <port>      Custom HTTP port to use
+
+    ssl                 Default configuration, with SSL enabled
+        --http-port <port>      Custom HTTP port to use
+        --https-port <port>     Custom HTTPS port to use
+        --key <file>            File containing key for SSL Server Certificate
+        --cert <file>           File containing SSL Server Certificate
+        --optional              Allow SSL to be optional
+
+    client-auth         Authenticate via Client-Side SSL Certificates
+        --http-port <port>      Custom HTTP port to use
+        --https-port <port>     Custom HTTPS port to use
+        --key <file>            File containing key for SSL Server Certificate
+        --cert <file>           File containing SSL Server Certificate
+        --ca <file>             File containing SSL Signing Certificates
+        --message <file>        Custom login message file
+        --cac                   Enable use of CAC formatted certificates
+        --mixed                 Enable mixed-mode authentication
+
+    help                Displays help and documentation.
+
+=head1 DESCRIPTION
+
+This script provides a simple way to configure the most common authentication
+scenarios.  There are many steps involved in configuring your Appliance's
+login, and using this tool can often times reduce things to a single command.
+
+=head1 ARGUMENTS
+
+=over
+
+=item B<default>
+
+Creates a default login configuration; no SSL, login via username/password.
+
+=item B<ssl>
+
+Creates an SSL-enabled configuration.
+
+By default, SSL is B<required> for all connections, but this can be made
+optional by use of the C<--optional> argument.
+
+=item B<client-auth>
+
+Creates an SSL-enabled configuration which requires the use of Client-Side SSL
+Certificates to authenticate the User.
+
+=item B<help>
+
+Displays a lengthy help message, including information on all available
+options.
+
+=back
+
+=head1 AVAILABLE OPTIONS
+
+=over
+
+=item --http-port <port>
+
+Specifies the port that the HTTP server should run on.
+
+=item --https-port <port>
+
+Specifies the port that the HTTPS server should run on.
+
+=item --key <file>
+
+Specifies the path to a file containing the key for the SSL Server
+Certificate.  This file will be automatically installed into its expected
+location.
+
+=item --cert <file>
+
+Specifies the path to a file containing the SSL Server Certificate.  This file
+will be automatically installed into its expected location.
+
+=item --ca <file>
+
+Specifies the path to a file containing a concatenated list of SSL Signing
+Certificates, to be used to verify Client-Side SSL Certificates.  This file
+will be automatically installed into its expected location.
+
+=item --optional
+
+Allows for SSL to be considered "optional".  By default, the C<ssl> command
+configures the system such that SSL is B<required> (non-SSL requests are
+automatically redirected to the HTTPS server).
+
+By passing this option, the configuration will be generated such that you can
+connect to I<either> the HTTP or HTTPS server.
+
+=item --message <file>
+
+Specifies a file containing a custom "Login Disabled" message that should be
+displayed to the User when credentials are not provided by their browser.
+
+The contents of the file should be an HTML snippet.
+
+=item --cac
+
+Enables CAC authentication.  When enabled, the SSL Certificates provided by
+the browser are expected to contain a Subject that adheres to the CAC standard
+and which contains an embedded EDIPIN.
+
+=item --mixed
+
+Enables mixed mode authentication; SSL Certificate support is enabled, but is
+I<not> required.  Users that have a username/password B<are> still able to log
+in using their username/password I<as well as> being able to use a Client-Side
+SSL Certificate.
+
+=back
+
+=head1 ENVIRONMENT VARIABLES
+
+=over
+
+=item VERBOSE
+
+Setting this to a non-zero value will increase the verbosity of the output.
+
+=back
+
+=head1 COPYRIGHT
+
+Copyright 2010 Socialtext, Inc.,  All Rights Reserved.
+
+=cut

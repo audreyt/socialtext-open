@@ -1,0 +1,40 @@
+| *Comment* | Test Case: Command Line Tests RESTRICTIONS |  |
+| set | domain | xndev.com |
+| set | acc_name | fifty-free-%%start_time%% |
+| set | acc_name2 | another-account-%%start_time%% |
+| set | emailok | matt%%start_time%%@%%domain%% |
+| set | emailok2 | joe%%start_time%%@%%domain%% |
+| set | emailbad | matt%%start_time%%@someothererewerwgel.com |
+| set | emailbad2 | matt%%start_time%%@noworkyderwqeree.com |
+| set | ws | restricted-ws-%%start_time%% |
+
+| *Comment* | Test Case: Command Line Tests RESTRICTIONS can't create bad domain in restricted account |  |
+| st-admin | create-account --name %%acc_name%% |  |
+| st-admin | set-account-config --account %%acc_name%% restrict_to_domain %%domain%% |  |
+| st-admin | show-account-config --account %%acc_name%% | %%domain%% |
+| st-admin | create-user --email %%emailok%% --password %%password%% --account %%acc_name%% | A new user with the username "%%emailok%%" was created. |
+| st-admin | create-user --email %%emailbad%% --password %%password%% --account %%acc_name%% | The email address, %%emailbad%%, is not in the domain %%domain%% |
+
+| *Comment* | Test Case: Command Line Tests RESTRICTIONS can't invite bad domain to restricted workspace |  |
+| st-admin | create-account --name %%acc_name2%% |  |
+| st-admin | create-user --email %%emailbad%% --password %%password%% --account %%acc_name2%% | A new user with the username "%%emailbad%%" was created. |
+| st-admin | create-user --email %%emailbad2%% --password %%password%% --account %%acc_name2%% | A new user with the username "%%emailbad2%%" was created. |
+| st-admin | create-user --email %%emailok2%% --password %%password%% --account %%acc_name2%% | A new user with the username "%%emailok2%%" was created. |
+| st-admin | create-workspace --empty --name %%ws%% --title %%ws%% --account %%acc_name2%% | A new workspace named "%%ws%%" was created. |
+| st-admin | add-member --email %%emailok2%% --workspace %%ws%% | qr/%%emailok2%% now has the role of 'member' in the %%ws%% workspace/ism |
+| st-admin | invite-user --email %%emailbad%% --workspace %%ws%% --from %%emailok2%% | An invite has been sent to "%%emailbad%%" to join the "%%ws%%" workspace. |
+| st-admin | set-workspace-config -w %%ws%% invitation_filter %%domain%% | The workspace config for %%ws%% has been updated. |
+| st-admin | invite-user --email %%emailbad2%% --workspace %%ws%% --from %%emailok2%% | The email address, %%emailbad2%%, does not match the workspace invitation filter %%domain%%. |
+| st-admin | invite-user --email %%emailok%% --workspace %%ws%% --from %%emailok2%% | An invite has been sent to "%%emailok%%" to join the "%%ws%%" workspace. |
+
+| *Comment* | Test Case: Command Line Tests RESTRICTED teardown |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%emailok%% |  |
+| deactivate-user | %%emailbad%% |  |
+| deactivate-user | %%emailbad2%% |  |
+| deactivate-user | %%emailok2%% |  |
+| st-admin | delete-workspace --w %%ws%% --no-export | has been deleted |
+| delete-account | %%acc_name%% |  |
+| delete-account | %%acc_name2%% |  |
+
+| *Comment* | Test Case: Command Line Tests RESTRICTIONS COMPLETED |  |

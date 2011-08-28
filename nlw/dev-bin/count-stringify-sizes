@@ -1,0 +1,49 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+
+my $file = "$ENV{HOME}/.nlw/log/nlw.log";
+open(my $fh, $file) or die;
+
+my @buckets = (
+    0, 1024, 1024 * 10, 1024 * 64, 1024 * 128, 1024 * 256, 1024 * 512,
+    1024 * 1000,
+    1024 * 2000, 1024 * 5000, 1024 * 20000
+);
+
+my $less_than_some_size = 0;
+my $more_than_some_size = 0;
+my $some_size = 256*1024;
+
+my @sizes;
+while (my $line = <$fh>) {
+    next unless $line =~ m/Stringify: done (\S+) - (\d+) characters/;
+    my ($filename, $len) = ($1, $2);
+
+    $less_than_some_size++ if $len <= $some_size;
+    $more_than_some_size++ if $len >  $some_size;
+
+    if ($len > $some_size) {
+        (my $shortname = $filename) =~ s!.+/!!;
+        warn "$shortname\n";
+   }
+    my $i = 0;
+    while (1) {
+        my $size = $buckets[$i];
+        $sizes[$i] ||= { size => $size, count => 0 };
+        if ($len <= $size) {
+            $sizes[$i]->{count}++;
+            last;
+        }
+        $i++;
+    }
+}
+
+for my $s (@sizes) {
+    print "$s->{size}\t$s->{count}\n";
+}
+
+my $total = $less_than_some_size + $more_than_some_size;
+print "< $some_size: $less_than_some_size, > $some_size: $more_than_some_size, total: $total\n";
+print "% > $some_size: " . $more_than_some_size / $total * 100 . "\n";

@@ -1,0 +1,60 @@
+dn: cn=Motorhead,dc=example,dc=com
+objectClass: groupOfNames
+cn: Motorhead
+member: cn=Lemmy Kilmister,dc=example,dc=com
+member: cn=Phil Taylor,dc=example,dc=com
+member: cn=Eddie Clarke,dc=example,dc=com
+
+dn: cn=\23WithHash,dc=example,dc=com
+objectClass: groupOfNames
+cn: With Hash
+member: cn=Lemmy Kilmister,dc=example,dc=com
+member: cn=Phil Taylor,dc=example,dc=com
+member: cn=Eddie Clarke,dc=example,dc=com
+
+dn: cn=Lemmy Kilmister,dc=example,dc=com
+objectClass: inetOrgPerson
+mail: lemmy@example.com
+gn: Lemmy
+sn: Kilmister
+cn: Lemmy Kilmister
+
+dn: cn=Phil Taylor,dc=example,dc=com
+objectClass: inetOrgPerson
+mail: phil@example.com
+gn: Phil
+sn: Taylor
+cn: Phil Taylor
+
+dn: cn=Eddie Clarke,dc=example,dc=com
+objectClass: inetOrgPerson
+mail: eddie@example.com
+gn: Eddie
+sn: Clarke
+cn: Eddie Clarke
+
+dn: cn=Hawkwind,dc=example,dc=com
+objectClass: groupOfNames
+cn: Hawkwind
+member: cn=Motorhead,dc=example,dc=com
+member: cn=Michael Moorcock,dc=example,dc=com
+
+dn: cn=Michael Moorcock,dc=example,dc=com
+objectClass: inetOrgPerson
+mail: michael@example.com
+gn: Michael
+sn: Moorcock
+cn: Michael Moorcock
+
+# Create a pair of Groups with *circular* references to one another
+dn: cn=Circular A,dc=example,dc=com
+objectClass: groupOfNames
+cn: Circular A
+member: cn=Michael Moorcock,dc=example,dc=com
+member: cn=Circular B,dc=example,dc=com
+
+dn: cn=Circular B,dc=example,dc=com
+objectClass: groupOfNames
+cn: Circular B
+member: cn=Phil Taylor,dc=example,dc=com
+member: cn=Circular A,dc=example,dc=com

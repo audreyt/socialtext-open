@@ -1,0 +1,103 @@
+TODO: Figure out a way to test the other config functions
+
+| *Comment* | Test Case: Workspace Configuration |
+
+| *Comment* | Test Case: Workspace Configuration Email Notification |  |
+| st-admin | set_workspace_config --workspace %%workspace%% email_notify_is_enabled 0 |  |
+| click_and_wait | link=Settings |  |
+| text_unlike | contentLeft | Email Notification |
+| st-admin | set_workspace_config --workspace %%workspace%% email_notify_is_enabled 1 |  |
+| click_and_wait | link=Settings |  |
+| text_like | contentLeft | Email Notification |
+
+| *Comment* | Test Case: Workspace Configuration Weblog Email Format |  |
+| st-admin | set_workspace_config --workspace %%workspace%% email_weblog_dot_address 1 |  |
+| click_and_wait | link=Create New Blog |  |
+| type_ok | weblog_title | Dot Address %%start_time%% |
+| click_and_wait | link=Save |  |
+
+| *Comment* | Check the blog link for a dot. Don't worry about the destination host |  |
+| text_like | //a[contains(@href,'mailto:%%workspace%%.Dot_Address_%%start_time%%_Blog')] | or post by email |
+
+| *Comment* | Check the blog link for a plus. Don't worry about the destination host |  |
+| st-admin | set_workspace_config --workspace %%workspace%% email_weblog_dot_address 0 |  |
+| open_ok | /%%workspace%%/?action=users_settings |  |
+| click_and_wait | link=Create New Blog |  |
+| type_ok | weblog_title | Plus Address %%start_time%% |
+| click_and_wait | link=Save |  |
+| text_like | //a[contains(@href,'mailto:%%workspace%%+Plus_Address_%%start_time%%_Blog')] | or post by email |
+
+| *Comment* | Test Case: Workspace Configuration Weblog Sort Order |  |
+| st-admin | set_workspace_config --workspace %%workspace%% sort_weblogs_by_create 1 |  |
+| open_ok | /%%workspace%%/?action=users_settings |  |
+| click_and_wait | link=Create New Blog |  |
+| type_ok | weblog_title | Order %%start_time%% |
+| click_and_wait | link=Save |  |
+| wait_for_element_visible_ok | st-weblog-newpost-button | 30000 |
+| click_and_wait | st-weblog-newpost-button |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
+| type_ok | st-newpage-pagename-edit | Order post 1 %%start_time%% |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| type_ok | wikiwyg_wikitext_textarea | Order post 1 content %%start_time%% |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| st-pause-click | 2000 | st-save-button-link |
+| wait_for_text_present_ok | Order post 1 content %%start_time%% | 30000 |
+
+| open_ok | /%%workspace%%/index.cgi?action=display;page_name=first_post_in_order_%%start_time%%_blog;caller_action=blog_display;category=order_%%start_time%%_blog;js=show_edit_div#edit |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| type_ok | wikiwyg_wikitext_textarea | Order post 1 revision |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| st-pause-click | 2000 | st-save-button-link |
+
+| wait_for_text_present_ok | Order post 1 content %%start_time%% | 30000 |
+| text_like | contentContainer | qr/Order post 1 content %%start_time%%.+Order post 1 revision/ |
+| st-admin | set_workspace_config --workspace %%workspace%% sort_weblogs_by_create 0 |  |
+
+| *Comment* | Test Case: Workspace Configuration Workspace Skin |  |
+| st-admin | set_workspace_config --workspace %%workspace%% allows_skin_upload 1 |  |
+| open_ok | /%%workspace%%/?action=users_settings |  |
+| wait_for_element_visible_ok | link=Workspace Skin | 30000 |
+| text_like | contentLeft | Workspace Skin |
+| st-admin | set_workspace_config --workspace %%workspace%% allows_skin_upload 0 |  |
+| open_ok | /%%workspace%%/?action=users_settings |  |
+| text_like | contentLeft | Workspace Appearance |
+| text_unlike | contentLeft | Workspace Skin |
+
+| *Comment* | Test Case: Workspace Configuration Invitation Settings |  |
+| st-admin | set_workspace_config --workspace %%workspace%% invitation_filter %%username%% |  |
+| st-admin | set_workspace_config --workspace %%workspace%% restrict_invitation_to_search 1 |  |
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=Invite New Users |  |
+| text_like | contentRight | All candidate email addresses must match this pattern: %%username%% |
+
+| *Comment* | Test Case: Workspace Configuration Invitation search and invite user {bz: 547} |  |
+| type_ok | user_search | %%username%% |
+| click_and_wait | link=Search |  |
+
+| *Comment* | Test Case: Workspace Configuration Invitation a checkbox should have arrived |  |
+| wait_for_text_present_ok | Search Results | 30000 |
+| wait_for_element_visible_ok | //input[@value='%%username%%'] | 30000 |
+| st-admin | set_workspace_config --workspace %%workspace%% restrict_invitation_to_search 0 |  |
+| st-admin | set_workspace_config --workspace %%workspace%% invitation_filter "" |  |
+
+| *Comment* | Test Case: Workspace Configuration TEARDOWN |  |
+| st-process-jobs | PageIndex | %%workspace%% |
+| st-admin | purge-page --w %%workspace%% --page first_post_in_dot_address_%%start_time%%_blog | was purged |
+| st-admin | purge-page --w %%workspace%% --page first_post_in_plus_address_%%start_time%%_blog | was purged |
+| st-admin | purge-page --w %%workspace%% --page first_post_in_order_%%start_time%%_blog | was purged |
+| st-admin | purge-page --w %%workspace%% --page order_post_1_%%start_time%% | was purged |
+
+| st-admin | set_workspace_config --workspace %%workspace%% email_addresses_are_hidden 0 |  |
+| st-admin | set_workspace_config --workspace %%workspace%% email_notify_is_enabled 1 |  |
+| st-admin | set_workspace_config --workspace %%workspace%% email_weblog_dot_address 0 |  |
+| st-admin | set_workspace_config --workspace %%workspace%% invitation_filter "" |  |
+| st-admin | set_workspace_config --workspace %%workspace%% restrict_invitation_to_search 0 |  |
+| st-admin | set_workspace_config --workspace %%workspace%% sort_weblogs_by_create 0 |  |
+| st-admin | set_workspace_config --workspace %%workspace%% unmasked_email_domain "" |  |
+| st-admin | set_workspace_config --workspace %%workspace%% allows_skin_upload 0 |
+
+| *Comment* | Test Case: Workspace Configuration COMPLETED |

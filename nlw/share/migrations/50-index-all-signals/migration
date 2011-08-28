@@ -1,0 +1,7 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+
+print "This migration is deprecated in favour of migration 53-reindex-all-signals\n";
+exit 0;

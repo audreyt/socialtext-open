@@ -1,0 +1,18 @@
+[%# @COPYRIGHT@ -%]
+[% PROCESS element/doctype %]
+<html>
+  <head>
+    <title>[% title %]</title>
+    <meta content="Socialtext Workspace(tm)" name="GENERATOR">
+    [% FOREACH css_file = html_archive.css_uris -%]
+      <link rel="stylesheet" type="text/css" href="[% css_file %]" />
+    [% END -%]
+  </head>
+  <body id="html-archive">
+    <div id="html-archive-directory-link"><a href="./">Directory</a></div>
+    <div id="html-archive-export-title">[% title %]</div>
+    <hr />
+    <div id="html-archive-page-html">[% html %]</div>
+  </body>
+</html>
+

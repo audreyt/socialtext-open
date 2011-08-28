@@ -1,0 +1,27 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+<dl class="form">
+  <dt><label>[% loc('wiki.create') %]</label></dt>
+  <dd>
+    <p>
+      [% loc('wiki.group-required') %]
+    </p>
+    [% IF can_create_groups %]
+    <p>
+         [% loc('info.wiki-group') %]
+    </p>
+    [% END %]
+    <p>
+      [% loc('wiki.to-existing-group') %]
+    </p>
+    [% IF can_create_groups %]
+    <p>
+      [% loc('wiki.to-new-group') %]
+    </p>
+    [% ELSE %]
+    <p>
+      [% loc('error.non-admin-create-group') %]
+    </p>
+    [% END %]
+  </dd>
+</dl>

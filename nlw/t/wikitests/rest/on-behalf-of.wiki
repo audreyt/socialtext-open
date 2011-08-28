@@ -1,0 +1,80 @@
+Test case for on-behalf-of functionality in a Workspace context.
+* Fixture: SocialRest
+
+| standard-test-setup |                |               |
+| set | impersonator | bot%%start_time%%@ken.socialtext.net |
+| set | impersonated | alice%%start_time%%@ken.socialtext.net |
+| create-user | %%impersonator%% | password | %%account%% | Autobot Decepticon |
+| create-user | %%impersonated%% | password | %%account%% | Alice Smith |
+
+| set | ctwiki | Content-Type=text/x.socialtext-wiki |
+| set | xobo   | X-on-behalf-of=%%impersonated%%     |
+
+| set       | page          | rock_on_%%start_time%%                        |
+| stub-page | %%workspace%% | %%page%%                                      |
+| set       | data_page     | /data/workspaces/%%workspace%%/pages/%%page%% |
+
+| *Comment*       | Clear all events                                   | .           |
+| st-clear-events |                                                    |             |
+| get             | /data/events                                       | application/json |
+| code-is         | 200                                                |             |
+| has-header      | Cache-Control                                      | qr/private/ |
+| body-like       | []                                                 |             |
+
+| Comment    | Set up impersonation                                                |                  |
+| st-admin   | add-workspace-impersonator --email %%impersonator%% --workspace %%workspace%% |                  |
+| add-member | %%impersonated%% | %%workspace%% |
+
+| Comment        | Log in as impersonator |          |
+| http-user-pass | %%impersonator%%       | password |
+
+| Comment | Put to a page on behalf of another user |                     |                        |
+| put     | %%data_page%%                           | %%ctwiki%%,%%xobo%% | Hello! Yes, I'm Alice! |
+| code-is | 204                                     |                     |                        |
+
+| Comment | Get page as some other user                 |
+| get     | %%data_page%%?on-behalf-of=%%impersonated%% |
+| code-is | 200                                         |
+
+| Comment         | Make sure event recorded as on-behalf-of user |             |
+| get-json        | /data/events?limit=1                          |             |
+| code-is         | 200                                           |             |
+
+| json-parse     |                           |                    |
+| json-path-is   | $[0].actor.best_full_name | Alice Smith        |
+| json-path-isnt | $[0].actor.best_full_name | Autobot Decepticon |
+
+
+| Comment   | See that the right user is shown for a comment      | .                                                        | .                  |
+
+| post    | %%data_page%%/comments | %%ctwiki%%,%%xobo%% | this is my comment %%start_time%% |
+| code-is | 204                    |                     |                                   |
+
+| get       | %%data_page%%                                  | text/html |
+| code-is   | 200                                            |           |
+| body-like | this is my comment %%start_time%%              |           |
+| body-like | <em>contributed by <span class="nlw_phrase">   |           |
+| body-like | <!-- wiki: {user: %%impersonated%%} --></span> |           |
+
+| get       | %%data_page%%?on-behalf-of=%%impersonated%%    | text/html |
+| code-is   | 200                                            |           |
+| body-like | this is my comment %%start_time%%              |           |
+| body-like | <em>contributed by <span class="nlw_phrase">   |           |
+| body-like | <!-- wiki: {user: %%impersonated%%} --></span> |           |
+
+
+| set | public_ws | pub%%start_time%% |
+| create-workspace | %%public_ws%% |
+| st-admin | set-permissions --workspace %%public_ws%% --permissions public |
+
+| Comment        | When user is guest/external challenge when on-behalf-user used public | .          |
+| http-user-pass | | |
+| get            | /data/workspaces/%%public_ws%%/pages?on-behalf-of=devnull2@socialtext.com | application/json |
+| code-is        | 401 | |
+| get            | /data/workspaces/non-existent/pages?on-behalf-of=devnull2@socialtext.com | application/json |
+| code-is        | 401 | |
+
+| Comment        | When user is guest challenge when on-behalf-user used admin | .          |
+| http-user-pass | | |
+| get            | /data/workspaces/admin/pages?on-behalf-of=devnull2@socialtext.com | application/json |
+| code-is        | 401 | |

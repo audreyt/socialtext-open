@@ -1,0 +1,2396 @@
+# @COPYRIGHT@
+msgid ""
+msgstr ""
+"Project-Id-Version: Socialtext i18n\n"
+"PO-Revision-Date: 2011-06-15 13:01-0700\n"
+"Last-Translator: Socialtext i18n team\n"
+"Language-Team: Socialtext i18n team\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: share/skin/s3/template/layout/html:66 share/skin/s3/template/layout/simple_html:54 share/skin/s3/template/layout/user_frame:71
+msgid "about.keywords"
+msgstr "维基，商务维基，文档管理，企业维基，内网维基，知识管理，在线协作，开放维基，门户维基，托管维基，协作，社会化软件，社交网络，显示板，项目协作，团队协作，维基应用，维基软件，社区，共笔，商务共笔，企业共笔，内网共笔，开源共笔，门户共笔，托管共笔，共笔应用，共笔软件"
+
+#: share/skin/s3/template/element/main_nav/subnav/people:8
+msgid "about.people"
+msgstr "是一个具有强劲社交网络功能的人员目录。您可以找到您同事的联络信息，发现具有特长和共同爱好的人，以及通过您的社交网络找到有价值的信息。"
+
+#: share/skin/s3/template/element/main_nav/subnav/signals:8
+msgid "about.signals"
+msgstr "提供与 Socialtext 的企业协作平台整合的社会化消息服务。在提供像其它微博客工具如 Twitter&#0153; 一样的好处的同时，Socialtext 讯息还有更多优点，因为消息服务的运作脉络，是在为共同目标协作的组织成员当中。"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:77
+msgid "about.unplugged"
+msgstr "“Socialtext 脱机”允许用户脱机阅读及编辑工作区。用户可以“脱机”一个以上的页面来进行阅读与编辑。更改将会与工作区同步。"
+
+#. (user_count)
+#: share/skin/s3/template/element/listview_account_filter:13 share/skin/s3/template/element/listview_account_filter:22
+msgid "account.count=people"
+msgstr "%1 人"
+
+#: share/skin/s3/template/lite/page_list.html:13 share/skin/s3/template/view/page/display:14
+msgid "ago.1day"
+msgstr "1 天前"
+
+#: share/skin/s3/template/lite/page_list.html:9
+msgid "ago.1hour"
+msgstr "1 小时前"
+
+#: share/skin/s3/template/lite/page_list.html:7
+msgid "ago.1min"
+msgstr "1 分钟前"
+
+#: share/skin/s3/template/view/page/display:8
+msgid "ago.1minute"
+msgstr "1 分钟前"
+
+#: share/skin/s3/template/view/page/display:7
+msgid "ago.<1minute"
+msgstr "不到 1 分钟前"
+
+#: share/skin/s3/template/view/page/display:15
+msgid "ago.about-1day"
+msgstr "大约 1 天前"
+
+#: share/skin/s3/template/view/page/display:10
+msgid "ago.about-1hour"
+msgstr "大约 1 小时前"
+
+#. (days)
+#: share/skin/s3/template/lite/page_list.html:16 share/skin/s3/template/view/page/display:18
+msgid "ago.days=count"
+msgstr "%1 天前"
+
+#. (hours)
+#: share/skin/s3/template/lite/page_list.html:12 share/skin/s3/template/view/page/display:13
+msgid "ago.hours=count"
+msgstr "%1 小时前"
+
+#. (minutes)
+#: share/skin/s3/template/lite/page_list.html:8
+msgid "ago.mins=count"
+msgstr "%1 分钟前"
+
+#. (minutes)
+#. (data.minutes_ago)
+#: share/skin/s3/javascript/s3.js:694 share/skin/s3/template/view/page/display:9
+msgid "ago.minutes=count"
+msgstr "%1 分钟前"
+
+#: share/skin/s3/template/view/weblog:108
+msgid "blog.archives"
+msgstr "博客存档"
+
+#: share/skin/s3/template/view/weblog:7
+msgid "blog.blog"
+msgstr "博客"
+
+#: share/skin/s3/template/layout/html:146 share/skin/s3/template/layout/user_frame:151 share/skin/s3/template/view/settings:66
+msgid "blog.blogs"
+msgstr "博客"
+
+#: share/skin/s3/template/element/settings/weblog_create:5
+msgid "blog.create"
+msgstr "新建一个博客"
+
+#: share/skin/s3/template/view/weblog:78
+msgid "blog.edit"
+msgstr "编辑这篇文章"
+
+#: share/skin/s3/template/view/weblog:17
+msgid "blog.go:"
+msgstr "转到："
+
+#: share/skin/s3/template/element/settings/weblog_create:7
+msgid "blog.naming"
+msgstr "请给您的博客命名。如果您的命名不以“博客”结尾，系统会在您的命名后面自动添加“博客”。点击“创建”之后，您将会直接进入新建的博客。"
+
+#: share/skin/s3/template/view/weblog:91
+msgid "blog.navigation"
+msgstr "博客导航"
+
+#: share/skin/s3/template/view/settings:68
+msgid "blog.new"
+msgstr "新建博客"
+
+#: share/skin/s3/template/view/weblog:0 share/skin/s3/template/view/weblog:138
+msgid "blog.newer"
+msgstr "新条目"
+
+#: share/skin/s3/template/view/weblog:0 share/skin/s3/template/view/weblog:141
+msgid "blog.older"
+msgstr "更早的条目"
+
+#: share/skin/s3/template/view/weblog:82
+msgid "blog.permalink"
+msgstr "永久链接"
+
+#: share/skin/s3/template/element/settings/weblog_create:10
+msgid "blog.sample"
+msgstr "示例博客"
+
+#. (html_escaped_category)
+#: share/skin/s3/template/element/category_display/action_weblog_view:3
+msgid "blog.show=tag"
+msgstr "%1 博客"
+
+#: share/skin/s3/template/view/weblog:9
+msgid "blog.subscribe"
+msgstr "添加到订阅"
+
+#: share/skin/s3/template/view/weblog:12
+msgid "blog.unplug"
+msgstr "保存最近的 50 个页面"
+
+#: share/skin/s3/template/view/weblog:65
+msgid "blog.updated-by"
+msgstr "更新者"
+
+#: share/skin/s3/template/element/category_display/action_weblog_view:2
+msgid "blog.view"
+msgstr "查看"
+
+#: share/skin/s3/template/lite/page/display.html:31
+msgid "comment.add:"
+msgstr "添加您的评论："
+
+#: share/skin/s3/template/lite/page/display.html:39
+msgid "comment.save"
+msgstr "保存评论"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:28
+msgid "comment.signal-to"
+msgstr "将本评论发送至"
+
+#: share/skin/s3/javascript/lightbox/comment.js:417
+msgid "comment.type-link"
+msgstr "在此输入链接文本"
+
+#: share/skin/s3/template/view/settings:31
+msgid "config.all-users"
+msgstr "管理用户"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:55
+msgid "config.blog-sort"
+msgstr "工作区博客排序"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:61
+msgid "config.blog:"
+msgstr "指定博客："
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:33
+msgid "config.email-notify"
+msgstr "工作区邮件通知设置"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:5
+msgid "config.email-receive"
+msgstr "工作区邮件接收设置"
+
+#: share/skin/s3/template/element/page/display/attachments:53
+msgid "config.files"
+msgstr "管理文件"
+
+msgid "config.first-name:"
+msgstr "名："
+
+#: share/skin/s3/template/element/settings/users_settings_section:68
+msgid "config.immutable-name-password"
+msgstr "您的用户名和密码不能用“我的设置”来更改。"
+
+#: share/skin/s3/template/element/settings/users_listall_section:7
+msgid "config.membership"
+msgstr "管理工作区成员"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:50
+msgid "config.no"
+msgstr "否"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:16
+msgid "config.private"
+msgstr "隐私"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:23
+msgid "config.public"
+msgstr "公开"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:35
+msgid "config.registered-users"
+msgstr "已注册用户"
+
+#. (workspace.title)
+#: share/skin/s3/template/workspaces_created_section.html:21
+msgid "config.review-settings=wiki:"
+msgstr "查看或更改%1的设置："
+
+#: share/skin/s3/template/element/settings/users_listall_section:15 share/skin/s3/template/element/settings/users_listall_section:80 share/skin/s3/template/view/settings:25
+msgid "config.users"
+msgstr "用户"
+
+#: share/skin/s3/template/view/settings:53
+msgid "config.wiki"
+msgstr "此工作区"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:21
+msgid "config.wiki-custom"
+msgstr "这个工作区有定制的许可"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:16
+msgid "config.wiki-private"
+msgstr "用户需由管理员邀请加入并登录，方可查看页面"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:23
+msgid "config.wiki-public"
+msgstr "用户无需登录即可查看页面。"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:43
+msgid "config.yes"
+msgstr "是"
+
+#: share/skin/s3/javascript/lightbox/attachment.tt2:28 share/skin/s3/javascript/lightbox/email.tt2:28
+msgid "do.add"
+msgstr "添加"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:5
+msgid "do.bold"
+msgstr "加粗"
+
+#: share/skin/s3/javascript/lightbox/attachment.tt2:30 share/skin/s3/javascript/lightbox/attachment.tt2:55 share/skin/s3/javascript/lightbox/comment.tt2:24 share/skin/s3/javascript/lightbox/copy.tt2:39 share/skin/s3/javascript/lightbox/create_content.tt2:51 share/skin/s3/javascript/lightbox/delete.tt2:23 share/skin/s3/javascript/lightbox/duplicate.tt2:34 share/skin/s3/javascript/lightbox/email.tt2:71 share/skin/s3/javascript/lightbox/rename.tt2:31 share/skin/s3/javascript/lightbox/self_join_workspace.tt2:16 share/skin/s3/template/element/settings/start:22 share/skin/s3/template/element/settings/stop:12 share/skin/s3/template/lite/subnav.html:46
+msgid "do.cancel"
+msgstr "取消"
+
+#: share/skin/s3/javascript/lightbox/simple.tt2:8
+msgid "do.close"
+msgstr "关闭"
+
+#: share/skin/s3/template/view/page_revision_list:98
+msgid "do.compare-revisions"
+msgstr "版本对比"
+
+#: share/skin/s3/javascript/lightbox/copy.tt2:34
+msgid "do.copy"
+msgstr "复制"
+
+#: share/skin/s3/javascript/lightbox/create_content.tt2:46
+msgid "do.create"
+msgstr "新建"
+
+#: share/skin/s3/javascript/lightbox/attachment.tt2:54 share/skin/s3/javascript/lightbox/delete.tt2:18
+msgid "do.delete"
+msgstr "删除"
+
+#: share/skin/s3/javascript/lightbox/attachment.tt2:40
+msgid "do.done"
+msgstr "完成"
+
+#: share/skin/s3/javascript/lightbox/duplicate.tt2:29 share/skin/s3/javascript/lightbox/duplicate.tt2:8
+msgid "do.duplicate"
+msgstr "复制"
+
+#: share/skin/s3/template/view/page/display:79
+msgid "do.email"
+msgstr "寄送"
+
+#: share/skin/s3/template/view/listview:21
+msgid "do.export"
+msgstr "导出"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:15
+msgid "do.file"
+msgstr "附件链接"
+
+#: share/skin/s3/javascript/people-avatar.js:40
+msgid "do.follow"
+msgstr "关注此人"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:8
+msgid "do.h1"
+msgstr "标题 1"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:9
+msgid "do.h2"
+msgstr "标题 2"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:10
+msgid "do.h3"
+msgstr "标题3"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:16
+msgid "do.image"
+msgstr "图片"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:14
+msgid "do.indent"
+msgstr "增减缩进"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:6
+msgid "do.italic"
+msgstr "斜体"
+
+#: share/skin/s3/javascript/lightbox/self_join_workspace.tt2:13
+msgid "do.join"
+msgstr "加入"
+
+#: share/skin/s3/javascript/lightbox/self_join_workspace.tt2:3
+msgid "do.join-to-edit"
+msgstr "加入以编辑"
+
+msgid "do.like"
+msgstr "赞"
+
+msgid "do.like=count"
+msgstr "(%1) 赞"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:12
+msgid "do.ol"
+msgstr "编号列表"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:13
+msgid "do.outdent"
+msgstr "减少缩进"
+
+#: share/skin/s3/template/view/page/display:77 share/skin/s3/template/view/weblog:10
+msgid "do.print"
+msgstr "打印"
+
+#: share/skin/s3/template/layout/html:198 share/skin/s3/template/layout/html:94 share/skin/s3/template/layout/user_frame:203 share/skin/s3/template/layout/user_frame:99
+msgid "do.register"
+msgstr "注册"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:41 share/skin/s3/template/element/settings/users_listall_section:24
+msgid "do.remove"
+msgstr "移除"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:42
+msgid "do.remove-all"
+msgstr "移除全部"
+
+#: share/skin/s3/javascript/lightbox/rename.tt2:26
+msgid "do.rename"
+msgstr "重命名"
+
+#: share/skin/s3/javascript/lightbox/attachment.tt2:29
+msgid "do.replace"
+msgstr "替换"
+
+#: share/skin/s3/template/view/page/revision:34
+msgid "do.source-view"
+msgstr "源码查看"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:7
+msgid "do.strike"
+msgstr "删去"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:19
+msgid "do.table"
+msgstr "新建表格"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:11
+msgid "do.ul"
+msgstr "项目符号列表"
+
+#: share/skin/s3/javascript/people-avatar.js:39
+msgid "do.unfollow"
+msgstr "停止关注此人"
+
+msgid "do.unlike"
+msgstr "取消赞"
+
+msgid "do.unlike=count"
+msgstr "(%1) 取消赞"
+
+#: share/skin/s3/template/element/settings/workspaces_unsubscribe_section:7 share/skin/s3/template/view/settings:49
+msgid "do.unsubscribe"
+msgstr "退出"
+
+#. (workspace.name)
+#: share/skin/s3/template/element/settings/workspaces_unsubscribe_section:12
+msgid "do.unsubscribe=wiki"
+msgstr "退出“%1”工作区"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:33
+msgid "do.upload"
+msgstr "上传"
+
+#: share/skin/s3/javascript/s3.js:929 share/skin/s3/template/view/empty_watchlist:39 share/skin/s3/template/view/page/display:74
+msgid "do.watch"
+msgstr "关注"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:18
+msgid "do.weblink"
+msgstr "网络链接"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:17
+msgid "do.wikilink"
+msgstr "共笔链接"
+
+#: share/skin/s3/javascript/s3.js:1196
+msgid "draft.?"
+msgstr "？"
+
+#: share/skin/s3/javascript/s3.js:1180
+msgid "draft.discard"
+msgstr "放弃"
+
+#: share/skin/s3/javascript/s3.js:1184
+msgid "draft.discard?"
+msgstr "您确定要丢弃草稿吗？"
+
+#: share/skin/s3/javascript/s3.js:1177
+msgid "draft.or"
+msgstr "&nbsp;or&nbsp;"
+
+#: share/skin/s3/javascript/s3.js:1174
+msgid "draft.resume"
+msgstr "继续"
+
+#. (draft.page_title, draft.workspace_title, draft.workspace_id)
+#: share/skin/s3/javascript/s3.js:1170
+msgid "draft.unsaved=page,wiki,wiki-id:"
+msgstr "您有一个“%1”的未保存草稿在“%2”（%3）工作区："
+
+#: share/skin/s3/javascript/lightbox/self_join_many.tt2:1
+msgid "edit.choose-group"
+msgstr "您必须成为具有访问此工作区权限的的群组中的成员。请在下面选择您想加入的群组："
+
+#: share/skin/s3/template/lite/page/contention.html:5
+msgid "edit.contention"
+msgstr "在您编辑的时候有其他人对此页面进行了更改。"
+
+#. (type)
+#: share/skin/s3/template/view/edit_contention:15
+msgid "edit.contention=type"
+msgstr "在您编辑的时候有其他人对%1进行了更改。"
+
+#: share/skin/s3/javascript/s3.js:156
+msgid "edit.copy-your-changes"
+msgstr "请复制您的更改并点击取消返回到页面。"
+
+#: share/skin/s3/javascript/s3.js:890
+msgid "edit.expand"
+msgstr "展开"
+
+#: share/skin/s3/javascript/lightbox/edit_check.tt2:9
+msgid "edit.force"
+msgstr "继续编辑"
+
+#: share/skin/s3/template/view/page/display:55
+msgid "edit.loading"
+msgstr "正在加载..."
+
+#: share/skin/s3/javascript/s3.js:866
+msgid "edit.normal"
+msgstr "正常"
+
+#. (tag)
+#: share/skin/s3/javascript/s3.js:305
+msgid "edit.remove=tag"
+msgstr "将%1从此队列中移除"
+
+#: share/skin/s3/javascript/lightbox/edit_check.tt2:10
+msgid "edit.return-to-page-view"
+msgstr "返回页面检视"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:23 share/skin/s3/template/element/settings/start:16 share/skin/s3/template/element/settings/start:8 share/skin/s3/template/element/settings/stop:6 share/skin/s3/template/lite/page/edit.html:10 share/skin/s3/template/lite/page/edit.html:15
+msgid "edit.save"
+msgstr "保存"
+
+#: share/skin/s3/javascript/s3.js:139
+msgid "edit.saved"
+msgstr "（您的修改已经保存。）"
+
+#. ('<a target="_blank" href="/st/group/' + group.group_id + '">' + group.name + '</a>')
+#. ("<a target=\"_blank\" href=\"/st/group/' + group.group_id + '\">' + group.name + '</a>")
+#: share/skin/s3/javascript/lightbox/self_join_single.tt2:1 share/skin/s3/javascript/lightbox/self_join_single.tt2:2
+msgid "edit.self-join=group?"
+msgstr "您必须成为 %1 群组的成员，才能在此页面进行编辑与评论。想现在加入吗？"
+
+#. (type)
+#: share/skin/s3/template/view/edit_contention:17
+msgid "edit.view-contention=type:"
+msgstr "您刚才编辑的%1显示如下。您可以从此处复制粘贴您的更改："
+
+#: share/skin/s3/template/view/page_locked:17
+msgid "edit.view-locked"
+msgstr "您的更改的原始wikitext 如下。您可以从此处复制您的更改。"
+
+#: share/skin/s3/template/lite/page/contention.html:7 share/skin/s3/template/lite/page/page_locked.html:7
+msgid "edit.view-unsaved:"
+msgstr "您刚编辑的文本显示如下。您可以从此处复制您的更改。"
+
+#: share/skin/s3/javascript/lightbox/edit_check.tt2:2
+msgid "edit.warning"
+msgstr "编辑警告"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:40
+msgid "email.add-all"
+msgstr "添加所有成员"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:49
+msgid "email.add-note?"
+msgstr "在邮件前面添加以下段落？"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:25
+msgid "email.address-or-name"
+msgstr "请输入邮件地址或用户名"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:23 share/skin/s3/template/element/settings/users_invite_section:69
+msgid "email.another-example"
+msgstr "another.friend@example.com"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:58
+msgid "email.copy-self?"
+msgstr "发送副本给自己？"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:49
+msgid "email.customize"
+msgstr "（您可以自定义下面的文字。）"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:11
+msgid "email.from"
+msgstr "寄件人"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:46
+msgid "email.message"
+msgstr "消息"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:50
+msgid "email.page-link:"
+msgstr "您好，这是我想要与您分享的一个工作区页面。此页面也可以在以下网页查看与编辑："
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:8
+msgid "email.position?"
+msgstr "如果已经有此标题的页面存在，邮件正文应该加在哪里？"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:35
+msgid "email.recipient-box"
+msgstr "请使用上面的“收件人”框"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:36
+msgid "email.recipient-box-continued"
+msgstr "来添加收件人到此列表。"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:23
+msgid "email.recipients"
+msgstr "收件人"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:66
+msgid "email.send"
+msgstr "发送"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:17
+msgid "email.subject"
+msgstr "主题"
+
+#: share/skin/s3/template/element/settings/users_listall_section:61
+msgid "error.cannot-reset-pasword"
+msgstr "此用户的密码不能重置。"
+
+#: share/skin/s3/javascript/lightbox/self_join_workspace.js:58
+msgid "error.choose-group"
+msgstr "请选择一个以上的群组"
+
+#: share/skin/s3/template/lite/html_begin.html:66
+msgid "error.css-disabled"
+msgstr "警告：样式单在移动设备上无法使用。要正确地查看移动版 Socialtext，您需要在浏览器设置里面启用样式单。"
+
+#: share/skin/s3/template/view/page/display:105
+msgid "error.email-spreadsheet"
+msgstr "对不起，此功能不支持电子表格。"
+
+#: share/skin/s3/javascript/lightbox/attachment.js:195
+msgid "error.filename-too-long"
+msgstr "网址编码后文件名太长。"
+
+msgid "error.groups-member-exists=count:"
+msgstr "下面的 %1 名用户已经是这些群组的成员："
+
+#. (new_title)
+#: share/skin/s3/javascript/st-lightbox.js:86
+msgid "error.invalid-page-name=title"
+msgstr "您选择的新页面名称“%1”不允许使用。请输入或更改页面名称。"
+
+#. (val)
+#: share/skin/s3/javascript/lightbox/email.js:97
+msgid "error.invalid=email"
+msgstr "“%1”不是有效的电子邮件地址"
+
+#: share/skin/s3/template/element/main_nav/subnav/signals:6
+msgid "error.is-guest"
+msgstr "您必须注册或登录以使用此功能。"
+
+#. (new_title)
+#: share/skin/s3/javascript/st-lightbox.js:91
+msgid "error.long-page-name=title"
+msgstr "您选择的新页面名称“%1”，在网址编码之后太长了。"
+
+#. ($(this.input)
+#: share/skin/s3/javascript/lookahead.js:361
+msgid "error.no-match=lookahead"
+msgstr "没有和“%1”匹配的项目"
+
+#: share/skin/s3/javascript/s3.js:832
+msgid "error.no-page-doc"
+msgstr "您必须至少勾选一个页面来创建Word文档"
+
+#: share/skin/s3/javascript/s3.js:820
+msgid "error.no-page-pdf"
+msgstr "您必须至少勾选一个页面来创建PDF"
+
+#. (template)
+#: share/skin/s3/javascript/lightbox/create_content.js:244
+msgid "error.no-page=template"
+msgstr "名为“%1”的页面不存在"
+
+#. (loc("page.type-"+type)
+#: share/skin/s3/javascript/lightbox/create_content.js:73
+msgid "error.no-page=type,tag"
+msgstr "找不到有“%2”标签的%1"
+
+#: share/skin/s3/javascript/lightbox/email.js:126
+msgid "error.no-recipient"
+msgstr "错误：要发送邮件，您必须指定收件人。"
+
+msgid "error.no-search-results"
+msgstr "您的搜索没有找到任何结果。"
+
+#: share/skin/s3/template/element/settings/workspaces_cannot_create_section:23
+msgid "error.non-admin-create-group"
+msgstr "由于您的应用配置限制，只有帐户管理员可以创建群组。"
+
+#. (new_title, button)
+#: share/skin/s3/javascript/st-lightbox.js:81
+msgid "error.page-exists=title,button"
+msgstr "您选择的新页面名称“%1”已经被使用，请选择其它的名字。如果您确定要覆盖现有的“%1”页面，请再次点击“%2”。"
+
+#: share/skin/s3/javascript/lookahead.js:662
+msgid "error.parsing-data"
+msgstr "解析数据出错"
+
+#. (new_title)
+#: share/skin/s3/javascript/st-lightbox.js:96
+msgid "error.same-page-name=title"
+msgstr "您选择的新页面名称“%1”，跟现在的名称一样。请输入新的名称。"
+
+#: share/skin/s3/template/view/page_revision_list:84
+msgid "error.same-revision"
+msgstr "您不能让版本跟自己比较。"
+
+#: share/skin/s3/javascript/lightbox/comment.js:91 share/skin/s3/javascript/s3.js:160
+msgid "error.save-failed"
+msgstr "服务器错误导致保存失败，请稍候再试。"
+
+#: share/skin/s3/javascript/lightbox/email.js:143
+msgid "error.send-failed"
+msgstr "错误：发送邮件失败。"
+
+#. (template,                        self.selected_visible_type()
+#: share/skin/s3/javascript/lightbox/create_content.js:239
+msgid "error.type-mismatch=template,type"
+msgstr "“%1”存在，但并不是%2"
+
+#: share/skin/s3/javascript/people-avatar.js:195
+msgid "error.user-data"
+msgstr "错误恢复用户数据"
+
+msgid "error.wiki-member-exists=count:"
+msgstr "下面的 %1 名用户已经是工作区成员："
+
+#: share/skin/s3/template/element/settings/weblog_create:13
+msgid "example.blog"
+msgstr "示例：销售团队博客"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:37
+msgid "example.logo"
+msgstr "示例：C:\\My Pictures\\socialtext-logo-30.gif"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:29
+msgid "example.logo-url"
+msgstr "示例：http://www.socialtext.com/images/socialtext-logo-30.gif"
+
+#: share/skin/s3/template/element/settings/workspace_clone_section:20 share/skin/s3/template/element/settings/workspaces_create_section:14 share/skin/s3/template/element/settings/workspaces_settings_appearance_section:13
+msgid "example.title"
+msgstr "示例：产品研发部"
+
+#: share/skin/s3/template/element/settings/workspace_clone_section:37 share/skin/s3/template/element/settings/workspaces_create_section:31
+msgid "example.wiki-email:"
+msgstr "这个邮件地址："
+
+#: share/skin/s3/template/element/settings/workspace_clone_section:35 share/skin/s3/template/element/settings/workspaces_create_section:29
+msgid "example.wiki-url:"
+msgstr "示例：acme-product-dev 创建的工作区地址为："
+
+#: share/skin/s3/template/view/page/display:113
+msgid "export.html"
+msgstr "导出为 HTML"
+
+#: share/skin/s3/template/view/listview:24 share/skin/s3/template/view/page/display:116
+msgid "export.pdf"
+msgstr "导出为 PDF"
+
+#: share/skin/s3/template/view/listview:26 share/skin/s3/template/view/page/display:118
+msgid "export.word"
+msgstr "导出为 Word"
+
+#. (filename, match.size, match.uploader_name, match.local_date)
+#: share/skin/s3/javascript/lightbox/attachment.js:239
+msgid "file.add-or-replace=name,size,user,date?"
+msgstr "本页面已经有名为“%1”（%2 由%3于%4上传）的附件。您可以<span class=\"emphasis\">添加</span> 此文件的其它版本或<span class=\"emphasis\">替换</span>现有的文件。您想怎么做？"
+
+#. (filename)
+#: share/skin/s3/javascript/lightbox/attachment.js:229
+msgid "file.add-or-replace=name?"
+msgstr "本页面已经有名为“%1”的附件。您可以<span class=\"emphasis\">添加</span>此文件的其它版本或<span class=\"emphasis\">替换</span>现有的文件。您想怎么做？"
+
+#: share/skin/s3/template/element/listview_tabs:22 share/skin/s3/template/view/empty_watchlist:21
+msgid "file.all"
+msgstr "所有文件"
+
+#: share/skin/s3/template/view/attachmentslist:58
+msgid "file.attached-to"
+msgstr "附加到"
+
+#: share/skin/s3/template/view/listview:145
+msgid "file.attached-to-page"
+msgstr "附加到页面"
+
+#: share/skin/s3/javascript/lightbox/attachment.js:186
+msgid "file.browse"
+msgstr "请点击“浏览”，并选择一个文件上传。"
+
+#: share/skin/s3/javascript/template/attachment-listing.tt2:20
+msgid "file.by"
+msgstr "由"
+
+#. (local_time(file.date)
+#. (local_time(file.date), user(file.uploader))
+#: share/skin/s3/template/element/page/display/attachments:43
+msgid "file.by=date,user"
+msgstr "%1 由 %2 上传"
+
+#: share/skin/s3/javascript/lightbox/attachment.tt2:49
+msgid "file.delete"
+msgstr "删除附件"
+
+#: share/skin/s3/template/view/attachmentslist:76
+msgid "file.delete-selected"
+msgstr "删除选择的附件"
+
+#: share/skin/s3/javascript/template/attachment-listing.tt2:15 share/skin/s3/javascript/template/attachment-listing.tt2:16 share/skin/s3/template/element/page/display/attachments:34 share/skin/s3/template/element/page/display/attachments:37 share/skin/s3/template/element/page/display/attachments:38
+msgid "file.delete-this"
+msgstr "删除这个附件"
+
+#. (selected_attachment)
+#: share/skin/s3/javascript/lightbox/attachment.tt2:50
+msgid "file.delete=name?"
+msgstr "您确定要从本页面删除此附件'%1'？"
+
+msgid "file.drop-here-to-upload"
+msgstr "将文件拖放到这里即可上传。"
+
+msgid "file.duplicate-files"
+msgstr "文件名称重复"
+
+#: share/skin/s3/javascript/template/attachment-listing.tt2:7 share/skin/s3/javascript/template/attachment-listing.tt2:8 share/skin/s3/template/element/page/display/attachments:28 share/skin/s3/template/element/page/display/attachments:29
+msgid "file.extract"
+msgstr "提取附件"
+
+#: share/skin/s3/javascript/lightbox/copy.tt2:27 share/skin/s3/javascript/lightbox/duplicate.tt2:21 share/skin/s3/javascript/lightbox/rename.tt2:19
+msgid "file.keep"
+msgstr "保留附件"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:55
+msgid "file.keep?"
+msgstr "寄送附件？"
+
+#: share/skin/s3/javascript/lightbox/attachment.tt2:13
+msgid "file.max-size"
+msgstr "文件最大：50MB"
+
+#: share/skin/s3/template/view/attachmentslist:29
+msgid "file.name"
+msgstr "文件名"
+
+#. (matches.length, match.size, match.uploader_name, match.local_date)
+#: share/skin/s3/javascript/lightbox/attachment.js:233
+msgid "file.replace=count,size,user,date"
+msgstr "此文件（最近更新：%2，由%3于%4上传）有<span class=\"emphasis\">%1以前的版本</span>。如果您点击<strong>替换</strong>，将会<strong>删除其它所有版本</strong>。"
+
+#: share/skin/s3/template/view/attachmentslist:33
+msgid "file.size"
+msgstr "大小"
+
+#: share/skin/s3/javascript/lightbox/attachment.tt2:6 share/skin/s3/template/element/page/display/attachments:51
+msgid "file.upload"
+msgstr "上传文件"
+
+#: share/skin/s3/javascript/lightbox/attachment.js:146
+msgid "file.upload-complete"
+msgstr "上传完成"
+
+#: share/skin/s3/template/view/attachmentslist:59
+msgid "file.uploaded-by"
+msgstr "上传者"
+
+#: share/skin/s3/javascript/lightbox/attachment.js:175
+msgid "file.uploaded:"
+msgstr "已上传的文件："
+
+#. (basename)
+#: share/skin/s3/javascript/lightbox/attachment.js:209
+msgid "file.uploading=name"
+msgstr "正在上传 %1..."
+
+#: share/skin/s3/template/element/listview_account_filter:5
+msgid "group.all"
+msgstr "所有群组"
+
+#: share/skin/s3/template/element/settings/users_listall_section:79
+msgid "group.name"
+msgstr "群组名称"
+
+msgid "im.away"
+msgstr "暂离"
+
+msgid "im.be-right-back"
+msgstr "马上回来"
+
+msgid "im.busy"
+msgstr "忙碌"
+
+msgid "im.do-not-disturb"
+msgstr "请勿打扰"
+
+msgid "im.do-not-disturb-but-allowed"
+msgstr "除非必要请勿打扰"
+
+msgid "im.idle-online"
+msgstr "空闲在线"
+
+msgid "im.lunch"
+msgstr "午餐"
+
+msgid "im.meeting"
+msgstr "会议"
+
+msgid "im.offline"
+msgstr "离线"
+
+msgid "im.on-phone"
+msgstr "电话中"
+
+msgid "im.online"
+msgstr "在线"
+
+msgid "im.out-of-office"
+msgstr "离开办公室"
+
+msgid "im.requires-internet-explorer"
+msgstr "（需要Internet Explorer）"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:32
+msgid "image.upload"
+msgstr "上传图片"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:24
+msgid "image.web"
+msgstr "图片已存在于页面"
+
+#: share/skin/s3/javascript/lightbox/duplicate.tt2:24
+msgid "info.after-duplicate"
+msgstr "点击“复制”之后，主窗口会导航到新的页面名称。 "
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:57
+msgid "info.blog-sort"
+msgstr "您可以选择按照条目更新的日期，或第一次发布日期进行排序。"
+
+#: share/skin/s3/javascript/lightbox/attachment.tt2:9
+msgid "info.browse"
+msgstr "点击“浏览”并选择上传图片或文件。"
+
+#. (workspace.title)
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:45
+msgid "info.central=wiki"
+msgstr "当用户点击工作区标题，会转到工作区首页。此页面跟工作区的标题相同（“%1”）。"
+
+#: share/skin/s3/template/element/page/display/comment-button:5
+msgid "info.comment"
+msgstr "点击按钮添加评论到页面"
+
+#: share/skin/s3/template/element/main_nav/subnav/people:10 share/skin/s3/template/element/main_nav/subnav/signals:10
+msgid "info.contact-link"
+msgstr "如果链接无效，请联系"
+
+#. (user.driver_name)
+#: share/skin/s3/template/element/settings/users_settings_section:69
+msgid "info.contact=admin"
+msgstr "请与您的%1管理员联系。"
+
+#: share/skin/s3/javascript/lightbox/create_content.tt2:37
+msgid "info.copy"
+msgstr "复制现有页面..."
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:21
+msgid "info.default-logo"
+msgstr "如果您没有选择图片，将会用 Socialtext 的标识代替。"
+
+#: share/skin/s3/javascript/lightbox/attachment.tt2:11
+msgid "info.done"
+msgstr "点击“完成”关闭窗口。"
+
+#: share/skin/s3/template/element/page/display/edit-button:12 share/skin/s3/template/element/page/display/edit-button:6
+msgid "info.edit"
+msgstr "点击按钮编辑页面"
+
+#: share/skin/s3/javascript/lightbox/comment.tt2:31
+msgid "info.edit-summary-signal-visibility"
+msgstr "只有有权查看本页面的成员会收到讯息。"
+
+#: share/skin/s3/javascript/lightbox/email.tt2:7 share/skin/s3/template/view/page/display:79
+msgid "info.email-page"
+msgstr "用邮件发送这个页面"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:7
+msgid "info.email-to-page"
+msgstr "当工作区收到邮件，邮件主题将变成页面名称，邮件正文将变成页面正文。"
+
+#: share/skin/s3/template/element/settings/start:31
+msgid "info.error:"
+msgstr "错误："
+
+#: share/skin/s3/javascript/s3.js:890
+msgid "info.expand-view"
+msgstr "扩展编辑区域以填充浏览器窗口"
+
+#: share/skin/s3/template/element/page/display/attachments:9
+msgid "info.files"
+msgstr "附件"
+
+#: share/skin/s3/template/element/main_nav/subnav/people:6
+msgid "info.following"
+msgstr "...列出您关注的人。您必须先注册或登录来使用这个功能。"
+
+#. ('<b>' _ user.best_full_name _ '</b>')
+#. ("<b>' _ user.best_full_name _ '</b>")
+#: share/skin/s3/template/lite/workspace_list/user_info:6
+msgid "info.hello=user"
+msgstr "你好，%1"
+
+#: share/skin/s3/template/view/listview:150
+msgid "info.in"
+msgstr "在"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:33
+msgid "info.invite-admin-groups"
+msgstr "使用下面的表格，邀请用户加入一个此工作区管理的群组。这些群组中的任何一个用户成员都可以进入此工作区。此外，如果你想授予某特定用户访问权，您可以取消勾选下面的“邀请用户加入选取的群组”选框。"
+
+#. (restrict_domain)
+#: share/skin/s3/template/element/settings/users_invite_search_section:10 share/skin/s3/template/element/settings/users_invite_section:58
+msgid "info.invite-filter=domain"
+msgstr "您只能邀请跟您一样使用“%1”邮箱域名的人。"
+
+#: share/skin/s3/template/element/settings/users_invite_section:9
+msgid "info.invite-member-groups"
+msgstr "使用下面的表格来邀请用户加入此工作区的一个群组。这些群组中的任何一个成员都可以访问此工作区。此外，如果您想授予某人进入工作区的权限而不想邀请他加入群组，您可以取消勾选下面的“邀请用户加入选取的群组”选框。强烈建议通过群组添加用户。"
+
+#. ('<b>' _ user.username _ '</b>')
+#. ("<b>' _ user.username _ '</b>")
+#: share/skin/s3/template/view/workspace_list:16
+msgid "info.logged-in=name"
+msgstr "您已登入为 %1"
+
+msgid "info.no-search-results"
+msgstr "请检查搜索拼字是否正确，然后再试一次："
+
+#: share/skin/s3/javascript/s3.js:866
+msgid "info.normal-view"
+msgstr "使编辑区域回到正常视图"
+
+#: share/skin/s3/template/view/attachmentslist:61 share/skin/s3/template/view/listview:158 share/skin/s3/template/view/listview:160 share/skin/s3/template/view/page/revision_compare:64 share/skin/s3/template/view/weblog:53 share/skin/s3/template/view/weblog:55 share/skin/s3/template/view/weblog:64 share/skin/s3/template/view/weblog:65 share/skin/s3/template/view/weblog:67
+msgid "info.on"
+msgstr "于"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:25 share/skin/s3/template/element/settings/workspaces_settings_appearance_section:33
+msgid "info.optional"
+msgstr "可选"
+
+#: share/skin/s3/template/view/weblog:33
+msgid "info.post"
+msgstr "点击按钮新建博客文章"
+
+#: share/skin/s3/template/view/weblog:39
+msgid "info.post-by-email"
+msgstr "或通过邮件发布"
+
+#. (support_address)
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:11
+msgid "info.public-wiki"
+msgstr "如果您想要无需登陆即可让用户查看的公共工作区，请联系<a href=\"%1\">Socialtext客服支持</a>."
+
+#: share/skin/s3/template/element/settings/users_settings_section:43
+msgid "info.relogin"
+msgstr "请用你的邮箱地址和新密码再次登录。"
+
+#: share/skin/s3/template/element/settings/weblog_create:11 share/skin/s3/template/element/settings/workspace_clone_section:17 share/skin/s3/template/element/settings/workspace_clone_section:32 share/skin/s3/template/element/settings/workspaces_create_section:11 share/skin/s3/template/element/settings/workspaces_create_section:26 share/skin/s3/template/element/settings/workspaces_settings_appearance_section:10
+msgid "info.required"
+msgstr "必选"
+
+#. (offset + 1, last, pager.total_entries)
+#: share/skin/s3/template/view/attachmentslist:92 share/skin/s3/template/view/listview:199
+msgid "info.showing=from,to,total"
+msgstr "显示第 %1 - %2 项，共 %3 项"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:8
+msgid "info.skin"
+msgstr "Socialtext可以创建视觉主题来自定义您的工作区的外观和风格。您可以使用由 Socialtext 提供的默认视觉主题，或自定义视觉主题。"
+
+#: share/skin/s3/template/layout/html:173 share/skin/s3/template/layout/user_frame:178
+msgid "info.socialtext"
+msgstr "Socialtext：企业社会化软件"
+
+#: share/skin/s3/javascript/lightbox/simple.js:30
+msgid "info.success"
+msgstr "成功"
+
+#: share/skin/s3/template/view/page/display:278 share/skin/s3/template/view/page/display:279
+msgid "info.unplugged"
+msgstr "点击按钮将页面保存到您的电脑离线使用。"
+
+#: share/skin/s3/template/element/settings/workspace_clone_section:28 share/skin/s3/template/element/settings/workspaces_create_section:22
+msgid "info.valid-wiki-name"
+msgstr "只能由 3-30 个小写字母、数字、下划线或破折号组成。"
+
+#: share/skin/s3/template/element/settings/start:28
+msgid "info.warning:"
+msgstr "警告："
+
+#. ('<b>' _ user.username _ '</b>')
+#. ("<b>' _ user.username _ '</b>")
+#: share/skin/s3/template/layout/html:78 share/skin/s3/template/layout/user_frame:83
+msgid "info.welcome=user"
+msgstr "欢迎%1"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:46
+msgid "info.wiki-as-blog"
+msgstr "或者您也可以指定一个博客，作为工作区链接的显示内容。"
+
+#: share/skin/s3/template/element/settings/workspaces_cannot_create_section:11
+msgid "info.wiki-group"
+msgstr "您可以创建一个新的群组，或添加工作区到已存在的群组。"
+
+#: share/skin/s3/template/element/settings/workspace_clone_section:27 share/skin/s3/template/element/settings/workspaces_create_section:21
+msgid "info.wiki-id"
+msgstr "这是一个作为您的工作区网址和邮件地址的唯一短标识。"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:20
+msgid "info.wiki-logo"
+msgstr "您可以选择一个图片当作工作区的标识。您可以输入图片网址，或从您的电脑上传一张图片。"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:8
+msgid "info.wiki-private"
+msgstr "工作区默认是不开放的。所有用户都需要登录查看页面。只有工作区管理员可以邀请新的用户。"
+
+#: share/skin/s3/template/element/settings/workspace_clone_section:13 share/skin/s3/template/element/settings/workspaces_create_section:7 share/skin/s3/template/element/settings/workspaces_settings_appearance_section:6
+msgid "info.wiki-title"
+msgstr "这是您工作区的标题。需要的话稍后可以更改。"
+
+#: share/skin/s3/template/element/main_nav/subnav/workspaces:4
+msgid "info.wikis"
+msgstr "...列出您所属的工作区。您必须登录查看您的列表。"
+
+msgid "invite.added-to-groups=users:"
+msgstr "下面的 %1 名用户已经被成功的邀请到这些群组："
+
+msgid "invite.added-to-wiki=users:"
+msgstr "下面的 %1 名用户已经被成功的邀请到工作区："
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:126 share/skin/s3/template/element/settings/users_invite_section:81
+msgid "invite.append?"
+msgstr "添加下面的个人消息？"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:131 share/skin/s3/template/element/settings/users_invite_section:86
+msgid "invite.click-edit"
+msgstr "如果您发现想要添加或编辑的内容，请点击页面顶部的“编辑”链接。"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:131 share/skin/s3/template/element/settings/users_invite_section:86
+msgid "invite.edit-save"
+msgstr "在文本框键入您的内容，然后点击“保存”。"
+
+#: share/skin/s3/template/element/settings/users_invite_section:70
+msgid "invite.email-template"
+msgstr "姓名 &lt;u01234@example.com&gt;"
+
+#: share/skin/s3/template/element/settings/users_invite_section:11
+msgid "invite.enter-email-list"
+msgstr "输入一个邮件列表（每个地址一行），包含您想要邀请加入这个工作区的人。"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:133 share/skin/s3/template/element/settings/users_invite_section:88
+msgid "invite.entering-text"
+msgstr "当您输入本文的时候，请按段落录入。"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:24
+msgid "invite.example"
+msgstr "范例"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:22 share/skin/s3/template/element/settings/users_invite_section:68
+msgid "invite.example-address"
+msgstr "your.friend@example.com"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:25
+msgid "invite.example-domain"
+msgstr "example.com"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:19 share/skin/s3/template/element/settings/users_invite_section:67
+msgid "invite.example:"
+msgstr "示例："
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:21
+msgid "invite.friend"
+msgstr "好友"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:35 share/skin/s3/template/element/settings/users_invite_section:14
+msgid "invite.group"
+msgstr "群组"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:123 share/skin/s3/template/element/settings/users_invite_section:78
+msgid "invite.include-personal-message"
+msgstr "如果您希望的话，可以在邀请信里面包含个人消息。您可以编辑消息说出您想说的话。"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:7
+msgid "invite.lookahead"
+msgstr "输入用户的姓或名的一部分，或邮件地址。"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:135 share/skin/s3/template/element/settings/users_invite_section:90
+msgid "invite.make-wikilink"
+msgstr "要链接到其它页面（即使页面还不存在），请给一个词语或词组加上方括号。"
+
+#: share/skin/s3/template/view/settings:33
+msgid "invite.new-users"
+msgstr "邀请新用户"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:133 share/skin/s3/template/element/settings/users_invite_section:88
+msgid "invite.no-worries"
+msgstr "请不用担心破坏任何东西--先前的版本都已经保存，因此总有一个您正在操作页面的备份。"
+
+#: share/skin/s3/template/element/settings/users_invite_section:7
+msgid "invite.other-users"
+msgstr "邀请其他用户"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:122 share/skin/s3/template/element/settings/users_invite_section:77
+msgid "invite.personal-message"
+msgstr "个人消息"
+
+msgid "invite.request-sent=users:"
+msgstr "已经成功寄出给下面 %1 名用户的邀请函："
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:6
+msgid "invite.search-users"
+msgstr "搜索用户并邀请"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:61 share/skin/s3/template/element/settings/users_invite_section:42
+msgid "invite.to-groups"
+msgstr "邀请用户到选定的群组"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:129 share/skin/s3/template/element/settings/users_invite_section:84
+msgid "invite.using-wiki"
+msgstr "工作区简单易用。点击这里总览页面。"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:141 share/skin/s3/template/element/settings/users_invite_section:96
+msgid "invite.welcome-email:"
+msgstr "新用户会收到以下欢迎信："
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:140 share/skin/s3/template/element/settings/users_invite_section:95
+msgid "invite.welcome-message"
+msgstr "标准欢迎信息"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:20
+msgid "invite.your"
+msgstr "您的"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:147 share/skin/s3/template/element/settings/users_invite_search_section:153 share/skin/s3/template/element/settings/users_invite_section:102 share/skin/s3/template/element/settings/users_invite_section:108
+msgid "invite.your-personal-message"
+msgstr "<此处是您的个人消息。>"
+
+msgid "like.all-people"
+msgstr "所有人"
+
+msgid "like.like=count"
+msgstr "%1 个赞"
+
+msgid "like.liked-this.page.not-you=followed"
+msgstr "%quant(%1,位,位,目前没有)您关注的人说这页面赞。"
+
+msgid "like.liked-this.page.not-you=others"
+msgstr "%quant(%1,个,个,目前没有)人说这页面赞。"
+
+msgid "like.liked-this.page.only-you"
+msgstr "只有您说这页面赞。"
+
+msgid "like.liked-this.page.you=followed"
+msgstr "您和 %1 位您关注的人都说这页面赞。"
+
+msgid "like.liked-this.page.you=others"
+msgstr "您和其他 %1 个人都说这页面赞。"
+
+msgid "like.liked-this.revision.not-you=followed"
+msgstr "%quant(%1,位,位,目前没有)您关注的人说这版本赞。"
+
+msgid "like.liked-this.revision.not-you=others"
+msgstr "%quant(%1,个,个,目前没有)人说这版本赞。"
+
+msgid "like.liked-this.revision.only-you"
+msgstr "只有您说这版本赞。"
+
+msgid "like.liked-this.revision.you=followed"
+msgstr "您和 %1 位您关注的人都说这版本赞。"
+
+msgid "like.liked-this.revision.you=others"
+msgstr "您和其他 %1 个人都说这版本赞。"
+
+msgid "like.liked-this.signal.not-you=followed"
+msgstr "%quant(%1,位,位,目前没有)您关注的人说这讯息赞。"
+
+msgid "like.liked-this.signal.not-you=others"
+msgstr "%quant(%1,个,个,目前没有)人说这讯息赞。"
+
+msgid "like.liked-this.signal.only-you"
+msgstr "只有您说这讯息赞。"
+
+msgid "like.liked-this.signal.you=followed"
+msgstr "您和 %1 位您关注的人都说这讯息赞。"
+
+msgid "like.liked-this.signal.you=others"
+msgstr "您和其他 %1 个人都说这讯息赞。"
+
+msgid "like.page:"
+msgstr "页数："
+
+msgid "like.people-i-follow"
+msgstr "我关注的人"
+
+#: share/skin/s3/template/lite/paging.html:4 share/skin/s3/template/lite/paging.html:6 share/skin/s3/template/lite/paging.html:8
+msgid "lite.first-page"
+msgstr "第一页"
+
+#: share/skin/s3/template/lite/paging.html:17 share/skin/s3/template/lite/paging.html:19
+msgid "lite.next-page"
+msgstr "下一页"
+
+#: share/skin/s3/template/lite/paging.html:12 share/skin/s3/template/lite/paging.html:14
+msgid "lite.previous-page"
+msgstr "上一页"
+
+msgid "loc.language"
+msgstr "语言"
+
+msgid "loc.settings"
+msgstr "语言设定"
+
+#: share/skin/s3/template/lite/login/nologin.html:6
+msgid "login.is-disabled"
+msgstr "无法登录"
+
+#: share/skin/s3/template/lite/login/login.html:6
+msgid "login.title"
+msgstr "Socialtext登录"
+
+#: share/skin/s3/javascript/lookahead.js:269
+msgid "lookahead.all-results"
+msgstr "显示所有结果..."
+
+#: share/skin/s3/template/lite/globalnav.html:44 share/skin/s3/template/lite/globalnav.html:46
+msgid "nav.activity"
+msgstr "活动"
+
+#: share/skin/s3/template/lite/event_list_nav.html:30 share/skin/s3/template/lite/event_list_nav.html:32
+msgid "nav.all"
+msgstr "所有"
+
+#: share/skin/s3/template/layout/html:179 share/skin/s3/template/layout/user_frame:184
+msgid "nav.community"
+msgstr "社区"
+
+#: share/skin/s3/template/layout/html:88 share/skin/s3/template/layout/user_frame:93
+msgid "nav.control-panel"
+msgstr "控制台"
+
+#: share/skin/s3/template/lite/event_list_nav.html:38 share/skin/s3/template/lite/event_list_nav.html:40
+msgid "nav.conversations"
+msgstr "我的对话"
+
+#: share/skin/s3/template/view/listview:24
+msgid "nav.create-pdf"
+msgstr "由勾选的页面创建PDF文档"
+
+#: share/skin/s3/template/view/listview:26
+msgid "nav.create-word"
+msgstr "由勾选的页面创建Word文档"
+
+#: share/skin/s3/template/view/weblog:64 share/skin/s3/template/view/weblog:67
+msgid "nav.created-by"
+msgstr "创建者"
+
+#: share/skin/s3/template/element/main_nav/standard:3
+msgid "nav.dashboard"
+msgstr "显示板"
+
+#: share/skin/s3/javascript/template/nav-list.tt2:12
+msgid "nav.default"
+msgstr "默认"
+
+#: share/skin/s3/template/layout/html:8 share/skin/s3/template/layout/user_frame:13
+msgid "nav.desktop"
+msgstr "桌面"
+
+#: share/skin/s3/javascript/lightbox/simple.js:25 share/skin/s3/template/view/error:3 share/skin/s3/template/view/error:7
+msgid "nav.error"
+msgstr "错误"
+
+#: share/skin/s3/template/element/listview_account_filter:3
+msgid "nav.filter:"
+msgstr "仅显示："
+
+#: share/skin/s3/template/view/paging:5 share/skin/s3/template/view/paging:8
+msgid "nav.first"
+msgstr "最前"
+
+#: share/skin/s3/template/view/paging:8
+msgid "nav.first-page"
+msgstr "第一页"
+
+#: share/skin/s3/template/lite/event_list_nav.html:46 share/skin/s3/template/lite/event_list_nav.html:48
+msgid "nav.following"
+msgstr "我关注的人"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:37 share/skin/s3/template/element/settings/users_invite_section:16 share/skin/s3/template/element/settings/users_listall_section:72
+msgid "nav.groups"
+msgstr "群组"
+
+#: share/skin/s3/template/layout/html:193 share/skin/s3/template/layout/html:90 share/skin/s3/template/layout/user_frame:198 share/skin/s3/template/layout/user_frame:95
+msgid "nav.help"
+msgstr "帮助"
+
+#: share/skin/s3/javascript/s3.js:346 share/skin/s3/template/view/page/display:131
+msgid "nav.hide"
+msgstr "隐藏"
+
+#: share/skin/s3/template/element/main_nav/subnav/history:2
+msgid "nav.history"
+msgstr "我的历史"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:105 share/skin/s3/template/element/settings/users_invite_search_section:79 share/skin/s3/template/element/settings/users_invite_section:3
+msgid "nav.invite"
+msgstr "邀请"
+
+#: share/skin/s3/template/element/main_nav/subnav/invite:2
+msgid "nav.invite!"
+msgstr "邀请！"
+
+#: share/skin/s3/template/view/paging:24 share/skin/s3/template/view/paging:27
+msgid "nav.last"
+msgstr "最后"
+
+#: share/skin/s3/template/view/paging:27
+msgid "nav.last-page"
+msgstr "末页"
+
+#: share/skin/s3/template/layout/html:196 share/skin/s3/template/layout/html:201 share/skin/s3/template/layout/html:93 share/skin/s3/template/layout/html:96 share/skin/s3/template/layout/user_frame:101 share/skin/s3/template/layout/user_frame:201 share/skin/s3/template/layout/user_frame:206 share/skin/s3/template/layout/user_frame:98 share/skin/s3/template/lite/globalnav.html:12 share/skin/s3/template/lite/globalnav.html:14
+msgid "nav.login"
+msgstr "登录"
+
+#: share/skin/s3/template/layout/html:204 share/skin/s3/template/layout/html:99 share/skin/s3/template/layout/user_frame:104 share/skin/s3/template/layout/user_frame:209 share/skin/s3/template/lite/globalnav.html:22 share/skin/s3/template/view/workspace_list:19
+msgid "nav.logout"
+msgstr "登出"
+
+#: share/skin/s3/template/lite/login/login.html:12
+msgid "nav.lost-password"
+msgstr "我忘记密码了"
+
+#: share/skin/s3/template/lite/event_list_nav.html:22 share/skin/s3/template/lite/event_list_nav.html:24
+msgid "nav.mine"
+msgstr "我的"
+
+#: share/skin/s3/template/layout/html:187 share/skin/s3/template/layout/html:81 share/skin/s3/template/layout/user_frame:192 share/skin/s3/template/layout/user_frame:86
+msgid "nav.mobile"
+msgstr "移动版"
+
+#: share/skin/s3/template/element/main_nav/subnav/history:4
+msgid "nav.my-recently-viewed"
+msgstr "所有我最近浏览的"
+
+#: share/skin/s3/template/view/settings:29
+msgid "nav.my-settings"
+msgstr "我的设置"
+
+#: share/skin/s3/template/layout/html:144 share/skin/s3/template/layout/user_frame:149
+msgid "nav.my-watchlist"
+msgstr "我的关注列表"
+
+#: share/skin/s3/template/lite/workspace_list/my_workspaces:5 share/skin/s3/template/view/settings:41
+msgid "nav.my-wikis"
+msgstr "我的工作区"
+
+#: share/skin/s3/template/element/listview_tabs:5 share/skin/s3/template/layout/html:142 share/skin/s3/template/layout/user_frame:147 share/skin/s3/template/lite/subnav.html:14 share/skin/s3/template/lite/subnav.html:16 share/skin/s3/template/view/empty_watchlist:8 share/skin/s3/template/view/page/display:224
+msgid "nav.news"
+msgstr "最新更动"
+
+#: share/skin/s3/template/view/paging:23 share/skin/s3/template/view/paging:26
+msgid "nav.next"
+msgstr "下一页"
+
+#: share/skin/s3/template/view/paging:26
+msgid "nav.next-page"
+msgstr "下一页"
+
+#: share/skin/s3/javascript/nav-list.js:80
+msgid "nav.no-followers"
+msgstr "目前，您还没有关注任何人。"
+
+#: share/skin/s3/template/element/main_nav/subnav/workspaces:27
+msgid "nav.no-wikis"
+msgstr "目前，您还不是任何工作区的成员。"
+
+#: share/skin/s3/template/view/paging:17
+msgid "nav.page"
+msgstr "页面"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:38
+msgid "nav.page-locking"
+msgstr "页面锁定"
+
+#: share/skin/s3/template/element/main_nav/subnav/people:3
+msgid "nav.people"
+msgstr "人员"
+
+#: share/skin/s3/javascript/nav-list.js:71
+msgid "nav.people-directory"
+msgstr "人员目录"
+
+#: share/skin/s3/template/element/settings/preferences_settings_section:5 share/skin/s3/template/view/settings:72
+msgid "nav.preferences"
+msgstr "偏好"
+
+#: share/skin/s3/template/view/paging:6 share/skin/s3/template/view/paging:9
+msgid "nav.previous"
+msgstr "上一页"
+
+#: share/skin/s3/template/view/paging:9
+msgid "nav.previous-page"
+msgstr "上一页"
+
+#: share/skin/s3/template/lite/event_list_nav.html:4
+msgid "nav.recent-activities"
+msgstr "近期活动"
+
+#: share/skin/s3/template/lite/changes/changes.html:5 share/skin/s3/template/view/weblog:20
+msgid "nav.recent-changes"
+msgstr "近期更改"
+
+#: share/skin/s3/template/element/listview_tabs:7 share/skin/s3/template/view/empty_watchlist:9 share/skin/s3/template/view/page/display:241
+msgid "nav.recently-viewed"
+msgstr "近期查看"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:3 share/skin/s3/template/lite/search/search.html:12 share/skin/s3/template/lite/subnav.html:28 share/skin/s3/template/lite/subnav.html:30
+msgid "nav.search"
+msgstr "搜索"
+
+#. (ws.title)
+#: share/skin/s3/template/lite/search/search.html:4
+msgid "nav.search=wiki"
+msgstr "搜索 %1"
+
+#: share/skin/s3/template/view/page_revision_list:42
+msgid "nav.select"
+msgstr "选取"
+
+#: share/skin/s3/template/layout/html:192 share/skin/s3/template/layout/html:86 share/skin/s3/template/layout/user_frame:197 share/skin/s3/template/layout/user_frame:91 share/skin/s3/template/view/settings:22
+msgid "nav.settings"
+msgstr "设置"
+
+#: share/skin/s3/javascript/s3.js:346 share/skin/s3/template/view/page/display:131
+msgid "nav.show"
+msgstr "显示"
+
+#: share/skin/s3/template/view/listview:79
+msgid "nav.show:"
+msgstr "显示："
+
+#: share/skin/s3/template/element/main_nav/subnav/signals:3
+msgid "nav.signals"
+msgstr "讯息"
+
+#: share/skin/s3/template/layout/html:74 share/skin/s3/template/layout/user_frame:79
+msgid "nav.socialtext"
+msgstr "Socialtext"
+
+#: share/skin/s3/template/element/main_nav/subnav/people:8
+msgid "nav.socialtext-people"
+msgstr "Socialtext人员"
+
+#: share/skin/s3/template/element/main_nav/subnav/signals:8
+msgid "nav.socialtext-signals"
+msgstr "Socialtext讯息"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:76
+msgid "nav.socialtext-unplugged"
+msgstr "Socialtext脱机"
+
+#: share/skin/s3/template/view/listview:154
+msgid "nav.summary"
+msgstr "编辑摘要"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:99
+msgid "nav.toggle-all"
+msgstr "全选/取消全选"
+
+#: share/skin/s3/template/view/page/display:81
+msgid "nav.tools"
+msgstr "工具"
+
+#: share/skin/s3/template/element/main_nav/subnav/people:9
+msgid "nav.try-people"
+msgstr "试试Socialtext别人"
+
+#: share/skin/s3/template/element/main_nav/subnav/signals:9
+msgid "nav.try-signals"
+msgstr "试试Socialtext Signals"
+
+#: share/skin/s3/template/view/attachmentslist:32
+msgid "nav.uploaded-date"
+msgstr "上传的日期"
+
+#: share/skin/s3/template/element/listview_tabs:16 share/skin/s3/template/view/empty_watchlist:17
+msgid "nav.view:"
+msgstr "查看："
+
+#: share/skin/s3/template/layout/html:134 share/skin/s3/template/layout/user_frame:139
+msgid "nav.wiki"
+msgstr "工作区"
+
+#: share/skin/s3/template/element/main_nav/subnav/workspaces:1 share/skin/s3/template/element/settings/workspaces_listall_section:4 share/skin/s3/template/lite/globalnav.html:60 share/skin/s3/template/lite/globalnav.html:62 share/skin/s3/template/view/settings:39
+msgid "nav.wikis"
+msgstr "工作区"
+
+#: share/skin/s3/template/view/page/display:183
+msgid "page.add-tag"
+msgstr "&nbsp;+"
+
+#: share/skin/s3/template/element/listview_tabs:18 share/skin/s3/template/view/empty_watchlist:19
+msgid "page.all"
+msgstr "所有页面"
+
+#. (escaped_str)
+#: share/skin/s3/template/lite/changes/changes.html:15
+msgid "page.all=wiki"
+msgstr "所有在%1的页面"
+
+#. (type)
+#: share/skin/s3/template/view/page_locked:19
+msgid "page.back=type"
+msgstr "点击这里返回%1。"
+
+#. (page.uri)
+#: share/skin/s3/template/lite/page/page_locked.html:6
+msgid "page.back=uri"
+msgstr "点击<a href=\"%1\">这里</a>返回页面。"
+
+#: share/skin/s3/javascript/lightbox/create_content.tt2:23
+msgid "page.blank"
+msgstr "空白页"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:22
+msgid "page.bottom"
+msgstr "页面底部"
+
+#: share/skin/s3/template/element/page/display/comment-button:6 share/skin/s3/template/view/weblog:73
+msgid "page.comment"
+msgstr "评论"
+
+#: share/skin/s3/template/view/page/display:88
+msgid "page.copy"
+msgstr "复制到另一个工作区"
+
+#. (page_title)
+#: share/skin/s3/javascript/lightbox/copy.tt2:8
+msgid "page.copy=title?"
+msgstr "将页面“%1”复制到另外一个工作区？"
+
+#. (page.revisions)
+#: share/skin/s3/template/view/page/display:295
+msgid "page.count=revision"
+msgstr "%1 次更动"
+
+#. (page.views)
+#: share/skin/s3/template/view/page/display:296
+msgid "page.count=view"
+msgstr "%1 次查看"
+
+#: share/skin/s3/javascript/lightbox/create_content.tt2:4
+msgid "page.create"
+msgstr "新建内容"
+
+#. (create_author, create_date)
+#: share/skin/s3/template/view/page/display:289
+msgid "page.created=author,date"
+msgstr "由 %1 于 %2 创建"
+
+#: share/skin/s3/template/view/listview:158
+msgid "page.creator"
+msgstr "原<strong>创建者</strong>为"
+
+#: share/skin/s3/javascript/lightbox/delete.tt2:7 share/skin/s3/template/view/page/display:91
+msgid "page.delete"
+msgstr "删除页面"
+
+#: share/skin/s3/template/view/page/delete_epilogue:17
+msgid "page.delete-epilogue"
+msgstr "您是否误删除了这个页面？如果是，您可以恢复页面。"
+
+#: share/skin/s3/javascript/pageview.js:160 share/skin/s3/javascript/pageview.js:161 share/skin/s3/template/view/page/display:161 share/skin/s3/template/view/page/display:163
+msgid "page.delete-tag"
+msgstr "删除这个标签"
+
+#. (page_title)
+#: share/skin/s3/javascript/lightbox/delete.tt2:12
+msgid "page.delete=title?"
+msgstr "您确定要删除“%1”？"
+
+#. (revision)
+#: share/skin/s3/template/view/page_revision_list:116
+msgid "page.deleted=revision"
+msgstr "已删除：版本%1"
+
+#: share/skin/s3/template/view/page/display:84
+msgid "page.duplicate"
+msgstr "复制页面"
+
+#. (Socialtext.page_title)
+#: share/skin/s3/javascript/lightbox/duplicate.js:12
+msgid "page.duplicate=title"
+msgstr "%1的副本"
+
+#: share/skin/s3/template/element/page/display/edit-button:13 share/skin/s3/template/element/page/display/edit-button:7 share/skin/s3/template/lite/subnav.html:40 share/skin/s3/template/view/weblog:98
+msgid "page.edit"
+msgstr "编辑"
+
+#. (page.title)
+#: share/skin/s3/template/lite/page/edit.html:2
+msgid "page.edit=title"
+msgstr "编辑%1"
+
+#. (ago_text(page.edit_in_progress.minutes_ago)
+#. (ago_text(page.edit_in_progress.minutes_ago))
+#: share/skin/s3/template/view/page/display:142
+msgid "page.editing=ago"
+msgstr "已于 %1打开本页进行编辑。"
+
+#: share/skin/s3/template/view/page/display:105 share/skin/s3/template/view/page/display:107
+msgid "page.email-to-this"
+msgstr "发送邮件到这个页面"
+
+#: share/skin/s3/template/lite/page/display.html:49
+msgid "page.files:"
+msgstr "本页面的附件："
+
+#: share/skin/s3/template/view/page/display:203
+msgid "page.incoming-links"
+msgstr "外部链接"
+
+#: share/skin/s3/template/lite/page/page_locked.html:5 share/skin/s3/template/view/page/display:28
+msgid "page.is-locked"
+msgstr "本页面已锁定，只有工作区管理员可以进行编辑。"
+
+#: share/skin/s3/template/element/page/display/edit-button:18 share/skin/s3/template/lite/subnav.html:42
+msgid "page.join-to-edit"
+msgstr "加入以编辑"
+
+#: share/skin/s3/template/element/page/display/edit-button:18
+msgid "page.join-to-edit!"
+msgstr "现在加入编辑此页面！"
+
+#: share/skin/s3/template/view/listview:160
+msgid "page.last-updated"
+msgstr "前次<strong>更新</strong>为"
+
+#. (time, author)
+#: share/skin/s3/template/lite/page/display.html:46
+msgid "page.last-updated=time,author"
+msgstr "页面最后更新：%2于%1"
+
+#. (type)
+#: share/skin/s3/template/view/edit_contention:16
+msgid "page.latest=type"
+msgstr "点击这里转到%1的最新版本。"
+
+#. (page.uri)
+#: share/skin/s3/template/lite/page/contention.html:6
+msgid "page.latest=uri"
+msgstr "点击<a href=\"%1\">这里</a>转到页面的最新版本。"
+
+#: share/skin/s3/template/view/page/display:96
+msgid "page.lock"
+msgstr "锁定页面"
+
+#. (type)
+#: share/skin/s3/template/view/page_locked:15
+msgid "page.locked=type"
+msgstr "在您打开并进行编辑之后一位管理员已经锁定了这个%1。您将无法保存修改。"
+
+#: share/skin/s3/template/layout/html:154 share/skin/s3/template/layout/user_frame:159
+msgid "page.new"
+msgstr "新页面"
+
+#: share/skin/s3/javascript/lightbox/copy.tt2:19 share/skin/s3/javascript/lightbox/duplicate.tt2:13 share/skin/s3/javascript/lightbox/rename.tt2:11
+msgid "page.new-name"
+msgstr "新页面名称"
+
+#: share/skin/s3/template/view/page/display:212
+msgid "page.no-backlinks"
+msgstr "还没有页面链接到此页面。"
+
+#: share/skin/s3/javascript/pageview.js:173 share/skin/s3/template/view/page/display:169
+msgid "page.no-tags"
+msgstr "此页面没有标签。"
+
+#. (user_link, time_ago)
+#: share/skin/s3/javascript/lightbox/edit_check.tt2:4
+msgid "page.opened-for-edit=user,ago"
+msgstr "%1 已于 %2打开本页进行编辑。"
+
+#: share/skin/s3/template/element/listview_tabs:11 share/skin/s3/template/view/empty_watchlist:13
+msgid "page.orphaned"
+msgstr "孤立页面"
+
+#: share/skin/s3/template/view/page/display:77
+msgid "page.print"
+msgstr "打印本页"
+
+#: share/skin/s3/javascript/lightbox/create_content.js:166
+msgid "page.prompt-name"
+msgstr "输入页面名称..."
+
+#: share/skin/s3/template/view/page/display:85
+msgid "page.rename"
+msgstr "重命名页面"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:28
+msgid "page.replace"
+msgstr "替换已存在页面"
+
+#: share/skin/s3/template/view/page/delete_epilogue:26
+msgid "page.restore"
+msgstr "恢复页面"
+
+#. (human_readable_revision)
+#: share/skin/s3/template/view/page/revision:41
+msgid "page.restore=revision"
+msgstr "恢复版本%1"
+
+#: share/skin/s3/template/view/page_revision_list:43
+msgid "page.revision"
+msgstr "版本"
+
+#. (revision)
+#: share/skin/s3/template/view/page_revision_list:119
+msgid "page.revision=revision"
+msgstr "版本%1"
+
+#. (row.revision_count)
+#. (page.revisions)
+#. (data.revision_count)
+#: share/skin/s3/javascript/pageview.js:96 share/skin/s3/template/view/listview:161 share/skin/s3/template/view/page/display:63
+msgid "page.revisions=count"
+msgstr "%1 次更动"
+
+#: share/skin/s3/template/view/page/display:69
+msgid "page.signal-this!"
+msgstr "分享此页!"
+
+#: share/skin/s3/template/view/listview:82 share/skin/s3/template/view/listview:85
+msgid "page.summaries"
+msgstr "摘要"
+
+#: share/skin/s3/template/view/attachmentslist:30
+msgid "page.title"
+msgstr "页面标题"
+
+#: share/skin/s3/template/view/listview:81 share/skin/s3/template/view/listview:84
+msgid "page.titles"
+msgstr "标题"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:16
+msgid "page.top"
+msgstr "页面顶部"
+
+msgid "page.type-spreadsheet"
+msgstr "电子表格"
+
+#: share/skin/s3/javascript/lightbox/create_content.js:9
+msgid "page.type-wiki"
+msgstr "页面"
+
+#: share/skin/s3/template/view/page/display:96
+msgid "page.unlock"
+msgstr "解锁页面"
+
+#: share/skin/s3/javascript/s3.js:1073 share/skin/s3/javascript/s3.js:15
+msgid "page.untitled"
+msgstr "未命名页面"
+
+#. (update_author, update_date)
+#: share/skin/s3/template/view/page/display:292
+msgid "page.updated=user,date"
+msgstr "由 %1 于 %2 更新"
+
+#: share/skin/s3/javascript/lightbox/create_content.tt2:29
+msgid "page.use-template:"
+msgstr "使用模板："
+
+#: share/skin/s3/template/element/settings/users_settings_section:58
+msgid "password.again:"
+msgstr "再次输入新密码："
+
+#: share/skin/s3/template/element/settings/users_settings_section:40
+msgid "password.change"
+msgstr "更改密码"
+
+#: share/skin/s3/template/element/settings/users_settings_section:46
+msgid "password.current:"
+msgstr "当前密码："
+
+#: share/skin/s3/template/element/settings/users_settings_section:42
+msgid "password.minimum-length"
+msgstr "新密码至少需6个字符长。"
+
+#: share/skin/s3/template/element/settings/users_settings_section:52
+msgid "password.new:"
+msgstr "新的密码："
+
+#: share/skin/s3/template/element/settings/users_listall_section:29
+msgid "password.reset"
+msgstr "重设密码"
+
+#: share/skin/s3/template/view/weblog:53 share/skin/s3/template/view/weblog:55
+msgid "post.by"
+msgstr "来自"
+
+#: share/skin/s3/template/element/category_display/action_post_by_email:3
+msgid "post.by-email:"
+msgstr "通过邮件向此标签发布："
+
+#: share/skin/s3/template/view/weblog:33
+msgid "post.new"
+msgstr "发帖"
+
+#: share/skin/s3/template/view/page/revision:21 share/skin/s3/template/view/page/revision_compare:21
+msgid "revision.all"
+msgstr "所有版本"
+
+#. (display_title)
+#: share/skin/s3/template/view/page_revision_list:5
+msgid "revision.all=page"
+msgstr "%1：所有版本"
+
+#: share/skin/s3/template/view/page/revision_compare:66
+msgid "revision.begin-quote"
+msgstr "说道：“"
+
+#: share/skin/s3/template/view/page/revision_compare:63
+msgid "revision.by:"
+msgstr "由："
+
+#: share/skin/s3/template/view/page/revision_compare:32
+msgid "revision.color"
+msgstr "颜色查看（无格式的）"
+
+#: share/skin/s3/template/view/page/revision_compare:49
+msgid "revision.compare"
+msgstr "版本比较"
+
+#: share/skin/s3/template/view/page/revision:11 share/skin/s3/template/view/page/revision_compare:11 share/skin/s3/template/view/page_revision_list:26
+msgid "revision.current"
+msgstr "回到当前版本"
+
+#: share/skin/s3/template/view/page_revision_list:45
+msgid "revision.date"
+msgstr "日期"
+
+#: share/skin/s3/template/view/page_revision_list:44
+msgid "revision.edited-by"
+msgstr "编辑者"
+
+#: share/skin/s3/template/view/page/revision_compare:66
+msgid "revision.end-quote"
+msgstr "”"
+
+#: share/skin/s3/template/view/page/revision:26
+msgid "revision.next"
+msgstr "下一个版本"
+
+#: share/skin/s3/template/view/page/revision_compare:26
+msgid "revision.next-compare"
+msgstr "下一个比较"
+
+#: share/skin/s3/template/view/page/revision:32
+msgid "revision.normal-view"
+msgstr "一般查看"
+
+#: share/skin/s3/template/view/page/revision:16
+msgid "revision.previous"
+msgstr "上一个版本"
+
+#: share/skin/s3/template/view/page/revision_compare:16
+msgid "revision.previous-compare"
+msgstr "前一个比较"
+
+#. (edit_summary)
+#: share/skin/s3/template/view/page/revision:62
+msgid "revision.quote=summary"
+msgstr "“%1”"
+
+#: share/skin/s3/template/view/page_revision_list:46
+msgid "revision.summary"
+msgstr "编辑摘要"
+
+#: share/skin/s3/template/view/page/revision:60 share/skin/s3/template/view/page/revision_compare:60
+msgid "revision.tags:"
+msgstr "标签："
+
+#: share/skin/s3/template/view/page/revision_compare:34
+msgid "revision.view"
+msgstr "查看含格式的"
+
+#: share/skin/s3/template/view/listview:44 share/skin/s3/template/view/listview:57
+msgid "search.be-more-specific"
+msgstr "请使用更准确的关键字，或添加更多搜索项目。"
+
+#: share/skin/s3/template/lite/search/search.html:15
+msgid "search.error:"
+msgstr "错误："
+
+#. (appconfig.search_warning_threshold)
+#: share/skin/s3/template/view/listview:41
+msgid "search.limit=count"
+msgstr "搜索被限制在%1结果."
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:111
+msgid "search.no-results"
+msgstr "您的搜索没有匹配的结果。"
+
+#: share/skin/s3/template/element/settings/users_invite_search_section:73
+msgid "search.results"
+msgstr "搜索结果"
+
+#: share/skin/s3/template/view/listview:54
+msgid "search.too-general"
+msgstr "您输入的搜索过于宽泛。"
+
+#. (too_many)
+#: share/skin/s3/template/view/listview:38
+msgid "search.too-many=count"
+msgstr "您输入的搜索过于宽泛; %1页面和/或附件符合请求。"
+
+#: share/skin/s3/javascript/s3.js:1074 share/skin/s3/javascript/s3.js:16
+msgid "sheet.untitled"
+msgstr "未命名电子表格"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:32
+msgid "skin.browse"
+msgstr "浏览..."
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:21
+msgid "skin.customized"
+msgstr "自定义的视觉主题"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:20
+msgid "skin.default"
+msgstr "默认视觉主题"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:54
+msgid "skin.file"
+msgstr "文件"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:47
+msgid "skin.files"
+msgstr "自定义的视觉主题文件"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:49
+msgid "skin.remove-existing"
+msgstr "移除&nbsp;存在的&nbsp;文件"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:31
+msgid "skin.select-file:"
+msgstr "选取一个包含自定义视觉主题文件的ZIP或TGZ文件："
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:18
+msgid "skin.select:"
+msgstr "选取一个工作区视觉主题："
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:55
+msgid "skin.size"
+msgstr "大小（位元组）"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:12
+msgid "skin.support"
+msgstr "自定义视觉主题支持"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:14
+msgid "skin.unsupported"
+msgstr "上传的视觉主题不支持。上传视觉主题仅用于开发和测试自定义视觉主题。请联系 sales@socialtext.com 获取更多关于自定义视觉主题的信息。"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:56
+msgid "skin.uploaded"
+msgstr "已上传"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:71
+msgid "sort.by-created"
+msgstr "按首次发布时间对条目排序"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:65
+msgid "sort.by-updated"
+msgstr "按最后更新时间对条目排序"
+
+#: share/skin/s3/template/view/attachmentslist:27 share/skin/s3/template/view/listview:95
+msgid "sort.by:"
+msgstr "排序按照："
+
+#: share/skin/s3/template/view/listview:109
+msgid "sort.created"
+msgstr "创建的日期"
+
+#: share/skin/s3/template/view/listview:106
+msgid "sort.creator"
+msgstr "创建者"
+
+#: share/skin/s3/template/view/listview:108
+msgid "sort.edited"
+msgstr "最后编辑的日期"
+
+#: share/skin/s3/template/view/listview:105
+msgid "sort.last-edited"
+msgstr "前次编辑者"
+
+#: share/skin/s3/template/view/listview:98
+msgid "sort.relevance"
+msgstr "相关性"
+
+#: share/skin/s3/template/view/listview:110
+msgid "sort.revisions"
+msgstr "更动次数"
+
+#: share/skin/s3/template/view/listview:100
+msgid "sort.title"
+msgstr "标题"
+
+#: share/skin/s3/template/view/attachmentslist:31
+msgid "sort.uploader"
+msgstr "上传者"
+
+#: share/skin/s3/template/view/listview:102
+msgid "sort.wiki"
+msgstr "工作区"
+
+#: share/skin/s3/template/view/page/display:175
+msgid "tag.add"
+msgstr "添加标签"
+
+#: share/skin/s3/template/element/listview_tabs:20 share/skin/s3/template/view/empty_watchlist:20
+msgid "tag.all"
+msgstr "所有标签"
+
+#. (ws.title)
+#: share/skin/s3/template/lite/tag/tag.html:5
+msgid "tag.all=wiki"
+msgstr "所有标签"
+
+#: share/skin/s3/javascript/lightbox/copy.tt2:23 share/skin/s3/javascript/lightbox/duplicate.tt2:17 share/skin/s3/javascript/lightbox/rename.tt2:15
+msgid "tag.keep"
+msgstr "保留标签"
+
+#: share/skin/s3/template/view/taglistview:25
+msgid "tag.pages"
+msgstr "页面"
+
+#: share/skin/s3/template/view/page/display:192
+msgid "tag.suggestions:"
+msgstr "建议："
+
+#: share/skin/s3/javascript/lightbox/create_content.js:59
+msgid "tag.template"
+msgstr "模版"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:90
+msgid "unplugged.disabled"
+msgstr "关闭 Socialtext 脱机"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:84
+msgid "unplugged.enabled"
+msgstr "开启 Socialtext 脱机"
+
+#: share/skin/s3/template/element/settings/users_listall_section:27
+msgid "user.admin"
+msgstr "管理员"
+
+#: share/skin/s3/template/element/settings/users_settings_section:8
+msgid "user.email"
+msgstr "邮件"
+
+#: share/skin/s3/template/element/settings/users_listall_section:26
+msgid "user.email-address"
+msgstr "邮件地址"
+
+#: share/skin/s3/template/element/settings/users_settings_section:17 share/skin/s3/template/element/settings/users_settings_section:26
+msgid "user.first-name:"
+msgstr "名字："
+
+#: share/skin/s3/template/element/settings/users_settings_section:13 share/skin/s3/template/element/settings/users_settings_section:34
+msgid "user.last-name:"
+msgstr "姓："
+
+#: share/skin/s3/template/view/settings:31
+msgid "user.list-all"
+msgstr "列出所有用户"
+
+#: share/skin/s3/template/element/settings/users_settings_section:21 share/skin/s3/template/element/settings/users_settings_section:30
+msgid "user.middle-name:"
+msgstr "中间名："
+
+#: share/skin/s3/template/element/settings/users_settings_section:6
+msgid "user.name"
+msgstr "名称"
+
+#: share/skin/s3/template/element/settings/users_listall_section:81
+msgid "user.role"
+msgstr "角色"
+
+#: share/skin/s3/template/view/empty_watchlist:42
+msgid "watch.click"
+msgstr "在您想关注的页面上点击，以添加页面到您的关注列表。"
+
+#: share/skin/s3/template/view/empty_watchlist:34
+msgid "watch.current-page"
+msgstr "您正在关注的页面"
+
+#: share/skin/s3/template/element/listview_tabs:9 share/skin/s3/template/view/empty_watchlist:11
+msgid "watch.list"
+msgstr "您的关注列表"
+
+#: share/skin/s3/template/view/empty_watchlist:37
+msgid "watch.look-for"
+msgstr "寻找"
+
+#: share/skin/s3/javascript/s3.js:941 share/skin/s3/template/view/listview:166 share/skin/s3/template/view/page/display:72
+msgid "watch.stop"
+msgstr "停止关注"
+
+msgid "widget.preview"
+msgstr "预览"
+
+msgid "widget.push-all"
+msgstr "推送到所有显示板"
+
+#: share/skin/s3/template/element/main_nav/subnav/workspaces:12
+msgid "wiki.all"
+msgstr "我所有的工作区"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:31
+msgid "wiki.anyone-can-email"
+msgstr "任何人都可以向这个工作区发送邮件。"
+
+#: share/skin/s3/template/view/settings:56 share/skin/s3/template/workspaces_created_section.html:23
+msgid "wiki.appearance"
+msgstr "工作区外观"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:54
+msgid "wiki.central-page"
+msgstr "工作区首页"
+
+#: share/skin/s3/template/element/settings/workspace_clone_section:6
+msgid "wiki.clone"
+msgstr "复制工作区"
+
+#. (workspace.title)
+#: share/skin/s3/template/element/settings/workspace_clone_section:7
+msgid "wiki.clone-and-invite-members=wiki"
+msgstr "复制%1工作区，包括所有的页面、标签和附件。下一步，您需要邀请成员加入新的工作区。"
+
+#: share/skin/s3/template/view/settings:44
+msgid "wiki.clone-this"
+msgstr "复制这个工作区"
+
+#. (workspace.title)
+#: share/skin/s3/template/element/settings/workspace_clone_section:16
+msgid "wiki.clone=wiki"
+msgstr "%1的副本"
+
+#: share/skin/s3/template/element/settings/workspaces_unsubscribe_section:9
+msgid "wiki.confirm-unsubscribe"
+msgstr "如果您希望从这个工作区退出，请点击下面的按钮。点击之后您将无法访问这个工作区，再次访问需要工作区管理员重新将您加入。 "
+
+#: share/skin/s3/template/element/settings/workspaces_cannot_create_section:4 share/skin/s3/template/view/settings:43 share/skin/s3/template/view/settings:46
+msgid "wiki.create"
+msgstr "新建工作区"
+
+#: share/skin/s3/template/workspaces_created_section.html:7
+msgid "wiki.created!"
+msgstr "恭喜！"
+
+#: share/skin/s3/template/workspaces_created_section.html:14
+msgid "wiki.created:"
+msgstr "如果您想，您已经可以跳转到您的新群组。选择您的下一步："
+
+#. (workspace.title, workspace_address)
+#: share/skin/s3/template/workspaces_created_section.html:11
+msgid "wiki.created=title,uri"
+msgstr "您刚刚创建了“%1”，一个全新的 Socialtext 工作区。您是管理员。新工作区的网址是 %2"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:21
+msgid "wiki.custom-permission"
+msgstr "自定义"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:45
+msgid "wiki.disable-locking"
+msgstr "取消页面锁定。任何有编辑页面权限的成员都可以编辑任何页面。任何之前被锁定的页面都会解锁。"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:28
+msgid "wiki.email-senders?"
+msgstr "谁可以向此工作区发送邮件？"
+
+#: share/skin/s3/template/view/page/display:102
+msgid "wiki.email-to-this"
+msgstr "发送邮件到这个工作区"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:36
+msgid "wiki.enable-email-notifications?"
+msgstr "为这个工作区开启邮件通知？"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:41
+msgid "wiki.enable-page-locking"
+msgstr "开启页面锁定。工作区管理员可以选择锁定任何页面，只有管理员可以编辑锁定的页面。 谨慎使用，如果成员能轻松编辑页面才能更多参与。"
+
+#: share/skin/s3/template/view/settings:57 share/skin/s3/template/workspaces_created_section.html:24
+msgid "wiki.feature"
+msgstr "工作区功能"
+
+#: share/skin/s3/template/element/settings/workspaces_cannot_create_section:7
+msgid "wiki.group-required"
+msgstr "要新建工作区，工作区必须属于一个群组。"
+
+#. (workspace.name, workspace.title)
+#: share/skin/s3/template/workspaces_created_section.html:18
+msgid "wiki.home=name,title"
+msgstr "<a href=\"/%1/\">转到</a>%2首页。"
+
+#: share/skin/s3/template/layout/html:148 share/skin/s3/template/layout/user_frame:153
+msgid "wiki.invite"
+msgstr "添加成员"
+
+#. (workspace.name, workspace.title)
+#: share/skin/s3/template/workspaces_created_section.html:19
+msgid "wiki.invite=name,title"
+msgstr "<a href=\"/%1/?action=users_invitation\">邀请</a>其他人到%2。"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:43
+msgid "wiki.link"
+msgstr "工作区链接"
+
+#: share/skin/s3/template/element/workspace_list/my_workspaces:5
+msgid "wiki.list:"
+msgstr "您所属的工作区："
+
+#: share/skin/s3/template/element/settings/workspaces_settings_appearance_section:19
+msgid "wiki.logo"
+msgstr "工作区标识"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:35
+msgid "wiki.members"
+msgstr "工作区成员"
+
+#: share/skin/s3/template/element/settings/workspace_clone_section:25 share/skin/s3/template/element/settings/workspaces_create_section:19 share/skin/s3/template/element/settings/workspaces_listall_section:13
+msgid "wiki.name"
+msgstr "工作区名称"
+
+#: share/skin/s3/javascript/lightbox/copy.tt2:14
+msgid "wiki.new"
+msgstr "新工作区"
+
+#: share/skin/s3/template/element/settings/users_listall_section:75
+msgid "wiki.no-groups"
+msgstr "没有群组直接跟此工作区关联。"
+
+#: share/skin/s3/template/element/settings/users_listall_section:19
+msgid "wiki.no-members"
+msgstr "没有用户直接跟此工作区关联。"
+
+#. (people_role)
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:36
+msgid "wiki.only-email-from=role"
+msgstr "只有%1可以向这个工作区发邮件。"
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:13
+msgid "wiki.permission-type:"
+msgstr "您是否想将此工作区设立为："
+
+#: share/skin/s3/template/element/settings/workspaces_permissions_section:6 share/skin/s3/template/view/settings:61 share/skin/s3/template/workspaces_created_section.html:25
+msgid "wiki.privacy"
+msgstr "工作区隐私"
+
+#: share/skin/s3/template/lite/workspace_list/public_workspaces:5
+msgid "wiki.public"
+msgstr "公开的工作区"
+
+#: share/skin/s3/template/element/workspace_list/public_workspaces:5
+msgid "wiki.public:"
+msgstr "您可以自由查看或编辑这些公开工作区："
+
+#: share/skin/s3/template/element/search_form:23
+msgid "wiki.search-all:"
+msgstr "搜索我的工作区："
+
+#: share/skin/s3/template/element/search_form:14 share/skin/s3/template/element/search_form:21
+msgid "wiki.search:"
+msgstr "搜索此工作区："
+
+#: share/skin/s3/template/element/settings/workspaces_settings_features_section:35
+msgid "wiki.send-email-notifications?"
+msgstr "通过邮件向此工作区的用户发送工作区更改通知吗？"
+
+#. (invitation_filter)
+#: share/skin/s3/template/element/settings/users_invite_search_section:14 share/skin/s3/template/element/settings/users_invite_section:62
+msgid "wiki.set=filter"
+msgstr "已在此工作区设置一个过滤器。所有邮件地址必须匹配此式样：<span style=\"color: red\">%1</span>"
+
+#: share/skin/s3/template/element/settings/workspaces_settings_skin_section:6 share/skin/s3/template/view/settings:59
+msgid "wiki.skin"
+msgstr "工作区视觉主题"
+
+#: share/skin/s3/template/view/taglistview:24
+msgid "wiki.tag"
+msgstr "标签"
+
+#. (escaped_str)
+#: share/skin/s3/template/lite/tag/tag.html:15
+msgid "wiki.tag=tag"
+msgstr "标签：%1"
+
+#: share/skin/s3/template/lite/subnav.html:21 share/skin/s3/template/lite/subnav.html:23 share/skin/s3/template/view/page/display:153
+msgid "wiki.tags"
+msgstr "标签"
+
+#: share/skin/s3/template/element/settings/workspace_clone_section:11 share/skin/s3/template/element/settings/workspaces_create_section:5 share/skin/s3/template/element/settings/workspaces_listall_section:10 share/skin/s3/template/element/settings/workspaces_settings_appearance_section:5
+msgid "wiki.title"
+msgstr "工作区标题"
+
+#: share/skin/s3/template/element/settings/workspaces_cannot_create_section:15
+msgid "wiki.to-existing-group"
+msgstr "要添加一个工作区到<strong>已存在的群组</strong>，请到主导航列的<a href=\"/st/groups\">“群组目录”</a>下拉菜单中，选择您的群组，并点击“编辑”来创建您的工作区。"
+
+#: share/skin/s3/template/element/settings/workspaces_cannot_create_section:19
+msgid "wiki.to-new-group"
+msgstr "要添加一个工作区到<strong>新群组</strong>，请到主导航列的<a href=\"#\" onclick=\"showCreateGroupLightbox(); return false\">“新建群组”</a>，在这里使用“工作区”来创建您的工作区。"
+
+#. (workspace.title)
+#: share/skin/s3/template/workspaces_created_section.html:31
+msgid "wiki.visit-later=wiki"
+msgstr "您也可以在此工作区继续工作，稍后再转到“%1”。"

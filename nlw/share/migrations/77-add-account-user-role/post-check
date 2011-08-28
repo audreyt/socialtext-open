@@ -1,0 +1,18 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_singlevalue/;
+
+my $has_account_user = eval { 
+    sql_singlevalue(q{
+        SELECT COUNT(*)
+          FROM "Role"
+         WHERE name = 'account_user'
+    });
+};
+
+exit 0 if defined($has_account_user) && $has_account_user == 1;
+
+print "Failed to find one and only one Account User Role\n";
+exit 1;

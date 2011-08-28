@@ -1,0 +1,13 @@
+<div class="lightbox" id="st-edit-check">
+  <h3>[% loc('edit.warning') %]</h3>
+
+  <p>[% loc('page.opened-for-edit=user,ago', user_link, time_ago) %]</p>
+
+  [% user_business_card %]
+
+  <ul class="buttons">
+    <li class="flexButton"><a href="#" class="continue">[% loc('edit.force') %]</a></li>
+    <li class="flexButton"><a href="#" class="close">[% loc('edit.return-to-page-view') %]</a></li>
+  </ul>
+</div>
+

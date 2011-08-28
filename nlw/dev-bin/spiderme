@@ -1,0 +1,19 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+
+use Getopt::Long;
+my $port = 20000 + $<;
+my $host = 'talc.socialtext.net';
+GetOptions(
+    'port:s' => \$port,
+    'host:s' => \$host,
+) or exit 1;
+
+0 == system(
+    'wget',
+    '-m',
+    '-D', $host,
+    "http://$host:$port/public"
+) or die $!;

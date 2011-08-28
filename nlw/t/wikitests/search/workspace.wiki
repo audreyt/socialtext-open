@@ -1,0 +1,175 @@
+* Fixture: Search
+
+# Set up 2 workspaces with similar content
+
+| standard-test-setup |
+
+| edit-page | %%workspace%%                                          | Phrase 1               | Wise saying: The greatest achievement is selflessness.        |
+| edit-page | %%workspace%%                                          | Phrase 2               | The greatest worth is self-mastery.                           |
+| edit-page | %%workspace%%                                          | Quote 3                | Wise saying: The greatest quality is seeking to serve others. |
+| edit-page | %%workspace%%                                          | Quote 4                | The greatest precept is continual awareness.                  |
+| edit-page | %%workspace%%                                          | Quote 5                | The greatest medicine is the emptiness of everything.         |
+| edit-page | %%workspace%%                                          | Wise Saying 6          | The greatest action is not conforming with the worlds ways.   |
+| edit-page | %%workspace%%                                          | Wise Saying 7          | The greatest magic is transmuting the passions.               |
+| edit-page | %%workspace%%                                          | Saying that are wise 8 | The greatest generosity is non-attachment.                    |
+| edit-page | %%workspace%%                                          | Statement 9            | The greatest goodness is a peaceful mind.                     |
+| PUT       | /data/workspaces/%%workspace%%/pages/phrase_1/tags/quote |                        |                                                               |
+| code-is   | 201                                                    |                        |                                                               |
+| PUT       | /data/workspaces/%%workspace%%/pages/quote_3/tags/quote  |                        |                                                               |
+| code-is   | 201                                                    |                        |                                                               |
+| PUT       | /data/workspaces/%%workspace%%/pages/quote_4/tags/Socialtext%20Blog  |                        |                                                               |
+| code-is   | 201                                                    |                        |                                                               |
+| job-count | PageIndex                                              | 12                     |                                                               |
+
+| set              | ws2               | ws2-%%start_time%% |
+| create-workspace | %%ws2%%           |                    |
+| add-member       | %%email_address%% | %%ws2%%            |
+| edit-page | %%ws2%% | Phrase 1 | The greatest achievement is selflessness. |
+| edit-page | %%ws2%% | Phrase 2 | The greatest worth is self-mastery. |
+| edit-page | %%ws2%% | Quote 3 | The greatest quality is seeking to serve others. |
+| edit-page | %%ws2%% | Quote 4 | The greatest precept is continual awareness. |
+| edit-page | %%ws2%% | Quote 5 | The greatest medicine is the emptiness of everything. |
+| edit-page | %%ws2%% | Saying 6 | The greatest action is not conforming with the worlds ways. |
+| edit-page | %%ws2%% | Saying 7 | The greatest magic is transmuting the passions. |
+| edit-page | %%ws2%% | Saying 8 | The greatest generosity is non-attachment. |
+| edit-page | %%ws2%% | Statement 9 | The greatest goodness is a peaceful mind. |
+
+
+| job-count       | PageIndex | 21 |
+| st-process-jobs |           |    |
+| job-count       | PageIndex | 0  |
+
+# only search results from the current workspace are returned
+
+| GET | /%%workspace%%/index.cgi?action=search&scope=&search_term=greatest |
+| code-is | 200 |
+| body-like | >Pages matching 'greatest'</h2> |
+| body-unlike | in <a href="/%%ws2%%">|
+| body-like | in <a href="/%%workspace%%">|
+| body-like | Showing 1 - 9 of 9 total |
+
+| GET | /%%ws2%%/index.cgi?action=search&scope=&search_term=greatest |
+| code-is | 200 |
+| body-like | >Pages matching 'greatest'</h2> |
+| body-unlike | in <a href="/%%workspace%%">|
+| body-like | in <a href="/%%ws2%%">|
+| body-like | Showing 1 - 9 of 9 total |
+
+# Title searches
+
+| GET         | /%%workspace%%/index.cgi?action=search&scope=&search_term=%3Dphrase |
+| code-is     | 200                                                                 |
+| body-like   | >Pages matching 'title:phrase'</h2>                                    |
+| body-like   | Showing 1 - 2 of 2 total                                            |
+| body-unlike | in <a href="/%%ws2%%">                                              |
+| body-like   | greatest achievement is selflessness                                |
+| body-like   | greatest worth is self-mastery                                      |
+
+| GET         | /%%workspace%%/index.cgi?action=search&scope=&search_term=title%3Aquote |
+| code-is     | 200                                                                     |
+| body-like   | >Pages matching 'title:quote'</h2>                                         |
+| body-like   | Showing 1 - 3 of 3 total                                                |
+| body-unlike | in <a href="/%%ws2%%">                                                  |
+| body-like   | The greatest quality is seeking to serve others.                        |
+| body-like   | The greatest precept is continual awareness.                            |
+| body-like   | The greatest medicine is the emptiness of everything.                   |
+
+| GET         | /%%workspace%%/index.cgi?action=search&scope=&search_term=%3D"wise+sayings" |
+| code-is     | 200                                                                     |
+| body-like   | >Pages matching 'title:&quot;wise sayings&quot;'</h2>                                         |
+| body-like   | Showing 1 - 2 of 2 total                                                |
+| body-unlike | in <a href="/%%ws2%%">                                                  |
+| body-like | The greatest action is not conforming with the worlds ways. |
+| body-like | The greatest magic is transmuting the passions. |
+
+# Tag searches
+
+| GET         | /%%workspace%%/index.cgi?action=search&scope=&search_term=tag%3Aquote |
+| code-is     | 200                                                                   |
+| body-like   | >Pages matching 'tag:quote'</h2>                                    |
+| body-like   | Showing 1 - 2 of 2 total                                              |
+| body-unlike | in <a href="/%%ws2%%">                                                |
+| body-like   | Wise saying: The greatest achievement is selflessness.                |
+| body-like   | Wise saying: The greatest quality is seeking to serve others.         |
+
+| GET         | /%%workspace%%/index.cgi?action=search&scope=&search_term=tag%3A"Socialtext+Blog" |
+| code-is     | 200                                                                   |
+| body-like   | >Pages matching 'tag:&quot;Socialtext Blog&quot;'</h2>                                    |
+| body-like   | Showing 1 - 1 of 1 total                                              |
+| body-unlike | in <a href="/%%ws2%%">                                                |
+| body-like   | The greatest precept is continual awareness.                  |
+
+# Boolean searches
+
+| GET         | /%%workspace%%/index.cgi?action=search&scope=&search_term=%3Dphrase+AND+tag%3Aquote |
+| code-is     | 200                                                                   |
+| body-like   | >Pages matching 'title:phrase AND tag:quote'</h2>                                    |
+| body-like   | Showing 1 - 1 of 1 total                                              |
+| body-unlike | in <a href="/%%ws2%%">                                                |
+| body-like   | Wise saying: The greatest achievement is selflessness.        |
+
+| GET         | /%%workspace%%/index.cgi?action=search&scope=&search_term=%3Dphrase+AND+tag%3Amonkey |
+| code-is     | 200                                                                   |
+| body-like   | >Pages matching 'title:phrase AND tag:monkey'</h2>                                    |
+| body-like   | Your search returned 0 results. |
+
+# Stemming
+
+| GET         | /%%workspace%%/index.cgi?action=search&scope=&search_term=tag%3Aquotes |
+| code-is     | 200                                                                   |
+| body-like   | >Pages matching 'tag:quotes'</h2>                                    |
+| body-like   | Showing 1 - 2 of 2 total                                              |
+| body-unlike | in <a href="/%%ws2%%">                                                |
+| body-like   | Wise saying: The greatest achievement is selflessness.                |
+| body-like   | Wise saying: The greatest quality is seeking to serve others.         |
+
+# Wildcards! 
+
+| GET         | /%%workspace%%/index.cgi?action=search&scope=&search_term=self |
+| code-is     | 200                                                            |
+| body-like   | >Pages matching 'self'</h2>                                    |
+| body-like   | Showing 1 - 1 of 1 total                                       |
+| body-unlike | in <a href="/%%ws2%%">                                         |
+| body-like   | The greatest worth is self-mastery.                            |
+
+| GET         | /%%workspace%%/index.cgi?action=search&scope=&search_term=self* |
+| code-is     | 200                                                            |
+| body-like   | >Pages matching 'self*'</h2>                                    |
+| body-like   | Showing 1 - 2 of 2 total                                       |
+| body-unlike | in <a href="/%%ws2%%">                                         |
+| body-like   | Wise saying: The greatest achievement is selflessness.        |
+| body-like   | The greatest worth is self-mastery.                            |
+
+| GET         | /%%workspace%%/index.cgi?action=search&scope=&search_term=ma?ic |
+| code-is     | 200                                                            |
+| body-like   | >Pages matching 'ma?ic'</h2>                                    |
+| body-like   | Showing 1 - 1 of 1 total                                       |
+| body-unlike | in <a href="/%%ws2%%">                                         |
+| body-like   | The greatest magic is transmuting the passions.        |
+
+# Search Scope!
+
+| GET       | /%%workspace%%/index.cgi?action=search&scope=*&search_term=greatest |
+| code-is   | 200                                                             |
+| body-like | >Pages matching 'greatest'</h2>                                     |
+| body-like | Showing 1 - 18 of 18 total                                        |
+| body-like | in <a href="/%%workspace%%">                                    |
+| body-like | in <a href="/%%ws2%%">                                          |
+
+# deletes
+
+| GET       | /%%ws2%%/index.cgi?action=search&scope=_&search_term=peaceful |
+| code-is   | 200                                                                |
+| body-like | Statement 9                                                        |
+
+| DELETE | /data/workspaces/%%ws2%%/pages/statement_9 |
+| code-is | 204 |
+
+| job-count       | PageIndex | 1 |
+| st-process-jobs |           |   |
+| job-count       | PageIndex | 0 |
+
+| GET         | /%%ws2%%/index.cgi?action=search&scope=_&search_term=peaceful |
+| code-is     | 200                                                                |
+| body-unlike | Statement 9                                                        |
+

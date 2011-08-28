@@ -1,0 +1,44 @@
+This is the test that verifies a conversation
+It should be included by the top-level replies testcase
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Replies Checker. Imported variables |  |
+| *Comment* | %%shared_account%% %%topic_signal%% %%reply_prefix%% |  |
+
+| *Comment* | Test Case: Replies Checker. Setup and login |  |
+| set | my_acct | %%shared_account%% |
+| set | my_user | `%%my_acct%%-checker@ken.socialtext.net` |
+
+| st-admin | create-user --account %%my_acct%% --e %%my_user%% --p %%password%% |  |
+| st-process-jobs |  |
+| st-logoutin | %%my_user%% | %%password%% |
+
+| *Comment* | Test Case; Replies Checker. Checks up to four replies and a Topic |  |
+| open_ok | /st/signals |  |
+
+| *Comment* | Test Case: Replies Checker. Open the Accordion. See topic and all replies |  |
+| wait_for_element_visible_ok | `//div[@class='older'][last()]` | 30000 |
+| click_ok | `//div[@class='older'][last()]` |  |
+
+| wait_for_text_present_ok | %%topic_signal%% | 10000 |
+
+| wait_for_text_present_ok | %%reply_prefix%%-0-0 | 10000 |
+| wait_for_text_present_ok | %%reply_prefix%%-0-1 | 10000 |
+| wait_for_text_present_ok | %%reply_prefix%%-0-2 | 10000 |
+| wait_for_text_present_ok | %%reply_prefix%%-1 | 10000 |
+| wait_for_text_present_ok | %%reply_prefix%%-2 | 10000 |
+
+| *Comment* | Test Case: Replies Checker. Close the Accordion. See topic and last two replies |  |
+| wait_for_element_visible_ok | `//div[@class='older'][last()]` | 30000 |
+| click_ok | `//div[@class='older'][last()]` |  |
+
+| wait_for_text_not_present_ok | %%reply_prefix%%-0-0 | 10000 |
+| wait_for_text_not_present_ok | %%reply_prefix%%-0-1 | 10000 |
+| wait_for_text_not_present_ok | %%reply_prefix%%-0-2 | 10000 |
+
+| wait_for_text_present_ok | %%topic_signal%% | 10000 |
+| wait_for_text_present_ok | %%reply_prefix%%-1 | 10000 |
+| wait_for_text_present_ok | %%reply_prefix%%-2 | 10000 |
+
+| *Comment* | Test Case: Replies Checker COMPLETED |  |

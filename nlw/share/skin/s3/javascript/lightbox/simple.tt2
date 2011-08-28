@@ -1,0 +1,12 @@
+<div id="simple-lightbox">
+    <div class="title">[% title %]</div>
+    <br/>
+    <div class="msg">[% msg %]</div>
+    <div class="buttons">
+    <ul class="widgetButton" style="float:left; padding:10px">
+      <li class="flexButton">
+        <a href="#" class="close genericOrangeButton">[% loc('do.close') %]</a>
+      </li>
+    </ul>
+    </div>
+</div>

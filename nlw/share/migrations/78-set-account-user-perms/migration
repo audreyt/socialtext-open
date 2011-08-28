@@ -1,0 +1,16 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_execute/;
+
+# Duplicate authenticated_user WS perms for account_users.
+sql_execute(q{
+    INSERT INTO "WorkspaceRolePermission"
+        SELECT wrp.workspace_id,
+               (SELECT role_id FROM "Role" WHERE name = 'account_user') AS role_id,
+               wrp.permission_id
+          FROM "WorkspaceRolePermission" wrp
+          JOIN "Role" r USING (role_id)
+         WHERE r.name = 'authenticated_user'
+});

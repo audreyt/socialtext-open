@@ -1,0 +1,93 @@
+#!/bin/bash
+
+OLDDB=`st-config echo db_name`
+NEWDB="${OLDDB}_reimport"
+PGUSER=`st-config echo db_user`
+MIGDIR=`dirname $0`
+
+# Grab the counts of records in key tables and store them.
+$MIGDIR/summarize-db $OLDDB $PGUSER > /tmp/$OLDDB-before-$$
+
+# Make a backup
+su - www-data -c 'st-db dump'
+
+# Create a new temporary database
+su - postgres -c "dropdb -e $NEWDB" 2> /dev/null
+su - postgres -c "createdb -E UTF8 -O nlw -e $NEWDB"
+
+# Set up the new schema
+su - postgres -c "psql $NEWDB -e -f $MIGDIR/nlw-schema.sql"
+
+# Set defaults, remove NULL values from old data for columns
+# that have been added by migrations
+su - postgres -c "psql $OLDDB -c \"UPDATE \\\"Workspace\\\" SET \\\"no_max_image_size\\\" = FALSE     WHERE \\\"no_max_image_size\\\" IS NULL\""
+su - postgres -c "psql $OLDDB -c \"UPDATE \\\"Workspace\\\" SET \\\"cascade_css\\\"       = TRUE      WHERE \\\"cascade_css\\\"       IS NULL\""
+su - postgres -c "psql $OLDDB -c \"UPDATE \\\"Workspace\\\" SET \\\"uploaded_skin\\\"     = FALSE     WHERE \\\"uploaded_skin\\\"     IS NULL\""
+su - postgres -c "psql $OLDDB -c \"UPDATE \\\"Workspace\\\" SET \\\"customjs_name\\\"     = ''::text  WHERE \\\"customjs_name\\\"     IS NULL\""
+su - postgres -c "psql $OLDDB -c \"UPDATE \\\"Workspace\\\" SET \\\"customjs_uri\\\"      = ''::text  WHERE \\\"customjs_uri\\\"      IS NULL\""
+
+# Create a dump file from data in the old database
+# We want to filter out the SELECT statements, as they
+# deal with Sequences.  We only care about Sequences
+# and Tables.
+DUMPFILE="/tmp/$OLDDB-dump.sql"
+su - postgres -c "pg_dump --data-only $OLDDB | grep '^SELECT' > $DUMPFILE"
+
+# We must dump these tables in a specific order, to avoid problems
+# with the referential integrity of the table.  All tables that
+# refer to other tables must appear later on.
+TABLES="
+Account
+Permission
+Role
+User
+UserId
+Workspace
+UserEmailConfirmation
+UserMetadata
+UserWorkspaceRole
+Watchlist
+WorkspaceBreadcrumb
+WorkspaceCommentFormCustomField
+WorkspacePingURI
+WorkspaceRolePermission
+search_set_workspaces
+search_sets
+sessions
+"
+for table in $TABLES; do 
+    echo "Dumping table $table"
+    su - postgres -c "pg_dump --column-inserts --data-only --table $table $OLDDB >> $DUMPFILE"
+done
+
+# Import the data into the new database
+su - postgres -c "psql $NEWDB -f /tmp/$OLDDB-dump.sql" >/tmp/migration-19-reimport.log 2>&1
+
+# Build a summary of the data in the new database. We will compare this
+# to the old database and make sure no key data is gone.
+sudo -u postgres $MIGDIR/summarize-db $NEWDB > /tmp/$OLDDB-after-$$
+
+DIFF=`diff /tmp/$OLDDB-before-$$ /tmp/$OLDDB-after-$$`
+
+# Force this to fail for now.
+if [ -n "$DIFF" ]; then
+  echo "Databases Differ!"
+  cat /tmp/migration-19-reimport.log
+
+  # We will exit 0 here because we haven't changed anything, so let's let
+  # the post-check fail.
+  exit 0
+fi 
+
+rm -f /tmp/migration-19-reimport.log
+
+# Delete the old database and rename the new one
+su - postgres -c "psql -c \"DROP DATABASE \\\"$OLDDB\\\"\""
+su - postgres -c "psql -c \"ALTER DATABASE \\\"$NEWDB\\\" RENAME TO \\\"$OLDDB\\\"\""
+
+# Change the ownership on the database
+RELATIONS="/tmp/$OLDDB-relations-$$.txt"
+su - postgres -c "psql $OLDDB -t -c \"\dts\" | awk '{print \$3}' > $RELATIONS"
+for r in $(cat $RELATIONS); do
+  su - postgres -c "psql $OLDDB -c \"alter table \\\"$r\\\" owner to $PGUSER\""
+done

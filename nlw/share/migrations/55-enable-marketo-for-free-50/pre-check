@@ -1,0 +1,28 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_singlevalue/;
+
+my $missing = sql_singlevalue(q{
+    SELECT COUNT(1)
+    FROM "Account" a
+    WHERE account_type = 'Free 50'
+    AND NOT EXISTS (
+        SELECT 1
+          FROM account_plugin
+         WHERE account_id = a.account_id
+           AND plugin = 'marketo'
+    )
+});
+
+if ($missing) {
+    print "Found $missing Free 50 accounts missing the marketo plugin.\n";
+    exit 0;
+}
+
+print "No Free 50 accounts found.  Skipping migration.\n";
+exit 1;
+
+
+

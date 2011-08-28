@@ -1,0 +1,30 @@
+<html>
+<head>
+<title>04rounded_corners</title>
+<script type="text/javascript" src="lib/JSAN.js" charset="UTF-8"></script>
+<script type="text/javascript" src="lib/Test/Builder.js" charset="UTF-8"></script>
+<script type="text/javascript" src="../lib/Widget/Lightbox.js"></script>
+</head>
+<body>
+<p>Nulla blandit ut ullamcorper lobortis ullamcorper. Volutpat exerci consequat tation minim ut erat, exerci euismod illum ad autem luptatum ut eum. Consequat laoreet feugait vero dolore. Dolor dignissim volutpat aliquam lobortis molestie commodo vel vel. Duis lobortis nulla dignissim magna facilisis at enim sed! Odio esse luptatum duis, ipsum molestie ut ad tation dolor nisl molestie dignissim ad consequat. Magna, facilisi esse dignissim dolore, dolor diam aliquam nulla hendrerit qui. Dolore aliquip delenit dignissim et, commodo consequat ex nostrud at illum ut vel in, augue. Ea consectetuer minim exerci feugait et. Lorem velit feugiat ea, zzril nibh augue at feugait dolor ipsum enim amet duis nisl. Duis quis iusto dolore amet euismod dolor dignissim amet dolore. Minim nonummy aliquam autem nostrud amet lobortis iusto, ex dolore hendrerit ad adipiscing sed adipiscing? Dolor iriure ipsum dolore dolor exerci, tation lorem magna; nulla eum laoreet. Feugiat tation dolore tincidunt dolor nibh facilisis? Lobortis tation vel nibh facilisis euismod. Enim feugiat facilisi diam lobortis, dolor dolore ad elit velit zzril minim luptatum, at consectetuer.
+</p>
+
+<pre id="test"></pre>
+</body>
+<script type="text/javascript"><!--
+JSAN.use("Effect.RoundedCorners");
+
+var t = new Test.Builder();
+t.plan({tests: 1});
+
+var box = new Widget.Lightbox();
+ box.content("<p id=\"testbox\">Hello world</p><p>Click anywhere to close this</p>");
+box.effects('RoundedCorners');
+box.show();
+
+t.ok( document.getElementById("testbox") , "Hello world div");
+
+//--></script>
+
+</html>
+

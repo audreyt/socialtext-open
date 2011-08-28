@@ -1,0 +1,220 @@
+user adds page to watchlist using Watchlist icon at top of sidebar icon turns color to indicate membership in watchlist
+
+| *Comment* | STARTING Test case: Calc Watchlist |
+
+| *Comment* | Test case: Calc Watchlist watch |  |
+| open_ok | %%workspace%%/index.cgi?action=display;page_type=spreadsheet;page_name=watchlist%20spreadsheet%20%%start_time%%#edit |  |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| pause | 5000 | I hate pause; needed for save |
+| st-page-save |  |  |
+| st-watch-page | 1 |  |
+| st-is-watched | 1 |  |
+
+user removes page from watchlist by clicking the star on the page icon reverses colors to indicate no longer in watchlist
+
+| *Comment* | Test case: Calc Watchlist unwatch |  |
+| st-watch-page | 0 |  |
+| st-is-watched | 0 |  |
+| st-watch-page | 1 |  |
+| st-is-watched | 1 |  |
+
+Visit some individual pages in the workspace; add them to the watchlist. View watchlist; pages appear in watchlist
+
+| *Comment* | Test case: Calc Watchlist check watchlist |  |
+| open_ok | /%%workspace%%/index.cgi?action=display;page_type=spreadsheet;page_name=watchlist%20aaa%20spreadsheet%20%%start_time%%#edit |  |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| pause | 5000 | I hate pause; needed for save |
+| st-page-save |  |  |
+| st-watch-page | 1 |  |
+| st-is-watched | 1 |  |
+
+| open_ok | /%%workspace%%/index.cgi?action=display;page_type=spreadsheet;page_name=watchlist%20bbb%20spreadsheet%20%%start_time%%#edit |  |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| pause | 5000 | I hate pause; needed for save |
+| st-page-save |  |  |
+| st-watch-page | 1 |  |
+| st-is-watched | 1 |  |
+
+| open_ok | /%%workspace%%/index.cgi?action=display;page_type=spreadsheet;page_name=watchlist%20ccc%20spreadsheet%20%%start_time%%#edit |  |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| pause | 5000 | I hate pause; needed for save |
+| st-page-save |  |  |
+| st-watch-page | 1 |  |
+| st-is-watched | 1 |  |
+
+| click_and_wait | link=My Watchlist |  |
+| st-page-title | Pages You're Watching |  |
+| text_like | contentContainer | watchlist aaa spreadsheet %%start_time%% |
+| text_like | contentContainer | watchlist bbb spreadsheet %%start_time%% |
+| text_like | contentContainer | watchlist ccc spreadsheet %%start_time%% |
+| st-is-watched | 1 | watchlist aaa spreadsheet %%start_time%% |
+| st-is-watched | 1 | watchlist bbb spreadsheet %%start_time%% |
+| st-is-watched | 1 | watchlist ccc spreadsheet %%start_time%% |
+
+User removes page from watchlist through the watchlist UI.
+
+Watchlist icon reverses color to indicate no longer a member of watchlist.
+Entry does not disappear.
+User adds removed page from watchlist through the watchlist UI.
+
+Watchlist icon reverses color to indicate a member of watchlist. | *Comment* | Test case: Calc Watchlist UI | |
+
+| st-watch-page | 0 | watchlist aaa spreadsheet %%start_time%% |
+| st-watch-page | 0 | watchlist bbb spreadsheet %%start_time%% |
+| st-watch-page | 0 | watchlist ccc spreadsheet %%start_time%% |
+| text_like | contentContainer | watchlist aaa spreadsheet %%start_time%% |
+| text_like | contentContainer | watchlist bbb spreadsheet %%start_time%% |
+| text_like | contentContainer | watchlist ccc spreadsheet %%start_time%% |
+| st-watch-page | 1 | watchlist aaa spreadsheet %%start_time%% |
+| st-is-watched | 1 | watchlist aaa spreadsheet %%start_time%% |
+| st-watch-page | 1 | watchlist bbb spreadsheet %%start_time%% |
+| st-is-watched | 1 | watchlist bbb spreadsheet %%start_time%% |
+| st-watch-page | 1 | watchlist ccc spreadsheet %%start_time%% |
+| st-is-watched | 1 | watchlist ccc spreadsheet %%start_time%% |
+
+When a page that is on the watchlist is deleted, it is removed from the watchlist.
+
+Remove all pages from watchlist; watchlist displays "No watchlist for USER ID in <workspace>"
+
+| *Comment* | Test case: Watchlist delete page |  |
+| text_like | contentContainer | watchlist spreadsheet %%start_time%% |
+| st-is-watched | 1 | watchlist spreadsheet %%start_time%% |
+| st-admin | purge-page --w %%workspace%% --page watchlist_spreadsheet_%%start_time%% | was purged |
+| click_and_wait | link=My Watchlist |  |
+| text_unlike | contentContainer | watchlist spreadsheet %%start_time |
+
+| *Comment* | Test case: Calc Watchlist ADDING AND DELETING IS FINISHED |
+
+Set up to check sorting.
+
+| open_ok | /%%workspace%%/index.cgi?action=display;page_type=spreadsheet;page_name=watchlist%20aaa%20spreadsheet%20%%start_time%% |
+| wait_for_element_visible_ok | link=My Watchlist | 30000 |
+| click_and_wait | link=My Watchlist |  |
+
+| *Comment* | Test case: Calc Watchlist CHECKING SORTING VIEWS |
+
+Set up to check sorting. (↑) (↓)
+
+| *Comment* | Test case: Calc Watchlist title sort |  |
+| wait_for_element_visible_ok | sort-picker | 30000 |
+| select_and_wait | sort-picker | label=Title |
+| text_like | contentContainer | qr/watchlist aaa spreadsheet %%start_time%%.+watchlist bbb spreadsheet %%start_time%%.+watchlist ccc spreadsheet %%start_time%%/ |
+
+| *Comment* | label=Title (↓) |  |
+| select_and_wait | sort-picker | label=Title (↓) |
+| text_like | contentContainer | qr/watchlist ccc spreadsheet %%start_time%%.+watchlist bbb spreadsheet %%start_time%%.+watchlist aaa spreadsheet %%start_time%%/ |
+
+| *Comment* | label=Title (↑) |  |
+| select_and_wait | sort-picker | label=Title (↑) |
+| text_like | contentContainer | qr/watchlist aaa spreadsheet %%start_time%%.+watchlist bbb spreadsheet %%start_time%%.+watchlist ccc spreadsheet %%start_time%%/ |
+
+add a new page for date and revision sorting
+
+| *Comment* | Test case: Calc Watchlist date and rev sort |  |
+| open_ok | %%workspace%%/index.cgi?action=display;page_type=spreadsheet;page_name=watchlist%20newpage%20spreadsheet%20%%start_time%%#edit |  |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| pause | 5000 | I hate pause; needed for save |
+| st-page-save |  |  |
+| st-watch-page | 1 |  |
+| st-is-watched | 1 |  |
+
+| *Comment* | Test case: Calc Watchlist create a SECOND revision, so revision sort places this page at the top |  |
+| click_ok | st-edit-button-link |  |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| pause | 5000 | I hate pause; needed for save |
+| st-page-save |  |
+
+| wait_for_element_visible_ok | link=My Watchlist | 30000 |
+| click_and_wait | link=My Watchlist |  |
+
+title sort
+
+| *Comment* | Test case: Calc Watchlist sort by title |  |
+| wait_for_element_visible_ok | sort-picker | 30000 |
+| select_and_wait | sort-picker | label=Title |
+| text_like | contentContainer | qr/watchlist aaa spreadsheet %%start_time%%.+watchlist bbb spreadsheet %%start_time%%.+watchlist ccc spreadsheet %%start_time%%.+watchlist newpage spreadsheet %%start_time%%/ |
+
+| *Comment* | label=Title (↓) |  |
+| select_and_wait | sort-picker | Title (↓) |
+| text_like | contentContainer | qr/watchlist newpage spreadsheet %%start_time%%.+watchlist ccc spreadsheet %%start_time%%.+watchlist bbb spreadsheet %%start_time%%.+watchlist aaa spreadsheet %%start_time%%/ |
+
+| *Comment* | label=Title (↑) |  |
+| select_and_wait | sort-picker | Title (↑) |
+| text_like | contentContainer | qr/watchlist aaa spreadsheet %%start_time%%.+watchlist bbb spreadsheet %%start_time%%.+watchlist ccc spreadsheet %%start_time%%.+watchlist newpage spreadsheet %%start_time%%/ |
+
+| *Comment* | Test case: Calc Watchlist sort by Date |  |
+| select_and_wait | sort-picker | label=Date Last Edited |
+| text_like | contentContainer | qr/watchlist newpage spreadsheet %%start_time%%.+watchlist ccc spreadsheet %%start_time%%.+watchlist bbb spreadsheet %%start_time%%.+watchlist aaa spreadsheet %%start_time%%/ |
+
+| *Comment* | label=Date (↑) |  |
+| select_and_wait | sort-picker | label=Date Last Edited (↑) |
+| text_like | contentContainer | qr/watchlist aaa spreadsheet %%start_time%%.+watchlist bbb spreadsheet %%start_time%%.+watchlist ccc spreadsheet %%start_time%%.+watchlist newpage spreadsheet %%start_time%%/ |
+
+| *Comment* | label=Date (↓) |  |
+| select_and_wait | sort-picker | label=Date Last Edited (↓) |
+| text_like | contentContainer | qr/watchlist newpage spreadsheet %%start_time%%.+watchlist ccc spreadsheet %%start_time%%.+watchlist bbb spreadsheet %%start_time%%.+watchlist aaa spreadsheet %%start_time%%/ |
+
+Date Created sort
+
+| *Comment* | Test case: Calc Watchlist sort by created date |  |
+| select_and_wait | sort-picker | label=Date Created |
+| text_like | contentContainer | qr/watchlist ccc spreadsheet %%start_time%%.+watchlist bbb spreadsheet %%start_time%%.+watchlist aaa spreadsheet %%start_time%%/ |
+
+| *Comment* | label=Date Created (↑) |  |
+| select_and_wait | sort-picker | label=Date Created (↑) |
+| text_like | contentContainer | qr/watchlist aaa spreadsheet %%start_time%%.+watchlist bbb spreadsheet %%start_time%%.+watchlist ccc spreadsheet %%start_time%%/ |
+
+| *Comment* | label=Date Created (↓) |  |
+| select_and_wait | sort-picker | label=Date Created (↓) |
+| text_like | contentContainer | qr/watchlist ccc spreadsheet %%start_time%%.+watchlist bbb spreadsheet %%start_time%%.+watchlist aaa spreadsheet %%start_time%%/ |
+
+Revisions sort
+
+| *Comment* | Test case: Calc Watchlist sort by Revisions |  |
+| select_and_wait | sort-picker | label=Revisions |
+| text_like | contentContainer | qr/watchlist newpage spreadsheet %%start_time%%.+watchlist aaa spreadsheet %%start_time%%.+watchlist bbb spreadsheet %%start_time%%.+watchlist ccc spreadsheet %%start_time%%/ |
+
+| *Comment* | label=Revisions (↑) |  |
+| select_and_wait | sort-picker | label=Revisions (↑) |
+| text_like | contentContainer | qr/watchlist aaa spreadsheet %%start_time%%.+watchlist bbb spreadsheet %%start_time%%.+watchlist ccc spreadsheet %%start_time%%.+watchlist newpage spreadsheet %%start_time%%/ |
+
+| *Comment* | label=Revisions (↓) |  |
+| select_and_wait | sort-picker | label=Revisions (↓) |
+| text_like | contentContainer | qr/watchlist newpage spreadsheet %%start_time%%.+watchlist aaa spreadsheet %%start_time%%.+watchlist bbb spreadsheet %%start_time%%.+watchlist ccc spreadsheet %%start_time%%/ |
+
+check for date sorting
+
+Last Edited By sort
+
+| *Comment* | Test case: Calc Watchlist sort by Last Edited By |  |
+| select_and_wait | sort-picker | label=Last Edited By |
+
+| *Comment* | label=Last Edited By (↓) |  |
+| select_and_wait | sort-picker | label=Last Edited By (↓) |
+
+| *Comment* | label=Last Edited By (↑) |  |
+| select_and_wait | sort-picker | label=Last Edited By (↑) |
+
+| *Comment* | Test case: Calc Watchlist TEARDOWN |  |
+
+| st-process-jobs | PageIndex | %%workspace%% |
+| st-admin | purge-page --w %%workspace%% --p watchlist_aaa_spreadsheet_%%start_time%% | was purged |
+| st-admin | purge-page --w %%workspace%% --p watchlist_bbb_spreadsheet_%%start_time%% | was purged |
+| st-admin | purge-page --w %%workspace%% --p watchlist_ccc_spreadsheet_%%start_time%% | was purged |
+| st-admin | purge-page --w %%workspace%% --p watchlist_newpage_spreadsheet_%%start_time%% | was purged |
+
+| *Comment* | Test case: Calc Watchlist COMPLETED |
+
+^ DONE_TESTING
+
+^ Remaining todo:
+
+| Figure out a way to check which element of a dropdown menu is currently selected, text_like does not do this | Check dropdown menu functionality in Settings->Watchlist |  |
+| Change notification to every minute, then edit a page in the watchlist | notification is saved as Every Minute |  |
+| Wait a few minutes, then read email | watchlist notification message received |  |
+| In the email, click through to change the preference for notification frequency | arrive at correct UI page |  |
+| if preference in watchlist email is set to display name, links, edited by and edited date, the email is displayed correctly according to the preference | verify correct email content |  |
+| if preference in watchlist email is set to display page title and link only, the email is displayed correctly | change preference, edit a watched page, receive email, verify correct email content |  |
+| clicking on a page link in the watchlist email takes you to the correct page |  |  |
+| when a page is removed from the watchlist, it is removed from email | remove a page from the watchlist, edit a watched page, receive email, verify that removed page is not present |  |
+| when a page is removed from watch list, it is removed from rss | click RSS icon for watchlist; examine RSS content |  |

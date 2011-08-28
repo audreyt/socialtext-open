@@ -1,0 +1,42 @@
+* Fixture: SocialRest
+
+## This tests for {bz: 3294}.
+
+| *Comment*           | Create a test page |              |    |
+| standard-test-setup |                    |              |    |
+| set                 | page               | edit_testing |    |
+| edit_page           | %%workspace%%      | %%page%%     | 無 |
+
+| *Comment*          | Setup workspace to be public-join-to-edit |                     |
+| set-ws-permissions | %%workspace%%                             | public-join-to-edit |
+
+## Non-member  User
+
+| *Comment*   | Create an authenticated non-member user |                                   |
+| set         | auth                                    | auth%%start_time%%@socialtext.net |
+| create_user | %%auth%%                                | password                          |
+
+| *Comment*      | Authenticated user sees a join link                |          |
+| http-user-pass | %%auth%%                                           | password |
+| GET            | /m/page/%%workspace%%/%%page%%                     |          |
+| code-is        | 200                                                |          |
+| body-unlike    | /m/page/%%workspace%%/%%page%%?action=edit         |          |
+| body-like      | /m/page/%%workspace%%/%%page%%?action=join_to_edit |          |
+
+| *Comment* | Following the link redirects back to page          |
+| GET       | /m/page/%%workspace%%/%%page%%?action=join_to_edit |
+| code-is   | 302                                                |
+
+| *Comment*      | The page now has an edit link              |          |
+| GET            | /m/page/%%workspace%%/%%page%%             |          |
+| code-is        | 200                                        |          |
+| body-like      | /m/page/%%workspace%%/%%page%%?action=edit |          |
+
+## Guest User should not see a join link, because the /m/register screen is not available.
+
+| *Comment*      | Guest user does not sees a join link       |
+| http-user-pass |                                            |
+| GET            | /m/page/%%workspace%%/%%page%%             |
+| code-is        | 200                                        |
+| body-unlike    | /m/page/%%workspace%%/%%page%%?action=edit |
+| body-unlike    | /m/page/%%workspace%%/%%page%%?action=join |

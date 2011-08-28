@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Strip off the path info to find the name of this script
+SCRIPT_NAME=`basename $0`
+
+# Use the refactored column adding code
+MIG_DIR=`dirname $0`/..
+
+$MIG_DIR/add-column/$SCRIPT_NAME Workspace workspace_template text "''"
+
+if [ "$SCRIPT_NAME" = "migration" ]; then
+    $MIG_DIR/add-column/_set_not_null Workspace workspace_template "''"
+fi
+

@@ -1,0 +1,56 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use 5.12.0;
+use autodie;
+use warnings;
+use open qw(:std :utf8);
+use Getopt::Long;
+use FindBin '$RealBin';
+use lib "$RealBin/../lib";
+use Socialtext::l10n::DevUtils;
+
+my $errors = 0;
+for my $po (@ARGV) {
+    open my $in, '<', $po;
+
+    local $/ = "\n\n";
+    scalar <$in>;
+
+    while (<$in>) {
+        my ($comments, $id, $str) = split(/\n(?=msg)/, "\n$_");
+        if (is_key($id)) {
+            # Great. Do nothing.
+            if (is_key($str)) {
+                warn "*** $po : Using key syntax: $str\n";
+                $errors++;
+            }
+        }
+        elsif (is_key($str)) {
+            warn "*** $po : Reversed key: $str\n";
+            ($str, $id) = ($id, $str);
+            $errors++;
+        }
+        elsif (!is_key($id)) {
+            if (trim($id) ne trim($str)) {
+                warn "*** $po : Invalid key: $id\n";
+                $errors++;
+            }
+            next;
+        }
+        elsif (trim($str) eq '') {
+            warn "*** $po : Untranslated key: $id\n";
+            $errors++;
+        }
+        elsif (trim($id) =~ /[!:?]$/ and substr(trim($str), -1) ne substr(trim($id), -1)) {
+            warn "*** $po : msgid has trailing punctuation not found in msgstr: $id\n";
+            $errors++;
+        }
+        elsif (trim($str) =~ /[!:?]$/ and substr(trim($str), -1) ne substr(trim($id), -1)) {
+            warn "*** $po : msgstr has trailing punctuation not found in msgid $str\n";
+            $errors++;
+        }
+    }
+}
+
+exit $errors;
+

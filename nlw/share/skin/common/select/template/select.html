@@ -1,0 +1,15 @@
+<div>
+    <h3 style="margin-top: 0;">Select a Socialtext Skin:</h3>
+    <form id="skin-select-form" onsubmit="return false;">
+        <select name="skin-name">
+            [% FOR skin = skins %]
+            <option value="[% skin %]">[% skin %]</option>
+            [% END %]
+        </select>
+        <br />
+        <br />
+        <input name="select" type="submit" value="Select" />&nbsp;
+        <input name="cancel" type="submit" value="Cancel" />
+    </form>
+    <p style="font-size: smaller; font-weight: bold; font-style: italic;">Note: this will change the Socialtext Skin only for your browser and only on this particular workspace. Nobody else will be affected and you can change it back at any time.</p>
+</div>

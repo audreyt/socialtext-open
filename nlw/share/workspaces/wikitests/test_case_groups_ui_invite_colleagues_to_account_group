@@ -1,0 +1,71 @@
+| *Comment* | Test Case: Groups UI Invite Colleages to account-group |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Groups UI Invite Colleagues to account-group Setup |  |  |
+| st-setup-a-group | 1 | 1 | 1 |
+| st-admin | set-account-config --account %%group_acct%% allow_invitation 1 | has been updated |
+| st-config | set allow_network_invitation 1 | Wrote updated config file |
+
+| st-logoutin | %%group_user%% | %%password%% |  |
+| set | to_ws | GIN-ws-%%start_time%% |  |
+| set | to_ws_user | %%to_ws%%@%%wikiemail%% |  |
+| set | eto_ws_user | %%to_ws%%\@%%wikiemail%% |  |
+| st-admin | create-workspace --empty --name %%to_ws%% --title "GIN %%to_ws%%" --account "%%group_acct%%" --empty | created |  |
+| add-group-to-workspace | %%group_id%% | %%to_ws%% |  |
+
+| *Comment* | Test Case: Groups UI Invite Colleagues to account-group INVITE! |  |  |
+| wait_for_element_visible_ok | link=Invite! | 30000 |  |
+| click_and_wait | link=Invite! | 30000 |  |
+| text_like | //body | Invite people to your group |  |
+| text_like | //body | Enter a list of email addresses (one address per line) of people you would like to invite to this group |  |
+| wait_for_element_visible_ok | object_id | 30000 |
+| text_unlike | object_id | ... %%group_name%% |
+| text_like | object_id | %%group_acct%% |
+
+| st-admin | add-group-admin --e %%group_user%% --g %%group_id%% | is now a admin of the |
+| open_ok | /?action=invite |  |
+| text_like | //body | ... %%group_name%% |
+| select_ok | object_id | ... %%group_name%% (1 user) |
+| wait_for_element_present_ok | users_new_ids | 30000 |
+| type_ok | users_new_ids | %%to_ws_user%% |
+| click_ok | link=Invite |  |
+| wait_for_element_visible_ok | Link=Invite more people | 30000 |
+| text_like | qr/The following 1 user was successfully invited into this Group:\s+%%eto_ws_user%%/i |  |
+
+| *Comment* | Test Case: Groups UI Invite Colleagues to account-group CHECK Activity for group, SEE NEW MEMBER |  |
+| open_ok | /st/group/%%group_id%% |  |
+| st-name-widget | 4 | activity_widget |
+| st-widget-title-like | activity_widget | Activities |
+| st-select-widget-frame | activity_widget |  |
+| pause | 3000 | needed for text_like |
+| text_like | //body | added %%to_ws%% to the group %%group_name%% |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Groups UI Invite Colleagues to account-group Pause 90 seconds for invitation email delivery |  |
+| pause | 90000 |
+
+| *Comment* | Test Case: Groups UI Invite Colleagues to account-group login as %%email%% so you can see the confirmation email |  |
+| open_ok | /%%to_ws%%/?action=recent_changes |  |
+| wait_for_element_visible_ok | link=I'm inviting you into the %%group_name%% group | 30000 |
+| click_and_wait | link=I'm inviting you into the %%group_name%% group |  |
+| wait_for_element_visible_ok | //a[contains(@href,'confirm_email')] | 30000 |
+
+| *Comment* | Test Case: Groups UI Invite Colleagues to account-group REMOVE admin, do no see "... group_name" |  |  |
+| open_ok | /st/group/%%group_id%% |  |  |
+| st-admin | remove-group-admin --e %%group_user%% --g %%group_id%% |  |  |
+| wait_for_element_visible_ok | link=Invite! | 30000 |  |
+| click_and_wait | link=Invite! | 30000 |  |
+| text_like | //body | Invite people to your group |  |
+| text_like | //body | Enter a list of email addresses (one address per line) of people you would like to invite to this group |  |
+| wait_for_element_visible_ok | object_id | 30000 |  |
+| text_unlike | object_id | ... %%group_name%% |  |
+
+| *Comment* | Test Case: Groups UI Invite Colleagues to account-group TEARDOWN |  |
+| st-process-jobs |  |  |
+| delete-group | %%group_id%% |  |
+| delete-workspace | %%group_ws%% |  |
+| delete-workspace | %%to_ws%% |  |
+| delete-account | %%group_acct%% |  |
+
+| *Comment* | Test Case:Groups UI Invite Colleages to account-group COMPLETED |

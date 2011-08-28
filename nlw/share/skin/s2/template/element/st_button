@@ -1,0 +1,15 @@
+[% DEFAULT
+    corners = 'straight'
+    buttonclass = 'st-button'
+%]
+<div class="[% buttonclass %] button-[% corners %]">
+    <div class="button-[% corners %]-right-top">
+        <div class="button-[% corners %]-left-bottom">
+            <div class="button-[% corners %]-right-bottom">
+                <div class="button-content">
+                    <a id="[% id %]" href="[% href || '#' %]" title="[% title %]">[% label %]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

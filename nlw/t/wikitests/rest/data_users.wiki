@@ -1,0 +1,86 @@
+Test cases for `/data/users` GETs.
+
+* Fixture: SocialRest
+
+| Comment | set up users and accounts |
+
+| set            | acct1                 | %%start_time%%acct1 |
+| set            | acct2                 | %%start_time%%acct2 |
+| set            | acct3                 | %%start_time%%acct3 |
+| create-account | %%acct1%%             |                     |
+| create-account | %%acct2%%             |                     |
+| create-account | %%acct3%%             |                     |
+| create-group   | %%start_time%%-group1 |                     |
+| set            | group1                | %%group_id%%        |
+| create-group   | %%start_time%%-group2 |                     |
+| set            | group2                | %%group_id%%        |
+
+| set                 | user_a           | asdf-%%start_time%%-a@ken.socialtext.com |           |       |            |
+| set                 | user_b           | zxcv-%%start_time%%-b@ken.socialtext.com |           |       |            |
+| set                 | user_z           | asdf-%%start_time%%-z@ken.socialtext.com |           |       |            |
+| set                 | user_9_email     | %%start_time%%-999@ken.socialtext.com    |           |       |            |
+| set                 | user_9           | 9999%%start_time%%                       |           |       |            |
+| create-user         | %%user_a%%       | password                                 | %%acct1%% |       |            |
+| add-user-to-group   | %%user_a%%       | %%group1%%                               |           |       |            |
+| create-user         | %%user_b%%       | password                                 | %%acct1%% |       |            |
+| add-user-to-account | %%user_b%%       | %%acct3%%                                |           |       |            |
+| add-user-to-group   | %%user_b%%       | %%group1%%                               |           |       |            |
+| add-user-to-group   | %%user_b%%       | %%group2%%                               |           |       |            |
+| create-user         | %%user_z%%       | password                                 | %%acct2%% |       |            |
+| create-user         | %%user_9_email%% | password                                 | %%acct1%% | niner | %%user_9%% |
+| http-user-pass      | %%user_a%%       | password                                 |           |       |            |
+
+| Comment | `GET /data/users/:username`                                            |
+| Comment | ... Status is 404 if the viewer and :username don't share any accounts |
+| GET     | /data/users/%%user_z%%                                                 |
+| code-is | 404                                                                    |
+
+| Comment     | ... Status is 200 if the viewer and :username share at least one account |
+| GET_json    | /data/users/%%user_b%%                                                   |
+| code-is     | 200                                                                      |
+| Comment     | ... `accounts` is a list of *only* shared accounts                       |
+| json-parse  |                                                                          |
+| body-like   | acct1                                                                    |
+| body-unlike | acct3                                                                    |
+| Comment     | ... `groups` is a list of *only* shared groups                           |
+| body-like   | group1                                                                   |
+| body-unlike | group2                                                                   |
+
+| Comment            | `GET /data/users/:username?all=1`                     |   |
+| Comment            | ... Status is 404 if the user is not a business admin |   |
+| GET_json           | /data/users/%%user_b%%?all=1                          |   |
+| code-is            | 404                                                   |   |
+| Comment            | ... Status is 200 if the user is a business admin     |   |
+| set-business-admin | %%user_a%%                                            | 1 |
+| GET_json           | /data/users/%%user_b%%?all=1                          |   |
+| code-is            | 200                                                   |   |
+| Comment            | ... `accounts` is a list of *all* the user's accounts |   |
+| body-like          | acct1                                                 |   |
+| body-like          | acct3                                                 |   |
+| Comment            | ... `groups` is a list of *all* the user's groups     |   |
+| body-like          | group1                                                |   |
+| body-like          | group2                                                |   |
+
+| Comment     | Business admin without `?all=1`                       |
+| GET_json    | /data/users/%%user_b%%                                |
+| code-is     | 200                                                   |
+| Comment     | ... `accounts` is a list of *all* the user's accounts |
+| body-like   | acct1                                                 |
+| body-unlike | acct3                                                 |
+| Comment     | ... `groups` is a list of *all* the user's groups     |
+| body-like   | group1                                                |
+| body-unlike | group2                                                |
+
+| Comment        | Make sure that a user can view themselves correctly too. |          |
+| http-user-pass | %%user_b%%                                               | password |
+| GET_json       | /data/users/%%user_b%%                                   |          |
+| code-is        | 200                                                      |          |
+| body-like      | acct1                                                    |          |
+| body-like      | acct3                                                    |          |
+| body-like      | group1                                                   |          |
+| body-like      | group2                                                   |          |
+
+| Comment   | A username with only digits |
+| GET_json  | /data/users/%%user_9%%      |
+| code-is   | 200                         |
+| body-like | %%user_9_email%%            |

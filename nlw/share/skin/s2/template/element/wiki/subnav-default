@@ -1,0 +1,19 @@
+<div id="st-wiki-subnav" class="st-wiki-subnav-dashboard">
+    <div id="st-wiki-subnav-left">
+	<span class="st-wiki-subnav-label">[% loc('Quick jump') %]:&nbsp;</span>
+[% IF NOT user.is_guest AND NOT home_is_dashboard %]
+        <a id="st-wiki-subnav-link-dashboard" href="?action=dashboard">[% loc('Dashboard') %]</a>
+        - 
+        <a id="st-wiki-subnav-link-whats-new" href="?action=recent_changes">[% loc("What's new") %]</a>
+	-
+        <a id="st-wiki-subnav-link-weblogs" href="?action=weblog_display">[% loc('Weblogs') %]</a>
+[% ELSE %]
+        <a id="st-wiki-subnav-link-whats-new" href="?action=recent_changes">[% loc("What's new") %]</a>
+	-
+        <a id="st-wiki-subnav-link-weblogs" href="?action=weblog_display">[% loc('Weblogs') %]</a>
+[% END %]
+    </div>
+    <div id="st-wiki-subnav-right">
+	<br style="clear: both; height: 1px;" />
+    </div>
+</div>

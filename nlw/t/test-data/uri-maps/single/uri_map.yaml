@@ -1,0 +1,22 @@
+--- !!omap
+- 
+    '/data/echo/:text':
+        'GET':
+            '*/*':           &default [Socialtext::Rest::Echo, GET_html]
+            'text/html':              *default
+            'application/json':       [Socialtext::Rest::Echo, GET_json]
+            'text/xml':               [Socialtext::Rest::Echo, GET_xml]
+            'text/x.socialtext-wiki': [Socialtext::Rest::Echo, GET_wikitext]
+        'POST':
+            '*/*':              [Socialtext::Rest::Echo, POST_js]
+            'text/xml':         [Socialtext::Rest::Echo, POST_xml]
+            'application/json': [Socialtext::Rest::Echo, POST_js]
+            'text/x.cowsay':    [Socialtext::Rest::Echo, POST_cowsay]
+        '*': [Socialtext::Rest::Echo, bad_method]
+-
+    '/data/version':
+        GET:
+            '*/*':     &default [Socialtext::Rest::Version, GET_text]
+            text/plain:         *default
+            application/json:   [Socialtext::Rest::Version, GET_json]
+        '*': [Socialtext::Rest::Version, bad_method]

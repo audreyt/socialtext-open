@@ -1,0 +1,26 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::SQL qw(:exec);
+
+my $interval = shift || die "USAGE: $0 <interval> (eg. 4 weeks)\n";
+
+# Store when in case this takes a long time and the date changes inbetween
+# calls
+my $when = sql_singlevalue(q{
+    SELECT 'today'::timestamptz - ?::interval
+}, $interval);
+
+sql_execute(q{
+    INSERT INTO event_archive
+        SELECT *
+          FROM event
+         WHERE at < ?::timestamptz
+}, $when);
+
+for my $t (qw(event event_page_contrib)) {
+    sql_execute(qq{DELETE FROM $t WHERE at < ?::timestamptz}, $when);
+}

@@ -1,0 +1,17 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::System qw/shell_run/;
+
+if ($>) {
+    print "Not running as root - skipping push plugin install.\n";
+}
+else {
+    print "Installing the push plugin\n";
+    shell_run("st-appliance-install-plugin push");
+}
+
+shell_run("st-admin enable-plugin --all-accounts --plugin push");
+
+exit 0;

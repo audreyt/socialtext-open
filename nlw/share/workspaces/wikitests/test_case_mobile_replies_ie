@@ -1,0 +1,32 @@
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Mobile Replies Imported variables |  |
+| *Comment* | %%shared_account%% %%topic_signal%% %%reply_prefix%% |  |
+
+| *Comment* | Test Case: Mobile Replies Setup and login |  |
+| set | my_acct | %%shared_account%% |
+| set | my_user | `%%my_acct%%_mobile_checker@david.socialtext.net` |
+| set | my_name | replies %%start_time%% mobile checker |
+| st-admin | create-user --account %%my_acct%% --e %%my_user%% --p %%password%% |  |
+| st-process-jobs |  |  |
+| st-logoutin | %%my_user%% | %%password%% |
+
+| *Comment* | Test Case: Mobile Replies Checks for all signals |  |
+| st-open-m-signals |  |  |
+| wait_for_text_present_ok | %%topic_signal%% | 30000 |
+| text_like | qr/%%reply_prefix%%-2.+%%reply_prefix%%-1.+%%reply_prefix%%-0-2.+%%reply_prefix%%-0-1.+%%reply_prefix%%-0-0.+%%topic_signal%%/ |  |
+
+| *Comment* | Test Case: Mobile Replies Post New Signal from Mobile UI |  |
+| st-open-m-signals |  |  |
+| wait_for_text_present_ok | %%topic_signal%% | 30000 |
+| wait_for_element_visible_ok | st-signal-text | 30000 |
+| type_ok | st-signal-text | new_signal_%%start_time%% |
+| wait_for_element_visible_ok | st-signal-submit | 30000 |
+| click_ok | st-signal-submit |  |
+| wait_for_text_present_ok | %%my_name%% | 30000 |
+| text_like | qr/%%my_name%%.+new_signal_%%start_time%%/ism |  |
+
+| *Comment* | Test Case: Mobile Replies Check that new signal is above old signal |  |
+| text_like | qr/%%my_name%%.+replies %%start_time%% seeder/ism |  |
+
+| *Comment* | Test Case: Mobile Replies COMPLETED |  |

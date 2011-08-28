@@ -1,0 +1,15 @@
+This is a migration for RT-27506.  htmldoc(1) creates lots of temp files in
+/var/tmp.  We changed how htmldoc is invokved so it uses /tmp instead, but we
+still need to cleanup its older temp files.  We can only safely do this
+cleanup on Socialtext appliances.  Other release types will skip this
+migration.
+
+The pre-check attempts to see if we're on an appliance.  If we are the
+migration continues, if we're not the migration is skipped.  Some other basic
+sanity checks are done as well.
+
+The migration does a find(1) / rm(1) of the htmldoc(1) temp files.  Care is
+taken to not remove recently used temp files and to only delete tempfiles
+matching the pattern used by htmldoc(1).
+
+The post-check is a no-op.

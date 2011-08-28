@@ -1,0 +1,29 @@
+| *Comment* | STARTING Test Case Command Line INDEXING |  |
+
+| set | cmdline_workspace | clw_%%start_time%% |
+| st-admin | create-workspace --name %%cmdline_workspace%% --title %%cmdline_workspace%% | A new workspace named "%%cmdline_workspace%%" was created |
+
+| *Comment* | Test Case: Command Line INDEXING index-workspace, delete-search-index, index-page, index-attachment |  |
+
+| st-admin | index-workspace | qr/The command you called \(index-workspace\) requires a workspace to be specified/ |
+| st-admin | delete-search-index | qr/The command you called \(delete-search-index\) requires a workspace to be specified/ |
+| st-admin | delete-search-index --workspace %%cmdline_workspace%% | qr/The search index for the %%cmdline_workspace%% workspace has been deleted/ |
+
+| *Comment* | Test Case: Command Line INDEXING pause 10 sec before reindexing after deleting index |  |
+| pause | 10000 |  |
+| st-admin | index-workspace --workspace %%cmdline_workspace%% --sync | qr/The %%cmdline_workspace%% workspace has been indexed/ |
+
+| st-admin | index-page | qr/The command you called \(index-page\) requires a workspace to be specified/ |
+| st-admin | index-attachment | qr/The command you called \(index-attachment\) requires a workspace to be specified/ |
+| st-admin | index-page --workspace %%cmdline_workspace%% | qr/The command you called \(index-page\) requires a page to be specified/ |
+| st-admin | index-attachment --workspace %%cmdline_workspace%% | qr/The command you called \(index-attachment\) requires a page to be specified/ |
+| st-admin | index-attachment --workspace %%cmdline_workspace%% --page %%cmdline_workspace%% | qr/The command you called \(index-attachment\) requires an attachment id to be specified/ |
+| st-admin | index-page --workspace %%cmdline_workspace%% --page %%cmdline_workspace%%_wiki | There is no page with the id "%%cmdline_workspace%%_wiki" in the %%cmdline_workspace%% workspace. |
+
+| st-admin | index-page --workspace %%cmdline_workspace%% --page example_page_project_tracking | The Example Page: Project Tracking page in the %%cmdline_workspace%% workspace has been indexed. |
+
+| *Comment* | Test Case: Command Line INDEXING Teardown |  |
+| st-process-jobs |  |  |
+| st-admin | delete-workspace --w %%cmdline_workspace%% --no-export | has been deleted |
+
+| *Comment* | Test Case Command Line INDEXING COMPLETED |  |

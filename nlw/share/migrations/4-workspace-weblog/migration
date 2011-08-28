@@ -1,0 +1,6 @@
+#!/bin/bash
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+
+psql -U $DB_USER -d $DB -t -c 'ALTER TABLE "Workspace" ADD COLUMN "homepage_weblog" text'

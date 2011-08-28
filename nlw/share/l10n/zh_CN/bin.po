@@ -1,0 +1,84 @@
+# @COPYRIGHT@
+msgid ""
+msgstr ""
+"Project-Id-Version: Socialtext i18n\n"
+"PO-Revision-Date: 2011-03-12 22:57+0800\n"
+"Last-Translator: Socialtext i18n team\n"
+"Language-Team: Socialtext i18n team\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: bin/ceq-stat:83
+msgid "info.verbose"
+msgstr "提示尝试 -- verbose 来获得关键的额外列表"
+
+#. ($cleaned)
+#: bin/ceq-cleanup:20
+msgid "job.cleaned=count"
+msgstr "完成 %1 的清理作业。"
+
+#: bin/ceq-stat:33
+msgid "job.count-delay"
+msgstr "有启动延时的作业数量"
+
+#: bin/ceq-stat:31
+msgid "job.count-enqueued"
+msgstr "入队作业的数量"
+
+#: bin/ceq-stat:35
+msgid "job.count-failed"
+msgstr "失败的作业数"
+
+#: bin/ceq-stat:32
+msgid "job.count-grabbed"
+msgstr "“抓取”的作业数量"
+
+#: bin/ceq-stat:34
+msgid "job.count-success"
+msgstr "成功作业计数"
+
+#. ($job_name)
+#: bin/ceq-cleanup:18
+msgid "job.deprecated=type"
+msgstr "作业 %1 已经过期，删除之。"
+
+#: bin/ceq-stat:72
+msgid "job.key:"
+msgstr "关键字："
+
+#: bin/ceq-stat:37
+msgid "job.last-failure"
+msgstr "最近的故障时间"
+
+#: bin/ceq-stat:36
+msgid "job.last-success"
+msgstr "最近的成功时间"
+
+#: bin/ceq-stat:38
+msgid "job.newest"
+msgstr "最近（最新）入队时间"
+
+#: bin/ceq-stat:39
+msgid "job.newest-without-delay"
+msgstr "最近（最新）入队的时候，没有延时启动"
+
+#: bin/ceq-stat:40
+msgid "job.oldest"
+msgstr "最早（时间最长）入队时间"
+
+#: bin/ceq-stat:41
+msgid "job.oldest-without-delay"
+msgstr "最早（时间最长）入队时间，没有延时启动"
+
+#: bin/ceq-stat:69
+msgid "job.total"
+msgstr "作业总数"
+
+#: bin/ceq-stat:68
+msgid "job.type"
+msgstr "作业类型"
+
+#: bin/ceq-stat:134
+msgid "time.never"
+msgstr "从不"

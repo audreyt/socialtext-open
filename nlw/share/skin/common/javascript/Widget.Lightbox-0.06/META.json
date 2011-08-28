@@ -1,0 +1,30 @@
+{
+    "resources": {
+        "license": "http://dev.perl.org/licenses/"
+    },
+    "generated_by": "Module::Build version 0.2805",
+    "meta-spec": {
+        "version": 1.2,
+        "url": "http://module-build.sourceforge.net/META-spec-v1.2.html"
+    },
+    "version": 0.06,
+    "name": "Widget.Lightbox",
+    "author": [
+        "Kang-min Liu, <gugod@gugod.org>"
+    ],
+    "license": "perl",
+    "keywords": [
+        "Widget",
+        "Lightbox"
+    ],
+    "provides": {
+        "Widget.Lightbox": {
+            "version": 0.06,
+            "file": "lib/Widget/Lightbox.js"
+        }
+    },
+    "requires": {
+        "JSAN": 0.1
+    },
+    "abstract": "Lightbox effect made easy"
+}

@@ -1,0 +1,25 @@
+---
+abstract: Socialtext Way Prettier Skin 10-03-16 update by reed reed@bertopro.com
+author:
+  name: Mark Schuber (Araucaria Design)
+cascade_css: 0
+depends:
+  - common
+  - wikiwyg
+focus_field:
+  preferences_settings: form > div > input:eq(0)
+  users_invitation: 'textarea[name="users_new_ids"]'
+  users_settings: 'input[name="first_name"]'
+  weblogs_create: dl.form > dd > input:eq(0)
+  workspaces_create: dl.form > dd > input:eq(0)
+  workspaces_settings_appearance: dl.form > dd > input:eq(0)
+license: CPAL
+mobile:
+  logo:
+    backgroundColor: '#17417F'
+    color: '#17417F'
+name: s3
+no_common: 1
+no_workspace_dashboard: 1
+parent: s2
+version: 1.0.0

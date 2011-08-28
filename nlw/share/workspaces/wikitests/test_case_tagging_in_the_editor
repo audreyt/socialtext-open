@@ -1,0 +1,28 @@
+| *Comment* | Starting Test Case: Tagging in the Editor |  |
+
+| st-admin | update-page --w %%workspace%% --e %%email%% --p "Tag Page %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |
+| open_ok | /%%workspace%%/?Tag Page %%start_time%% |  |
+
+| *Comment* | Test Case: Tagging in the Editor validate that single quotes don't prevent page from saving |  |
+
+| click_ok | st-edit-button-link |  |
+| wait_for_element_visible_ok | st-edit-mode-tagbutton | 30000 |
+| click_ok | st-edit-mode-tagbutton |  |
+| wait_for_element_visible_ok | st-tagqueue-field | 30000 |
+| type_ok | st-tagqueue-field | Foo's Blog single quote |
+| click_ok | st-tagqueue-addbutton |  |
+| type_ok | st-tagqueue-field | Foo"s Blog double quote |
+| click_ok | st-tagqueue-addbutton |  |
+| click_ok | st-tagqueue-close |  |
+
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| click_ok | st-save-button-link |  |
+| wait_for_element_visible_ok | link=Foo's Blog single quote | 30000 |
+| text_like | link=Foo's Blog single quote | Foo's Blog single quote |
+| wait_for_element_visible_ok | link=Foo"s Blog double quote | 30000 |
+| text_like | link=Foo"s Blog double quote | Foo"s Blog double quote |
+
+| *Comment* | Test Case : Tagging in the Editor Teardown |
+| st-admin | purge-page --w %%workspace%% --p tag_page_%%start_time%% | was purged |
+
+| *Comment* | Test Case : Tagging in the Editor COMPLETED |

@@ -1,0 +1,15 @@
+[% WRAPPER layout/html id="loginPage" title=loc("login.login-disabled") %]
+<div id="st-display-mode-container" class="authentication">
+  <div id="controls">
+    <div id="st-editing-tools-edit">
+        <h2 id="st-page-titletext" class="tableTitle">[% loc('login.login-disabled' ) %]</h2>
+    </div>
+    <div id="controlsRight">&nbsp;</div>
+  </div>
+
+  <div id="contentContainer">
+    [% INCLUDE errors_and_messages %]
+    <div class="clear" style="height:5px;"></div>
+  </div>
+</div>
+[% END %]

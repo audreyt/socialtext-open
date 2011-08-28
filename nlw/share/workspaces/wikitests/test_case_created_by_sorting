@@ -1,0 +1,57 @@
+| *Comment* | Test Case: Created By Sorting |  |
+
+| set | user_1 | user1_%%start_time%%@ken.socialtext.net |
+| set | user_2 | user2_%%start_time%%@ken.socialtext.net |
+| set | user_3 | user3_%%start_time%%@ken.socialtext.net |
+| set | user_4 | user4_%%start_time%%@ken.socialtext.net |
+| set | sws | creator-%%start_time%% |
+
+| set | page_1 | Search aaa %%start_time%% |
+| set | page_2 | Search bbb %%start_time%% |
+| set | page_3 | Search ccc %%start_time%% |
+| set | page_4 | Search ddd %%start_time%% |
+
+| *Comment* | Test Case: Created By Sorting Create new ws %%sws%% |  |
+| st-admin | create-workspace --empty --name %%sws%% --title %%sws%% --empty | A new workspace named "%%sws%%" was created. |
+| *Comment* | Test Case: Created By Sorting. Adding %%email%% so you can login to this workspace |  |
+| st-admin | add-workspace-admin --e %%email%% --w %%sws%% |  |
+| *Comment* | Test Case: Created By Sorting. Adding devnull1 so you can login to this workspace |  |
+| st-admin | add-workspace-admin --e devnull1@socialtext.com --w %%sws%% |  |
+
+| *Comment* | Test Case: Created By Sorting setup user1 ... user4 |  |
+| st-admin | create-user --email %%user_1%% --password 123456 |  |
+| st-admin | add-member --email %%user_1%% --workspace %%sws%% |  |
+| st-admin | create-user --email %%user_2%% --password 123456 |  |
+| st-admin | add-member --email %%user_2%% --workspace %%sws%% |  |
+| st-admin | create-user --email %%user_3%% --password 123456 |  |
+| st-admin | add-member --email %%user_3%% --workspace %%sws%% |  |
+| st-admin | create-user --email %%user_4%% --password 123456 |  |
+| st-admin | add-member --email %%user_4%% --workspace %%sws%% |  |
+
+| *Comment* | 1st date, page 2, user 3, 5 revisions |  |
+| st-admin | update-page --page "%%page_1%%" --email %%user_3%% --workspace %%sws%% < %%wikitest_client_files%%wikitest.txt | The "%%page_1%%" page has been created. |
+| st-admin | update-page --page "%%page_2%%" --email %%user_1%% --workspace %%sws%% < %%wikitest_client_files%%wikitest.txt | The "%%page_2%%" page has been created. |
+| st-admin | update-page --page "%%page_3%%" --email %%user_4%% --workspace %%sws%% < %%wikitest_client_files%%wikitest.txt | The "%%page_3%%" page has been created. |
+| st-admin | update-page --page "%%page_4%%" --email %%user_2%% --workspace %%sws%% < %%wikitest_client_files%%wikitest.txt | The "%%page_4%%" page has been created. |
+
+| *Comment* | Test Case: What's New list view |  |
+| open_ok | /%%sws%%/index.cgi?action=recent_changes |  |
+| text_like | Changes in Last |  |
+
+| *Comment* | Test Case: Created By asc |  |
+| select_and_wait | sort-picker | label=Created By |
+| text_like | contentContainer | qr/%%page_2%%.+%%page_4%%.+%%page_1%%.+%%page_3%%/ |
+
+| *Comment* | Test Case: Created By desc |  |
+| select_and_wait | sort-picker | label=Created By (↓) |
+| text_like | contentContainer | qr/%%page_3%%.+%%page_1%%.+%%page_4%%.+%%page_2%%/ |
+
+| *Comment* | Test Case: Created By asc |  |
+| select_and_wait | sort-picker | label=Created By (↑) |
+| text_like | contentContainer | qr/%%page_2%%.+%%page_4%%.+%%page_1%%.+%%page_3%%/ |
+
+| *Comment* | Test Case: Created By Sorting. TEARDOWN |  |
+
+| st-admin | delete-workspace --workspace %%sws%% --no-export | has been deleted |
+
+| *Comment* | Test Case: Created By Sorting COMPLETED |

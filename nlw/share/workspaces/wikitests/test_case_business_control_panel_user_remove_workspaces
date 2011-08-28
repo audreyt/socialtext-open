@@ -1,0 +1,75 @@
+
+| *comment* | Test Case: Business Control Panel User Remove Workspaces |  |
+| set | bcpur_user | bcpuser_%%start_time%%@matt.socialtext.com |
+| set | short_bcpur | bcpuser %%start_time%% |
+| set | bcp_link | "%%short_bcpur%%" <%%bcpur_user%%> |
+| set | other_admin | other-admin-%%start_time%%@matt.socialtext.com |
+| set | bcpws_1 | bcpws-1-%%start_time%% |
+| set | bcpws_2 | bcpws-2-%%start_time%% |
+| set | bcpws_3 | bcpws-3-%%start_time%% |
+| set | bcpws_4 | bcpws-4-%%start_time%% |
+| st-admin | create-user --e %%bcpur_user%% --p %%password%% |  |
+| st-admin | create-user --e %%other_admin%% --p %%password%% |  |
+| create_workspace | %%bcpws_1%% |  |
+| create_workspace | %%bcpws_2%% |  |
+| create_workspace | %%bcpws_3%% |  |
+| create_workspace | %%bcpws_4%% |  |
+| st-admin | add-member --e %%bcpur_user%% --w %%bcpws_1%% |  |
+| st-admin | add-member --e %%bcpur_user%% --w %%bcpws_2%% |  |
+| st-admin | add-member --e %%bcpur_user%% --w %%bcpws_3%% |  |
+| st-admin | add-member --e %%bcpur_user%% --w %%bcpws_4%% |  |
+| st-admin | add-workspace-admin --e %%other_admin%% --w %%bcpws_1%% |  |
+| st-admin | add-workspace-admin --e %%other_admin%% --w %%bcpws_2%% |  |
+| st-admin | add-workspace-admin --e %%other_admin%% --w %%bcpws_3%% |  |
+| st-admin | add-workspace-admin --e %%other_admin%% --w %%bcpws_4%% |  |
+
+
+
+
+
+| *comment* | Test Case: Business Control Panel User Go to /CP, see user, remove a workspace |  |
+| st-search-cp-users | %%bcpur_user%% |  |
+| wait_for_element_visible_ok | link=%%bcp_link%% | 30000 |
+| click_and_wait | link=%%bcp_link%% |  |
+| wait_for_text_present_ok | Workspaces (4) | 30000 |
+| text_like | //body | %%bcpws_1%% |
+| wait_for_element_visible_ok | workspaceTable-action-0 | 30000 |
+| wait_for_element_visible_ok | workspaceTable-select-0 | 30000 |
+| click_ok | workspaceTable-select-0 |  |
+| click_ok | workspaceTable-action-0 |  |
+| verifyConfirmation | Remove this user from 1 selected workspace? |  |
+| wait_for_text_present_ok | Workspaces (3) | 30000 |
+| st-search-cp-users | %%bcpur_user%% |  |
+| wait_for_element_visible_ok | link=%%bcp_link%% | 30000 |
+| click_and_wait | link=%%bcp_link%% |  |
+| wait_for_text_present_ok | Workspaces (3) | 30000 |
+| text_unlike | //body | %%bcpws_1%% |
+| text_like | //body | %%bcpws_2%% |
+| text_like | //body | %%bcpws_3%% |
+| click_ok | workspaceTable-select-0 |  |
+| click_ok | workspaceTable-select-1 |  |
+| click_ok | workspaceTable-action-0 |  |
+| verifyConfirmation | Remove this user from 2 selected workspaces? |  |
+| wait_for_text_present_ok | Workspaces (1) | 30000 |
+| st-search-cp-users | %%bcpur_user%% |  |
+| wait_for_element_visible_ok | link=%%bcp_link%% | 30000 |
+| click_and_wait | link=%%bcp_link%% |  |
+| wait_for_text_present_ok | Workspaces (1) | 30000 |
+| text_unlike | //body | %%bcpws_2%% |
+| text_unlike | //body | %%bcpws_3%% |
+| st-search-cp-users | %%bcpur_user%% |  |
+| wait_for_element_visible_ok | link=%%bcp_link%% | 30000 |
+| click_and_wait | link=%%bcp_link%% |  |
+| wait_for_text_present_ok | Workspaces (1) | 30000 |
+| text_unlike | //body | %%bcpws_1%% |
+| text_unlike | //body | %%bcpws_2%% |
+| text_unlike | //body | %%bcpws_3%% |
+| text_like | //body | %%bcpws_4%% |
+
+| *comment* | Test Case: Business Control Panel User Remove Workspaces TEARDOWN |  |
+| st-admin | delete-workspace --w %%bcpws_1%% --no-export | has been deleted |
+| st-admin | delete-workspace --w %%bcpws_2%% --no-export | has been deleted |
+| st-admin | delete-workspace --w %%bcpws_3%% --no-export | has been deleted |
+| st-admin | delete-workspace --w %%bcpws_4%% --no-export | has been deleted |
+
+| *comment* | Test Case: Business Control Panel User Remove Workspaces COMPLETED |  |

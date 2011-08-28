@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::AppConfig;
+
+my $cfg = Socialtext::AppConfig->instance();
+
+# Change "user_factories" from "colon-delimited" to "semicolon-delmited"
+my $factories = $cfg->user_factories();
+if ($factories =~ s/:/;/g) {
+    $cfg->set(user_factories => $factories);
+    $cfg->write();
+}

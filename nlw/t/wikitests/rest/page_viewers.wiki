@@ -1,0 +1,44 @@
+* Fixture: Reports
+
+| standard-test-setup |
+| set | viewers_url | /data/workspaces/%%workspace%%/pages/foo/viewers |
+
+Should be no activity for a new workspace.
+
+| GET_json  | %%viewers_url%%  |
+| code-is   | 200              |
+| body-like | "totalResults":0 |
+
+View a page:
+
+| edit-page    | %%workspace%%      | Foo | Blah |
+| GET          | /%%workspace%%/foo |     |      |
+| code-is      | 200                |     |      |
+| sleep        | 1                  |     |      |
+| consume-logs |                    |     |      |
+
+| GET_json  | %%viewers_url%%         |
+| code-is   | 200                     |
+| body-like | "totalResults":1        |
+| body-like | "count":"1"             |
+| body-like | "user_id":"%%user_id%%" |
+
+Try getting a workspace we're not a member of.
+
+| set              | ws2              | ws2-%%start_time%%                         |
+| create-workspace | %%ws2%%          |                                            |
+| set              | viewers_url2     | /data/workspaces/%%ws2%%/pages/foo/viewers |
+| GET_json         | %%viewers_url2%% |                                            |
+| code-is          | 403              |                                            |
+
+
+But if we're a business admin we should be able to view any ws.
+
+| set-business-admin | %%username%%     |
+| GET_json           | %%viewers_url2%% |
+| code-is            | 200              |
+
+
+
+TODO:
+* Test report for a ws i cant view

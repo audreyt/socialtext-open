@@ -1,0 +1,146 @@
+| *Comment* | Test Case: Phrase Search |
+| *Comment* | test searching on "quoted phrases". |
+
+Note: ticket inspiring this series of tests (amongst others:) {rt: 26849}
+
+Note: Depends on the content of the test-data workspace, most notably the pages Kinosearch test page: truth & falsity, Kinosearch test page: politics, and Kinosearch test page: strategy.
+
+| *Comment* | Test case: Phrase Search: easy searches |  |
+| *Comment* | important to include a few quoted phrase searches with colons |  |
+| st-search | "Strategy without tactics is the slowest route to victory." | Pages matching '"Strategy without tactics is the slowest route to victory."' |
+| st-result | 1 total |  |
+| st-result | Kinosearch test page: strategy |  |
+| st-search | "The right to search for truth implies also a duty: one must not conceal any part of what one has recognized to be true. :Albert Einstein" | Pages matching '"The right to search for truth implies also a duty: one must not conceal any part of what one has recognized to be true. :Albert Einstein"' |
+| st-result | 1 total |  |
+| st-result | Kinosearch test page: truth & falsity |  |
+| st-search | ":Sir Winston Churchill" | Pages matching '":Sir Winston Churchill"' |
+| st-result | 2 total |  |
+| st-result | Kinosearch test page: truth & falsity |  |
+| st-result | Kinosearch test page: strategy |  |
+| st-search | ". :Sir" | Pages matching '". :Sir"' |
+| st-result | 3 total |  |
+| st-result | Kinosearch test page: politics |  |
+| st-result | Kinosearch test page: truth & falsity |  |
+| st-result | Kinosearch test page: strategy |  |
+
+| *Comment* | Test case: Phrase Search: titles |  |
+| *Comment* | exercise both 'title:foo' and '=foo' |  |
+| st-search | title:"test page: truth & falsity" | Pages matching 'title:"test page: truth & falsity"' |
+| st-result | 1 total |  |
+| st-result | Kinosearch test page: truth & falsity |  |
+| st-search | ="Kinosearch test page: strategy" | Pages matching 'title:"Kinosearch test page: strategy"' |
+| st-result | 1 total |  |
+| st-result | Kinosearch test page: strategy |  |
+| st-search | title:"Kinosearch test page: strategy" | Pages matching 'title:"Kinosearch test page: strategy"' |
+| st-result | 1 total |  |
+| st-result | Kinosearch test page: strategy |  |
+
+| *Comment* | Test case: Phrase Search: tags |  |
+| *Comment* | exercise both 'tag:foo' and 'category:foo' |  |
+| st-search | tag:"root: civil society: peace, order, & good government: politics" | Pages matching 'tag:"root: civil society: peace, order, & good government: politics"' |
+| st-result | 1 total |  |
+| st-result | Kinosearch test page: politics |  |
+| st-search | category:"root: civil society: peace, order, & good government: politics" | Pages matching 'category:"root: civil society: peace, order, & good government: politics"' |
+| st-result | 1 total |  |
+| st-result | Kinosearch test page: politics |  |
+
+| *Comment* | Test case: Phrase Search: new tag syntax |  |
+| *Comment* | 'tag:(foo bar)' should be equivalent to 'tag:foo tag:bar' |  |
+| *Comment* | exercise both 'tag:(foo bar)' and 'category:(foo bar)' |  |
+| st-search | tag:wisdom tag:folly | Pages matching 'tag:wisdom tag:folly' |
+| st-result | 1 total |  |
+| st-result | Kinosearch test page: truth & falsity |  |
+| st-search | tag:(wisdom folly) | Pages matching 'tag:(wisdom folly)' |
+| st-result | 1 total |  |
+| st-result | Kinosearch test page: truth & falsity |  |
+| st-search | category:(wisdom folly) | Pages matching 'category:(wisdom folly)' |
+| st-result | 1 total |  |
+| st-result | Kinosearch test page: truth & falsity |  |
+| st-search | tag:"test_tag: cynicism" tag:"root: civil society: peace, order, & good government: politics" | Pages matching 'tag:"test_tag: cynicism" tag:"root: civil society: peace, order, & good government: politics"' |
+| st-result | 1 total |  |
+| st-result | Kinosearch test page: politics |  |
+| st-search | tag:("test_tag: cynicism" "root: civil society: peace, order, & good government: politics") | Pages matching 'tag:("test_tag: cynicism" "root: civil society: peace, order, & good government: politics")' |
+| st-result | 1 total |  |
+| st-result | Kinosearch test page: politics |  |
+| st-search | tag:wisdom tag:drink | Pages matching 'tag:wisdom tag:drink' |
+| st-result | 2 total |  |
+| st-result | Kinosearch test page: truth & falsity |  |
+| st-result | Kinosearch test page: politics |  |
+| st-search | tag:(wisdom drink) | Pages matching 'tag:(wisdom drink)' |
+| st-result | 2 total |  |
+| st-result | Kinosearch test page: truth & falsity |  |
+| st-result | Kinosearch test page: politics |  |
+| st-search | category:(wisdom drink) | Pages matching 'category:(wisdom drink)' |
+| st-result | 2 total |  |
+| st-result | Kinosearch test page: truth & falsity |  |
+| st-result | Kinosearch test page: politics |  |
+| st-search | tag:"test_tag: speech" category:(wisdom folly) | Pages matching 'tag:"test_tag: speech" category:(wisdom folly)' |
+| st-result | 1 total |  |
+| st-result | Kinosearch test page: truth & falsity |  |
+
+| *Comment* | test AND, OR, (NOT, -) with combinations of different search value types (text, title, tag) |  |
+
+| *Comment* | Test case: Phrase Search: homogenous AND searches |  |
+| *Comment* | Test case: Phrase Search {bz: 4327} |  |
+| st-search | ":Sir Winston Churchill" AND ":Sun Tzu" | Pages matching '":Sir Winston Churchill" AND ":Sun Tzu"' |
+| st-result | 1 total |  |
+| st-result | Kinosearch test page: strategy |  |
+| st-search | ":Sun Tzu" AND ":Sir Winston Churchill" | Pages matching '":Sun Tzu" AND ":Sir Winston Churchill"' |
+| st-result | 1 total |  |
+| st-result | Kinosearch test page: strategy |  |
+| *Comment* | Test case: Phrase Search {bz: 4327} |  |
+| st-search | ":Sir John A. MacDonald" AND ":Publius Syrus" | Pages matching '":Sir John A. MacDonald" AND ":Publius Syrus"' |
+| st-result | 0 results |  |
+| *Comment* | confusing / incorrect search result page title -- already reported as {rt: 22619} |  |
+| st-search | ="Kinosearch test page:" AND =": truth" | Pages matching 'title:"Kinosearch test page:" AND title:": truth"' |
+| st-result | 1 total |  |
+| st-result | Kinosearch test page: truth & falsity |  |
+| *Comment* | Test case: Phrase Search {bz: 4327} |  |
+| st-search | tag:"test_tag: cynicism" AND tag:"root: civil society: peace, order, & good government: politics" | Pages matching 'tag:"test_tag: cynicism" AND tag:"root: civil society: peace, order, & good government: politics"' |
+| st-result | 1 total |  |
+| st-result | Kinosearch test page: politics |  |
+
+| *Comment* | Test case: Phrase Search: heterogenous AND searches |  |
+| st-search | title:"test page: truth & falsity" AND "truth" | Pages matching 'title:"test page: truth & falsity" AND "truth"' |
+| st-result | 1 total |  |
+| st-result | Kinosearch test page: truth & falsity |  |
+| st-search | tag:"test_tag: speech" AND ":Sir Winston Churchill" | Pages matching 'tag:"test_tag: speech" AND ":Sir Winston Churchill"' |
+| st-result | 1 total |  |
+| st-result | Kinosearch test page: truth & falsity |  |
+
+| *Comment* | Test case: Phrase Search: homogenous OR searches |  |
+| st-search | ":Virginia Woolf" OR ":Nikita Khrushchev" | Pages matching '":Virginia Woolf" OR ":Nikita Khrushchev"' |
+| st-result | 2 total |  |
+| st-result | Kinosearch test page: truth & falsity |  |
+| st-result | Kinosearch test page: politics |  |
+
+| *Comment* | Test case: Phrase Search: heterogenous OR searches |  |
+| st-search | title:"test page: truth & falsity" OR "truth" | Pages matching 'title:"test page: truth & falsity" OR "truth"' |
+| st-result | 2 total |  |
+| st-result | Kinosearch test page: truth & falsity |  |
+| st-result | Kinosearch test page: strategy |  |
+| st-search | ":Albert Einstein" OR category:"wisdom" OR ="test page: strategy" | Pages matching '":Albert Einstein" OR category:"wisdom" OR title:"test page: strategy" |
+| st-result | 2 total |  |
+| st-result | Kinosearch test page: truth & falsity |  |
+| st-result | Kinosearch test page: strategy |  |
+
+| *Comment* | Test case: Phrase Search: homogenous NOT searches |  |
+| st-search | title:"Kinosearch test page:" NOT title:"& falsity" | Pages matching 'title:"Kinosearch test page:" NOT title:"& falsity"' |
+| st-result | 2 total |  |
+| st-result | Kinosearch test page: strategy |  |
+| st-result | Kinosearch test page: politics |  |
+| st-search | title:"Kinosearch test page:" -title:"& falsity" | Pages matching 'title:"Kinosearch test page:" -title:"& falsity"' |
+| st-result | 2 total |  |
+| st-result | Kinosearch test page: strategy |  |
+| st-result | Kinosearch test page: politics |  |
+| st-search | title:"Kinosearch test page:" -="& falsity" | Pages matching 'title:"Kinosearch test page:" -title:"& falsity"' |
+| st-result | 2 total |  |
+| st-result | Kinosearch test page: strategy |  |
+| st-result | Kinosearch test page: politics |  |
+
+| *Comment* | Test case: Phrase Search: heterogenous NOT searches |  |
+| st-search | ":Sir Winston Churchill" NOT tag:"test_tag: speech" | Pages matching '":Sir Winston Churchill" NOT tag:"test_tag: speech"' |
+| st-result | 1 total |  |
+| st-result | Kinosearch test page: strategy |  |
+
+| *Comment* | Test case: Phrase Search COMPLETED |  |

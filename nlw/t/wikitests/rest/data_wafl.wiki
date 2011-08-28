@@ -1,0 +1,7 @@
+* Fixture: SocialRest
+
+| http-user-pass |                                        |
+| get            | /data/wafl/unformatted%3A%20%20abcdef  |
+| code-is        | 200                                    |
+| get            | /data/wafl/unformatted%3A%20%20abc/def |
+| code-is        | 200                                    |

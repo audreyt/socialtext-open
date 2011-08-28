@@ -1,0 +1,46 @@
+<html>
+<head>
+<title>03timeout</title>
+<script type="text/javascript" src="lib/JSAN.js" charset="UTF-8"></script>
+<script type="text/javascript" src="lib/Test/Builder.js" charset="UTF-8"></script>
+<script type="text/javascript" src="../lib/Widget/Lightbox.js"></script>
+</head>
+<body>
+<p>Sed, vulputate lorem blandit feugait consectetuer qui. Dolore at aliquam tincidunt adipiscing nisl, wisi iriure minim wisi commodo. Duis duis ipsum vulputate diam dolore nonummy wisi delenit nonummy ea te autem nonummy. Feugait amet ipsum praesent vel. Et feugait facilisis sed iusto consectetuer at ea esse feugiat eu. Feugait consequat adipiscing minim et consequat molestie? Dolore molestie dignissim praesent feugiat. Exerci molestie eu euismod lorem luptatum consectetuer ea vero praesent in ut minim nonummy facilisis. Nisl molestie delenit exerci ut iusto eu iriure wisi facilisis. Facilisi ut: et eu enim enim nonummy qui duis ipsum ex ut iusto vero eum! In minim adipiscing duis dolor eros. Lorem suscipit vero nibh eu. Feugiat odio; iriure molestie, sed, in euismod vulputate vulputate et. Duis vel amet quis duis sit facilisi diam veniam te facilisis lorem autem. Dolor nulla euismod qui ullamcorper accumsan et duis duis. Nostrud, at praesent consequat ut molestie consequat consequat tincidunt lobortis aliquip?</p>
+<p>Accumsan odio esse -- molestie ad et sit ut vulputate et. Vulputate vel magna; hendrerit vel hendrerit eros nulla wisi dolore tincidunt consequat lobortis. Consequat dolore facilisi molestie consectetuer volutpat nisl ut et odio nulla. Velit amet exerci tincidunt aliquam velit dolore veniam facilisi dolore. Facilisi in commodo esse, sit. Volutpat consequat qui enim: vero nonummy diam enim. Zzril eu dolor praesent augue, consequat exerci diam zzril ad tation euismod. In elit sit hendrerit tation ut quis dignissim odio. Nisl vel lorem elit luptatum lobortis facilisis dolor; luptatum enim. Elit quis adipiscing praesent dolore eum erat elit in tation nonummy at elit autem. Et tincidunt dolor duis eu ex ut nonummy. Sit commodo eu illum ullamcorper, in consectetuer in euismod, ad hendrerit te adipiscing. Eu adipiscing tation duis ea iriure qui. Aliquam at laoreet tation vulputate luptatum -- enim consequat ut tation praesent vel. Delenit dolore hendrerit minim sit laoreet. Nonummy ipsum feugiat vel euismod aliquip volutpat iriure et vel ut nisl, lobortis nonummy. Eu adipiscing et velit sit amet euismod commodo praesent dignissim. Et, elit dolor sed ut ad in quis qui in duis qui, esse. Et praesent tation tation lobortis erat. Hendrerit nibh magna nostrud, lobortis in ut facilisi augue. Esse ex duis te magna diam nisl ex! Duis praesent accumsan ut erat ut duis esse ipsum illum lobortis iusto!
+</p>
+<p>
+Vel wisi facilisis dolore amet hendrerit suscipit augue blandit. Delenit sit facilisi consectetuer amet; tincidunt iriure praesent elit. Elit duis sit duis ex tincidunt blandit eum ut hendrerit dignissim wisi feugiat, veniam iusto. Aliquip ut velit praesent vel ipsum augue. Ullamcorper consequat qui sit euismod tation elit. Nibh nulla diam; consequat molestie ut in. Commodo luptatum commodo; aliquam augue! Tation erat nonummy, ad elit! Enim dolore, odio nibh tation augue: praesent quis molestie dolore dolore: euismod veniam. Quis ipsum facilisi autem ut nisl duis, lorem. Lobortis vel dolor eros tincidunt nibh, aliquip sit augue, eu minim iusto vulputate, in? Wisi vel commodo veniam facilisi. Eros aliquam euismod hendrerit feugait iusto elit; duis et aliquam commodo lobortis. Autem luptatum ut accumsan quis facilisi vel at feugait minim ut at at aliquam. Duis aliquip lorem tation amet commodo lobortis ea aliquip volutpat qui tincidunt in ipsum vulputate. Luptatum duis amet in, accumsan aliquip dignissim enim hendrerit euismod volutpat nulla facilisis facilisi ad. Aliquip dignissim accumsan magna tincidunt nulla euismod luptatum dolore diam? Suscipit consequat iusto facilisi in consequat ut ut nibh.
+</p>
+<p>
+Nulla blandit ut ullamcorper lobortis ullamcorper. Volutpat exerci consequat tation minim ut erat, exerci euismod illum ad autem luptatum ut eum. Consequat laoreet feugait vero dolore. Dolor dignissim volutpat aliquam lobortis molestie commodo vel vel. Duis lobortis nulla dignissim magna facilisis at enim sed! Odio esse luptatum duis, ipsum molestie ut ad tation dolor nisl molestie dignissim ad consequat. Magna, facilisi esse dignissim dolore, dolor diam aliquam nulla hendrerit qui. Dolore aliquip delenit dignissim et, commodo consequat ex nostrud at illum ut vel in, augue. Ea consectetuer minim exerci feugait et. Lorem velit feugiat ea, zzril nibh augue at feugait dolor ipsum enim amet duis nisl. Duis quis iusto dolore amet euismod dolor dignissim amet dolore. Minim nonummy aliquam autem nostrud amet lobortis iusto, ex dolore hendrerit ad adipiscing sed adipiscing? Dolor iriure ipsum dolore dolor exerci, tation lorem magna; nulla eum laoreet. Feugiat tation dolore tincidunt dolor nibh facilisis? Lobortis tation vel nibh facilisis euismod. Enim feugiat facilisi diam lobortis, dolor dolore ad elit velit zzril minim luptatum, at consectetuer.
+
+</p>
+<pre id="test"></pre>
+
+<script type="text/javascript"><!--
+var t = new Test.Builder();
+t.plan({tests: 2});
+
+var box = Widget.Lightbox.show("<p id=\"testbox\">Hello world</p><p>This dialog box will disappear in about 5 seconds....</p><span id=\"countdown\">5</span>");
+
+var count=4;
+var e=document.getElementById("countdown");
+var i=setInterval(function() {
+       e.innerHTML = count; 
+       }, 1000);
+
+t.ok( document.getElementById("testbox") , "Hello world div");
+
+t.beginAsync();
+setTimeout( function() {
+        clearInterval(i);
+        box.hide();
+        t.ok( box.div.style.display == 'none' , "Hello world is gone");
+        t.endAsync();
+        }, 5000);
+
+//</script>
+</body>
+</html>
+

@@ -1,0 +1,9 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+use Socialtext::SQL qw/sql_execute/;
+
+sql_execute(q{DELETE FROM page_tag WHERE tag = 'Recent Changes'});
+
+exit 0;

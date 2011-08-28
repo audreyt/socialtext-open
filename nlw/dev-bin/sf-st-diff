@@ -1,0 +1,46 @@
+#!/usr/bin/env perl -w
+# @COPYRIGHT@
+
+# Determines differences between ST-based trunk and SF-based trunk
+
+use strict;
+use warnings;
+
+use Readonly;
+use File::HomeDir;
+
+Readonly my $DIFF_FLAGS => '-du';
+
+Readonly my $ST  => File::HomeDir->my_home . '/src/st/trunk/nlw';
+Readonly my $OSR  => File::HomeDir->my_home . '/src/st/apache-parsimony-merge/nlw';
+ 
+my $SOURCEDIR = $OSR;
+my $TARGETDIR = $ST;
+if ( @ARGV && ($ARGV[0] =~ /^-r/i) ) {
+    $SOURCEDIR = $ST;
+    $TARGETDIR = $OSR;
+}
+
+my @source_files = `dev-bin/diffable $SOURCEDIR`;
+chomp @source_files;
+my %source_files = map { ($_,1) } @source_files;
+
+my @target_files = `dev-bin/diffable $TARGETDIR`;
+chomp @target_files;
+my %target_files = map { ($_,1) } @target_files;
+
+my %common_files;
+for my $file ( keys %source_files ) {
+    if ( delete $target_files{$file} ) {
+        $common_files{$file} = 1;
+        delete $source_files{$file};
+    }
+}
+
+print "Only in $SOURCEDIR: $_\n" for sort keys %source_files;
+print "Only in $TARGETDIR: $_\n" for sort keys %target_files;
+
+for my $key ( sort keys %common_files ) {
+    my @args = ( 'diff', $DIFF_FLAGS, "$SOURCEDIR/$key", "$TARGETDIR/$key" );
+    my $rc = system( @args );
+}

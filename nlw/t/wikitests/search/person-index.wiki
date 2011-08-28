@@ -1,0 +1,178 @@
+* Fixture: Search
+
+| standard-test-setup |
+
+| Comment |  Test person indexing |
+
+| st-clear-jobs   |             |                                        |
+| set             | randy       | randy%%start_time%%@ken.socialtext.net |
+| create-user     | %%randy%%   | password                               | %%account%% |
+| set             | sandy       | sandy%%start_time%%@ken.socialtext.net |
+| create-user     | %%sandy%%   | password                               | %%account%% |
+| job-count       | PersonIndex | 2                                      |
+| st-process-jobs |             |                                        |
+| job-count       | PersonIndex | 0                                      |
+
+| Comment |  can search them? |
+| search-people | randy%%start_time%% | 1 |
+
+| Comment |  Change some data |
+| http-user-pass | %%randy%% | password |
+| post-json | /data/people/%%randy%% | {"first_name":"f%%start_time%%", "last_name":"l%%start_time%%", "gtalk_sn":"gtx%%start_time%%"} |
+| code-is   | 204                    |                                                                                                |
+| job-count       | PersonIndex | 1                                      |
+| st-process-jobs |             |                                        |
+| job-count       | PersonIndex | 0                                      |
+
+| http-user-pass | %%randy%% | password |
+| post-json | /data/people/%%randy%% | {"gtalk_sn":"gt%%start_time%%"} |
+| code-is   | 204                    |                                                                                                |
+| job-count       | PersonIndex | 1                                      |
+| st-process-jobs |             |                                        |
+| job-count       | PersonIndex | 0                                      |
+
+| Comment |  can search them? |
+| search-people | randy%%start_time%% | 1 |
+| search-people | f%%start_time%% | 1 |
+| search-people | l%%start_time%% | 1 |
+
+| Comment |  Search by gtalk works too |
+| search-people | gt%%start_time%% | 1 |
+
+| Comment |  Test UTF8 Characters |
+| post-json       | /data/people/%%randy%% | {"first_name":"Frëddy"} |
+| code-is         | 204                    |                          |
+| job-count       | PersonIndex            | 1                        |
+| st-process-jobs |                        |                          |
+| job-count       | PersonIndex            | 0                        |
+| search-people | Frëddy | 1 |
+
+
+| Comment |  UTF8 in a tag |
+| post-json       | /data/people/%%randy%%/tags | {"tag_name":"über"} |
+| code-is         | 204                         |                      |
+| job-count       | PersonIndex                 | 1                    |
+| st-process-jobs |                             |                      |
+| job-count       | PersonIndex                 | 0                    |
+
+| Comment |  UTF8 in a profile field |
+| post-json       | /data/people/%%randy%% | {"gtalk_sn":"haxør"} |
+| code-is         | 204                    |                       |
+| job-count       | PersonIndex            | 1                     |
+| st-process-jobs |                        |                       |
+| job-count       | PersonIndex            | 0                     |
+
+| Comment |  Changing a primary account re-indexes the user |
+| set | account2 | acct2%%start_time%% |
+| create-account | %%account2%% |
+| user-primary-account | %%randy%% | %%account2%% |
+| job-count       | PersonIndex            | 1                     |
+| st-process-jobs |                        |                       |
+| job-count       | PersonIndex            | 0                     |
+
+| Comment |  Changing a user's accounts re-indexes the user |
+
+| set                       | other_acct     | oa%%start_time%% |
+| create-account            | %%other_acct%% |                  |
+| set                       | other_wksp     | ow%%start_time%% |
+| create-workspace          | %%other_wksp%% | %%other_acct%%   |
+| add-member                | %%randy%%      | %%other_wksp%%   |
+| job-count                 | PersonIndex    | 1                |
+| st-process-jobs           |                |                  |
+| job-count                 | PersonIndex    | 0                |
+| add-workspace-admin       | %%randy%%      | %%other_wksp%%   |
+| job-count                 | PersonIndex    | 0                |
+| workspace-primary-account | %%other_wksp%% | %%account%%      |
+| job-count                 | PersonIndex    | 1                |
+| st-process-jobs           |                |                  |
+| job-count                 | PersonIndex    | 0                |
+| remove-member             | %%randy%%      | %%other_wksp%%   |
+| job-count                 | PersonIndex    | 1                |
+| st-process-jobs           |                |                  |
+| job-count                 | PersonIndex    | 0                |
+
+| Comment |  Changing a group's workspace & account re-index the group's users |
+
+| set                         | g1          | g1%%start_time%% |        |
+| create-group                | %%g1%%      | %%account%%      |        |
+| set                         | g1id        | %%group_id%%     |        |
+| add-user-to-group           | %%randy%%   | %%g1id%%         |        |
+| add-user-to-group           | %%sandy%%   | %%g1id%%         |        |
+| job-count                   | PersonIndex | 2                |        |
+| st-process-jobs             |             |                  |        |
+| job-count                   | PersonIndex | 0                |        |
+| add-group-to-workspace      | %%g1id%%    | %%other_wksp%%   | member |
+| job-count                   | PersonIndex | 2                |        |
+| st-process-jobs             |             |                  |        |
+| job-count                   | PersonIndex | 0                |        |
+| add-group-to-workspace      | %%g1id%%    | %%other_wksp%%   | workspace_admin  |
+| job-count                   | PersonIndex | 0                |        |
+
+| add-group-to-account      | %%g1id%%    | %%other_acct%% | member    |
+| job-count                 | PersonIndex | 2              |           |
+| st-process-jobs           |             |                |           |
+| job-count                 | PersonIndex | 0              |           |
+| add-group-to-account      | %%g1id%%    | %%other_acct%% | affiliate |
+| job-count                 | PersonIndex | 0              |           |
+| remove-group-from-account | %%g1id%%    | %%other_acct%% |           |
+| job-count                 | PersonIndex | 2              |           |
+| st-process-jobs           |             |                |           |
+| job-count                 | PersonIndex | 0              |           |
+
+
+| remove-group-from-workspace | %%g1id%%    | %%other_wksp%%   |        |
+| job-count                   | PersonIndex | 2                |        |
+| st-process-jobs             |             |                  |        |
+| job-count                   | PersonIndex | 0                |        |
+| remove-user-from-group      | %%randy%% | %%g1id%% | |
+| job-count                   | PersonIndex | 1                |        |
+| st-process-jobs             |             |                  |        |
+| job-count                   | PersonIndex | 0                |        |
+
+
+| Comment |  User A in acct A, wksp C, User B in acct B, wksp C, a can search for b |
+
+| set              | domain          | ken.socialtext.net         |           |
+| set              | usera           | a%%start_time%%@%%domain%% |           |
+| set              | userb           | b%%start_time%%@%%domain%% |           |
+| set              | accta           | acct-a%%start_time%%       |           |
+| set              | acctb           | acct-b%%start_time%%       |           |
+| create-account   | %%accta%%       |                            |           |
+| create-account   | %%acctb%%       |                            |           |
+| create-user      | %%usera%%       | passwd                     | %%accta%% |
+| create-user      | %%userb%%       | passwd                     | %%acctb%% |
+| set              | wkspc           | wkspc-%%start_time%%       |           |
+| create-workspace | %%wkspc%%       | %%account%%                |           |
+| add-member       | %%usera%%       | %%wkspc%%                  |           |
+| add-member       | %%userb%%       | %%wkspc%%                  |           |
+| job-count        | PersonIndex     | 2                          |           |
+| st-process-jobs  |                 |                            |           |
+| job-count        | PersonIndex     | 0                          |           |
+| http-user-pass   | %%usera%%       | passwd                     |           |
+| people-search    | email:%%userb%% | 1                          |           |
+| http-user-pass   | %%userb%%       | passwd                     |           |
+| people-search    | email:%%usera%% | 1                          |           |
+
+
+| Comment |  2 users in the group? |
+
+
+| Comment |  Tagging a user |
+
+| http-user-pass | %%randy%% | password |
+| post | /data/people/%%randy%%/tags | Content-Type=application/json | {"tag_name":"obamamama"} |
+| code-is | 204 |
+| job-count       | PersonIndex            | 1                     |
+| st-process-jobs |                        |                       |
+| job-count       | PersonIndex            | 0                     |
+
+
+| Comment |  This next test should come last |
+
+| Comment |  Deactivating a user makes them not searchable |
+| deactivate-user | %%randy%%       |   |
+| job-count       | PersonIndex     | 1 |
+| st-process-jobs |                 |   |
+| job-count       | PersonIndex     | 0 |
+| search-people   | f%%start_time%% | 0 |
+

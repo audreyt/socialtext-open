@@ -1,0 +1,43 @@
+| *Comment* | STARTING Test Case: Command Line LOCK PAGES |
+
+| *Comment* | STARTING Test Case: Command Line LOCK PAGES Setup Users and a workspace |  |
+| set | cli_user | `cli-%%start_time%%@ken.socialtext.net` |
+| set | cli_admin | `cli-admin-%%start_time%%@ken.socialtext.net` |
+| set | cmdline_workspace | clw_%%start_time%% |
+| st-admin | create-workspace --empty --name %%cmdline_workspace%% --title %%cmdline_workspace%% | qr/A new workspace named "%%cmdline_workspace%%" was created/ism |
+| st-admin | create-user --email %%cli_user%% --password wikicli --first-name Wiki --last-name CLI | qr/A new user with the username "%%cli_user%%" was created/ism |
+| st-admin | create-user --email %%cli_admin%% --password wikicli --first-name Wiki --last-name CLI | qr/A new user with the username "%%cli_admin%%" was created/ism |
+| st-admin | add-member --email %%cli_user%% --workspace %%cmdline_workspace%% | qr/%%cli_user%% now has the role of 'member' in the %%cmdline_workspace%% workspace/ism |
+| st-admin | add-member --email %%cli_admin%% --workspace %%cmdline_workspace%% | qr/%%cli_admin%% now has the role of 'member' in the %%cmdline_workspace%% workspace/ism |
+| st-admin | add-workspace-admin --email %%cli_admin%% --workspace %%cmdline_workspace%% | qr/%%cli_admin%% is now a workspace admin of the %%cmdline_workspace%% workspace/ism |
+| st-admin | update-page --email %%email%% --workspace %%cmdline_workspace%% --page "Lockme Page 1 %%start_time%%" < %%wikitest_client_files%%wikitest.txt | The "Lockme Page 1 %%start_time%%" page has been created. |
+| st-admin | update-page --email %%email%% --workspace %%cmdline_workspace%% --page "Lockme Page 2 %%start_time%%" < %%wikitest_client_files%%wikitest.txt | The "Lockme Page 2 %%start_time%%" page has been created. |
+
+can-lock-pages
+lock-page
+unlock-page
+locked-pages
+
+| *Comment* | STARTING Test Case: Command Line LOCK PAGES Now one can lock to start |  |
+| st-admin | can-lock-pages --email %%cli_user%% --workspace %%cmdline_workspace%% | User '%%cli_user%%' cannot lock a page. |
+| st-admin | can-lock-pages --email %%cli_admin%% --workspace %%cmdline_workspace%% | User '%%cli_admin%%' cannot lock a page. |
+
+| *Comment* | STARTING Test Case: Command Line LOCK PAGES Make workspace lockable |  |
+| st-admin | set-workspace-config --workspace %%cmdline_workspace%% allows_page_locking 1 | The workspace config for %%cmdline_workspace%% has been updated. |
+| st-admin | can-lock-pages --email %%cli_user%% --workspace %%cmdline_workspace%% | User '%%cli_user%%' cannot lock a page. |
+| st-admin | can-lock-pages --email %%cli_admin%% --workspace %%cmdline_workspace%% | User '%%cli_admin%%' can lock a page. |
+| st-admin | lock-page --workspace %%cmdline_workspace%% --page lockme_page_1_%%start_time%% | Page 'Lockme Page 1 %%start_time%%' in workspace '%%cmdline_workspace%%' has been locked. |
+| st-admin | lock-page --workspace %%cmdline_workspace%% --page lockme_page_2_%%start_time%% | Page 'Lockme Page 2 %%start_time%%' in workspace '%%cmdline_workspace%%' has been locked. |
+| st-admin | locked-pages --workspace %%cmdline_workspace%% | Lockme Page 1 %%start_time%% |
+| st-admin | locked-pages --workspace %%cmdline_workspace%% | Lockme Page 2 %%start_time%% |
+| st-admin | unlock-page --workspace %%cmdline_workspace%% --page lockme_page_1_%%start_time%% | Page 'Lockme Page 1 %%start_time%%' in workspace '%%cmdline_workspace%%' has been unlocked. |
+
+| *Comment* | STARTING Test Case: Command Line LOCK PAGES Make workspace unlockable |  |
+| st-admin | set-workspace-config --workspace %%cmdline_workspace%% allows_page_locking 0 | The workspace config for %%cmdline_workspace%% has been updated. |
+| st-admin | can-lock-pages --email %%cli_user%% --workspace %%cmdline_workspace%% | User '%%cli_user%%' cannot lock a page. |
+| st-admin | can-lock-pages --email %%cli_admin%% --workspace %%cmdline_workspace%% | User '%%cli_admin%%' cannot lock a page. |
+
+| *Comment* | STARTING Test Case: Command Line LOCK PAGES Teardown |  |
+| st-admin | delete-workspace --w %%cmdline_workspace%% --no-export | has been deleted |
+
+| *Comment* | STARTING Test Case: Command Line LOCK PAGES COMPLETED |  |

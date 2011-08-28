@@ -1,0 +1,174 @@
+Test case for `/data/workspaces`; the Workspace list
+
+* Fixture: SocialRest
+
+| standard-test-setup |
+| set | wksp | workspace_%%start_time%% |
+
+| *Comment* | Can't query a Workspace that doesn't exist |
+| GET       | /data/workspaces/%%wksp%%                  |
+| code-is   | 404                                        |
+
+| *Comment* | Workspace name validation                               |                  |
+| GET       | /data/workspaces/aa                                     | text/html        |
+| code-is   | 400                                                     |                  |
+| GET       | /data/workspaces/aa                                     | application/json |
+| code-is   | 400                                                     |                  |
+| body-like | Workspace name must be between 3 and 30 characters long |                  |
+
+| *Comment*        | Get list of Workspaces that are visible to a User |                              |             |
+| set              | peon                                              | peon_%%start_time%%@q.q      |             |
+| create-user      | %%peon%%                                          | password                     | %%account%% |
+| set              | ws_one                                            | peon_ws_one_%%start_time%%   |             |
+| set              | ws_two                                            | peon_ws_two_%%start_time%%   |             |
+| set              | ws_three                                          | peon_ws_three_%%start_time%% |             |
+| create-workspace | %%ws_one%%                                        | %%account%%                  |             |
+| create-workspace | %%ws_two%%                                        | %%account%%                  |             |
+| create-workspace | %%ws_three%%                                      | %%account%%                  |             |
+| add-member       | %%peon%%                                          | %%ws_one%%                   |             |
+| add-member       | %%peon%%                                          | %%ws_two%%                   |             |
+| http-user-pass   | %%peon%%                                          | password                     |             |
+| GET              | /data/workspaces                                  | application/json             |             |
+| code-is          | 200                                               |                              |             |
+| body-like        | "name":"%%ws_one%%"                               |                              |             |
+| body-like        | "name":"%%ws_two%%"                               |                              |             |
+| body-like        | "id":                                             |                              |             |
+| body-like        | "workspace_id":                                   |                              |             |
+| body-like        | "permission_set":                                 |                              |             |
+| body-unlike      | "name":"%%ws_three%%"                             |                              |             |
+
+## Setup so we can test POST
+| set                | non_default_acct     | non-default%%start_time%%                       |                      |
+| create-account     | %%non_default_acct%% |                                                 |                      |
+| set                | non_default_acct_id  | %%account_id%%                                  |                      |
+| set                | bus_admin            | business-admin%%start_time%%@ken.socialtext.net |                      |
+| create-user        | %%bus_admin%%        | password                                        | %%non_default_acct%% |
+| set-business-admin | %%bus_admin%%        | 1                                               |                      |
+| set                | bus_admin_id         | %%user_id%%                                     |                      |
+| set                | auth_user            | auth-user-%%start_time%%@ken.socialtext.net     |                      |
+| create-user        | %%auth_user%%        | password                                        |                      |
+| set                | auth_user_id         | %%user_id%%                                     |                      |
+| set                | violin               | violin-ws-%%start_time%%                        |                      |
+| set                | viola                | viola-ws-%%start_time%%                         |                      |
+| set                | cello                | cello-ws-%%start_time%%                         |                      |
+| set                | double_bass          | double-bass-ws-%%start_time%%                   |                      |
+| set                | octo_bass            | octo-bass-ws-%%start_time%%                     |                      |
+| set                | trumpet              | trumpet-%%start_time%%                          |                      |
+| create-group       | %%trumpet%%          |                                                 |                      |
+| set                | trumpet_id           | %%group_id%%                                    |                      |
+| add-user-to-group  | %%auth_user%%        | %%trumpet_id%%                                  | admin                |
+| set                | tuba                 | tuba-ws-%%start_time%%                          |                      |
+| set                | sousaphone           | sousaphone-ws-%%start_time%%                    |                      |
+
+## POST to a workspace, Using an account_id arg.
+| *Comment*      | POST to a workspace, Using an account_id arg |                                                                              |
+| http-user-pass | %%bus_admin%%                                | password                                                                     |
+| POST-json      | /data/workspaces                             | {"name":"%%violin%%","title":"Violin","account_id":"%%default_account_id%%"} |
+| code-is        | 201                                          |                                                                              |
+| GET-json       | /data/workspaces?q=all                       |                                                                              |
+| code-is        | 200                                          |                                                                              |
+| json-parse |
+| json-like |  [{"permission_set":"member-only", "group_count":"0", "name":"%%violin%%", "account_id":"%%default_account_id%%", "title":"Violin", "user_count":"1"}] |
+
+## POST to a workspace, Using the creator's account_id
+| *Comment* | POST to a workspace, Using the creator's account_id |                                      |
+| POST-json | /data/workspaces                                    | {"name":"%%viola%%","title":"Viola"} |
+| code-is   | 400                                                 |                                      |
+| POST-json | /data/workspaces                                    | {"name":"%%viola%%","title":"Viola","account_id":"%%non_default_acct_id%%"} |
+| code-is   | 201                                                 |                                      |
+| GET-json  | /data/workspaces?q=all                              |                                      |
+| code-is   | 200                                                 |                                      |
+| json-parse |
+| json-like |  [{"permission_set":"member-only", "group_count":"0", "name":"%%viola%%", "account_id":"%%non_default_acct_id%%", "title":"Viola", "user_count":"1"}] |
+
+## POST, authenticated user cannot create a workspace in an account they don't have access to
+| *Comment*      | POST, authenticated user, unauthorized account |                                                                             |
+| http-user-pass | %%auth_user%%                                  | password                                                                    |
+| POST-json      | /data/workspaces                               | {"name":"%%cello%%","title":"Cello","account_id":"%%non_default_acct_id%%"} |
+| code-is        | 401                                            |                                                                             |
+| body-like      | user cannot access account                     |                                                                             |
+
+## POST, authenticated user
+| *Comment*      | POST, authenticated user |                                      |
+| http-user-pass | %%auth_user%%            | password                             |
+| POST-json      | /data/workspaces         | {"name":"%%cello%%","title":"Cello","account_id":"%%default_account_id%%"} |
+| code-is        | 201                      |                                      |
+
+## POST, create multiple workspaces
+| *Comment* | POST, create multiple workspaces |                                                                                                 |
+| POST-json | /data/workspaces                 | [{"name":"%%double_bass%%","title":"Double Bass","account_id":"%%default_account_id%%"},{"name":"%%octo_bass%%","title":"Octo Bass","account_id":"%%default_account_id%%"}] |
+| code-is   | 201                              |                                                                                                 |
+
+## POST, create workspace, add a group
+| *Comment* | POST, create workspace, add a group |                                                                           |
+| POST-json | /data/workspaces                    | {"name":"%%tuba%%","title":"Tuba","groups":{"group_id":"%%trumpet_id%%"},"account_id":"%%default_account_id%%"} |
+| code-is   | 201                                 |                                                                           |
+| GET-json  | /data/workspaces                    |                                                                           |
+| code-is   | 200                                 |                                                                           |
+| json-parse |
+| json-like |  [{"permission_set":"member-only", "group_count":"1", "name":"%%tuba%%", "account_id":"%%default_account_id%%", "title":"Tuba", "user_count":"1"}] |
+
+## POST, create workspace using invalid permission_set param
+| *Comment* | POST, create workspace using permission_set param |
+| POST-json | /data/workspaces | {"name":"bad-workspace","title":"Bad Bad Bad","permission_set":"ENOSUCHSET","account_id":"%%default_account_id%%"} |
+| code-is | 400 |
+
+## POST, create workspace using valid permission_set param
+| *Comment* | POST, create workspace using permission_set param |
+| POST-json | /data/workspaces | {"name":"%%sousaphone%%","title":"Sousaphone Hero","permission_set":"public","account_id":"%%default_account_id%%"} |
+| code-is      | 201                             |        |
+| GET-json     | /data/workspaces/%%sousaphone%% |        |
+| code-is      | 200                             |        |
+| json-parse   |                                 |        |
+| json-path-is | $.permission_set                | public |
+
+# Minimal interface
+| *Comment*   | GET minimal                |
+| GET-json    | /data/workspaces?minimal=1 |
+| code-is     | 200                        |
+| body-like   | %%tuba%%                   |
+| body-like   | %%cello%%                  |
+| body-like   | %%octo_bass%%              |
+| body-like   | %%double_bass%%            |
+| body-like   | workspace_id               |
+| body-like   | name                       |
+| body-like   | account_id                 |
+| body-like   | title                      |
+| body-like   | default                    |
+| body-like   | uri                        |
+| body-unlike | group_count                |
+| body-unlike | modified_time              |
+| body-unlike | "id"                       |
+| body-unlike | user_count                 |
+
+## Permission Set filtering
+| set                | perms_user     | perms-user%%start_time%%@ken.socialtext.net |             |
+| create-user        | %%perms_user%% | password                                    | %%account%% |
+| set                | private        | private-%%start_time%%                      |             |
+| create-workspace   | %%private%%    | %%account%%                                 |             |
+| set                | private_id     | %%workspace_id%%                            |             |
+| add-member         | %%perms_user%% | %%private%%                                 | admin       |
+| set                | public         | public-%%start_time%%                       |             |
+| create-workspace   | %%public%%     | %%account%%                                 |             |
+| set                | public_id      | %%workspace_id%%                            |             |
+| set-ws-permissions | %%public%%     | public                                      |             |
+| add-member         | %%perms_user%% | %%public%%                                  | admin       |
+
+| http-user-pass | %%perms_user%% | password |
+
+## GET-json error when permission_set is invalid
+| GET-json | /data/workspaces?permission_set=ENOSUCHSET |
+| code-is  | 500                                        |
+
+## GET-json returns proper results with permission_set param
+| GET-json        | /data/workspaces?permission_set=member-only |                |
+| code-is         | 200                                         |                |
+| json-parse      |                                             |                |
+| json-array-size | 1                                           |                |
+| json-path-is    | $[0].id                                     | %%private_id%% |
+
+## GET-json, using a minimal param ignores a permission_set param
+| GET-json        | /data/workspaces?minimal=1;permission_set=member-only |
+| code-is         | 200                                                   |
+| json-parse      |                                                       |
+| json-array-size | 2                                                     |

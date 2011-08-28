@@ -1,0 +1,30 @@
+<html>
+<head>
+<title>08shake</title>
+<script type="text/javascript" src="lib/JSAN.js" charset="UTF-8"></script>
+<script type="text/javascript" src="lib/Test/Builder.js" charset="UTF-8"></script>
+<script type="text/javascript" src="lib/prototype.js"></script>
+<script type="text/javascript" src="lib/effects.js"></script>
+<script type="text/javascript" src="../lib/Widget/Lightbox.js"></script>
+</head>
+<body>
+<p>Hello</p>
+
+<pre id="test"></pre>
+</body>
+<script type="text/javascript"><!--
+JSAN.use("Effect.RoundedCorners");
+
+var t = new Test.Builder();
+t.plan({tests: 1});
+
+var box = new Widget.Lightbox();
+box.content("<p id=\"testbox\">Hello world</p><p>Click grey background to close this box</p><p>Lobortis, qui facilisis illum magna nibh elit consequat iusto esse eum, delenit odio; quis. Consequat ullamcorper facilisis augue et consectetuer, nonummy blandit lorem? Vel consequat nisl duis diam facilisi nulla iusto ut luptatum eros zzril dolore. Exerci praesent odio in consequat esse ipsum nonummy autem, quis consectetuer quis adipiscing esse! Volutpat, dolore, illum facilisis ut; tincidunt aliquam eum tation diam aliquip esse. Ullamcorper nisl duis sit, tation -- eum, adipiscing vel molestie at suscipit luptatum enim velit. Enim lorem commodo vel, diam dolore blandit nisl amet. Sed tincidunt iriure at eros quis.</p>");
+box.effects('Shake');
+box.show();
+
+t.ok( document.getElementById("testbox") , "Hello world div");
+//--></script>
+
+</html>
+

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+
+# Strip off the path info to find the name of this script
+SCRIPT_NAME=`perl -e 'my $n = shift; $n =~ s#.+/##; print $n' $0`
+
+# Use the refactored column adding code
+MIG_DIR=`perl -MSocialtext::Migration -le 'print Socialtext::Migration::migration_script_dir'`
+$MIG_DIR/add-column/$SCRIPT_NAME Workspace cascade_css boolean "'t'"
+
+# make sure anyone with the default socialtext skin (st) has our new value set to false
+SQL="UPDATE \"Workspace\" SET \"cascade_css\" = 'f' WHERE \"skin_name\" <> 'st'";
+
+echo $SQL;
+psql -U $DB_USER -d $DB -t -c "$SQL"

@@ -1,0 +1,103 @@
+# Paths
+
+data_directory = '/var/lib/postgresql/9.0/main'
+hba_file = '/etc/postgresql/9.0/main/pg_hba.conf'
+ident_file = '/etc/postgresql/9.0/main/pg_ident.conf'
+external_pid_file = '/var/run/postgresql/9.0-main.pid'
+
+# Connection
+
+[% IF config.pg_hot_role == 'master' %]
+  listen_address = '*'
+  ssl = true
+  #ssl_ciphers = 'ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH'
+[% ELSE %]
+  listen_addresses = 'localhost'
+  ssl = false
+[% END %]
+
+unix_socket_directory = '/var/run/postgresql'
+port = 5432
+max_connections = [% config.pg_max_connections %]
+
+# Memory
+
+shared_buffers = '[% config.pg_shared_buffers %]'
+temp_buffers = '[% config.pg_temp_buffers %]'
+work_mem = '[% config.pg_work_mem %]'
+maintenance_work_mem = '[% config.pg_maintenance_work_mem %]'
+
+# Disk
+
+effective_io_concurrency = [% config.pg_effective_io_concurrency %]
+
+# WAL
+
+[% IF config.pg_hot_role == 'master' %]
+  wal_level = 'hot_standby'
+[% ELSIF config.pg_archive %]
+  wal_level = 'archive'
+[% ELSE %]
+  wal_level = 'minimal'
+[% END %]
+
+[% IF config.pg_archive %]
+  archive_mode    = on
+  archive_command = '/usr/share/libsocialtext-appliance-perl/pgbackup/wal-archive "%p" "%f"'
+  archive_timeout = '[% config.pg_archive_timeout %]'
+[% ELSE %]
+  archive_mode    = off
+[% END %]
+
+# WAL tuning
+
+wal_buffers = [% config.pg_wal_buffers %]
+checkpoint_segments = [% config.pg_checkpoint_segments %]
+checkpoint_timeout = [% config.pg_checkpoint_timeout %]
+checkpoint_completion_target = [% config.pg_checkpoint_completion_target %]
+
+# Streaming Replication 
+
+[% IF config.pg_hot_role == 'master' %]
+  max_wal_senders = [% config.pg_max_wal_senders %]
+  wal_sender_delay = 200ms
+[% END -%]
+
+# Standby
+
+[% IF config.pg_hot_role == 'standby' %]
+  hot_standby = on
+  max_standby_archive_delay = [% config.pg_max_standby_archive_delay %]
+  max_standby_streaming_delay = [% config.pg_max_standby_streaming_delay %]
+[% ELSE %]
+  hot_standby = off
+[% END %]
+
+# Planner
+
+cpu_index_tuple_cost = [% config.pg_cpu_index_tuple_cost %]
+cpu_operator_cost = [% config.pg_cpu_operator_cost %]
+cpu_tuple_cost = [% config.pg_cpu_tuple_cost %]
+effective_cache_size = '[% config.pg_effective_cache_size %]'
+random_page_cost = [% config.pg_random_page_cost %]
+seq_page_cost = [% config.pg_seq_page_cost %]
+
+# Logging
+
+log_line_prefix = '%m ' # %m = timestamp w/ ms, %t = timestamp w/o ms
+log_statement = 'none' # enable ONLY for debugging
+
+# Stats
+
+default_statistics_target = [% config.pg_default_statistics_target %]
+track_activities = on
+track_counts = on
+track_functions = none
+
+# Clients
+
+datestyle = 'iso, mdy'
+lc_messages = 'C'
+lc_monetary = 'C'
+lc_numeric = 'C'
+lc_time = 'C'

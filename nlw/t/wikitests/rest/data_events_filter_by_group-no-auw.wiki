@@ -1,0 +1,42 @@
+* Fixture: SocialRest
+
+| standard-test-setup |
+
+| set                      | auw         | the-auw-%%start_time%% |
+| create-workspace         | %%auw%%     | %%account%%            |
+| add-account-to-workspace | %%account%% | %%auw%%                |
+
+| st-clear-events |
+
+| Comment | make an edit in both workspaces |
+
+| edit_page | %%auw%%       | some_page  | some page content  |
+| edit_page | %%workspace%% | other_page | other page content |
+
+| Comment | retrieve feed, expect just normal workspace's event |
+
+| GET-json        | /data/events?group_id=%%group_id%% |               |
+| code-is         | 200                                |               |
+| json-parse      |                                    |               |
+| json-array-size | 1                                  |               |
+| json-path-is    | $[0].event_class                   | page          |
+| json-path-is    | $[0].page.workspace_name           | %%workspace%% |
+| json-path-is    | $[0].page.id                       | other_page    |
+
+| Comment | make the group a deliberate admin of the auw |
+
+| add-group-to-workspace | %%group_id%% | %%auw%% | admin |
+
+| Comment | retrieve feed, expect both events |
+
+| GET-json        | /data/events?group_id=%%group_id%% |               |
+| code-is         | 200                                |               |
+| json-parse      |                                    |               |
+| json-array-size | 3                                  |               |
+| json-path-is    | $[0].event_class                   | group         |
+| json-path-is    | $[1].event_class                   | page          |
+| json-path-is    | $[1].page.workspace_name           | %%workspace%% |
+| json-path-is    | $[1].page.id                       | other_page    |
+| json-path-is    | $[2].event_class                   | page          |
+| json-path-is    | $[2].page.workspace_name           | %%auw%%       |
+| json-path-is    | $[2].page.id                       | some_page     |

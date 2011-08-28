@@ -1,0 +1,11 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+my $setting = `/usr/sbin/st-appliance-config get solr_heap`;
+if ($setting =~ /The solr_heap config is set to '(\d+)'/ && $1 >= 384) {
+    print "solr_heap is sufficiently large\n";
+    exit 0;
+}
+print "solr_heap didn't get set correctly\n";
+exit 1;

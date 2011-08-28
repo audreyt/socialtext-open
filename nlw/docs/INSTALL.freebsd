@@ -1,0 +1,224 @@
+INSTALL.freebsd -- FreeBSD-specific notes for Socialtext Open
+
+@COPYRIGHT@
+
+When running configure, Jason Crome uses the following settings:
+
+    $ ./configure \
+        --confdir=/usr/local/etc/socialtext \
+        --db-user=pgsql \
+        --httpd=/usr/local/sbin \
+        --httpd_confdir=/usr/local/etc/apache \
+        --httpd_lockdir=/var/run \
+        --httpd_logdir=/var/log \
+        --httpd_piddir=/var/run \
+        --init-d=/usr/local/etc/rc.d \
+        --root-group=wheel \
+        --sharedir=/usr/local/share/nlw \
+        --st-group=www \
+        --st-user=www \
+        --webroot=/usr/local/www/data \
+        --ssldir=/usr/local/etc/apache/ssl.crt \
+
+These settings should work with the default settings for the ports
+installed above.
+
+Some other things to keep in mind:
+
+- Use gmake, not make.  FreeBSD's make chokes during the make test
+stage, and does not run any of the tests.
+
+- FreeBSD's cp is different than GNU's cp.  I had to change cp -r in
+the makefile to cp -R.
+
+- Make sure to install wv before starting the Socialtext install, or
+indexing will not be able to read from Word documents.
+
+- Make sure you have the following in your /etc/rc.conf, else Apache
+and Postgres won't run for you:
+
+    apache_enable="YES"
+    postgresql_enable="YES"
+
+These ports are necessary for building Socialtext:
+
+    ImageMagick-6.2.5.5_3 (or else image resizing won't work)
+    apache+mod_ssl-1.3.34+2.8.25_3
+    gmake-3.80_2
+    libgsf-1.13.3_1
+    libxml2-2.6.23_1
+    mod_perl-1.29_1
+    perl-5.8.8
+    postgresql-server-8.1.3
+    sudo-1.6.8.12_1
+
+
+The following modules packages of CPAN modules that Socialtext Open needs.
+Installing via the package system is usually much faster than through
+the CPAN shell.  We recommend installing these packages before starting
+the main configure and build process.
+
+    bsdpan-Algorithm-Diff-1.1902
+    bsdpan-Apache-Reload-0.07
+    bsdpan-Apache-Session-1.81
+    bsdpan-Apache-Session-Wrapper-0.31
+    bsdpan-Apache-SubProcess-0.03
+    bsdpan-Apache-Test-1.28
+    bsdpan-AppConfig-1.63
+    bsdpan-Archive-Extract-0.12
+    bsdpan-Archive-Tar-1.30
+    bsdpan-Archive-Zip-1.16
+    bsdpan-Bit-Vector-Minimal-1.3
+    bsdpan-CPAN-1.87
+    bsdpan-CPANPLUS-0.072
+    bsdpan-Cache-Cache-1.05
+    bsdpan-Carp-Assert-0.18
+    bsdpan-Class-Accessor-0.25
+    bsdpan-Class-Container-0.12
+    bsdpan-Class-Data-Inheritable-0.05
+    bsdpan-Class-ErrorHandler-0.01
+    bsdpan-Class-Factory-Util-1.6
+    bsdpan-Class-Field-0.12
+    bsdpan-Class-Inspector-1.16
+    bsdpan-Class-Singleton-1.03
+    bsdpan-Class-Virtual-0.05
+    bsdpan-Compress-Zlib-1.42
+    bsdpan-Crypt-SSLeay-0.51
+    bsdpan-DBD-Pg-1.49
+    bsdpan-DBI-1.52
+    bsdpan-DB_File-Lock-0.05
+    bsdpan-Data-OptList-0.101
+    bsdpan-Data-UUID-0.14
+    bsdpan-Date-Range-1.40
+    bsdpan-Date-Simple-3.02
+    bsdpan-DateTime-0.34
+    bsdpan-DateTime-Format-Pg-0.13
+    bsdpan-DateTime-Format-Strptime-1.0700
+    bsdpan-DateTime-Format-W3CDTF-0.04
+    bsdpan-DateTime-Locale-0.22
+    bsdpan-Devel-Cycle-1.07
+    bsdpan-Devel-StackTrace-1.13
+    bsdpan-Devel-Symdump-2.0602
+    bsdpan-Digest-SHA-5.43
+    bsdpan-Digest-SHA1-2.11
+    bsdpan-Email-Abstract-2.131
+    bsdpan-Email-Address-1.870
+    bsdpan-Email-Date-1.101
+    bsdpan-Email-MIME-1.851
+    bsdpan-Email-MIME-ContentType-1.01
+    bsdpan-Email-MIME-Creator-1.45
+    bsdpan-Email-MIME-Encodings-1.3
+    bsdpan-Email-MIME-Modifier-1.43
+    bsdpan-Email-MessageID-1.35
+    bsdpan-Email-Send-2.171
+    bsdpan-Email-Simple-1.980
+    bsdpan-Email-Simple-Creator-1.41
+    bsdpan-Email-Valid-0.176
+    bsdpan-Error-0.17003
+    bsdpan-Exception-Class-1.23
+    bsdpan-ExtUtils-MakeMaker-6.30
+    bsdpan-Feed-Find-0.06
+    bsdpan-File-Copy-Recursive-0.25
+    bsdpan-File-CounterFile-1.04
+    bsdpan-File-Fetch-0.08
+    bsdpan-File-Find-Rule-0.30
+    bsdpan-File-HomeDir-0.58
+    bsdpan-File-Slurp-9999.12
+    bsdpan-File-Temp-0.17
+    bsdpan-File-Which-0.05
+    bsdpan-File-chdir-0.06
+    bsdpan-Filesys-Df-0.92
+    bsdpan-HTML-FillInForm-1.06
+    bsdpan-HTML-PrettyPrinter-0.03
+    bsdpan-HTML-Tree-3.21
+    bsdpan-HTTP-BrowserDetect-0.98
+    bsdpan-IO-All-0.35
+    bsdpan-IO-Socket-SSL-0.999
+    bsdpan-IO-String-1.08
+    bsdpan-IO-Zlib-1.04
+    bsdpan-IO-stringy-2.110
+    bsdpan-IPC-Cmd-0.24
+    bsdpan-IPC-Run-0.80
+    bsdpan-Image-Size-3.0
+    bsdpan-JSON-1.07
+    bsdpan-LWP-Authen-Wsse-0.05
+    bsdpan-Lingua-PT-Stemmer-0.01
+    bsdpan-Lingua-Stem-0.82
+    bsdpan-Lingua-Stem-Fr-0.02
+    bsdpan-Lingua-Stem-It-0.01
+    bsdpan-Lingua-Stem-Ru-0.01
+    bsdpan-Lingua-Stem-Snowball-Da-1.01
+    bsdpan-Lingua-Stem-Snowball-No-1
+    bsdpan-Lingua-Stem-Snowball-Se-1.01
+    bsdpan-Linux-MemInfo-0.03
+    bsdpan-List-MoreUtils-0.21
+    bsdpan-Locale-Maketext-Simple-0.17
+    bsdpan-Log-Message-0.01
+    bsdpan-MIME-Types-1.17
+    bsdpan-MIME-tools-5.420
+    bsdpan-MLDBM-2.01
+    bsdpan-MailTools-1.74
+    bsdpan-Module-CoreList-2.07
+    bsdpan-Module-Load-0.10
+    bsdpan-Module-Load-Conditional-0.12
+    bsdpan-Module-Loaded-0.01
+    bsdpan-Module-Pluggable-3.1
+    bsdpan-Net-Telnet-3.03
+    bsdpan-Net_SSLeay.pm-1.30
+    bsdpan-Number-Compare-0.01
+    bsdpan-Object-Accessor-0.21
+    bsdpan-Package-Constants-0.01
+    bsdpan-PadWalker-1.0
+    bsdpan-Params-Check-0.25
+    bsdpan-Params-Util-0.17
+    bsdpan-Params-Validate-0.86
+    bsdpan-PathTools-3.19
+    bsdpan-Pod-Coverage-0.18
+    bsdpan-Pod-Escapes-1.04
+    bsdpan-Pod-Simple-3.04
+    bsdpan-REST-Application-0.95
+    bsdpan-Readonly-1.03
+    bsdpan-Readonly-XS-1.04
+    bsdpan-Return-Value-1.301
+    bsdpan-Spiffy-0.30
+    bsdpan-Sub-Exporter-0.970
+    bsdpan-Sub-Install-0.922
+    bsdpan-Sub-Uplevel-0.13
+    bsdpan-Template-Toolkit-2.15
+    bsdpan-Term-ReadLine-Perl-1.0302
+    bsdpan-TermReadKey-2.30
+    bsdpan-Test-Base-0.52
+    bsdpan-Test-Deep-0.095
+    bsdpan-Test-Exception-0.21
+    bsdpan-Test-Harness-2.62
+    bsdpan-Test-Manifest-1.14
+    bsdpan-Test-Memory-Cycle-1.04
+    bsdpan-Test-NoWarnings-0.082
+    bsdpan-Test-Output-0.10
+    bsdpan-Test-Pod-1.26
+    bsdpan-Test-Pod-Coverage-1.08
+    bsdpan-Test-Program-0.04
+    bsdpan-Test-Tester-0.103
+    bsdpan-Text-Autoformat-1.13
+    bsdpan-Text-Bastardize-0.06
+    bsdpan-Text-Flowed-0.14
+    bsdpan-Text-German-0.06
+    bsdpan-Text-Glob-0.07
+    bsdpan-Text-Reform-1.11
+    bsdpan-Tie-Array-Sorted-1.41
+    bsdpan-Tie-IxHash-1.21
+    bsdpan-Time-Piece-1.09
+    bsdpan-Time-Piece-Range-1.2
+    bsdpan-TimeDate-1.16
+    bsdpan-URI-Fetch-0.08
+    bsdpan-XML-Atom-0.23
+    bsdpan-XML-Feed-0.12
+    bsdpan-XML-LibXML-1.60
+    bsdpan-XML-LibXML-Common-0.13
+    bsdpan-XML-NamespaceSupport-1.09
+    bsdpan-XML-Parser-2.34
+    bsdpan-XML-RSS-1.10
+    bsdpan-XML-SAX-0.14
+    bsdpan-YAML-0.62
+    bsdpan-libapreq-1.33
+    bsdpan-version-0.6701

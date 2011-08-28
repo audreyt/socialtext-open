@@ -1,0 +1,12 @@
+| *Comment* | Test Case: Replies Include. %%i%% |  |
+
+| set_default | reply_prefix | Reply from %%my_user%% |
+| set | reply_signal | %%reply_prefix%%-%%i%% |
+
+| *Comment* | Test Case: Replies Include. Signal %%reply_signal%% |  |
+| st-send-reply | %%reply_signal%% |  |
+
+| *Comment* | Test Case: Replies Include. Wait for the reply to appear |  |
+| wait_for_text_present_ok | %%reply_signal%% | 30000 |
+
+| *Comment* | Test Case: Replies Include %%i%% COMPLETED |  |

@@ -1,0 +1,100 @@
+| *Comment* | Test Case: Group Directory |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Group Directory SETUP |  |  |
+| st-setup-a-group | 1 | 1 | 1 |
+| st-logoutin | %%group_user%% | %%password%% |  |
+
+| *Comment* | Test Case: Group Directory Go to page |  |
+| wait_for_element_present_ok | link=Group Directory | 30000 |
+| click_and_wait | link=Group Directory |  |
+| wait_for_element_visible_ok | st-create-group | 30000 |
+
+| *Comment* | Test Case: Group Directory Verify Directory |  |
+| st-name-widget | 1 | my_groups |
+| st-widget-title-like | my_groups | My Groups |
+| st-select-widget-frame | my_groups |  |
+| wait_for_element_visible_ok | link=%%group_name%% | 30000 |
+| text_like | //body | %%group_name%% (private) |
+| select-frame | relative=parent |  |
+| st-name-widget | 2 | available_groups |
+| st-widget-title-like | available_groups | All Available Groups |
+
+| *Comment* | Test Case: Group Directory Create one private, two self-join groups in the account SETUP |  |
+| set | alpha_first_selfjoin | alpha-selfjoin-%%start_time%% |
+| set | alpha_second_selfjoin | second-selfjoin%%start_time%% |
+| set | private_group | private-group-%%start_time%% |
+
+| *Comment* | Test Case: Group Directory Create one private, two self-join groups in the account Create the groups |  |  |
+| create-group | private_group | %%group_acct%% | %%username%% |
+| set | private_group_id | %%group_id%% |  |
+| create-group | %%alpha_second_selfjoin%% | %%group_acct%% | %%username%% |
+| set | second_sj_group_id | %%group_id%% |  |
+| st-admin | set-permissions --g %%second_sj_group_id%% --p self-join | group have been changed to self-join. |  |
+| create-group | %%alpha_first_selfjoin%% | %%group_acct%% | %%username%% |
+| set | first_sj_group_id | %%group_id%% |  |
+| st-admin | set-permissions --g %%first_sj_group_id%% --p self-join | group have been changed to self-join. |  |
+
+| *Comment* | Test Case: Group Directory Refresh the page see 2 self-join groups with buttons |  |
+| refresh |  |  |
+| st-name-widget | 1 | my_groups |
+| st-widget-title-like | my_groups | My Groups |
+| st-select-widget-frame | my_groups |  |
+| wait_for_element_visible_ok | link=%%group_name%% | 30000 |
+| text_like | //body | %%group_name%% (private) |
+| select-frame | relative=parent |  |
+| st-name-widget | 2 | available_groups |
+| st-widget-title-like | available_groups | All Available Groups |
+| st-select-widget-frame | available_groups |  |
+| wait_for_element_visible_ok | link=%%alpha_second_selfjoin%% | 30000 |
+| wait_for_element_visible_ok | link=%%alpha_first_selfjoin%% | 30000 |
+| wait_for_text_not_present_ok | %%private_group%% | 30000 |
+| text_like | //body | qr/%%alpha_first_selfjoin%%.+%%alpha_second_selfjoin%%/ |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Group Directory Click Create Group Button |
+| wait_for_element_visible_ok | st-create-group | 30000 |
+| click_ok | st-create-group | 30000 |
+| wait_for_element_present_ok | st-create-group-next | 30000 |
+| wait_for_element_present_ok | st-lightbox-cancel-create-group | 30000 |
+| wait_for_text_present_ok | Create Group | 30000 |
+| wait_for_text_present_ok | Will not be displayed in the Group Directory and new members must be invited by | 30000 |
+
+| *Comment* | Test Case: Group Directory TODO Add self-join group in different account - don't see it |  |  |
+| set | isolated_account | iso-acct-%%start_time%% |  |
+| set | isolated_group | iso-group-%%start_time%% |  |
+| st-admin | create-account --name %%isolated_account%% | was created |  |
+| create-group | %%isolated_group%% | %%isolated_account%% | %%username%% |
+| set | isolated_group_id | %%group_id%% |  |
+| open_ok | /st/groups |  |  |
+
+| st-name-widget | 1 | my_groups |
+| st-widget-title-like | my_groups | My Groups |
+| st-select-widget-frame | my_groups |  |
+| wait_for_element_visible_ok | link=%%group_name%% | 30000 |
+| text_like | //body | %%group_name%% (private) |
+| select-frame | relative=parent |  |
+
+| st-name-widget | 2 | available_groups |
+| st-widget-title-like | available_groups | All Available Groups |
+| st-select-widget-frame | available_groups |  |
+| wait_for_element_visible_ok | link=%%alpha_second_selfjoin%% | 30000 |
+| wait_for_element_visible_ok | link=%%alpha_first_selfjoin%% | 30000 |
+| wait_for_text_not_present_ok | %%isolated_group%% | 30000 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Group Directory TODO Press the join button, join the group |  |
+
+| *Comment* | Test Case: Group Directory TEARDOWN |  |
+| st-process-jobs |  |  |
+| st-admin | delete-workspace --w %%group_ws%% --no-export | has been deleted |
+| delete-group | %%group_id%% |  |
+| delete-group | %%private_group_id%% |  |
+| delete-group | %%second_sj_group_id%% |  |
+| delete-group | %%first_sj_group_id%% |  |
+| delete-group | %%isolated_group_id%% |  |
+| delete-account | %%group_acct%% |  |
+| delete-account | %%isolated_account%% |  |
+
+| *Comment* | Test Case: Group Directory COMPLETED |

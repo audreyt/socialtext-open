@@ -1,0 +1,150 @@
+#!/usr/bin/env perl -w
+#@COPYRIGHT@
+use strict;
+use Sys::Hostname;
+use Cwd;
+use File::Basename;
+
+chdir( File::Basename::dirname($0));
+use FindBin ();
+use lib "$FindBin::Bin";
+
+require 'reports-functions.pl';
+
+#Globals
+my $host = hostname;
+
+
+#Touch and chmod the logs
+my $userid = `whoami`;
+chomp($userid);
+print "User ID is '$userid' \n\n";
+my $test_nlw = get_nlw_filename();
+setup_local_logs($test_nlw, $host);
+
+
+#Create the account data
+#--------------------------------------------#
+my $exec = './st-create-account-data';
+my $strGrowth = './st-qa-growth-report-add-members';
+
+unless (is_dev_env($host)) {
+   $strGrowth ='sudo -u www-data ' . $strGrowth;
+   $exec ='sudo -u www-data ' . $exec;
+}
+
+
+my $results = `$strGrowth`;
+my $str = `$exec`;
+$str=~/Account ID: (\d*)\n/;
+my $account_id = $1;
+print "ID Is $account_id, host is $host\n";
+
+#Process the logs to catch up the changes
+#----------------------------------------------#
+#if (!(is_dev_env($host))) {
+#   `sudo /usr/bin/st-reports-consume-nlw-log /var/log/nlw.log 2>&1`;
+#}
+if (!(is_dev_env($host))) {
+       `../../socialtext-reports/parse-dev-env-logs /var/log/nlw.log 2>&1`;
+    }
+
+#We just caught up the logs with the new id's
+#But we will insert older, fake id's into the DB
+#So we'll delete these
+#----------------------------------------------#
+
+my $u = '';
+my $db = 'NLW_reports';
+if (is_dev_env($host)) {
+    $db.="_".$userid;
+} else {
+    $u = '-U nlw ';
+}
+
+
+my $delete_1 = 'psql ' . $u . $db . ' -c "delete from workspace_actions_by_user where account_id =' . $account_id . '; "';
+`$delete_1`;
+my $delete_2 = 'psql ' . $u . $db . ' -c "delete from nlw_log_actions where account_id =' . $account_id . '; "';
+`$delete_2`;
+my $delete_3 = 'psql ' . $u . $db . ' -c "delete from meta_actions_by_user where account_id =' . $account_id . '; "';
+`$delete_3`;
+
+my $delete_4 = 'psql ' . $u . $db . ' -c "delete from dashboard_actions_by_user where account_id =' . $account_id . '; "';
+`$delete_4`;
+my $delete_5 = 'psql ' . $u . $db . ' -c "delete from people_actions_by_user where account_id =' . $account_id . '; "';
+`$delete_5`;
+my $delete_6 = 'psql ' . $u . $db . ' -c "delete from signal_actions_by_user where account_id =' . $account_id . '; "';
+`$delete_6`;
+
+
+#Data is deleted, now we can re-add the workspace reports
+#-----------------------------------------------#
+my $populate_db = './st-qa-growth-report-populate-db';
+unless (is_dev_env($host)) {
+   $populate_db ='sudo -u www-data ' . $populate_db;
+}
+system($populate_db);
+
+
+#... and the account-level reports
+#-----------------------------------------------#
+if (is_dev_env($host)) {
+   `./st-consume-stub-reports`;
+} else {
+   # fast-forward the existing nlw.log file, not the test log file
+   system('sudo /usr/bin/st-reports-import-nlw-data --force  /var/log/nlw.log');
+   # process and fast-forward the test log file
+   system('sudo /usr/bin/st-reports-consume-nlw-log ' . $test_nlw);
+}
+
+
+st_reports_reduce($host);
+print "Completed Reports data set-up (If you saw no errors)\n";
+#---------------------------------------------------------------#
+# End Main Routine Subroutines Follow                           #
+#---------------------------------------------------------------#
+#
+
+
+sub st_reports_reduce {
+    my $host = shift;
+    my $reduce_path = "";
+    my $orig_dir = cwd;
+    if (is_dev_env($host)) {
+        chdir "../../socialtext-reports/";
+        $reduce_path =  "./bin/st-reports-reduce";
+        system($reduce_path);
+        chdir($orig_dir);
+     } else {
+        $reduce_path = "sudo /usr/bin/st-reports-reduce";
+        system($reduce_path);
+     }
+}
+                                    
+
+sub is_dev_env {
+    my $host = shift;
+    if ($host=~/talc/ || $host=~/topaz/ || $host=~/borax/ ) {
+        return 1; 
+    } else {
+        return 0;
+    }
+}
+
+sub setup_local_logs {  
+    my ($test_nlw, $host) = @_;
+    system("rm -f $test_nlw");
+    system("touch $test_nlw");
+    system("chmod 666 $test_nlw");
+    if (is_dev_env($host)) {
+        `rm -f ~/.nlw/cache/logreader/test* >& /dev/null`;
+        `st-admin give-accounts-admin --email devnull1\@socialtext.com`;
+        `st-admin give-system-admin --email devnull1\@socialtext.com`;
+    } else {
+        `sudo rm -f  /var/cache/socialtext/logreader/test*`;
+        `sudo st-admin give-accounts-admin --email devnull1\@socialtext.com`;
+        `sudo st-admin give-system-admin --email devnull1\@socialtext.com`;
+    }
+}
+

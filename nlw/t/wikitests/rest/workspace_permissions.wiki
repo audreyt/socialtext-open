@@ -1,0 +1,135 @@
+Ensure that the various Permission Sets can be set on a Workspace via ReST, by Users with the right Admin privileges
+
+We're not testing the results of what the Permission Set grants to readers/viewers, just who's allowed to set/view the Permission Sets.
+
+* Fixture: SocialRest
+
+| standard-test-setup |
+
+| set            | test_user     | test_user_%%start_time%%@q.q |             |
+| create-user    | %%test_user%% | password                     | %%account%% |
+| http-user-pass | %%test_user%% | password                     |             |
+
+| *Comment*   | Permission Set *only* visible to the Workspace Admin via ReST             |                  |
+| st-admin    | remove-system-admin --username %%test_user%%                              | no longer        |
+| st-admin    | remove-accounts-admin --username %%test_user%%                            | no longer        |
+| st-admin    | remove-member --username %%test_user%% --workspace %%workspace%%          |                  |
+| st-admin    | remove-workspace-admin --username %%test_user%% --workspace %%workspace%% |                  |
+| *comment*   | ... non-member                                                            |                  |
+| GET         | /data/workspaces/%%workspace%%                                            | application/json |
+| code-is     | 403                                                                       |                  |
+| body-unlike | permission_set                                                            |                  |
+| *comment*   | ... member                                                                |                  |
+| st-admin    | add-member --username %%test_user%% --workspace %%workspace%%             | now has          |
+| GET         | /data/workspaces/%%workspace%%                                            | application/json |
+| code-is     | 200                                                                       |                  |
+| body-unlike | permission_set                                                            |                  |
+| *comment*   | ... member w/system admin                                                 |                  |
+| st-admin    | give-system-admin --username %%test_user%%                                | now has          |
+| GET         | /data/workspaces/%%workspace%%                                            | application/json |
+| code-is     | 200                                                                       |                  |
+| body-unlike | permission_set                                                            |                  |
+| st-admin    | remove-system-admin --username %%test_user%%                              | no longer        |
+| *comment*   | ... member w/accounts admin                                               |                  |
+| st-admin    | give-accounts-admin --username %%test_user%%                              | now has          |
+| GET         | /data/workspaces/%%workspace%%                                            | application/json |
+| code-is     | 200                                                                       |                  |
+| body-like   | permission_set                                                            |                  |
+| st-admin    | remove-accounts-admin --username %%test_user%%                            | no longer        |
+| *comment*   | ... workspace admin                                                       |                  |
+| st-admin    | add-workspace-admin --username %%test_user%% --workspace %%workspace%%    | now has          |
+| GET         | /data/workspaces/%%workspace%%                                            | application/json |
+| code-is     | 200                                                                       |                  |
+| body-like   | permission_set                                                            |                  |
+| st-admin    | remove-workspace-admin --username %%test_user%% --workspace %%workspace%% | no longer        |
+| st-admin    | remove-member --username %%test_user%% --workspace %%workspace%%          | no longer        |
+
+| *Comment* | Member cannot change WS Permissions via Rest                  |                               |                                |
+| st-admin  | remove-system-admin --username %%test_user%%                  | no longer                     |                                |
+| st-admin  | remove-accounts-admin --username %%test_user%%                | no longer                     |                                |
+| st-admin  | add-member --username %%test_user%% --workspace %%workspace%% | now has                       |                                |
+| PUT       | /data/workspaces/%%workspace%%                                | Content-Type=application/json | { "permission_set": "public" } |
+| code-is   | 403                                                           |                               |                                |
+
+| *Comment* | Non-member cannot change WS Permissions via ReST                 |                               |                                |
+| st-admin  | remove-system-admin --username %%test_user%%                     | no longer                     |                                |
+| st-admin  | remove-accounts-admin --username %%test_user%%                   | no longer                     |                                |
+| st-admin  | remove-member --username %%test_user%% --workspace %%workspace%% |                               |                                |
+| PUT       | /data/workspaces/%%workspace%%                                   | Content-Type=application/json | { "permission_set": "public" } |
+| code-is   | 403                                                              |                               |                                |
+
+| *Comment* | Accounts Admin can change WS Permissions via ReST                         |                               |                                |
+| st-admin  | remove-system-admin --username %%test_user%%                              | no longer                     |                                |
+| st-admin  | give-accounts-admin --username %%test_user%%                              | now has                       |                                |
+| st-admin  | remove-member --username %%test_user%% --workspace %%workspace%%          |                               |                                |
+| PUT       | /data/workspaces/%%workspace%%                                            | Content-Type=application/json | { "permission_set": "public" } |
+| code-is   | 204                                                                       |                               |                                |
+| *comment* | ... only WS Admin can view perm set via ReST                              |                               |                                |
+| st-admin  | add-workspace-admin --username %%test_user%% --workspace %%workspace%%    | now has                       |                                |
+| GET       | /data/workspaces/%%workspace%%                                            | application/json              |                                |
+| code-is   | 200                                                                       |                               |                                |
+| body-like | "permission_set":"public"                                                 |                               |                                |
+| st-admin  | remove-workspace-admin --username %%test_user%% --workspace %%workspace%% | no longer                     |                                |
+
+| *Comment* | System Admin can change WS Permissions via ReST                           |                               |                                     |
+| st-admin  | give-system-admin --username %%test_user%%                                | now has                       |                                     |
+| st-admin  | remove-accounts-admin --username %%test_user%%                            | no longer                     |                                     |
+| st-admin  | remove-member --username %%test_user%% --workspace %%workspace%%          |                               |                                     |
+| PUT       | /data/workspaces/%%workspace%%                                            | Content-Type=application/json | { "permission_set": "member-only" } |
+| code-is   | 204                                                                       |                               |                                     |
+| *comment* | ... only WS Admin can view perm set via ReST                              |                               |                                     |
+| st-admin  | add-workspace-admin --username %%test_user%% --workspace %%workspace%%    | now has                       |                                     |
+| GET       | /data/workspaces/%%workspace%%                                            | application/json              |                                     |
+| code-is   | 200                                                                       |                               |                                     |
+| body-like | "permission_set":"member-only"                                            |                               |                                     |
+| st-admin  | remove-workspace-admin --username %%test_user%% --workspace %%workspace%% | no longer                     |                                     |
+
+| *Comment* | Workspace Admin can change WS Permissions via ReST                        |                               |                                |
+| st-admin  | remove-system-admin --username %%test_user%%                              | no longer                     |                                |
+| st-admin  | remove-accounts-admin --username %%test_user%%                            | no longer                     |                                |
+| st-admin  | add-workspace-admin --username %%test_user%% --workspace %%workspace%%    | now has                       |                                |
+| PUT       | /data/workspaces/%%workspace%%                                            | Content-Type=application/json | { "permission_set": "public" } |
+| code-is   | 204                                                                       |                               |                                |
+| GET       | /data/workspaces/%%workspace%%                                            | application/json              |                                |
+| code-is   | 200                                                                       |                               |                                |
+| body-like | "permission_set":"public"                                                 |                               |                                |
+| st-admin  | remove-workspace-admin --username %%test_user%% --workspace %%workspace%% | no longer                     |                                |
+
+| *Comment* | All known permission sets can be set via ReST                          |                               |                                                 |
+| st-admin  | remove-system-admin --username %%test_user%%                           | no longer                     |                                                 |
+| st-admin  | remove-accounts-admin --username %%test_user%%                         | no longer                     |                                                 |
+| st-admin  | add-workspace-admin --username %%test_user%% --workspace %%workspace%% | now has                       |                                                 |
+| *comment* | ... public                                                             |                               |                                                 |
+| PUT       | /data/workspaces/%%workspace%%                                         | Content-Type=application/json | { "permission_set": "public" }                  |
+| GET       | /data/workspaces/%%workspace%%                                         | application/json              |                                                 |
+| body-like | "permission_set":"public"                                              |                               |                                                 |
+| *comment* | ... authenticated-user-only                                            |                               |                                                 |
+| PUT       | /data/workspaces/%%workspace%%                                         | Content-Type=application/json | { "permission_set": "authenticated-user-only" } |
+| GET       | /data/workspaces/%%workspace%%                                         | application/json              |                                                 |
+| body-like | "permission_set":"authenticated-user-only"                             |                               |                                                 |
+| *comment* | ... member-only                                                        |                               |                                                 |
+| PUT       | /data/workspaces/%%workspace%%                                         | Content-Type=application/json | { "permission_set": "member-only" }             |
+| GET       | /data/workspaces/%%workspace%%                                         | application/json              |                                                 |
+| body-like | "permission_set":"member-only"                                         |                               |                                                 |
+| *comment* | ... public-read-only                                                   |                               |                                                 |
+| PUT       | /data/workspaces/%%workspace%%                                         | Content-Type=application/json | { "permission_set": "public-read-only" }        |
+| GET       | /data/workspaces/%%workspace%%                                         | application/json              |                                                 |
+| body-like | "permission_set":"public-read-only"                                    |                               |                                                 |
+| *comment* | ... public-comment-only                                                |                               |                                                 |
+| PUT       | /data/workspaces/%%workspace%%                                         | Content-Type=application/json | { "permission_set": "public-comment-only" }     |
+| GET       | /data/workspaces/%%workspace%%                                         | application/json              |                                                 |
+| body-like | "permission_set":"public-comment-only"                                 |                               |                                                 |
+| *comment* | ... public-join-to-edit                                                |                               |                                                 |
+| PUT       | /data/workspaces/%%workspace%%                                         | Content-Type=application/json | { "permission_set": "public-join-to-edit" }     |
+| GET       | /data/workspaces/%%workspace%%                                         | application/json              |                                                 |
+| body-like | "permission_set":"public-join-to-edit"                                 |                               |                                                 |
+| *comment* | ... intranet                                                           |                               |                                                 |
+| PUT       | /data/workspaces/%%workspace%%                                         | Content-Type=application/json | { "permission_set": "intranet" }                |
+| GET       | /data/workspaces/%%workspace%%                                         | application/json              |                                                 |
+| body-like | "permission_set":"intranet"                                            |                               |                                                 |
+| *Comment* | ... invalid set                                                        |                               |                                                 |
+| PUT       | /data/workspaces/%%workspace%%                                         | Content-Type=application/json | { "permission_set": "ENOSUCH" }                 |
+| code-is   | 400                                                                    |                               |                                                 |
+| body-like | ENOSUCH unknown                                                        |                               |                                                 |
+| GET       | /data/workspaces/%%workspace%%                                         | application/json              |                                                 |
+| body-like | "permission_set":"intranet"                                            |                               |                                                 |

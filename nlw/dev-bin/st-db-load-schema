@@ -1,0 +1,5 @@
+#!/bin/bash
+
+st-db recreate --force -s socialtext --schema-file $1
+
+

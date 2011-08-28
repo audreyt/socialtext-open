@@ -1,0 +1,141 @@
+| *Comment* | Test Case: Authen Renewal |
+
+| st-admin | give-accounts-admin --email %%email%% | %%username%% now has accounts admin access |
+
+| *Comment* | Set a *really* low "soft limit" on authen cookies, login again, and wait for cookie to need renewal |
+| st-config | set auth_token_soft_limit 2 |
+| st-logoutin |  |
+| pause | 5000 |
+
+* *Interruptable actions*
+
+| *Comment* | Workspace Pages - interruptable |  |
+| open-ok | /%%workspace%%/index.cgi |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+
+| *Comment* | Workspace Actions - interruptable |  |
+| open-ok | /%%workspace%%/index.cgi?action=recent_changes |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+| open-ok | /%%workspace%%/index.cgi?action=display_watchlist |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+| open-ok | /%%workspace%%/index.cgi?action=weblog_display |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+| open-ok | /%%workspace%%/index.cgi?action=users_invitation |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+| open-ok | /%%workspace%%/index.cgi?action=new_page |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+| open-ok | /%%workspace%%/index.cgi?action=breadcrumbs_list |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+| open-ok | /%%workspace%%/index.cgi?action=watchlist |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+| open-ok | /%%workspace%%/index.cgi?action=orphans_list |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+| open-ok | /%%workspace%%/index.cgi?action=changes |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+| open-ok | /%%workspace%%/index.cgi?action=category_list |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+| open-ok | /%%workspace%%/index.cgi?action=attachments_listall |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+
+| *Comment* | Container Views - interruptable |  |
+| open-ok | /st/dashboard |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+| open-ok | /st/groups |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+| open-ok | /st/signals |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+| open-ok | /st/profile |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+| open-ok | /st/edit_profile |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+
+| *Comment* | Top Level Actions - interruptable |  |
+| open-ok | /?action=search&search_term=abc123 |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+| open-ok | /?action=people |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+| open-ok | /?action=workspaces_listall |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+| open-ok | /?action=invite |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+
+| *Comment* | Miki - interruptable |  |
+| open-ok | /m/activities |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+| open-ok | /m/people |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+| open-ok | /m/signals |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+| open-ok | /m/changes/admin |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+| open-ok | /m/page/admin |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+| open-ok | /m/search/admin |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+| open-ok | /m/tag/admin |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+
+| *Comment* | Control Panel - interruptable |  |
+| open-ok | /control |  |
+| text-like | //body | Login session has expired; please re-authenticate |
+
+* *NON-interruptable actions*
+
+| *Comment* | Submit Handlers - *NOT* interruptable |  |
+| open-ok | /nlw/submit/logout |  |
+| text-unlike | //body | Login session has expired; please re-authenticate |
+| st-login |  |  |
+
+| *Comment* | Challengers - *NOT* interruptable |  |
+| open-ok | /challenge |  |
+| text-unlike | //body | Login session has expired; please re-authenticate |
+
+| *Comment* | POST of page edit - *NOT* interruptable (save successful) |  |
+| st-config | set auth_token_soft_limit 10 |  |
+| st-logoutin |  |  |
+| open-ok | /%%workspace%%/index.cgi |  |
+| wait-for-element-visible-ok | link=Edit | 30000 |
+| click-ok | link=Edit |  |
+| pause | 15000 |  |
+| wait-for-element-visible-ok | link=Wiki Text | 30000 |
+| click-ok | link=Wiki Text |  |
+| wait-for-element-visible-ok | wikiwyg_wikitext_textarea | 30000 |
+| type-ok | wikiwyg_wikitext_textarea | Edit This Page %%start_time%% |
+| wait-for-element-visible-ok | st-save-button-link | 30000 |
+| st-pause-click | 2000 | st-save-button-link |
+| pause | 10000 | time for alert to pop up |
+| verifyAlert | Login session has expired; please re-authenticate |  |
+| st-logoutin |  |  |
+| open-ok | /%%workspace%%/index.cgi |  |
+| text-like | //body | Edit This Page %%start_time%% |
+
+| *Comment* | ReST views - *NOT* interruptable |  |
+| open-ok | /data/events |  |
+| text-unlike | //body | Login session has expired; please re-authenticate |
+| open-ok | /data/signals |  |
+| text-unlike | //body | Login session has expired; please re-authenticate |
+| open-ok | /data/workspaces |  |
+| text-unlike | //body | Login session has expired; please re-authenticate |
+
+| *Comment* | Feeds - *NOT* interruptable (didn't get redirected to STLogin) |
+| open-ok | /feed/workspace/%%workspace%% |
+| location-like | /feed/workspace/%%workspace%% |
+
+| *Comment* | JSON Proxy requests - *NOT* interruptable |
+
+* Load your Dashboard, let your auth cookie expire
+* All widgets should continue to refresh without error
+
+| *Comment* | PushD requests - *NOT* interruptable |
+
+* Load your Dashboard, let your auth cookie expire
+* All widgets should continue to refresh without error
+
+| *Comment* | Desktop Badge - *NOT* interruptable |  |
+| open-ok | /st/desktop/badge |  |
+| text-unlike | //body | Login session has expired; please re-authenticate |
+
+| *Comment* | TEARDOWN - set us back to a reasonable auth cookie soft limit |
+| st-config | set auth_token_soft_limit 86400 |
+
+| *Comment* | Test Case: Authen Renewal COMPLETED |

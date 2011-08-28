@@ -1,0 +1,97 @@
+| *Comment* | Test Case: Canadien Francais Tags |  |
+
+* Fixture: SocialWidgets
+
+
+| *Comment* | Test Case: Canadien Francais Tags - Create ws, user, acct |  |
+| set | acct | cfpages%%start_time%% |
+| set | ws | cfpages%%start_time%% |
+| set | user_short | cfuser%%start_time%% |
+| set | user | %%user_short%%@matt.socialtext.net |
+| st-admin | create-account --name %%acct%% | was created |
+| st-admin | create-workspace --name %%ws%% --title %%ws%% --account %%acct%% | was created |
+| st-admin | create-user --e %%user%% --p %%password%% --account %%acct%% | was created |
+| st-admin | add-member --e %%user%% --w %%ws%% | now has the role of 'member' in the |
+
+| *Comment* | Test Case: Canadien Francais Tags - Define Tags |  |
+| set | tagAA | aardvark%%start_time%% |
+| set | tagA | Ångström%%start_time%% |
+| set | tagL | LOLCat%%start_time%% |
+| set | tagM | ḿegashark%%start_time%% |
+| set | tagN | nunmanuma%%start_time%% |
+| set | tagX | Xylophone%%start_time%% |
+| set | user | cfuser%%start_time%%@matt.socialtext.net |
+
+
+| *Comment* | Test Case: Canadien Francais Tags - Login, go to %%ws%%, add tags |  |
+| st-logoutin | %%user%% | %%password%% |
+| open_ok | /%%ws%% |  |
+| setSpeed | 2000 |  |
+| call | [st-tag-page] | tag_to_apply=%%tagAA%% |
+| st-process-jobs |  |  |
+| open_ok | /%%ws%% |  |
+| call | [st-tag-page] | tag_to_apply=%%tagA%% |
+| st-process-jobs |  |  |
+| open_ok | /%%ws%% |  |
+| call | [st-tag-page] | tag_to_apply=%%tagX%% |
+| st-process-jobs |  |  |
+| open_ok | /%%ws%% |  |
+| call | [st-tag-page] | tag_to_apply=%%tagL%% |
+| st-process-jobs |  |  |
+| open_ok | /%%ws%% |  |
+| call | [st-tag-page] | tag_to_apply=%%tagM%% |
+| st-process-jobs |  |  |
+| pause | 30000 |  |
+| open_ok | /%%ws%% |  |
+| call | [st-tag-page] | tag_to_apply=%%tagN%% |
+| st-process-jobs |  |  |
+| st-process-jobs |  |  |
+| setSpeed | 0 |  |
+
+
+| *Comment* | Test Case: Canadien Francais Tags - see tags in order on the page |  |
+| open_ok | /%%ws%% |  |
+| wait_for_element_visible_ok | link=%%tagA%% | 30000 |
+| text_like | //body | qr/%%tagAA%%.+%%tagA%%.+%%tagL%%.+%%tagM%%.+%%tagN%%.+%%tagX%%/ |
+
+| *Comment* | Test Case: Canadien Francais Tags Test Sorting for Page in All Tags |  |
+| open_ok | /%%ws%%/?action=category_list |  |
+| wait_for_element_visible_ok | link=%%tagA%% | 30000 |
+| text_like | //body | qr/%%tagAA%%.+%%tagA%%.+%%tagL%%.+%%tagM%%.+%%tagN%%.+%%tagX%%/ |
+
+| wait_for_element_visible_ok | link=What's New | 30000 |
+| click_and_wait | link=What's New |  |
+| wait_for_element_visible_ok | link=All Tags | 30000 |
+| click_and_wait | link=All Tags |  |
+| wait_for_element_visible_ok | link=%%tagA%% | 30000 |
+| wait_for_element_visible_ok | link=%%tagL%% | 30000 |
+| text_like | //body | qr/%%tagAA%%.+%%tagA%%.+%%tagL%%.+%%tagM%%.+%%tagN%%.+%%tagX%%/ |
+
+| *Comment* | Test Case: Canadien Francais Tags Now Tag /me/ |  |  |
+| call | [st-tag-user] | find_user_short=%%user_short%% | tag_to_apply=%%tagX%% |
+| pause | 3000 |  |
+| call | [st-tag-user] | find_user_short=%%user_short%% | tag_to_apply=%%tagM%% |
+| pause | 3000 |  |
+| call | [st-tag-user] | find_user_short=%%user_short%% | tag_to_apply=%%tagL%% |
+| pause | 3000 |  |
+| call | [st-tag-user] | find_user_short=%%user_short%% | tag_to_apply=%%tagN%% |
+| pause | 3000 |  |
+| call | [st-tag-user] | find_user_short=%%user_short%% | tag_to_apply=%%tagA%% |
+| pause | 3000 |  |
+| call | [st-tag-user] | find_user_short=%%user_short%% | tag_to_apply=%%tagAA%% |
+| pause | 3000 |  |
+
+| *Comment* | Test Case: Canadien Francais Tags Tag Order on my profile |  |
+| st-process-jobs |  |  |
+| wait_for_element_visible_ok | link=%%user_short%% | 30000 |
+| click_and_wait | link=%%user_short%% |  |
+| wait_for_element_visible_ok | link=%%tagA%% | 30000 |
+| text_like | //body | qr/%%tagAA%%.*%%tagA%%.*%%tagL%%.*%%tagM%%.*%%tagN%%.*%%tagX%%/ |
+
+| *Comment* | Test Case: Canadien Francais Tags TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%user%% |  |
+| st-admin | delete-workspace --no-export -w %%ws%% | has been deleted |
+| delete-account | %%acct%% |  |
+
+| *Comment* | Test Case: Canadien Francais Tags COMPLETED |

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+MIG_DIR=`dirname $0`/..
+
+psql -U $DB_USER -d $DB -t -c "ALTER TABLE \"Workspace\" ADD COLUMN \"customjs_name\" text DEFAULT ''"
+$MIG_DIR/add-column/_set_not_null Workspace customjs_name "''"

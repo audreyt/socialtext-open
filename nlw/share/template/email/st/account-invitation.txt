@@ -1,0 +1,30 @@
+[% extra_text -%]
+
+[% loc('email.hi') %]
+
+[% loc("email.inviting-you-to-join=account", account_name) %] [% UNLESS requires_confirmation %][% loc('email.sign-in-using-information-below:') %][% END %]
+
+[% IF requires_confirmation -%]
+[% loc("email.click-to-confirm-email:") %] [% confirmation_uri | html %]
+
+[% loc("email.once-confirmed-you-will-receive-second-email-with-login-details") %]
+[% ELSE -%]
+[% loc('email.web-address:') %] [% account_uri | html %]
+[% loc('email.username:') %] [% username | html %]
+
+[% IF appconfig.is_default('user_factories') %] 
+[% IF app_name; a = 'a'; ELSE; a = 'an'; END %]
+[% loc("email.same-password-as-existing-account=a,app,app", a, app_name, app_name) %]
+[% loc("email.follow-link-to-select-password:") %]
+[% forgot_password_uri %]
+
+[% END %]
+[% loc("email.keep-this-for-future-reference") %]
+[% END -%]
+
+[% loc('email.thanks') %]
+
+[% inviting_user %]
+
+[% PROCESS 'email/standard-footer.txt'
+   support_link = 1 %]

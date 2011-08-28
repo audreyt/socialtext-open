@@ -1,0 +1,54 @@
+UPGRADE.to-2.7 -- How to upgrade to Socialtext Open 2.7
+
+@COPYRIGHT@
+
+Socialtext Open 2.7 includes a new search engine, KinoSearch.  If you're
+upgrading from an older version of Socialtext Open, you'll need to reindex
+your workspaces.  Search will NOT return any search results until this
+reindexing is done.
+
+First, get a list of your workspaces:
+
+    $ st-admin list-workspaces
+    help
+    sales           # or whatever
+    development     # yours are
+
+Then, for each of your workspaces, reindex them:
+
+    $ st-admin index-workspace --workspace YOUR_WORKSPACE
+
+This will submit a task to the ceqlotron for each page in the workspace.
+You can keep track of progress with ceq-stat:
+
+    $ s
+    $ ceq-stat
+    Changes in queue:
+      Attachment      5
+      Page           73
+      Workspace       0
+
+      TOTAL          78
+
+If you want to make the reindexing happen all at once in a single
+process, you can use the --sync option.
+
+    $ st-admin index-workspace --workspace YOUR_WORKSPACE --sync
+
+This provides an order of magnitude performance increase over generating
+individual page events and feeding them to the ceqlotron (e.g. 16 minutes
+instead of 4 hours for a very large Socialtext internal workspace).
+However, it also means that no one can use that workspace during the
+reindexing time, because the reindexing process has a lock on the entire
+workspace.
+
+Whichever path to reindexing you choose, you can now delete the index
+files used by Plucene:
+
+    $ rm -fr /var/www/socialtext/plugin/*/plucene
+
+That's it.  Enjoy the new capabilities of KinoSearch!
+
+# END OF DOCUMENT
+# vi: set ts=8 sts=4 sw=4 expandtab
+# -*- text -*-

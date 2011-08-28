@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::File qw/get_contents/;
+
+my $apache2 = get_contents('/etc/default/apache2');
+if ($apache2 =~ m/NO_START=1/) {
+    # Apache2 has already been disabled, no need to run this.
+    exit 1;
+}
+
+# We should run this migration to disable apache2 and start nginx.
+exit 0;

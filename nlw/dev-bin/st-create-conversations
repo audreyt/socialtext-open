@@ -1,0 +1,28 @@
+#!/usr/bin/env perl -w
+#@COPYRIGHT@
+use strict;
+
+my $workspaces = shift;
+my $pages = shift;
+
+print "Writing $workspaces workspaces and $pages pages\n";
+
+for (my $idx=0; $idx<$workspaces; $idx++ ) {
+    #Create a workspace
+    my $ws_name = 'dash_ws_' . $idx;
+    print "Making st-admin create-workspace --name $ws_name --title $ws_name\n";
+    system("st-admin create-workspace --name $ws_name --title $ws_name");
+    system("st-admin add_member --username devnull1\@socialtext.com --workspace $ws_name");
+    system("st-admin add_member --username wikitester\@ken.socialtext.net --workspace $ws_name");
+    for (my $jdx=0; $jdx<$pages; $jdx++) {
+       #Create a page
+       my $page = $ws_name . "a_page_$jdx";
+       print "Creating page $page\n";
+       system("st-admin update-page --workspace $ws_name --page $page --email devnull1\@socialtext.com <foo.txt");
+       system("st-admin update-page --workspace $ws_name --page $page --email wikitester\@ken.socialtext.net <foo.txt");
+       print "Finished Updated page $page\n";
+   }
+}
+
+
+

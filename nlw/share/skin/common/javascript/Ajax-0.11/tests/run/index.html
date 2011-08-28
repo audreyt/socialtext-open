@@ -1,0 +1,19 @@
+<html>
+<head>
+    <title>Ajax Testing</title>
+    <script type="text/javascript" src="lib/Test/Harness.js"></script>
+    <script type="text/javascript" src="lib/Test/Harness/Browser.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+    var t = new Test.Harness.Browser();
+    
+    t.runTests(
+        "get_async.t.html",
+        "get_sync.t.html",
+        "post_async.t.html",
+        "post_sync.t.html"
+    );
+</script>
+</body>
+</html>

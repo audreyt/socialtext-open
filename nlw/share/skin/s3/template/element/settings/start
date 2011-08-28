@@ -1,0 +1,32 @@
+[%# vim: set et sts=2 sw=2: %]
+[%
+  enctype = 'application/x-www-form-urlencoded';
+  SET enctype = 'multipart/form-data'
+    IF (hub.action == 'workspaces_settings_appearance');
+%]
+<form method="post" name="settings" action="[% script_name %]" enctype="[% enctype %]">
+  <input type="hidden" name="Button" value="[% loc('edit.save') %]"/>
+  <input type="hidden" name="action" value="[% form_action || hub.action %]" />
+  <input type="hidden" name="preferences_class_id" value="[% preferences_class_id %]" />
+  [%- IF settings_error %]<div class="st-errorbox">[% settings_error %]</div>[% END -%]
+  <ul class="formButtons form-[% form_action || hub.action %]">
+    [% IF hub.action != 'users_listall' OR perm_admin %]
+      <li class="flexButton">
+        <a class="genericOrangeButton" id="[% ns %]-savelink" href="#" onclick="document.forms['settings'].submit(); return false">
+          [% save_button_value || loc('edit.save') %]
+        </a>
+      </li>
+    [% END %]
+      <li class="flexButton">
+        <a class="genericOrangeButton" id="[% ns %]-cancellink" href="#" onclick="document.forms['settings'].reset(); return false">
+          [% loc('do.cancel') %]
+        </a>
+      </li>
+  </ul>
+  <div class="message">[% message %]</div>
+  [% FOREACH warning = warnings %] 
+    <div class="error-message">[% loc('info.warning:') %] [% warning %]</div>
+  [% END %]
+  [% FOREACH error = errors %] 
+    <div class="error-message">[% loc('info.error:') %] [% error %]</div>
+  [% END %]

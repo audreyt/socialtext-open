@@ -1,0 +1,36 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+
+use Socialtext::Search::AbstractFactory;
+
+sub usage {
+    print <<END_OF_HELP; exit 0;
+
+    USAGE: nlwsearch WORKSPACE QUERY
+
+END_OF_HELP
+}
+
+usage() if @ARGV < 2;
+
+my $workspace = shift;
+my $query = "@ARGV";
+
+my @hits = Socialtext::Search::AbstractFactory->GetFactory
+    ->create_searcher($workspace)
+    ->search($query);
+
+foreach my $hit (@hits) {
+    if ($hit->isa('Socialtext::Search::PageHit')) {
+        print "PAGE: ", $hit->page_uri, "\n";
+    } elsif ($hit->isa('Socialtext::Search::AttachmentHit')) {
+        print "ATT:  ", $hit->page_uri, " ", $hit->attachment_id, "\n";
+    } else {
+        print "Unknown hit type $hit.\n";
+    }
+}

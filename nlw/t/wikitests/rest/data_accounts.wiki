@@ -1,0 +1,80 @@
+* Fixture: SocialRest
+
+| Standard-test-setup |                   |                    |
+| set                 | primary_acct      | %%account%%        |
+| set                 | acct_name         | test%%start_time%% |
+| set-business-admin  | %%email_address%% | 1                  |
+
+| POST_json | /data/accounts | {"name":"%%acct_name%%","type":"Standard"} |
+| code-is | 201 |
+
+GETting /data/accounts/:account_id is not currently supported.
+
+| st-account-type-is | %%acct_name%% | Standard |
+
+# GET /data/accounts as a regular user
+
+| set-business-admin | %%email_address%% | 0 |
+
+| GET         | /data/accounts   |
+| code-is     | 200              |
+| body-like   | %%primary_acct%% |
+| body-unlike | %%acct_name%%    |
+
+# GET /data/accounts?all=1 as a regular user (should be ignored)
+
+| GET         | /data/accounts?all=1 |
+| code-is     | 200                  |
+| body-like   | %%primary_acct%%     |
+| body-unlike | %%acct_name%%        |
+
+# GET /data/accounts as a business admin
+
+| set-business-admin | %%email_address%% | 1 |
+
+| GET         | /data/accounts   |
+| code-is     | 200              |
+| body-like   | %%primary_acct%% |
+| body-unlike | %%acct_name%%    |
+
+# GET /data/accounts?all=1 as a business admin
+
+| GET       | /data/accounts?all=1 |
+| code-is   | 200                  |
+| body-like | %%primary_acct%%     |
+| body-like | %%acct_name%%        |
+
+# Getting accounts as JSON
+
+| GET       | /data/accounts?all=1 | application/json |
+| code-is   | 200                  |                  |
+| body-like | %%primary_acct%%     |                  |
+| body-like | %%acct_name%%        |                  |
+
+# Filtering accounts as a business admin
+
+| set-substr | acct_prefix | %%acct_name%% | 13 |
+
+| GET         | /data/accounts?all=1;filter=\b%%acct_prefix%% | application/json |
+| code-is     | 200                                         |                  |
+| body-unlike | %%primary_acct%%                            |                  |
+| body-like   | %%acct_name%%                               |                  |
+
+# \b matches start of string
+
+| GET         | /data/accounts?all=1;filter=\btest | application/json |
+| code-is     | 200                                |                  |
+| body-like   | %%acct_name%%                      |                  |
+| GET         | /data/accounts?all=1;filter=\best  | application/json |
+| code-is     | 200                                |                  |
+| body-unlike | %%acct_name%%                      |                  |
+
+# Filtering accounts as a regular user
+
+| set-business-admin | %%email_address%% | 0                |    |
+| set-substr         | acct_prefix       | %%primary_acct%% | 14 |
+
+| GET         | /data/accounts?filter=\b%%acct_prefix%% | application/json |
+| code-is     | 200                                         |                  |
+| body-like   | %%primary_acct%%                            |                  |
+| body-unlike | %%acct_name%%                               |                  |

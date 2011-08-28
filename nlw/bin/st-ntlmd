@@ -1,0 +1,293 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use warnings;
+use strict;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::TimestampedWarnings;
+
+#
+# Override a bunch of modules to prevent Apache::AuthenNTLM from loading
+# mod_perl components.
+#
+
+package main;
+
+use AnyEvent;
+use Guard;
+use Try::Tiny;
+use Getopt::Long;
+use Tie::Cache::LRU ();
+
+# MUST load all Socialtext::* packages late (after we override the Apache::
+# packages above)
+use Socialtext::Async::HTTPD qw/http_server/;
+use Socialtext::Log qw/st_log/;
+use Socialtext::NTLM::Config;
+use Socialtext::Apache::AuthenNTLM sub { goto &main::get_config };
+
+use constant MAX_PASSWORD_FAILURES => 5; # will reject after this many
+use constant REMEMBER_FAILURES     => 100;
+
+my $in_progress_sid;
+my $in_progress_timer;
+
+my %recent_sid_failures;
+tie %recent_sid_failures, 'Tie::Cache::LRU', REMEMBER_FAILURES;
+
+our $Handshake_timeout = 2.0;
+
+my $pending_guard;
+my $pending_reqs = [];
+
+my $port = 9090;
+
+GetOptions(
+    'port=i' => \$port,
+    'timeout' => \$Handshake_timeout,
+);
+
+my $server = http_server '127.0.0.1', $port, \&handle_http;
+st_log->notice("Starting st-ntlmd on port $port\n");
+AE::cv->recv;
+exit 0;
+
+
+sub get_config {
+    my ($self, $r) = @_;
+
+    # mocking sets up these two:
+    delete $self->{smbpdc}{foo};
+    delete $self->{smbbdc}{foo};
+
+    $self->{debug} = 1;
+
+    Socialtext::NTLM::Config->ConfigureApacheAuthenNTLM($self);
+
+    $Handshake_timeout = delete $self->{handshake_timeout};
+
+    return unless $self->{debug};
+
+    # debugging for development and/or trouble-shooting:
+#     my $prefix = 'st-ntlmd';
+#     st_log->debug("$prefix default domain: " . $self->{defaultdomain} );
+#     st_log->debug("$prefix fallback domain: " . $self->{fallbackdomain} );
+#     st_log->debug("$prefix AuthType: " . $self->{authtype} );
+#     st_log->debug("$prefix AuthName: " . $self->{authname} );
+#     st_log->debug("$prefix Auth NTLM: " . $self->{authntlm} );
+#     st_log->debug("$prefix Auth Basic: " . $self->{authbasic} );
+#     st_log->debug("$prefix NTLMAuthoritative: " . $self->{ntlmauthoritative} );
+#     st_log->debug("$prefix SplitDomainPrefix: " . $self->{splitdomainprefix} );
+#     foreach my $domain (sort keys %{$self->{smbpdc}}) {
+#         next unless ($domain);  # skip blank/empty domains
+#         st_log->debug("$prefix domain: $domain" );
+#         st_log->debug("$prefix ... pdc: " . $self->{smbpdc}{$domain} );
+#         st_log->debug("$prefix ... bdc: " . $self->{smbbdc}{$domain} );
+#     }
+}
+
+sub handle_http {
+    my ($handle, $env, undef, $fatal, $err) = @_;
+
+    if ($err || $fatal) {
+        # just log it and carry on; no CVs to worry about
+        # st_log->error("ntlmd AnyEvent::Handle error: $err");
+        chomp $err;
+        st_log->error("AnyEvent::Handle error: $err\n");
+        $handle->destroy if $handle;
+        return;
+    }
+
+    my ($sid) = ($env->{QUERY_STRING} =~ /sid=([^;&]+)/);
+    unless ($sid) {
+        $handle->push_write("HTTP/1.0 500 No session\r\n".
+            "Content-Length:0\r\n\r\n");
+        $handle->on_drain(sub {
+            shutdown $handle->{fh}, 1;
+            $handle->destroy;
+        });
+        return;
+    }
+    my $xa = $env->{HTTP_X_AUTHORIZATION} || '';
+    my $ntlm_type = ($xa !~ /NTLM .{7}TUAA(.)/) ? 'non-ntlm' :
+        ($1 eq 'B') ? 'type-1' : 'type-3';
+    st_log->debug("GOT SID: $sid, NTLM type: $ntlm_type\n");
+
+    if ($ntlm_type eq 'non-ntlm') {
+        ask_to_use_ntlm($handle);
+        return;
+    }
+
+    if (!$in_progress_sid) {
+        st_log->debug("NEW SID $sid\n");
+    }
+    elsif ($sid eq $in_progress_sid) {
+        st_log->debug("CONTINUE $sid\n");
+        undef $in_progress_timer; # cancel the timeout
+    }
+    else {
+        st_log->debug("QUEUE $sid\n");
+        push @$pending_reqs, [$handle, $env, $sid];
+        return;
+    }
+
+    do_ntlm($handle,$env,$sid);
+    return;
+};
+
+sub ask_to_use_ntlm {
+    my $handle = shift;
+    st_log->warning("client didn't provide a NTLM blob, rc: 401\n");
+    my $resp =
+        "HTTP/1.0 200 OK\r\n".
+        "X-Status: 401\r\n".
+        "X-WWW-Authenticate: NTLM\r\n".
+        "Content-Length: 3\r\n".
+        "Content-Type: text/plain\r\n".
+        "\r\n".
+        "ok\n";
+    $handle->push_write($resp);
+    $handle->on_drain(sub {
+        shutdown $handle->{fh}, 1;
+        $handle->destroy;
+    });
+    return;
+}
+
+sub empty_pending {
+    st_log->debug("empty pending queue\n");
+    $pending_reqs = [];
+    undef $pending_guard;
+}
+
+sub cancel_in_progress {
+    st_log->debug("throwing out sid $in_progress_sid\n");
+    undef $Socialtext::Apache::AuthenNTLM::cache; # releases samba
+    undef $in_progress_sid;
+    undef $in_progress_timer;
+
+    unless (@$pending_reqs) {
+        empty_pending();
+        return;
+    }
+
+    # schedule processing the next pending request
+    $pending_guard ||= AE::idle(sub {
+        if (!@$pending_reqs) {
+            empty_pending();
+            return;
+        }
+        st_log->debug("found pending\n");
+
+        # might be unnecessary paranoia:
+        if ($in_progress_sid) {
+            # disable guard, leave queue alone; timer will clean up the
+            # in-progress one if needed.
+            undef $pending_guard;
+            return;
+        }
+
+        my $next = shift @$pending_reqs;
+        do_ntlm(@$next);
+    });
+}
+
+sub do_ntlm {
+    my ($handle, $env, $sid) = @_;
+    my $safety = guard {
+        $handle->destroy;
+        cancel_in_progress();
+    };
+
+    try {
+        _do_ntlm($handle,$env,$sid);
+        $safety->cancel;
+    }
+    catch {
+        st_log->error("st-ntlmd: error processing SID:$sid\n$_\n");
+    };
+    return;
+}
+
+sub _do_ntlm {
+    my ($handle, $env, $sid) = @_;
+
+    st_log->debug("PROCESSING SID: $sid\n");
+
+    my $r = Apache->new(
+        _sid => $sid,
+        uri => $env->{PATH_INFO},
+        headers_in => Apache::Table->new(_table => {
+            Connection    => 'keep-alive',
+            Authorization => $env->{HTTP_X_AUTHORIZATION},
+        })
+    );
+
+    # blocks, blocks HARD:
+    my $rc = Socialtext::Apache::AuthenNTLM -> run($r);
+
+    my $w_a = $r->err_headers_out->get('WWW-Authenticate');
+    my $u = $r->user || '';
+
+    my $resp = "HTTP/1.0 200 OK\r\n";
+
+    if (my $reason = $r->reason) {
+        if ($reason =~ /^Wrong password/) {
+            if (++$recent_sid_failures{$sid} > MAX_PASSWORD_FAILURES) {
+                # frequent re-attempts seems to happen if IE6 isn't logged
+                # into the right domain.
+                st_log->error("SID $sid has too many failures, rejecting");
+                $rc = 403;
+                $w_a = '';
+                $u = '';
+                cancel_in_progress();
+            }
+        }
+        $reason =~ s/\r?\n/ /smg;
+        chomp $reason;
+        $resp .= "X-Reason: $reason\r\n";
+    }
+
+    $resp .= "X-Status: $rc\r\n";
+
+    if ($w_a) {
+        $resp .= "X-WWW-Authenticate: $w_a\r\n";
+        # stop processing the queue while we're working on this one.
+        undef $pending_guard;
+        $in_progress_sid = $sid;
+        $in_progress_timer =
+            AE::timer $Handshake_timeout, 0, sub {
+                st_log->error("SSO,NTLM,TIMEOUT,SID:$sid,{}\n");
+                cancel_in_progress();
+            };
+    }
+    elsif ($u) {
+        $resp .= "X-User: $u\r\n";
+        # all finished
+        cancel_in_progress();
+    }
+
+    $resp .=
+        "Content-Length: 3\r\n".
+        "Content-Type: text/plain\r\n".
+        "\r\n".
+        "ok\n";
+
+    $handle->on_error(sub {
+        my (undef, $fatal, $error) = @_;
+        st_log->error("AnyEvent::Handle error while responding to sid:$sid, $error\n");
+        cancel_in_progress();
+        $handle->destroy;
+    });
+    $handle->push_write($resp);
+    $handle->on_drain(sub {
+        st_log->info("SSO,NTLM,RESPONSE,SID:$sid,{".
+            qq{"rc":"$rc",}.
+            qq{"x-www-a":}.($w_a ? 'true' : 'false').','.
+            qq{"user":"$u"}.
+        "}\n");
+        shutdown $handle->{fh}, 1;
+        $handle->destroy;
+    });
+}

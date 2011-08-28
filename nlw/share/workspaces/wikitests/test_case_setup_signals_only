@@ -1,0 +1,53 @@
+| *Comment* | Test Case: Setup Signals Only |
+
+* Fixture: SocialWidgets
+
+Setup Signals Only is intended to be called from [Signals Only Testcases]
+
+This testcase mimics the Signals Only configuration in a dev env: dashboard disabled, signals enabled, no wikis other than Help wikis.
+
+It will delete all the standard wikis from a dev env and remove devnull1 membership from help-en and help-adminguide
+Since it will delete all wikis, the plan server and plan workspace must be in a different running environment.
+
+If running on a VE instead of a dev env, it will execute:
+`st-appliance-config set signals_only 1`
+to actually set up microblogging. It still expects the plan server to be elsewhere - a dev env will work just fine.
+
+| *Comment* | Test Case: Setup Signals Only. create a well-known static account for later use |  |
+| set | wna | Well Known Account |
+| set | wnw | well-known-account |
+
+| *Comment* | create %%username%% who might not exist in this dev env |  |
+| st-admin | create-user --e %%username%% --p %%password%% |  |
+
+| st-admin | enable-plugin --all-accounts --p signals |  |
+| st-admin | disable-plugin --all-accounts --p dashboard |  |
+| open_ok | /nlw/submit/logout |  |
+
+| *Comment* | Test Case: Setup Signals Only. Delete dev env workspaces |  |
+| st-admin | delete-workspace --no-export --w admin |  |
+| st-admin | delete-workspace --no-export --w a_test_stub_ws |  |
+| st-admin | delete-workspace --no-export --w auth-to-edit |  |
+| st-admin | delete-workspace --no-export --w b_test_stub_ws |  |
+| st-admin | delete-workspace --no-export --w exchange |  |
+| st-admin | delete-workspace --no-export --w foobar |  |
+| st-admin | delete-workspace --no-export --w growth_report_test |  |
+| st-admin | delete-workspace --no-export --w public |  |
+| st-admin | delete-workspace --no-export --w sale |  |
+
+| *Comment* | Test Case: Setup Signals Only. Delete wikitests and test-data |  |
+| st-admin | delete-workspace --no-export --w wikitests |  |
+| st-admin | delete-workspace --no-export --w test-data |  |
+
+| *Comment* | Test Case: Setup Signals Only. remove devnull1 from Help spaces |  |
+| st-admin | remove-member --w help-en --e devnull1@socialtext.com |  |
+| st-admin | remove-member --w help-adminguide --e devnull1@socialtext.com |  |
+
+| *Comment* | Test Case: Setup Signals Only. create a well-known account before signals_only |  |
+| *Comment* | Test Case: Setup Signals Only. %%wna%% is used in Test Case: True Microblogging |  |
+| st-admin | create-account --name "%%wna%%" | was created |
+
+| *Comment* | Test Case: Setup Signals Only. set signals_only. Could take minutes. |  |
+| st-appliance-config | set signals_only 1 |  |
+
+| *Comment* | Test Case: Setup Signals Only COMPLETED |

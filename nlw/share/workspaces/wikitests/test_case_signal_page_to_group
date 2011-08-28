@@ -1,0 +1,79 @@
+| *Comment* | Test Case: Signal Page To Group |
+
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Signal Page To Group SETUP Account |  |
+| set | group1 | signalpage-group1-%%start_time%% |
+| set | group2 | signalpage-group2-%%start_time%% |
+| set | acct | grpacct-%%start_time%% |
+| st-admin | create-account --name %%acct%% | was created |
+
+| *Comment* | Test Case: Signal Page To Group SETUP 2nd User, workspace |  |
+| set | nonwsuser | nonwseuser%%start_time%%@matt.socialtext.net |
+| set | ws | signalpage-%%start_time%% |
+| st-admin | create-workspace --name %%ws%% --title %%ws%% --e %%nonwsuser%% --p %%password%% --account %%acct%% | was created |
+| st-admin | add-member --e %%username%% --w %%ws%% | now has the role of |
+| st-admin | create-user --e %%nonwsuser%% --p %%password%% | was created |
+
+| *Comment* | Test Case: Signal Page To Group SETUP Groups |  |  |
+| create-group | %%group1%% | %%acct%% | %%username%% |
+| set | group1_id | %%group_id%% |  |
+| create-group | %%group2%% | %%acct%% | %%username%% |
+| set | group2_id | %%group_id%% |  |
+| set | signalpage | Signal Page %%start_time%% |  |
+
+
+| st-create-page | %%ws%% | %%signalpage%% |
+
+
+| *Comment* | Test Case: Signal Page To Group - click link then cancel |  |
+| open_ok | /%%ws%%/index.cgi?%%signalpage%% |  |
+| wait_for_element_visible_ok | st-signalthis-indicator | 30000 |
+| click_ok | st-signalthis-indicator |  |
+| wait_for_element_present_ok | //div[@id='st-signal-this-frame'] | 30000 |
+| wait_for_text_present_ok | Send a signal with a link to this page | 30000 |
+| wait_for_element_visible_ok | //img[@title='Close this window'] | 30000 |
+| click_ok | //img[@title='Close this window'] |  |
+| wait_for_text_not_present_ok | Send a signal with a link to this page | 30000 |
+
+| *Comment* | Test Case: Signal Page To Group - click link then send a signal |  |
+| open_ok | /%%ws%%/index.cgi?%%signalpage%% |  |
+| wait_for_element_visible_ok | st-signalthis-indicator | 30000 |
+| click_ok | st-signalthis-indicator |  |
+| wait_for_element_present_ok | //div[@id='st-signal-this-frame'] | 30000 |
+| wait_for_text_present_ok | Send a signal with a link to this page | 30000 |
+| st-send-page-signal | Check out this page, it's great: %%start_time%% |  |
+
+| *Comment* | Test Case: Signal Page To Group - see signal on signals page for %%acct%% |  |
+| open_ok | /st/signals/ |  |
+| wait_for_element_present_ok | //ul[@id='st-dropdown-2-list']/li[1]/a | 30000 |
+| click_ok | //ul[@id='st-dropdown-2-list']/li[1]/a |  |
+| wait_for_text_present_ok | Check out this page, it's great: %%start_time%% | 30000 |
+| wait_for_text_present_ok | %%signalpage%% | 30000 |
+| wait_for_element_visible_ok | link=%%signalpage%% | 30000 |
+
+| *Comment* | Test Case: Signal Page To Group - Login as non-workspace member; do no see signal |  |
+| st-logoutin | %%nonwsuser%% | %%password%% |
+| open_ok | /st/signals |  |
+| set | new_signal | New Signal %%start_time%% |
+| st-send-signal-in-activities-widget | %%new_signal%% |  |
+
+| *Comment* | Test Case: Signal Page To Group - See just sent signal, not previous signal |  |
+| wait_for_element_visible_ok | link=Signals |  |
+| click_and_wait | link=Signals |  |
+| wait_for_text_present_ok | %%new_signal%% | 30000 |
+| wait_for_text_not_present_ok | Check out this page, it's great: %%start_time%% | 30000 |
+| text_unlike | //body | %%signalpage%% |
+
+| *Comment* | Test Case: Signal Page To Group TODO: Signal to different groups within the widget |  |
+
+| *Comment* | Test Case: Signal Page To Group TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%nonwsuser%% |  |
+| delete-group | %%group2_id%% |  |
+| delete-group | %%group1_id%% |  |
+| st-admin | delete-workspace --no-export --w %%ws%% | been deleted |
+| delete-account | %%acct%% |  |
+
+| *Comment* | Test Case: Signal Page To Group COMPLETED |  |

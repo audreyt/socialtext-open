@@ -1,0 +1,28 @@
+<html>
+<head>
+<title>02oo</title>
+<script type="text/javascript" src="lib/JSAN.js" charset="UTF-8"></script>
+<script type="text/javascript" src="lib/Test/Builder.js" charset="UTF-8"></script>
+<script type="text/javascript" src="../lib/Widget/Lightbox.js"></script>
+</head>
+<body>
+<p>Sed, vulputate lorem blandit feugait consectetuer qui. Dolore at aliquam tincidunt adipiscing nisl, wisi iriure minim wisi commodo. Duis duis ipsum vulputate diam dolore nonummy wisi delenit nonummy ea te autem nonummy. Feugait amet ipsum praesent vel. Et feugait facilisis sed iusto consectetuer at ea esse feugiat eu. Feugait consequat adipiscing minim et consequat molestie? Dolore molestie dignissim praesent feugiat. Exerci molestie eu euismod lorem luptatum consectetuer ea vero praesent in ut minim nonummy facilisis. Nisl molestie delenit exerci ut iusto eu iriure wisi facilisis. Facilisi ut: et eu enim enim nonummy qui duis ipsum ex ut iusto vero eum! In minim adipiscing duis dolor eros. Lorem suscipit vero nibh eu. Feugiat odio; iriure molestie, sed, in euismod vulputate vulputate et. Duis vel amet quis duis sit facilisi diam veniam te facilisis lorem autem. Dolor nulla euismod qui ullamcorper accumsan et duis duis. Nostrud, at praesent consequat ut molestie consequat consequat tincidunt lobortis aliquip?</p>
+<pre id="test"></pre>
+
+<script type="text/javascript"><!--
+var t = new Test.Builder();
+t.plan({tests: 2});
+
+var box = new Widget.Lightbox;
+box.content("<p id=\"testbox\">Hello World</p>");
+box.show();
+
+t.ok( document.getElementById("testbox") , "Hello world div");
+
+box.hide();
+t.ok( box.style.display=="none" , "Hello world div is invisible");
+
+//--></script>
+</body>
+</html>
+

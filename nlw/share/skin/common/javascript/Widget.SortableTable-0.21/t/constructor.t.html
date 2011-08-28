@@ -1,0 +1,45 @@
+<html>
+
+<head>
+ <script type="text/javascript" src="lib/JSAN.js"></script>
+ <script type="text/javascript">
+  JSAN.addRepository("lib", "../lib");
+  JSAN.use("Test.More");
+  JSAN.errorLevel = "die";
+ </script>
+</head>
+
+<body>
+
+ <table id="a-table">
+ </table>
+
+ <pre style="white-space: pre" id="test"><script>
+plan({ tests: 7 });
+
+JSAN.use("Widget.SortableTable");
+
+is( typeof Widget.SortableTable, "function", "constructor namespace exists" );
+ok( Widget.SortableTable.VERSION, "found library VERSION" );
+
+{
+    var error;
+    var widg;
+    try { widg = new Widget.SortableTable() }
+    catch (e) { error = e }
+    ok( error, "cannot construct a new object without params" );
+    like( error.message, /without parameters/i, "exception contains expected message" );
+
+    try { widg = new Widget.SortableTable( { foo: 1 } ) }
+    catch (e) { error = e }
+    ok( error, "cannot construct new object with bad params" );
+    like( error.message, /requires a tableId/i, "exception contains expected message" );
+
+    widg = new Widget.SortableTable( { tableId: "a-table" } );
+    ok( widg, "constructor returned a new object" );
+}
+
+ </script></pre>
+
+</body>
+</html>

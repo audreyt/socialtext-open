@@ -1,0 +1,140 @@
+Test signal shortcutting for event queries.
+
+* Fixture: SocialRest
+
+| comment             | set up four user-account-workspace sets |
+| standard-test-setup | a                                      |
+| standard-test-setup | b                                      |
+| standard-test-setup | c                                      |
+| standard-test-setup | d                                      |
+
+| comment | make them share an account | |
+| add-member | %%a_username%% | %%b_workspace%% |
+| add-member | %%b_username%% | %%a_workspace%% |
+
+| comment | a and c are disjoint |
+| add-member | %%b_username%% | %%c_workspace%% |
+
+
+Set up events
+
+| st-clear-events |
+| Comment | set up events |
+| http-user-pass | %%b_username%% | b_password |
+
+| post-json | /data/signals | {"signal":"tk 3abc!"} |
+| get | /data/events?event_class=signal;limit=1 | application/json |
+| set-from-content | abc_at | qr/"at":"([^"]+)"/ |
+
+| post-json | /data/signals | {"signal":"tk 3a!","account_ids":[%%a_account_id%%]} |
+| get | /data/events?event_class=signal;limit=1 | application/json |
+| set-from-content | a_at | qr/"at":"([^"]+)"/ |
+
+| post-json | /data/signals | {"signal":"tk 3b!","account_ids":[%%b_account_id%%]} |
+| get | /data/events?event_class=signal;limit=1 | application/json |
+| set-from-content | b_at | qr/"at":"([^"]+)"/ |
+
+| post-json | /data/signals | {"signal":"tk 3c!","account_ids":[%%c_account_id%%]} |
+| get | /data/events?event_class=signal;limit=1 | application/json |
+| set-from-content | c_at | qr/"at":"([^"]+)"/ |
+
+| post-json | /data/people/%%b_username%%/watchlist | {"person": {"id":"%%a_user_id%%"}} |
+| code-is | 204 |
+
+| comment         | check event setup |                  |
+| http-user-pass  | %%b_username%%    | b_password       |
+| get             | /data/events      | application/json |
+| code-is         | 200               |                  |
+| json-parse      |                   |                  |
+| json-array-size | 5                 |                  |
+| body-like       | 3abc!             |                  |
+| body-like       | 3a!               |                  |
+| body-like       | 3b!               |                  |
+| body-like       | 3c!               |                  |
+| body-like | watch | |
+| header-isnt     | X-Events-Optimize | signal-shortcut  |
+
+| comment | just person events should not shortcut | |
+| get | /data/events?event_class=person | application/json |
+| code-is         | 200               |                 |
+| json-parse      |                   |                 |
+| json-array-size | 1                 |                 |
+| body-like       | watch             |                 |
+| header-isnt     | X-Events-Optimize | signal-shortcut |
+
+
+Shortcutting using `after=` clause.
+
+| comment | don't shortcut after with event_class | |
+| get | /data/events?event_class=signal;after=%%b_at%% | application/json |
+| code-is         | 200               |                 |
+| json-parse      |                   |                 |
+| json-array-size | 1                 |                 |
+| body-like       | 3c!               |                 |
+| header-isnt     | X-Events-Optimize | signal-shortcut |
+
+| comment | shortcut after with event_class | |
+| get | /data/events?event_class=signal;after=%%c_at%% | application/json |
+| code-is         | 200               |                 |
+| json-parse      |                   |                 |
+| json-array-size | 0                 |                 |
+| header-is       | X-Events-Optimize | signal-shortcut |
+
+| comment | shortcut after with event_class, mix with 'person' events | |
+| get | /data/events?event_class=signal,person;after=%%c_at%% | application/json |
+| code-is         | 200               |                 |
+| json-parse      |                   |                 |
+| json-array-size | 1                 |                 |
+| body-like       | watch             |                 |
+| header-is       | X-Events-Optimize | signal-shortcut |
+
+| comment | shortcut after with action | |
+| get | /data/events?action=signal;after=%%c_at%% | application/json |
+| code-is         | 200               |                 |
+| json-parse      |                   |                 |
+| json-array-size | 0                 |                 |
+| header-is       | X-Events-Optimize | signal-shortcut |
+
+
+Shortcutting using `before=` clause.
+
+| comment | don't shortcut before with event_class | |
+| get | /data/events?event_class=signal;before=%%a_at%% | application/json |
+| code-is         | 200               |                 |
+| json-parse      |                   |                 |
+| json-array-size | 1                 |                 |
+| body-like       | 3abc!             |                 |
+| header-isnt     | X-Events-Optimize | signal-shortcut |
+
+| comment | shortcut before with event_class | |
+| get | /data/events?event_class=signal;before=%%abc_at%% | application/json |
+| code-is         | 200               |                 |
+| json-parse      |                   |                 |
+| json-array-size | 0                 |                 |
+| header-is       | X-Events-Optimize | signal-shortcut |
+
+| comment | shortcut before with action | |
+| get | /data/events?action=signal;before=%%abc_at%% | application/json |
+| code-is         | 200               |                 |
+| json-parse      |                   |                 |
+| json-array-size | 0                 |                 |
+| header-is       | X-Events-Optimize | signal-shortcut |
+
+
+Shortcutting on total visible.
+
+| http-user-pass  | %%d_username%%    | d_password       |
+
+| comment | shortcut no colleagues | |
+| get | /data/events?event_class=signal | application/json |
+| code-is         | 200               |                 |
+| json-parse      |                   |                 |
+| json-array-size | 0                 |                 |
+| header-is       | X-Events-Optimize | signal-shortcut |
+
+| comment | shortcut no colleagues, mix with person events | |
+| get | /data/events?event_class=signal,person | application/json |
+| code-is         | 200               |                 |
+| json-parse      |                   |                 |
+| json-array-size | 0                 |                 |
+| header-is       | X-Events-Optimize | signal-shortcut |

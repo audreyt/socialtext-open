@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# detect whether running in dev env
+SUDO='sudo'
+HOST=`hostname --fqdn`
+    if [ $HOST == 'lucite.socialtext.net' ] || [ $HOST == 'topaz.socialtext.net' ] || [ $HOST == 'borax.socialtext.net' ]; then
+        SUDO=''
+    fi
+
+    if [ "$1" == "enable" ]; then
+            echo ENABLING socialcalc for all workspaces
+            $SUDO st-admin enable-plugin --all-workspaces --plugin socialcalc
+    elif [ "$1" == "disable" ]; then
+            echo DISABLING socialcalc for all workspaces
+            $SUDO st-admin disable-plugin --all-workspaces --plugin socialcalc
+    else
+        echo "Usage: st-socialcalc [enable|disable]"
+    fi

@@ -1,0 +1,72 @@
+Tests for TaggedPages via the REST API
+
+* Fixture: SocialRest
+
+| Comment          | Test Setup    |                                     |
+| set              | username      | u%%start_time%%@ken.socialtext.net  |
+| create-user      | %%username%%  | %%password%%                        |
+| http-user-pass   | %%username%%  | %%password%%                        |
+| set              | workspace     | w%%start_time%%                     |
+| create-workspace | %%workspace%% |                                     |
+| add-member       | %%username%%  | %%workspace%%                       |
+| set              | tags_uri      | /data/workspaces/%%workspace%%/tags |
+
+| edit-page| %%workspace%% | pagenew1 | new |
+| sleep | 1.1 |
+| edit-page| %%workspace%% | pagenew2 | new |
+| sleep | 1.1 |
+| edit-page| %%workspace%% | pagenew3 | new |
+| sleep | 1.1 |
+| edit-page| %%workspace%% | pagenew4 | new |
+
+| Comment   | Tag pages                                          |                         |           |
+| POST      | /data/workspaces/%%workspace%%/pages/pagenew1/tags | Content-Type=text/plain | Foo       |
+| code-is   | 201                                                |                         |           |
+| POST      | /data/workspaces/%%workspace%%/pages/pagenew2/tags | Content-Type=text/plain | Foo       |
+| code-is   | 201                                                |                         |           |
+| POST      | /data/workspaces/%%workspace%%/pages/pagenew3/tags | Content-Type=text/plain | Foo       |
+| code-is   | 201                                                |                         |           |
+| POST      | /data/workspaces/%%workspace%%/pages/pagenew4/tags | Content-Type=text/plain | Foo       |
+| code-is   | 201                                                |                         |           |
+
+| GET             | /data/workspaces/%%workspace%%/tags/Foo/pages | application/json |
+| code-is         | 200              |
+| json-parse      |                  |
+| json-array-size | 4                |
+| body-unlike     | qr/startIndex/   |
+| body-unlike     | qr/itemsPerPage/ |
+| body-unlike     | qr/totalResults/ |
+
+| GET             | /data/workspaces/%%workspace%%/tags/Foo/pages?count=1 | application/json |
+| code-is         | 200              |
+| json-parse      |                  |
+| json-array-size | 1                |
+| body-unlike     | qr/startIndex/   |
+| body-unlike     | qr/itemsPerPage/ |
+| body-unlike     | qr/totalResults/ |
+
+| GET             | /data/workspaces/%%workspace%%/tags/Foo/pages?offset=1 | application/json |
+| code-is         | 200              |
+| json-parse      |                  |
+| json-array-size | 3                |
+| body-unlike     | qr/startIndex/   |
+| body-unlike     | qr/itemsPerPage/ |
+| body-unlike     | qr/totalResults/ |
+
+| GET             | /data/workspaces/%%workspace%%/tags/Foo/pages?startIndex=1 | application/json |
+| code-is         | 200              |
+| body-like       | qr/startIndex/ | startIndex present |
+| body-like       | qr/itemsPerPage":25/ | itemsPerPage is the default |
+| body-like       | qr/totalResults":4/ | totalResults is correct |
+
+| GET             | /data/workspaces/%%workspace%%/tags/Foo/pages?startIndex=1;count=1 | application/json |
+| code-is         | 200              |
+| body-like       | qr/startIndex/ | startIndex present |
+| body-like       | qr/itemsPerPage":1/ | itemsPerPage is affected by count= |
+| body-like       | qr/totalResults":4/ | totalResults is correct |
+
+| GET             | /data/workspaces/%%workspace%%/tags/Foo/pages?startIndex=1;count=1;skipTotalResults=1 | application/json |
+| code-is         | 200              |
+| body-like       | qr/startIndex/ | startIndex present |
+| body-like       | qr/itemsPerPage":1/ | itemsPerPage is affected by count= |
+| body-unlike     | qr/totalResults/ | No totalResults entry with skipTotalResults |

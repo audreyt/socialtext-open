@@ -1,0 +1,102 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[% perm_admin = hub.checker.check_permission('admin_workspace') %]
+[% INCLUDE element/settings/start %]
+
+<dl class="form">
+<dt><label>[% loc('config.membership') %]</label></dt>
+</dl>
+[% IF is_auw %]
+  <p>All users from the <b>[% workspace.account.name %]</b> account are also members of
+     this "all users" workspace.<br /></p>
+[% END %]
+
+<dl class="form">
+<dt><label>[% loc('config.users') %]</label></dt>
+</dl>
+
+[% IF users_with_roles.size == 0 %]
+  <p>[% loc('wiki.no-members') %]</p>
+[% ELSE %]
+  <table style="margin: 1em 0">
+  <tr>
+    [% IF perm_admin %]
+      <th>[% loc('do.remove') %]</th>
+    [% END %]
+      <th>[% loc('user.email-address') %]</th>
+      <th>[% loc('user.admin') %]</th>
+    [% IF perm_admin && appconfig.is_default('user_factories') %]
+      <th>[% loc('password.reset') %]</th>
+    [% END %]
+  </tr>
+
+  [% FOREACH user_with_role IN users_with_roles %]
+    [% SET user = user_with_role.0 %]
+    [% SET role = user_with_role.1 %]
+    <tr>
+      [% IF hub.checker.check_permission('admin_workspace') %]
+        <td class="text-align-center">
+          <input type="checkbox" value="[% user.user_id %]" name="remove_user" />
+        </td>
+      [% END %]
+        <td>
+      [% IF hub.checker.check_permission('admin_workspace') %]
+         [% user.name_and_email | html %]
+      [% ELSE %]
+         [% user.best_full_name( workspace => hub.current_workspace ) | html %]
+      [% END %]
+        </td>
+        <td>
+        [% UNLESS user.is_deleted %]
+          <input type="checkbox" value="[% user.user_id %]" name="should_be_admin"[% IF role.name == 'admin' %] checked="checked"[% END %][% UNLESS hub.checker.check_permission('admin_workspace') %] disabled="disabled"[% END %] />
+        [% END %]
+        </td>
+      [% IF hub.checker.check_permission('admin_workspace') &&
+            appconfig.is_default('user_factories') %]
+        <td>
+        [% IF user.can_update_store %]
+          <input type="checkbox" value="[% user.user_id %]" name="reset_password" />
+        [% ELSE %]
+          <input type="checkbox" name="reset_password" disabled="true"
+                 title="[% loc("error.cannot-reset-pasword") %]" />
+        [% END %]
+        </td>
+      [% END %]
+    </tr>
+  [% END %]
+  </table>
+[% END %]
+
+[% IF is_business_admin OR NOT is_auw %]
+  <dl class="form">
+  <dt><label>[% loc('nav.groups') %]</label></dt>
+  </dl>
+  [% IF groups_with_roles.size == 0 %]
+    <p>[% loc('wiki.no-groups') %]</p>
+  [% ELSE %]
+    <table>
+    <tr>
+      <th>[% loc('group.name') %]</th>
+      <th>[% loc('config.users') %]</th>
+      <th>[% loc('user.role') %]</th>
+    </tr>
+
+    [% FOREACH gwr IN groups_with_roles %]
+      [% SET group = gwr.0 %]
+      [% SET role = gwr.1 %]
+      <tr>
+          <td class="text-align-center">
+            [% group.driver_group_name | html %]
+          </td>
+          <td>
+            [% group.user_count %]
+          </td>
+          <td>
+            [% role.name | html %]
+          </td>
+      </tr>
+    [% END %]
+    </table>
+  [% END %]
+[% END %]
+[% INCLUDE element/settings/stop %]

@@ -1,0 +1,78 @@
+diff --git a/nlw/lib/Socialtext/CLI.pm b/nlw/lib/Socialtext/CLI.pm
+index 7a63a4c..d1aaf45 100644
+--- a/nlw/lib/Socialtext/CLI.pm
++++ b/nlw/lib/Socialtext/CLI.pm
+@@ -459,6 +459,9 @@ sub import_account {
+         Socialtext::Group::Photo->ClearCache();
+     };
+ 
++    local $ENV{ST_OMIT_EVENT_RECORDING} = 1;
++    local $ENV{ST_OMIT_EMAIL_OUT} = 1;
++
+     print loc("Importing account data..."), "\n";
+     my $account = eval { Socialtext::Account->import_file(
+         file  => "$dir/account.yaml",
+diff --git a/nlw/lib/Socialtext/EmailSender/Base.pm b/nlw/lib/Socialtext/EmailSender/Base.pm
+index d288f24..e245107 100644
+--- a/nlw/lib/Socialtext/EmailSender/Base.pm
++++ b/nlw/lib/Socialtext/EmailSender/Base.pm
+@@ -19,6 +19,7 @@ use List::Util qw(first);
+ use Readonly;
+ use Socialtext::Exceptions qw( param_error );
+ use Socialtext::MIME::Types;
++use Socialtext::Log qw/st_log/;
+ use Socialtext::Validate
+     qw( validate SCALAR_TYPE ARRAYREF_TYPE HASHREF_TYPE SCALAR_OR_ARRAYREF_TYPE BOOLEAN_TYPE );
+ use vars qw[$SendClass];
+@@ -43,7 +44,15 @@ $SendClass                       = 'Sendmail';
+     };
+ 
+     sub get_send_class {
+-        if (my $file = $ENV{ST_EMAIL_TO_FILE}) {
++        my $self = shift;
++        my $recip = shift;
++        my $file = $ENV{ST_EMAIL_TO_FILE};
++
++        if ($ENV{ST_OMIT_EMAIL_OUT}) {
++            st_log->warning("Omitting email to $recip.");
++            $file ||= "/tmp/email-not-sent";
++        }
++        if ($file) {
+             require Email::Send::IO;
+             @Email::Send::IO::IO = ($file);
+             return 'IO';
+@@ -235,7 +244,7 @@ $SendClass                       = 'Sendmail';
+             $email->header_set( $_ => $headers{$_} ) for keys %headers;
+         }
+ 
+-        Email::Send->new( { mailer => $self->get_send_class } )->send($email);
++        Email::Send->new( { mailer => $self->get_send_class($to || $cc) } )->send($email);
+     }
+ 
+ }
+diff --git a/nlw/lib/Socialtext/Events/Recorder.pm b/nlw/lib/Socialtext/Events/Recorder.pm
+index 0e49a5a..979a5e6 100644
+--- a/nlw/lib/Socialtext/Events/Recorder.pm
++++ b/nlw/lib/Socialtext/Events/Recorder.pm
+@@ -4,6 +4,7 @@ use warnings;
+ use strict;
+ use Socialtext::SQL qw/sql_execute/;
+ use Socialtext::JSON qw/encode_json decode_json/;
++use Socialtext::Log qw/st_log/;
+ use Socialtext::Encode;
+ 
+ sub new {
+@@ -98,6 +99,13 @@ sub record_event {
+     my $self = shift;
+     my $p = shift || die 'Requires Event parameters';
+ 
++    if ($ENV{ST_OMIT_EVENT_RECORDING}) {
++        warn "Omitting event recording: $p->{event_class} "
++                . "$p->{action} by $p->{actor}";
++        st_log->debug( "Omitting event recording: $p->{event_class} "
++                . "$p->{action} by $p->{actor}");
++        return;
++    }
+     #warn "EVENT: $p->{event_class}:$p->{action}\n";
+ 
+     $p->{at} ||= $p->{timestamp}; # compatibility alias

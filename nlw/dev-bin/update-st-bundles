@@ -1,0 +1,48 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Cwd qw(abs_path);
+use File::Basename qw(dirname);
+use File::Slurp;
+
+my $src_dir = dirname($0) . '/..';
+my $lib_dir = "$src_dir/../bundles/Bundle-Socialtext/";
+
+my @bundles = (
+    [ "$lib_dir/Socialtext.pm", 'build/Deps.yaml' ],
+    [ "$lib_dir/Tests.pm", 'build/TestDeps.yaml' ],
+);
+
+for my $bundle_info (@bundles) {
+    my ($module, $deps_file) = @$bundle_info;
+    my $text = read_file( $module = abs_path($module) );
+    my $deps = get_deps($deps_file);
+
+    if ( $text =~ /^(.*)=head1 CONTENTS.*?(=head1.*)$/s ) {
+        print "Updating $module\n";
+        write_file( $module, $1 . serialze_deps($deps_file) . $2 );
+    } else {
+        die "Could not parse $module\n";
+    }
+}
+
+sub serialze_deps {
+    my $file = shift;
+    my $deps = get_deps($file);
+    my $content = "=head1 CONTENTS\n\n";
+    for my $dep (sort keys %$deps) {
+        my $ver = $deps->{$dep} || 0;
+        $content .= join " ", $dep, ( $ver eq '?' ? 0 : $ver );
+        $content .= "\n\n";
+    }
+    return $content;
+}
+
+sub get_deps {
+    my $file = shift;
+    my $VAR1;
+    eval `$src_dir/dev-bin/list-module-deps -f $file --dump`;
+    die "$@\n" if $@;
+    return $VAR1;
+}

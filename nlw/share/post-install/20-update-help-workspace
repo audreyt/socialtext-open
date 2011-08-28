@@ -1,0 +1,25 @@
+#!/bin/bash
+set -e
+
+SHAREDIR=`dirname $0`/../l10n/help/
+
+# Early out if the help tarballs haven't changed since last time
+HELPSUM=`dirname $0`/../l10n/help/help.sha1
+if [ -e $HELPSUM ]; then
+    echo "Checking if help needs to be updated ..."
+    TMPSUM=/tmp/help.sha1.$$
+    sha1sum $SHAREDIR/*.gz > $TMPSUM
+
+    OLDHELP=`cat $HELPSUM`
+    NEWHELP=`cat $TMPSUM`
+    rm $TMPSUM
+    if [ "$OLDHELP" = "$NEWHELP" ]; then
+        echo "Help looks to be up-to-date."
+        exit
+    fi
+fi
+sha1sum $SHAREDIR/*.gz > $HELPSUM
+
+
+JOBID=`(st-run-as-web-user ceq-exec --timeout 900 --priority 90 /usr/bin/st-create-help-workspaces $SHAREDIR || echo "FAILED TO create-help-workspaces")`
+echo "$JOBID running st-create-help-workspaces $SHAREDIR"

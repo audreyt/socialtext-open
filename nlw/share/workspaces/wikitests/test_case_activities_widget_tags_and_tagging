@@ -1,0 +1,75 @@
+| *Comment* | Test Case: Activities Widget Tags and Tagging |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Activities Widget Tags and Tagging Setup |  |
+
+TODO: there seems to be some weirdness indexing usernames that end in a string of numbers. Come back and look at that. Meanwhile, put letters after the numbers.
+
+| set | tagginguser | tagging%%start_time%%@ken.socialtext.net |
+| set | taggingusershort | You |
+| set | taguser | taguser%%start_time%%@ken.socialtext.net |
+| set | tagusershort | taguser%%start_time%% |
+| set | pagename | pagename%%start_time%% |
+| set | personaltag | personaltag %%start_time%% |
+| set | othertag | othertag %%start_time%% |
+| set | pagetag | pagetag |
+| set | wrkspc | acwidg-tags-ws%%start_time%% |
+
+| st-admin | create-workspace --empty --name %%wrkspc%% --title %%wrkspc%% |  |
+| st-admin | create-user --email %%tagginguser%% --password %%password%% |  |
+| st-admin | create-user --email %%taguser%% --password %%password%% |  |
+| st-admin | add-member --email %%tagginguser%% --workspace %%wrkspc%% |  |
+| st-admin | add-member --email %%taguser%% --workspace %%wrkspc%% |  |
+
+| *Comment* | Test Case: Activities Widget Tags and Tagging: login %%tagginguser%% |
+| st-logoutin | %%tagginguser%% | %%password%% |
+
+| *Comment* | Test Case: Activities Widget Tags and Tagging: Process jobs after creating user |  |
+| st_process_jobs | PersonIndex |  |
+
+| *Comment* | Test Case: Activities Widget Tags and Tagging Tag A profile |  |
+| st-find-user | %%tagusershort%% |  |
+| wait_for_element_visible_ok | new_tag | 30000 |
+| type_ok | new_tag | %%othertag%% |
+| click_ok | //input[@value='Add Tag'] |  |
+| wait_for_element_visible_ok | link=%%othertag%% | 30000 |
+| text_like | link=%%othertag%% | %%othertag%% |
+
+| *Comment* | Test Case: Activities Widget Tags and Tagging Tag ME %%tagginguser%% |  |
+| open_ok | /?profile |  |
+| wait_for_element_visible_ok | new_tag | 30000 |
+| type_ok | new_tag | %%personaltag%% |
+| click_ok | //input[@value='Add Tag'] |  |
+| wait_for_element_visible_ok | link=%%personaltag%% | 30000 |
+| text_like | link=%%personaltag%% | %%personaltag%% |
+
+| *Comment* | Test Case: Activities Widget Tags and Tagging Tag A Page |  |
+| st-create-wikipage | %%wrkspc%% | %%pagename%% |
+| st-add-page-tag | /%%wrkspc%%/index.cgi?%%pagename%% | %%pagetag%% |
+
+| *Comment* | Test Case: Activities Widget Tags and Tagging Clear Cache, catchup logs |
+| st-clear-json-cache |  |
+
+| *Comment* | Test Case: Activities Widget Tags and Tagging Load Activity Widget |  |
+| open_ok | /?dashboard |  |
+| st-single-widget-in-dashboard | gallery-widget-Activities |  |
+| st-name-widget | 1 | activities_widget |
+| st-widget-title-like | activities_widget | Activities |
+
+| *Comment* | Test Case: Activities Widget Tags and Tagging Verify Tags in activities widget |
+
+| set | t1 | %%taggingusershort%%.+minute.+ago.+tagged.+%%pagename%%.+in.+%%wrkspc%%.+as.+%%pagetag%% |
+| set | t2 | %%taggingusershort%%.+minute.+ago.+edited.+%%pagename%%.+in.+%%wrkspc%% |
+| set | t3 | %%taggingusershort%%.+minute.+ago.+tagged.+themself.+%%personaltag%% |
+| set | t4 | %%taggingusershort%%.+minute.+ago.+tagged.+%%tagusershort%%.+%%othertag%% |
+
+| st_verify_text_in_activities_widget | activities_widget | qr/Showing.+%%t1%%.+%%t2%%.+%%t3%%.+%%t4%%/ism |
+
+| *Comment* | Test Case: Activities Widget Tags and Tagging TEARDOWN |
+| st-process-jobs |  |  |
+| st-admin | delete-workspace --no-export --w %%wrkspc%% | has been deleted |
+| st-admin | deactivate-user --email %%tagginguser%% |  |
+| st-admin | deactivate-user --email %%taguser%% |  |
+
+| *Comment* | Test Case: Activities Widget Tags and Tagging COMPLETED |

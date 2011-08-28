@@ -1,0 +1,64 @@
+<span class="title">[% loc('table.create') %]</span>
+<form action="#" onsubmit="return false">
+<table class="table-create">
+    <tr>
+        <td class="row-col-label">
+            [% loc('table.rows:') %]&nbsp;
+        </td>
+        <td class="row-value">
+            <input name="rows" type="text" value="5">
+        </td>
+    </tr>
+
+    <tr>
+        <td class="row-col-label">
+            [% loc('table.columns:') %]&nbsp;
+        </td>
+        <td class="col-value">
+            <input name="columns" type="text" value="3">
+        </td>
+    </tr>
+
+    <tr>
+        <td></td>
+        <td>
+            <input type="checkbox" name="sort" disabled="true" />
+            <label for="sort">[% loc('table.table-sortable') %]</label>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            <input type="checkbox" name="border" checked="checked" />
+            <label for="border">[% loc('table.show-cell-borders') %]</label>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan="2">
+            <div>
+                <ul class="widgetButton" style="float:left; padding:10px">
+                    <li class="flexButton">
+                        <a class="save genericOrangeButton" id="table-info-save" href="#">
+                            [% loc('do.save') %]
+                        </a>
+                    </li>
+                </ul>
+                <ul class="widgetButton" style="float:left; padding:10px">
+                    <li class="flexButton">
+                        <a class="close genericOrangeButton" id="table-info-cancel" href="#">
+                            [% loc('do.cancel') %]
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan="2">
+            <span class="error"></span>
+        </td>
+    </tr>
+</table>
+</form>

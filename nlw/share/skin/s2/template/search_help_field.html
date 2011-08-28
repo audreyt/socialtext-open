@@ -1,0 +1,30 @@
+[%# @COPYRIGHT@ -%]
+<p>
+  [% loc("It looks like you are trying to search on a field in the search index. At this time the fields available are:") %]
+</p>
+
+<ul>
+  <li>[% loc("title") %]</li>
+  <li>[% loc("category") %]</li>
+</ul>
+
+<p>
+  [% loc("You may search on a field by separating the field name from the query with a colon, like this:") %]
+</p>
+
+<pre>
+   [% loc("title:hello") %]
+   [% loc("category:help") %]
+</pre>
+
+<p>
+  [% loc("If you try to search on a field that does not exist (<tt>link:hello</tt>) or without a query (<tt>link:</tt>) you will see this message.") %]
+</p>
+
+<p>
+  [% loc('Your query was "[_1]"', self.cgi.search_term) %].
+</p>
+
+<p>
+  [% loc("As we continue to develop the search system, the options you will have and the interface you have to make use of them will improve.") %]
+</p>

@@ -1,0 +1,16 @@
+#!/bin/bash -e
+
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+
+# We need to make the default for homepage_weblog be an empty string AND set a 
+# NOT NULL constraint.  Before we can set the NOT NULL constraint, we need to
+# make sure all pre-existing NULLs are converted to the default empty string.
+
+psql --no-align --tuples-only -U $DB_USER -d $DB <<EOF
+ALTER TABLE "Workspace" ALTER COLUMN "homepage_weblog" SET DEFAULT '';
+UPDATE "Workspace" SET "homepage_weblog" = '' WHERE "homepage_weblog" IS NULL;
+ALTER TABLE "Workspace" ALTER COLUMN "homepage_weblog" SET NOT NULL;
+EOF
+

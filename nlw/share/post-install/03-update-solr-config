@@ -1,0 +1,4 @@
+#!/bin/bash
+set -e
+
+cp -R /usr/share/socialtext-solr/conf/* /var/lib/socialtext-solr/cores/core0/conf/

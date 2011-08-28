@@ -1,0 +1,42 @@
+* Fixture: SocialWidgets
+
+These testcases work for an LDAP user but not for a default user.
+These testcases REQUIRE that LDAP be enabled.
+Any LDAP user specific testcases should go here.
+
+Every test should override the passed in values as follows:
+
+set | username | devnullx |
+set | email | devnullx@socialtext.com |
+set | password | ldapd3v |
+set | email_esc | devnullx\@socialtext.com |
+
+LDAP test cases must explicitly use the above ldap username, email, and pwd so LDAP Testcases can be called from tests where a Default user is logged in.
+
+* [Enable LDAP]
+
+Test Case: Verify LDAP Enabled verifies the LDAP user screens for Login/Logout, Password Reset, Admin resets password, and self register
+
+* [Test Case: Verify LDAP Enabled]
+
+Test Case: LDAP Group moved to top of top-level testcases so they run in a pristine LDAP environment ...
+
+Special test case for LDAP user CLI commands
+
+* [Test Case: Command Line: LDAP USERS]
+
+Run a fairly complex testcase logged in as the LDAP user
+
+* [Test Case: LDAP Watchlist]
+
+Make sure that the "Email this page" popup works correctly with LDAP users
+
+* [Test Case: Email page shows LDAP emails]
+
+* [Test Case: Manager's Name in LDAP]
+
+Special test for LDAP user deletion.
+
+* [Test Case: LDAP Deleted User]
+
+* [Enable LDAP]

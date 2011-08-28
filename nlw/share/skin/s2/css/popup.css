@@ -1,0 +1,188 @@
+body.st-popup {
+    font-family: Verdana, Arial, sans-serif;
+    color: #000;
+    background-color: #fff;
+    margin: 5px;
+}
+
+.st-popup-errormessage {
+    border-top: 1px solid #BA4949;
+    border-bottom: 1px solid #BA4949;
+    background-color: #F5F5F5;
+    color: #800000;
+    font-size: 90%;
+    padding: 4px;
+}
+
+.st-popup-title {
+    border-bottom: 1px solid #000;
+    padding-bottom: 2px;
+    font-size: 100%;
+    font-weight: bold;
+}
+
+p.input {
+    font-size: 90%;
+    padding: 0;
+    margin: 0 0 .3em 0;
+}
+
+p.st-popup-hint {
+    font-size: 90%;
+    padding: 0;
+    margin: 0.1em 0 .1em 0;
+}
+
+/* Rename specific styles */
+
+#st-popup-rename p.st-popup-hint {
+    font-size: 90%;
+    padding: 0;
+    margin: 0.4em 0 0 0;
+}
+
+
+/* Duplicate specific styles */
+
+#st-popup-duplicate p.st-popup-hint {
+    font-size: 90%;
+    padding: 0;
+    margin: 0.4em 0 0 0;
+}
+
+/* Reference Card styles */
+
+#st-refcard {
+    font-family: Verdana, Arial, sans-serif;
+    color: #000;
+    background-color: #fff;
+    margin: 5px;
+    font-size: 90%;
+}
+
+#st-refcard .st-refcard-table {
+    background-color: #ccc;
+    margin: 0.5em;
+    clear: both;
+    border-spacing: 2px;
+}
+
+#st-refcard .st-refcard-table-row {
+    background-color: white;
+}
+
+#st-refcard .st-refcard-table-row td {
+    padding: 1px 2px 1px 2px;
+}
+
+#st-refcard #st-refcard-print-button {
+    float: right;
+}
+
+#st-refcard .window-button {
+    font-size: x-small;
+}
+
+/*
+
+=head2 Send Page by Email
+
+Styles for the "Send Page by Email" popup, accessed from the "Email" dropdown
+menu on the page bar.
+
+*/
+
+
+.email-page-row {
+    clear: both;
+}
+
+.email-page-row-label {
+    font-weight: bold;
+    float: left;
+    width: 5em;
+    margin-left: 1.2em;
+    margin-right: 1.2em;
+    text-align: right;
+    font-size: 90%;
+}
+
+.email-page-row-content {
+    float: left;
+    padding-bottom: 1.2em;
+    font-size: 90%;
+}
+
+.email-page-user-select-column {
+    float: left;
+    padding-right: 1.0em;
+    width: 16em;
+}
+
+#st-popup-emailpage-userselect-columncenter {
+    width: 11em;
+}
+
+#st-popup-emailpage-userselect-columnright {
+    padding-right: 0;
+}
+
+.email-page-user-select-label {
+    text-align: left;
+}
+
+#st-popup-emailpage-userselect-addlabel {
+    padding-top: 1em;
+}
+
+.email-page-user-select-button-group {
+    padding-bottom: 2em;
+}
+
+.email-page-input {
+    width: 120px;
+    clear: both;
+    display: block;
+}
+
+
+.email-page-select {
+   width: 175px;
+   font-size: x-small;
+}
+
+#st-popup-emailpage-buttonscontainer {
+    clear: both;
+}
+
+#st-popup-emailpage-buttons {
+    text-align: center;
+}
+
+.email-page-input-new {
+    width: 175px;
+}
+
+.standard-button-cancel {
+    font-weight: bold;
+    background-color: #71004b;
+
+    border-left: 1px solid #aaa;
+    border-top: 1px solid #aaa;
+    border-bottom: 2px solid #333;
+    border-right: 2px solid #333;
+    color: #f4f3b9;
+    width: 8em;
+}
+
+.standard-button-submit {
+    font-weight: bold;
+    background-color: #656084;
+
+    border-left: 1px solid #aaa;
+    border-top: 1px solid #aaa;
+    border-bottom: 2px solid #333;
+    border-right: 2px solid #333;
+    color: #f4f3b9;
+    width: 8em;
+}

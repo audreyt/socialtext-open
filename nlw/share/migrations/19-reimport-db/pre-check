@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# We only need to run this migration if the database differs
+# from the schema we expect to have
+MIGDIR=`dirname $0`
+DIFF=`$MIGDIR/check-schema`
+
+if [ -z "$DIFF" ]; then
+    echo "$PGDATABASE schema is correct.  Skipping migration."
+    exit 1
+fi
+
+echo "$PGDATABASE schema differs from what we expect.  Running migration."
+exit 0

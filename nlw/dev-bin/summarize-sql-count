@@ -1,0 +1,26 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Fatal qw/open/;
+
+# This script should be used in coordination with
+# $Socialtext::SQL::COUNT_SQL=1 in your process under inspection;
+
+my $file = shift || "/tmp/sql-count";
+die "No such file: $file" unless -e $file;
+
+open(my $fh, $file);
+my %sqls;
+my %counts;
+while (my $line = <$fh>) {
+    chomp $line;
+    my ($hash, $query) = split ' ', $line, 2;
+    $sqls{$hash} ||= $query;
+    $counts{$hash}++;
+}
+
+for my $hash (sort { $counts{$b} <=> $counts{$a} } keys %counts) {
+    print "$counts{$hash}\t$sqls{$hash}\n";
+}
+

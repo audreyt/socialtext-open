@@ -1,0 +1,125 @@
+| *Comment* | Test Case: Command Line: NEW |
+
+| set | cmd_user | cmd_user_%%start_time%%@david.socialtext.net |
+| set | cmd_user_short | cmd_user_%%start_time%% |
+| set | cmd_acct | cmd_account_%%start_time%% |
+| set | cmd_ws | cmd_ws_%%start_time%% |
+| set | cmd_grp | cmd_group_%%start_time%% |
+| set | cmd_grp_2 | cmd_group_2_%%start_time%% |
+| st-admin | create-account --name %%cmd_acct%% |  |
+| st-admin | create-workspace --name %%cmd_ws%% --account %%cmd_acct%% --title %%cmd_ws%% |  |
+| st-admin | create-user --email %%cmd_user%% --password %%password%% |  |
+| create-group | %%cmd_grp%% | %%cmd_acct%% |
+
+| *Comment* | Test Case: Command Line: NEW add-account-admin |  |
+| *Comment* | Test Case: Command Line: NEW {bz: 4816} |  |
+
+| st-admin | add-account-admin | The command you called (add-account-admin) requires a user to be specified. |
+| st-admin | add-account-admin --email %%cmd_user%% | The command you called (add-account-admin) requires an account to be specified. |
+| st-admin | add-account-admin --email %%cmd_user%% --account %%cmd_acct%% | %%cmd_user%% now has the role of 'admin' in the %%cmd_acct%% Account |
+| st-admin | add-account-admin --email %%cmd_user%% --account %%cmd_acct%% | %%cmd_user%% already has the role of 'admin' in the %%cmd_acct%% Account |
+
+| *Comment* | Test Case: Command Line: NEW remove-account-admin |  |
+| *Comment* | Test Case: Command Line: NEW only passes until {bz: 4816} is fixed |  |
+| st-admin | remove-account-admin | The command you called (remove-account-admin) requires a user to be specified. |
+| st-admin | remove-account-admin --email %%cmd_user%% | The command you called (remove-account-admin) requires an account to be specified. |
+| st-admin | remove-account-admin --email %%cmd_user%% --account %%cmd_acct%% | %%cmd_user_short%% no longer has the role of 'admin' in the %%cmd_acct%% Account. |
+| st-admin | remove-account-admin --email %%cmd_user%% --account %%cmd_acct%% | %%cmd_user_short%% does not have the role of 'admin' in the %%cmd_acct%% Account. |
+
+| *Comment* | Test Case: Command Line: NEW set-external-id |  |
+| st-admin | set-external-id | The command you called (set-external-id) requires a user to be specified. |
+| st-admin | set-external-id --email %%cmd_user%% | The command you called (set-external-id) requires an external ID to be specified with the --external-id option |
+| st-admin | set-external-id --email %%cmd_user%% --external-id %%start_time%% | External ID for '%%cmd_user%%' set to '%%start_time%%'. |
+
+| *Comment* | Test Case: Command Line: NEW mass-add-users |  |
+| st-admin | mass-add-users | The file you provided could not be read. No users were added. |
+
+| *Comment* | Test Case: Command Line: NEW purge-signal-attachment |  |
+| st-admin | purge-signal-attachment | The command you called (purge-signal-attachment) requires --signal and --attachment arguments. |
+
+| *Comment* | Test Case: Command Line: NEW rebuild-pagelinks |  |
+| st-admin | rebuild-pagelinks | You must specify a workspace |
+| st-admin | rebuild-pagelinks --workspace %%cmd_ws%% | A job has been created to rebuild page links for the %%cmd_ws%% workspace. |
+
+| *Comment* | Test Case: Command Line: NEW import-account |  |
+| st-admin | import-account | No import directory specified. |
+| st-admin | import-account --dir no/such | Directory no/such does not exist. |
+
+| *Comment* | Test Case: Command Line: NEW list-plugins |  |
+| st-admin | list-plugins | dashboard |
+
+| *Comment* | Test Case: Command Line: NEW set-plugin-pref |  |
+| st-admin | set-plugin-pref | You must specify a plugin. |
+| st-admin | set-plugin-pref --plugin dashboard | Preferences for the dashboard plugin(s) have been updated. |
+
+| *Comment* | Test Case: Command Line: NEW show-plugin-prefs |  |
+| st-admin | show-plugin-prefs | You must specify a plugin. |
+| st-admin | show-plugin-prefs --plugin dashboard | Preferences for the dashboard plugin: |
+
+| *Comment* | Test Case: Command Line: NEW clear-plugin-prefs |  |
+| st-admin | clear-plugin-prefs | You must specify a plugin. |
+| st-admin | clear-plugin-prefs --plugin dashboard | Preferences for the dashboard plugin(s) have been cleared. |
+
+| *Comment* | Test Case: Command Line: NEW index-people |  |
+| st-admin | index-people | Scheduled people for re-indexing. |
+
+| *Comment* | Test Case: Command Line: NEW index-groups |  |
+| st-admin | index-groups | Scheduled groups for re-indexing. |
+
+| *Comment* | Test Case: Command Line: NEW index-signals |  |
+| st-admin | index-signals | Scheduled signals for re-indexing. |
+
+| *Comment* | Test Case: Command Line: NEW add-profile-field |  |
+| st-admin | add-profile-field | Unable to create profile field. |
+
+| *Comment* | Test Case: Command Line: NEW set-profile-field |  |
+| st-admin | set-profile-field | Must specify the name of the field to change |
+
+| *Comment* | Test Case: Command Line: NEW list-groups |  |
+| st-admin | list-groups | Displaying all groups |
+| st-admin | list-groups --account %%cmd_acct%% | %%cmd_grp%% |
+
+| *Comment* | Test Case: Command Line: NEW create-group |  |
+| st-admin | create-group | --name or --ldap-dn must be supplied to create a group. |
+| st-admin | create-group --name %%cmd_grp_2%% | --email must be supplied to create a group. |
+| st-admin | create-group --name %%cmd_grp_2%% --email %%cmd_user%% | %%cmd_grp_2%% Group has been created (Group Id: |
+
+| *Comment* | Test Case: Command Line: NEW show group config |  |
+| st-admin | show-group-config | The command you called (show-group-config) requires a '--group' parameter. |
+| st-admin | show-group-config --group %%group_id%% | Config for group %%cmd_grp%%: |
+| st-admin | show-group-config --group %%group_id%% | Group Name |
+
+| *Comment* | Test Case: Command Line: NEW add-account-impersonator |  |
+| *Comment* | Test Case: Command Line: NEW {bz: 4816} |  |
+| st-admin | add-account-impersonator | The command you called (add-account-impersonator) requires one of --username --email --group and one of --account |
+| st-admin | add-account-impersonator --email %%cmd_user%% --account %%cmd_acct%% | %%cmd_user%% now has the role of 'impersonator' in the %%cmd_acct%% Account |
+
+| *Comment* | Test Case: Command Line: NEW remove-account-impersonator |  |
+| *Comment* | Test Case: Command Line: NEW {bz: 4816} |  |
+| st-admin | remove-account-impersonator | The command you called (remove-account-impersonator) requires one of --username --email --group and one of --account |
+| st-admin | remove-account-impersonator --email %%cmd_user%% --account %%cmd_acct%% | no longer has the role of 'impersonator' in the %%cmd_acct%% Account. |
+
+| *Comment* | Test Case: Command Line: NEW add-group-admin |  |
+| st-admin | add-group-admin | The command you called (add-group-admin) requires a user to be specified. |
+| st-admin | add-group-admin --email %%cmd_user%% | The command you called (add-group-admin) requires a '--group' parameter. |
+| st-admin | add-group-admin --email %%cmd_user%% --group %%group_id%% | %%cmd_user%% is now a admin of the %%cmd_grp%% Group |
+| st-admin | add-group-admin --email %%cmd_user%% --group %%group_id%% | User already has the role of 'admin' in the %%cmd_grp%% Group |
+
+| *Comment* | Test Case: Command Line: NEW remove-group-admin |  |
+| st-admin | remove-group-admin | The command you called (remove-group-admin) requires a user to be specified. |
+| st-admin | remove-group-admin --email %%cmd_user%% | The command you called (remove-group-admin) requires a '--group' parameter. |
+| st-admin | remove-group-admin --email %%cmd_user%% --group %%group_id%% | %%cmd_user%% is now a member of %%cmd_grp%% |
+| st-admin | remove-group-admin --email %%cmd_user%% --group %%group_id%% | %%cmd_user%% is already a non-admin member of %%cmd_grp%% |
+
+| *Comment* | Test Case: Command Line: NEW delete-group |  |
+| st-admin | delete-group | The command you called (delete-group) requires a '--group' parameter. |
+| st-admin | delete-group --group %%group_id%% | Deleted group id: %%group_id%% |
+| st-admin | delete-group --group %%group_id%% | No group with ID %%group_id%%. |
+
+| *Comment* | Test Case: Command Line: NEW TEARDOWN |
+| st-process-jobs |  |
+| st-admin | deactivate-user --email %%cmd_user%% |
+| st-admin | delete-workspace --workspace %%cmd_ws%% |
+| delete-account | %%cmd_acct%% |
+
+| *Comment* | Test Case: Command Line: NEW COMPLETED |

@@ -1,0 +1,232 @@
+[%# This macro defines the main chunk of the nginx config.  We load this chunk into
+  # Virtual host blocks below... %]
+[%- MACRO server_common( apache_perl_port, for_ssl_vhost) BLOCK %]
+    server_name [% config.nlw_web_hostname %] [% FOREACH alias in config.nlw_server_aliases %][% alias %][% END %];
+
+    root [% config.data_root_dir %];
+    underscores_in_headers on; 
+
+[%- UNLESS config.is_dev %]
+    error_page 502 /static/html/502.html;
+    error_page 504 /static/html/502.html;
+[%- END %]
+
+    set $method_uri "$request_method$uri";
+
+[%- IF config.is_appliance || config.is_dev %]
+     location /console {
+         proxy_pass http://localhost:[% config.backend_ports.console %];
+     }
+[%- END %]
+
+[%- IF config.is_appliance -%]
+     location /appliance/static {
+         alias /usr/share/libsocialtext-appliance-perl/static;
+     }
+     rewrite ^/static/appliance/(.+)$ /appliance/static/$1 last;
+[%- END %]
+
+    [%- BLOCK image_cache %]
+        # image cache: [% cache_name %]
+        set $cache_match "no-match";
+
+        [%- IF cache_name == 'wafl' -%]
+        set $uneditable "0";
+        if ($arg_uneditable ~ "1") {
+            set $uneditable "1";
+        }
+        if ($method_uri ~* ^GET[% rest_pattern %]) {
+            set $cache_match "$1$uneditable";
+        }
+        [%- ELSE -%]
+        if ($method_uri ~* ^GET[% rest_pattern %]) {
+            set $cache_match $1;
+        }
+        if ($http_cookie !~* "NLW-user=") {
+            set $cache_match "no-match";
+        }
+        [%- END -%]
+
+        if (-f [% config.cache_dir %]/[% cache_name %]/$cache_match[% file_suffix %]) {
+          rewrite ^[% rest_pattern %] /[% cache_name %]/$cache_match[%file_suffix%];
+        }
+
+        [%- IF define %]
+            location /[% cache_name %] {
+              internal;
+              root [% config.cache_dir %];
+              # pre-check=30 - IE needs enough time to load the page before it starts asking If-Modified-Since.
+              add_header Cache-Control "public, must-revalidate, max-age=0, post-check=0, pre-check=30";
+              add_header X-Cache "HIT from [% cache_name %]";
+            }
+        [%- END %]
+    [%- END %]
+
+    [% PROCESS image_cache cache_name="avatar"      rest_pattern="/data/people/([^/]+)/photo"       file_suffix="-large.png" define=0 %]
+    [% PROCESS image_cache cache_name="avatar"      rest_pattern="/data/people/([^/]+)/small_photo" file_suffix="-small.png" define=1 %]
+    [% PROCESS image_cache cache_name="group-photo" rest_pattern="/data/groups/([^/]+)/photo"       file_suffix="-large.png" define=0 %]
+    [% PROCESS image_cache cache_name="group-photo" rest_pattern="/data/groups/([^/]+)/small_photo" file_suffix="-small.png" define=1 %]
+
+    [% PROCESS image_cache cache_name="wafl"             rest_pattern="/data/wafl/(.*)"                        file_suffix=".png"       define=1 %]
+    [% PROCESS image_cache cache_name="account_logo"     rest_pattern="/data/accounts/([^/]+)/logo"            file_suffix="-logo.png"  define=1 %]
+    [% PROCESS image_cache cache_name="widget_thumbnail" rest_pattern="/data/gadgets/gadget/([^/]+)/thumbnail" file_suffix=".png"       define=1 %]
+
+[%# The rewrite file must come before any of the redirect confs below %]
+[% PROCESS 'nginx/rewrite.nginx' %]
+
+    [%- IF config.is_dev %]
+        location ~ "^/static/skin/([^/]+)/javascript/(.*)" {
+            proxy_pass http://localhost:[% apache_perl_port %]/js/skin/$1/$2;
+        }
+
+        location ~ "^/nlw/plugin/([^/]+)/javascript/(.*)" {
+            proxy_pass http://localhost:[% apache_perl_port %]/js/plugin/$1/$2;
+        }
+    [%- END %]
+
+    location /nlw/static/ {
+        internal;
+        alias [% config.static_dir %]/;
+        expires 1y;
+    }
+
+    location ~ "^/nlw/static/(.+.js.gz)$" {
+        alias [% config.static_dir %]/$1;
+        expires 1y;
+        types {}
+        default_type application/javascript;
+        add_header Content-Encoding "gzip";
+        gzip off;
+    }
+
+    location ~ "^/static/(.+.js.gz)$" {
+        alias [% config.static_dir %]/$1;
+        expires 1y;
+        types {}
+        default_type application/javascript;
+        add_header Content-Encoding "gzip";
+        gzip off;
+    }
+
+    location ~ ^/static/(.+) {
+        alias [% config.static_dir %]/$1;
+        expires 1y;
+    }
+
+    location ~ "^/nlw/plugin/([^/]+)/(.+.js.gz)" {
+        alias [% config.static_dir %]/plugin/$1/share/$2;
+        expires 1y;
+        types {}
+        default_type application/javascript;
+        add_header Content-Encoding "gzip";
+        gzip off;
+    }
+
+    location ~ "^/nlw/plugin/([^/]+)/(.+)" {
+        alias [% config.static_dir %]/plugin/$1/share/$2;
+        expires 1y;
+    }
+
+    # include all conf.d files (rewrite rules, json proxies, etc) on this system
+    include conf.d/*.conf;
+
+    # Used with X-Accel-Redirect to serve old-style attachments from nginx
+    location /nlw/protected/ {
+        internal;
+        alias [% config.data_root_dir %]/plugin/;
+        expires 1y;
+    }
+    # Used with X-Accel-Redirect to serve new-style attachments from nginx
+    location /nlw/attachments/ {
+        internal;
+        alias [% config.data_root_dir %]/attachments/;
+        expires 1y;
+    }
+
+    # DON'T cache RPC relay
+    location /nlw/plugin/widgets/rpc_relay.html {
+        alias [% config.static_dir %]/plugin/widgets/share/rpc_relay.html;
+        expires 1s;
+    }
+    location /nlw/plugin/widgets/ifpc_relay.html {
+        alias [% config.static_dir %]/plugin/widgets/share/ifpc_relay.html;
+        expires 1s;
+    }
+
+    [%- IF config.is_dev %]
+        location /favicon.ico {
+            root [% config.static_dir %];
+        }
+    [%- ELSE %]
+        location /favicon.ico {
+            root [% config.data_root_dir %];
+        }
+    [%- END %]
+    location /robots.txt {
+        root [% config.data_root_dir %]/docroot;
+    }
+
+    # Force IE8 to emulate IE7, to avoid IE8 rendering issues.
+    add_header X-UA-Compatible IE=EmulateIE7;
+
+    location ~ "^/static/.+\.js$" {
+      # Safari doesn't like compressed JS, so *only* compress HTML content
+      gzip_disable     "AppleWebKit";
+    }
+
+    location /nginx_status {
+      stub_status on;
+      access_log  off;
+      allow 127.0.0.1;
+      allow 127.0.1.1;
+      deny all;
+    }
+
+    # Unconditionally include local Socialtext-provided add-ons
+    include [% config.nginx_etc_dir %]/socialtext-conf.d/include-*.conf;
+
+[% END %][%# server_common %]
+
+[%- MACRO server_redirect(redirect_port, redirect_scheme) BLOCK %]
+    if ($request_method = TRACE) {
+      return 403;
+    }
+    rewrite ^(.*) [% redirect_scheme %]://[% config.nlw_web_hostname %]:[% redirect_port %]$1;
+[% END %]
+
+[%# ######################################
+  # Real code starts 
+  # ###################################### %]
+
+server {
+    listen [% config.frontend_ports.http %];
+    [%- IF config.ssl_only %]
+        [%- server_redirect( config.frontend_ports.https, 'https' ) -%]
+    [%- ELSE %]
+        [%- server_common( config.backend_ports.http, 0 ) -%]
+    [%- END %]
+}
+
+[%- IF config.is_dev OR (config.ssl_only OR config.ssl_name) %]
+server {
+    [%#- Have SSL enabled server too %]
+    listen [% config.frontend_ports.https %];
+    ssl on;
+    ssl_certificate [% config.ssl_base_dir %]/certs/[% config.ssl_name%].crt;
+    ssl_certificate_key [% config.ssl_base_dir %]/private/[% config.ssl_name %].key;
+    [%- IF config.ssl_client_cert %]
+        ssl_client_certificate [% config.ssl_base_dir %]/certs/[% config.ssl_client_cert %].crt;
+        ssl_verify_client optional;
+        error_page 495 = $uri;    # ignore "ssl cert is invalid" error and continue
+        if ($ssl_client_verify = 'SUCCESS') {
+            set $valid_cert_subject $ssl_client_s_dn; # see proxy.conf
+        }
+    [%- END %]
+
+    ssl_ciphers AES128-SHA:AES:RC4:CAMELLIA128-SHA:!MD5:!ADH:!DH:!ECDH:!PSK:!SSLv2;
+    ssl_protocols SSLv3 TLSv1;
+    ssl_session_cache shared:SSLTLS:10m;
+
+    [% server_common( config.backend_ports.https, 1 ) %]
+}
+[%- END %]

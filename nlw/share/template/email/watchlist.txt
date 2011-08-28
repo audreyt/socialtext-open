@@ -1,0 +1,16 @@
+[% user.guess_real_name %],
+
+[% loc('email.following-pages-in-watchlist-have-recently-changed=wiki,date,time', workspace.title, email_date, email_time) %]
+
+[%- FOR page = pages %]
+  [%- PROCESS 'email/page-details.txt' -%]
+[%- END %]
+
+--
+
+[% loc('email.change-watchlist-preferences-at=wiki:', workspace.title) %]
+
+ [% watchlist_preference_uri %]
+ 
+[% PROCESS 'email/standard-footer.txt'
+   support_link = 0 %]

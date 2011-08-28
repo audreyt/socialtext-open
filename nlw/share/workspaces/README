@@ -1,0 +1,6 @@
+nlw/share/workspaces contains data used to populate workspaces for development purposes.
+
+The stl10n workspace contains translations of Socialtext strings.  There are 2 scripts
+to keep this workspace in sync with svn:
+* stl10n-to-wiki - populates a new `stl10n` workspace from share/workspaces/stl10n
+* stl10n-from-wiki - pulls down pages tagged 'l10n' from the stl10n workspace

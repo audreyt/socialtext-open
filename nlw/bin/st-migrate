@@ -1,0 +1,40 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+
+use Socialtext::Migration;
+use Socialtext::System qw/shell_run/;
+use Getopt::Long;
+
+my @OLD_ARGV = @ARGV;
+
+my %opts;
+GetOptions( \%opts,
+    'initialize',
+    'dryrun',
+) or usage();
+
+if ($>) { # non root
+    shell_run("sudo", $0, @OLD_ARGV);
+    exit;
+}
+
+Socialtext::Migration->new(%opts)->migrate;
+exit;
+
+
+sub usage {
+    die <<EOT;
+USAGE: $0 [options]
+
+Options:
+  --initialize Setup initial state file, ignoring existing migrations.
+  --dryrun  No migrations will actually be run
+
+st-migrate currently only runs migrations.
+EOT
+}
+

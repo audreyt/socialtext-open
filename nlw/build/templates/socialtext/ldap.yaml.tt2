@@ -1,0 +1,67 @@
+# Lists the LDAP connections, in order of precedence.  In cases where searches
+# need to be performed via LDAP, each LDAP configuration below will be
+# searched in turn and the first one to issue a suitable response wins.
+#
+# For more information on the configuration options, please refer to the
+# documentation in Socialtext::LDAP::Config.
+#
+# Example:
+#   ---
+#   id: 606f707371
+#   name: Our OpenLDAP server
+#   backend: OpenLDAP
+#   host: openldap.example.com
+#   port: 389
+#   base: cn=IT,dc=example,dc=com
+#   bind_user: CN=Manager,dc=example,dc=com
+#   bind_password: its-a-secret
+#   filter: (objectClass=inetOrgPerson)
+#   ttl: 3600
+#   not_found_ttl: 1800
+#   attr_map:
+#       user_id: dn
+#       username: cn
+#       email_address: mail
+#       first_name: givenName
+#       last_name: sn
+#       company: o
+#       home_phone: homeTelephoneNumber
+#       location: l
+#       mobile_phone: mobile
+#       position: title
+#       supervisor: manager
+#       work_phone: telephoneNumber
+#   group_filter: (objectClass=groupOfNames)
+#   group_attr_map:
+#       group_id: dn
+#       group_name: cn
+#       member_dn: member
+#   ---
+#   id: 1529909304
+#   name: Our Active Directory server
+#   backend: ActiveDirectory
+#   host: ad.example.com
+#   port: 389
+#   base: cn=Sales,dc=example,dc=com
+#   filter: (&(objectClass=user)(objectCategory=person))
+#   ttl: 3600
+#   not_found_ttl: 1800
+#   attr_map:
+#       user_id: dn
+#       username: sAMAccountName
+#       email_address: mail
+#       first_name: givenName
+#       last_name: sn
+#       company: company
+#       home_phone: homeTelephoneNumber
+#       location: physicalDeliveryOfficeName
+#       mobile_phone: mobile
+#       personal_url: wWWHomePage
+#       position: title
+#       supervisor: manager
+#       work_phone: telephoneNumber
+#   group_filter: (objectClass=group)
+#   group_attr_map:
+#       group_id: dn
+#       group_name: cn
+#       member_dn: member

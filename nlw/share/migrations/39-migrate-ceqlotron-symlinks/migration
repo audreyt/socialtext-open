@@ -1,0 +1,101 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::AppConfig;
+use Socialtext::JobCreator;
+use Socialtext::Workspace;
+use Socialtext::User;
+use Socialtext;
+use Socialtext::Migration::Utils qw/ensure_socialtext_schema/;
+
+ensure_socialtext_schema(47);
+
+my $ceq_dir = Socialtext::AppConfig->change_event_queue_dir;
+my $data_dir = Socialtext::AppConfig->data_root_dir;
+my $Hub = _make_hub();
+
+my @links = glob("$ceq_dir/*");
+for my $link (@links) {
+    next unless -l $link;
+    my $dest = readlink $link;
+
+    (my $shortdest = $dest) =~ s#^\Q$data_dir\E/##;
+    if (-f $link) {
+        queue_attachment_index($link, $shortdest);
+    }
+    else {
+        queue_page_index($link, $shortdest);
+    }
+}
+
+# Try to clean up the old ceq stuff, but don't worry if cruft causes it to
+# fail.
+eval {
+    unlink "$ceq_dir/lock";
+    rmdir $ceq_dir;
+};
+
+exit 0;
+
+
+sub queue_attachment_index {
+    my $symlink = shift;
+    my $path = shift;
+    # eg: plugin/admin/attachments/admin/20090304185150-25-21807/myconversations128.gif
+    if ($path =~ m#^plugin/([^/]+)/attachments/([^/]+)/([^/]+)/(.+)$#) {
+        my ($ws_name, $page_id, $attach_id, $attach_name) = ($1, $2, $3, $4);
+        print "  Found attachment index job: $ws_name:$page_id - $attach_name\n";
+        my $ws = Socialtext::Workspace->new( name => $ws_name );
+        next unless $ws;
+
+        $Hub->current_workspace($ws);
+        my $attachment = $Hub->attachments->new_attachment(
+            id => $attach_id,
+            page_id => $page_id,
+        )->load;
+        next if $attachment->deleted;
+        next unless -f $attachment->full_path;
+
+        Socialtext::JobCreator->index_attachment($attachment);
+        unlink $symlink or warn "Could not unlink $symlink: $!";
+    }
+    else {
+        warn "Unknown attachment symlink: $path";
+    }
+}
+
+sub queue_page_index {
+    my $symlink = shift;
+    my $path = shift;
+
+    # data/admin/people/
+    if ($path =~ m#^data/([^/]+)/(.+)$#) {
+        my ($ws_name, $page_id) = ($1, $2);
+        print "  Found page index job: $ws_name:$page_id\n";
+
+        my $ws = Socialtext::Workspace->new( name => $ws_name );
+        next unless $ws;
+
+        $Hub->current_workspace($ws);
+        my $page = $Hub->pages->new_page( $page_id );
+        next if $page->deleted;
+
+        Socialtext::JobCreator->index_page($page);
+        unlink $symlink or warn "Could not unlink $symlink: $!";
+    }
+    else {
+        warn "Unknown page symlink: $path";
+    }
+}
+
+sub _make_hub {
+    my $main = Socialtext->new();
+    $main->load_hub(
+        current_user => Socialtext::User->SystemUser,
+        current_workspace => Socialtext::NoWorkspace->new,
+    );
+    $main->hub()->registry()->load();
+    return $main->hub;
+}
+

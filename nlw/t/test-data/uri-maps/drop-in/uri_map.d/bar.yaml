@@ -1,0 +1,5 @@
+--- !!omap
+-
+    '/data/bar':
+        GET:
+            '*/*':     &default [Bar, GET]

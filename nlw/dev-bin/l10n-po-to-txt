@@ -1,0 +1,40 @@
+#!/usr/bin/env perl
+use 5.12.0;
+use autodie;
+use open qw(:std :utf8);
+use Getopt::Long;
+use FindBin '$RealBin';
+use lib "$RealBin/../lib";
+use Socialtext::l10n::DevUtils;
+
+my ($in, $out);
+for my $po (@ARGV) {
+    open $in, '<', $po;
+    open $out, '>:crlf', "$po.txt";
+    select $out;
+
+    local $/ = "\n\n";
+    while (<$in>) {
+        next if /^msgid ""\nmsgstr ""/m;
+
+        my ($comments, $id, $str) = split(/\n(?=msg)/, "\n$_");
+        if (is_key($str)) {
+            $id =~ s/^msgid/msgstr/m;
+            $str =~ s/^msgstr/msgid/m;
+        }
+        else {
+            ($str, $id) = ($id, $str);
+        }
+        $str =~ s/msgid "(.*)"/[[[$1]]]/;
+        $id =~ s/msgstr ""\n//;
+        $id =~ s/msgstr "(.*)"/$1\n/;
+        $id =~ s!^"(.*?)(\\n)?"\n!$1 . ($2 ? '</>' : '')!meg;
+        $id =~ s/\\([^n])/$1/g;
+        outs $str;
+        outs $id;
+        print "\n";
+    }
+
+    close $in;
+    warn "*** $po.txt\n";
+}

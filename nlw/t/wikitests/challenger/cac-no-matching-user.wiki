@@ -1,0 +1,38 @@
+Verify that we can't auto-provision Users that don't match the necessary criteria.
+
+* Fixture: SocialRest
+
+| set | https | https://%%hostname%%:%%https_port%% |
+
+| *Comment* | Decide who our test User is going to be |                                                         |
+| set       | f_name                                  | Karen                                                   |
+| set       | m_name                                  | Lynn-%%start_time%%                                     |
+| set       | l_name                                  | Greening                                                |
+| set       | edipin                                  | %%start_time%%                                          |
+| set       | email                                   | %%f_name%%.%%l_name%%.%%start_time%%@ken.socialtext.net |
+| set       | password                                | abc123                                                  |
+
+| *Comment*     | Enable CAC support, and create a client-side SSL cert for our test User |                                             |
+| st-config     | set credentials_extractors CAC:Guest                                    |                                             |
+| st-client-ssl | server-on                                                               |                                             |
+| st-client-ssl | client-on                                                               | %%l_name%%.%%f_name%%.%%m_name%%.%%edipin%% |
+
+| *Comment*   | Unauth; no User record in ST |            |
+| GET         | %%https%%/st/dashboard       |            |
+| code-is     | 302                          |            |
+| header-like | Location                     | /challenge |
+
+| *Comment*   | Unauth; User record exists, but has *no* EDIPIN and *no* restriction to trigger auto-provisioning |
+| st-admin    | create-user --first-name %%f_name%% --middle-name %%m_name%% --last-name %%l_name%% --username %%email%% --email %%email%% --password %%password%% |
+| GET         | %%https%%/st/dashboard       |            |
+| code-is     | 302                          |            |
+| header-like | Location                     | /challenge |
+
+| *Comment* | Add EDIPIN to User record, auth works fine now             |
+| st-admin  | set-external-id --email %%email%% --external-id %%edipin%% |
+| GET       | %%https%%/st/dashboard                                     |
+| code-is   | 200                                                        |
+
+| *Comment*     | CLEANUP: Reset the configuration                  |
+| st-config     | set credentials_extractors BasicAuth:Cookie:Guest |
+| st-client-ssl | server-off                                        |

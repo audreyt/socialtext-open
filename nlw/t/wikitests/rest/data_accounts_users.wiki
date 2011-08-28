@@ -1,0 +1,191 @@
+Tests for [Story: User can be member of multiple accounts]
+
+* Fixture: SocialRest
+
+| standard-test-setup |           |                                      |
+| set                 | user2     | u2-%%start_time%%@ken.socialtext.net |
+| create-user         | %%user2%% | password                             |
+| set                 | user2_id  | %%user_id%%                          |
+| set                 | users_uri | /data/accounts/%%account%%/users     |
+
+# Make user3 an indirect member of the account
+| set            | user3_account     | u3acct%%start_time%%                 |                   |
+| create-account | %%user3_account%% |                                      |                   |
+| set            | user3             | u3-%%start_time%%@ken.socialtext.net |                   |
+| create-user    | %%user3%%         | password                             | %%user3_account%% |
+
+# Add a user without being a business admin
+| POST_json | %%users_uri%% | {"username":"%%user2%%"} |
+| code-is   | 403           |                          |
+
+# Add a user as a business admin (defaults to member)
+| set-business-admin | %%username%%  | 1                        |
+| POST_json          | %%users_uri%% | {"username":"%%user2%%"} |
+| code-is            | 201           |                          |
+
+# Adding a user again should still be 201
+| POST_json | %%users_uri%% | {"username":"%%user2%%"} |
+| code-is   | 201           |                          |
+
+# Other errors give 400
+| POST_json | %%users_uri%% | {"username":"bad-user@example.com"} |
+| code-is   | 400           |                                     |
+| POST_json | %%users_uri%% | {"username":"bad-user@example.}     |
+| code-is   | 400           |                                     |
+
+# Remove from account via username, but fail b/c not a business admin
+| set-business-admin | %%username%%            | 0 |
+| DELETE             | %%users_uri%%/%%user2%% |   |
+| code-is            | 403                     |   |
+
+# Remove from account via username
+| set-business-admin | %%username%%            | 1 |
+| DELETE             | %%users_uri%%/%%user2%% |   |
+| code-is            | 204                     |   |
+| DELETE             | %%users_uri%%/%%user2%% |   |
+| code-is            | 400                     |   |
+
+# Attempting to remove a user from their primary account is 400
+| DELETE  | %%users_uri%%/%%username%% |
+| code-is | 400                        |
+
+# Deleting a bad user
+| DELETE  | %%users_uri%%/bad-user@example.com |
+| code-is | 400                                |
+
+# Adding and Removing via Email address
+| POST_json | %%users_uri%%           | {"email_address":"%%user2%%"} |
+| code-is   | 201                     |                               |
+| DELETE    | %%users_uri%%/%%user2%% |                               |
+| code-is   | 204                     |                               |
+
+# Adding and Removing via user_id
+| POST_json | %%users_uri%%              | {"user_id":"%%user2_id%%"} |
+| code-is   | 201                        |                            |
+| DELETE    | %%users_uri%%/%%user2_id%% |                            |
+| code-is   | 204                        |                            |
+
+# Test getting the list of users
+| set            | notamember     | notamember-%%start_time%%@ken.socialtext.net |             |
+| create-user    | %%notamember%% | password                                     |             |
+| http-user-pass | %%notamember%% | password                                     |             |
+| set            | isamember      | isamember-%%start_time%%@ken.socialtext.net  |             |
+| create-user    | %%isamember%%  | password                                     | %%account%% |
+
+| http-user-pass | %%notamember%%                   | password |
+| GET-json       | /data/accounts/%%account%%/users |          |
+| code-is        | 403                              |          |
+
+| http-user-pass  | %%isamember%%                    | password      |
+| GET-json        | /data/accounts/%%account%%/users |               |
+| code-is         | 200                              |               |
+| json-parse      |                                  |               |
+| json-array-size | 2                                |               |
+| json-path-is    | $[0].username                    | %%isamember%% |
+| json-path-is    | $[1].username                    | %%username%%  |
+
+#################
+
+Adding users as admins!
+
+| *comment*      | Add an admin to the account |                                              |
+| set            | admin                       | admin-%%start_time%%@ken.socialtext.net      |
+| create-user    | %%admin%%                   | password                                     |
+| http-user-pass | %%username%%                   | password                                     |
+| POST_json      | %%users_uri%%               | {"email_address":"%%admin%%","role_name":"admin"} |
+| code-is        | 201                         |                                              |
+| GET-json        | /data/accounts/%%account%%/users |               |
+| code-is         | 200                              |               |
+| json-parse      |                                  |               |
+| json-array-size | 3                                |               |
+| json-path-is    | $[0].username                    | %%admin%%  |
+| json-path-is    | $[1].username                    | %%isamember%% |
+| json-path-is    | $[2].username                    | %%username%%  |
+| json-path-is    | $[0].role_name               | admin  |
+| json-path-is    | $[1].role_name               | member  |
+| json-path-is    | $[2].role_name               | member  |
+
+| Comment | Update an existing user. |
+| POST_json | %%users_uri%% | {"email_address":"%%username%%","role_name":"admin"} |
+| code-is         | 201                              |               |
+| GET-json        | /data/accounts/%%account%%/users |               |
+| code-is         | 200                              |               |
+| json-parse      |                                  |               |
+| json-array-size | 3                                |               |
+| json-path-is    | $[0].username                    | %%admin%%     |
+| json-path-is    | $[1].username                    | %%isamember%% |
+| json-path-is    | $[2].username                    | %%username%%  |
+| json-path-is    | $[0].role_name                   | admin         |
+| json-path-is    | $[1].role_name                   | member        |
+| json-path-is    | $[2].role_name                   | admin         |
+
+| Comment | Use a bad role_name |
+| POST_json | %%users_uri%% | {"email_address":"%%username%%","role_name":"badmin"} |
+| code-is         | 400                              |               |
+
+# Test direct parameter
+
+| add-member     | %%user3%%         | %%workspace%%                        |                   |
+
+| http-user-pass  | %%isamember%%                    | password      |
+| GET-json        | /data/accounts/%%account%%/users |               |
+| code-is         | 200                              |               |
+| json-parse      |                                  |               |
+| json-array-size | 4                                |               |
+| json-path-is    | $[2].username                    | %%user3%%  |
+
+| http-user-pass  | %%isamember%%                    | password      |
+| GET-json        | /data/accounts/%%account%%/users?direct=1 |               |
+| code-is         | 200                              |               |
+| json-parse      |                                  |               |
+| json-array-size | 3                                |               |
+| body-unlike | %%user3%% |
+
+| http-user-pass  | %%isamember%%                    | password      |
+| GET-json        | /data/accounts/%%account%%/users?direct=0 |               |
+| code-is         | 200                              |               |
+| json-parse      |                                  |               |
+| json-array-size | 4                                |               |
+| json-path-is    | $[2].username                    | %%user3%%  |
+
+
+| Comment | for bz 3993, add a user to a workspace in this account |
+
+| set | beta_ws | beta_%%start_time%% |
+| create-workspace | %%beta_ws%% | %%account%% |
+| add-member | %%admin%% | %%beta_ws%% | member |
+
+| Comment | check that they're a direct admin |
+
+| http-user-pass | %%username%% | password |
+
+| GET-json | /data/accounts/%%account%%/users?direct=1 |
+| code-is         | 200            |              |
+| json-parse      |                |              |
+| json-array-size | 3              |              |
+| json-path-is    | $[0].username  | %%admin%% |
+| json-path-is    | $[0].role_name | admin        |
+
+| Comment | demote them |
+| POST-json | %%users_uri%% | {"email_address":"%%admin%%","role_name":"member"} |
+| code-is | 201 |
+
+| GET-json | /data/accounts/%%account%%/users?direct=1 |
+| code-is         | 200            |              |
+| json-parse      |                |              |
+| json-array-size | 3              |              |
+| json-path-is    | $[0].username  | %%admin%% |
+| json-path-is    | $[0].role_name | member       |
+
+| *Comment* | business admin can see private user fields |
+| set-business-admin | %%admin%%                                                           |          |
+| st-admin           | set-external-id --email %%admin%% --external-id %%start_time%%admin |          |
+| http-user-pass     | %%admin%%                                                           | password |
+
+| GET-json | /data/accounts/%%account%%/users?want_private_fields=1 |
+| json-response-is | 200                      | 4                   |
+| json-path-is     | $[0].email_address       | %%admin%%           |
+| json-path-is     | $[0].private_external_id | %%start_time%%admin |
+| json-path-exists | $[1].private_external_id |                     |
+| json-path-exists | $[2].private_external_id |                     |
+| json-path-exists | $[3].private_external_id |                     |

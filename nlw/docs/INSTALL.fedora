@@ -1,0 +1,33 @@
+INSTALL.fedora -- Fedora Core-specific notes for Socialtext Open
+
+@COPYRIGHT@
+
+NOTE:  This file is not complete.  It's a scratch pad for notes as we
+work on porting.
+
+== Order of install ==
+
+Install Apache1
+
+    See docs/INSTALL.apache-perl
+
+Install OpenSSL
+
+Install Postgresql
+
+    postgresql
+    postgresql-server
+    postgresql-devel
+
+Create config
+
+    $ cp /usr/share/pgsql/pg_hba.conf.sample /var/lib/pgsql/data/pg_hba.conf
+    # now, edit the settings as in INSTALL
+
+== Packages ==
+
+apache2-prefork
+perl-Crypt-SSLeay
+zlib-devel
+libxml2
+libxml2-devel

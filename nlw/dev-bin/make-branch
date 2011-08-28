@@ -1,0 +1,22 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+use File::Path qw(rmtree);
+use Getopt::Long;
+use Readonly;
+
+Readonly my $SVN_REPO => 'https://repo.socialtext.net:8999';
+
+my %opts;
+GetOptions(
+    'type:s'    => \$opts{type},
+    'source:s'  => \$opts{source},
+    'message:s' => \$opts{message},
+    'version:s' => \$opts{version},
+    'help'      => \$opts{help},
+) or exit 1;
+
+die "not yet implemented ...";

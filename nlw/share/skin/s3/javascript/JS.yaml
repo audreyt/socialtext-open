@@ -1,0 +1,162 @@
+---
+'socialtext-s3.js':
+    compress: 1
+    parts:
+        - {dir: 'skin/common/javascript', file: 'jquery-1.4.4.js'}
+        - {dir: 'skin/common/javascript', file: 'jquery-json-1.3.js'}
+        - {dir: 'skin/common/javascript', file: 'utf8.js'}
+        - 'info.js'
+        - 'Debug.js'
+        - 'Class.js'
+        - 'lightbox.js'
+        - 'jquery-patch.js'
+        - 'jquery-popup.js'
+        - 'jquery-plugin.js'
+        - 'jquery.tablesorter.js'
+        - 'jquery.selectOverlap.js'
+        - { jemplate_runtime: jquery }
+        - 'JemplatePlugin/*.js'
+        - { jemplate: 'template/nav-list.tt2' }
+        - { jemplate: 'template/new_signal.tt2' }
+        - { jemplate: 'template/dropdown.tt2' }
+        - 'lightbox-create_content.js'
+        - 'loc.js'
+        - 'cookie.js'
+        - 'lookahead.js'
+        - 'pageview.js'
+        - 'email.js'
+        - 'search.js'
+        - 'nav-list.js'
+        - {dir: 'skin/common/javascript', file: 'Socialtext/socialtext-api.js'}
+        - 's3.js'
+        - 'html5-file-upload.js'
+        - 'people-avatar.js'
+        - 'im.js'
+'info.js':
+    parts:
+        - { template: 'template/info.js', config: '../info.yaml' }
+'lightbox-attachment.js':
+    compress: 1
+    parts:
+        - { jemplate: 'template/attachment-listing.tt2' }
+        - { jemplate: 'lightbox/attachment.tt2' }
+        - 'st-lightbox.js'
+        - 'lightbox/attachment.js'
+'lightbox-comment.js':
+    compress: 1
+    parts:
+        - { jemplate: lightbox/comment.tt2 }
+        - 'st-lightbox.js'
+        - lightbox/comment.js
+'lightbox-copy.js':
+    compress: 1
+    parts:
+        - { jemplate: lightbox/copy.tt2 }
+        - 'st-lightbox.js'
+        - lightbox/copy.js
+'lightbox-create_content.js':
+    compress: 1
+    parts:
+        - { jemplate: lightbox/create_content.tt2 }
+        - 'st-lightbox.js'
+        - lightbox/create_content.js
+'lightbox-delete.js':
+    compress: 1
+    parts:
+        - { jemplate: lightbox/delete.tt2 }
+        - 'st-lightbox.js'
+        - lightbox/delete.js
+'lightbox-duplicate.js':
+    compress: 1
+    parts:
+        - { jemplate: lightbox/duplicate.tt2 }
+        - 'st-lightbox.js'
+        - lightbox/duplicate.js
+'lightbox-edit_check.js':
+    compress: 1
+    parts:
+        - { jemplate: lightbox/edit_check.tt2 }
+        - 'st-lightbox.js'
+        - lightbox/edit_check.js
+'lightbox-edit_warning_help.js':
+    compress: 1
+    parts:
+        - { jemplate: lightbox/edit_warning_help.tt2 }
+        - 'st-lightbox.js'
+        - lightbox/edit_warning_help.js
+'lightbox-email.js':
+    compress: 1
+    parts:
+        - { jemplate: lightbox/email.tt2 }
+        - 'st-lightbox.js'
+        - lightbox/email.js
+'lightbox-rename.js':
+    compress: 1
+    parts:
+        - { jemplate: lightbox/rename.tt2 }
+        - 'st-lightbox.js'
+        - lightbox/rename.js
+'lightbox-simple.js':
+    compress: 1
+    parts:
+        - { jemplate: lightbox/simple.tt2 }
+        - 'st-lightbox.js'
+        - lightbox/simple.js
+'lightbox-self_join_workspace.js':
+    compress: 1
+    parts:
+        - { jemplate: lightbox/self_join_workspace.tt2 }
+        - { jemplate: lightbox/self_join_single.tt2 }
+        - { jemplate: lightbox/self_join_many.tt2 }
+        - 'st-lightbox.js'
+        - lightbox/self_join_workspace.js
+'Selection.htc':
+    nocomment: 1
+    parts:
+        - ../../wikiwyg/javascript/lib/Selection.htc
+'socialtext-editor.js':
+    compress: 1
+    parts:
+        - lightbox-attachment.js
+        - {dir: 'skin/wikiwyg/javascript', file: 'socialtext-editor.js'}
+'socialtext-editor-light.js':
+    compress: 1
+    parts:
+        - 'jquery-plugin.js'
+        - 'lookahead.js'
+        - 'jquery.selectOverlap.js'
+        - 'Class.js'
+        - 'loc.js'
+        - {dir: 'skin/wikiwyg/javascript', file: 'socialtext-editor-light.js'}
+'l10n-en.js':
+    compress: 1
+    parts:
+        - {dir: 'skin/s3/javascript/l10n', file: 'en.js'}
+'l10n-zz.js':
+    compress: 1
+    parts:
+        - {dir: 'skin/s3/javascript/l10n', file: 'zz.js'}
+'l10n-zq.js':
+    compress: 1
+    parts:
+        - {dir: 'skin/s3/javascript/l10n', file: 'zq.js'}
+'l10n-zh_CN.js':
+    compress: 1
+    parts:
+        - {dir: 'skin/s3/javascript/l10n', file: 'zh_CN.js'}
+#'l10n-fr_CA.js':
+#    compress: 1
+#    parts:
+#        - {dir: 'skin/s3/javascript/l10n', file: 'fr_CA.js'}
+'l10n-zh_TW.js':
+    compress: 1
+    parts:
+        - {dir: 'skin/s3/javascript/l10n', file: 'zh_TW.js'}
+'l10n-xx.js':
+    compress: 1
+    parts:
+        - {dir: 'skin/s3/javascript/l10n', file: 'xx.js'}
+'l10n-xq.js':
+    compress: 1
+    parts:
+        - {dir: 'skin/s3/javascript/l10n', file: 'xq.js'}

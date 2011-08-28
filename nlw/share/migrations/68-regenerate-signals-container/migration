@@ -1,0 +1,13 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_execute/;
+
+sql_execute(qq{
+   DELETE FROM container
+   WHERE container_type = ?
+}, 'signals');
+
+exit 0;

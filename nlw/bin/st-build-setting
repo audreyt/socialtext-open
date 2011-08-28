@@ -1,0 +1,13 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::Build qw(get_build_setting);
+
+my $setting = shift || die "Usage: $0 setting\n";
+my $value = get_build_setting($setting);
+die "Setting \"$setting\" not found\n" unless defined $value;
+print "$value\n";

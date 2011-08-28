@@ -1,0 +1,4 @@
+For [Story: Store email notification times in DB], this migration creates a job to migrate
+the email and watchlist notification files into the database.
+
+Going forward, email notifications are handled by the schwartz as jobs.

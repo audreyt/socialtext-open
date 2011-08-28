@@ -1,0 +1,327 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Getopt::Long;
+use Pod::Usage;
+use Log::Dispatch::Screen;
+use Socialtext::LDAP::Operations;
+
+###############################################################################
+# Read in our command line options.
+my %opts;
+GetOptions(
+    \%opts,
+    'help|?',
+    'man',
+    'verbose',
+    'force',
+    'dryrun',
+    'driver:s',
+    'email:s',
+    'username:s',
+    'id:i',
+) || pod2usage(1);
+pod2usage(1) if ($opts{help});
+pod2usage( -exitstatus=>0, -verbose=>2 ) if ($opts{man});
+
+my $command = shift @ARGV;
+pod2usage(1) unless ($command);
+
+###############################################################################
+# Get a hold of the system logger.
+my $logger = Socialtext::Log->new();
+$logger->log->add( Log::Dispatch::Screen->new(
+    name        => 'screen',
+    min_level   => $opts{verbose} ? 'info' : 'notice',
+    stderr      => 1,
+    callbacks   => [\&_add_newline],
+) );
+binmode(STDERR, ':utf8');
+
+###############################################################################
+# Execute the requested command.
+my %commands = (
+    'refresh-users' => sub {
+        Socialtext::LDAP::Operations->RefreshUsers(@_);
+    },
+    'refresh-groups' => sub {
+        Socialtext::LDAP::Operations->RefreshGroups(@_);
+    },
+    'refresh' => sub {
+        Socialtext::LDAP::Operations->RefreshUsers(@_);
+        Socialtext::LDAP::Operations->RefreshGroups(@_);
+    },
+    'load-users' => sub {
+        Socialtext::LDAP::Operations->LoadUsers(@_);
+    },
+    'list-groups' => sub {
+        Socialtext::LDAP::Operations->ListGroups(@_);
+    },
+);
+
+my $callback = $commands{$command};
+unless ($callback) {
+    die "Unknown command, '$command'.\n";
+}
+
+# ... build the list of arguments for this command
+my %accepted_args = (
+    'refresh-users'  => [qw( force email username )],
+    'refresh-groups' => [qw( force id )],
+    'refresh'        => [qw( force )],
+    'load-users'     => [qw( dryrun email username )],
+    'list-groups'    => [qw( driver )],
+);
+my %args = map { $_ => $opts{$_} } @{$accepted_args{$command}};
+
+# ... execute the command
+$callback->(%args);
+exit;
+
+
+###############################################################################
+# Adds a newline to the log message.
+sub _add_newline {
+    my %p = @_;
+    $p{message} =~ s/\n*$/\n/;
+    return $p{message};
+}
+
+=head1 NAME
+
+st-ldap - Socialtext LDAP integration utility
+
+=head1 SYNOPSIS
+
+  st-ldap <command> [options]
+
+  Commands:
+    load-users      Loads Users from LDAP
+        --dryrun            Dry-run; show Users, but don't add them
+        --email <addr>      Load one User, by e-mail address
+        --username <name>   Load one User, by username
+
+    list-groups     Lists Groups known in the specified LDAP directory
+        --driver <id>   LDAP Group Factory id (from "group_factories")
+
+    refresh-users   Refreshes user data from LDAP
+        --force             Force refresh for all LDAP users
+        --email <addr>      Refresh one User, by e-mail address
+        --username <name>   Refresh one User, by username
+
+    refresh-groups  Refreshes group data from LDAP
+        --force             Force refresh for all LDAP groups
+        --id <group_id>     Refresh one Group, by Id
+
+    refresh         Refreshes user and group data from LDAP
+        --force         Force refresh for all LDAP users/groups
+
+  Options:
+    --verbose       Enable verbose output
+    --help/-?       Brief help message
+    --man           Full documentation
+
+  Example:
+    st-ldap load-users
+    st-ldap refresh-users --force --verbose
+    st-ldap refresh-groups --force --verbose
+    st-ldap list-groups --driver my-ldap-directory
+
+=head1 DESCRIPTION
+
+C<st-ldap> is a command line utility to perform LDAP operations in your
+Socialtext environment.
+
+=head1 ARGUMENTS
+
+=over
+
+=item B<load-users>
+
+Loads users from LDAP into Socialtext.
+
+=over
+
+=item B<--email E<lt>addrE<gt>>
+
+Loads a I<single> User, by e-mail address.
+
+=item B<--username E<lt>nameE<gt>>
+
+Loads a I<single> User, by username.
+
+=item B<--dryrun>
+
+Dry-run; logs information on Users found and that would be added to the
+system, but doesn't actually add them.
+
+=back
+
+Each of the configured LDAP servers is queried to determine what User records
+they contain, and those Users are then added to the Socialtext Appliance.
+
+This command B<requires> that you have a valid C<filter> specified in B<all>
+of your LDAP configurations, in order to prevent non-User records from being
+added to Socialtext (e.g. groups, mailing lists).  If I<any> of your LDAP
+configurations are missing a C<filter>, B<no> Users will be loaded into the
+system.
+
+Automatic, scheduled synchronization of the User list from an LDAP directory
+into Socialtext can be performed by creating a cronjob which executes
+"C<st-ldap load-users>" on a regular basis.  Easiest way to do this is to
+create F</etc/cron.daily/st-ldap-load-users> as follows:
+
+  #!/bin/bash
+  st-ldap load-users
+
+=item B<list-groups>
+
+Lists the Groups that are known to the specified LDAP Group Factory.
+
+=over
+
+=item B<--driver E<lt>idE<gt>>
+
+Specifies the ID for the LDAP Group Factory that you wish to list the Groups in
+(as was specified in the C<group_factories> configuration option listed in
+C<socialtext.conf>).
+
+If no C<--driver> is specified, Groups are listed for B<all> configured LDAP
+Group Factories.
+
+=back
+
+=item B<refresh-users>
+
+Refreshes the local DB cache with information on LDAP users.
+
+=over
+
+=item B<--email E<lt>addrE<gt>>
+
+Refreshes a I<single> User, by e-mail address.
+
+=item B<--username E<lt>nameE<gt>>
+
+Refreshes a I<single> User, by username.
+
+=item B<--force>
+
+Forces a refresh for B<all> LDAP users, not just those who are known to have
+stale/outdated cached data.
+
+=back
+
+LDAP user data I<is> refreshed automatically by the system as part of its
+regular operations, but there are times when you may wish to refresh the data
+explicitly:
+
+=over
+
+=item *
+
+Initial population of LDAP user data; cache is empty and you'd like to
+pre-fetch all of the user data so that its available immediately, rather than
+waiting for the user data to get cached naturally through system use.
+
+=item *
+
+You've made (possibly major) changes to the data stored within the LDAP
+directory, and want that data to be reflected immediately within Socialtext.
+
+=back
+
+By default, only those users whose cached data is stale are refreshed.  This
+can be over-ridden by using the C<--force> command line option, which forces a
+refresh of B<all> LDAP users.
+
+=item B<refresh-groups>
+
+Refreshes the local DB cache with information on LDAP groups.
+
+=over
+
+=item B<--id E<lt>group_idE<gt>>
+
+Refreshes a single Group, by Id.
+
+=item B<--force>
+
+Forces a refresh for B<all> LDAP groups, not just those who are known to have
+stale/outdated cached data.
+
+=back
+
+LDAP group data I<is> refreshed automatically by the system as part of its
+regular operations, but there are times when you may wish to refresh the data
+explicitly:
+
+=over
+
+=item *
+
+Initial population of LDAP group data; cache is empty and you'd like to
+pre-fetch all of the group data so that its available immediately, rather than
+waiting for the group data to get cached naturally through system use.
+
+=item *
+
+You've made (possibly major) changes to the data stored within the LDAP
+directory, and want that data to be reflected immediately within Socialtext.
+
+=back
+
+By default, only those groups whose cached data is stale are refreshed.  This
+can be over-ridden by using the C<--force> command line option, which forces a
+refresh of B<all> LDAP groups.
+
+=item B<refresh>
+
+Refreshes the local DB cache with information on LDAP users and groups.
+
+=over
+
+=item B<--force>
+
+Forces a refresh for B<all> LDAP users and groups, not just those who are
+known to have stale/outdated cached data.
+
+=back
+
+Note that "refresh" is simply a short-hand method for calling "refresh-users"
+and "refresh-groups" (in that order).
+
+=back
+
+=head1 OPTIONS
+
+=over
+
+=item B<--verbose>
+
+Runs in verbose mode, displaying additional information as operations are
+performed.
+
+=item B<--help/-?>
+
+Displays a brief help message.
+
+=item B<--man>
+
+Displays the full documentation.
+
+=back
+
+=head1 AUTHOR
+
+Graham TerMarsch C<< <graham.termarsch@socialtext.com> >>
+
+=head1 COPYRIGHT
+
+Copyright 2008-2009 Socialtext, Inc.,  All Rights Reserved.
+
+=cut

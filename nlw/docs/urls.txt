@@ -1,0 +1,45 @@
+---> vim:sts=2:sw=2:
+This document is to serve as master documentation of the semantics of all the
+URLs that we serve anywhere.  This should include, eventually, even special
+URLs for serving static content more quickly overseas, etc.  Those URLs
+peculiar to specific customer installations should probably be documented in
+separate file(s).
+
+The layout is described in the file outline.txt.
+
+1. The character '*' serves as a wildcard as in the shell.  '?' does not.
+
+2. Synonymous URLs can be separated by a space.  A literal space should be
+   percent-escaped (%20).
+
+3. Any word in all caps is considered a placeholder, not a literal.
+
+4. If a given http method is not specified, then the expected behaviour is not
+   defined.  Users should reasonably expect to receive an HTTP error code when
+   they hit that URL with that method.
+
+- //www.socialtext.net //APPLIANCE
+  - /
+    - Meaning: User's home on the service.
+    - GET: Authenticate, then redirect to the lexicographically first
+      workspace to which the user belongs.
+
+    - /lite
+      - FIXME: flesh out /lite
+
+    - /nlw
+      - FIXME: flesh out /nlw
+
+    - /search - RESERVED
+
+    - /st-* - RESERVED
+
+    - FIXME: what else is reserved?
+
+    - /WORKSPACE /WORKSPACE/ /WORKSPACE/index.cgi
+      - Meaning: The main entry point to WORKSPACE.
+      - GET: Authenticate, then show the home page of the workspace.
+
+      - /WORKSPACE/index.cgi?action=recent_changes
+        - FIXME: flesh out recent changes
+      - FIXME: other stuff under /WORKSPACE

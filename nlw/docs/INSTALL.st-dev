@@ -1,0 +1,90 @@
+INSTALL.st-dev -- How to set up a Socialtext development environment
+
+@COPYRIGHT@
+
+# This document is an internal Socialtext document for describing how
+# Socialtext developers can set up their own development environments,
+# on a fresh Ubuntu install.  It's not intended for end users.
+#
+# But if you want to read it, go ahead.
+
+
+
+
+# Install some basic packages.  The ones above the blank are required for
+# Socialtext (or essential to admining of Socilatext), the ones below are just
+# needed for a devbox:
+sudo apt-get install \
+    apache libapache-mod-perl libcpanplus-perl libfile-chdir-perl pmtools \
+    libssl-dev libxml-sax-perl libxml2-dev ca-certificates exim4 \
+    lsof ltrace mtools netcat nmap screen strace unzip wamerican-large \
+    miscfiles wv bzip2 zip zsh \
+    subversion apache-doc debhelper dh-make dpkg-dev \
+    perltidy perl-doc dh-make-perl perl-debug \
+    gcc gdb libc6-dev manpages-dev apache-dev postgresql linux-kernel-headers \
+    links bc ccze dict \
+    emacs21-nox apache2 apache2-mpm-prefork \
+    libpng3 libpng3-dev libungif4-dev  libjpeg62-dev \
+
+# You'll also need to install the libpq-dev package, which seems like it's
+# currently named "postgresql-dev" on ubuntu.
+
+
+# Johnt, can you re-set-up apt.socialtext.net to make this true again? {{{
+
+# Add the socialtext apt repo to /etc/apt/sources.list:
+#  deb http://apt.socialtext.net binary/
+
+# TODO - Document the pinning stuff we finally figured out.
+
+# Then slurp in all of our packages:
+wget http://apt.socialtext.net/alldebs -q -O - | tee alldeb
+sudo apt-get install `<alldeb`
+# Note: Currently (Jul05), the packages that have been made just for
+# socialtext don't have signatures, so you'll get a prompt.
+
+# }}}
+
+
+# Now for some apache pre-config:
+# Make sure /etc/hosts has something like the following (so the server won't
+# think its name was localhost.localhost):
+# 65.87.18.219    dev-asp.socialtext.net
+# ...and:
+# Keep the default server from wasting our resources (note: when we switch to
+# a DSO mod_perl, this apache will be the correct one, not apache_perl):
+sudo /etc/init.d/apache stop
+sudo update-rc.d -f apache remove
+sudo update-rc.d apache stop 91 0 1 2 3 4 5 6 .
+
+# For en_US.UTF-8
+[ `locale -a | grep en_US.utf8` ] && sudo dpkg-reconfigure locales
+
+# workaround our "standardization on /usr/local/bin/perl":
+sudo ln -s /usr/bin/perl /usr/local/bin/perl
+
+# Some Pre-prereqs (Note: As of Jun05, the package of
+# libperl-module-build-perl (0.26) is not a high enough version for Socialtext
+# (which wants 0.261))
+# We also had to cpan install ExtUtils::CBuilder so that Module::Build would
+# have C_support, which was needed for later deps
+sudo cpanp -i Module::Build Kwiki Cache::FileCache # XXX need to be .debs
+
+# Then, from your Socialtext checkout directory:
+perl Build.PL # (ignore the dependency warnings)
+sudo ./Build install_maintained_dependencies 
+
+# You might run into some bumps along the way.  As of -r6269, there no
+# ordering handled for modules/tarballs, so DBD-Pg attempts to install before
+# DBI, which means it fails.  You'll need at least CPAN 0.55, or else
+# Socialtext::Build::Deps complains about the inability to parse any module names.
+./Build install_other_dependencies # TODO - convert this to a bunch of .deb's
+
+# This hack is crazy, but was necessary (Jun05) to get rid of an error that
+# said "Cannot load Apache/Request/Request.so", so I put I put
+# /usr/lib/perl5/auto/libapreq/ into /etc/ld.so.conf, and ran:
+sudo ldconfig
+
+# For additional steps for talc-like dev box setup, see:
+#  https://www.socialtext.net/ops/index.cgi?dev_box
+

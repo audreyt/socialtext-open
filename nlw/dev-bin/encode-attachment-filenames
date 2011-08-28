@@ -1,0 +1,39 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+use File::Basename;
+use File::Copy;
+use File::Find::Rule;
+use CGI ();
+
+my $base = -d '/var/www/socialtext-1.0' ? '/var/www/socialtext-1.0' : '/var/www/socialtext';
+
+my $workspace = shift;
+
+for my $d ( $workspace ? "$base/plugin/$workspace" : grep { -d } glob "$base/plugin/*" )
+{
+    next unless -d "$d/attachments";
+
+    my $workspace = basename($d);
+    print "Fixing attachment file names for $d\n";
+
+    for my $f ( File::Find::Rule->file
+                                ->in( "$d/attachments" ) )
+    {
+        next unless $f =~ m{/\d+/[^/]+$};
+
+        my $basename = basename($f);
+
+        next if $f =~ /%[\dA-Fa-f]/;
+        next unless $basename ne CGI::escape($basename);
+
+        my $dir = dirname($f);
+
+        print "$basename => ", CGI::escape($basename), "\n";
+        move( "$dir/$basename" => "$dir/" . CGI::escape($basename) );
+    }
+}
+

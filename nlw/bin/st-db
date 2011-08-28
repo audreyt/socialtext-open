@@ -1,0 +1,87 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use 5.12.0;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use lib ($ENV{ST_SRC_BASE} || '') ."/current/socialtext-reports/lib";
+use Getopt::Long;
+use YAML qw/LoadFile/;
+use Socialtext::Schema;
+
+my %opts = (
+    'schema' => '*',
+);
+GetOptions( \%opts,
+    'verbose',
+    'force',
+    'schema|s=s',
+    'schema-file=s',
+    'output=s',
+) or usage();
+my $command = shift @ARGV;
+usage("No command supplied!") unless $command;
+my %valid_command = map { $_ => 1 } 
+    qw/sync recreate dump createdb dropdb version escalate_privs revoke_privs
+       run_sql_file reset_db_locale/;
+usage("Invalid command: $command\n") unless $valid_command{$command};
+
+if ($command eq 'recreate' and !$opts{force}) {
+    usage("recreate option requires --force - it is dangerous!");
+}
+
+my $schema_dir = Socialtext::Schema::schema_dir();
+my @schemas = sort {$a cmp $b} glob("$schema_dir/$opts{schema}.yaml");
+usage("No schemas found in $schema_dir!\n") unless @schemas;
+
+for my $schema_config_file (@schemas) {
+    my $schema_config = LoadFile($schema_config_file);
+    
+    my $class = delete $schema_config->{class};
+    eval "require $class";
+    die $@ if $@;
+
+    my $schema = $class->new(
+        %$schema_config,
+        verbose => delete $opts{verbose},
+        output  => delete $opts{output},
+        force   => $opts{force},
+    );
+
+    my @args;
+    if ($opts{'schema-file'} and $command eq 'recreate') {
+        @args = ('schema-file' => $opts{'schema-file'});
+    }
+    elsif ($command ~~ ['run_sql_file', 'reset_db_locale']) {
+        @args = $ARGV[0];
+    }
+
+    $schema->$command(@args);
+}
+exit;
+
+
+sub usage {
+    my $msg = shift || '';
+    warn "$msg\n\n" if $msg;
+    die <<EOT;
+USAGE: $0 <command>
+
+Runs the command against all configured schemas.
+
+Commands:
+  sync     - Sync the database schema
+  dump     - Dump the database to a SQL file
+  version  - Print the current schema version number
+  recreate - Dump, drop and create a new fresh database
+             (Requires --force option)
+
+  reset_db_locale <locale> - Reset the database locale.
+    (<locale> must be either "C" or "en_US.UTF-8" at the moment.)
+
+Options:
+  -s|--schema <foo> - only operate on the specified schema
+  -v|--verbose      - show more output
+  --force           - must be used with the recreate option
+EOT
+}

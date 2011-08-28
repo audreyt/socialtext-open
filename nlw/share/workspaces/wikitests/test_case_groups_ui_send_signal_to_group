@@ -1,0 +1,216 @@
+| *Comment* | Test Case: Groups UI Send Signal to Group |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Groups UI Send Signal to Group. Setup |  |  |
+| st-setup-a-group | 1 | 1 | 1 |
+
+| *Comment* | Created user: %%group_user%% Account: %%group_acct%% Group Name: %%group_name%% Group ID: %%group_id%% Workspace: %%group_ws%% |  |  |
+
+| set | account_signal | This goes to all members of account %%group_acct%% |
+| set | group_signal | This goes to just the group %%group_name%% |
+
+| set | ssg_user | `ssg-user-%%start_time%%@ken.socialtext.net` |
+| set | ssg_user_bestfull | ssg user %%start_time%% |
+| set | ssg_non_member | `ssg-non-member-%%start_time%%@ken.socialtext.net` |
+| set | ssg_non_member_bestfull | ssg non member %%start_time%% |
+
+| st-admin | create_user --email %%ssg_user%% --password %%password%% --account %%group_acct%% |  |
+| st-admin | add-member --email %%ssg_user%% --group %%group_id%% |  |
+| st-admin | create_user --email %%ssg_non_member%% --password %%password%% --account %%group_acct%% |  |
+
+| *Comment* | Test Case: Groups UI Send Signal to Group. login as %%group_user%% |  |
+| st-logoutin | %%group_user%% | %%password%% |
+
+| *Comment* | Test Case: Groups UI Send Signal to Group. SEND SIGNAL TO ACCOUNT %%group_acct%% |  |
+| open_ok | /st/signals |  |
+| text_like | st-editing-tools-edit | Signals |
+| st-name-widget | 1 | signals_widget |
+
+| *Comment* | Test Case: Groups UI Send Signal to Group. values for ".. within <group>" filter shows account and group |  |
+| wait_for_element_present_ok | //ul[@id='st-dropdown-2-list']/li[1]/a | 5000 |
+| wait_for_element_present_ok | //ul[@id='st-dropdown-2-list']/li[2]/a | 5000 |
+| wait_for_element_present_ok | //ul[@id='st-dropdown-2-list']/li[3]/a | 5000 |
+
+| *Comment* | Test Case: Groups UI Send Signal to Group. "Post to" list shows account and group |  |
+| wait_for_element_present_ok | //ul[@id='st-dropdown-3-list']/li[1]/a | 5000 |
+| wait_for_element_present_ok | //ul[@id='st-dropdown-3-list']/li[2]/a | 5000 |
+
+| *Comment* | Test Case: Groups UI Send Signal to Group. Choose within %%group_acct%% |  |
+| *Comment* | Test Case: Groups UI Send Signal to Group. Post to should automagically become %%group_acct%% |  |
+| click_ok | //ul[@id='st-dropdown-2-list']/li[2]/a | 20000 |
+
+| *Comment* | Test Case: Groups UI Send Signal to Group. Send and check %%account_signal%% |  |
+| st_send_signal_via_activities_widget | signals_widget | %%account_signal%% |
+| st_verify_text_in_activities_widget | signals_widget | qr/%%group_acct%%.+By you.*minute.*ago\s*to/ism |
+| st_verify_text_in_activities_widget | signals_widget | %%account_signal%% |
+| open_ok | /st/signals |  |
+
+| *Comment* | Test Case: Groups UI Send Signal to Group. Choose within %%group_name%% |  |
+| *Comment* | Test Case: Groups UI Send Signal to Group. Post to should automagically become %%group_name%% |  |
+| wait_for_element_present_ok | //ul[@id='st-dropdown-2-list']/li[3]/a | 5000 |
+| click_ok | //ul[@id='st-dropdown-2-list']/li[3]/a |  |
+
+| *Comment* | Test Case: Groups UI Send Signal to Group. Send and check %%group_signal%% |  |
+
+| st_send_signal_via_activities_widget | signals_widget | %%group_signal%% |
+| st_verify_text_in_activities_widget | signals_widget | qr/%%group_name%%.+By you.*minute.*ago\s*to/ism |
+| st_verify_text_in_activities_widget | signals_widget | %%group_signal%% |
+
+| *Comment* | Test Case: Groups UI Send Signal to Group. login as group member %%ssg_user%% |  |
+| st-logoutin | %%ssg_user%% | %%password%% |
+
+| open_ok | /st/signals |  |
+| wait_for_text_present_ok | Colleagues | 30000 |
+| text_like | st-editing-tools-edit | Signals |
+| st-name-widget | 1 | signals_widget |
+
+| *Comment* | Test Case: Groups UI Send Signal to Group. Select within %%group_name%% |  |
+| wait_for_element_present_ok | //ul[@id='st-dropdown-2-list']/li[3]/a | 20000 |
+| click_ok | //ul[@id='st-dropdown-2-list']/li[3]/a |  |
+
+| open_ok | /st/dashboard |  |
+| wait_for_text_present_ok | Welcome, New User | 30000 |
+| text_like | st-editing-tools-edit | Welcome |
+| open_ok | /st/signals |  |
+| wait_for_text_present_ok | Colleagues | 30000 |
+| text_like | st-editing-tools-edit | Signals |
+| st-name-widget | 1 | signals_widget |
+
+| *Comment* | Test Case: Groups UI Send Signal to Group. see group signal only, not account signal |  |
+| st_verify_text_in_activities_widget | signals_widget | qr/%%group_user_short%%.*minute.*ago\s*to\s*%%group_name%%/ |
+| st_verify_text_in_activities_widget | signals_widget | %%group_signal%% |
+
+| st_text_unlike_in_activities_widget | signals_widget | %%account_signal%% |
+
+| *Comment* | Test Case: Groups UI Send Signal to Group. Select within All my groups |  |
+| wait_for_element_present_ok | //ul[@id='st-dropdown-2-list']/li[1]/a | 20000 |
+| click_ok | //ul[@id='st-dropdown-2-list']/li[1]/a |  |
+
+| open_ok | /st/dashboard |  |
+| wait_for_text_present_ok | Welcome, New User | 30000 |
+| text_like | st-editing-tools-edit | Welcome |
+| open_ok | /st/signals |  |
+| wait_for_text_present_ok | Colleagues | 30000 |
+| text_like | st-editing-tools-edit | Signals |
+| st-name-widget | 1 | signals_widget |
+
+| *Comment* | Test Case: Groups UI Send Signal to Group. Verify %%ssg_user%% sees both signals |  |
+| st_verify_text_in_activities_widget | signals_widget | qr/%%group_user_short%%.*minute.*ago\s*to\s*%%group_name%%/ |
+| st_verify_text_in_activities_widget | signals_widget | %%group_signal%% |
+| st_verify_text_in_activities_widget | signals_widget | qr/%%group_user_short%%.*minute.*ago\s*to\s*%%group_acct%%/ |
+| st_verify_text_in_activities_widget | signals_widget | %%account_signal%% |
+
+| *Comment* | Test Case: Groups UI Send Signal to Group. Select within %%group_acct%% |  |
+| wait_for_element_present_ok | //ul[@id='st-dropdown-2-list']/li[2]/a | 20000 |
+| click_ok | //ul[@id='st-dropdown-2-list']/li[2]/a |  |
+
+| open_ok | /st/dashboard |  |
+| wait_for_text_present_ok | Welcome, New User | 30000 |
+| text_like | st-editing-tools-edit | Welcome |
+| open_ok | /st/signals |  |
+| wait_for_text_present_ok | Colleagues | 30000 |
+| text_like | st-editing-tools-edit | Signals |
+| st-name-widget | 1 | signals_widget |
+
+| *Comment* | Test Case: Groups UI Send Signal to Group. Verify %%ssg_user%% sees only account signal |  |
+| st_verify_text_in_activities_widget | signals_widget | %%account_signal%% |
+
+| st_text_unlike_in_activities_widget | signals_widget | %%group_signal%% |
+
+| *Comment* | Test Case: Groups UI Send Signal to Group. Verify non-member of %%group_name%% sees only account signals |  |
+| st-logoutin | %%ssg_non_member%% | %%password%% |
+
+| open_ok | /st/signals |  |
+| wait_for_text_present_ok | Colleagues | 30000 |
+| text_like | st-editing-tools-edit | Signals |
+| st-name-widget | 1 | signals_widget |
+
+| st_verify_text_in_activities_widget | signals_widget | qr/%%group_user_short%%.*minute.*ago\s*to\s*%%group_acct%%/ |
+| st_verify_text_in_activities_widget | signals_widget | %%account_signal%% |
+
+| st_text_unlike_in_activities_widget | signals_widget | qr/%%group_user_short%%.*minute.*ago\s*to\s*%%group_name%%/ |
+| st_text_unlike_in_activities_widget | signals_widget | %%group_signal%% |
+
+| *Comment* | Groups UI Send Signal to Group search does not find group-only signal |  |
+| type_ok | st-search-term | %%group_name%% |
+| click_and_wait | st-search-submit |  |
+| wait_for_text_present_ok | Signals matching '%%group_name%%' | 30000 |
+| text_unlike | //body | %%group_signal%% |
+
+| *Comment* | Groups UI Send Signal to Group search does find account signal |
+| type_ok | st-search-term | %%group_acct%% |
+| click_and_wait | st-search-submit |  |
+| wait_for_text_present_ok | Signals matching '%%group_acct%%' | 30000 |
+| text_like | %%account_signal%% |  |
+
+| *Comment* | Groups UI Send Signal to Group group member search for account signal |  |
+| st-logoutin | %%ssg_user%% | %%password%% |
+| open_ok | /st/signals |  |
+| wait_for_element_visible_ok | st-search-submit | 30000 |
+| wait_for_element_visible_ok | st-search-term | 30000 |
+| type_ok | st-search-term | %%group_acct%% |
+| click_and_wait | st-search-submit |  |
+
+| *Comment* | Groups UI Send Signal to Group filter by account, see account signal |  |
+| wait_for_text_present_ok | Signals matching '%%group_acct%%' | 30000 |
+| wait_for_element_visible_ok | //select[@class='account-select'] | 10000 |
+| select_and_wait | //select[@class='account-select'] | index=1 |
+| wait_for_text_present_ok | Signals matching '%%group_acct%%' | 30000 |
+| wait_for_text_present_ok | %%group_user_short%% | 30000 |
+| text_like | %%account_signal%% |  |
+
+| *Comment* | Groups UI Send Signal to Group filter by group, don't see account signal |  |
+| wait_for_element_visible_ok | //select[@class='account-select'] | 10000 |
+| select_and_wait | //select[@class='account-select'] | index=2 |
+| wait_for_text_present_ok | Signals matching '%%group_acct%%' | 30000 |
+| text_unlike | //body | %%group_user_short%% |
+| text_unlike | //body | %%account_signal%% |
+
+| *Comment* | Groups UI Send Signal to Group group member search for group signal |  |
+| type_ok | st-search-term | %%group_name%% |
+| click_and_wait | st-search-submit |  |
+| wait_for_text_present_ok | Signals matching '%%group_name%%' | 30000 |
+| text_like | %%group_signal%% |  |
+
+| *Comment* | Groups UI Send Signal to Group group member filter by group see group signal |  |
+| wait_for_element_visible_ok | //select[@class='account-select'] | 10000 |
+| select_and_wait | //select[@class='account-select'] | index=2 |
+| wait_for_text_present_ok | Signals matching '%%group_name%%' | 30000 |
+| text_like | %%group_signal%% |  |
+| text_unlike | //body | %%account_signal%% |
+
+| *Comment* | Groups UI Send Signal to Group group member filter by account don't see group signal |  |
+| wait_for_element_visible_ok | //select[@class='account-select'] | 10000 |
+| select_and_wait | //select[@class='account-select'] | index=1 |
+| wait_for_text_present_ok | Signals matching '%%group_name%%' | 30000 |
+| text_unlike | //body | %%group_signal%% |
+
+| *Comment* | Groups UI Send Signal to Group group member search for account signal |  |
+| type_ok | st-search-term | %%group_acct%% |
+| click_and_wait | st-search-submit |  |
+| wait_for_text_present_ok | Signals matching '%%group_acct%%' | 30000 |
+| text_like | %%account_signal%% |  |
+
+| *Comment* | Groups UI Send Signal to Group group member filter by account see account signal |  |
+| wait_for_element_visible_ok | //select[@class='account-select'] | 10000 |
+| select_and_wait | //select[@class='account-select'] | index=1 |
+| wait_for_text_present_ok | Signals matching '%%group_acct%%' | 30000 |
+| text_like | %%account_signal%% |
+| text_unlike | //body | %%group_signal%% |  |
+
+| *Comment* | Groups UI Send Signal to Group group member filter by group don't see account signal |  |
+| wait_for_element_visible_ok | //select[@class='account-select'] | 10000 |
+| select_and_wait | //select[@class='account-select'] | index=2 |
+| wait_for_text_present_ok | Signals matching '%%group_acct%%' | 30000 |
+| text_unlike | //body | %%account_signal%% |
+
+| *Comment* | Groups UI Send Signal to Group TEARDOWN |  |
+| st-process-jobs |  |  |
+| delete-group | %%group_id%% |  |
+| delete-workspace | %%group_ws%% |  |
+| st-admin | deactivate-user --email %%ssg_user%% | has been removed |
+| st-admin | deactivate-user --email %%ssg_non_member%% | has been removed |
+| delete_account | %%group_acct%% | Recklessly deleting |
+
+| *Comment* | Groups UI Send Signal to Group COMPLETED |  |

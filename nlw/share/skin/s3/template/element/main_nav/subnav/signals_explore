@@ -1,0 +1,4 @@
+[% USE decorate %]
+[% FILTER decorate('nav_signals_explore') %]
+<!-- Nothing if signals is not installed  -->
+[% END %]

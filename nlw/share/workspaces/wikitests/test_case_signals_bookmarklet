@@ -1,0 +1,14 @@
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Signals Bookmarklet See Link on activities widget |  |
+| open_ok | /st/signals |  |
+| wait_for_element_present_ok | link=Signal This! | 30000 |
+| click_ok | link=Signal This! |  |
+
+| *Comment* | Test Case: Signals Bookmarklet Click, see text |  |
+| pause | 10000 | wait for pop-up |
+| selectWindow | "Signal This" Bookmarklet |  |
+| wait_for_text_present_ok | Signals Bookmarklet | 30000 |
+| text_like | //body | Share any page on the web via Signals using this handy bookmarklet |
+
+| *Comment* | Test Case: Signals Bookmarklet COMPLETED |

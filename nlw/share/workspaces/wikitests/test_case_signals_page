@@ -1,0 +1,48 @@
+| *Comment* | Test case: Signals Page |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Signals Page |  |
+
+| set-default | mark | single |
+| set-default | group | %%defaultaccount%% |
+
+| *Comment* | Test Case: Signals Page. Get to the Signals page. Wait for the widget to fully load |  |
+| st-admin | enable-plugin --all-accounts --p signals |  |
+| open_ok | /st/signals |  |
+| wait_for_text_present_ok | Signal | 60000 |
+
+| *Comment* | Test Case: Signals Page. Send four signals |  |
+| st-name-widget | 1 | signals_widget |
+
+| *Comment* | Test Case: Signals Page. Once Upon A Time |  |
+| st_send_signal_via_activities_widget | signals_widget | Once Upon A Time %%start_time%% %%mark%% |
+| open_ok | /st/signals |  |
+
+| *Comment* | Test Case: Signals Page. I Remember Long Ago |  |
+| st_send_signal_via_activities_widget | signals_widget | I Remember Long Ago %%start_time%% %%mark%% |
+| open_ok | /st/signals |  |
+
+| *Comment* | Test Case: Signals Page. Way Back In History |  |
+| st_send_signal_via_activities_widget | signals_widget | Way Back In History %%start_time%% %%mark%% |
+| open_ok | /st/signals |  |
+
+| *Comment* | Test Case: Signals Page. I May Be Kinda Slow |  |
+| st_send_signal_via_activities_widget | signals_widget | I May Be Kinda Slow %%start_time%% %%mark%% |
+| open_ok | /st/signals |  |
+
+| *Comment* | Test Case: Signals Page. Process jobs. |  |
+| st-process-jobs | SignalIndex |  |
+
+| *Comment* | Test Case: Signals Page. Verify signals in page. |  |
+| wait_for_text_present_ok | Once Upon A Time %%start_time%% %%mark%% | 30000 |
+| wait_for_text_present_ok | I Remember Long Ago %%start_time%% %%mark%% | 30000 |
+| wait_for_text_present_ok | Way Back In History %%start_time%% %%mark%% | 30000 |
+| wait_for_text_present_ok | I May Be Kinda Slow %%start_time%% %%mark%% | 30000 |
+
+| *Comment* | Test Case: Signals Page. Wait for automatic refresh to "x minute ago" in page |  |
+| wait_for_text_present_ok | minute | 30000 |
+| text_like | //body | qr/%%group%%/ism |
+| text_like | //body | qr/By you.+minute.+ago/ism |
+
+| *Comment* | Test Case: Signals Page COMPLETED |  |

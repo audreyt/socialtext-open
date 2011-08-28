@@ -1,0 +1,29 @@
+#!/bin/bash
+# @COPYRIGHT@
+
+# quick hack based on the one liners we were playing with
+
+# take an ip number
+# find all the ports that that ip number is coming in on
+# use them to get a list of pids
+# strace the pid (note being in read is not bad, it could be normally idle)
+# look in the logs for that pid's activity
+
+# you have to hit ctrl-c to get out of the strace
+# you have to hit return to dismiss the egrep output and move on to text pid
+
+
+IP=$1
+LOG=/var/log/apache-perl/nlw-access.log
+
+for i in \
+  `netstat -nt|grep $IP|awk '{print $5}'|awk -F: '{print $2}'` ; do
+    PID=`sudo lsof -i:$i |grep -v PID|awk '{print $2}'`
+    echo $PID || exit
+    sudo strace -p $PID
+    sudo gdb -p $PID
+    egrep " $PID [0-9]$" $LOG
+    read
+done\
+
+

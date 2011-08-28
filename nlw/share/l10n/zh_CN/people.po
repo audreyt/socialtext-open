@@ -1,0 +1,669 @@
+# @COPYRIGHT@
+msgid ""
+msgstr ""
+"Project-Id-Version: Socialtext i18n\n"
+"PO-Revision-Date: 2011-05-18 08:08-0700\n"
+"Last-Translator: Socialtext i18n team\n"
+"Language-Team: Socialtext i18n team\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: share/plugin/people/share/widgets/all_tags/config.yaml:4
+msgid "description.all_tags"
+msgstr "以标签云方式显示所有人员标签。"
+
+#: share/plugin/people/share/widgets/forbidden_profile/config.yaml:5
+msgid "description.forbidden_profile"
+msgstr "个人档案"
+
+#: share/plugin/people/share/widgets/profile/config.yaml:5
+msgid "description.profile"
+msgstr "个人档案"
+
+#: share/plugin/people/share/widgets/profile_activities/config.yaml:4
+msgid "description.profile_activities"
+msgstr "活动"
+
+#: share/plugin/people/share/widgets/profile_edit/config.yaml:4
+msgid "description.profile_edit"
+msgstr "编辑个人档案"
+
+#: share/plugin/people/share/widgets/profile_network/config.yaml:4
+msgid "description.profile_network"
+msgstr "与您有关联的人"
+
+#: share/plugin/people/share/widgets/profile_tags/config.yaml:5
+msgid "description.profile_tags"
+msgstr "标签"
+
+#: share/plugin/people/template/invite:109
+msgid "do.cancel"
+msgstr "取消"
+
+msgid "do.edit-layout"
+msgstr "编辑布局"
+
+#: share/plugin/people/template/profile_links:5
+msgid "do.edit-profile"
+msgstr "编辑个人档案"
+
+#: share/plugin/people/template/invite:102
+msgid "do.invite"
+msgstr "邀请"
+
+#: share/plugin/people/share/widgets/profile_edit/widget.html:10
+msgid "do.remove"
+msgstr "移除"
+
+msgid "do.revert-to-default"
+msgstr "恢复为默认…"
+
+#: share/plugin/people/share/widgets/profile_tags/widget.js:86
+msgid "error.add-profile-tag"
+msgstr "无法添加标签。"
+
+#: share/plugin/people/share/widgets/profile_tags/widget.js:122
+msgid "error.build-profile-tags"
+msgstr "无法建立标签列表。"
+
+#: share/plugin/people/share/widgets/profile_tags/widget.js:51
+msgid "error.delete-profile-tag"
+msgstr "无法删除标签。"
+
+#. (users_already_present.size)
+#: share/plugin/people/template/invite_done:17 share/plugin/people/template/invite_done:18
+msgid "error.group-member-exists=count:"
+msgstr "对不起，下面的 %1 名用户已经是群组成员："
+
+#. (wrong_domain.size, '<span style="color: red">' _ restrict_to_domain _ '</span>')
+#. (wrong_domain.size, "<span style=\"color: red\">' _ restrict_to_domain _ '</span>")
+#: share/plugin/people/template/invite_done:17 share/plugin/people/template/invite_done:26
+msgid "error.invalid-email-address=count,domain"
+msgstr "对不起，下面的 %1 项电子邮件地址不在域名 %2 下面"
+
+#. (invalid_addresses.size)
+#: share/plugin/people/template/invite_done:17 share/plugin/people/template/invite_done:22
+msgid "error.invalid-email-address=count:"
+msgstr "对不起，下面的 %1 项电子邮件地址是无效的："
+
+#: share/plugin/people/share/widgets/profile_activities/widget.html:2
+msgid "error.load-widget-content"
+msgstr "无法载入小工具的内容。"
+
+#: share/plugin/people/template/lite/profile.html:70
+msgid "error.no-activities"
+msgstr "没有活动可以显示。"
+
+#: share/plugin/people/template/lite/profile.html:164
+msgid "error.no-additional-profile-data"
+msgstr "没有额外的个人数据。"
+
+#: share/plugin/people/template/lite/people.html:39
+msgid "error.no-people-found"
+msgstr "没有人员符合此标准。"
+
+#: share/plugin/people/template/lite/profile.html:72
+msgid "error.no-signals"
+msgstr "没有人注册。"
+
+#: share/plugin/people/share/widgets/profile_network/widget.js:6
+msgid "error.show-profile-followers"
+msgstr "无法显示关注您的人。"
+
+#: share/plugin/people/share/widgets/profile_network/widget.js:12
+msgid "error.show-profile-following"
+msgstr "无法显示您关注的人。"
+
+#: share/plugin/people/share/widgets/profile_network/widget.js:18
+msgid "error.show-profile-groups"
+msgstr "无法显示群组列表。"
+
+msgid "error.their-twitter-username-missing"
+msgstr "该用户尚未输入自己的 Twitter 用户名"
+
+msgid "error.twitter-feed-protected=user"
+msgstr "@<a href=\"http://www.twitter.com/%1\">%1</a> 的 Twitter 来源受到保护，不能显示在这个小工具中。"
+
+msgid "error.your-twitter-username-missing"
+msgstr "您的 Twitter 用户名尚未添加到您的个人资料中。请点击“编辑个人资料”并输入您的 Twitter 用户名。"
+
+#. (person_tag)
+#: share/plugin/people/template/data/events/person:6
+msgid "event.add-tag-self=tag"
+msgstr "给自己加标签 %1。"
+
+#. (person, person_tag)
+#: share/plugin/people/template/data/events/person:17
+msgid "event.add-tag=person,tag"
+msgstr "给 %1 加标签 %2。"
+
+#. (person_tag)
+#: share/plugin/people/template/data/events/person:8
+msgid "event.delete-tag-self=tag"
+msgstr "给自己移除标签 %1。"
+
+#. (person_tag, person)
+#: share/plugin/people/template/data/events/person:19
+msgid "event.delete-tag=tag,person"
+msgstr "给 %2 移除标签 %1。"
+
+#: share/plugin/people/template/data/events/person:4
+msgid "event.edit-profile-self"
+msgstr "编辑自己的个人档案。"
+
+#. (person)
+#: share/plugin/people/template/data/events/person:15
+msgid "event.edit-profile=person"
+msgstr "编辑 %1 的个人档案。"
+
+#. (person)
+#: share/plugin/people/template/data/events/person:21
+msgid "event.follow=person"
+msgstr "开始关注 %1。"
+
+#. (event.action)
+#: share/plugin/people/template/data/events/person:10
+msgid "event.generic-self=action"
+msgstr "对自己执行动作 %1。"
+
+#. (event.action, person)
+#: share/plugin/people/template/data/events/person:25
+msgid "event.generic=action,person"
+msgstr "在 %2 执行动作 %1。"
+
+#. (person)
+#: share/plugin/people/template/data/events/person:23
+msgid "event.unfollow=person"
+msgstr "停止关注 %1。"
+
+msgid "groups.member=count"
+msgstr "%1 位成员"
+
+#: share/plugin/people/template/email/invitation-body.html:39
+msgid "invite.account-password-exists"
+msgstr "由于您已经拥有一个帐户，其它群组的密码将与其密码相同。"
+
+#. (app_name)
+#: share/plugin/people/template/email/invitation-body.html:37
+msgid "invite.account-password-exists=app-name"
+msgstr "由于您已经拥有帐户%1，其它群组的密码将和%1的密码相同。"
+
+#. (users_invited.size)
+#: share/plugin/people/template/invite_done:17 share/plugin/people/template/invite_done:30
+msgid "invite.added-to-group=users:"
+msgstr "下面的 %1 名用户已经被成功的邀请到这个群组："
+
+#: share/plugin/people/template/invite:47
+msgid "invite.another-example-email-address"
+msgstr "another.friend@example.com"
+
+#. (confirm_uri)
+#: share/plugin/people/template/email/invitation-body.html:22
+msgid "invite.click-to-confirm-email=uri"
+msgstr "请<a href=\"%1\">点击此链接</a>来确认您的电子邮件地址。"
+
+#. (support_address)
+#: share/plugin/people/template/email/standard-footer.html:6
+msgid "invite.contact-support=uri"
+msgstr "如果您对此电子邮件有疑问，请 <a href=\"%1\">联系支持</a>。"
+
+#: share/plugin/people/template/invite_disabled_by_group:15
+msgid "invite.disabled-for-group"
+msgstr "对不起，当前服务器管理员禁用了该群组的这项功能。"
+
+#: share/plugin/people/template/invite_disabled:15
+msgid "invite.disabled-for-server"
+msgstr "对不起，当前服务器管理员禁用了这项功能。"
+
+#. ('<span style="color: red;">' _ restrict_to_domain _ '</span>')
+#. ("<span style=\"color: red;\">' _ restrict_to_domain _ '</span>")
+#: share/plugin/people/template/invite:39
+msgid "invite.email-restricted=domain"
+msgstr "您只能邀请那些和您邮箱%1域名一致的用户。"
+
+#: share/plugin/people/template/invite:22
+msgid "invite.enter-email-list:"
+msgstr "输入您要邀请到该群组的人的电子邮件地址清单（每行一个地址）："
+
+#: share/plugin/people/template/invite:46
+msgid "invite.example-email-address"
+msgstr "your.friend@example.com"
+
+#: share/plugin/people/template/invite:48
+msgid "invite.example-full-email-address"
+msgstr "姓 &lt;u01234@example.com&gt;"
+
+#: share/plugin/people/template/invite:45
+msgid "invite.example:"
+msgstr "示例："
+
+#: share/plugin/people/template/invite:35
+msgid "invite.features-for-invitees"
+msgstr "邀请的人员会列在群组的名单中，上面有个人资料。如果开启了Socialtext讯息，他们也可使用。"
+
+#: share/plugin/people/template/email/invitation-body.html:8
+msgid "invite.hi"
+msgstr "您好，"
+
+#. (acct_name, host)
+#: share/plugin/people/template/email/invitation-body.html:13
+msgid "invite.join=account,host"
+msgstr "我邀请您加入%2的群组%1。"
+
+#: share/plugin/people/template/email/invitation-body.html:46
+msgid "invite.keep-this-email-for-reference"
+msgstr "您可以保存这些电子邮件以备将来参考。"
+
+#: share/plugin/people/template/email/invitation-body.html:41
+msgid "invite.link-to-reset-password:"
+msgstr "如果您不记得了，请点击此链接以选择一个新密码："
+
+#: share/plugin/people/template/email/invitation-body.html:26
+msgid "invite.login-details-after-confirmation"
+msgstr "一旦您确认了您的帐户，您将收到第二封电子邮件，其中有登录的详细信息。"
+
+#: share/plugin/people/template/invite_done:42
+msgid "invite.more-people"
+msgstr "邀请更多人员"
+
+#: share/plugin/people/template/invite:67
+msgid "invite.new-users-will-be-sent-following-welcome-email:"
+msgstr "将下面的欢迎邮件发送到新用户："
+
+#: share/plugin/people/template/invite:21
+msgid "invite.people"
+msgstr "邀请人员"
+
+#: share/plugin/people/template/invite:54
+msgid "invite.personal-message"
+msgstr "个人消息"
+
+#: share/plugin/people/template/invite:55
+msgid "invite.personal-message-in-email"
+msgstr "如果愿意，您可以在邀请电子邮件内包含个人信息。您可以编辑该消息来说您想说的。"
+
+#: share/plugin/people/template/invite:58
+msgid "invite.personal-message-in-email?"
+msgstr "在下面的邀请信中加入个人信息？"
+
+#. (acc.user_count)
+#: share/plugin/people/template/invite:26
+msgid "invite.primary-account=users"
+msgstr "主要，%1 名用户"
+
+#: share/plugin/people/template/email/invitation-body.html:15
+msgid "invite.sign-in-with:"
+msgstr "用下面的信息登录："
+
+#: share/plugin/people/template/email/standard-footer.html:11
+msgid "invite.socialtext-footer"
+msgstr "由 Socialtext 为您带来。"
+
+#: share/plugin/people/template/invite:66
+msgid "invite.standard-welcome-message"
+msgstr "标准欢迎辞"
+
+#: share/plugin/people/template/email/invitation-body.html:51
+msgid "invite.thanks"
+msgstr "谢谢，"
+
+#: share/plugin/people/template/invite:13 share/plugin/people/template/invite:4 share/plugin/people/template/invite_disabled:13 share/plugin/people/template/invite_disabled:4 share/plugin/people/template/invite_disabled_by_group:13 share/plugin/people/template/invite_disabled_by_group:4 share/plugin/people/template/invite_done:3
+msgid "invite.to-your-group"
+msgstr "邀请人员到您的群组"
+
+#. (name)
+#: share/plugin/people/template/invite_done:12
+msgid "invite.to=name"
+msgstr "邀请人员到 %1"
+
+#: share/plugin/people/template/email/invitation-body.html:31
+msgid "invite.username:"
+msgstr "用户名："
+
+#: share/plugin/people/template/email/invitation-body.html:30
+msgid "invite.web-address:"
+msgstr "网址："
+
+#: share/plugin/people/template/invite:73 share/plugin/people/template/invite:80
+msgid "invite.your-personal-message"
+msgstr "<此处是您的个人消息。>"
+
+#: share/plugin/people/template/lite/people.html:11
+msgid "nav.my-profile"
+msgstr "我的个人资料"
+
+#: share/plugin/people/template/nav_people:1
+msgid "nav.people"
+msgstr "人员"
+
+#: share/plugin/people/template/view/peoplelist:17
+msgid "people.add-tag-to-myself"
+msgstr "给我添加这个标签"
+
+#: share/plugin/people/template/view/peoplelist:22
+msgid "people.add-tag-to-someone"
+msgstr "给某人添加这个标签"
+
+#. (tag)
+#. (tagname)
+#: share/plugin/people/share/people.js:11 share/plugin/people/template/tagged_people_links:13
+msgid "people.add-tag-to-user=name:"
+msgstr "为用户添加标签\"%1\"："
+
+#: share/plugin/people/share/people.js:31
+msgid "people.cancel-add-tag"
+msgstr "取消"
+
+#: share/plugin/people/template/dashboard_hello_incomplete:6
+msgid "people.complete-your-profile"
+msgstr "请填写<a href=\"/st/edit_profile\">您的个人资料</a>。"
+
+#. (acc.user_count)
+#. (group.user_count)
+#: share/plugin/people/template/invite:28 share/plugin/people/template/invite:31
+msgid "people.count=users"
+msgstr "%1 名用户"
+
+#: share/plugin/people/template/lite/people.html:9
+msgid "people.directory"
+msgstr "人员名单"
+
+msgid "people.edit-profile"
+msgstr "(编辑)"
+
+msgid "people.employee=count"
+msgstr "%* 位员工"
+
+#: share/plugin/people/template/lite/profile.html:15
+msgid "people.follow"
+msgstr "关注"
+
+#: share/plugin/people/template/profile_hcard:38
+msgid "people.mobile:"
+msgstr "移动电话："
+
+msgid "people.number-of-tweets"
+msgstr "显示推特数量上限"
+
+msgid "people.peer=count"
+msgstr "%* 位同事"
+
+#: share/plugin/people/template/lite/profile.html:173
+msgid "people.private-message-send"
+msgstr "发送"
+
+#. (p.best_full_name)
+#: share/plugin/people/template/lite/profile.html:169
+msgid "people.private-message-to=user:"
+msgstr "给%1的短消息："
+
+#: share/plugin/people/template/lite/profile.html:54 share/plugin/people/template/lite/profile.html:56
+msgid "people.profile"
+msgstr "个人资料"
+
+#: share/plugin/people/template/lite/people.html:7
+msgid "people.search"
+msgstr "搜索人员"
+
+#: share/plugin/people/template/search_box_people:1
+msgid "people.search:"
+msgstr "搜索人员："
+
+msgid "people.see-all-peers"
+msgstr "（检视所有人）"
+
+msgid "people.show-all"
+msgstr "全部显示"
+
+msgid "people.show-less"
+msgstr "收缩显示"
+
+#. (offset + 1, last, pager.total_entries)
+#: share/plugin/people/template/view/peoplelist:44
+msgid "people.showing=from,to,total"
+msgstr "显示第 %1 - %2 项，共 %3 项。"
+
+#: share/plugin/people/template/view/peoplelist:50
+msgid "people.sort-name"
+msgstr "名字"
+
+#: share/plugin/people/template/view/peoplelist:49
+msgid "people.sort-relevance"
+msgstr "相关度"
+
+#: share/plugin/people/template/lite/profile.html:13
+msgid "people.stop-following"
+msgstr "停止下面的"
+
+msgid "people.tag-name"
+msgstr "标签名称"
+
+#: share/plugin/people/template/view/peoplelist:13
+msgid "people.tools"
+msgstr "工具"
+
+msgid "people.twitter-id"
+msgstr "Twitter 用户名"
+
+#: share/plugin/people/template/dashboard_hello_incomplete:5
+msgid "people.welcome-new-user"
+msgstr "欢迎新用户"
+
+#: share/plugin/people/share/widgets/profile_network/widget.js:4
+msgid "profile.about-no-followers"
+msgstr "尚未有人关注您。当某人查看您的个人页面时，他可通过点击页面顶部的“关注”来关注您。"
+
+#: share/plugin/people/share/widgets/profile_network/widget.js:10
+msgid "profile.about-no-following"
+msgstr "您尚未关注他人。当查看某人的个人页面时，您可以通过点击页面顶部的“关注”来关注此人。"
+
+#: share/plugin/people/template/lite/profile.html:59 share/plugin/people/template/lite/profile.html:61
+msgid "profile.activities"
+msgstr "活动"
+
+#. ("<span class='realName'>__ENV_owner_name__</span>")
+#: share/plugin/people/share/widgets/profile_activities/widget.html:11
+msgid "profile.activity-rss-link=user"
+msgstr "<a id='rss_link' href='#'>RSS 订阅</a> %1 的活动。"
+
+#: share/plugin/people/template/profile_hcard:52
+msgid "profile.aim:"
+msgstr "AIM："
+
+#: share/plugin/people/template/lite/profile.html:100
+msgid "profile.assistant"
+msgstr "助理"
+
+#: share/plugin/people/template/profile_hcard:87
+msgid "profile.blog:"
+msgstr "博客："
+
+#: share/plugin/people/share/widgets/profile_edit/widget.html:54
+msgid "profile.contact"
+msgstr "联系方式"
+
+#: share/plugin/people/share/widgets/profile/widget.html:64 share/plugin/people/share/widgets/profile_edit/widget.html:69 share/plugin/people/template/lite/profile.html:153
+msgid "profile.custom"
+msgstr "自定义"
+
+#: share/plugin/people/template/profile_hcard:107
+msgid "profile.facebook:"
+msgstr "Facebook："
+
+#: share/plugin/people/share/widgets/profile_network/widget.js:2
+msgid "profile.followers"
+msgstr "受谁关注"
+
+#: share/plugin/people/share/widgets/profile_network/widget.js:8
+msgid "profile.follows"
+msgstr "关注谁"
+
+#: share/plugin/people/share/widgets/profile_edit/widget.html:31
+msgid "profile.grab-photo"
+msgstr "抓取照片"
+
+#: share/plugin/people/share/widgets/profile_network/widget.js:14
+msgid "profile.groups"
+msgstr "群组"
+
+#: share/plugin/people/template/profile_hcard:66
+msgid "profile.gtalk:"
+msgstr "GTalk："
+
+#: share/plugin/people/template/profile_hcard:44
+msgid "profile.home:"
+msgstr "家庭地址："
+
+#: share/plugin/people/share/widgets/profile_edit/widget.html:59
+msgid "profile.i"
+msgstr "我"
+
+#: share/plugin/people/share/widgets/profile/widget.html:38 share/plugin/people/template/lite/profile.html:108
+msgid "profile.im"
+msgstr "聊天室"
+
+#: share/plugin/people/template/profile_hcard:99
+msgid "profile.linkedin:"
+msgstr "Linkedin&reg;："
+
+#: share/plugin/people/template/lite/profile.html:97
+msgid "profile.manager"
+msgstr "经理"
+
+#: share/plugin/people/share/widgets/profile_network/widget.js:5
+msgid "profile.no-followers"
+msgstr "尚未有人关注此人。"
+
+#: share/plugin/people/share/widgets/profile_network/widget.js:11
+msgid "profile.no-following"
+msgstr "此人尚未关注任何人。"
+
+#: share/plugin/people/share/widgets/profile_network/widget.js:16
+msgid "profile.no-groups-for-you"
+msgstr "您不是任何群组的成员。"
+
+#: share/plugin/people/share/widgets/all_tags/widget.js:20
+msgid "profile.no-people-tags"
+msgstr "没有人员标签。使用人员个人资料中的“添加标签”功能来创建标签。"
+
+#: share/plugin/people/share/widgets/profile_network/widget.js:17
+msgid "profile.no-shared-groups"
+msgstr "您与此人没有共享任何群组。"
+
+#: share/plugin/people/share/widgets/profile_tags/widget.js:12
+msgid "profile.no-tags"
+msgstr "此人没有标签。点击<b>添加标签</b>来添加一个。"
+
+#: share/plugin/people/share/widgets/profile_tags/widget.js:11
+msgid "profile.no-tags-for-you"
+msgstr "您没有标签。点击<b>添加标签</b>来添加一个。"
+
+msgid "profile.office-communicator:"
+msgstr "Office Communicator&trade;："
+
+#: share/plugin/people/share/widgets/profile/widget.html:28 share/plugin/people/share/widgets/profile_edit/widget.html:49 share/plugin/people/template/lite/profile.html:95
+msgid "profile.organization"
+msgstr "组织"
+
+#: share/plugin/people/template/profile_hcard:93
+msgid "profile.personal:"
+msgstr "个人："
+
+#: share/plugin/people/share/widgets/profile/widget.html:17 share/plugin/people/template/lite/profile.html:79
+msgid "profile.phone"
+msgstr "电话"
+
+#: share/plugin/people/share/widgets/profile_edit/widget.html:5
+msgid "profile.photos"
+msgstr "照片"
+
+#: share/plugin/people/template/profile_hcard:79
+msgid "profile.sametime:"
+msgstr "同时&reg;："
+
+#: share/plugin/people/template/profile_hcard:72
+msgid "profile.skype:"
+msgstr "Skype&trade;："
+
+#: share/plugin/people/template/lite/profile.html:141
+msgid "profile.tags"
+msgstr "标签"
+
+#: share/plugin/people/template/profile_hcard:113
+msgid "profile.twitter:"
+msgstr "Twitter："
+
+#: share/plugin/people/share/widgets/profile_edit/widget.html:74
+msgid "profile.update"
+msgstr "更新个人资料"
+
+#: share/plugin/people/share/widgets/profile_edit/widget.html:17
+msgid "profile.upload-new-photo:"
+msgstr "上传新照片："
+
+#: share/plugin/people/share/widgets/profile_edit/widget.html:22
+msgid "profile.upload-photo"
+msgstr "上传照片"
+
+#: share/plugin/people/share/widgets/profile_edit/widget.html:29
+msgid "profile.use-photo-on-web:"
+msgstr "使用网络上的照片："
+
+#: share/plugin/people/share/widgets/profile/widget.html:51 share/plugin/people/share/widgets/profile_edit/widget.html:64 share/plugin/people/template/lite/profile.html:119
+msgid "profile.web"
+msgstr "网页"
+
+#: share/plugin/people/template/profile_hcard:32
+msgid "profile.work:"
+msgstr "工作："
+
+#: share/plugin/people/template/profile_hcard:59
+msgid "profile.yahoo:"
+msgstr "雅虎&trade;："
+
+#: share/plugin/people/template/view/peoplelist:47
+msgid "sort.by:"
+msgstr "排序按照："
+
+#: share/plugin/people/share/widgets/profile_tags/widget.html:11
+msgid "tag.add"
+msgstr "添加标签"
+
+#: share/plugin/people/share/widgets/all_tags/config.yaml:3
+msgid "title.all_tags"
+msgstr "所有人员标签"
+
+#: share/plugin/people/share/widgets/forbidden_profile/config.yaml:4
+msgid "title.forbidden_profile"
+msgstr "个人档案"
+
+#: share/plugin/people/share/widgets/profile/config.yaml:4
+msgid "title.profile"
+msgstr "个人档案"
+
+#: share/plugin/people/share/widgets/profile_activities/config.yaml:3
+msgid "title.profile_activities"
+msgstr "活动"
+
+#: share/plugin/people/share/widgets/profile_edit/config.yaml:3
+msgid "title.profile_edit"
+msgstr "编辑个人档案"
+
+#: share/plugin/people/share/widgets/profile_network/config.yaml:3
+msgid "title.profile_network"
+msgstr "同事"
+
+#: share/plugin/people/share/widgets/profile_tags/config.yaml:4
+msgid "title.profile_tags"
+msgstr "标签"
+
+#: share/plugin/people/share/widgets/profile_edit/widget.html:44
+msgid "user.name"
+msgstr "名称"
+
+msgid "widgets.all"
+msgstr "全部"
+
+msgid "widgets.number-of-tags-to-show"
+msgstr "显示标签数量"

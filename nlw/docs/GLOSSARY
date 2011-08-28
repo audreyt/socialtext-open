@@ -1,0 +1,24 @@
+GLOSSARY -- A glossary of terms in Socialtext Open
+
+@COPYRIGHT@
+
+== ceqlotron
+
+The ceqlotron is the program that handles the event queue for
+Socialtext.  For example, whenever a page is updated, an event is
+put in the queue to reindex that page, leaving the web server to
+carry on the task of delivering data.  The ceqlotron comes along
+and does that indexing.
+
+
+== NLW
+
+Nice Little Wiki, an old name for the Socialtext software.
+
+
+== OSR
+
+Open Source Release.  Same as Socialtext Open.  This was the code
+name for Socialtext Open when the project started.
+
+

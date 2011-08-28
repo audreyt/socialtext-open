@@ -1,0 +1,35 @@
+HOWTO.multiple-hosts -- How to have multiple hosts in Apache
+
+@COPYRIGHT@
+
+Socialtext Open is designed to behave nicely with an Apache configuration that includes other hosts.
+Here's how to do that.
+
+== Single-host Apache setup
+
+The simplest way to set up Socialtext Open is the default, where you
+use /etc/init.d/st-apache for starting the Apache daemon.  st-apache
+loads /etc/apache-perl/st-httpd.conf, which in turn <Include>s
+/etc/apache-perl/auto-generated.d/nlw.conf.
+
+The st-httpd.conf contains the high-level Apache configuration items,
+like what port to use, MIME types, etc.  There is nothing related to
+hosts in it.
+
+The host information, including hostnames, paths to handle, etc, are
+all in the nlw.conf.  (The name "nlw.conf" is a remnant from Socialtext
+Open's earliest incarnations as "Nice Little Wiki".)
+
+== Multiple-host Apache setup
+
+All you need to do to get a Socialtext host co-existing with your other
+virtual hosts is to include it from your main httpd.conf.
+
+    Include /etc/apache-perl/auto-generated.d/nlw.conf
+
+Make sure that you don't edit any of the values in nlw.conf, since they
+will be overwritten next time you do a Socialtext Open upgrade.
+
+# END OF DOCUMENT
+# vi: set ts=8 sts=4 sw=4 expandtab
+# -*- text -*-

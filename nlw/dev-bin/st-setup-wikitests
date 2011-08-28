@@ -1,0 +1,55 @@
+#!/bin/bash
+
+WIKITESTS="$ST_CURRENT/nlw/share/workspaces/wikitests/"
+NLW_BIN="$ST_CURRENT/nlw/bin"
+NLW_DEVBIN="$ST_CURRENT/nlw/dev-bin"
+NLW_LIB="$ST_CURRENT/nlw/lib"
+APPLIANCE_SBIN="$ST_CURRENT/appliance/libsocialtext-appliance-perl/sbin"
+USERNAME="wikitester@ken.socialtext.net"
+
+echo Set up  test-data workspace
+$NLW_DEVBIN/create-test-data-workspace
+$NLW_BIN/st-admin create-user --e $USERNAME >/dev/null 2>/dev/null || true
+$NLW_BIN/st-admin add-workspace-admin --w test-data --e $USERNAME >/dev/null 2>/dev/null || true
+$NLW_BIN/st-admin give-accounts-admin  --e $USERNAME  >/dev/null 2>/dev/null || true
+$NLW_BIN/st-admin give-system-admin  --e $USERNAME  >/dev/null 2>/dev/null || true
+
+echo "Set up wikitests"
+    $NLW_DEVBIN/wikitests-to-wiki
+
+echo ENABLING Socialcalc for all workspaces
+$NLW_DEVBIN/st-socialcalc enable
+
+echo "Importing latest help workspace"
+$NLW_BIN/st-admin delete-workspace --workspace help-en --no-export
+$NLW_BIN/st-admin import-workspace --tarball $NLW_BIN/../share/l10n/help/help-en.tar.gz
+
+echo "No longer populating reports DB"
+#echo "CTRL-C to halt reports DB setup"
+
+#echo ""
+#echo Populating reports DB
+#export PGUSER=`st-config echo db_user`
+#$NLW_DEVBIN/st-populate-reports-db
+
+if [ ! -e $HOME/wikitests/anycorp.small ]; then
+    echo "Unpacking AnyCorp archive"
+    mkdir -p $HOME/wikitests/anycorp.small
+    cd $HOME/wikitests/anycorp.small/
+    tar -zxf  $WIKITESTS/anycorp.small.account.tar.gz
+fi
+
+HASANYCORP=`$NLW_BIN/st-admin list-accounts | grep -o AnyCorp`
+echo HASANYCORP is $HASANYCORP
+
+if [ ! "$HASANYCORP" ]; then
+    echo "Importing account anycorp in background"
+    $NLW_BIN/st-admin import-account --dir $HOME/wikitests/anycorp.small >&$HOME/anycorp.log &
+fi
+
+cd $NLW_LIB
+$APPLIANCE_SBIN/st-appliance-config set captcha_enabled 0
+$APPLIANCE_SBIN/st-appliance-config set max_objects_for_control_panel 999
+cd $ST_CURRENT
+
+echo Done setting up wikitests

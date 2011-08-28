@@ -1,0 +1,38 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_singlevalue/;
+
+my $ws_count = sql_singlevalue(qq{
+ SELECT COUNT(*)
+   FROM "Workspace"
+});
+
+my $permission_id = sql_singlevalue(qq{
+ SELECT permission_id
+   FROM "Permission"
+  WHERE name = 'lock'
+});
+
+my $role_id = sql_singlevalue(qq{
+ SELECT role_id
+   FROM "Role"
+  WHERE name = 'workspace_admin'
+});
+
+my $locked_count = sql_singlevalue(qq{
+ SELECT COUNT(*)
+   FROM "WorkspaceRolePermission"
+  WHERE role_id = ?
+    AND permission_id = ?
+}, $role_id, $permission_id);
+
+
+if ( $locked_count != $ws_count ) {
+    print "Workspace admins were not properly assigned page locking permission. Aborting!\n";
+    exit 1;
+}
+
+print "Page locking permissions added for workspace admins.\n";
+exit 0;

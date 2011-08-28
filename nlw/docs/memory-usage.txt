@@ -1,0 +1,74 @@
+# These notes on memory usage apply to Socialtext's internal servers and
+# appliance installations.  Socialtext Open users may be interested when
+# determining memory usage for their installs.  This document also
+# assumes use of the setup with Apache2 proxying apache-perl content.
+
+Some notes on memory usage. Our production server and standard appliances
+have 4GB of memory. Some appliances have 2GB. Because of limitations of
+a 32-bit kernel, we really only have 3.1GB available on a 4GB machine.
+
+We want to reserve at least 300MB for things like exim, ssh, cron, etc.
+
+That leaves us 2.8GB for the Socialtext application.
+
+For best performance, we really want to avoid _any_ swapping, as once
+we start swapping, we tend to go into a "swap thrash" death spiral,
+and it's hard to recover.
+
+That means we want to use conservative numbers for estimating how much
+memory a process might use.
+
+Take a look at
+http://virtualthreads.blogspot.com/2006/02/understanding-memory-usage-on-linux.html
+for a good overview of how to determine memory usage on Linux.
+
+Given all that, here's some assumptions about process size:
+
+* Apache2 - 2MB of private memory per process + another 5MB shared
+
+* Apache w/ mod_perl - our app can use up 200MB of _private_ memory per
+process, but seems to average around 70-100MB. In order to account for
+outliers, let's call it 100MB per process, plus another 30MB of shared
+memory for all procs.
+
+* Postgres - for each Apache w/mod_perl proc, we have a postgres
+connection that creates a new Pg thread. Each seems to use about 1700k +
+plus another 16MB of shared memory for all procs. This shared memory
+will go up a lot in the future, as it is the main way to improve Pg
+performance.
+
+Pg also uses an additional 1MB per connection for sorting, which we will
+count against the mod_perl procs, for a total of an additional 3MB per
+process. This number is so small I'll ignore it, and assume it is covered
+by our 750MB safety buffer.
+
+See http://www.varlena.com/GeneralBits/Tidbits/perf.html for Postgres
+tuning information.
+
+So here's our numbers:
+
+   3100MB - total available
+ -  300MB - non-NLW procs
+ -  750MB - safety buffer
+ -   30MB - Apache w/mod_perl shared
+ -   16MB - Pg shared buffers
+ -    5MB - Apache2 shared
+ ========
+   1999MB
+
+Let's round this to 2000MB for simplicity.
+
+As a guess, we probably want about 5 times as many front-end processes
+as backend, so that gives us this equation, where x is the number of
+MaxClients on the backend:
+
+           +-- Private memory in MB per front-end process
+           |                  +-- Total memory available to Apaches.
+           |                  |
+  (5 * x * 2) + (x * 100) = 2000
+   |                  |
+   |                  +--- Private memory in MB per back-end process
+   +--- We want 5x as many front end procs.
+
+This makes x = 18, so we have a MaxClients of 18 for the backend and 90
+for the front.

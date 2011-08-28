@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <title>[% collection_name %]</title>
+[% IF refresh %]
+    <meta http-equiv="refresh" content="[% refresh %]" />
+[% END %]
+    </head>
+    <style type="text/css">
+[% INCLUDE data/jobs.css %]
+    </style>
+    <body>
+        [% IF !lite %]
+        <p>
+            Also available in
+            <a href="?accept=json">JSON</a> and <a href="?accept=text/plain">YAML</a>
+        <p>
+        [% END %]
+        <table class="jobs jobstats">
+            <thead>
+                <tr class="jobsheader">
+                    [% FOREACH hdr IN columns %]
+                    <th>
+                    [%- SWITCH hdr -%]
+                       [%- CASE 'name'     %][% loc('job.class') -%]
+                       [%- CASE 'queued'   %][% loc('job.queued') -%]
+                       [%- CASE 'delayed'  %][% loc('job.delayed') -%]
+                       [%- CASE 'grabbed'  %][% loc('job.grabbed') -%]
+                       [%- CASE 'num_ok'   %][% loc('job.num-ok') -%]
+                       [%- CASE 'num_fail' %][% loc('job.num-fail') -%]
+                       [%- CASE 'last_ok'  %][% loc('job.last-ok') -%]
+                       [%- CASE 'last_fail'%][% loc('job.last-fail') -%]
+                       [%- CASE 'latest'%][% loc('job.latest-queued') -%]
+                       [%- CASE 'latest_nodelay' %][% loc('job.latest-nodelay') -%]
+                       [%- CASE 'earliest'%][% loc('job.earliest-queued') -%]
+                       [%- CASE 'earliest_nodelay' %][% loc('job.earliest-nodelay') -%]
+                       [%- CASE 'recent_completions' %][% loc('job.last-5min') -%]
+                       [%- CASE %][% hdr -%]
+                    [%- END -%]
+                    </th>
+                    [% END %]
+                </tr>
+            <thead>
+            <tbody>
+                [% FOREACH job_stat IN job_stats %]
+                <tr class="jobrow">
+                    [% FOREACH col IN columns %]
+                    <td class="jobcol[%col%]">
+                      [% IF col == 'name' %]
+                        <a href="/data/jobs/class/[% job_stat.name %]">[% job_stat.name |html%]</a>
+                      [% ELSE %]
+                        [% job_stat.$col |html%]
+                      [% END %]
+                    </td>
+                    [% END %]
+                </tr>
+                [% END %]
+            </tbody>
+        </table>
+    </body>
+</html>

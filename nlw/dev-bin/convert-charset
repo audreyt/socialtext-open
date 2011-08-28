@@ -1,0 +1,59 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+use Encode ();
+use bytes;
+
+my $from = shift || 'ISO-8859-1';
+my $to = shift || 'UTF-8';
+
+my $from_enc = Encode::find_encoding($from)
+    or die "Can't find encoding '$from'";
+my $to_enc = Encode::find_encoding($to)
+    or die "Can't find encoding '$to'";
+
+binmode STDIN;
+binmode STDOUT;
+$|=1;
+my $flags = Encode::FB_WARN | Encode::FB_PERLQQ;
+
+my $in = do { local $/; <> };
+print $to_enc->encode($from_enc->decode($in,$flags),$flags);
+
+__END__
+
+=head1 NAME
+
+convert-charset - convert STDIN to another charset on STDOUT
+
+=head1 SYNOPSIS
+
+    convert-charset < iso88591.txt > utf8.txt
+    convert-charset Shift_JIS < shiftjis.txt > utf8.txt
+    convert-charset UTF-8 Shift_JIS < utf8.txt > shiftjis.txt
+
+=head1 DESCRIPTION
+
+Using L<Encode> (perl's built-in conversion and encoding library), converts
+bytes on STDIN to another charset on STDOUT.  By default input is assumed to
+be ISO-8859-1 (~8-bit ASCII) and output is UTF-8.
+
+You can change the input and output character sets by supplying one or two
+arguments, respectively.
+
+If there are any errors in the encoding these are warned to STDERR and the
+unknown characters are output in C<< \x{HHHH} >> format (compatible with
+double-quoted perl interpolation).  Specificically the FB_WARN and FB_PERLQQ
+flags are passed to L<Encode>.
+
+=head1 BUGS
+
+convert-charset does not stream it's input.  This is so that it can be lazy
+about putting one BOM for UTF-16/UTF-32 encodings.
+
+=head1 SEE ALSO
+
+L<iconv(1)>
+
+=cut

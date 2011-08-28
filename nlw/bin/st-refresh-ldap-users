@@ -1,0 +1,23 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+### NOTE: This script can be purged as of August 1st 2009.
+
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::System qw(shell_run);
+
+our $DELAY = 10;
+warn <<EOT;
+#
+# st-refresh-ldap-users has been deprecated.
+#
+# Please use "st-ldap refresh-users" instead.
+# This new command will be run for you automatically in $DELAY seconds.
+#
+EOT
+
+sleep $DELAY;
+shell_run('st-ldap', 'refresh-users', @ARGV);

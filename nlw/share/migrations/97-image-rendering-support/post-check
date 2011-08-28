@@ -1,0 +1,22 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_singlevalue/;
+use Socialtext::Upload;
+
+my $standins = join(',', map {'?'} @Socialtext::Upload::SupportedImageTypes);
+my $count = sql_singlevalue(qq{
+    SELECT COUNT(1)
+      FROM attachment
+     WHERE is_image IS true
+       AND mime_type NOT IN ($standins)
+}, @Socialtext::Upload::SupportedImageTypes);
+
+if ($count == 0) {
+    exit 0;
+}
+else {
+    print "unsupported images still present, migration failed\n";
+    exit 1;
+}

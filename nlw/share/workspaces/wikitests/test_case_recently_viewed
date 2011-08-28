@@ -1,0 +1,42 @@
+| *Comment* | START Test Case S3: Recently Viewed |  |
+
+ Find or create several pages. Open the pages to create view instances
+
+| *Comment* | Test Case S3: Recently Viewed. Create pages. |  |
+| st-admin | update-page --email %%email%% --workspace %%workspace%% --page "RV Page 1 %%start_time%%" < %%wikitest_client_files%%wikitest.txt | The "RV Page 1 %%start_time%%" page has been created. |
+
+| st-admin | update-page --email %%email%% --workspace %%workspace%% --page "RV Page 2 %%start_time%%" < %%wikitest_client_files%%wikitest.txt | The "RV Page 2 %%start_time%%" page has been created. |
+
+| st-admin | update-page --email %%email%% --workspace %%workspace%% --page "RV Page 3 %%start_time%%" < %%wikitest_client_files%%wikitest.txt | The "RV Page 3 %%start_time%%" page has been created. |
+
+| *Comment* | Test Case S3: Recently Viewed. View the pages. |  |
+| open_ok | /%%workspace%%/?RV Page 1 %%start_time%% |  |
+| open_ok | /%%workspace%%/?RV Page 2 %%start_time%% |  |
+| open_ok | /%%workspace%%/?RV Page 3 %%start_time%% |  |
+
+Open Recently Viewed list view
+
+| *Comment* | Test Case: Recently Viewed. Recently Viewed page list |  |
+| click_and_wait | link=What's New |  |
+| click_and_wait | link=Recently Viewed |  |
+| text_like | link=RV Page 1 %%start_time%% | RV Page 1 %%start_time%% |
+| text_like | link=RV Page 2 %%start_time%% | RV Page 2 %%start_time%% |
+| text_like | link=RV Page 3 %%start_time%% | RV Page 3 %%start_time%% |
+
+| *Comment* | Test Case: Recently Viewed. page links work |  |
+| click_and_wait | link=RV Page 1 %%start_time%% |  |
+| text_like | contentTitle | RV Page 1 %%start_time%% |
+| click_and_wait | link=What's New |  |
+| click_and_wait | link=Recently Viewed |  |
+| click_and_wait | link=RV Page 2 %%start_time%% |  |
+| text_like | contentTitle | RV Page 2 %%start_time%% |
+
+| *Comment* | Test Case: Recently Viewed. SORT PICKER IS GONE |  |
+
+| *Comment* | Test Case: Recently Viewed. Tearing down Recently Viewed data |  |
+
+| st-admin | purge-page --workspace %%workspace%% --page rv_page_1_%%start_time%% | was purged |
+| st-admin | purge-page --workspace %%workspace%% --page rv_page_2_%%start_time%% | was purged |
+| st-admin | purge-page --workspace %%workspace%% --page rv_page_3_%%start_time%% | was purged |
+
+| *Comment* | Test Case Recently Viewed COMPLETED |  |

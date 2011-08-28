@@ -1,0 +1,41 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+# This handy tool creates a summary list of all the documents in the
+# docs/ directory.
+
+use warnings;
+use strict;
+
+use FindBin;
+use File::Slurp qw( read_file );
+
+my $base_dir = $FindBin::Bin;
+
+# REVIEW: Needs to handle GLOSSARY
+for my $file ( sort glob( "$base_dir/INSTALL.*" ) ) {
+    next if $file =~ /~$/;
+
+    $file =~ m{(docs/.+)} or die;
+    my $relative_file = $1;
+
+    my @lines = read_file( $file );
+    chomp @lines;
+
+    my $header = $lines[0];
+    if ( $header !~ /^(INSTALL\.\S+)/ ) {
+        warn "Missing a proper filename in $file"
+    }
+    my $filename_from_file = $1;
+    if ( $relative_file !~ /\Q$filename_from_file/ ) {
+        warn "Internal filename doesn't match actual filename: $file\n";
+    }
+    if ( $lines[2] !~ /COPYRIGHT/ ) {
+        warn "$file has no copyright";
+    }
+
+    $header =~ s{.+ -- }{};
+
+    print "* $relative_file\n\n    $header\n\n";
+}
+

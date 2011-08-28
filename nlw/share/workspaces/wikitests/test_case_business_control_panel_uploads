@@ -1,0 +1,61 @@
+
+| *Comment* | Test case: Business Control Panel Uploads |  |
+
+| st-admin | give-accounts-admin --email %%email%% | %%username%% now has accounts admin access |
+
+| set | new_acct | bcp-%%start_time%% |
+| create-account | %%new_acct%% |  |
+
+| *Comment* | Test case: Business Control Panel Uploads navigate to account page |  |
+| open_ok | /nlw/control/account |  |
+| wait_for_element_visible_ok | link=%%new_acct%% | 30000 |
+| click_and_wait | link=%%new_acct%% | 30000 |
+
+| *Comment* | Test case: Business Control Panel Uploads navigate to Logo Uploads |  |
+| wait_for_element_visible_ok | link=Account Logo | 30000 |
+| click_and_wait | link=Account Logo |  |
+| text_like | You can choose an image to use as the Account logo. |  |
+
+| *Comment* | Test case: Business Control Panel Uploads upload wikitest.jpg to both web and desktop |  |
+| wait_for_element_visible_ok | new_logo_file | 10000 |
+| type_ok | new_logo_file | %%wikitest_client_files%%wikitest.jpg |
+| check_ok | xpath=(//input[@id='apply_to_desktop'][1]) |  |
+| click_and_wait | design_submit |  |
+
+| *Comment* | Test case: Business Control Panel Uploads verify upload |  |
+| text_like | Logo has been updated. It should be visible immediately. |  |
+| text_like | (Desktop users need to logout and login again to see the new logo.) |  |
+
+| *Comment* | Test case: Business Control Panel Uploads reset both web and desktop |  |
+| click_and_wait | use_default |  |
+| text_like | Logo removed. The default should be visible immediately. |  |
+| text_like | (Desktop users need to logout and login again to see the default logo.) |  |
+
+| *Comment* | Test case: Business Control Panel Uploads redo test for web UI only |  |
+| open_ok | /nlw/control/account |  |
+| wait_for_element_visible_ok | link=%%new_acct%% | 30000 |
+| click_and_wait | link=%%new_acct%% | 30000 |
+
+| *Comment* | Test case: Business Control Panel Uploads navigate to Logo Uploads |  |
+| wait_for_element_visible_ok | link=Account Logo | 30000 |
+| click_and_wait | link=Account Logo |  |
+| text_like | You can choose an image to use as the Account logo. |  |
+
+| *Comment* | Test case: Business Control Panel Uploads upload wikitest.jpg to web only |  |
+| wait_for_element_visible_ok | new_logo_file | 10000 |
+| type_ok | new_logo_file | %%wikitest_client_files%%wikitest.jpg |
+| click_and_wait | design_submit |  |
+
+| *Comment* | Test case: Business Control Panel Uploads verify upload web only |  |
+| text_like | Logo has been updated. It should be visible immediately. |  |
+| text_unlike | //body | (Desktop users need to logout and login again to see the new logo.) |
+
+| *Comment* | Test case: Business Control Panel Uploads web only |  |
+| click_and_wait | use_default |  |
+| text_like | Logo removed. The default should be visible immediately. |  |
+| text_unlike | //body | (Desktop users need to logout and login again to see the default logo.) |
+
+| *Comment* | Test case: Business Control Panel Uploads TEARDOWN |  |
+| delete_account | %%new_acct%% |  |
+
+| *Comment* | Test case: Business Control Panel Uploads COMPLETED |  |

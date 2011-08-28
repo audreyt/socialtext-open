@@ -1,0 +1,200 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+
+use Cwd qw'cwd abs_path';
+use File::Basename 'dirname';
+use IO::File;
+use Socialtext::Page;
+
+sub usage {
+    return <<"END_USAGE";
+USAGE: wsutil verb required-arguments
+
+VERBS:
+  extract WORKSPACE PAGE_NAME
+    Extracts a page from a WORKSPACE under ~/.nlw/root and formats it
+    appropriately for inclusion in t/extra-pages.
+
+  edit WORKSPACE PAGE_NAME
+    Fires up your editor on the most recent revision of PAGE_NAME in
+    WORKSPACE.
+
+  echo WORKSPACE PAGE_NAME
+    Prints the path to the given page.
+
+  cat WORKSPACE PAGE_NAME
+    Prints the contents of the given page on standard output.
+
+  wikicat WORKSPACE PAGE_NAME
+    Prints only the wikitext contents of the given page on standard output.
+
+  ls WORKSPACE
+    Lists all the pages in WORKSPACE.
+
+  enable-selenium WORKSPACE
+    Enable Selenium testing on WORKSPACE.
+
+  disable-selenium WORKSPACE
+    Enable Selenium testing on WORKSPACE.
+
+  extract-selenium WORKSPACE
+    Extract all Selenium test pages in WORKSPACE.
+
+NOTE: PAGE_NAME doesn't have to be canonical.
+
+END_USAGE
+}
+
+my $root_dir = "$ENV{HOME}/.nlw/root";
+my $data_dir = "$root_dir/data";
+my $plugin_dir = "$root_dir/plugin";
+my $dest_dir = abs_path(dirname($0) . "/../t/extra-pages");
+
+{
+    my $verb = shift(@ARGV);
+    die usage unless defined $verb;
+
+    if ($verb eq 'extract' and @ARGV == 2) {
+        extract(@ARGV);
+    } elsif ($verb eq 'edit' and @ARGV == 2) {
+        edit(@ARGV);
+    } elsif ($verb eq 'ls' and @ARGV == 1) {
+        list_pages(@ARGV);
+    } elsif ($verb eq 'echo' and @ARGV == 2) {
+        echo(@ARGV);
+    } elsif ($verb eq 'cat' and @ARGV == 2) {
+        cat(@ARGV);
+    } elsif ($verb eq 'wikicat' and @ARGV == 2) {
+        wikicat(@ARGV);
+    } elsif ($verb eq 'enable-selenium' and @ARGV == 1) {
+        enable_selenium(@ARGV);
+    } elsif ($verb eq 'disable-selenium' and @ARGV == 1) {
+        disable_selenium(@ARGV);
+    } elsif ($verb eq 'extract-selenium' and @ARGV == 1) {
+        extract_selenium(@ARGV);
+    } else {
+        die usage;
+    }
+}
+
+sub extract {
+    my ($workspace, $page_name, $no_warn) = @_;
+    $no_warn ||= 0;
+    my $fh = get_page_handle($workspace, $page_name);
+    my $subject;
+    HEADER_LINE: while (<$fh>) {
+        last HEADER_LINE if /^$/;
+        if (/^Subject:\s+(.*?)\s*$/) {
+            $subject = $1;
+        }
+    }
+
+    die "Failed to find a subject in the header" unless defined $subject;
+
+    die "Can't find extra-pages at '$dest_dir'" unless -d $dest_dir;
+    my $dest_path = "$dest_dir/$subject";
+    open DEST, '>', $dest_path or die "$dest_path: $!";
+
+    print DEST <$fh>;
+
+    warn("Wrote '$subject'.\n(Don't forget to run update-t-expected)\n")
+      unless $no_warn;
+}
+
+sub wikicat {
+    my ($workspace, $page_name) = @_;
+    my $fh = get_page_handle($workspace, $page_name);
+
+    HEADER_LINE: while (<$fh>) {
+        last HEADER_LINE if /^$/;
+    }
+
+    print <$fh>;
+}
+
+sub exec_on_page {
+    my ($workspace, $page_name, @command) = @_;
+    my $page_path = get_page_path($workspace, $page_name);
+    exec @command, $page_path 
+        or die "exec @command $page_path: $!";
+}
+
+sub edit {
+    exec_on_page(@_, ($ENV{EDITOR} || 'vi'));
+}
+
+sub cat {
+    exec_on_page(@_, 'cat');
+}
+
+sub echo {
+    my ($workspace, $page_name) = @_;
+    print get_page_path($workspace, $page_name), "\n";
+}
+
+sub list_pages {
+    my @pages = get_all_pages(shift);
+    print "$_\n" for sort @pages;
+}
+
+sub get_all_pages {
+    my $workspace = shift;
+    my $dir = workspace_data_dir($workspace);
+    return map {chomp; $_} `ls $dir/`;
+}
+
+sub enable_selenium {
+    my $workspace = shift;
+    my $plugin_dir = workspace_plugin_dir($workspace) . '/selenium';
+    my $selenium_dir = 'base/selenium';
+    symlink('../../js-modules/selenium', $selenium_dir)
+      unless -e $selenium_dir;
+    symlink(abs_path($selenium_dir), $plugin_dir)
+      unless -e $plugin_dir;
+}
+
+sub disable_selenium {
+    my $workspace = shift;
+    my $plugin_dir = workspace_plugin_dir($workspace) . '/selenium';
+    unlink($plugin_dir)
+      if -e $plugin_dir;
+}
+
+sub extract_selenium {
+    my $workspace = shift;
+    my @page_names = get_all_pages($workspace);
+    for my $page_name (sort @page_names) {
+        next unless $page_name =~ /^selenium[_:]\w+$/;
+        warn "Extracting '$page_name'\n";
+        extract($workspace, $page_name, 1);
+    }
+}
+
+sub get_page_path {
+    my ($workspace, $page_name) = @_;
+    my $page_id = Socialtext::Page->new->name_to_id($page_name);
+    return workspace_data_dir($workspace) . "/$page_id/index.txt";
+}
+
+sub get_page_handle {
+    my ($workspace, $page_name) = @_;
+    my $page_path = get_page_path($workspace, $page_name);
+
+    my $fh = IO::File->new($page_path) or die "$page_path: $!";
+    return $fh;
+}
+
+sub workspace_data_dir {
+    my $workspace = shift;
+    return "$data_dir/$workspace";
+}
+
+sub workspace_plugin_dir {
+    my $workspace = shift;
+    return "$plugin_dir/$workspace";
+}

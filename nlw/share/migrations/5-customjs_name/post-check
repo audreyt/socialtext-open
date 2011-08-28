@@ -1,0 +1,13 @@
+#!/bin/bash
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+
+empty=`psql -U $DB_USER -d $DB -t -c '\d "Workspace"' | grep customjs_name`
+
+if [ -z "$empty" ]; then
+    echo "customjs_name column not added!"
+    exit -1
+fi
+echo "Added customjs_name column"
+exit 0

@@ -1,0 +1,4019 @@
+# @COPYRIGHT@
+msgid ""
+msgstr ""
+"Project-Id-Version: Socialtext i18n\n"
+"PO-Revision-Date: 2011-07-05 14:39-0700\n"
+"Last-Translator: Socialtext i18n team\n"
+"Language-Team: Socialtext i18n team\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. ($name)
+#: lib/Socialtext/Handler/ControlPanel.pm:494
+msgid "account.created=name"
+msgstr "已创建帐户 %1。"
+
+#. ($account->name)
+#: lib/Socialtext/CLI.pm:471
+msgid "account.default=name"
+msgstr "默认帐户为 %1。"
+
+#. ($dir)
+#: lib/Socialtext/CLI.pm:492
+msgid "account.deleting-old-export=path"
+msgstr "正在删除导出到 %1 的现存帐户。"
+
+#: lib/Socialtext/Account.pm:559
+msgid "account.enabling-plugins"
+msgstr "正在启用帐户插件..."
+
+#: lib/Socialtext/Pluggable/Plugin/Widgets.pm:171
+msgid "account.exporting-gallery"
+msgstr "正在导出帐户工具库 ..."
+
+#. ($groups->count, $acct->name)
+#: lib/Socialtext/Pluggable/Plugin/Groups.pm:69
+msgid "account.exporting-groups=count,account"
+msgstr "正在导出帐户“%2”的全部群组（%1）..."
+
+#. ($account->name)
+#: lib/Socialtext/CLI.pm:501
+msgid "account.exporting=name"
+msgstr "正在导出帐户 %1..."
+
+#. ($account->name)
+#: lib/Socialtext/CLI.pm:574
+msgid "account.imported=name"
+msgstr "%1 帐户已导入。"
+
+#: lib/Socialtext/CLI.pm:544
+msgid "account.importing-data"
+msgstr "正在导入帐户数据..."
+
+#: lib/Socialtext/Pluggable/Plugin/Widgets.pm:284
+msgid "account.importing-gallery"
+msgstr "正在导入帐户工具库 ..."
+
+#. ($acct->name)
+#: lib/Socialtext/Pluggable/Plugin/Groups.pm:90
+msgid "account.importing-groups=account"
+msgstr "正在为“%1”帐户导入全部群组..."
+
+#: lib/Socialtext/Account.pm:476
+msgid "account.importing-logo"
+msgstr "正在导入帐户标志..."
+
+#. ($name)
+#: lib/Socialtext/Handler/ControlPanel.pm:1990
+msgid "account.matching=name"
+msgstr "匹配“%1”的帐户"
+
+#. ($account->name)
+#: lib/Socialtext/CLI.pm:182
+msgid "account.new-default=name"
+msgstr "默认帐户更新为 %1。"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:767
+msgid "account.removed-logo"
+msgstr "标志已移除。默认即时可见。"
+
+#. ($old_name, $new_name)
+#: lib/Socialtext/Handler/ControlPanel.pm:943
+msgid "account.renamed=old,new"
+msgstr "%1 帐户已重命名为 %2"
+
+msgid "account.settings-updated"
+msgstr "帐户设置已更新"
+
+#. ($plugin_name)
+#: lib/Socialtext/Account.pm:562
+msgid "account.skip-missing=plugin"
+msgstr "... “%1”插件丢失；跳过"
+
+#: lib/Socialtext/Handler/Authen.pm:84
+msgid "account.socialtext"
+msgstr "Socialtext 帐户"
+
+#. ($acct_name)
+#: lib/Socialtext/Handler/ControlPanel.pm:2079
+msgid "account.to-group=name"
+msgstr "成功迁移帐户 %1 至群组"
+
+#. ($account->name)
+#: lib/Socialtext/Handler/ControlPanel.pm:459
+msgid "account.type-changed=name"
+msgstr "已更新帐户类型 %1。"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:430
+msgid "account.updated"
+msgstr "帐户已更新。"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:752
+msgid "account.updated-logo"
+msgstr "标志已更新。即时可见。"
+
+#. ($user->primary_account->name)
+#: lib/Socialtext/User/Restrictions/email_confirmation.pm:64
+msgid "account.welcome-confirm=name"
+msgstr "欢迎来到 %1 社区 - 请确认注册邮箱"
+
+#: lib/Socialtext/Workspace/Permissions.pm:101
+msgid "acl.authenticated-user-only"
+msgstr "只开放给认证用户"
+
+#. ($name, $object, $set_name)
+#: lib/Socialtext/CLI.pm:2109
+msgid "acl.changed=name,object,set"
+msgstr "%1 %2 的权限已设置为 %3"
+
+#. ($ws->name()
+#: lib/Socialtext/WorkspacesUIPlugin.pm:670
+msgid "acl.changed=wiki,set"
+msgstr "%1 的权限已设置为 %2。"
+
+#: lib/Socialtext/Workspace/Permissions.pm:101
+msgid "acl.intranet"
+msgstr "内联网"
+
+#: lib/Socialtext/Workspace/Permissions.pm:101
+msgid "acl.member-only"
+msgstr "只开放成员"
+
+#: lib/Socialtext/Workspace/Permissions.pm:101
+msgid "acl.public"
+msgstr "公开"
+
+#: lib/Socialtext/Workspace/Permissions.pm:101
+msgid "acl.public-authenticate-to-edit"
+msgstr "公开编辑（需认证）"
+
+#: lib/Socialtext/Workspace/Permissions.pm:101
+msgid "acl.public-comment-only"
+msgstr "公开回复"
+
+#: lib/Socialtext/Workspace/Permissions.pm:101
+msgid "acl.public-join-to-edit"
+msgstr "公开编辑"
+
+#: lib/Socialtext/Workspace/Permissions.pm:101
+msgid "acl.public-read-only"
+msgstr "公开只读"
+
+msgid "agile.clear-history"
+msgstr "清除敏捷历史"
+
+msgid "analytics.invalid-domains-setting=data"
+msgstr "无效的域名设置：%1"
+
+#. (shift)
+#: lib/Socialtext/Handler/ControlPanel.pm:616
+msgid "appliance.added-business-admin=user"
+msgstr "指派 %1 为应用业务管理员。"
+
+#. (shift)
+#: lib/Socialtext/Handler/ControlPanel.pm:630
+msgid "appliance.added-technical-admin=user"
+msgstr "指派 %1 为应用技术管理员。"
+
+#: lib/Socialtext/Appliance/Model/Backup.pm:37
+msgid "appliance.archive-directory"
+msgstr "存档目录"
+
+#: lib/Socialtext/Appliance/Model/Backup.pm:51
+msgid "appliance.backup-destination-updated"
+msgstr "备份地址已更新"
+
+msgid "appliance.backup-in-progress-started-at-never"
+msgstr "正在进行备份 – 尚未开始"
+
+msgid "appliance.backup-in-progress=started-at"
+msgstr "正在进行备份 – 从 %1 开始"
+
+msgid "appliance.backup-schedule-updated"
+msgstr "备份计划已更新"
+
+#: lib/Socialtext/Appliance/Model/Backup.pm:33
+msgid "appliance.backup-server-name"
+msgstr "备份服务器名称"
+
+#. ($data->{collaborativeness})
+#: lib/Socialtext/Appliance/WorkspaceUsageReport.pm:89
+msgid "appliance.collaborativeness=score"
+msgstr "协作：%1 – 总贡献人数占总访客人数的百分比"
+
+#: lib/Socialtext/Appliance/ConsoleController.pm:119
+msgid "appliance.confirm-initialize-wikis"
+msgstr "您确定要删除所有工作区，并创建新工作区吗？（此操作无法恢复。）"
+
+#: lib/Socialtext/Appliance/ConsoleController.pm:91
+msgid "appliance.confirm-reboot?"
+msgstr "您确定要重启设备？"
+
+#: lib/Socialtext/Appliance/ConsoleController.pm:105
+msgid "appliance.confirm-shutdown?"
+msgstr "您确定要关闭设备？"
+
+#: lib/Socialtext/Appliance/WorkspaceUsageReport.pm:92
+msgid "appliance.contributions"
+msgstr "贡献"
+
+#: lib/Socialtext/Appliance/Model/Setup.pm:474
+msgid "appliance.email-required"
+msgstr "请输入电子邮件地址"
+
+msgid "appliance.format=gb"
+msgstr "%#(%1) Gb"
+
+#: lib/Socialtext/Appliance/ConsoleController.pm:120
+msgid "appliance.initialize-wikis"
+msgstr "工作区初始化"
+
+#: lib/Socialtext/Appliance/ConsoleController.pm:118
+msgid "appliance.initialize-wikis?"
+msgstr "要初始化工作区吗？"
+
+#: lib/Socialtext/Appliance/Model/Setup.pm:465 lib/Socialtext/Appliance/Model/Setup.pm:485
+msgid "appliance.invalid-email"
+msgstr "请输入有效的电子邮件地址"
+
+msgid "appliance.last-manual-backup-was-never"
+msgstr "最近一次手动备份未开始"
+
+msgid "appliance.last-manual-backup-was=last"
+msgstr "最近一次手动备份：%1"
+
+#: lib/Socialtext/Appliance/Model/Backup.pm:36
+msgid "appliance.password"
+msgstr "密码"
+
+#: lib/Socialtext/Appliance/ConsoleController.pm:92
+msgid "appliance.reboot"
+msgstr "重启"
+
+#: lib/Socialtext/Appliance/ConsoleController.pm:90
+msgid "appliance.reboot?"
+msgstr "重启设备？"
+
+#: lib/Socialtext/Appliance/Model/System.pm:58
+msgid "appliance.rebooting"
+msgstr "系统重启中 ..."
+
+#. ($login_url)
+#: lib/Socialtext/Appliance/ConsoleController.pm:131
+msgid "appliance.redirecting-to=url"
+msgstr "重定向至 %1"
+
+msgid "appliance.refresh-in-progress"
+msgstr "正在进行更新，请稍等 ..."
+
+msgid "appliance.refreshing-backup-list"
+msgstr "正在备份列表 ..."
+
+#. (shift)
+#: lib/Socialtext/Handler/ControlPanel.pm:619
+msgid "appliance.removed-business-admin=user"
+msgstr "解除 %1 应用业务管理员的角色。"
+
+#. (shift)
+#: lib/Socialtext/Handler/ControlPanel.pm:633
+msgid "appliance.removed-technical-admin=user"
+msgstr "解除 %1 应用技术管理员的角色。"
+
+msgid "appliance.restore-already-running"
+msgstr "已经启用恢复"
+
+msgid "appliance.restore-finished=latest-backup"
+msgstr "已完成 %1 的恢复。"
+
+msgid "appliance.restore-in-progress-started-at-never"
+msgstr "正在进行恢复 – 尚未开始"
+
+msgid "appliance.restore-in-progress=started-at"
+msgstr "正在进行恢复 – 从 %1 开始"
+
+msgid "appliance.restore-latest-already-running"
+msgstr "最新恢复已开始"
+
+msgid "appliance.retry-after-backup"
+msgstr "请等待备份完成，然后重试。"
+
+msgid "appliance.retry-after-restore"
+msgstr "请等待恢复完成，然后重试。"
+
+msgid "appliance.select-backup-to-restore"
+msgstr "请选择某个备份进行恢复"
+
+#: lib/Socialtext/Appliance/Model/Setup.pm:427
+msgid "appliance.set-mail-server-to-built-in"
+msgstr "已更新邮件服务器以便使用内置服务器"
+
+#. ($new_host)
+#: lib/Socialtext/Appliance/Model/Setup.pm:423
+msgid "appliance.set-mail-server=host"
+msgstr "已更新邮件服务器至%1"
+
+#: lib/Socialtext/Appliance/Model/Backup.pm:34
+msgid "appliance.shared-directory-name"
+msgstr "共享地址名称"
+
+#: lib/Socialtext/Appliance/ConsoleController.pm:106
+msgid "appliance.shutdown"
+msgstr "关闭"
+
+#: lib/Socialtext/Appliance/ConsoleController.pm:104
+msgid "appliance.shutdown?"
+msgstr "要关闭设备吗？"
+
+#: lib/Socialtext/Appliance/Model/System.pm:64
+msgid "appliance.shutting-down"
+msgstr "系统关闭中 ..."
+
+#. ($wksp->title)
+#: lib/Socialtext/Appliance/WorkspaceUsageReport.pm:48
+msgid "appliance.skipping-no-usage=wiki"
+msgstr "跳过工作区 %1，未使用。"
+
+#. ($ts)
+#: lib/Socialtext/Appliance/Model/Setup.pm:362
+msgid "appliance.synchronized-time-with=ts"
+msgstr "同步时间 %1"
+
+msgid "appliance.system"
+msgstr "系统"
+
+#: lib/Socialtext/Appliance/Model/Setup.pm:448
+msgid "appliance.test-email"
+msgstr "Socialtext 设备的测试邮件"
+
+#. ($recip)
+#: lib/Socialtext/Appliance/Model/Setup.pm:442
+msgid "appliance.test-email-sent=recipient"
+msgstr "发送测试邮件至 %1"
+
+#. ($new_ts)
+#: lib/Socialtext/Appliance/Model/Setup.pm:330
+msgid "appliance.timeserver-updated=ts"
+msgstr "时间服务器已更新至 %1，时钟已同步"
+
+#: lib/Socialtext/Appliance/Model/Backup.pm:35
+msgid "appliance.username"
+msgstr "用户名"
+
+#: lib/Socialtext/Appliance/Model/Setup.pm:397
+msgid "appliance.web-proxy-cleared"
+msgstr "网络代理已清除。"
+
+#. ($new_proxy)
+#: lib/Socialtext/Appliance/Model/Setup.pm:394
+msgid "appliance.web-proxy-updated=new-proxy"
+msgstr "网络代理已更新为 %1"
+
+#. ($log)
+#: lib/Socialtext/Appliance/Model/Setup.pm:482
+msgid "appliance.wikis-initialized=log"
+msgstr "工作区已初始化。<br>记录：%1"
+
+msgid "backup.postgresql-pitr-target=date-time,timeline,inclusive"
+msgstr "PostgreSQL 时间点还原目标适用于日期-时间“%1”，时间线“%2”，包括“%3”"
+
+msgid "backup.postgresql-pitr-target=transaction-id,timeline,inclusive"
+msgstr "PostgreSQL 时间点还原目标适用于更动编号“%1”，时间线\"%2\"，包括\"%3\""
+
+msgid "backup.postgresql-will-recover-to-most-recent-commit=timeline,inclusive"
+msgstr "PostgreSQL 将被还原到最近的提交状态，时间线“%1”，包括“%2”"
+
+msgid "backup.share-name"
+msgstr "备份共享名"
+
+msgid "backup.starting-recovery=options"
+msgstr "正在开始还原，选项“%1”"
+
+msgid "backup.successfully-deleted=label"
+msgstr "成功删除备份：%1"
+
+#. ($self->current_blog_str)
+#: lib/Socialtext/WeblogPlugin.pm:202
+msgid "blog.atom=blog"
+msgstr "博客：%1 Atom"
+
+#: lib/Socialtext/WeblogPlugin.pm:103
+msgid "blog.blog"
+msgstr "博客"
+
+#. ($blog_tag)
+#: lib/Socialtext/WeblogPlugin.pm:183
+msgid "blog.first-post-body=tag"
+msgstr "这是 %1 的第一篇文章。点击 *发帖* 创建更多文章。"
+
+#. ($blog_tag)
+#: lib/Socialtext/WeblogPlugin.pm:124
+msgid "blog.first-post=tag"
+msgstr "标记为 %1 的第一个博客"
+
+#. ($blog_tag)
+#: lib/Socialtext/WeblogPlugin.pm:159
+msgid "blog.name=tag"
+msgstr "%1博客"
+
+#: lib/Socialtext/WeblogPlugin.pm:467
+msgid "blog.navigation"
+msgstr "博客导航"
+
+#. ($self->current_blog_str)
+#: lib/Socialtext/WeblogPlugin.pm:490
+msgid "blog.navigation-for=tag"
+msgstr "导航框：%1"
+
+#: lib/Socialtext/WeblogPlugin.pm:95
+msgid "blog.new"
+msgstr "新建博客"
+
+#: lib/Socialtext/WeblogPlugin.pm:49
+msgid "blog.number-of-posts?"
+msgstr "在博客视图中显示多少博客？"
+
+#. ($arguments)
+#: lib/Socialtext/CategoryPlugin.pm:533
+msgid "blog.recent-posts=tag"
+msgstr "%1 的最新博客"
+
+#. ($arguments, $self->target_workspace)
+#: lib/Socialtext/CategoryPlugin.pm:531
+msgid "blog.recent-posts=tag,wiki"
+msgstr "%2 工作区中 %1 的最近更新"
+
+#. ($self->current_blog_str)
+#: lib/Socialtext/WeblogPlugin.pm:197
+msgid "blog.rss=blog"
+msgstr "博客：%1 RSS"
+
+#: lib/Socialtext/Hub.pm:197
+msgid "bug.contact-support"
+msgstr "请填写<a href=\"http://www.socialtext.com/customers/support_request.php\">技术支持请求</a>表格，联系Socialtext，描述错误发生的时间，以及发生错误之前的操作。"
+
+#: lib/Socialtext/BugsPlugin.pm:44
+msgid "bug.dump"
+msgstr "错误倾向"
+
+#: lib/Socialtext/BugsPlugin.pm:32
+msgid "bug.ignore"
+msgstr "忽略错误"
+
+#: lib/Socialtext/BugsPlugin.pm:31
+msgid "bug.report"
+msgstr "报告错误"
+
+#: lib/Socialtext/Wikiwyg/AnalyzerPlugin.pm:11
+msgid "class.analyzer"
+msgstr "分析"
+
+#: lib/Socialtext/AttachmentsUIPlugin.pm:21
+msgid "class.attachments_ui"
+msgstr "附件"
+
+#: lib/Socialtext/BacklinksPlugin.pm:15
+msgid "class.backlinks"
+msgstr "逆向链接"
+
+#: lib/Socialtext/BreadCrumbsPlugin.pm:18
+msgid "class.breadcrumbs"
+msgstr "最近浏览页面"
+
+#: lib/Socialtext/CategoryPlugin.pm:23
+msgid "class.category"
+msgstr "类别管理"
+
+#: lib/Socialtext/CodeSyntaxPlugin.pm:9
+msgid "class.code"
+msgstr "代码语法插件"
+
+#: lib/Socialtext/DisplayPlugin.pm:25
+msgid "class.display"
+msgstr "显示方式"
+
+#: lib/Socialtext/EditPlugin.pm:19
+msgid "class.edit"
+msgstr "页面编辑"
+
+#: lib/Socialtext/EmailNotifyPlugin.pm:11
+msgid "class.email_notify"
+msgstr "电子邮件通知"
+
+#: lib/Socialtext/EmailPageUIPlugin.pm:12
+msgid "class.email_page_ui"
+msgstr "电子邮件页面"
+
+#: lib/Socialtext/FavoritesPlugin.pm:12
+msgid "class.favorites"
+msgstr "您的记事本"
+
+#: lib/Socialtext/FetchRSSPlugin.pm:16
+msgid "class.fetchrss"
+msgstr "获取 RSS"
+
+#: lib/Socialtext/Formatter.pm:16
+msgid "class.formatter"
+msgstr "NLW 格式器"
+
+#: lib/Socialtext/GoogleSearchPlugin.pm:13
+msgid "class.google_search"
+msgstr "Google 搜索"
+
+#: lib/Socialtext/HomepagePlugin.pm:16
+msgid "class.homepage"
+msgstr "主页链接"
+
+#: lib/Socialtext/NewFormPagePlugin.pm:15
+msgid "class.new_form_page"
+msgstr "新表单页面"
+
+#: lib/Socialtext/PageActivityPlugin.pm:20
+msgid "class.page_activity"
+msgstr "页面活动"
+
+#: lib/Socialtext/Pages.pm:29
+msgid "class.pages"
+msgstr "NLW 页面"
+
+#: lib/Socialtext/PdfExportPlugin.pm:34
+msgid "class.pdf_export"
+msgstr "PDF 导出"
+
+#: lib/Socialtext/Pluggable/Adapter.pm:26
+msgid "class.pluggable"
+msgstr "插件"
+
+#: lib/Socialtext/RecentChangesPlugin.pm:18
+msgid "class.recent_changes"
+msgstr "近期更改"
+
+#: lib/Socialtext/RtfExportPlugin.pm:31
+msgid "class.rtf_export"
+msgstr "Word 导出"
+
+#: lib/Socialtext/SearchPlugin.pm:19
+msgid "class.search"
+msgstr "搜索"
+
+#: lib/Socialtext/ShortcutLinksPlugin.pm:12
+msgid "class.shortcut_links"
+msgstr "快捷链接"
+
+#: lib/Socialtext/SyndicatePlugin.pm:44
+msgid "class.syndicate"
+msgstr "联播"
+
+#: lib/Socialtext/TiddlyPlugin.pm:21
+msgid "class.tiddly"
+msgstr "脱机"
+
+#: lib/Socialtext/TimeZonePlugin.pm:17
+msgid "class.timezone"
+msgstr "时间"
+
+#: lib/Socialtext/UserPreferencesPlugin.pm:17
+msgid "class.user_preferences"
+msgstr "用户偏好"
+
+#: lib/Socialtext/VideoPlugin.pm:22
+msgid "class.video"
+msgstr "视频插件"
+
+#: lib/Socialtext/Formatter/Viewer.pm:16
+msgid "class.viewer"
+msgstr "NLW 查看器"
+
+#: lib/Socialtext/WatchlistPlugin.pm:15
+msgid "class.watchlist"
+msgstr "关注列表"
+
+#: lib/Socialtext/WeblogPlugin.pm:21
+msgid "class.weblog"
+msgstr "博客"
+
+#: lib/Socialtext/WeblogArchive.pm:14
+msgid "class.weblog_archive"
+msgstr "博客存档"
+
+#: lib/Socialtext/WidgetPlugin.pm:14
+msgid "class.widget"
+msgstr "小工具插件"
+
+#: lib/Socialtext/WikiwygPlugin.pm:28
+msgid "class.wikiwyg"
+msgstr "页面编辑"
+
+#: lib/Socialtext/WorkspaceListPlugin.pm:12
+msgid "class.workspace_list"
+msgstr "工作区列表"
+
+#: lib/Socialtext/CLI.pm:534
+msgid "cli.clearing-caches"
+msgstr "正在清理缓存..."
+
+#: lib/Socialtext/CLI.pm:3509
+msgid "cli.created"
+msgstr "已创建"
+
+#: lib/Socialtext/CLI.pm:3509
+msgid "cli.created-by"
+msgstr "创建于"
+
+#: lib/Socialtext/CLI.pm:3505
+msgid "cli.displaying-all-groups"
+msgstr "正在显示全部群组"
+
+#: lib/Socialtext/CLI.pm:2573
+msgid "cli.email"
+msgstr "邮箱"
+
+#. ($account->name, $dir)
+#: lib/Socialtext/CLI.pm:512
+msgid "cli.exported=account,path"
+msgstr "%1 帐户导出到 %2"
+
+#: lib/Socialtext/CLI.pm:2573
+msgid "cli.first-name"
+msgstr "名字"
+
+#: lib/Socialtext/CLI.pm:3507
+msgid "cli.group-id"
+msgstr "ID"
+
+#: lib/Socialtext/CLI.pm:3507
+msgid "cli.group-name"
+msgstr "群组名"
+
+#: lib/Socialtext/CLI.pm:3508
+msgid "cli.group-primary-account"
+msgstr "主要帐户"
+
+#: lib/Socialtext/CLI.pm:3508
+msgid "cli.group-users"
+msgstr "# 用户"
+
+#: lib/Socialtext/CLI.pm:3508
+msgid "cli.group-wikis"
+msgstr "# 工作区"
+
+#. ($user->username, $role->display_name, $thing->name)
+#. ($condemned->name, $role->display_name, $container->name)
+#. ($thingy->display_name, $current_role->name, $container->name,)
+#: lib/Socialtext/CLI.pm:1461 lib/Socialtext/CLI.pm:1582 lib/Socialtext/CLI.pm:1650
+msgid "cli.indirect-member=name,role,container"
+msgstr "%1 现是 %3 的“%2”，归于一个群组内的成员。"
+
+#: lib/Socialtext/CLI.pm:2573
+msgid "cli.last-name"
+msgstr "姓氏"
+
+#. ($group->display_name,            $new_role->display_name,            $account->name,)
+#. ($user->username,            $new_role->display_name,            $account->name,)
+#: lib/Socialtext/CLI.pm:1241 lib/Socialtext/CLI.pm:1265
+msgid "cli.member-added=name,role,account"
+msgstr "%1 现是 %3 帐户的“%2”"
+
+#. ($user->username, $new_role->display_name, $ws->name)
+#. ($thingy->name,            $new_role->display_name,            $ws->name)
+#: lib/Socialtext/CLI.pm:1303 lib/Socialtext/CLI.pm:1355
+msgid "cli.member-added=name,role,wiki"
+msgstr "%1 现是 %3 工作区的“%2”"
+
+#. ($user->username, $group->driver_group_name)
+#: lib/Socialtext/CLI.pm:1500
+msgid "cli.member-added=user,group"
+msgstr "%1 现已是 %2 的成员"
+
+#. ($user->username, $new_role->name, $group->display_name)
+#: lib/Socialtext/CLI.pm:1202
+msgid "cli.member-added=user,role,group"
+msgstr "%1 现已是 %3 群组的 %2"
+
+#. ($user->username, $group->driver_group_name)
+#. ($condemned->name, $container->name)
+#: lib/Socialtext/CLI.pm:1513 lib/Socialtext/CLI.pm:1586
+msgid "cli.member-removed=name,container"
+msgstr "%1 不再是 %2 的成员"
+
+#. ($thingy->display_name, $from_role,            $container->name, ucfirst($container_type)
+#: lib/Socialtext/CLI.pm:1657
+msgid "cli.member-removed=name,role,container,type"
+msgstr "%1 不再是 %3 %4 的 %2"
+
+#. ($user->username, $thing->name)
+#: lib/Socialtext/CLI.pm:1466
+msgid "cli.member-removed=user,container"
+msgstr "%1 不再是 %2 的“成员”"
+
+#. ($group->driver_name)
+#: lib/Socialtext/CLI.pm:2572
+msgid "cli.members-of=group"
+msgstr "%1 群组成员"
+
+#: lib/Socialtext/CLI.pm:230
+msgid "cli.no-changes"
+msgstr "未进行任何更改"
+
+#: lib/Socialtext/CLI.pm:2573
+msgid "cli.role"
+msgstr "角色"
+
+#. ($user->username, $extern)
+#: lib/Socialtext/CLI.pm:687
+msgid "cli.set=user,external-id"
+msgstr "将“%1”的外部 ID 设置为“%2”。"
+
+#. ($user->username, $account->name)
+#: lib/Socialtext/CLI.pm:663
+msgid "cli.show-primary-account=user,account"
+msgstr "“%1”的主要帐户是 %2。"
+
+#. ($user->username)
+#: lib/Socialtext/CLI.pm:643 lib/Socialtext/CLI.pm:654
+msgid "cli.updated-user=name"
+msgstr "已更新用户 %1。"
+
+#. ($ws->name()
+#: lib/Socialtext/WorkspacesUIPlugin.pm:684
+msgid "config.anyone-can-email=wiki"
+msgstr "任何人都可以发送邮件至 %1。"
+
+#: lib/Socialtext/RecentChangesPlugin.pm:39
+msgid "config.changes-depth?"
+msgstr "间隔多长时间显示“最新更新”？"
+
+#: lib/Socialtext/AppConfig.pm:1060
+msgid "config.did-you-know-text"
+msgstr "作为 Socialtext 的客户，您可以在 <a href=\"http://www.socialtext.net/exchange/\">Socialtext 客户交流区</a> 与其他 Socialtext 客户分享和交流。"
+
+#: lib/Socialtext/AppConfig.pm:1052
+msgid "config.did-you-know-title"
+msgstr "节点社区入口"
+
+#. ($group->driver_group_name)
+#: lib/Socialtext/CLI.pm:3633
+msgid "config.for=group:"
+msgstr "配置为 %1 群组："
+
+#: lib/Socialtext/DisplayPlugin.pm:127
+msgid "config.language?"
+msgstr "您的语言是？"
+
+#. ($ws->name()
+#: lib/Socialtext/WorkspacesUIPlugin.pm:688
+msgid "config.members-can-email=wiki"
+msgstr "只有工作区成员才能发送邮件到 %1。"
+
+#. ($ws->name()
+#: lib/Socialtext/WorkspacesUIPlugin.pm:691
+msgid "config.registered-can-email=wiki"
+msgstr "只有已注册的用户才能发送邮件到 %1。"
+
+#: lib/Socialtext/Pluggable/Plugin/Signals.pm:487 lib/Socialtext/UserSettingsPlugin.pm:118 lib/Socialtext/UserSettingsPlugin.pm:240 lib/Socialtext/WorkspacesUIPlugin.pm:415 lib/Socialtext/WorkspacesUIPlugin.pm:72
+msgid "config.saved"
+msgstr "更改已保存"
+
+#: lib/Socialtext/TimeZonePlugin.pm:69
+msgid "config.time-zone?"
+msgstr "显示哪个时区的时间？"
+
+#: lib/Socialtext/UserSettingsPlugin.pm:163
+msgid "config.user-admin"
+msgstr "用户：管理用户"
+
+#: lib/Socialtext/OpenIdPlugin.pm:91 lib/Socialtext/UserSettingsPlugin.pm:301 lib/Socialtext/UserSettingsPlugin.pm:387 lib/Socialtext/UserSettingsPlugin.pm:490
+msgid "config.user-invite"
+msgstr "用户：邀请新用户"
+
+#: lib/Socialtext/UserSettingsPlugin.pm:164
+msgid "config.user-list"
+msgstr "用户：列出所有用户"
+
+#: lib/Socialtext/UserSettingsPlugin.pm:62
+msgid "config.user-settings"
+msgstr "用户：我的设置"
+
+#: lib/Socialtext/WorkspacesUIPlugin.pm:650
+msgid "config.wiki-acl"
+msgstr "工作区：权限"
+
+#: lib/Socialtext/WorkspacesUIPlugin.pm:431
+msgid "config.wiki-clone"
+msgstr "工作区：克隆工作区"
+
+#: lib/Socialtext/WorkspacesUIPlugin.pm:585
+msgid "config.wiki-created"
+msgstr "工作区：已创建新工作区"
+
+#: lib/Socialtext/WorkspacesUIPlugin.pm:358 lib/Socialtext/WorkspacesUIPlugin.pm:99
+msgid "config.wiki-current"
+msgstr "工作区：本工作区"
+
+#: lib/Socialtext/WorkspacesUIPlugin.pm:60
+msgid "config.wiki-list"
+msgstr "工作区：我的工作区"
+
+#: lib/Socialtext/WorkspacesUIPlugin.pm:460
+msgid "config.wiki-new"
+msgstr "工作区：创建新工作区"
+
+#: lib/Socialtext/WorkspacesUIPlugin.pm:611
+msgid "config.wiki.unsubscribe"
+msgstr "工作区：退出"
+
+#: lib/Socialtext/Gadgets/Container/Activities.pm:12
+msgid "container.activities"
+msgstr "Socialtext 活动"
+
+#: lib/Socialtext/Gadgets/Container/AccountDashboard.pm:12 lib/Socialtext/Gadgets/Container/Dashboard.pm:13
+msgid "container.dashboard"
+msgstr "Socialtext 显示板"
+
+#: lib/Socialtext/Gadgets/Container/Explore.pm:14
+msgid "container.explore"
+msgstr "Socialtext 探索"
+
+#: lib/Socialtext/Gadgets/Container/GroupDirectory.pm:12
+msgid "container.group-directory"
+msgstr "群组目录"
+
+#: lib/Socialtext/Gadgets/Container/CreateGroup.pm:12 lib/Socialtext/Gadgets/Container/Group.pm:12
+msgid "container.groups"
+msgstr "Socialtext 群组"
+
+#: lib/Socialtext/Gadgets/Container/EditProfile.pm:12 lib/Socialtext/Gadgets/Container/ForbiddenProfile.pm:13 lib/Socialtext/Gadgets/Container/Profile.pm:12
+msgid "container.people"
+msgstr "Socialtext 人员"
+
+#: lib/Socialtext/Gadgets/Container/Signals.pm:14
+msgid "container.signals"
+msgstr "Socialtext 讯息"
+
+#: lib/Socialtext/Gadgets/Container/Signals/Signal.pm:17
+msgid "containers.signals-permalink"
+msgstr "Socialtext 讯息 - 永久链接"
+
+#: lib/Socialtext/Gadgets/Container/Test.pm:12
+msgid "containers.test"
+msgstr "测试容器"
+
+#: lib/Socialtext/Gadgets/Container/WidgetEditor.pm:13
+msgid "containers.widget-editor"
+msgstr "Socialtext 小工具编辑器"
+
+msgid "control.new-users-in=account"
+msgstr "%1 中的新用户"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:2190
+msgid "control.new-wiki"
+msgstr "新工作区"
+
+#: lib/Socialtext/Pluggable/Plugin/Widgets.pm:117
+msgid "dashboard.exporting-widgets"
+msgstr "正在导出控制面板小工具..."
+
+#: lib/Socialtext/Pluggable/Plugin/Widgets.pm:244
+msgid "dashboard.importing-default"
+msgstr "正在导入默认控制面板"
+
+#. ($email)
+#: lib/Socialtext/Pluggable/Plugin/Widgets.pm:241
+msgid "dashboard.importing=user"
+msgstr "正在为“%1”用户导入控制面板"
+
+msgid "date.apr"
+msgstr "四月"
+
+msgid "date.aug"
+msgstr "八月"
+
+msgid "date.dec"
+msgstr "十二月"
+
+msgid "date.feb"
+msgstr "二月"
+
+#: lib/Socialtext/TimeZonePlugin.pm:127
+msgid "date.format?"
+msgstr "如何显示日期格式？"
+
+msgid "date.fri"
+msgstr "周五"
+
+#: lib/Socialtext/TimeZonePlugin.pm:161
+msgid "date.hour-format?"
+msgstr "显示时间为 12 小时制或是 24 小时制？"
+
+#: lib/Socialtext/TimeZonePlugin.pm:193
+msgid "date.include-seconds?"
+msgstr "在时间里显示秒数？"
+
+msgid "date.jan"
+msgstr "一月"
+
+msgid "date.jul"
+msgstr "七月"
+
+msgid "date.jun"
+msgstr "六月"
+
+msgid "date.mar"
+msgstr "三月"
+
+msgid "date.may"
+msgstr "五月"
+
+msgid "date.mon"
+msgstr "周一"
+
+msgid "date.nov"
+msgstr "十一月"
+
+msgid "date.oct"
+msgstr "十月"
+
+msgid "date.sat"
+msgstr "周六"
+
+msgid "date.sep"
+msgstr "九月"
+
+msgid "date.sun"
+msgstr "周日"
+
+msgid "date.thu"
+msgstr "周四"
+
+msgid "date.tue"
+msgstr "周二"
+
+msgid "date.wed"
+msgstr "周三"
+
+msgid "desktop.2nd-bg-color"
+msgstr "次要背景颜色"
+
+msgid "desktop.about-2nd-bg-color"
+msgstr "为表单、设定页标题和未选择的标签使用"
+
+msgid "desktop.about-bg-color"
+msgstr "Socialtext 桌面内所有内容的背景颜色。与“文本颜色”搭配作为可读内容。"
+
+msgid "desktop.about-header-gradient-bottom"
+msgstr "标题的底端渐层颜色。与“标题（顶端）”选择同样颜色时，将不会显示渐层。"
+
+msgid "desktop.about-header-gradient-top"
+msgstr "标题的顶端渐层颜色。与“标题（底端）”搭配，以创造渐层效果。"
+
+msgid "desktop.about-highlight-color"
+msgstr "高亮元素使用的颜色，例如发布按钮的背景色。"
+
+msgid "desktop.about-link-color"
+msgstr "链接使用的颜色。通常使用深蓝色。"
+
+msgid "desktop.about-logo-uri"
+msgstr "Socialtext 桌面标志（自动缩放至 240 x 34 像素）。"
+
+msgid "desktop.about-text-color"
+msgstr "Socialtext 桌面内所有文本的颜色（链接除外）。与“背景颜色”搭配作为可读内容。"
+
+msgid "desktop.bg-color"
+msgstr "背景颜色"
+
+msgid "desktop.header-gradient-bottom"
+msgstr "标题（底部）"
+
+msgid "desktop.header-gradient-top"
+msgstr "标题（顶部）"
+
+msgid "desktop.highlight-color"
+msgstr "高亮颜色"
+
+msgid "desktop.link-color"
+msgstr "链接颜色"
+
+msgid "desktop.logo-uri"
+msgstr "图标网址"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:774
+msgid "desktop.relogin-for-default-logo"
+msgstr "（桌面用户如需看默认标志，需重新登录。）"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:792
+msgid "desktop.relogin-for-logo"
+msgstr "当前帐户标志应用至桌面。桌面用户需重新登录才能看到新的标志。"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:761
+msgid "desktop.relogin-for-new-logo"
+msgstr "（桌面用户如需看新的标志，需重新登录）"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:785
+msgid "desktop.relogin-for-reset-logo"
+msgstr "重置为默认桌面标志。桌面用户需要注销并重新登录才能看到新的标志。"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:872
+msgid "desktop.relogin-for-skin"
+msgstr "设置已保存。桌面用户需要重新登陆才能启用新的主题。"
+
+msgid "desktop.text-color"
+msgstr "文本颜色"
+
+#. ($group->driver_group_name)
+#: lib/Socialtext/Handler/ControlPanel.pm:1309
+msgid "do.add-users=group"
+msgstr "添加用户到 %1 群组"
+
+#: lib/Socialtext/Pluggable/Plugin/SocialCalc.pm:50
+msgid "do.export-csv"
+msgstr "导出为 CSV"
+
+#: lib/Socialtext/Page.pm:1134
+msgid "edit.default-text"
+msgstr "请在此输入文字。"
+
+#. ($app_name)
+#: lib/Socialtext/User/Restrictions/email_confirmation.pm:87
+msgid "email.confirmation-subject=app"
+msgstr "已登陆到应用 %1"
+
+#. ($ws->title()
+#: lib/Socialtext/User/Restrictions/email_confirmation.pm:84
+msgid "email.confirmation-subject=wiki"
+msgstr "已登陆到工作区 %1"
+
+#: lib/Socialtext/EmailReceiver/Base.pm:671
+msgid "email.date:"
+msgstr "日期："
+
+#: lib/Socialtext/EmailNotifyPlugin.pm:29
+msgid "email.frequency?"
+msgstr "您想要多长时间收到一次邮件更新？"
+
+#: lib/Socialtext/EmailReceiver/Base.pm:654
+msgid "email.from:"
+msgstr "来自："
+
+#: lib/Socialtext/EmailNotifyPlugin.pm:65 lib/Socialtext/WatchlistPlugin.pm:63
+msgid "email.page-digest-details?"
+msgstr "在每日邮件中您想得到更新的页面的哪些信息？"
+
+#: lib/Socialtext/EmailNotifyPlugin.pm:50
+msgid "email.page-digest-sort?"
+msgstr "采用哪种顺序显示更新信息？"
+
+#: lib/Socialtext/EmailNotifyPlugin.pm:69 lib/Socialtext/WatchlistPlugin.pm:67
+msgid "email.page-name-link-author-date"
+msgstr "页面名称和链接，外加作者和日期"
+
+#: lib/Socialtext/EmailNotifyPlugin.pm:68 lib/Socialtext/WatchlistPlugin.pm:66
+msgid "email.page-name-link-only"
+msgstr "只有页面名称和链接"
+
+#. ($sender->best_full_name)
+#: lib/Socialtext/Job/SignalDMNotify.pm:55
+msgid "email.private-message-from=sender"
+msgstr "来自 %1 的私人讯息"
+
+#. ($ws->title)
+#: lib/Socialtext/Job/EmailNotifyUser.pm:119
+msgid "email.recent-changes=wiki"
+msgstr "%1 工作区的最近更新"
+
+#: lib/Socialtext/Appliance/Model/Setup.pm:449
+msgid "email.sent-from-socialtext-appliance"
+msgstr "此电子邮件发送自 Socialtext 设备。"
+
+#: lib/Socialtext/User/Restrictions/email_confirmation.pm:78
+msgid "email.socialtext"
+msgstr "Socialtext"
+
+#: lib/Socialtext/User/Restrictions/email_confirmation.pm:77
+msgid "email.socialtext-appliance"
+msgstr "Socialtext 设备"
+
+#. ($p->{name})
+#: lib/Socialtext/Account.pm:1118
+msgid "error.account-exists=name"
+msgstr "此帐户名 %1 已被占用。"
+
+#: lib/Socialtext/Workspace.pm:646
+msgid "error.account-for-new-wiki-required"
+msgstr "帐户必须被所有新的工作区指定。"
+
+#: lib/Socialtext/Pluggable/Listview.pm:58
+msgid "error.account-forbidden"
+msgstr "无权限使用此帐户"
+
+#. ($self->{uri})
+#: lib/Socialtext/Handler/ControlPanel.pm:1730
+msgid "error.account-id-or-name-required=uri"
+msgstr "必须提供合法的帐户名或帐户 ID 到此网址（%1）。"
+
+#: lib/Socialtext/Account.pm:1090
+msgid "error.account-name-required"
+msgstr "帐户名称必填。"
+
+#. ($self->{command})
+#: lib/Socialtext/CLI.pm:2634 lib/Socialtext/CLI.pm:274 lib/Socialtext/CLI.pm:316
+msgid "error.account-or-wiki-required=command"
+msgstr "命令（%1）必须指定帐户或工作区。"
+
+#. ($self->{command})
+#: lib/Socialtext/CLI.pm:460
+msgid "error.account-required=command"
+msgstr "命令（%1）必须指定帐户。"
+
+#. ($acct_name, $e)
+#: lib/Socialtext/Handler/ControlPanel.pm:2075
+msgid "error.account-to-group-failed=name,message"
+msgstr "迁移帐户 %1 至群组失败：%2"
+
+#. (join ", ", @add_errors)
+#: lib/Socialtext/Handler/ControlPanel.pm:371
+msgid "error.add-auw-failed=wikis"
+msgstr "无法开放下列工作区给全体用户：%1"
+
+#. ($p{name},                $p{ws_name})
+#: lib/Socialtext/CLI.pm:1376
+msgid "error.admin-role-exists=user,wiki"
+msgstr "%1 已是 %2 工作区的管理员"
+
+#. ($user->username, $group->driver_group_name)
+#: lib/Socialtext/CLI.pm:1506
+msgid "error.already-a-member=name,group"
+msgstr "%1 已是 %2 的非管理员成员。"
+
+#. ($name,)
+#. ($proto->{driver_group_name},)
+#. ($proto->{driver_group_name})
+#: lib/Socialtext/CLI.pm:3561 lib/Socialtext/CLI.pm:3596 lib/Socialtext/Handler/ControlPanel.pm:1613
+msgid "error.already-added=group"
+msgstr "已加入系统中以存在 %1 群组。"
+
+#. ($email_address)
+#: lib/Socialtext/Handler/Authen.pm:604
+msgid "error.already-confirmed=email"
+msgstr "邮箱 %1 已确认。"
+
+#. ($user->email_address, $hostname, $error)
+#: lib/Socialtext/BugsPlugin.pm:120
+msgid "error.application=email,host,error"
+msgstr "在 %2 上 %1 的应用错误为：%3"
+
+#. ($hostname, $error)
+#: lib/Socialtext/BugsPlugin.pm:122
+msgid "error.application=host,error"
+msgstr "在 %1 出现的的应用错误为：%2"
+
+#. ($workspace,$user->email_address, $hostname, $error)
+#: lib/Socialtext/BugsPlugin.pm:114
+msgid "error.application=wiki,email,host,error"
+msgstr "在 %3 上 %1 出现了 %2 的应用错误为：%4"
+
+#. ($workspace,$hostname, $error)
+#: lib/Socialtext/BugsPlugin.pm:117
+msgid "error.application=wiki.host,error"
+msgstr "在 %2 上 %1 的应用错误为：%3"
+
+msgid "error.at-least-one-wiki-administrator-required"
+msgstr "你必须至少添加一个工作区管理员。"
+
+#. ($self->{line}, $msg)
+#: lib/Socialtext/MassAdd.pm:335
+msgid "error.at=line,message"
+msgstr "第 %1 行：%2"
+
+#: lib/Socialtext/Appliance/Model/Setup.pm:207
+msgid "error.authentication-token-soft-limit-must-be-lower-than-hard-limit"
+msgstr "认证所采用的软限制须低于硬限制。"
+
+msgid "error.backup-already-running"
+msgstr "备份已经开始"
+
+msgid "error.backup-delete-failed=error"
+msgstr "删除备份失败：%1"
+
+msgid "error.backup-failed"
+msgstr "备份失败 ..."
+
+msgid "error.backup-schedule-update-failed=message"
+msgstr "备份计划更新失败：%1"
+
+msgid "error.bad-json"
+msgstr "错误的json"
+
+#: lib/Socialtext/Handler/Base.pm:131
+msgid "error.bad-request"
+msgstr "错误请求"
+
+#: lib/Socialtext/Lite.pm:512
+msgid "error.blackberry-version-too-low"
+msgstr "警告：Socialtext 移动版需要不低于v4.5的BlackBerry OS"
+
+#: lib/Socialtext/WorkspacesUIPlugin.pm:377
+msgid "error.blog-name-required"
+msgstr "更新失败，未选择博客名。"
+
+#: lib/Socialtext/WeblogPlugin.pm:113
+msgid "error.blog-name-too-long"
+msgstr "网址中的博客名称太长"
+
+#: lib/Socialtext/Handler/Authen.pm:388
+msgid "error.captcha"
+msgstr "验证码失效"
+
+#: lib/Socialtext/Handler/Authen.pm:731
+msgid "error.challenger-redirect-failed"
+msgstr "无重定向异议者。"
+
+#. ($new_type)
+#: lib/Socialtext/Handler/ControlPanel.pm:454
+msgid "error.change-account=type"
+msgstr "无法转换帐户类型到 %1。"
+
+#. ($user->username)
+#: lib/Socialtext/Handler/ControlPanel.pm:599
+msgid "error.change-password=user"
+msgstr "用户 %1 修改密码出错"
+
+#: lib/Socialtext/Pluggable/Plugin/People.pm:765
+msgid "error.change-profile-field-failed"
+msgstr "无法更新资料字段。"
+
+#: lib/Socialtext/Appliance/BackupCleanup.pm:29
+msgid "error.cleaning-not-implemented"
+msgstr "清除功能尚未实现。"
+
+#. ($new_ts)
+#: lib/Socialtext/Appliance/Model/Setup.pm:317
+msgid "error.configure-ntpd-failed=new-ts"
+msgstr "未能配置网络时间服务器至 %1"
+
+#: lib/Socialtext/Handler/Authen.pm:497
+msgid "error.confirmation-expired"
+msgstr "确认网址已过期。将重新发送确认邮件。"
+
+#: lib/Socialtext/Handler/Authen.pm:611
+msgid "error.confirmation-resent"
+msgstr "已重新发送确认邮件。请通过邮件中链接激活帐户。"
+
+#: lib/Socialtext/WidgetPlugin.pm:145
+msgid "error.corrupted-widget-settings"
+msgstr "此小工具设置已损坏。请删除并重新插入。"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:1555
+msgid "error.create-group"
+msgstr "创建群组出错。"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:1631
+msgid "error.create-group-failed"
+msgstr "添加群组时无法定位。"
+
+#. ($msg)
+#: lib/Socialtext/CLI.pm:3568
+msgid "error.create-group=message"
+msgstr "创建群组出错：%1"
+
+#: lib/Socialtext/Pluggable/Plugin/People.pm:716
+msgid "error.create-profile-field-failed"
+msgstr "无法创建资料字段。"
+
+#. ($name)
+#: lib/Socialtext/Handler/ControlPanel.pm:489
+msgid "error.create=account"
+msgstr "无法创建帐户 %1。"
+
+#. ($ws_title)
+#: lib/Socialtext/Handler/ControlPanel.pm:2333
+msgid "error.create=wiki"
+msgstr "无法创建工作区 %1。"
+
+msgid "error.date-must-be-in-iso8601-format"
+msgstr "日期必须使用 ISO8601 格式 YYYY-mm-dd HH:MM:SS(.NNNNNN)[+-]zzzz。可以使用“T”分隔日期与时间，而分数形式的秒数是可选的。"
+
+#. ($user->username)
+#: lib/Socialtext/Handler/ControlPanel.pm:580
+msgid "error.deactivate=user"
+msgstr "用户 %1 停用出错"
+
+#. ($self->account->name)
+#. ($ws->account->name)
+#: lib/Socialtext/CLI.pm:2925 lib/Socialtext/Workspace.pm:654
+msgid "error.delete-auw-workspace"
+msgstr "本工作区属于帐户 %1 下全体用户，正在终止。"
+
+#. ($gid, $@)
+#: lib/Socialtext/CLI.pm:1214
+msgid "error.delete-group=id,message"
+msgstr "删除群组 ID %1 失败：%2"
+
+#. (Socialtext::AppConfig->support_address)
+#: lib/Socialtext/Handler/Base.pm:83
+msgid "error.display-page"
+msgstr "页面显示出错。请刷新本页面，如还有问题请联系<a href=\"%1\">Socialtext 客户服务人员</a>"
+
+#: lib/Socialtext/Helpers.pm:480 lib/Socialtext/Helpers.pm:501
+msgid "error.email-adress-required"
+msgstr "未指定电子邮件"
+
+#: lib/Socialtext/Handler/Authen.pm:592
+msgid "error.email-for-confirmation-required"
+msgstr "找不到电子邮件重新发送确认信息。"
+
+#: lib/Socialtext/Handler/Authen.pm:621
+msgid "error.email-missing-for-password-change"
+msgstr "未找到重发变更密码的电子邮件地址。"
+
+#: lib/Socialtext/Handler/Authen.pm:411
+msgid "error.email-required"
+msgstr "请输入电子邮件地址。"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:1113
+msgid "error.email-required!"
+msgstr "未提供邮箱"
+
+#. ($name)
+#: lib/Socialtext/Handler/ControlPanel.pm:476
+msgid "error.exists=account"
+msgstr "此名字（%1）的帐户已存在。"
+
+#. ($name)
+#: lib/Socialtext/Account.pm:437
+msgid "error.exists=account!"
+msgstr "%1 帐户已存在！"
+
+#. ($blog_tag)
+#: lib/Socialtext/WeblogPlugin.pm:172
+msgid "error.exists=blog"
+msgstr "博客“%1”已存在，请选择其他名字。"
+
+#. ($dir)
+#: lib/Socialtext/CLI.pm:496
+msgid "error.export-directory-exists=path!"
+msgstr "错误 - 导出目录 %1 已存在！"
+
+#. ($p{dir})
+#: lib/Socialtext/Workspace.pm:1189
+msgid "error.export-directory-not-writable=path"
+msgstr "导出目录 %1 不可写。"
+
+#. ($file)
+#: lib/Socialtext/Workspace.pm:1201
+msgid "error.export=file"
+msgstr "无法写入导出文件 %1，正在终止。"
+
+#: lib/Socialtext/WorkspacesUIPlugin.pm:231
+msgid "error.extract-skin"
+msgstr "无法解压主题存档。这很可能是由损坏的存档文件造成的。请检查您的文件，并重新上传。"
+
+#: lib/Socialtext/Syndicate/Atom.pm:147 lib/Socialtext/Syndicate/RSS20.pm:31
+msgid "error.feed"
+msgstr "订阅错误"
+
+#. ($from_class, $to_class)
+#: lib/Socialtext/Pluggable/Plugin/People.pm:761
+msgid "error.field-conversion-failed=from-class,to-class"
+msgstr "不能从“%1”转换字段类型到“%2”"
+
+#. ($opts->{name}, $acct->name)
+#: lib/Socialtext/Pluggable/Plugin/People.pm:709
+msgid "error.field-exists=name,account"
+msgstr "不能创建个人资料字段：字段“%1”已在帐户“%2”中使用"
+
+#. ($name, $opts->{title}, $acct->name)
+#: lib/Socialtext/Pluggable/Plugin/People.pm:706
+msgid "error.field-exists=name,title,account"
+msgstr "不能创建个人资料字段：字段“%1”（源于“%2”）已存在“%3”帐户中"
+
+#: lib/Socialtext/Pluggable/Plugin/People.pm:730
+msgid "error.field-name-required"
+msgstr "必须指定需要更改的字段名"
+
+#. ($mfield)
+#: lib/Socialtext/MassAdd.pm:214
+msgid "error.field-required=name"
+msgstr "%1 是必填项，但它不存在。"
+
+#. ($opts->{name})
+#: lib/Socialtext/Pluggable/Plugin/People.pm:699
+msgid "error.field-reserved=name"
+msgstr "不能创建个人资料字段：字段“%1”是 Socialtext 的保留字段"
+
+#. ($name, $opts->{title})
+#: lib/Socialtext/Pluggable/Plugin/People.pm:696
+msgid "error.field-reserved=name,title,account"
+msgstr "不能创建个人资料字段：字段“%1”（源于“%2”）是 Socialtext 的保留字段"
+
+#: lib/Socialtext/AttachmentsUIPlugin.pm:101
+msgid "error.file-required"
+msgstr "上传文件不存在"
+
+#: lib/Socialtext/AttachmentsUIPlugin.pm:104
+msgid "error.file-upload-forbidden"
+msgstr "没有权限上传附件"
+
+#: lib/Socialtext/VideoPlugin.pm:203
+msgid "error.full-video-url-required"
+msgstr "请输入完整的视频链接地址。"
+
+#: lib/Socialtext/Rest/Gadgets/Gallery.pm:50 lib/Socialtext/Rest/Gadgets/Gallery.pm:64
+msgid "error.gadget-id-required"
+msgstr "gadget_id 为必要参数"
+
+#: lib/Socialtext/Rest/Gadgets/Gallery.pm:35
+msgid "error.gallery-forbidden"
+msgstr "您没有对任何帐户共享该工具库。"
+
+msgid "error.group-already-in-wiki"
+msgstr "该群组已经在工作区内"
+
+msgid "error.group-does-not-exist"
+msgstr "群组不存在"
+
+#: lib/Socialtext/CLI.pm:3540
+msgid "error.group-email-required"
+msgstr "创建新的群组时，必须指定 --email。"
+
+#. (Socialtext::AppConfig->support_address)
+#: lib/Socialtext/Handler/Container/Group.pm:41
+msgid "error.group-forbidden"
+msgstr "没有权限浏览此群组。请询问群组管理员或联系 <a href=\"%1\">Socialtext 客户服务人员</a>"
+
+#. ($self->{uri})
+#: lib/Socialtext/Handler/ControlPanel.pm:1705
+msgid "error.group-id-required=uri"
+msgstr "必须提供合法的群组 ID 到此网址（%1）。"
+
+#. ($account->name)
+#: lib/Socialtext/Handler/ControlPanel.pm:1465
+msgid "error.group-member-exists=account"
+msgstr "群组已在帐户 %1 中"
+
+#. ($workspace->name)
+#: lib/Socialtext/Handler/ControlPanel.pm:1389
+msgid "error.group-member-exists=wiki"
+msgstr "群组已在工作区 %1 中"
+
+#: lib/Socialtext/CLI.pm:3535
+msgid "error.group-name-or-ldap-dn-required"
+msgstr "创建新的群组时，必须带有 --name 或 --ldap-dn 参数。"
+
+msgid "error.group-needs-at-least-one-admin"
+msgstr "群组需要至少有一个管理员。"
+
+#: lib/Socialtext/CLI.pm:2103
+msgid "error.group-or-wiki-required"
+msgstr "只能更改群组或工作区的权限。"
+
+#. ($self->{command})
+#: lib/Socialtext/CLI.pm:3646
+msgid "error.group-required=command"
+msgstr "命令（%1）必须带有 --group 参数。"
+
+#. ($EXPORT_VERSION)
+#: lib/Socialtext/Account.pm:430
+msgid "error.import-account=max-version"
+msgstr "不能导入一个比 %1 更高版本的帐户"
+
+#: lib/Socialtext/CLI.pm:521
+msgid "error.import-directory-required"
+msgstr "未指定导入目录。"
+
+#: lib/Socialtext/UserSettingsPlugin.pm:85
+msgid "error.incorrect-old-password"
+msgstr "旧密码不正确"
+
+#: lib/Socialtext/WorkspacesUIPlugin.pm:250
+msgid "error.info-yaml-required!"
+msgstr "上传的主题不包含 info.yaml 文件！"
+
+#: lib/Socialtext/RecentChangesPlugin.pm:83
+msgid "error.invalid-/-in-changes"
+msgstr "更改参数中含有非法字符“/”"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:748
+msgid "error.invalid-account-logo?"
+msgstr "图片处理出错，尝试重新上传其它文件？"
+
+#. ($key)
+#: lib/Socialtext/Handler/ControlPanel.pm:312
+msgid "error.invalid-account-setting=key"
+msgstr "对不起，%1 无法更改。"
+
+#. ($filename)
+#: lib/Socialtext/WorkspacesUIPlugin.pm:217
+msgid "error.invalid-archive=file"
+msgstr "%1 是无效文件名。主题文件后缀名只能是 .zip，.tar.gz 或 .tgz。"
+
+#. ($min_days, $max_days)
+#: lib/Socialtext/Appliance/Model/Setup.pm:203
+msgid "error.invalid-authentication-token-hard-limit=min-days,max-days"
+msgstr "认证所采用的硬限制须介于 %1 与%2 天之间。"
+
+#. ($min_days, $max_days)
+#: lib/Socialtext/Appliance/Model/Setup.pm:200
+msgid "error.invalid-authentication-token-soft-limit=min-days,max-days"
+msgstr "认证所采用的软限制须介于 %1 与 %2 天之间。"
+
+#: lib/Socialtext/Handler/Authen.pm:486 lib/Socialtext/Handler/Authen.pm:545 lib/Socialtext/Handler/Authen.pm:66
+msgid "error.invalid-confirmation-url"
+msgstr "无效的确认网址。"
+
+#: lib/Socialtext/Workspace.pm:637
+msgid "error.invalid-email-placement"
+msgstr "新邮件位置必须位于顶部，底部或覆盖。"
+
+msgid "error.invalid-expire-to-folder-parameter"
+msgstr "Expire-to-folder 参数设置无效；此处只能使用字母与数字（a-z、0-9）、除斜线、反斜线，以及底线字符。"
+
+#. ($source)
+#: lib/Socialtext/Pluggable/Plugin/People.pm:672
+msgid "error.invalid-field=source"
+msgstr "无效的字段来源“%1”"
+
+#. ($email, $workspace->invitation_filter)
+#: lib/Socialtext/CLI.pm:867
+msgid "error.invalid-invite=email,filter"
+msgstr "邮箱 %1 不符合工作区的邀请过滤器 %2。"
+
+#. ($validname)
+#: lib/Socialtext/Handler/Authen.pm:211
+msgid "error.invalid-login=field"
+msgstr "必须提供合法的字段 %1"
+
+#. ($validname)
+#: lib/Socialtext/Handler/Authen.pm:248 lib/Socialtext/Handler/Authen.pm:259
+msgid "error.invalid-login=name"
+msgstr "错误的 %1 或密码 - 请重试"
+
+#: lib/Socialtext/Workspace.pm:862
+msgid "error.invalid-logo-image-type"
+msgstr "标志文件必须为gif，jpeg，或png格式。"
+
+#: lib/Socialtext/CLI.pm:913
+msgid "error.invalid-mass-add-file"
+msgstr "无法读取该文件。未添加任何用户。"
+
+#. ($username, $validname)
+#: lib/Socialtext/Handler/Authen.pm:220
+msgid "error.invalid-name=user,type"
+msgstr "“%1”是无效的 %2。请使用您的 %2 登录。"
+
+#: lib/Socialtext/DisplayPlugin.pm:170
+msgid "error.invalid-page-name"
+msgstr "无效页面名称"
+
+#. ($p->{permission_set})
+#: lib/Socialtext/Group/Factory.pm:440
+msgid "error.invalid-permission=name"
+msgstr "无效的权限：%1"
+
+#: lib/Socialtext/Hub.pm:193
+msgid "error.invalid-query"
+msgstr "非法查询。"
+
+msgid "error.invalid-role-for-group"
+msgstr "无效的群组角色"
+
+#. ($plugin, $scope)
+#: lib/Socialtext/UserSetContainer.pm:105
+msgid "error.invalid-scope=plugin,scope"
+msgstr "插件 %1 并未设于 %2 范围中。"
+
+#. ($self->name)
+#: lib/Socialtext/PageRevision.pm:470
+msgid "error.invalid-title=page"
+msgstr "“%1”是无效的页面主题。请另选一个。"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:289
+msgid "error.invalid-value=group-create"
+msgstr "“%1”不是创建群组的有效值。"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:255
+msgid "error.invalid-value=self-join"
+msgstr "“%1”不是self_join的有效值。"
+
+#: lib/Socialtext/VideoPlugin.pm:197
+msgid "error.invalid-video-url"
+msgstr "抱歉，该网址并非指向嵌入视频的链接。"
+
+#. (join(', ', sort keys %Socialtext::VideoPlugin::Services)
+#: lib/Socialtext/VideoPlugin.pm:209
+msgid "error.invalid-video-url=hosts"
+msgstr "对不起，此网址不提供任何我们支持的服务（%1）。"
+
+#: lib/Socialtext/Gadgets/Gadget/XML.pm:80
+msgid "error.invalid-widget-type"
+msgstr "只有url和html是小工具类型的有效值。"
+
+#. ($self->_file_or_url, $error)
+#: lib/Socialtext/Gadgets/Gadget/XML.pm:30
+msgid "error.invalid-widget=src,message"
+msgstr "您提供的 %1 文件不是一个合法的小工具XML：%2"
+
+#. ($self->_file_or_url, $url, $err)
+#: lib/Socialtext/Gadgets/Gadget.pm:791
+msgid "error.invalid-widget=src,url,message"
+msgstr "您提供的 %1 不包含小工具文件。请重新检查并上传。%1 被指定为 %2。错误为 %3。"
+
+#: lib/Socialtext/Workspace.pm:883
+msgid "error.invalid-wiki-logo?"
+msgstr "无法处理标志文件，它是什么图片？"
+
+#: lib/Socialtext/Workspace.pm:745
+msgid "error.invalid-wiki-name"
+msgstr "工作区名字必须介于3到30个字符长度，只能包含小写字母，数字，下划线和连字符，且不能以“-”开头。"
+
+#: lib/Socialtext/Workspace.pm:750
+msgid "error.invalid-wiki-name-begins-with-dash"
+msgstr "工作区名字不能以- 开头。"
+
+#: lib/Socialtext/Workspace.pm:707
+msgid "error.invalid-wiki-title"
+msgstr "工作区题目必须介于2到64个字符长度，并不能以“-”开头。"
+
+#. ($self->_file_or_url, html_escape($xml_error)
+#: lib/Socialtext/Gadgets/Gadget/XML.pm:36
+msgid "error.invalid-xml=src,message"
+msgstr "您提供的 %1 文件不是一个合法的XML：%2"
+
+#. ($name)
+#: lib/Socialtext/Handler/ControlPanel.pm:1726
+msgid "error.invalid=account"
+msgstr "“%1”是无效的帐户名。"
+
+#. ($p->{account_type})
+#: lib/Socialtext/Account.pm:1131
+msgid "error.invalid=account-type!"
+msgstr "帐户类型（%1）无效！"
+
+#. ($domain)
+#: lib/Socialtext/Handler/ControlPanel.pm:427
+msgid "error.invalid=domain"
+msgstr "域名（%1）无效。"
+
+#. ($p->{restrict_to_domain})
+#: lib/Socialtext/Account.pm:1138
+msgid "error.invalid=domain!"
+msgstr "域名（%1）无效！"
+
+#. ($email)
+#: lib/Socialtext/User/Factory.pm:447
+msgid "error.invalid=email"
+msgstr "“%1”不是有效的电子邮件地址"
+
+#. ($email, $account->restrict_to_domain)
+#: lib/Socialtext/CLI.pm:859
+msgid "error.invalid=email,domain"
+msgstr "邮箱 %1 不符合域名 %2。"
+
+#. ($opts->{field_class})
+#: lib/Socialtext/Pluggable/Plugin/People.pm:713
+msgid "error.invalid=field-class"
+msgstr "不能创建个人资料字段： 字段 “%1”无效"
+
+#. ($new_ts)
+#. ($new_proxy)
+#: lib/Socialtext/Appliance/Model/Setup.pm:292 lib/Socialtext/Appliance/Model/Setup.pm:377
+msgid "error.invalid=host"
+msgstr "无效伺服：%1"
+
+#. ($new_locale)
+#: lib/Socialtext/CLI.pm:1885
+msgid "error.invalid=locale"
+msgstr "“%1”是无效的区域设置"
+
+#. ($page_id)
+#: lib/Socialtext/WikiwygPlugin.pm:654 lib/Socialtext/WikiwygPlugin.pm:804
+msgid "error.invalid=page"
+msgstr "无效页面ID已给出：%1"
+
+#. ($new_href)
+#: lib/Socialtext/Appliance/Model/Setup.pm:237
+msgid "error.invalid=support-uri"
+msgstr "网址“%1”无效。"
+
+#. ($url)
+#: lib/Socialtext/VideoPlugin.pm:125
+msgid "error.invalid=url"
+msgstr "%1 是无效链接。"
+
+msgid "error.list-of-users-required"
+msgstr "没有提供预期的用户清单。"
+
+#. ($url)
+#: lib/Socialtext/FetchRSSPlugin.pm:194
+msgid "error.load-feed=url"
+msgstr "加载订阅出错：%1"
+
+msgid "error.maintenance-hour-not-integer"
+msgstr "维护小时数不是整数"
+
+msgid "error.maintenance-hour-out-of-range"
+msgstr "维护小时数超出范围"
+
+msgid "error.maintenance-minutes-not-integer"
+msgstr "维护分钟数不是整数"
+
+msgid "error.maintenance-minutes-out-of-range"
+msgstr "维护分钟数超出范围"
+
+msgid "error.maintenance-weeks-not-integer"
+msgstr "维护周数不是整数"
+
+msgid "error.maintenance-weeks-out-of-range"
+msgstr "维护周数超出范围"
+
+#. ($group_info->{role_name})
+#: lib/Socialtext/Pluggable/Plugin/Groups.pm:100 lib/Socialtext/Pluggable/Plugin/Groups.pm:183
+msgid "error.missing-or-unknown=role"
+msgstr "缺失或未识别角色“%1”；应用默认角色"
+
+#: lib/Socialtext/CLI.pm:759
+msgid "error.missing-people-plugin"
+msgstr "成员插件不可用。"
+
+#: lib/Socialtext/Appliance/BackupStore.pm:87
+msgid "error.mount-samba-share"
+msgstr "无法增加 SAMBA 共享。"
+
+#. ($username,)
+#: lib/Socialtext/CredentialsExtractor/Extractor/CAC.pm:61
+msgid "error.multiple-user-matched=name"
+msgstr "搜索符合“%1”的用户有多重结果"
+
+msgid "error.must-be-business-admin-to-set-members-of-wiki"
+msgstr "必须是业务管理员才能设置工作区成员。"
+
+msgid "error.name-title-required"
+msgstr "必须要有名字和标题"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:470
+msgid "error.new-account-name-required"
+msgstr "必须提供一个名字用以创建帐户"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:445
+msgid "error.new-account-type-required"
+msgstr "必须指定更新的帐户类型。"
+
+#: lib/Socialtext/UserSettingsPlugin.pm:87
+msgid "error.new-password-mismatch"
+msgstr "新密码不匹配"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:1139 lib/Socialtext/Handler/ControlPanel.pm:1187
+msgid "error.no-account-id!"
+msgstr "帐户ID未填写！"
+
+#. ($plugin_name)
+#: lib/Socialtext/Pluggable/Listview.pm:26
+msgid "error.no-account-with=plugin"
+msgstr "未通过认证：没有帐户启用插件 %1"
+
+#. ($p->{account_id})
+#: lib/Socialtext/Workspace.pm:660
+msgid "error.no-account=id"
+msgstr "指定帐户ID：%1 不存在。"
+
+#. ($opts{account})
+#. ($value)
+#: lib/Socialtext/CLI.pm:2317 lib/Socialtext/CLI.pm:258
+msgid "error.no-account=name"
+msgstr "指定帐户 %1 不存在。"
+
+#. ($account_name_or_id)
+#: lib/Socialtext/Handler/ControlPanel.pm:1457
+msgid "error.no-account=name-or-id"
+msgstr "%1 帐户不存在"
+
+#: lib/Socialtext/Lite/People.pm:91
+msgid "error.no-activities"
+msgstr "没有活动可以显示。"
+
+#: lib/Socialtext/AttachmentsUIPlugin.pm:63 lib/Socialtext/AttachmentsUIPlugin.pm:82
+msgid "error.no-attachment"
+msgstr "找不到附件。页面名，文件名或链接中的识别码可能有错误，或附件已被删除或不存在于此工作区。"
+
+#: lib/Socialtext/WeblogPlugin.pm:81
+msgid "error.no-blog-title"
+msgstr "必须提供一个博客标题。"
+
+#. ($dir)
+#: lib/Socialtext/CLI.pm:522
+msgid "error.no-directory=path"
+msgstr "目录 %1 不存在。"
+
+#. ($args{section})
+#: lib/Socialtext/Lite/Activities.pm:81
+msgid "error.no-events-conversations=section"
+msgstr "您没有任何对话记录，无法显示%1。"
+
+#. ($args{section})
+#: lib/Socialtext/Lite/Activities.pm:65
+msgid "error.no-events-followers=section"
+msgstr "您没有关注任何人或者您关注的人未创建%1，无法显示。请去同事的资料页点击关注。"
+
+#. ($args{section})
+#: lib/Socialtext/Lite/Activities.pm:57
+msgid "error.no-events-mine=section"
+msgstr "您未创建%1，无法显示。"
+
+#. ($args{section})
+#: lib/Socialtext/Lite/Activities.pm:76
+msgid "error.no-events=section"
+msgstr "%1未被创建，无法显示。"
+
+#. ($p{dir})
+#: lib/Socialtext/Workspace.pm:1186
+msgid "error.no-export-directory=path"
+msgstr "导出目录 %1 不存在。"
+
+#. ($opts->{profile_field_id}, $acct->name)
+#: lib/Socialtext/Pluggable/Plugin/People.pm:743
+msgid "error.no-field=id,account"
+msgstr "帐户“%2”中不存在个人资料ID“%1”。"
+
+#. ($opts->{name}, $acct->name)
+#: lib/Socialtext/Pluggable/Plugin/People.pm:749
+msgid "error.no-field=name,account"
+msgstr "帐户“%2”中不存在个人资料“%1”"
+
+#. ($group_id)
+#: lib/Socialtext/CLI.pm:3659
+msgid "error.no-group=id"
+msgstr "没有ID %1 的群组。"
+
+#. ($ldap_dn)
+#: lib/Socialtext/CLI.pm:3608
+msgid "error.no-group=ldap-dn"
+msgstr "找不到带有 DN “%1”的群组"
+
+#: lib/Socialtext/CLI.pm:3504
+msgid "error.no-groups"
+msgstr "群组不存在"
+
+#. ("<a href='$page_url'>$page_title</a>",)
+#: lib/Socialtext/Formatter/WaflPhrase.pm:920
+msgid "error.no-headers=page"
+msgstr "%1 无任何标题。"
+
+#. ($s->{signal_id}, $s->{username})
+#: lib/Socialtext/Pluggable/Plugin/Signals.pm:345
+msgid "error.no-imported-author=signal,user"
+msgstr "讯息 %1 无法被导入：找不到发送者“%2”"
+
+#. ($s->{signal_id}, $s->{recipient_username})
+#: lib/Socialtext/Pluggable/Plugin/Signals.pm:374
+msgid "error.no-imported-recipient=signal,user"
+msgstr "讯息 %1 无法被导入：找不到接受者“%2”"
+
+#: lib/Socialtext/CLI.pm:3586
+msgid "error.no-ldap-group-factories"
+msgstr "LDAP 群组配置不存在；不能在 LDAP 创建群组。"
+
+#: lib/Socialtext/EditPlugin.pm:195
+msgid "error.no-page-body"
+msgstr "保存页面时，正文不能为空。"
+
+#: lib/Socialtext/EditPlugin.pm:173
+msgid "error.no-page-title"
+msgstr "保存页面时，标题不能为空。"
+
+#. ($opts{page}, $hub->current_workspace()
+#: lib/Socialtext/CLI.pm:3849
+msgid "error.no-page=id,wiki"
+msgstr "无法在 %2 工作区中找到ID为“%1”的页面。"
+
+#: lib/Socialtext/User/Factory.pm:465
+msgid "error.no-password-for-new-user"
+msgstr "创建一个新用户时需要填写密码。"
+
+#: lib/Socialtext/CLI.pm:3029 lib/Socialtext/CLI.pm:3041 lib/Socialtext/CLI.pm:3410 lib/Socialtext/CLI.pm:764
+msgid "error.no-people-plugin"
+msgstr "成员插件未安装。"
+
+#. ($account->name)
+#: lib/Socialtext/Handler/ControlPanel.pm:1043
+msgid "error.no-people-plugin=account"
+msgstr "%1 帐户必须启用成员插件"
+
+#. ($set_name)
+#: lib/Socialtext/CLI.pm:2087
+msgid "error.no-permission=name"
+msgstr "权限“%1”不存在"
+
+#. ($p)
+#: lib/Socialtext/CLI.pm:353
+msgid "error.no-plugin=name!"
+msgstr "插件 %1 不存在！"
+
+#: lib/Socialtext/UserPreferencesPlugin.pm:35
+msgid "error.no-preference-class-id"
+msgstr "缺少Class ID 选项"
+
+#. ($plugin)
+#: lib/Socialtext/CLI.pm:445
+msgid "error.no-preference=plugin"
+msgstr "%1 插件没有参数选项"
+
+#. ($key)
+#: lib/Socialtext/CLI.pm:701
+msgid "error.no-profile-field=name"
+msgstr "未知资料字段“%1”"
+
+msgid "error.no-requested-resource"
+msgstr "所要求的資源不存在。"
+
+#. ($user->username, $member->display_name, $thing->name)
+#: lib/Socialtext/CLI.pm:1452
+msgid "error.no-role=name,role,container"
+msgstr "%1 不是 %3 的“%2”"
+
+#. ($thingy->display_name, $role->name,                $container->name, ucfirst($container_type)
+#: lib/Socialtext/CLI.pm:1620
+msgid "error.no-role=name,role,container,type"
+msgstr "%1 不是 %3 %4 的“%2”。"
+
+#: lib/Socialtext/Lite/People.pm:78
+msgid "error.no-signals"
+msgstr "没有人注册。"
+
+#: lib/Socialtext/CLI.pm:3052
+msgid "error.no-signals-plugin"
+msgstr "讯息插件未安装。"
+
+#. ($p->{skin_name})
+#: lib/Socialtext/Account.pm:1105
+msgid "error.no-skin=name"
+msgstr "指定主题 %1 不存在。"
+
+#. (Socialtext::AppConfig->support_address)
+#: lib/Socialtext/Handler/Container/Group.pm:36
+msgid "error.no-such-group"
+msgstr "您所访问的群组不存在。请咨询群组管理员或联系<a href=\"%1\">Socialtext 客户服务人员</a>."
+
+#. (Socialtext::AppConfig->support_address)
+#: lib/Socialtext/Handler/Base.pm:138
+msgid "error.no-such-page"
+msgstr "您所访问的页面不存在。请咨询系统管理员或联系<a href=\"%1\">Socialtext 客户服务人员</a>."
+
+#: lib/Socialtext/Handler/Authen.pm:800
+msgid "error.no-such-pending-confirmation"
+msgstr "此确认网址不符合任何待确认用户。"
+
+#. (Socialtext::AppConfig->support_address)
+#: lib/Socialtext/Handler/Container/Profile.pm:38
+msgid "error.no-such-person"
+msgstr "您所查看的成员不存在。请咨询系统管理员或联系<a href=\"%1\">Socialtext 客户服务人员</a>."
+
+#: lib/Socialtext/Handler/Container/Signals/Signal.pm:35
+msgid "error.no-such-signal"
+msgstr "对不起，讯息不存在。使用讯息搜索框可以查找想要的讯息。"
+
+#. ($email_address)
+#: lib/Socialtext/Handler/Authen.pm:598 lib/Socialtext/Handler/Authen.pm:627
+msgid "error.no-such-user=email"
+msgstr "%1 用户邮箱未注册。试试其他的邮箱？"
+
+msgid "error.no-such-widget=src"
+msgstr "小工具 %1 不存在"
+
+#. ($opts{search}, $hub->current_workspace()
+#: lib/Socialtext/CLI.pm:3825
+msgid "error.no-tag=query,wiki"
+msgstr "在 %2 工作区中找不到匹配“%1”的标签。"
+
+#. ($opts{tag}, $hub->current_workspace()
+#: lib/Socialtext/CLI.pm:3813
+msgid "error.no-tag=tag,wiki"
+msgstr "无法在 %2 工作区中找到标签为“%1”的页面。"
+
+#. ($url)
+#: lib/Socialtext/Gadgets/Gadget.pm:770
+msgid "error.no-thumbnail=url"
+msgstr "找不到缩略图：%1"
+
+#: lib/Socialtext/Appliance/Model/Setup.pm:341
+msgid "error.no-timeserver-configured"
+msgstr "错误：未配置时间服务器"
+
+#: lib/Socialtext/Handler/Authen.pm:228
+msgid "error.no-user-email"
+msgstr "此用户名没有关联任何邮箱。"
+
+#. ($username,)
+#: lib/Socialtext/CredentialsExtractor/Extractor/CAC.pm:55
+msgid "error.no-user-matched=name"
+msgstr "未找到符合“%1”的用户"
+
+#. ($email)
+#: lib/Socialtext/CLI.pm:3544
+msgid "error.no-user=email"
+msgstr "无法找到邮箱为 %1 的用户"
+
+#. ($username)
+#: lib/Socialtext/Handler/Authen.pm:332
+msgid "error.no-user=name"
+msgstr "%1 用户名未注册。试试其他用户名？"
+
+#: lib/Socialtext/Gadgets/Gadget/XML.pm:152
+msgid "error.no-widget-localization-file"
+msgstr "由于本地化文件无法找到，此小工具安装失败"
+
+#: lib/Socialtext/Query/Wafl.pm:52
+msgid "error.no-wiki-access"
+msgstr "无权访问工作区"
+
+#. ($workspace_name)
+#: lib/Socialtext/CLI.pm:2016
+msgid "error.no-wiki=name"
+msgstr "找不到名为“%1”的工作区。"
+
+#. ($workspace_name_or_id)
+#: lib/Socialtext/Handler/ControlPanel.pm:1381
+msgid "error.no-wiki=name-or-id"
+msgstr "%1 工作区不存在。"
+
+#: lib/Socialtext/CLI.pm:3425
+msgid "error.not-both-visible-and-hidden"
+msgstr "只能指定 --visible 和 --hidden 其中一项参数"
+
+msgid "error.not-found=entity"
+msgstr "找不到%1"
+
+#. ($user->username, $thing->name)
+#. ($user->username, $group->driver_group_name)
+#. ($condemned->name, $container->name)
+#: lib/Socialtext/CLI.pm:1445 lib/Socialtext/CLI.pm:1490 lib/Socialtext/CLI.pm:1573
+msgid "error.not-member=name,container"
+msgstr "%1 不是 %2 的成员"
+
+#. ($email)
+#: lib/Socialtext/Pluggable/Plugin/Widgets.pm:238
+msgid "error.not-yet-imported=user!"
+msgstr "用户 %1 尚未导入！"
+
+#: lib/Socialtext/Apache/Authen/NTLM.pm:31
+msgid "error.ntlm"
+msgstr "Socialtext系统无法连接Windows NTLM域控制器。管理员请检查域控制器或Socialtext配置。"
+
+#. ($file->{filename})
+#: lib/Socialtext/WorkspacesUIPlugin.pm:223
+msgid "error.open=file"
+msgstr "无法打开 %1"
+
+#: lib/Socialtext/OpenIdPlugin.pm:42
+msgid "error.openid-and-email-required"
+msgstr "必须同时提供OpenID和邮箱"
+
+#: lib/Socialtext/OpenIdPlugin.pm:36
+msgid "error.openid-users-required"
+msgstr "没有用户输入"
+
+#: lib/Socialtext/Page.pm:897
+msgid "error.page-conflict"
+msgstr "其他人或程序已被编辑到此页面。"
+
+#: lib/Socialtext/PdfExportPlugin.pm:67
+msgid "error.page-for-export-required"
+msgstr "错误：<pre>导出页面不能为空</pre>"
+
+#. (Socialtext::AppConfig->support_address)
+#: lib/Socialtext/Handler/Base.pm:146
+msgid "error.page-forbidden"
+msgstr "没有权限浏览此页面。请询问群组管理员或联系 <a href=\"%1\">Socialtext 客户服务人员</a>"
+
+#: lib/Socialtext/PageRevision.pm:461
+msgid "error.page-id-mismatch"
+msgstr "不能更改页面名称：请提供其他 page_id"
+
+#: lib/Socialtext/WikiwygPlugin.pm:645 lib/Socialtext/WikiwygPlugin.pm:795
+msgid "error.page-id-required"
+msgstr "未给予页面 ID"
+
+#: lib/Socialtext/RtfExportPlugin.pm:69
+msgid "error.page-name-is-empty"
+msgstr "未给予页面名"
+
+#: lib/Socialtext/DisplayPlugin.pm:53
+msgid "error.page-name-too-long"
+msgstr "页面名称太长"
+
+#: lib/Socialtext/EditPlugin.pm:48
+msgid "error.page-title-required"
+msgstr "缺少页面标题"
+
+#: lib/Socialtext/EditPlugin.pm:44 lib/Socialtext/EmailReceiver/Base.pm:184 lib/Socialtext/EmailReceiver/Base.pm:190 lib/Socialtext/PageRevision.pm:474 lib/Socialtext/UserPreferencesPlugin.pm:143
+msgid "error.page-title-too-long"
+msgstr "在网址编码后，页面标题过长"
+
+#. (Socialtext::String::MAX_PAGE_ID_LEN)
+#: lib/Socialtext/WeblogPlugin.pm:478
+msgid "error.page-title-too-long=max-length"
+msgstr "页面标题太长；最大长度是 %1"
+
+#: lib/Socialtext/RtfExportPlugin.pm:61
+msgid "error.pages-for-export-required"
+msgstr "导出页面不能为空"
+
+#: lib/Socialtext/MassAdd.pm:76
+msgid "error.parse-csv-header"
+msgstr "无法解析 CSV 标头信息，处理中止。"
+
+#: lib/Socialtext/MassAdd.pm:116
+msgid "error.parse-extra-fields"
+msgstr "含有多余字段无法解析，跳过此用户。"
+
+#: lib/Socialtext/MassAdd.pm:80
+msgid "error.parse-failed"
+msgstr "无法解析，跳过此用户。"
+
+#. ($missing)
+#: lib/Socialtext/MassAdd.pm:95
+msgid "error.parse-header-missing=fields"
+msgstr "无法解析，文件中缺失必要字段（%1）。文件标头必须包含字段列表。"
+
+#: lib/Socialtext/MassAdd.pm:109
+msgid "error.parse-missing-fields"
+msgstr "字段不足无法解析，跳过此用户。"
+
+#. ($email_address)
+#: lib/Socialtext/Handler/Authen.pm:634
+msgid "error.password-exists-for=email"
+msgstr "电子邮件地址 %1 已设有密码。"
+
+#: lib/Socialtext/Handler/Authen.pm:433 lib/Socialtext/Handler/Authen.pm:555
+msgid "error.password-mismatch"
+msgstr "密码不匹配。"
+
+#: lib/Socialtext/User.pm:924 lib/Socialtext/User/Base.pm:263
+msgid "error.password-too-short"
+msgstr "密码必须至少由 6 个字符组成。"
+
+#: lib/Socialtext/PdfExportPlugin.pm:87
+msgid "error.pdf-conversion-failed"
+msgstr "错误：<pre>无法转换为 PDF</pre>"
+
+#. ($post_url, $response->status_line)
+#: lib/Socialtext/Appliance/PhoneHome.pm:104
+msgid "error.phone-home=url,response"
+msgstr "不能发送设备用户报告数据至“%1”：%2"
+
+#: lib/Socialtext/CLI.pm:345
+msgid "error.plugin-required"
+msgstr "必须指定一个插件。"
+
+#: lib/Socialtext/Appliance/Model/Setup.pm:172
+msgid "error.private-and-public-key-required-for-captcha"
+msgstr "必须设置私钥和公钥方可开启验证码"
+
+#: lib/Socialtext/Handler/Authen.pm:368
+msgid "error.registration-disabled"
+msgstr "注册号被停用。"
+
+#: lib/Socialtext/Handler/Base.pm:122 lib/Socialtext/Handler/ControlPanel.pm:52 lib/Socialtext/Rest.pm:62
+msgid "error.relogin"
+msgstr "登录会话已过期，请重新认证。"
+
+#: lib/Socialtext/Gadgets/Gallery.pm:230
+msgid "error.remove-account-widget"
+msgstr "移除帐户小工具出错。"
+
+#. (join ", ", @remove_errors)
+#: lib/Socialtext/Handler/ControlPanel.pm:372
+msgid "error.remove-auw-failed=wikis"
+msgstr "无法开放下列工作区给全体用户：%1"
+
+#. ($user->username, $indirect_role->name, $thing->name)
+#. ($thingy->display_name, $indirect_role->name, $container->name,)
+#: lib/Socialtext/CLI.pm:1439 lib/Socialtext/CLI.pm:1632
+msgid "error.remove-indirect=name,role,container"
+msgstr "在此群组中 %1 是 %3 的 %2，不能被直接移除。"
+
+#: lib/Socialtext/Gadgets/Gallery.pm:200
+msgid "error.remove-non-account-widget"
+msgstr "不能永久删除非帐户小工具。"
+
+#. ($account->name)
+#: lib/Socialtext/CLI.pm:1527
+msgid "error.remove-primary=account"
+msgstr "%1 为群组的主要帐户，不能解除成员资格。"
+
+#: lib/Socialtext/Gadgets/Gallery.pm:197
+msgid "error.remove-socialtext-widget"
+msgstr "不能删除 Socialtext 的小工具。"
+
+#: lib/Socialtext/CLI.pm:1405
+msgid "error.remove-user-primary-account"
+msgstr "无法从主帐户删除用户"
+
+#: lib/Socialtext/UserSettingsPlugin.pm:237
+msgid "error.removing-last-admin"
+msgstr "不能取消最后管理员的权限。"
+
+#: lib/Socialtext/Hub.pm:189
+msgid "error.request"
+msgstr "请求出错"
+
+#. ($self->{command},            join(' ', @cli_entities)
+#: lib/Socialtext/CLI.pm:1168
+msgid "error.required=command,entity,collection"
+msgstr "命令（%1）必须指定一个 %2 和一个 %3。"
+
+#. (ucfirst Socialtext::Data::humanize_column_name($field)
+#: lib/Socialtext/Group/Factory.pm:485 lib/Socialtext/User/Factory.pm:416
+msgid "error.required=field"
+msgstr "%1 是必填项。"
+
+#. ($display_name)
+#: lib/Socialtext/PageRevision.pm:466
+msgid "error.reserved-name=page"
+msgstr "“%1” 已被注册。请另选其它名字。"
+
+#. ($name)
+#: lib/Socialtext/Workspace.pm:755
+msgid "error.reserved-name=wiki"
+msgstr "“%1”是已注册的工作区名，不能使用。"
+
+#: lib/Socialtext/Handler/Authen.pm:341
+msgid "error.reset-ldap-password"
+msgstr "如果您的密码保存在组织目录，Socialtext 管理员无法帮您重设密码。"
+
+#: lib/Socialtext/Gadgets/Gallery.pm:277
+msgid "error.restore-account-widget"
+msgstr "恢复帐户小工具出错。"
+
+msgid "error.restore-failed=log-file"
+msgstr "恢复失败 – 检查 %1"
+
+msgid "error.restore-failed=restore-id"
+msgstr "恢复 %1 失败..."
+
+#: lib/Socialtext/CLI.pm:1047
+msgid "error.restriction-required"
+msgstr "请指定限制类型。"
+
+#. ($p{name}, $p{cur_role}->display_name, $p{acct_name})
+#: lib/Socialtext/CLI.pm:1276
+msgid "error.role-exists=user,role,account"
+msgstr "%1 已是 %3 帐户的 %2"
+
+#. ($p{name}, $p{cur_role}->display_name, $p{ws_name})
+#: lib/Socialtext/CLI.pm:1367
+msgid "error.role-exists=user,role,wiki"
+msgstr "%1 已是 %3 工作区的 %2"
+
+#: lib/Socialtext/Appliance/Model/Setup.pm:356
+msgid "error.saving-system-time-to-hardware-clock"
+msgstr "保存系统时间至硬件时钟时发生错误"
+
+#. ($new_ts)
+#: lib/Socialtext/Appliance/Model/Setup.pm:309
+msgid "error.saving-timeserver-to-appliance-configuration=new-ts"
+msgstr "未能将时间服务器 %1 保存至设备配置中"
+
+#: lib/Socialtext/Query/Wafl.pm:76
+msgid "error.search-too-general"
+msgstr "您的搜索字词过于笼统。请添加更多相关信息。"
+
+#. ($search_results->{hits})
+#: lib/Socialtext/Lite.pm:304
+msgid "error.search-too-general=hits"
+msgstr "您的搜索字词过于笼统。%1 个页面和或附件符合搜索，请添加更多相关信息。"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:567
+msgid "error.self-delete"
+msgstr "无法删除本人"
+
+#. ($ws_name)
+#. ($target_ws_name)
+#: lib/Socialtext/Handler/Authen.pm:308 lib/Socialtext/Handler/Authen.pm:402
+msgid "error.self-join-disabled=wiki"
+msgstr "自行加入群组已停用"
+
+#. ($err)
+#: lib/Socialtext/Appliance/Model/Setup.pm:224
+msgid "error.set-authentication-token-limits=message"
+msgstr "设置认证所采用的限制 %1 时发生错误"
+
+#. ($err)
+#: lib/Socialtext/Appliance/Model/Setup.pm:182
+msgid "error.set-captcha=message"
+msgstr "设置验证码时发生错误：%1"
+
+#. ($err)
+#: lib/Socialtext/Appliance/Model/Setup.pm:265
+msgid "error.set-desktop-update=message"
+msgstr "设置桌面更新时发生错误：%1"
+
+#. ($err)
+#: lib/Socialtext/Appliance/Model/Setup.pm:122
+msgid "error.set-login-message=message"
+msgstr "设置登录信息时发生错误：%1"
+
+#. ($err)
+#: lib/Socialtext/Appliance/Model/Setup.pm:388
+msgid "error.set-proxy-server=message"
+msgstr "设置代理服务器时发生错误：%1"
+
+#. ($err)
+#: lib/Socialtext/Handler/ControlPanel.pm:266
+msgid "error.set-self-register=message"
+msgstr "设置自注册时发生错误：%1"
+
+#. ($err)
+#: lib/Socialtext/Appliance/Model/Setup.pm:142
+msgid "error.set-signals-only=message"
+msgstr "设置讯息专用设备时发生错误：%1"
+
+#. ($err)
+#: lib/Socialtext/Appliance/Model/Setup.pm:160
+msgid "error.set-signals-size-limit=message"
+msgstr "设置讯息长度限制时发生错误：%1"
+
+#. ($err)
+#: lib/Socialtext/Appliance/Model/Setup.pm:251
+msgid "error.set-support-href=message"
+msgstr "设置支持网址时发生错误：%1"
+
+#: lib/Socialtext/Account.pm:1126
+msgid "error.set-system-account"
+msgstr "无法在帐户创建后更新is_system_created字段"
+
+#: lib/Socialtext/Account.pm:1122
+msgid "error.set-system-account-name"
+msgstr "无法修改系统创建帐户的名字"
+
+#: lib/Socialtext/User/Factory.pm:340
+msgid "error.set-system-user-email"
+msgstr "无法修改系统创建用户的邮箱"
+
+#: lib/Socialtext/User/Factory.pm:336
+msgid "error.set-system-user-name"
+msgstr "无法修改系统创建用户的名字"
+
+#: lib/Socialtext/CLI.pm:428
+msgid "error.show-pref-for-multiple-plugins"
+msgstr "show-plugin-prefs 只用于单个插件"
+
+#. ($computed_max_size)
+#: lib/Socialtext/Rest/Signals.pm:626
+msgid "error.signal-too-long=max-length"
+msgstr "讯息长度限制为 %1，请编辑您的讯息"
+
+#: lib/Socialtext/Appliance/Model/Setup.pm:151
+msgid "error.signals-maximum-size-not-positive-integer"
+msgstr "讯息最大长度须为正整数"
+
+#: lib/Socialtext/WorkspacesUIPlugin.pm:290
+msgid "error.skin-upload-failed"
+msgstr "一个自定义的主题文件没有被上传。"
+
+#: lib/Socialtext/PageRevision.pm:478
+msgid "error.store-revision"
+msgstr "不能保存页面修订"
+
+#. ($ts)
+#: lib/Socialtext/Appliance/Model/Setup.pm:348
+msgid "error.synchronizing-with-timeserver=ts"
+msgstr "与时间服务器 %1 同步时发生错误"
+
+#. ($new_ts)
+#: lib/Socialtext/Appliance/Model/Setup.pm:300
+msgid "error.testing-timeserver=new-ts"
+msgstr "测试时间服务器 %1 时发生错误"
+
+msgid "error.timeline-identifier-must-be-eight-hex-digits-or-latest"
+msgstr "时间线标识符必须是八位十六进制数字或“latest”"
+
+#: lib/Socialtext/DeletePagePlugin.pm:53
+msgid "error.undelete-page-one-revision"
+msgstr "不能恢复只带有一次修订的页面。返回首页。"
+
+#: lib/Socialtext/Gadgets/Gadget/XML.pm:35
+msgid "error.unknown"
+msgstr "未知错误"
+
+#. ($type)
+#: lib/Socialtext/CLI.pm:1054
+msgid "error.unknown-restriction=type"
+msgstr "未知限制类型：“%1”"
+
+#. ($file->{filename})
+#: lib/Socialtext/WorkspacesUIPlugin.pm:225
+msgid "error.unpack=file"
+msgstr "不能从 %1 中提取文件"
+
+#. ($key)
+#: lib/Socialtext/CLI.pm:716
+msgid "error.update-external=field"
+msgstr "个人资料“%1”是外部来源，无法更新。"
+
+#. ($field)
+#: lib/Socialtext/MassAdd.pm:319
+msgid "error.update-failed=field"
+msgstr "个人资料“%1”无法更新。"
+
+#. ($key)
+#: lib/Socialtext/CLI.pm:709
+msgid "error.update-hidden=field"
+msgstr "个人资料“%1”被隐藏，无法更新。"
+
+#. ($name)
+#: lib/Socialtext/CLI.pm:2098
+msgid "error.update-permission=group"
+msgstr "无法更新 %1 群组的权限。"
+
+#: lib/Socialtext/CLI.pm:1189 lib/Socialtext/CLI.pm:1483
+msgid "error.update-remote-group"
+msgstr "不能通过 Socialtext 更新远程群组。"
+
+#: lib/Socialtext/CLI.pm:1822
+msgid "error.update-remote-password"
+msgstr "不能通过 Socialtext 更新远程密码。"
+
+#: lib/Socialtext/CLI.pm:635
+msgid "error.update-remote-user"
+msgstr "不能通过 Socialtext 更新远程用户。"
+
+msgid "error.updating-group-exists=name"
+msgstr "更新群组出错：%1已经存在。"
+
+msgid "error.updating-group=name"
+msgstr "更新群组出错：%1"
+
+#: lib/Socialtext/Appliance/Model/SupportTarball.pm:54
+msgid "error.upload-support-tarball-already-started"
+msgstr "上传已经开始!"
+
+#. ($err)
+#: lib/Socialtext/Handler/ControlPanel.pm:299
+msgid "error.user-can-create-groups=message"
+msgstr "“用户创建群组”设定出错：%1"
+
+msgid "error.user-cannot-access-account"
+msgstr "用户无权进入该帐户"
+
+msgid "error.user-cannot-manage-associated-wikis-for-group"
+msgstr "用户不能管理该群组关联的工作区"
+
+#. ($email_address)
+#: lib/Socialtext/Handler/Authen.pm:421
+msgid "error.user-exists=email"
+msgstr "此邮箱已被注册。"
+
+#. (Socialtext::Data::humanize_column_name($field)
+#: lib/Socialtext/User/Factory.pm:436
+msgid "error.user-exists=field,value"
+msgstr "字段 %1（%2）已被占用。"
+
+#. ($self->{uri})
+#: lib/Socialtext/Handler/ControlPanel.pm:1758
+msgid "error.user-id-required=uri"
+msgstr "必须提供用户 ID 到此网址（%1）"
+
+msgid "error.user-is-not-group-admin"
+msgstr "用户非群组管理员"
+
+msgid "error.user-not-authorized"
+msgstr "用戶未認證"
+
+#. ($current_role->display_name, $group->display_name)
+#: lib/Socialtext/CLI.pm:1195
+msgid "error.user-role-exists=role,group"
+msgstr "用户在 %2 群组具有“%1”身份"
+
+msgid "error.valid-account-for-this-wiki-required"
+msgstr "你必须为该工作区选定一个有效的帐户。"
+
+#. ($username)
+#: lib/Socialtext/Challenger/OpenToken.pm:133
+msgid "error.valid-token-for-unknown=user"
+msgstr "令牌有效，但用户“%1”未被识别。"
+
+#: lib/Socialtext/WikiwygPlugin.pm:659
+msgid "error.validation-called-outside-validator"
+msgstr "验证子程序调用外部验证器"
+
+msgid "error.weeks-to-retain-backups-not-integer"
+msgstr "备份的保留周数不是整数"
+
+msgid "error.weeks-to-retain-backups-out-of-range"
+msgstr "备份的保留周数超出范围"
+
+#: lib/Socialtext/Gadgets/Gallery.pm:144
+msgid "error.widget-exists-in-gallery"
+msgstr "该小工具已存在于此工具库中。"
+
+#: lib/Socialtext/Rest/Gadgets/Gadget.pm:23 lib/Socialtext/Rest/Gadgets/Gallery.pm:21
+msgid "error.widget-forbidden"
+msgstr "您已失去所有帐户的管理员权限。"
+
+#. ($p->{name})
+#: lib/Socialtext/Workspace.pm:622
+msgid "error.wiki-email-alias-exists=name"
+msgstr "选择的工作空间名 %1，已被作为邮箱别名被占用。"
+
+msgid "error.wiki-exists"
+msgstr "工作区已存在。"
+
+#. ($p->{name})
+#: lib/Socialtext/Workspace.pm:626
+msgid "error.wiki-exists=name"
+msgstr "选择的工作空间名 %1，已被占用。"
+
+#. ($username . $workspace->title()
+#: lib/Socialtext/Challenger/NTLM.pm:53
+msgid "error.wiki-forbidden=user,wiki"
+msgstr "用户 %1 未得到查看 %2 工作区的认证"
+
+#. ($self->{uri})
+#: lib/Socialtext/Handler/ControlPanel.pm:1773
+msgid "error.wiki-id-required=uri"
+msgstr "必须指定一个workspace_id到网址（%1）。"
+
+#: lib/Socialtext/Workspace.pm:600
+msgid "error.wiki-name-required"
+msgstr "工作区名字是必填字段"
+
+#. ($self->{uri})
+#: lib/Socialtext/Handler/ControlPanel.pm:1746
+msgid "error.wiki-required=uri"
+msgstr "必须指定一个工作区到网址（%1）"
+
+#: lib/Socialtext/Workspace.pm:611
+msgid "error.wiki-title-required"
+msgstr "工作区题目是必填字段"
+
+#: lib/Socialtext/Workspace.pm:714
+msgid "error.wiki-title-too-long"
+msgstr "工作区标题网址太长"
+
+#: lib/Socialtext/EmailNotifyPlugin.pm:35 lib/Socialtext/WatchlistPlugin.pm:47
+msgid "every.15minutes"
+msgstr "每15分钟"
+
+#: lib/Socialtext/EmailNotifyPlugin.pm:39 lib/Socialtext/WatchlistPlugin.pm:51
+msgid "every.3days"
+msgstr "每3天"
+
+#: lib/Socialtext/EmailNotifyPlugin.pm:34 lib/Socialtext/WatchlistPlugin.pm:46
+msgid "every.5minutes"
+msgstr "每5分钟"
+
+#: lib/Socialtext/EmailNotifyPlugin.pm:37 lib/Socialtext/WatchlistPlugin.pm:49
+msgid "every.6hours"
+msgstr "每6小时"
+
+#: lib/Socialtext/EmailNotifyPlugin.pm:38 lib/Socialtext/WatchlistPlugin.pm:50
+msgid "every.day"
+msgstr "每天"
+
+#: lib/Socialtext/EmailNotifyPlugin.pm:36 lib/Socialtext/WatchlistPlugin.pm:48
+msgid "every.hour"
+msgstr "每小时"
+
+#: lib/Socialtext/EmailNotifyPlugin.pm:33 lib/Socialtext/WatchlistPlugin.pm:45
+msgid "every.minute"
+msgstr "每分钟"
+
+#: lib/Socialtext/EmailNotifyPlugin.pm:40 lib/Socialtext/WatchlistPlugin.pm:52
+msgid "every.week"
+msgstr "每周"
+
+#. ($arg)
+#: lib/Socialtext/l10n.pm:25 lib/Socialtext/l10n.pm:32
+msgid "example.string"
+msgstr "字符串 %1"
+
+#: lib/Socialtext/Syndicate/Feed.pm:140
+msgid "feed.attachments:"
+msgstr "附件："
+
+#. ($user->best_full_name)
+#: lib/Socialtext/Rest/Signals/Feed.pm:89
+msgid "feed.avatar=user"
+msgstr "%1 的头像"
+
+#. ($create_time)
+#: lib/Socialtext/Syndicate/Feed.pm:120
+msgid "feed.created=time"
+msgstr "创建于：%1"
+
+#: lib/Socialtext/SyndicatePlugin.pm:144
+msgid "feed.number-of-posts?"
+msgstr "在订阅输出中显示多少博客？"
+
+#. ($self->hub->current_workspace->title, $query)
+#: lib/Socialtext/SyndicatePlugin.pm:385
+msgid "feed.search=wiki,query"
+msgstr "%1：搜索 %2"
+
+#. ($self->hub->main->product_version)
+#: lib/Socialtext/SyndicatePlugin.pm:272
+msgid "feed.socialtext-wiki=version"
+msgstr "Socialtext 工作区 v%1"
+
+#. (join( ", ", @tags)
+#: lib/Socialtext/Syndicate/Feed.pm:114
+msgid "feed.tags=tags"
+msgstr "标签：%1"
+
+#. ($creator, $editor)
+#: lib/Socialtext/Syndicate/Feed.pm:69
+msgid "feed.updated-by=creator,editor"
+msgstr "%1（由 %2 更新）"
+
+#. ($self->hub->current_workspace->title, $user->best_full_name)
+#: lib/Socialtext/SyndicatePlugin.pm:392
+msgid "feed.watchlist=wiki,user"
+msgstr "%1：关注 %2"
+
+#: lib/Socialtext/AttachmentsUIPlugin.pm:187
+msgid "file.all"
+msgstr "所有文件"
+
+msgid "file.size=bytes"
+msgstr "%1 字节"
+
+msgid "file.size=kb"
+msgstr "%1K"
+
+msgid "file.size=mb"
+msgstr "%1M"
+
+#: lib/Socialtext/Handler/Authen.pm:79
+msgid "free50.account"
+msgstr "50 个免费 Socialtext 帐户"
+
+#: lib/Socialtext/Handler/Authen.pm:77 lib/Socialtext/Handler/Authen.pm:78
+msgid "free50.setup"
+msgstr "50个免费帐户"
+
+#. ($query)
+#: lib/Socialtext/GoogleSearchPlugin.pm:92
+msgid "google.for=query"
+msgstr "搜索“%1”"
+
+#. ($self->permission_set)
+#: lib/Socialtext/Group/Homunculus.pm:215
+msgid "group.acl-"
+msgstr "类型："
+
+#. ($group->driver_group_name,            $opts{account}->name,)
+#: lib/Socialtext/CLI.pm:3616
+msgid "group.created=name,account"
+msgstr "%1 群组已被创建在帐户 %2 中。"
+
+#. ($group->driver_group_name,            $group->group_id,)
+#: lib/Socialtext/CLI.pm:3574
+msgid "group.created=name,id"
+msgstr "%1 群组已创建（群组ID：%2）"
+
+#. ($gid)
+#: lib/Socialtext/CLI.pm:1216
+msgid "group.deleted=id"
+msgstr "已删除群组ID：%1"
+
+#. ($ws->name)
+#: lib/Socialtext/Pluggable/Plugin/Groups.pm:149
+msgid "group.exporting=wiki"
+msgstr "正在导出工作区“%1”的全部群组..."
+
+#. ($ws->name)
+#: lib/Socialtext/Pluggable/Plugin/Groups.pm:171
+msgid "group.importing=wiki"
+msgstr "正在为“%1”工作区导入全部群组..."
+
+#. ($account->name)
+#: lib/Socialtext/Handler/ControlPanel.pm:1499
+msgid "group.joined=account"
+msgstr "群组现加入帐户 %1"
+
+#. ($group->display_name, $role->name, $workspace->name)
+#: lib/Socialtext/Handler/ControlPanel.pm:1437
+msgid "group.joined=group,role,wiki"
+msgstr "群组“%1”现是 %3 工作区的 %2"
+
+#. ($search_term)
+#: lib/Socialtext/Pluggable/Plugin/Groups.pm:351
+msgid "group.list=query"
+msgstr "群组名和描述符合“%1”"
+
+#. ($user_count, $ws_count)
+#: lib/Socialtext/Handler/ControlPanel.pm:2309
+msgid "info.added-members=user-count,wiki"
+msgstr "恭喜您！您已成功添加 %1 位用户到 %2 个工作区。他们将会收到邀请到相应工作区的信息。"
+
+#: lib/Socialtext/CLI.pm:1407
+msgid "info.change-primary-account:"
+msgstr "这么做，第一个指定给他们的帐户就是一个新的主帐户："
+
+#: lib/Socialtext/Pluggable/Plugin/Widgets.pm:257
+msgid "info.container-exists"
+msgstr "容器已存在...跳过..."
+
+#: lib/Socialtext/Handler/ControlPanel.pm:1623
+msgid "info.created-ldap-group"
+msgstr "群组已被添加，正在刷新用户列表..."
+
+#. ($count,            $link)
+#: lib/Socialtext/Handler/ControlPanel.pm:2346
+msgid "info.created-wiki=user-count,link"
+msgstr "恭喜您！您已成功创建一个包含 %1 位用户的工作区。他们将会收到链接到 %2 的邀请信息。"
+
+#: lib/Socialtext/CLI.pm:1411
+msgid "info.deactivated-user:"
+msgstr "如果您想移除用户的系统访问权限，请按如下操作："
+
+#. ($from_address)
+#: lib/Socialtext/Handler/Authen.pm:351
+msgid "info.email-confirmation=from"
+msgstr "为确保您能收到来自 %1 的邮件，请将 %1 添加到通讯录或安全列表中。"
+
+#: lib/Socialtext/Handler/Authen.pm:643
+msgid "info.email-sent-for-password-change"
+msgstr "密码变更电子邮件已发出。请依照该邮件中的链接重设您的密码。"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:998
+msgid "info.external-field-update"
+msgstr "此字段的内容会在用户数据刷新后自动随着外部资料更新。"
+
+#: lib/Socialtext/Gadgets/Container/ForbiddenProfile.pm:65
+msgid "info.forbidden-profile"
+msgstr "注意：不和其他人分享群组，则无法查看他们的个人资料。"
+
+#. ($wafl, $user->primary_account->name)
+#: lib/Socialtext/User/Restrictions/email_confirmation.pm:136
+msgid "info.just-joined=user,group!"
+msgstr "大家好！%1 刚加入 %2 群组。"
+
+#. ($self->driver_name)
+#: lib/Socialtext/User.pm:855
+msgid "info.login-admin=driver"
+msgstr "登录信息由目录管理员管理。"
+
+#: lib/Socialtext/Handler/Authen.pm:148 lib/Socialtext/Lite.pm:130
+msgid "info.login-disabled"
+msgstr "登录名已被停用"
+
+#: lib/Socialtext/User/Restrictions/password_change.pm:57
+msgid "info.reset-password"
+msgstr "请根据以下说明更改您的Socialtext密码"
+
+#: lib/Socialtext/BreadCrumbsPlugin.pm:69
+msgid "info.unplug-breadcrumbs"
+msgstr "点击此按钮保存最近浏览页面为脱机页面。"
+
+#. ($self->hub->tiddly->default_count)
+#: lib/Socialtext/HomepagePlugin.pm:79 lib/Socialtext/RecentChangesPlugin.pm:96
+msgid "info.unplug-recent=count"
+msgstr "点击此按钮保存最新 %1 页面为脱机页面。"
+
+#: lib/Socialtext/SearchPlugin.pm:178
+msgid "info.unplug-search"
+msgstr "点击此按钮保存这次搜索页面为脱机页面。"
+
+#: lib/Socialtext/WatchlistPlugin.pm:215
+msgid "info.unplug-watchlist"
+msgstr "点击此按钮保存当前页面为脱机页面。"
+
+#. ($html_escaped_category)
+#: lib/Socialtext/CategoryPlugin.pm:177
+msgid "info.unplug=tag"
+msgstr "点击此按钮保存标记为 %1 的页面为脱机页面。"
+
+#. ($name)
+#. ($self->account->name)
+#: lib/Socialtext/AccountInvitation.pm:26 lib/Socialtext/GroupInvitation.pm:28
+msgid "invite.group=name"
+msgstr "我邀请您加入 %1 群组"
+
+#. ($self->hub->current_workspace->title)
+#: lib/Socialtext/UserSettingsPlugin.pm:530
+msgid "invite.request=wiki"
+msgstr "请求邀请新用户到 %1 工作区"
+
+#. ($workspace->title)
+#: lib/Socialtext/WorkspaceInvitation.pm:126 lib/Socialtext/WorkspaceInvitation.pm:94
+msgid "invite.wiki=title"
+msgstr "我邀请您加入 %1 工作区"
+
+#. ($_[0]->jobclass)
+#: lib/Socialtext/Rest/JobsByClass.pm:20
+msgid "job.all=class"
+msgstr "所有 %1 工作"
+
+#. ($user->username, $new_locale)
+#: lib/Socialtext/CLI.pm:1895
+msgid "lang.changed=user,locale"
+msgstr "%1 区域现已更新为 %2"
+
+msgid "lang.en"
+msgstr "英文"
+
+msgid "lang.fr-ca"
+msgstr "法文 – 加拿大"
+
+msgid "lang.zh-cn"
+msgstr "中文 – 简体"
+
+msgid "lang.zh-tw"
+msgstr "中文 – 繁体"
+
+#: lib/Socialtext/RecentChangesPlugin.pm:42
+msgid "last.24hours"
+msgstr "最近24小时"
+
+#: lib/Socialtext/RecentChangesPlugin.pm:43
+msgid "last.2days"
+msgstr "最近2天"
+
+#: lib/Socialtext/RecentChangesPlugin.pm:46
+msgid "last.2weeks"
+msgstr "最近2周"
+
+#: lib/Socialtext/RecentChangesPlugin.pm:44
+msgid "last.3days"
+msgstr "最近3天"
+
+#: lib/Socialtext/RecentChangesPlugin.pm:47
+msgid "last.month"
+msgstr "上个月"
+
+#: lib/Socialtext/RecentChangesPlugin.pm:45
+msgid "last.week"
+msgstr "上周"
+
+#: lib/Socialtext/Formatter/Phrase.pm:270 lib/Socialtext/Formatter/Phrase.pm:332
+msgid "link.external"
+msgstr "外部链接"
+
+#: lib/Socialtext/Pages.pm:212
+msgid "link.incipient"
+msgstr "点击新建页面"
+
+#. ($workspace_name)
+#: lib/Socialtext/Formatter/WaflPhrase.pm:642
+msgid "link.interwiki"
+msgstr "内部工作区链接：%1"
+
+#: lib/Socialtext/Formatter/Phrase.pm:269 lib/Socialtext/Formatter/Phrase.pm:331
+msgid "link.irc"
+msgstr "进入IRC会话"
+
+#: lib/Socialtext/Formatter/WaflPhrase.pm:638
+msgid "link.section"
+msgstr "章节链接"
+
+msgid "loc.settings"
+msgstr "语言设定"
+
+msgid "loc.system-default=lang"
+msgstr "%1（默认）"
+
+#. ($address)
+#: lib/Socialtext/Handler/Authen.pm:531
+msgid "login.confirmed=email"
+msgstr "邮箱 %1 已确认，请登陆。"
+
+#. ($address, $targetws->title)
+#: lib/Socialtext/Handler/Authen.pm:528
+msgid "login.confirmed=email,wiki"
+msgstr "邮箱 %1 已确认，并且已加入工作区 %2，请登陆。"
+
+#: lib/Socialtext/Lite.pm:134
+msgid "login.disabled"
+msgstr "登录控制面板"
+
+#: lib/Socialtext/Handler/Authen.pm:206
+msgid "login.email-address"
+msgstr "邮件"
+
+#: lib/Socialtext/Authen.pm:37
+msgid "login.email:"
+msgstr "登录邮箱："
+
+#: lib/Socialtext/Authen.pm:38
+msgid "login.name:"
+msgstr "用户名"
+
+#: lib/Socialtext/Lite.pm:111
+msgid "login.title"
+msgstr "Socialtext登录"
+
+#: lib/Socialtext/Handler/Authen.pm:207
+msgid "login.username"
+msgstr "用户名"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:2004
+msgid "nav.accounts"
+msgstr "帐户"
+
+msgid "nav.activities"
+msgstr "活动"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:2176
+msgid "nav.groups"
+msgstr "群组"
+
+msgid "nav.likes"
+msgstr "哪些赞"
+
+#: lib/Socialtext/RecentChangesPlugin.pm:268
+msgid "nav.news"
+msgstr "最新更动"
+
+#. ($self->target_workspace)
+#: lib/Socialtext/RecentChangesPlugin.pm:266
+msgid "nav.news=wiki"
+msgstr "工作区 %1 的更新"
+
+#: lib/Socialtext/Pluggable/Plugin/People.pm:71 lib/Socialtext/Pluggable/Plugin/People.pm:82
+msgid "nav.people"
+msgstr "人员"
+
+#: lib/Socialtext/Pluggable/Plugin/Signals.pm:141
+msgid "nav.private-message"
+msgstr "私人讯息"
+
+#: lib/Socialtext/SyndicatePlugin.pm:378 lib/Socialtext/WeblogPlugin.pm:224 lib/Socialtext/WeblogPlugin.pm:279 lib/Socialtext/WeblogPlugin.pm:332 lib/Socialtext/WeblogPlugin.pm:335
+msgid "nav.recent-changes"
+msgstr "近期更改"
+
+#. ($arguments)
+#: lib/Socialtext/CategoryPlugin.pm:540
+msgid "nav.recent-changes=tag"
+msgstr "标签 %1 的最近更新"
+
+#. ($arguments, $self->target_workspace)
+#: lib/Socialtext/CategoryPlugin.pm:538
+msgid "nav.recent-changes=tag,wiki"
+msgstr "%2 工作区中标签 %1 的最近更新"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:1934
+msgid "nav.settings"
+msgstr "设置"
+
+#: lib/Socialtext/Pluggable/Plugin/Signals.pm:119 lib/Socialtext/Pluggable/Plugin/Signals.pm:129 lib/Socialtext/Pluggable/Plugin/Signals.pm:140 lib/Socialtext/Pluggable/Plugin/Signals.pm:507
+msgid "nav.signals"
+msgstr "讯息"
+
+#. ($tag)
+#. ($category)
+#: lib/Socialtext/CategoryPlugin.pm:167 lib/Socialtext/Lite.pm:366
+msgid "nav.tag=tag"
+msgstr "标签：%1"
+
+#: lib/Socialtext/Lite.pm:398
+msgid "nav.tags"
+msgstr "标签"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:2161
+msgid "nav.users"
+msgstr "用户"
+
+#: lib/Socialtext/WatchlistPlugin.pm:208
+msgid "nav.watchlist"
+msgstr "关注列表"
+
+#. ('<b><a href="/st/profile">' . $self->user->guess_real_name . '</a></b>',        '<a href="/st/edit_profile">' . $edit_link . '</a>')
+#: lib/Socialtext/Pluggable/Plugin/People.pm:181
+msgid "nav.welcome=user,edit-link"
+msgstr "欢迎 %1 %2"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:1920
+msgid "nav.wikis"
+msgstr "工作区"
+
+#: lib/Socialtext/FavoritesPlugin.pm:25
+msgid "notepad.set-title"
+msgstr "<p> 您可以在这里设置您想在“您的记事本”面板上看到的页面标题。</p> <p>有些人选择一个已存在的页面，有些人选择新的页面，如“Rupert Jee的记事本”</p>"
+
+#. ($self->hub->current_user->best_full_name)
+#: lib/Socialtext/FavoritesPlugin.pm:31
+msgid "notepad.title=user"
+msgstr "%1 的记事本"
+
+#. ($self->hub->current_workspace->name)
+#: lib/Socialtext/OpenIdPlugin.pm:121
+msgid "openid.invite=wiki"
+msgstr "加入 %1 的邀请"
+
+#: lib/Socialtext/RecentChangesPlugin.pm:177
+msgid "page.all"
+msgstr "所有页面"
+
+#: lib/Socialtext/BacklinksPlugin.pm:162
+msgid "page.backlinks:"
+msgstr "此页面有这些反向链接："
+
+#. ($page->name)
+#: lib/Socialtext/BacklinksPlugin.pm:64
+msgid "page.backlinks=page"
+msgstr "所有“%1”的反向链接"
+
+#: lib/Socialtext/BreadCrumbsPlugin.pm:67
+msgid "page.breadcrumbs"
+msgstr "最近浏览页面"
+
+#. ($last_changes_time, $changed_total, $total)
+#: lib/Socialtext/RecentChangesPlugin.pm:182
+msgid "page.changes=time,changed,total"
+msgstr "%1更新（%2 个页面，共 %3 个页面）"
+
+#. ($edit_summary, $page_link, $workspace->title)
+#: lib/Socialtext/Page.pm:404
+msgid "page.commented=summary,page,wiki"
+msgstr "“%1”（在 %3 中评论 %2）"
+
+#. ($rev->editor->email_address, $utc_date)
+#: lib/Socialtext/Page.pm:734
+msgid "page.contributed-by=user,date"
+msgstr "由 {user: %1} 于 {date: %2} 发表"
+
+#. ($page_link, $workspace->title)
+#: lib/Socialtext/Page.pm:406
+msgid "page.default-summary=page,wiki"
+msgstr "编辑了 %2 的页面 %1"
+
+#. ($page->name)
+#: lib/Socialtext/DeletePagePlugin.pm:77
+msgid "page.deleted=name"
+msgstr "已删除“%1”"
+
+#. ($edit_summary, $page_link, $workspace->title)
+#: lib/Socialtext/Page.pm:405
+msgid "page.edited=summary,page,wiki"
+msgstr "“%1”（在 %3 中编辑 %2）"
+
+#: lib/Socialtext/BacklinksPlugin.pm:168
+msgid "page.linked-from:"
+msgstr "这个页面链接来自："
+
+#. ($ws->title)
+#: lib/Socialtext/CLI.pm:2751
+msgid "page.list-locked=wiki:"
+msgstr "在“%1”工作区中锁定页面："
+
+#. ($page->name, $workspace->title()
+#: lib/Socialtext/CLI.pm:2709
+msgid "page.locked=name,wiki"
+msgstr "“%2”工作区中的“%1”页面已被锁定。"
+
+#: lib/Socialtext/Page.pm:509
+msgid "page.locking"
+msgstr "正在锁定页面。"
+
+#: lib/Socialtext/BacklinksPlugin.pm:177
+msgid "page.no-backlinks"
+msgstr "还没有页面链接到此页面。"
+
+#. ($ws->title)
+#: lib/Socialtext/CLI.pm:2757
+msgid "page.nothing-locked=wiki"
+msgstr "工作区 %1 没有锁定页面。"
+
+#: lib/Socialtext/BacklinksPlugin.pm:106 lib/Socialtext/BacklinksPlugin.pm:80
+msgid "page.orphaned"
+msgstr "孤立页面"
+
+#. ($title, $hub->current_workspace()
+#: lib/Socialtext/CLI.pm:2678
+msgid "page.purged=title,wiki"
+msgstr "已在工作区 %2 中清除 %1 页面。"
+
+#. ($new_page_title)
+#: lib/Socialtext/Page.pm:2036
+msgid "page.renamed=title"
+msgstr "页面重命名为 [%1]"
+
+#. ($revision->revision_num)
+#. ($pretty_revision)
+#: lib/Socialtext/RevisionPlugin.pm:118 lib/Socialtext/RevisionPlugin.pm:252
+msgid "page.revision=revision"
+msgstr "版本%1"
+
+#: lib/Socialtext/Page.pm:745 lib/Socialtext/Syndicate/Feed.pm:122
+msgid "page.summary-comment"
+msgstr "（注释）"
+
+#: lib/Socialtext/Pluggable/Plugin/SocialCalc.pm:23
+msgid "page.type-spreadsheet"
+msgstr "电子表格"
+
+#: lib/Socialtext/Pluggable/Plugin/Default.pm:45
+msgid "page.type-wiki"
+msgstr "页面"
+
+#. ($page->name, $workspace->title()
+#: lib/Socialtext/CLI.pm:2715
+msgid "page.unlocked=name,wiki"
+msgstr "“%2”工作区中的“%1”页面已解锁。"
+
+#: lib/Socialtext/Page.pm:509
+msgid "page.unlocking"
+msgstr "正在解锁页面"
+
+#: lib/Socialtext/DisplayPlugin.pm:68 lib/Socialtext/PageRevision.pm:410
+msgid "page.untitled"
+msgstr "未命名页面"
+
+#. ($user->username, $new_password)
+#: lib/Socialtext/Handler/ControlPanel.pm:604
+msgid "pasword.changed=user,new-password"
+msgstr "用户 %1 密码已更改为“%2”。"
+
+#: lib/Socialtext/Handler/Authen.pm:82 lib/Socialtext/Handler/Authen.pm:83
+msgid "pasword.choose"
+msgstr "选择密码"
+
+#: lib/Socialtext/Pluggable/Plugin/People.pm:271
+msgid "people.all"
+msgstr "所有成员"
+
+#. ($tag)
+#: lib/Socialtext/Pluggable/Plugin/People.pm:271
+msgid "people.tagged=tag"
+msgstr "标记为“%1”的所有成员"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:912
+msgid "plugin.disabled"
+msgstr "模块已停用。"
+
+#. ($_, $what)
+#: lib/Socialtext/CLI.pm:223
+msgid "plugin.disabled=plugin,container"
+msgstr "插件 %1 已在 %2 中停用。"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:911
+msgid "plugin.enabled"
+msgstr "模块已启用。"
+
+#. ($_, $what)
+#: lib/Socialtext/CLI.pm:221
+msgid "plugin.enabled=plugin,container"
+msgstr "插件 %1 已在 %2 中启用。"
+
+#. ($to_string)
+#: lib/Socialtext/CLI.pm:418
+msgid "pref.cleared=plugins"
+msgstr "%1 插件的选项已被清除。"
+
+#. ($object->class_title)
+#: lib/Socialtext/UserPreferencesPlugin.pm:64
+msgid "pref.for-class=title"
+msgstr "选项：%1"
+
+#. ($plugin, $account->name)
+#: lib/Socialtext/CLI.pm:436
+msgid "pref.for=plugin,account"
+msgstr "%2 帐户中 %1 插件的选项"
+
+#. ($plugin)
+#: lib/Socialtext/CLI.pm:437
+msgid "pref.for=plugin:"
+msgstr "%1 插件的选项："
+
+#: lib/Socialtext/UserPreferencesPlugin.pm:47
+msgid "pref.saved"
+msgstr "选项已保存"
+
+#. ($to_string)
+#: lib/Socialtext/CLI.pm:400
+msgid "pref.updated=plugins"
+msgstr "%1 插件的选项已更新。"
+
+#: lib/Socialtext/NewFormPagePlugin.pm:40
+msgid "profile.create"
+msgstr "创建您的档案"
+
+#. (shift->title)
+#: lib/Socialtext/Handler/ControlPanel.pm:1015
+msgid "profile.created-field=title"
+msgstr "已创建档案栏“%1”"
+
+#. ($field->title, $acct->name)
+#: lib/Socialtext/CLI.pm:3459
+msgid "profile.created-field=title,account"
+msgstr "已创建帐户“%2”的档案栏”%1”"
+
+#: lib/Socialtext/Pluggable/Plugin/People.pm:177
+msgid "profile.edit"
+msgstr "（编辑）"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:1005
+msgid "profile.field-hidden"
+msgstr "此字段在用户资料中可见。"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:1002
+msgid "profile.field-visible"
+msgstr "此字段在用户资料中隐藏。"
+
+#. ($user->username)
+#: lib/Socialtext/CLI.pm:750
+msgid "profile.hidden=user"
+msgstr "用户“%1”的资料已隐藏。"
+
+#: lib/Socialtext/Lite/People.pm:169
+msgid "profile.home-number"
+msgstr "家庭电话"
+
+#: lib/Socialtext/Account.pm:554
+msgid "profile.importing"
+msgstr "正在导入个人资料..."
+
+#: lib/Socialtext/Lite/People.pm:168
+msgid "profile.mobile-number"
+msgstr "移动电话"
+
+#. ($key, $val, $user->username,)
+#: lib/Socialtext/CLI.pm:725
+msgid "profile.set=field,value,user"
+msgstr "用户“%3”的个人资料“%1”设置为“%2”"
+
+#. (shift->title)
+#: lib/Socialtext/Handler/ControlPanel.pm:1026
+msgid "profile.updated=field"
+msgstr "更新个人资料字段“%1”"
+
+#. ($old_title, $acct->name)
+#: lib/Socialtext/CLI.pm:3478
+msgid "profile.updated=field,account"
+msgstr "帐户“%2”的个人资料“%1”已更新"
+
+#. ($user->username)
+#: lib/Socialtext/CLI.pm:738
+msgid "profile.visible=user"
+msgstr "用户“%1”的资料已显示。"
+
+#: lib/Socialtext/Lite/People.pm:167
+msgid "profile.work-number"
+msgstr "工作区编号"
+
+#. ($email_address)
+#: lib/Socialtext/Handler/Authen.pm:476
+msgid "register.confirmation-sent=email"
+msgstr "帐户确认邮件已发送至 %1。"
+
+#. ($user->username)
+#: lib/Socialtext/Handler/Authen.pm:351
+msgid "register.reset-password-sent=email"
+msgstr "帮助您修改密码的邮件已发送至 %1。"
+
+#. ($user->username)
+#: lib/Socialtext/Handler/ControlPanel.pm:1885
+msgid "report.dashboard-activity=user"
+msgstr "用户 %1 的活动"
+
+#. ($acct->name)
+#: lib/Socialtext/Handler/ControlPanel.pm:1870
+msgid "report.growth=account"
+msgstr "%1 帐户增长报告"
+
+#. ($w->name)
+#: lib/Socialtext/Handler/ControlPanel.pm:1862
+msgid "report.growth=wiki"
+msgstr "%1 工作区增长报告"
+
+#. ($user->username)
+#: lib/Socialtext/Handler/ControlPanel.pm:1881
+msgid "report.people-activity=user"
+msgstr "用户 %1 的活动"
+
+#. ($user->username)
+#: lib/Socialtext/Handler/ControlPanel.pm:1883
+msgid "report.signals-activity=user"
+msgstr "用户 %1 的讯息活动"
+
+#: lib/Socialtext/Appliance/WorkspaceUsageReport.pm:92
+msgid "report.total"
+msgstr "总共"
+
+#. ($data->{total_members})
+#: lib/Socialtext/Appliance/WorkspaceUsageReport.pm:87
+msgid "report.total-members=count"
+msgstr "总成员数（当前）：%1"
+
+#. ($data->{unique_contributors})
+#: lib/Socialtext/Appliance/WorkspaceUsageReport.pm:83
+msgid "report.total-unique-contributors=count"
+msgstr "总贡献人数：%1"
+
+#. ($data->{unique_visitors})
+#: lib/Socialtext/Appliance/WorkspaceUsageReport.pm:85
+msgid "report.total-unique-visitors=count"
+msgstr "总访客人数：%1"
+
+#. (ucfirst($wksp->name)
+#: lib/Socialtext/Appliance/WorkspaceUsageReport.pm:103
+msgid "report.total=wiki"
+msgstr "%1 工作区总数"
+
+#. ($acct->name)
+#: lib/Socialtext/Handler/ControlPanel.pm:1849
+msgid "report.usage=account"
+msgstr "%1 帐户使用报告"
+
+#. ($w->name)
+#: lib/Socialtext/Handler/ControlPanel.pm:1857
+msgid "report.usage=wiki"
+msgstr "%1 工作区使用报告"
+
+#. ($wksp->title, $self->start_time,)
+#: lib/Socialtext/Appliance/WorkspaceUsageReport.pm:58
+msgid "report.usage=wiki,start"
+msgstr "%1 工作区使用率 - %2 - 上周"
+
+#: lib/Socialtext/Appliance/WorkspaceUsageReport.pm:92
+msgid "report.user"
+msgstr "用户"
+
+#: lib/Socialtext/Appliance/WorkspaceUsageReport.pm:92
+msgid "report.views"
+msgstr "查看次数"
+
+#. ($self->start_time)
+#: lib/Socialtext/Appliance/WorkspaceUsageReport.pm:80
+msgid "report.week-ending=start-time"
+msgstr "报告时间范围：周末%1"
+
+#: lib/Socialtext/Appliance/WorkspaceUsageReport.pm:69
+msgid "report.wiki-usage-blog"
+msgstr "工作区用量统计博客"
+
+#. ($user->username)
+#: lib/Socialtext/Handler/ControlPanel.pm:1879
+msgid "report.workspace.activity=user"
+msgstr "用户 %1 的工作区活动"
+
+#. ($self->_workspace->title)
+#. ($self->_group->display_name)
+#. ($user->best_full_name)
+#: lib/Socialtext/Rest/Events/Activities.pm:12 lib/Socialtext/Rest/Events/Groups.pm:13 lib/Socialtext/Rest/Events/Workspaces.pm:14
+msgid "rest.activity=user"
+msgstr "%1 的活跃度"
+
+#: lib/Socialtext/Rest/Events.pm:19
+msgid "rest.all-changes"
+msgstr "所有更新"
+
+#: lib/Socialtext/Rest/Events.pm:20
+msgid "rest.all-events"
+msgstr "所有事件"
+
+#: lib/Socialtext/Rest/EventsBase.pm:22
+msgid "rest.events"
+msgstr "事件"
+
+#. ($self->hub->pages->current->title,                $self->hub->current_workspace->title)
+#: lib/Socialtext/Rest/Events/Page.pm:13
+msgid "rest.events=page,wiki"
+msgstr "%2 中页面 %1 的事件"
+
+#: lib/Socialtext/Rest/Jobs.pm:25
+msgid "rest.jobs"
+msgstr "工作"
+
+#: lib/Socialtext/Rest/Events/Followed.pm:9
+msgid "rest.my-colleagues"
+msgstr "我的同事"
+
+#: lib/Socialtext/Rest/Events/Conversations.pm:9
+msgid "rest.my-conversations"
+msgstr "对话记录"
+
+#. ($signaler->best_full_name)
+#: lib/Socialtext/Rest/Signals/Feed.pm:116
+msgid "rest.signalled=user"
+msgstr "%1 发送讯息"
+
+#. ($old_revision, $new_revision)
+#: lib/Socialtext/RevisionPlugin.pm:184
+msgid "revision.compare=old,new"
+msgstr "对比版本 %1 和 %2"
+
+#. ($workspace->title, $query{search_term})
+#: lib/Socialtext/SearchPlugin.pm:208
+msgid "search.atom=wiki,query"
+msgstr "%1 - 用 Atom 搜索 %2"
+
+#. ($arguments)
+#: lib/Socialtext/SearchPlugin.pm:446
+msgid "search.for=query"
+msgstr "搜索 %1"
+
+#. ($arguments, $self->target_workspace)
+#: lib/Socialtext/SearchPlugin.pm:444
+msgid "search.for=query,wiki"
+msgstr "在 %2 工作区中搜索 %1"
+
+#. ($search_term)
+#: lib/Socialtext/SearchPlugin.pm:243
+msgid "search.pages=query"
+msgstr "符合“%1”的页面"
+
+#. ($unescaped_search_term)
+#: lib/Socialtext/Pluggable/Plugin/People.pm:317
+msgid "search.people=query"
+msgstr "符合“%1”的成员"
+
+#: lib/Socialtext/SearchPlugin.pm:175
+msgid "search.results"
+msgstr "搜索结果"
+
+#. ($workspace->title, $query{search_term})
+#: lib/Socialtext/SearchPlugin.pm:201
+msgid "search.rss=wiki,query"
+msgstr "%1 - 用 RSS 搜索 %2"
+
+#: lib/Socialtext/Page.pm:1133
+msgid "sheet.creating"
+msgstr "正在创建新的电子表格..."
+
+#: lib/Socialtext/DisplayPlugin.pm:68 lib/Socialtext/PageRevision.pm:412
+msgid "sheet.untitled"
+msgstr "未命名电子表格"
+
+#: lib/Socialtext/Pluggable/Plugin/Signals.pm:333
+msgid "signals.importing"
+msgstr "正在导入讯息..."
+
+#. ($search_term)
+#: lib/Socialtext/Pluggable/Plugin/Signals.pm:656
+msgid "signals.matching=query"
+msgstr "符合“%1”的讯息"
+
+#. ($sig_old_id, $parent_old_id, $signal_id)
+#: lib/Socialtext/Pluggable/Plugin/Signals.pm:466
+msgid "signals.no-imported-parent=old-id,old-parent-id,new-id"
+msgstr "讯息 %1 是回复 %2，但被回复的讯息丢失。更新此讯息为 %3"
+
+#: lib/Socialtext/Lite/People.pm:104
+msgid "signals.private-message-sent"
+msgstr "已发送的私人讯息"
+
+#. ($1)
+#: lib/Socialtext/Pluggable/Plugin/Signals.pm:653
+msgid "signals.tagged=tag"
+msgstr "标记了 #%1 的讯息"
+
+#. (_field_display_name($field)
+#: lib/Socialtext/Handler/ControlPanel.pm:2538
+msgid "sort.ascending=field"
+msgstr "按照 %1 正序排列"
+
+#. (_field_display_name($field)
+#: lib/Socialtext/Handler/ControlPanel.pm:2539
+msgid "sort.descending=field"
+msgstr "按照 %1 反序排列"
+
+#: lib/Socialtext/EmailNotifyPlugin.pm:54
+msgid "sort.newest-first"
+msgstr "时间倒序"
+
+#: lib/Socialtext/EmailNotifyPlugin.pm:53
+msgid "sort.oldest-first"
+msgstr "按时间顺序（从旧到新）"
+
+#: lib/Socialtext/EmailNotifyPlugin.pm:55
+msgid "sort.page-name"
+msgstr "页面名称"
+
+#. ($sth->rows)
+#: lib/Socialtext/WikiFixture/SocialBase.pm:2930
+msgid "test.deleted-containers=count"
+msgstr "已删除 %1 个容器"
+
+#. ($sth->rows)
+#: lib/Socialtext/WikiFixture/SocialBase.pm:2914
+msgid "test.deleted-galleries=count"
+msgstr "已删除 %1 个工具库"
+
+#. ($sth->rows)
+#: lib/Socialtext/WikiFixture/SocialBase.pm:2941
+msgid "test.deleted-uploaded-widgets=count"
+msgstr "删除 %1 上传的小工具"
+
+#. ($sth->rows)
+#: lib/Socialtext/WikiFixture/SocialBase.pm:2947
+msgid "test.deleted-widgets=count"
+msgstr "已删除 %1 个小工具"
+
+#. ($self->hub->timezone->date_local( $_[0], dateonly => 1)
+#: lib/Socialtext/DisplayPlugin.pm:267
+msgid "time.at=date,time"
+msgstr "%1 %2"
+
+#. ($diff->in_units('days')
+#: lib/Socialtext/Authen.pm:46
+msgid "time.count=days"
+msgstr "%1 天"
+
+#. (int($age / 86400)
+#: lib/Socialtext/PageRevision.pm:377
+msgid "time.days=count"
+msgstr "%1 天"
+
+#. (int($age / 3600)
+#: lib/Socialtext/PageRevision.pm:376
+msgid "time.hours=count"
+msgstr "%1 小时"
+
+#. (int($age / 60)
+#: lib/Socialtext/PageRevision.pm:375
+msgid "time.minutes=count"
+msgstr "%1 分钟"
+
+#. (int($age / 2592000)
+#: lib/Socialtext/PageRevision.pm:379
+msgid "time.months=count"
+msgstr "%1 个月"
+
+#: lib/Socialtext/EmailNotifyPlugin.pm:32 lib/Socialtext/WatchlistPlugin.pm:44
+msgid "time.never"
+msgstr "从不"
+
+#. ($age)
+#: lib/Socialtext/PageRevision.pm:374
+msgid "time.seconds=count"
+msgstr "%1 秒"
+
+#. (int($age / 604800)
+#: lib/Socialtext/PageRevision.pm:378
+msgid "time.weeks=count"
+msgstr "%1 周"
+
+msgid "twilio.changes-saved"
+msgstr "更改已保存"
+
+msgid "twilio.phone-services"
+msgstr "电话服务"
+
+msgid "twilio.pick-one"
+msgstr "选择一个"
+
+msgid "twilio.private-message-from=sender"
+msgstr "來自 %1 的私人邮件"
+
+#: lib/Socialtext/TimeZonePlugin.pm:36
+msgid "tz.+0000"
+msgstr "+0000 UTC/GMT， 西欧"
+
+#: lib/Socialtext/TimeZonePlugin.pm:37
+msgid "tz.+0100"
+msgstr "+0100 中欧"
+
+#: lib/Socialtext/TimeZonePlugin.pm:38
+msgid "tz.+0200"
+msgstr "+0200 东欧"
+
+#: lib/Socialtext/TimeZonePlugin.pm:39
+msgid "tz.+0300"
+msgstr "+0300 巴格达"
+
+#: lib/Socialtext/TimeZonePlugin.pm:40
+msgid "tz.+0330"
+msgstr "+0330 伊朗"
+
+#: lib/Socialtext/TimeZonePlugin.pm:41
+msgid "tz.+0400"
+msgstr "+0400 尼罗河三角洲/苏联3区"
+
+#: lib/Socialtext/TimeZonePlugin.pm:42
+msgid "tz.+0500"
+msgstr "+0500 回音/苏联4区"
+
+#: lib/Socialtext/TimeZonePlugin.pm:43
+msgid "tz.+0530"
+msgstr "+0530 印度"
+
+#: lib/Socialtext/TimeZonePlugin.pm:44
+msgid "tz.+0600"
+msgstr "+0600 弧步/苏联5区"
+
+#: lib/Socialtext/TimeZonePlugin.pm:45
+msgid "tz.+0700"
+msgstr "+0700 高尔夫/苏联6区"
+
+#: lib/Socialtext/TimeZonePlugin.pm:46
+msgid "tz.+0800"
+msgstr "+0800 澳大利亚西部， 中国海岸"
+
+#: lib/Socialtext/TimeZonePlugin.pm:47
+msgid "tz.+0900"
+msgstr "+0900 日本，韩国"
+
+#: lib/Socialtext/TimeZonePlugin.pm:48
+msgid "tz.+0930"
+msgstr "+0930 澳大利亚中部"
+
+#: lib/Socialtext/TimeZonePlugin.pm:49
+msgid "tz.+1000"
+msgstr "+1000 澳大利亚中部， 关岛"
+
+#: lib/Socialtext/TimeZonePlugin.pm:50
+msgid "tz.+1100"
+msgstr "+1100 利马"
+
+#: lib/Socialtext/TimeZonePlugin.pm:52
+msgid "tz.+1200"
+msgstr "+1200 新西兰"
+
+#: lib/Socialtext/TimeZonePlugin.pm:51
+msgid "tz.+1200-east"
+msgstr "+1200 国际日界线东"
+
+#: lib/Socialtext/TimeZonePlugin.pm:35
+msgid "tz.-0100"
+msgstr "-0100 西非"
+
+#: lib/Socialtext/TimeZonePlugin.pm:34
+msgid "tz.-0200"
+msgstr "-0200 奥斯卡"
+
+#: lib/Socialtext/TimeZonePlugin.pm:33
+msgid "tz.-0300"
+msgstr "-0300 格林兰岛"
+
+#: lib/Socialtext/TimeZonePlugin.pm:32
+msgid "tz.-0330"
+msgstr "-0330 纽芬兰"
+
+#: lib/Socialtext/TimeZonePlugin.pm:31
+msgid "tz.-0400"
+msgstr "-0400 大西洋"
+
+#: lib/Socialtext/TimeZonePlugin.pm:30
+msgid "tz.-0500"
+msgstr "-0500 美洲东部"
+
+#: lib/Socialtext/TimeZonePlugin.pm:29
+msgid "tz.-0600"
+msgstr "-0600 美洲中部"
+
+#: lib/Socialtext/TimeZonePlugin.pm:28
+msgid "tz.-0700"
+msgstr "-0700 落基山脉"
+
+#: lib/Socialtext/TimeZonePlugin.pm:27
+msgid "tz.-0800"
+msgstr "-0800 太平洋"
+
+#: lib/Socialtext/TimeZonePlugin.pm:26
+msgid "tz.-0900"
+msgstr "-0900 育空"
+
+#: lib/Socialtext/TimeZonePlugin.pm:25
+msgid "tz.-1000"
+msgstr "-1000 夏威夷，阿拉斯加州中部"
+
+#: lib/Socialtext/TimeZonePlugin.pm:24
+msgid "tz.-1100"
+msgstr "-1100 诺姆"
+
+#: lib/Socialtext/TimeZonePlugin.pm:23
+msgid "tz.-1200-west"
+msgstr "-1200 国际日界线西"
+
+#: lib/Socialtext/TimeZonePlugin.pm:98
+msgid "tz.auto-us"
+msgstr "自动，美国"
+
+#: lib/Socialtext/TimeZonePlugin.pm:99
+msgid "tz.dst-never"
+msgstr "无夏令时"
+
+#: lib/Socialtext/TimeZonePlugin.pm:97
+msgid "tz.dst-no"
+msgstr "当前不属于夏令时"
+
+#: lib/Socialtext/TimeZonePlugin.pm:96
+msgid "tz.dst-yes"
+msgstr "当前属于夏令时"
+
+#: lib/Socialtext/TimeZonePlugin.pm:93
+msgid "tz.dst?"
+msgstr "如何处理夏令时？"
+
+#. (scalar(@$members)
+#: lib/Socialtext/Handler/ControlPanel.pm:1598
+msgid "user.added=count,group"
+msgstr "成功添加 %1 位用户到 %2 个群组，他们将会收到对应群组的邀请消息。"
+
+#. ($args{username})
+#: lib/Socialtext/MassAdd.pm:187
+msgid "user.added=name"
+msgstr "%1 用户已添加"
+
+#. ($user->name_and_email)
+#: lib/Socialtext/Handler/ControlPanel.pm:506
+msgid "user.confirmed=name-and-email"
+msgstr "用户 %1 已确认。"
+
+#: lib/Socialtext/User.pm:854
+msgid "user.deactivated"
+msgstr "用户已被删除出工作区和目录。"
+
+#. ($username)
+#. ($user->username)
+#: lib/Socialtext/Handler/Authen.pm:336 lib/Socialtext/Handler/ControlPanel.pm:574
+msgid "user.deactivated=name"
+msgstr "用户 %1 已被停用。"
+
+#. ($user->name_and_email)
+#: lib/Socialtext/Handler/ControlPanel.pm:516
+msgid "user.external-id-cleared=name"
+msgstr "已为 %1 清除外部 ID"
+
+#. ($user->name_and_email)
+#: lib/Socialtext/Handler/ControlPanel.pm:526
+msgid "user.external-id-requirement-added=name"
+msgstr "已为 %1 增加外部 ID 要求"
+
+#. ($user->name_and_email)
+#: lib/Socialtext/Handler/ControlPanel.pm:538
+msgid "user.external-id-requirement-removed=name"
+msgstr "已为 %1 删除外部 ID 要求"
+
+#. ($user->username, $t)
+#: lib/Socialtext/CLI.pm:998
+msgid "user.given=name,restriction"
+msgstr "已为 “%1” 施加 “%2” 限制"
+
+#. ($filename)
+#: lib/Socialtext/Handler/ControlPanel.pm:1181
+msgid "user.imported=file"
+msgstr "从 %1 加载用户"
+
+#: lib/Socialtext/Account.pm:485
+msgid "user.importing"
+msgstr "正在导入用户..."
+
+#. ($r->restriction_type, $user->username,)
+#: lib/Socialtext/CLI.pm:1032
+msgid "user.lifted=restriction,name"
+msgstr "已为 “%2” 取消 “%1” 限制"
+
+#. ($name)
+#: lib/Socialtext/Handler/ControlPanel.pm:2151
+msgid "user.matching=query"
+msgstr "符合“%1”用户"
+
+#. ($args{username})
+#: lib/Socialtext/MassAdd.pm:195
+msgid "user.no-changes=name"
+msgstr "用户 %1 没有更改"
+
+#: lib/Socialtext/CLI.pm:972
+msgid "user.no-restrictions"
+msgstr "用户无任何限制"
+
+#. ($user->username, $t)
+#: lib/Socialtext/CLI.pm:1020
+msgid "user.no-such=name,restriction"
+msgstr "“%1” 没有 “%2” 的限制"
+
+#. ($user->username)
+#: lib/Socialtext/CLI.pm:1812
+msgid "user.password-changed=name"
+msgstr "%1 的密码已更改。"
+
+#. ($removed, $group->driver_group_name)
+#: lib/Socialtext/Handler/ControlPanel.pm:1276
+msgid "user.removed=count,group"
+msgstr "成功从 %2 群组删除 %1 位用户。"
+
+#: lib/Socialtext/CLI.pm:977
+msgid "user.restriction-token"
+msgstr "令牌"
+
+#: lib/Socialtext/CLI.pm:976
+msgid "user.restriction-type"
+msgstr "限制类型"
+
+#: lib/Socialtext/Handler/ControlPanel.pm:2129
+msgid "user.selected"
+msgstr "所选用户"
+
+#. ($group_name)
+#: lib/Socialtext/Handler/ControlPanel.pm:2128
+msgid "user.selected-for=group"
+msgstr "添加所选用户到 %1 群组"
+
+#: lib/Socialtext/WikiText/Emitter/Messages/Canonicalize.pm:67 lib/Socialtext/WikiText/Emitter/Messages/HTML.pm:94
+msgid "user.unknown"
+msgstr "未知用户"
+
+#. ($args{username})
+#: lib/Socialtext/MassAdd.pm:191
+msgid "user.updated=name"
+msgstr "已更新用户 %1"
+
+#: lib/Socialtext/Formatter/WaflPhrase.pm:849
+msgid "wafl.contents"
+msgstr "内容"
+
+#: lib/Socialtext/Formatter/WaflPhrase.pm:515
+msgid "wafl.edit"
+msgstr "编辑"
+
+#. (loc($p{action})
+#: lib/Socialtext/Formatter/WaflPhrase.pm:737
+msgid "wafl.link=action"
+msgstr "%1 链接"
+
+#: lib/Socialtext/WatchlistPlugin.pm:265
+msgid "watch.current-pages"
+msgstr "当前页面"
+
+#: lib/Socialtext/WatchlistPlugin.pm:41
+msgid "watch.email-frequency?"
+msgstr "您想要多长时间收到一次关注列表邮件？"
+
+#. ($ws->title)
+#: lib/Socialtext/Job/WatchlistNotifyUser.pm:15
+msgid "watch.email-subject=wiki"
+msgstr "%1 工作区的关注列表更新"
+
+#. ($self->hub->current_workspace->title)
+#: lib/Socialtext/WatchlistPlugin.pm:202
+msgid "watch.empty=wiki"
+msgstr "%1 中的关注列表为空。"
+
+#. ($widget->{src})
+#: lib/Socialtext/Pluggable/Plugin/Widgets.pm:313
+msgid "widget.adding=src"
+msgstr "正在添加 %1 小工具……"
+
+#: lib/Socialtext/Gadgets/Gadget.pm:784
+msgid "widget.file"
+msgstr "文件"
+
+#: lib/Socialtext/Pluggable/Plugin/Widgets.pm:217
+msgid "widget.importing-container"
+msgstr "正在导入小工具容器..."
+
+#. ($widget->{src})
+#: lib/Socialtext/Pluggable/Plugin/Widgets.pm:309
+msgid "widget.removing=src"
+msgstr "正在移除插件 %1..."
+
+#: lib/Socialtext/Gadgets/Gadget.pm:783
+msgid "widget.resource"
+msgstr "资源"
+
+#. ($type)
+#: lib/Socialtext/Pluggable/Plugin/Widgets.pm:249
+msgid "widget.skipping-container=type"
+msgstr "跳过 %1 类的容器"
+
+#: lib/Socialtext/Gadgets/Gallery.pm:308
+msgid "widget.socialtext"
+msgstr "Socialtext 小工具"
+
+#: lib/Socialtext/Gadgets/Gallery.pm:312
+msgid "widget.third-party"
+msgstr "第三方小工具"
+
+#: lib/Socialtext/Gadgets/Gadget.pm:784
+msgid "widget.url"
+msgstr "网址"
+
+msgid "widgets.importing-profile-for-user=email"
+msgstr "正在导入用户 %1 的配置文件"
+
+#: lib/Socialtext/Workspace/Permissions.pm:243
+msgid "wiki.acl-custom"
+msgstr "自定权限"
+
+#: lib/Socialtext/Workspace/Permissions.pm:241
+msgid "wiki.acl-private"
+msgstr "私密"
+
+#: lib/Socialtext/Workspace/Permissions.pm:249
+msgid "wiki.acl-public"
+msgstr "公开"
+
+#: lib/Socialtext/Workspace/Permissions.pm:242
+msgid "wiki.acl-self-join"
+msgstr "自行加入"
+
+#: lib/Socialtext/CategoryPlugin.pm:83
+msgid "wiki.all-tags"
+msgstr "工作区的所有标签"
+
+#: lib/Socialtext/HomepagePlugin.pm:69
+msgid "wiki.dashboard"
+msgstr "控制面板"
+
+#: lib/Socialtext/WorkspacesUIPlugin.pm:663
+msgid "wiki.disabled-locking"
+msgstr "页面锁定被停用。"
+
+#. ($workspace->title()
+#: lib/Socialtext/CLI.pm:2701
+msgid "wiki.disabled-locking=title"
+msgstr "“%1”工作区中的页面锁定已关闭。"
+
+#. ($user->username)
+#: lib/Socialtext/CLI.pm:2739
+msgid "wiki.disabled-locking=user"
+msgstr "用户“%1”不可以锁定页面。"
+
+#: lib/Socialtext/WikiwygPlugin.pm:711
+msgid "wiki.double-click-to-edit?"
+msgstr "双击编辑页面？"
+
+#: lib/Socialtext/WorkspacesUIPlugin.pm:662
+msgid "wiki.enabled-locking"
+msgstr "页面锁定已启用。"
+
+#. ($user->username)
+#: lib/Socialtext/CLI.pm:2733
+msgid "wiki.enabled-locking=user"
+msgstr "用户“%1”可以锁定页面。"
+
+#. ($ws->name, $file)
+#: lib/Socialtext/CLI.pm:2844
+msgid "wiki.exported=name,file"
+msgstr "工作区 %1 已被导出至 %2 。"
+
+#. ($wksp->name)
+#: lib/Socialtext/CLI.pm:506
+msgid "wiki.exporting=name"
+msgstr "正在导出工作区 %1 ..."
+
+#. ($tarball)
+#: lib/Socialtext/CLI.pm:554
+msgid "wiki.importing=tarball"
+msgstr "正在从 %1 中导入工作区..."
+
+#: lib/Socialtext/DisplayPlugin.pm:118
+msgid "wiki.include-breadcrumbs?"
+msgstr "浏览页面时，在侧边栏显示最近浏览页面？"
+
+#. ($ws->name, $account->name)
+#: lib/Socialtext/Handler/ControlPanel.pm:553
+msgid "wiki.joined=name,account"
+msgstr "工作区 %1 已加入到帐户 %2 下。"
+
+#: lib/Socialtext/Lite.pm:260
+msgid "wiki.list"
+msgstr "工作区列表"
+
+#. ($name)
+#: lib/Socialtext/Handler/ControlPanel.pm:1906
+msgid "wiki.matching=query"
+msgstr "符合“%1”的工作区"
+
+#: lib/Socialtext/DisplayPlugin.pm:110
+msgid "wiki.mouseover-link?"
+msgstr "鼠标停在链接上时显示页面的第一部份？"
+
+#. ($group->driver_group_name)
+#: lib/Socialtext/Handler/ControlPanel.pm:1516
+msgid "wiki.not-member=group"
+msgstr "%1 群组不属于此工作区"
+
+#: lib/Socialtext/HomepagePlugin.pm:87
+msgid "wiki.notes-title"
+msgstr "公告和链接"
+
+#. ($group->driver_group_name)
+#: lib/Socialtext/Handler/ControlPanel.pm:1527
+msgid "wiki.removed=group"
+msgstr "%1 群组已从此工作区移除"
+
+#: lib/Socialtext/BreadCrumbsPlugin.pm:33
+msgid "wiki.show-breadcrumbs-sidebox?"
+msgstr "显示“最近浏览”侧边栏？"
+
+#: lib/Socialtext/RecentChangesPlugin.pm:70
+msgid "wiki.show-sidebox?"
+msgstr "在页面视图中显示为侧边栏？"
+
+#: lib/Socialtext/BacklinksPlugin.pm:16
+msgid "wiki.sidebox-number-of-backlinks?"
+msgstr "侧窗格中显示的反向链接数量"
+
+#: lib/Socialtext/BreadCrumbsPlugin.pm:41
+msgid "wiki.sidebox-number-of-breadcrumbs?"
+msgstr "显示多少页面在侧边栏？"
+
+#: lib/Socialtext/RecentChangesPlugin.pm:57
+msgid "wiki.sidebox-number-of-changes?"
+msgstr "一段时间内，页面侧边栏应该显示多少项目？"
+
+#: lib/Socialtext/Workspace.pm:317
+msgid "wiki.top-page"
+msgstr "首页"
+
+#: lib/Socialtext/Workspace.pm:316 lib/Socialtext/l10n.pm:18 lib/Socialtext/l10n.pm:20
+msgid "wiki.welcome"
+msgstr "欢迎"
+
+#. ($workspace->title)
+#: lib/Socialtext/User/Restrictions/email_confirmation.pm:62
+msgid "wiki.welcome-confirm=name"
+msgstr "欢迎来到 %1 工作区 - 请确认注册邮箱"

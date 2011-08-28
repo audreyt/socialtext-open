@@ -1,0 +1,9 @@
+| *Comment* | Test Case: Edit Contention Reset. Must be preceded by TC: Edit Contention Setup. |  |
+| *Comment* | value for variable `page` must correspond to value in TC: Edit Contention Setup. |  |
+| *Comment* | short username is %%short_username%%. atmail is %%atmail%% |  |
+
+| set | page | special_edit_contention_page |
+| st-process-jobs | PageIndex | %%workspace%% |
+| st-admin | purge-page --w %%workspace%% --p "%%page%%" | was purged |
+
+| *Comment* | Test Case: Edit Contention Reset COMPLETED |  |

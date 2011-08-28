@@ -1,0 +1,11 @@
+[%- SWITCH event.action -%]
+    [%- CASE "comment" -%]<img class="asset-icon" src="[% skin_uri("/images/asset-icons/comment-16.png") %]"/>
+    [%- CASE "tag_add" -%]<img class="asset-icon" src="[% skin_uri("/images/asset-icons/tag-16.png") %]"/>
+    [%- CASE "tag_delete" -%]<img class="asset-icon" src="[% skin_uri("/images/asset-icons/tag-16.png") %]"/>
+    [%- CASE "watch_add" -%]<img class="asset-icon" src="[% skin_uri("/images/asset-icons/follow-16.png") %]"/>
+    [%- CASE "watch_delete" -%]<img class="asset-icon" src="[% skin_uri("/images/asset-icons/follow-16.png") %]"/>
+    [%- CASE "like" -%]<img class="asset-icon" src="[% skin_uri("/images/asset-icons/like-16.png") %]"/>
+    [%- CASE "unlike" -%]<img class="asset-icon" src="[% skin_uri("/images/asset-icons/unlike-16.png") %]"/>
+    [%- CASE -%]<img class="asset-icon" src="[% skin_uri("/images/asset-icons/edit-16.png") %]"/>
+[%- END -%]
+

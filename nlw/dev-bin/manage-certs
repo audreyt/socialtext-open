@@ -1,0 +1,248 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use Getopt::Long;
+use Pod::Usage;
+use FindBin qw($Bin);
+use lib "$Bin/../lib";
+use Socialtext::System qw/shell_run/;
+use Term::ANSIColor;
+use Sys::Hostname;
+use Socialtext::AppConfig;
+
+my $STUB = '/C=US/ST=CA/L=Palo Alto/O=Socialtext';
+
+my $name    = '';
+my $server  = '';
+my $force   = 0;
+my $dryrun  = 0;
+my $expired = 0;
+my ($help, $man);
+GetOptions(
+    'username=s' => \$name,
+    'server=s'   => \$server,
+    'expired'    => \$expired,
+    'force'      => \$force,
+    'dry-run'    => \$dryrun,
+    'help|?'     => \$help,
+    'man'        => \$man,
+) || pod2usage( -sections => [qw( SYNOPSIS )] );
+pod2usage(1) if ($help);
+pod2usage( -exitstatus=>0, -verbose=>2 ) if ($man);
+
+my $action = shift @ARGV;
+pod2usage( -sections => [qw( SYNOPSIS )] ) unless ($action);
+
+my $ca_cert = 'ca/cert';
+my $ca_key  = 'ca/key.nopass';
+
+if ($action eq 'init') {
+    error("CA directory exists, use --force")
+        if -e $ca_cert && !$force;
+
+    my $subj = $STUB .'/CN=ca@ken.socialtext.net/';
+
+    print color('magenta');
+    shell_run('-rm -Rf cert ca working binary') if $force;
+    shell_run('-mkdir cert ca working binary');
+    shell_run("openssl genrsa -out $ca_key");
+    shell_run("openssl req -x509 -new -key $ca_key -out $ca_cert -subj '$subj'");
+    print color('reset');
+
+    message("Initialization Complete");
+}
+elsif ($action eq 'client') {
+    usage() unless $name;
+    error("This doesn't look like a CA directory")
+        unless -e $ca_cert;
+
+    my $key    = "cert/$name.key.nopass";
+    my $csr    = "working/$name.csr";
+    my $cert   = "cert/$name.crt";
+    my $binary = "binary/$name.p12";
+    my $subj   = "$STUB/CN=$name/";
+    my $days_valid = $expired ? '-7' : '30';
+
+    error("Cert '$name' already exists, use --force")
+        if -e $cert && !$force;
+
+    print color('magenta');
+    shell_run("openssl genrsa -out $key");
+    shell_run("openssl req -new -key $key -out $csr -subj '$subj'");
+    shell_run("openssl x509 -req -in $csr -days $days_valid -CA $ca_cert -CAkey $ca_key -CAcreateserial -out $cert");
+    shell_run("openssl pkcs12 -export -name 'client $name TEST' -clcerts -in $cert -inkey $key -passout 'pass:password' -out $binary");
+    shell_run("rm $csr");
+    print color('reset');
+
+    message("Signed cert is in '$cert'");
+}
+elsif ($action eq 'install') {
+    error("This doesn't look like a CA directory")
+        unless -e $ca_cert;
+
+    $server ||= hostname();
+    my $key = "working/$server.key";
+    my $csr = "working/$server.csr";
+    my $cert = "working/$server.crt";
+    my $subj = "$STUB/CN=$server/";
+
+    my $path = Socialtext::AppConfig->is_appliance()
+        ? '' : $ENV{HOME} . '/.nlw';
+
+    print color('magenta');
+    shell_run("openssl genrsa -out $key");
+    shell_run("openssl req -new -key $key -out $csr -subj '$subj'");
+    shell_run("openssl x509 -req -in $csr -CA $ca_cert -CAkey $ca_key -CAcreateserial -out $cert");
+
+    unless ($dryrun) {
+        shell_run("mkdir -p $path/etc/ssl/certs");
+        shell_run("mkdir -p $path/etc/ssl/private");
+        shell_run("cp $cert $path/etc/ssl/certs/");
+        shell_run("cp $key $path/etc/ssl/private/");
+        shell_run("cp $ca_cert $path/etc/ssl/certs/$server.client.crt");
+    }
+
+    shell_run("rm $csr");
+    print color('reset');
+
+    message("Installed certs");
+}
+elsif ($action eq 'help') {
+    usage();
+}
+else {
+    message("Action '$action' is not valid", 'red');
+    usage();
+}
+
+exit;
+
+sub message {
+    my $msg = shift;
+    my $color = shift || 'cyan';
+    print color($color), "\n$msg", color('reset'), "\n\n";
+}
+
+sub error {
+    my $msg = shift;
+    die color('red'), "\n$msg", color('reset'), "\n\n";
+}
+
+
+=head1 NAME
+
+manage-certs - Tool to help manage SSL certificates for testing
+
+=head1 SYNOPSIS
+
+  manage-certs <action> [options]
+
+  Actions:
+    init            Initialize SSL certificate chain
+        --force             Force, and over-write existing certs
+
+    install         Generate/install server certificate chain
+        --server <name>     Server name to create server cert for
+        --dryrun            Dry-run; install nothing
+
+    client          Generate client-side SSL certificate
+        --force             Force, and over-write existing certs
+        --username <name>   Username for certificate to create
+        --expired           Make an expired cert, not a valid one
+
+  Options:
+    --help/-?       Brief help message
+    --man           Full documentation
+
+  Example:
+    manage-certs init
+    manage-certs install
+    manage-certs client --username davey.jones@locker.com --expired
+
+=head1 DESCRIPTION
+
+F<manage-certs> is a command line utility to help manage SSL certificates for
+testing and development purposes.
+
+=head1 OPTIONS
+
+=over
+
+=item B<init>
+
+Initializes the SSL certificate chain, creating a passwordless CA key and
+self-signing it.
+
+=over
+
+=item --force
+
+Forces overwrite of any existing CA cert from a previous run.
+
+=back
+
+=item B<install>
+
+Installs the SSL certificate chain for the CA, as well as creating and
+installing a self-signed SSL server certificate.
+
+=over
+
+=item --server <name>
+
+Specifies the server name to be used for the generated server certificate.  By
+default it will be named the same as the machine that it is running on.
+
+=item --dryrun
+
+Dry-run for the install; generate the certificates but do B<not> copy them
+into place.
+
+=back
+
+=item B<client>
+
+Generates a Client-Side SSL Certificate, which can be manually installed in
+your browser and used to authenticate against the server.
+
+=over
+
+=item --force
+
+Forces overwrite of any existing client-side SSL certificate with the same
+name from a previous run.
+
+=item --username <name>
+
+B<Required>.  Specifies the username to be placed inside the client-side SSL
+certificate.
+
+=item --expired
+
+Generates a client-side SSL certificate that has already expired.
+
+By default, valid SSL certificates are generated, but using this option you
+can explicitly generate an expired certificate.
+
+=back
+
+=item B<--help/-?>
+
+Displays a brief help message.
+
+=item B<--man>
+
+Displays the full documentation.
+
+=back
+
+=head1 AUTHOR
+
+Socialtext, Inc.  C<< <code@socialtext.com> >>
+
+=head1 COPYRIGHT
+
+Copyright 2011 Socialtext, Inc.,  All Rights Reserved.
+
+=cut

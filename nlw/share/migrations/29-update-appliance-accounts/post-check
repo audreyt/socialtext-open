@@ -1,0 +1,50 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+# We're going to look up results that should _not_ be there.
+# Any results that these queries return will be thought of as
+# a failure.
+
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_singlevalue/;
+
+my $failures = 0;
+
+$failures += sql_singlevalue( <<EOSQL );
+SELECT COUNT(*)
+  FROM "Account"
+ WHERE skin_name != 's3'
+EOSQL
+
+$failures += sql_singlevalue( <<EOSQL );
+SELECT COUNT(*)
+  FROM "Workspace"
+ WHERE skin_name = 's2'
+EOSQL
+
+$failures += sql_singlevalue( <<EOSQL );
+SELECT COUNT(*)
+  FROM "Account"
+  LEFT OUTER JOIN account_plugin
+    ON "Account".account_id = account_plugin.account_id
+   AND account_plugin.plugin = 'widgets'
+ WHERE account_plugin.plugin IS NULL
+EOSQL
+
+$failures += sql_singlevalue( <<EOSQL );
+SELECT COUNT(*)
+  FROM "Account"
+  LEFT OUTER JOIN account_plugin
+    ON "Account".account_id = account_plugin.account_id
+   AND account_plugin.plugin = 'dashboard'
+ WHERE account_plugin.plugin IS NULL
+EOSQL
+
+if ( $failures > 0 ) {
+    print "There were $failures failures!\n";
+    exit $failures;
+}
+
+print "Update complete.\n";
+exit 0;

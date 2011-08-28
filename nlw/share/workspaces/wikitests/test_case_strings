@@ -1,0 +1,17 @@
+| *Comment* | Test Case: Strings |  |
+
+| set | test_string | `Double dashes -- are double trouble` |
+| set | test_string_esc | `Double dashes \-\- are double trouble` |
+| set | test_id | `double_dashes_are_double_trouble` |
+
+| *Comment* | Test Case: Strings testing %%test_string%% |  |
+| include | [Test Case: String Use] |  |
+
+| set | test_string | `C++ Stuff` |
+| set | test_string_esc | `C\+\+ Stuff` |
+| set | test_id | c_stuff |
+
+| *Comment* | Test Case: Strings testing %%test_string%% |  |
+| include | [Test Case: String Use] |  |
+
+| *Comment* | Test Case: Strings COMPLETED |  |

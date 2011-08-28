@@ -1,0 +1,15 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[% PROCESS element/settings/start %]
+<dl class="form">
+  <dt><label>[% loc('nav.preferences') %]</label></dt>
+</dl>
+[% FOREACH preference = preference_list %]
+  <div style="padding-bottom:5px"><label>
+    [% IF preference.query %]
+      [% loc(preference.query) %]
+    [% END %]
+    [% preference.form_element %]
+  </label></div>
+[% END %]
+[% PROCESS element/settings/stop %]

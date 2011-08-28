@@ -1,0 +1,57 @@
+Test case for `/data/account/:acct/users` ( GET and POST )
+
+* Fixture: SocialRest
+
+| Standard-test-setup |
+| set | acct1 | acct1-%%start_time%% |
+| create-account | %%acct1%% |
+| set | acct2 | acct2 %%start_time%% |
+| create-account | %%acct2%% |
+| set | tester | tester-%%start_time%%@ken.socialtext.net |
+| create-user | %%tester%% | password |
+
+| *Comment*      | Returns a 401 when the user is not logged in |                                      |
+| http-user-pass |                                              |                                      |
+| post-json      | /data/accounts/Socialtext/users              | {"email_address":"user@example.com"} |
+| code-is        | 401                                          |                                      |
+
+| *Comment*      | GET requests return a 403 when user is not a business admin. |          |
+| http-user-pass | %%tester%%                                                   | password |
+| get            | /data/accounts/Socialtext/users                              |          |
+| code-is        | 403                                                          |          |
+
+| *Comment*      | Log in as devnull1, a business admin. |          |
+| http-user-pass | devnull1@socialtext.com               | d3vnu11l |
+
+| *Comment* | GET returns a 200 for a business admin |
+| get       | /data/accounts/Socialtext/users        |
+| code-is   | 200                                    |
+
+| *Comment* | GET returns 404 when no account exists. |
+| get       | /data/accounts/ENOSUCHACCOUNT/users     |
+| code-is   | 404                                     |
+
+| *Comment* | Return a 404 if the Account does not exist. |                                      |
+| post-json | /data/accounts/ENOSUCHACCOUNT/users         | {"email_address":"user@example.com"} |
+| code-is   | 404                                         |                                      |
+
+| *Comment* | Returns a 400 if the post json is bad. |    |
+| post-json | /data/accounts/Socialtext/users        | {} |
+| code-is   | 400                                    |    |
+
+| *Comment* | Return a 400 if the user does not exist. |                                             |
+| post-json | /data/accounts/Socialtext/users          | {"email_address":"enosuchuser@example.com"} |
+| code-is   | 400                                      |                                             |
+
+| *Comment* | Returns a 201 when all is good. |                                       |
+| post-json | /data/accounts/Socialtext/users | {"email_address":"%%email_address%%"} |
+| code-is   | 201                             |                                       |
+
+| *Comment* | GET returns a 200 for a business admin |
+| get       | /data/accounts/Socialtext/users?all=1  |
+| code-is   | 200                                    |
+| body-like | %%email_address%%                      |
+
+| *Comment* | Returns a 201 when we post to an account with a space in the name. |                                |
+| post-json | /data/accounts/%%acct2%%/users                                     | {"email_address":"%%tester%%"} |
+| code-is   | 201                                                                |                                |

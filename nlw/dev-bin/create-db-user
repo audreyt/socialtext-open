@@ -1,0 +1,41 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+
+=head1 DESCRIPTION
+
+Creates the database user if it does not already exists.
+
+=cut
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+
+use DBI;
+use Socialtext::AppConfig;
+
+my ( $db_superuser, $db_superpass ) = @ARGV;
+
+# Eventually, this should work on configurable DBs.
+my $dsn = "dbi:Pg:database=template1";
+
+my $host = Socialtext::AppConfig->db_host;
+$dsn .= ";host=$host" if defined $host;
+
+my $port = Socialtext::AppConfig->db_port;
+$dsn .= ";port=$port" if defined $port;
+
+my $dbh = DBI->connect( $dsn, $db_superuser, $db_superpass );
+
+my $user = Socialtext::AppConfig->db_user;
+
+my $matches = $dbh->selectrow_array(
+    'SELECT count(*) FROM pg_shadow WHERE usename=?',
+    {},
+    $user
+);
+
+# REVIEW: Can't bind here, AFAICT, because we don't really want a quoted
+# string.
+$dbh->do("CREATE USER $user WITH SUPERUSER") unless $matches;

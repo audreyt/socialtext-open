@@ -1,0 +1,31 @@
+See also: [FormattingTest] | FormattingToDo | [WikiwygFormattingTest] | [WikiwygFormattingToDo]
+
+(Move things from here to [FormattingTest] when they pass flawlessly.)
+
+^^ fangs with wafl - merged into one line {rt: 13797}
+
+> one
+>> two {tm}
+>> three {{two}}
+>> four
+
+^^ Preservation of newlines before double-fangs {rt: 13714}:
+
+> Line X
+
+>> Line X+2
+
+----
+
+^ WontFix (ever)
+
+^^ Wafl without a colon
+
+{link public [wiki 101]}
+
+^^ The what the hell is this section
+
+* <\\Windows/File/Yuck>
+* "Renamed File"<\\Windows/File>
+
+{{ asis text ending with a space eats the space after the asis in IE only }} <- this space gets eaten

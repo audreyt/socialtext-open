@@ -1,0 +1,102 @@
+## For [Story: User associates group with a workspace]
+
+* Fixture: SocialRest
+
+################################################################################
+
+| standard-test-setup |
+
+## Create a new user that our user cannot see.
+| set            | other_account     | other_account%%start_time%%            |                   |
+| create-account | %%other_account%% |                                        |                   |
+| set            | other_user        | other%%start_time%%@ken.socialtext.net |                   |
+| create-user    | %%other_user%%    | password                               | %%other_account%% |
+
+## Create a workspace the the user does not have admin_workspace privs
+| set              | ws1          | %%workspace%%     |
+| set              | ws2          | ws2%%start_time%% |
+| create-workspace | %%ws2%%      |                   |
+| add-member       | %%username%% | %%ws2%%           |
+
+
+################################################################################
+
+## GET, user doesn't exist
+| *Comment* | GET, user doesn't exist               |
+| GET       | /data/users/ENOSUCHUSER/workspaces    |
+| code-is   | 404                                   |
+| body-like | The requested resource does not exist |
+
+## GET, cannot see user
+| *Comment* | GET, cannot see user                  |
+| GET       | /data/users/%%other_user%%/workspaces |
+| code-is   | 403                                   |
+| body-like | User not authorized                   |
+
+## GET, bad permission arg
+| *Comment* | GET, bad permission arg                                    |
+| GET       | /data/users/%%username%%/workspaces?permission=ENOSUCHPERM |
+| code-is   | 500                                                        |
+
+## GET HTML, self
+| *Comment* | GET HTML, self                      |
+| GET       | /data/users/%%username%%/workspaces |
+| code-is   | 200                                 |
+| body-like | <h1>User Workspaces</h1>            |
+| body-like | %%ws1%%                             |
+| body-like | %%ws2%%                             |
+
+## GET HTML, self with permission
+| *Comment*   | GET HTML, self with permission                                 |
+| GET         | /data/users/%%username%%/workspaces?permission=admin_workspace |
+| code-is     | 200                                                            |
+| body-like   | <h1>User Workspaces</h1>                                       |
+| body-like   | %%ws1%%                                                        |
+| body-unlike | %%ws2%%                                                        |
+
+## GET JSON, self
+| *Comment*       | GET JSON, self                      |
+| GET-json        | /data/users/%%username%%/workspaces |
+| code-is         | 200                                 |
+| json-parse      |                                     |
+| json-array-size | 2                                   |
+| body-like       | permission_set                      |
+| body-like       | %%ws1%%                             |
+| body-like       | %%ws2%%                             |
+
+## GET JSON, self with permission
+| *Comment*       | GET JSON, self with permission                                 |
+| GET-json        | /data/users/%%username%%/workspaces?permission=admin_workspace |
+| code-is         | 200                                                            |
+| json-parse      |                                                                |
+| json-array-size | 1                                                              |
+| body-like       | permission_set                                                 |
+| body-like       | %%ws1%%                                                        |
+| body-like       | workspace_id                                                   |
+| body-unlike     | %%ws2%%                                                        |
+
+## GET JSON, Pageable interface (actual paging is tested elsewhere |
+| *Comment*        | GET JSON, Pageable interface                     |    |
+| GET-json         | /data/users/%%username%%/workspaces?startIndex=0 |    |
+| code-is          | 200                                              |    |
+| json-parse       |                                                  |    |
+| json-path-is     | $.startIndex                                     | 0  |
+| json-path-is     | $.itemsPerPage                                   | 25 |
+| json-path-is     | $.totalResults                                   | 2  |
+| json-path-exists | $.entry[0]                                       |    |
+| json-path-exists | $.entry[1]                                       |    |
+
+## GET JSON, passing a bad permission_set param
+| *Comment* | GET JSON, passing a bad permission_set param |
+| GET-json | /data/users/%%username%%/workspaces?permission_set=ENOSUCHSET |
+| code-is  | 500                                                           |
+
+## GET JSON, with permission_set filtering
+| st-admin          | set-permissions --workspace %%ws1%% --permissions public                    |         |
+| GET-json          | /data/users/%%username%%/workspaces?startIndex=0;permission_set=member-only |         |
+| code-is           | 200                                                                         |         |
+| json-parse        |                                                                             |         |
+| json-path-is      | $.totalResults                                                              | 1       |
+| json-path-exists  | $.entry[0]                                                                  |         |
+| json-path-is      | $.entry[0].name                                                             | %%ws2%% |
+| json-path-missing | $.entry[1]                                                                  |         |

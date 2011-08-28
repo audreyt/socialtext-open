@@ -1,0 +1,8 @@
+dn: ou=contacts,dc=example,dc=com
+objectClass: organizationalUnit
+ou: contacts
+
+dn: cn=John Doe,ou=contacts,dc=example,dc=com
+objectClass: organizationalPerson
+cn: John Doe
+sn: Doe

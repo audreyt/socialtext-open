@@ -1,0 +1,637 @@
+# @COPYRIGHT@
+package Test::Socialtext::Fixture;
+
+# Inspired by Ruby on Rails' fixtures.
+# See http://api.rubyonrails.com/classes/Fixtures.html
+
+use strict;
+use warnings;
+use Carp qw( confess );
+use DateTime;
+use File::Basename ();
+use File::chdir;
+use File::Slurp qw(slurp write_file);
+use File::Spec;
+use Socialtext::ApacheDaemon;
+use Socialtext::Build qw( get_build_setting );
+use File::Path qw/mkpath rmtree/;
+use FindBin;
+use Socialtext::SystemSettings qw/get_system_setting set_system_setting/;
+use Socialtext::Schema;
+use Socialtext::Hub;
+use Socialtext::Pages;
+use Socialtext::User;
+use Socialtext::AppConfig;
+use Test::Socialtext::User;
+use Socialtext::System qw(shell_run);
+
+our @DEFAULT_PLUGINS = qw(dashboard people signals groups);
+
+sub new {
+    my $class = shift;
+    my $self = {@_};
+
+    croak("Need to specify an environment") unless exists $self->{env};
+    croak("Need to specify a name") unless exists $self->{name};
+    bless $self, $class;
+
+    $self->_init;
+
+    return $self;
+}
+
+sub _init {
+    my $self = shift;
+    $self->{fixtures} = [];
+
+    my $dir = $self->dir;
+
+    require Socialtext::Account;
+    require Socialtext::Paths;
+    require Socialtext::User;
+    require Socialtext::Workspace;
+
+    if (-f "$dir/fixture.yaml") {
+        require YAML;
+
+        $self->set_config(YAML::LoadFile("$dir/fixture.yaml"))
+            or die "Could not load " . $self->name . "/fixture.yaml: $!";
+        foreach my $sub_name (@{$self->config->{fixtures}}) {
+            push @{ $self->fixtures },
+                Test::Socialtext::Fixture->new( name => $sub_name, env => $self->env );
+        }
+    }
+    else {
+        $self->set_config({});
+    }
+}
+
+sub _built_in_clean {
+    my $self     = shift;
+    my $env      = $self->env;
+    my @to_clean = (
+        $env->base_dir,
+        $self->buildstamp_dir(),
+    );
+
+    require Socialtext::Jobs;
+    eval { Socialtext::Jobs->clear_jobs() };
+    rmtree( \@to_clean );
+}
+
+sub _built_in_base_layout {
+    my $self = shift;
+    my $env  = $self->env;
+    my @layout;
+    foreach my $based (qw(docroot storage storage/db-backups storage/json_cache data plugin user)) {
+        push @layout, File::Spec->catdir( $env->base_dir, $based );
+    }
+    foreach my $rooted (qw(ceq etc/socialtext lock log run)) {
+        push @layout, File::Spec->catdir( $env->root_dir, $rooted );
+    }
+    mkpath( \@layout, 0, 0755 );
+}
+
+sub _built_in_base_config {
+    my $self = shift;
+
+    my $env               = $self->env;
+
+    my $testing = $ENV{HARNESS_ACTIVE} ? '--testing' : '';
+    my $gen_config = $env->nlw_dir . '/dev-bin/gen-config';
+
+    _system_or_die(
+        $gen_config,
+        '--quiet',
+        '--root',           $env->root_dir,
+        '--dev=0',    # Don't create the files in ~/.nlw
+        $testing,
+    );
+    _system_or_die(
+        $env->nlw_dir . '/dev-bin/solr-create',
+    );
+}
+
+sub _built_in_db {
+    my $self = shift;
+
+    my $env = $self->env;
+    local $ENV{PGDATABASE} = Socialtext::AppConfig->db_name;
+
+    # Put the schemas in place
+    my $schema_dir =     $env->root_dir . '/etc/socialtext/db';
+    my $schema_src_dir = $env->nlw_dir  . '/etc/socialtext/db';
+
+    rmtree $schema_dir;
+    mkpath $schema_dir;
+    _system_or_die("cp $schema_src_dir/* $schema_dir");
+
+    local $ENV{ST_TEST_SKIP_DB_DUMP} = 1;
+
+    _restore_initial_data: {
+        my $checksum = _get_current_schema_checksum();
+        my $filename = "$schema_src_dir/cache.$checksum.sql";
+        if (-f $filename) {
+            print "# restoring initial data from $filename\n";
+            _system_or_die("psql -q -f $filename >/dev/null");
+            return;
+        }
+    }
+
+    my $s = Socialtext::Schema->new(verbose => 1);
+    $s->recreate(
+        no_dump        => 1,
+        no_die_on_drop => 1,
+    );
+
+    _cache_initial_data($schema_src_dir);
+}
+
+sub _get_current_schema_checksum {
+    my $sum = `pg_dump --no-owner --no-privileges --schema-only | egrep -v 'STARTS? WITH ' | md5sum | awk '{print \$1}'`;
+    chomp $sum;
+    return $sum;
+}
+
+sub _cache_initial_data {
+    my $schema_cache_dir = shift;
+
+    if ($ENV{ST_TEST_SKIP_DB_CACHE}) {
+        print "# SKIPPING initial data caching because ST_TEST_SKIP_DB_CACHE is set\n";
+        return;
+    }
+
+    my $checksum = _get_current_schema_checksum();
+    my $filename = "$schema_cache_dir/cache.$checksum.sql";
+    return if (-f $filename && -s _);
+
+    print "# caching initial data to $filename\n";
+    _system_or_die("rm -f $schema_cache_dir/cache.*.sql");
+
+    # TODO: support more than the 'public' schema
+
+    my @tables = `psql -t -c "select tablename from pg_tables where schemaname='public'"`;
+    chomp @tables;
+    @tables = map { s/^\s*(.+?)\s*$/$1/; $_ }
+              grep { length } @tables;
+    die "no tables?!" unless @tables;
+
+    my $data = `pg_dump -a --disable-triggers | egrep -v '^SET '`;
+    die "no data?!" unless $data;
+
+    eval {
+        open my $fh, '>', $filename or die "can't open $filename: $!";
+        print $fh <<'SETTINGS';
+--
+-- Generated by Test::Socialtext::Fixture
+--
+SET client_encoding = 'UTF8';
+SET client_min_messages = error;
+SET search_path = public, pg_catalog;
+
+BEGIN;
+SETTINGS
+
+        print $fh "TRUNCATE ".join(',',map { qq/"$_"/ } @tables).";\n";
+        print $fh "\n-- pg_dump output follows...\n\n";
+        print $fh $data;
+        print $fh "\n\nCOMMIT;";
+        close $fh or die "$!";
+    };
+    if ($@) {
+        unlink $filename;
+        die $@;
+    }
+}
+
+sub buildstamp_dir {
+    my $stampdir = File::Spec->catdir(
+        Socialtext::AppConfig->_cache_root_dir(),
+        'fixtures',
+    );
+    return $stampdir;
+}
+
+sub buildstamp_file {
+    my $self = shift;
+    my $buildstamp = File::Spec->catfile(
+        buildstamp_dir(),
+        $self->{name}
+    );
+    return $buildstamp;
+}
+
+sub _touch_buildstamp {
+    my $self = shift;
+
+    my $dir = $self->buildstamp_dir;
+    unless (-d $dir) {
+        mkpath( $dir, 0, 0755 ) || die "can't create buildstamp dir '$dir'; $!";
+    }
+
+    # write an (empty) buildstamp file, to make note that we've built this
+    # fixture already.
+    my $file = $self->buildstamp_file;
+    write_file( $file, '' );
+}
+
+sub is_current {
+    my $self = shift;
+    my $dir = $self->dir;
+
+    if (-x "$dir/is-current") {
+        return ! (system "$dir/is-current");
+    }
+
+    return 1 if (-e $self->buildstamp_file);
+    return 0;
+}
+
+sub has_conflicts {
+    my $self = shift;
+    return 1 if ($self->_i_have_conflicts);
+    return 1 if ($self->_dependencies_have_conflicts);
+    return 0;
+}
+
+sub _i_have_conflicts {
+    my $self = shift;
+    my $conflicts = $self->config->{conflicts};
+    if ($conflicts) {
+        foreach my $fixture_name (@{$conflicts}) {
+            my $fixture = Test::Socialtext::Fixture->new( name=>$fixture_name, env=>$self->env );
+            return 1 if (-e $fixture->buildstamp_file);
+        }
+    }
+    return 0;
+}
+
+sub _dependencies_have_conflicts {
+    my $self = shift;
+    foreach my $fixture (@{$self->fixtures}) {
+        return 1 if ($fixture->has_conflicts);
+    }
+    return 0;
+}
+
+sub generate {
+    my $self = shift;
+
+    unless ( $self->is_current() ) {
+        $self->_generate_subfixtures;
+        $self->_generate_builtins;
+        $self->_generate_workspaces;
+        $self->_run_custom_generator;
+        $self->_touch_buildstamp;
+    }
+}
+
+{
+    my %BUILT;
+    my %builtins = (
+        clean       => \&_built_in_clean,
+        base_layout => \&_built_in_base_layout,
+        base_config => \&_built_in_base_config,
+        db          => \&_built_in_db,
+    );
+    sub _generate_builtins {
+        my $self = shift;
+        my $name = $self->name;
+        my $func = $builtins{$name};
+        if ($func) {
+            unless ($BUILT{$name}++) {
+                $self->$func();
+            }
+        }
+    }
+}
+
+sub _run_custom_generator {
+    my $self = shift;
+    my $dir = $self->dir;
+    my $env = $self->env;
+
+    if (-r "$dir/generate") {
+        local $ENV{NLW_DIR} = $env->nlw_dir;
+        local $ENV{NLW_ROOT_DIR} = $env->root_dir;
+
+        (system "$dir/generate") == 0
+            or die $self->name . "/generate exit ", $? >> 8;
+    }
+}
+
+sub _default_account {
+    my $self = shift;
+
+    # Fetch the default account directly, so we avoid caching in
+    # Socialtext::Account
+    return  get_system_setting('default-account');
+}
+
+sub _create_user {
+    my $self = shift;
+    my %p = @_;
+
+    # Set the default account to be Socialtext and enable all plugins for that
+    # account
+    my $account = $self->_default_account;
+    my $adapter = Socialtext::Pluggable::Adapter->new;
+    $account->enable_plugin($_) for @DEFAULT_PLUGINS;
+    $account->update(skin_name => 's3');
+
+    my $user = Socialtext::User->new( username => $p{username} );
+    $user ||= Socialtext::User->create(
+        username        => $p{username},
+        email_address   => $p{username},
+        password        => $p{passwd},
+        is_business_admin  => $p{is_business_admin},
+        is_technical_admin => $p{is_technical_admin},
+        primary_account_id => $account->account_id,
+    );
+
+    return $user;
+}
+
+sub _generate_subfixtures {
+    my $self = shift;
+
+    foreach my $name (@{$self->config->{fixtures}}) {
+        Test::Socialtext::Fixture->new(name => $name, env => $self->env)->generate();
+    }
+}
+
+my %PermsForName = (
+    public          => 'public',
+    'auth-to-edit'  => 'public-join-to-edit',
+);
+sub _generate_workspaces {
+    my $self = shift;
+
+    return unless $self->config->{workspaces};
+
+    my $creator = $self->_create_user(
+        username           => Test::Socialtext::User->test_username(),
+        email_address      => Test::Socialtext::User->test_email_address(),
+        passwd             => Test::Socialtext::User->test_password(),
+        is_business_admin  => 1,
+        is_technical_admin => 1,
+    );
+
+    # Create a user that is easy for ingy to type
+    my $user_q = $self->_create_user(
+        username           => 'q@q.q',
+        passwd             => 'qwerty',
+        is_business_admin  => 1,
+        is_technical_admin => 1,
+    );
+
+    # Create all of our Workspaces.
+    print STDERR "# workspaces: " if $self->env->verbose;
+    while ( my ( $name, $spec ) = each %{ $self->config->{workspaces} } ) {
+        print STDERR "$name... " if $self->env->verbose;
+        if ( $name =~ /help/ ) {
+            $self->_generate_help_workspace( $creator, $name );
+            next;
+        }
+
+	my $title = ucfirst($name) . ' Wiki';
+
+	if( defined $spec->{title} ) {
+	    $title = $spec->{title};
+	}
+
+        my $ws = Socialtext::Workspace->create(
+            name               => $name,
+            title              => $title,
+            created_by_user_id => $creator->user_id(),
+            account_id         => $self->_default_account->account_id,
+            ($spec->{no_pages} ? (skip_default_pages => 1) : ())
+        );
+        $ws->add_user(
+            user => $user_q,
+            role => Socialtext::Role->Admin(),
+        );
+
+        my $perms = $PermsForName{ $ws->name } || 'member-only';
+	if( defined( $spec->{permission_set_name} )) {
+	    $perms = $spec->{permission_set_name};
+	}
+
+        $ws->permissions->set( set_name => $perms );
+
+        # Add extra users in the roles specified.
+        while ( my ( $role, $users ) = each %{ $spec->{extra_users} } ) {
+            $self->_add_user( $ws, $_, $role ) for @$users;
+        }
+
+        $self->_create_extra_pages($ws) if $spec->{extra_pages};
+        $self->_create_ordered_pages($ws) if $spec->{ordered_pages};
+        $self->_activate_impersonate_permission($ws)
+            if $spec->{admin_can_impersonate};
+    }
+
+    print STDERR "done!\n" if $self->env->verbose;
+}
+
+sub _add_user {
+    my $self = shift;
+    my $ws = shift;
+    my $username = shift;
+    my $rolename = shift;
+
+    $ws->add_user(
+        user => $self->_create_user( username => $username ),
+        role => Socialtext::Role->new( name => $rolename ),
+    );
+}
+
+sub _activate_impersonate_permission {
+    my $self = shift;
+    my $workspace = shift;
+
+    $workspace->permissions->add(
+        permission => Socialtext::Permission->new( name => 'impersonate' ),
+        role => Socialtext::Role->Admin(),
+    );
+}
+
+sub _generate_help_workspace {
+    my $self = shift;
+    my $user = shift;
+    my $ws_name = shift || 'help-en';
+    my $tarball = $self->env->nlw_dir . "/t/share/tarballs/$ws_name.tar.gz";
+
+    # Workspace already exists.
+    return if Socialtext::Workspace->new( name => $ws_name );
+
+    # Load up the workspace from a previous export.
+    my $ws = Socialtext::Workspace->ImportFromTarball(
+        name        => $ws_name,
+        tarball     => $tarball,
+        overwrite   => 1,
+        index_async => 1,
+    );
+    $ws ->add_user(
+        user => $user,
+        role => Socialtext::Role->Admin(),
+    );
+}
+sub _unlink_existing_pages {
+    my $self = shift;
+    my $ws = shift;
+
+    my $user = Socialtext::User->SystemUser();
+    my $hub = Socialtext::Hub->new(
+        current_workspace => $ws,
+        current_user => $user,
+    );
+    my @pages = Socialtext::Pages->new(hub => $hub)->all;
+    for my $p (@pages) {
+        $p->delete(user => $user);
+    }
+
+    $self->_clean_workspace_ceqlotron_tasks($ws);
+}
+
+# remove the ceqlotron jobs we don't want
+sub _clean_workspace_ceqlotron_tasks {
+    my $self = shift;
+    my $ws   = shift;
+
+    my $program = $self->env->nlw_dir . '/bin/ceq-rm';
+    system($program, ";ws=" . $ws->workspace_id . ";") and die "$program failed: $!";
+}
+
+sub _create_ordered_pages {
+    my $self = shift;
+    my $ws = shift;
+
+    $self->_unlink_existing_pages($ws);
+
+    my $workspace_name = $ws->name;
+
+    my $hub = $self->env->hub_for_workspace($ws);
+
+    my $category_count = 1;
+
+    # prepare the recent changes data
+    my $date = DateTime->now;
+    $date->subtract( seconds => 120 );
+    for my $number (qw(one two three four five six)) {
+        my $category = $category_count++ % 2;
+        $category = "category $category";
+
+        # We set the dates to ensure a repeatable sort order
+        my $page = Socialtext::Page->new( hub => $hub )->create(
+            title      => "$workspace_name page $number",
+            content    => "$number content",
+            date       => $date,
+            categories => [$category],
+            creator    => $hub->current_user,
+        );
+        $date->add( seconds => 5 );
+    }
+}
+
+sub _create_extra_pages {
+    my $self = shift;
+    my $ws = shift;
+
+    my $hub = $self->env->hub_for_workspace($ws);
+    my $xtra_pgs_dir = $self->env->nlw_dir . '/t/extra-pages';
+
+    for my $file ( grep { -f && ! /(?:\.sw.|~)$/ } glob "$xtra_pgs_dir/*" ) {
+        my $name = Encode::decode( 'utf8', File::Basename::basename( $file ) );
+        $name =~ s{_SLASH_}{/}g;
+
+        open my $fh, '<:utf8', $file
+            or die "Cannot read $file: $!";
+        my $content = File::Slurp::read_file($fh);
+
+        Socialtext::Page->new( hub => $hub )->create(
+            title   => $name,
+            content => $content,
+            date    => $self->_get_deterministic_date_for_page($name),
+            creator => Socialtext::User->SystemUser(),
+        );
+    }
+
+    $self->_create_extra_attachments($ws);
+}
+
+sub _get_deterministic_date_for_page {
+    my $self = shift;
+    my $name  = shift;
+    my $epoch = DateTime->now->epoch;
+
+    $epoch -= $self->_hash_name_for_seconds_in_the_past($name);
+
+    return DateTime->from_epoch( epoch => $epoch )
+}
+
+sub _hash_name_for_seconds_in_the_past {
+    my $self = shift;
+    my $name = shift;
+
+    # We want some pages to stay at the top of RecentChanges for quick access:
+    my @very_recents = split /\n/, <<'EOT';
+FormattingTest
+FormattingToDo
+WikiwygFormattingToDo
+WikiwygFormattingTest
+Babel
+Internationalization
+<script>alert("pathological")</script>
+EOT
+    return 0 if grep { $_ eq $name } @very_recents;
+
+    my $NUM_BUCKETS = 1000;
+    my $x = 33;
+    $x *= ord for split //, $name;
+    $x %= $NUM_BUCKETS;
+
+    my $OFFSET_TO_ACCOUNT_FOR_VERY_RECENTS = 60;
+    my $SECONDS_CURVE_ROOT = exp(log(60*60*24)/$NUM_BUCKETS);
+    return
+        $OFFSET_TO_ACCOUNT_FOR_VERY_RECENTS
+        + int(($SECONDS_CURVE_ROOT**$x)*$x);
+}
+
+sub _create_extra_attachments {
+    my $self = shift;
+    my $ws = shift;
+
+    my $hub = $self->env->hub_for_workspace($ws);
+
+    local $CWD = $self->env->nlw_dir . '/t/extra-attachments';
+    for my $dir ( grep { -d && ! /\.svn/ } glob '*' ) {
+        $hub->pages->current( $hub->pages->new_from_name( $dir ) );
+
+        for my $file ( grep { -f } glob "$dir/*" ) {
+            open my $fh, '<', $file
+                or die "Cannot read $file: $!";
+
+            $hub->attachments->create(
+                fh     => $fh,
+                embed  => 0,
+                filename => $file,
+                creator  => Socialtext::User->SystemUser(),
+            );
+        }
+    }
+}
+
+sub _system_or_die {
+    (system @_) == 0 or confess("Cannot execute @_: $!");
+}
+
+sub env { $_[0]->{env} }
+sub name { $_[0]->{name} }
+sub dir { $_[0]->env->nlw_dir . "/t/Fixtures/" . $_[0]->name }
+sub config { $_[0]->{config} }
+sub set_config { $_[0]->{config} = $_[1] }
+sub fixtures { $_[0]->{fixtures} }
+
+1;
+
+__END__

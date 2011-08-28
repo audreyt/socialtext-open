@@ -1,0 +1,61 @@
+HOWTO.custom-javascript -- How to insert a custom JavaScript file into your workspace
+
+@COPYRIGHT@
+
+== Overview ==
+
+Beginning in Socialtext 2.7.0.1 it is possible to write a custom
+Javascript file that will be inserted and read by any workspace that is
+configured to do so. There are many reasons that a user may wish to do
+so, one of the most common reasons is it gives one the ability to change
+and/or add HTML elements in your workspaces.
+
+Custom javascript files work in close cooperation with custom skins. As
+a rule of thumb, it is a good idea to associate these files with a given
+skin. For more information about building and applying custom skins to
+your workspace, please take a look at:
+
+    * Socialtext Style Customization Guide
+        https://www.socialtext.net/help/index.cgi?socialtext_style_customization_guide
+
+== Where should your JavaScript file go?
+
+These should go in /usr/share/nlw/javascript/<skin_name>/custom.js, where
+<skin_name> should be replaced with a directory name of your choosing.
+
+== Configuring a workspace to read the file
+
+When you have that in place, you will want to configure your workspace
+to read the custom javascript file. This can be done by logging in to
+the machine via the commandline and executing the following command
+(this assumes that the user you are running as has permission to sudo
+to the user www-data):
+
+    sudo -u www-data st-admin set-workspace-config --workspace <workspace_id> \
+        customjs_uri base/javascript/<skin_name>/custom.js
+
+
+Be sure to replace <workspace_id> with the ID of the workspace that you
+would like to apply this to and <skin_name> with the value you used above.
+
+== Editing your custom.js file
+
+Now, you are ready to edit your javascript file. In our markup, we have
+two HTML elements that are specifically meant for creating a custom
+header and footer. They are each a div, set to display: none by default,
+called #st-custom-header and #st-custom-footer respectively.
+
+The goal of your custom javascript file is to write one or more functions
+that can be called on page load that adds/alters your markup. Enclosed is
+an example of a custom javascript, called custom.js, that is currently
+being used on our production server that does just that in addition to
+taking advantage of the custom header and footer divs.
+
+Once you have written a couple of functions to add or alter existing
+html, you can make sure that they are called after the page loads by
+adding a line like the following to your script:
+
+    Event.observe(window, 'load', add_custom_header);
+
+where add_custom_header is the name of your custom header function. Again,
+please refer to custom.js for an example.

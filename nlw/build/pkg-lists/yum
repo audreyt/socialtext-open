@@ -1,0 +1,103 @@
+# C/C++ compiler: Building libapreq specifically needs this
+gcc-c++
+
+# Apache 2
+httpd
+httpd-devel
+
+# Postgres
+postgresql
+postgresql-libs
+postgresql-devel
+postgresql-server
+
+# Libs for Perl dependencies
+libxml2-devel
+
+# Perl dependencies
+ImageMagick-perl
+perl-Algorithm-Diff
+perl-Apache-Session
+perl-Apache-Session-Wrapper
+perl-Archive-Tar
+perl-Archive-Zip
+perl-Cache
+perl-Cache-Cache
+perl-Class-Accessor
+perl-Class-Data-Inheritable
+perl-Class-ErrorHandler
+perl-Class-Factory-Util
+perl-Class-Singleton
+perl-Class-Virtual
+perl-Data-UUID
+perl-Date-Simple
+perl-DateTime
+perl-DateTime-Format-Builder
+perl-DateTime-Format-HTTP
+perl-DateTime-Format-Mail
+perl-DateTime-Format-Strptime
+perl-DateTime-Format-W3CDTF
+perl-DateTime-Locale
+perl-DateTime-TimeZone
+perl-DBD-Pg
+perl-DBI
+perl-Devel-StackTrace
+perl-Digest-SHA1
+perl-Email-Address
+perl-Email-MessageID
+perl-Email-MIME
+perl-Email-MIME-Modifier
+perl-Email-Simple
+perl-Email-Valid
+perl-Exception-Class
+perl-Feed-Find
+perl-File-CounterFile
+perl-File-Slurp
+perl-HTML-FillInForm
+perl-HTML-Parser
+perl-HTML-Tagset
+perl-HTML-Tree
+perl-IPC-Run
+perl-JSON
+perl-libwww-perl
+perl-List-MoreUtils
+perl-Log-Dispatch
+perl-MIME-Types
+perl-MLDBM
+perl-Module-Pluggable
+perl-Number-Format
+perl-Params-Validate
+perl-Readonly
+perl-Readonly-XS
+perl-Spiffy
+perl-Sub-Uplevel
+perl-Template-Toolkit
+perl-Template-Plugin-Number-Format
+perl-Test-Base
+perl-Test-Exception
+perl-Text-Autoformat
+perl-Tie-IxHash
+perl-Time-HiRes
+perl-Time-Piece
+perl-XML-Atom
+perl-XML-LibXML
+perl-XML-Parser
+perl-XML-RSS
+
+# perl-Lingua-Stem is missing some dependencies
+perl-Lingua-Stem
+perl-Lingua-Stem-It
+perl-Lingua-Stem-Snowball
+perl-Bit-Vector-Minimal
+perl-IO-stringy
+perl-Tie-Array-Sorted
+
+
+# Optional stringify tools
+catdoc
+lynx
+unrtf
+xpdf
+ghostscript
+# No MP3::Tag package
+# No wvText package

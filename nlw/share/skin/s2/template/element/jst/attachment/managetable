@@ -1,0 +1,14 @@
+{for a in attachments}
+<tr class="st-attachments-manage-filerow row-{if a.odd}odd{else}even{/if}">
+    <td class="st-attachments-manage-filerow-check" nowrap="nowrap"><input type="checkbox" name="select-file" value="${a.uri}" /></td>
+    <td class="st-attachments-manage-filerow-name" nowrap="nowrap">
+        <a href="${a.uri}">${a.name}</a>
+        {if a.name.match(/\.(zip|tar|tar.gz|tgz)$/)}
+            (<a href="#" onclick="Attachments.extract('${a.id}')">extract</a>)
+        {/if}
+    </td>
+    <td class="st-attachments-manage-filerow-from" nowrap="nowrap">${a.uploader}</td>
+    <td class="st-attachments-manage-filerow-date" nowrap="nowrap">${a.date}</td>
+    <td class="st-attachments-manage-filerow-length" nowrap="nowrap">${a.displaylength}</td>
+</tr>
+{/for}

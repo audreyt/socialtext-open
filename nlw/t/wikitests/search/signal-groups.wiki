@@ -1,0 +1,90 @@
+* Fixture: Search
+
+| standard-test-setup | a |
+| standard-test-setup | b |
+| standard-test-setup | c |
+| create-user | d |
+
+| set-searcher | Solr |
+| st-clear-signals |
+
+| create-group | azure%%start_time%%    | %%a_account%% |
+| set          | azure_id | %%group_id%% |
+| add-user-to-group   | %%a_username%% | %%azure_id%%   |
+| add-user-to-group   | %%b_username%% | %%azure_id%%   |
+| add-user-to-account | %%c_username%% | %%a_account%% |
+
+| comment        | post some signals as user a |            |
+| http-user-pass | %%a_username%%              | a_password |
+
+| post-json | /data/signals | {"signal":"relevant all groups"}                                          |
+| code-is   | 201           |                                                                    |
+| post-json | /data/signals | {"signal":"no match all groups"}                                          |
+| code-is   | 201           |                                                                    |
+| post-json | /data/signals | {"signal":"relevant just to an account","account_ids":[%%a_account_id%%]} |
+| code-is   | 201           |                                                                    |
+| post-json | /data/signals | {"signal":"relevant just to a group","group_ids":[%%azure_id%%]}         |
+| code-is   | 201           |                                                                    |
+
+| comment         | check setup   |
+| get-json        | /data/signals |
+| code-is         | 200           |
+| json-parse      |               |
+| json-array-size | 4             |
+
+| comment         | index recent signals |   |
+| st-process-jobs |                      |   |
+| job-count       | SignalIndex          | 0 |
+
+| comment | check that they were indexed and visible to at least sender |
+
+| get-json        | /data/signals?q=relevant    |
+| code-is         | 200                         |
+| json-parse      |                             |
+| json-array-size | 3                           |
+| body-like       | relevant all groups         |
+| body-unlike     | no match all groups         |
+| body-like       | relevant just to an account |
+| body-like       | relevant just to a group    |
+
+
+User B shares account a and the azure group with user A.  Signals targeted at either are visible.
+
+| comment         | do queries as user b   |            |
+| http-user-pass  | %%b_username%%         | b_password |
+
+| get-json        | /data/signals?q=relevant    |
+| code-is         | 200                         |
+| json-parse      |                             |
+| json-array-size | 3                           |
+| body-like       | relevant all groups         |
+| body-unlike     | no match all groups         |
+| body-like       | relevant just to an account |
+| body-like       | relevant just to a group    |
+
+
+User C can see only signals to the shared account (account a).
+
+| comment         | do queries as user c   |            |
+| http-user-pass  | %%c_username%%         | c_password |
+
+| get-json        | /data/signals?q=relevant    |
+| code-is         | 200                         |
+| json-parse      |                             |
+| json-array-size | 2                           |
+| body-like       | relevant all groups         |
+| body-unlike     | no match all groups         |
+| body-like       | relevant just to an account |
+| body-unlike     | relevant just to a group    |
+
+
+User D shares no accounts; no visibility.
+
+| comment        | do queries as user d |          |
+| http-user-pass | %%d%%                | password |
+
+| get-json        | /data/signals?q=relevant |
+| code-is         | 200                      |
+| json-parse      |                          |
+| json-array-size | 0                        |
+

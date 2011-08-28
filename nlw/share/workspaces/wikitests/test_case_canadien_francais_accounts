@@ -1,0 +1,40 @@
+| *Comment* | Test Case: Canadien Français (Accounts) |  |
+
+| *Comment* | Test Case: Canadien Français (Accounts) - Create Accounts |  |
+| set | acctAA | aardvark%%start_time%% |
+| set | acctA | Ångström%%start_time%% |
+| set | acctB | Banana%%start_time%% |
+| set | acctE | éegashark%%start_time%% |
+| set | acctN | numanuma%%start_time%% |
+| set | acctX | Xylophone%%start_time%% |
+| set | user | usercfaccts%%start_time%%@matt.socialtext.net |
+| st-admin | create-account --name %%acctA%% | was created |
+| st-admin | create-account --name %%acctX%% | was created |
+| st-admin | create-account --name %%acctE%% | was created |
+| st-admin | create-account --name %%acctAA%% | was created |
+| st-admin | create-account --name %%acctB%% | was created |
+| st-admin | create-account --name %%acctN%% | was created |
+
+| *Comment* | Test Case: Canadien Français (Accounts) - Test Display of accounts in Control Panel |  |
+| open_ok | /nlw/control/account |  |
+| wait_for_element_visible_ok | st-search-by-name | 30000 |
+| wait_for_element_visible_ok | st-submit-search-by-name | 30000 |
+| type_ok | st-search-by-name | %%start_time%% |
+| click_and_wait | st-submit-search-by-name |  |
+| wait_for_element_visible_ok | link=%%acctA%% | 30000 |
+| wait_for_element_visible_ok | link=%%acctB%% | 30000 |
+| wait_for_element_visible_ok | link=%%acctE%% | 30000 |
+| wait_for_element_visible_ok | link=%%acctN%% | 30000 |
+| wait_for_element_visible_ok | link=%%acctX%% | 30000 |
+| text_like | //body | qr/%%acctAA%%.+%%acctA%%.+%%acctB%%.+%%acctE%%.+%%acctN%%.+%%acctX%%/ |
+
+| *Comment* | Test Case: Canadien Français (Accounts) TEARDOWN |  |
+| st-process-jobs |  |  |
+| delete-account | %%acctA%% |  |
+| delete-account | %%acctX%% |  |
+| delete-account | %%acctE%% |  |
+| delete-account | %%acctAA%% |  |
+| delete-account | %%acctB%% |  |
+| delete-account | %%acctN%% |  |
+
+| *Comment* | Test Case: Canadien Français (Accounts) COMPLETED |  |

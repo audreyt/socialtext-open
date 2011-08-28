@@ -1,0 +1,196 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use Socialtext::Account;
+use Socialtext::Migration::Utils qw/ensure_socialtext_schema/;
+use Socialtext::SQL qw/sql_execute sql_singlevalue sql_txn/;
+use Socialtext::SQL::Builder qw/sql_nextval/;
+use Socialtext::Log qw/st_log/;
+use Socialtext::User;
+use Socialtext::JobCreator;
+
+ensure_socialtext_schema(141); # migration requires the all_users table
+my $logfile = "/var/log/canonical-user-records-$$-.log";
+my $actor_id = Socialtext::User->SystemUser->user_id();
+my $deleted = Socialtext::Account->Deleted->account_id();
+
+my $sth = sql_execute(qq{
+    SELECT array_accum(user_id)
+      FROM users
+  GROUP BY driver_username
+    HAVING COUNT(user_id) > 1
+});
+
+local *LOGF;
+open(LOGF, '>', $logfile);
+while (my $row = $sth->fetchrow_arrayref()) {
+    my @dupes = @{$row->[0]};
+    my $canon = canonical_user_id(@dupes);
+
+    # if all of the duped users are "deleted", we'll get no canon.
+    next unless $canon;
+
+    my @condemned = grep { $_ != $canon } @dupes;
+    sql_txn {
+        my $updates = activity_to_canon($canon, @condemned);
+        map_condemned_ids_to_canon($canon, @condemned);
+        condemn(@condemned);
+        reindex_affected_pages($canon);
+        Socialtext::JobCreator->index_person($_) for @dupes;
+        st_log->info("MIGRATION,CANONOCAL-USER-RECORDS,ACTOR_ID:0,$canon:[". join(',', @condemned). "]");
+        print LOGF join("\n", @$updates);
+    };
+}
+close(LOGF);
+
+sql_execute(qq{
+    UPDATE all_users
+       SET is_deleted = true
+     WHERE EXISTS (
+             SELECT 1
+               FROM "UserMetadata"
+              WHERE "UserMetadata".user_id = all_users.user_id
+                AND "UserMetadata".primary_account_id = ?
+           )
+}, $deleted);
+
+exit;
+################################################################################
+
+sub reindex_affected_pages {
+    my $canon = shift;
+
+    my $sth = sql_execute(qq{
+        SELECT page_id, workspace_id FROM page WHERE last_editor_id = ?
+    }, $canon);
+
+    my $creator = Socialtext::JobCreator->new();
+    while (my $row = $sth->fetchrow_hashref()) {
+        $creator->insert(
+            'Socialtext::Job::PageIndex' => {
+                workspace_id => $row->{workspace_id},
+                page_id => $row->{page_id},
+                job => {
+                    priority => 63,
+                    coalesce => "$row->{workspace_id}-$row->{page_id}",
+                },
+            }
+        );
+    }
+}
+
+sub map_condemned_ids_to_canon {
+    my $canon = shift;
+    my @condemned = shift;
+
+    for my $id (@condemned) {
+        my $seq = sql_nextval('user_mapping_id_seq');
+        sql_execute(qq{
+            INSERT INTO user_mapping (
+                            user_mapping_id,
+                            actor_id,
+                            current_user_id,
+                            original_user_id
+                        )
+                 VALUES ( ?, ?, ?, ? )
+        }, $seq, $actor_id, $canon, $id);
+    }
+
+    return;
+}
+
+sub condemn {
+    my @condemned = @_;
+
+    my $placeholders = join(',', map { '?' } @condemned);
+    sql_execute(qq{
+        UPDATE all_users
+           SET is_deleted = true
+         WHERE user_id IN ($placeholders)
+    }, @condemned);
+
+    return;
+}
+
+sub activity_to_canon {
+    my $canon = shift;
+    my @condemned = @_;
+
+    my @activities = (
+        { table => '"Workspace"',             field => 'created_by_user_id', key => [qw/workspace_id/] },
+        { table => 'attachment',              field => 'creator_id', key => [qw/attachment_id/] },
+        { table => 'event',                   field => 'actor_id', key => [qw/at action actor_id event_class/] },
+        { table => 'event',                   field => 'person_id', key => [qw/at action actor_id event_class/] },
+        { table => 'event_archive',           field => 'actor_id', key => [qw/at action actor_id event_class/] },
+        { table => 'event_archive',           field => 'person_id', key => [qw/at action actor_id event_class/] },
+        { table => 'event_page_contrib',      field => 'actor_id', key => [qw/at action actor_id page_id page_workspace_id/] },
+        { table => 'groups',                  field => 'created_by_user_id', key => [qw/group_id/] },
+        { table => 'page',                    field => 'creator_id', key => [qw/workspace_id page_id/] },
+        { table => 'page',                    field => 'last_editor_id', key => [qw/workspace_id page_id/] },
+        { table => 'page_revision',           field => 'editor_id', key => [qw/revision_id/] },
+        { table => 'recent_signal',           field => 'user_id', key => [qw/signal_id/] },
+        { table => 'recent_signal',           field => 'recipient_id', key => [qw/signal_id/] },
+        { table => 'signal',                  field => 'user_id', key => [qw/signal_id/] },
+        { table => 'signal',                  field => 'recipient_id', key => [qw/signal_id/] },
+        { table => 'signal_user_set',         field => 'user_set_id', key => [qw/signal_id user_set_id/] },
+        { table => 'signal_thread_tag',       field => 'user_id', key => [qw/signal_id user_id tag/] },
+        { table => 'topic_signal_user',       field => 'user_id', key => [qw/signal_id user_id/] },
+        { table => 'view_event',              field => 'actor_id', key => [qw/at action actor_id event_class/] },
+        { table => 'webhook',                 field => 'creator_id', key => [qw/id/] },
+        { table => '"UserMetadata"',          field => 'created_by_user_id', key => [qw/user_id/] },
+    );
+
+    my $placeholder = join(',', map { '?' } @condemned);
+
+    my $updates = [];
+    foreach my $rel (@activities) {
+        my $select_for = join(', ', @{$rel->{key}}, $rel->{field});
+        my $sth = sql_execute(qq!
+            SELECT $select_for
+              FROM $rel->{table}
+             WHERE $rel->{field} IN ($placeholder)
+        !, @condemned);
+
+        while (my $row = $sth->fetchrow_hashref()) {
+            my @values = (
+                "table=$rel->{table}",
+                "canonical_user_id=$canon",
+                "field=$rel->{field}",
+                map { "$_=$row->{$_}" } keys %$row,
+            );
+            push @$updates, join(',', @values);
+        }
+
+        sql_execute(qq!
+            UPDATE $rel->{table}
+               SET $rel->{field} = ?
+             WHERE $rel->{field} IN ($placeholder)
+        !, $canon, @condemned);
+    }
+
+    return $updates;
+}
+
+sub canonical_user_id {
+    my @candidates = @_;
+
+    my $placeholders = join(',', map { '?' } @candidates);
+    my $canonical_user_id = sql_singlevalue(qq{
+        SELECT user_id
+          FROM "UserMetadata"
+         WHERE last_login_datetime = (
+             SELECT MAX(last_login_datetime)
+               FROM "UserMetadata"
+              WHERE user_id IN ($placeholders)
+             )
+           AND user_id IN ($placeholders)
+           AND primary_account_id != ?
+      ORDER BY creation_datetime DESC,
+               user_id DESC
+         LIMIT 1
+    }, @candidates, @candidates, $deleted);
+
+    return $canonical_user_id;
+}
+
+exit 0;

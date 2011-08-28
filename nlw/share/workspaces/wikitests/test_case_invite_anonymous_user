@@ -1,0 +1,38 @@
+This case only covers inviting anonymous users into the test workspace.
+
+| *Comment* | Test Case: Invite Anonymous User Invite new users |  |
+| open_ok | /%%workspace%%/?action=users_settings |  |
+| click_and_wait | link=Invite New Users |  |
+| st-admin | remove-member --email %%start_time%%.one@ken.socialtext.net --workspace %%workspace%% |  |
+| st-admin | remove-member --email %%start_time%%.two@ken.socialtext.net --workspace %%workspace%% |  |
+| type_ok | users_new_ids | `%%start_time%%.one@ken.socialtext.net\n%%start_time%%.two@ken.socialtext.net\n%%start_time%%.malformed2ken.socialtext` |
+| check_ok | append_invitation |  |
+| click_and_wait | link=Invite |  |
+
+| text_like | contentRight | qr/The following 1 email address was invalid.+%%start_time%%\.malformed2ken\.socialtext/ism |
+| text_like | contentRight | qr/The following 2 users were invited into this Workspace.+%%start_time%%\.one\@ken\.socialtext\.net.+%%start_time%%\.two\@ken\.socialtext\.net/ism |
+
+| *Comment* | Test Case: Invite Anonymous User Make user an admin |  |
+| click_and_wait | link=Manage All Users |  |
+| st-should-be-admin | %%start_time%%.one@ken.socialtext.net | 1 |
+| st-logout |  |  |
+| st-force-confirmation | %%start_time%%.one@ken.socialtext.net | password |
+| st-force-confirmation | %%start_time%%.two@ken.socialtext.net | password |
+| st-login | %%start_time%%.one@ken.socialtext.net | password |
+| open_ok | /%%workspace%%/?action=users_settings |  |
+| text_like | Manage All Users |  |
+| st-logout |  |  |
+| st-login | %%start_time%%.two@ken.socialtext.net | password |
+| open_ok | /%%workspace%%/?action=users_settings |  |
+| text_like | List All Users |  |
+| st-logout |  |  |
+
+| *Comment* | Test Case: Invite Anonymous User Teardown |  |
+| st-admin | remove-member --email %%start_time%%.one@ken.socialtext.net --workspace %%workspace%% |  |
+| st-admin | remove-member --email %%start_time%%.two@ken.socialtext.net --workspace %%workspace%% |  |
+
+| *Comment* | Test case: Invite Anonymous User COMPLETED |  |
+
+----
+
+ st-should-be-admin makes listed user an admin. You must be in the Manage All Users screen

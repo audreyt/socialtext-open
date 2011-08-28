@@ -1,0 +1,53 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+use Socialtext::User;
+use DB_File;
+
+my %opts = (root => '/var/www/socialtext');
+
+GetOptions(\%opts, 'root:s', 'help', 'nochange', 'verbose') or exit 1;
+
+die <<'.' if $opts{help};
+USAGE: import-user-data-1 [ OPTIONS ]
+
+    This script copies usernames and passwords from htpasswd.db into the DBMS.
+
+OPTIONS
+
+    --root=/socialtext/root     Specify directory where htpasswd.db lives.
+    --verbose                   Produce extra noise.
+    --nochange                  Don't actually change anything.  Try w/ verbose.
+    --help                      See this message.
+.
+
+$| = 1 if $opts{verbose};
+
+msg("Changing to $opts{root}.\n");
+chdir $opts{root} or die "Cannot chdir to $opts{root}: $!";
+
+msg("Tying htpasswd.db.\n");
+tie my %htpasswd, 'DB_File', 'htpasswd.db', O_RDONLY, 0644
+  or die "Cannot tie to htpasswd.db: $!";
+
+while ( my ( $email, $password ) = each %htpasswd ) {
+    msg("Examining $email.\n");
+    next if Socialtext::User->new( username => $email );
+
+    msg("Inserting $email.\n");
+    Socialtext::User->create( username => $email,
+                              email_address => $email,
+                              password => $password,
+                              no_crypt => 1,
+                            )
+        unless ($opts{nochange});
+}
+
+sub msg {
+    print STDOUT @_ if $opts{verbose};
+}
+

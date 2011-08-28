@@ -1,0 +1,8 @@
+#!/bin/bash
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+MIG_DIR=`dirname $0`/..
+
+psql -U $DB_USER -d $DB -t -c 'ALTER TABLE "Workspace" ADD COLUMN "no_max_image_size" boolean'
+psql -U $DB_USER -d $DB -t -c 'UPDATE "Workspace" SET "no_max_image_size" = FALSE WHERE "no_max_image_size" IS NULL;'

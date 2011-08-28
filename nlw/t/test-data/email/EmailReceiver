@@ -1,0 +1,74 @@
+From williams@tni.com Wed Sep 15 16:08:28 2004
+Return-path: <monkey-users-admin@lists.sourceforge.net>
+Envelope-to: autarch@urth.org
+Delivery-date: Wed, 15 Sep 2004 15:20:29 -0500
+Received: from lists.sourceforge.net ([66.35.250.206]
+    helo=sc8-sf-list1.sourceforge.net)
+	by urth.org with esmtp (TLS-1.0:DHE_RSA_3DES_EDE_CBC_SHA:24)
+	(Exim 4.34)
+	id 1C7gGT-00017C-4e
+	for autarch@urth.org; Wed, 15 Sep 2004 15:20:29 -0500
+Received: from localhost ([127.0.0.1] helo=projects.sourceforge.net)
+	by sc8-sf-list1.sourceforge.net with esmtp (Exim 4.30)
+	id 1C7ft5-0004Pg-Ro; Wed, 15 Sep 2004 12:56:19 -0700
+Received: from sc8-sf-mx1-b.sourceforge.net ([10.3.1.11]
+    helo=sc8-sf-mx1.sourceforge.net)
+	by sc8-sf-list1.sourceforge.net with esmtp (Exim 4.30)
+	id 1C7fVu-0000DH-UE
+	for monkey-users@lists.sourceforge.net; Wed, 15 Sep 2004 12:32:22 -0700
+Received: from fwick01.ex.morinda.com ([66.236.69.41] helo=mail.morinda.com)
+	by sc8-sf-mx1.sourceforge.net with esmtp (Exim 4.34)
+	id 1C7fVt-0003QW-Hw
+	for monkey-users@lists.sourceforge.net; Wed, 15 Sep 2004 12:32:22 -0700
+Received: from sharkey.morinda.com ([172.16.38.45]) by mail.morinda.com
+    with Microsoft SMTPSVC(5.0.2195.5329);
+	 Wed, 15 Sep 2004 13:32:00 -0600
+Received: from localhost (williams@localhost)
+	by sharkey.morinda.com (8.11.2/8.11.2) with ESMTP id i8FJWEX05873;
+	Wed, 15 Sep 2004 13:32:14 -0600
+From: John Williams <williams@tni.com>
+X-X-Sender:  <williams@sharkey.morinda.com>
+To: Marcus Ramberg <marcus@thefeed.no>
+cc: <monkey-users@lists.sourceforge.net>
+Subject: Re: [monkey] CVS monkey and ape2
+In-Reply-To: <41487AAC.5040007@thefeed.no>
+Message-ID: <Pine.LNX.4.33.0409151241140.5203-100000@sharkey.morinda.com>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Errors-To: monkey-users-admin@lists.sourceforge.net
+Sender: monkey-users-admin@lists.sourceforge.net
+Date: Wed, 15 Sep 2004 13:32:14 -0600 (MDT)
+
+Category: monkey, ape
+
+On Wed, 15 Sep 2004, Marcus Ramberg wrote:
+> I noticed ape2 support was added to the monkey cvs tree, so I thought
+> I'd give it a spin. However, with ape2 2.0.50 and mod_perl 2 1.99r16
+> I get the following error with a basic httpd.conf setup:
+>
+> Error message:
+> Can't locate object method "server_root_relative" via package "ape"
+> at /usr/local/lib/perl5/site_perl/5.8.5/HTML/monkey/apeHandler.pm line
+> 602.
+
+Argh.
+
+The API changed in mod_perl-1.99.15 regarding server_root_relative.
+
+I'll post a patch as soon as I can.
+
+~ John Williams
+
+
+
+
+-------------------------------------------------------
+This SF.Net email is sponsored by: thawte's Crypto Challenge Vl
+Crack the code and win a Sony DCRHC40 MiniDV Digital Handycam
+Camcorder. More prizes in the weekly Lunch Hour Challenge.
+Sign up NOW http://ad.doubleclick.net/clk;10740251;10262165;m
+_______________________________________________
+monkey-users mailing list
+monkey-users@lists.sourceforge.net
+https://lists.sourceforge.net/lists/listinfo/monkey-users
+

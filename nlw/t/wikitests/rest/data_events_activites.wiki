@@ -1,0 +1,318 @@
+Test case to test `/data/events/activities/:user`
+
+* clean out the events
+* create a pre-canned set of events to test against
+** some that we know are goign to be in the results
+*** user has contributed to a page recently
+*** user has changed their profile recently
+** some that we know *aren't* going to be in the results
+* get the activities list for the user
+* check: got the right number of events
+* check: contains the events we knew we wanted
+* check: doesn't contain the events we know we don't want
+
+* Fixture: SocialRest
+
+This test case assumes a logged in user.
+
+| comment         | STARTING Test case: REST event activites |
+
+| comment          | set up fixture    |                                      |             |
+| set              | workspace         | foobar%%start_time%%                 |             |
+| create-workspace | %%workspace%%     |                                      |             |
+| set              | account           | a%%start_time%%                      |             |
+| create-account   | %%account%%       |                                      |             |
+| set              | username          | u%%start_time%%@ken.socialtext.net   |             |
+| create-user      | %%username%%      | password                             | %%account%% |
+| add-member       | %%username%%      | %%workspace%%                        |             |
+| set-user-id      | theuser_id        | %%username%%                         |             |
+| http-user-pass   | %%username%%      | password                             |             |
+| set              | otherusername     | u2-%%start_time%%@ken.socialtext.net |             |
+| create-user      | %%otherusername%% | password                             | %%account%% |
+| add-member       | %%otherusername%% | %%workspace%%                        |             |
+| set-user-id      | otheruser_id      | %%otherusername%%                    |             |
+| set              | thirdusername     | u3-%%start_time%%@ken.socialtext.net |             |
+| create-user      | %%thirdusername%% | password                             | %%account%% |
+| add-member       | %%thirdusername%% | %%workspace%%                        |             |
+| set-user-id      | thirduser_id      | %%thirdusername%%                    |             |
+
+| st-create-pages | %%workspace%% | 2 |
+| set | page | test_page_1 |
+
+| st-clear-events |
+
+| comment   | check that we're starting clean |                  |
+| get       | /data/events                    | application/json |
+| code-is   | 200                             |                  |
+| body-like | []                              |                  |
+
+| comment   | no activities yet                    |                  |
+| get       | /data/events/activities/%%username%% | application/json |
+| code-is   | 200                                  |                  |
+| body-like | []                                   |                  |
+
+####################################
+| *Comment* | Signal Conversations |
+####################################
+
+| set | mention | <a href="/st/profile/%%theuser_id%%">u%%start_time%%</a> |
+
+# From the user
+| post-json | /data/signals | {"signal":"*booya*"} |
+| code-is   | 201           |                      |
+
+# From the user in reply
+| http-user-pass   | %%otherusername%% | password                                                               |
+| post-json        | /data/signals     | {"signal":"Starting some thread"}                                      |
+| code-is          | 201               |                                                                        |
+| set-from-content | signal_id         | qr/"signal_id":"(\d+)"/                                                |
+| http-user-pass   | %%username%%      | password                                                               |
+| post-json        | /data/signals     | {"signal":"I'm replying", "in_reply_to":{"signal_id":"%%signal_id%%"}} |
+| code-is          | 201               |                                                                        |
+
+# Mentions from other users
+| http-user-pass | %%otherusername%% | password                                       |
+| post-json      | /data/signals     | {"signal":"Mentioning {user: %%theuser_id%%}"} |
+| code-is        | 201               |                                                |
+
+# Mentions in replies
+| http-user-pass   | %%otherusername%% | password                                                                                  |
+| post-json        | /data/signals     | {"signal":"Starting a thread"}                                                            |
+| code-is          | 201               |                                                                                           |
+| set-from-content | signal_id         | qr/"signal_id":"(\d+)"/                                                                   |
+| http-user-pass   | %%thirdusername%% | password                                                                                  |
+| post-json        | /data/signals     | {"signal":"in reply {user: %%theuser_id%%}", "in_reply_to":{"signal_id":"%%signal_id%%"}} |
+
+# Verify
+| get-json         | /data/events/activities/%%username%%?html=0 | application/json       |
+| json-response-is | 200                                         | 4                      |
+| json-path-is     | $[0].context.body                           | in reply %%mention%%   |
+| json-path-is     | $[1].context.body                           | Mentioning %%mention%% |
+| json-path-is     | $[2].context.body                           | I'm replying           |
+| json-path-is     | $[3].context.body                           | <b>booya</b>           |
+
+####### Done conversation tests ########
+
+| http-user-pass   | %%username%%      | password                                                               |
+| st-clear-events |
+
+| comment | post a person event | . | .. |
+| post-json | /data/events | {"event_class":"person", "action":"edit_save", "person":{"id":"%%theuser_id%%"}, "context":{"testkey":"1"}} |
+| code-is | 201 |  |  |
+
+| comment | check that we get the one event | . | .. |
+| get | /data/events/activities/%%username%% | application/json |
+| code-is | 200 | |
+| json-parse | |
+| json-array-size | == | 1 |
+| body-like | "event_class":"person" | |
+| body-like | "action":"edit_save" | |
+| body-like | qr/"person":[^}]*"id":"%%theuser_id%%"/ | |
+| body-like | qr/"actor":[^}]*"id":"%%theuser_id%%"/ | |
+| body-like | qr/"actor":[^}]*"avatar_is_visible":"1"/ | |
+| body-like | qr/"actor":[^}]*"profile_is_visible":"1"/ | |
+| body-like | "testkey":"1" | |
+
+| Comment   | Make sure profile_is_visible is disabled if the user has been hidden |
+| st-admin  | hide-profile --u %%username%% |
+| get       | /data/events/activities/%%username%% | application/json |
+| code-is   | 200                                             |
+| body-like | qr/"actor":[^}]*"profile_is_visible":0/ | |
+| st-admin  | show-profile --u %%username%% |
+| get       | /data/events/activities/%%username%% | application/json |
+| code-is   | 200                                             |
+| body-like | qr/"actor":[^}]*"profile_is_visible":"1"/ | |
+
+| comment | post an event by another user | . | .. |
+| post-json | /data/events | {"event_class":"person", "action":"edit_save", "actor":{"id":"%%theuser_id%%"}, "person":{"id":"%%otheruser_id%%"}, "context":{"testkey":"2"}} |
+| code-is | 201 |  |  |
+| get  | /data/events | application/json   |  |
+| code-is | 200 |  |  |
+| json-parse |  |  |  |
+| json-array-size | == | 2 | |
+
+| comment | check that we still get the two events | . | .. |
+| get  | /data/events/activities/%%username%% | application/json  |
+| code-is | 200 | |
+| json-parse | |
+| json-array-size | == | 2 |
+| body-like | qr/"person":[^}]*"id":"%%otheruser_id%%"/ | |
+| body-like | "testkey":"1" | |
+| body-like | "testkey":"2" | |
+
+
+| comment | reset events |
+| st-clear-events | |
+
+| comment | post a person:tag_add event |  |  |
+| post-json | /data/events | {"event_class":"person", "action":"tag_add", "actor":{"id":"%%otheruser_id%%"}, "person":{"id":"%%theuser_id%%"}, "tag_name":"foo", "context":{"testkey":"3"}} |
+| code-is | 201 |  |  |
+
+| comment | post a person:tag_delete event |  |  |
+| post-json | /data/events | {"event_class":"person", "action":"tag_delete", "actor":{"id":"%%otheruser_id%%"}, "person":{"id":"%%theuser_id%%"}, "tag_name":"foo", "context":{"testkey":"4"}} |
+| code-is | 201 |  |  |
+
+| comment | post a person:watch_add event |  |  |
+| post-json | /data/events | {"event_class":"person", "action":"watch_add", "actor":{"id":"%%otheruser_id%%"}, "person":{"id":"%%theuser_id%%"}, "context":{"testkey":"5"}} |
+| code-is | 201 |  |  |
+
+| comment | post a page:edit_save event |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"edit_save", "actor":{"id":"%%theuser_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"6"}} |
+| code-is | 201 |  |  |
+
+| comment | post a page:edit_save event for another actor (filtered) |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"edit_save", "actor":{"id":"%%otheruser_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"7"}} |
+| code-is | 201 |  |  |
+
+| comment | post a page:comment event |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"comment", "actor":{"id":"%%theuser_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"8"}} |
+| code-is | 201 |  |  |
+
+| comment | post a page:tag_add event |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"tag_add", "actor":{"id":"%%theuser_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"9"}, "tag_name":"sometag"} |
+| code-is | 201 |  |  |
+
+| comment | post a page:rename event |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"rename", "actor":{"id":"%%theuser_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"10", "target_page":{"id":"blah","workspace_name":"%%workspace%%"}}} |
+| code-is | 201 |  |  |
+
+| comment | post a page:duplicate event |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"duplicate", "actor":{"id":"%%theuser_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"11", "target_page":{"id":"blah","workspace_name":"%%workspace%%"}}} |
+| code-is | 201 |  |  |
+
+| comment | post a page:delete event |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"delete", "actor":{"id":"%%theuser_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"12"}} |
+| code-is | 201 |  |  |
+
+| comment | post a page:edit_begin event (filtered) |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"edit_begin", "actor":{"id":"%%theuser_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"13"}} |
+| code-is | 201 |  |  |
+
+| comment | post a page:edit_contention event (filtered) |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"edit_contention", "actor":{"id":"%%theuser_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"14"}} |
+| code-is | 201 |  |  |
+
+| comment | post a page:unknown event (filtered) |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"unknown", "actor":{"id":"%%theuser_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"15"}} |
+| code-is | 201 |  |  |
+
+| comment | post a fake:fake event (filtered) |  |  |
+| post-json | /data/events | {"event_class":"fake", "action":"fake", "actor":{"id":"%%theuser_id%%"}, "context":{"testkey":"16"}} |
+| code-is | 201 |  |  |
+
+| comment | post a page:edit_save event |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"edit_save", "actor":{"id":"%%theuser_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"17"}} |
+| code-is | 201 |  |  |
+
+| comment | post a page:edit_save event |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"edit_save", "actor":{"id":"%%theuser_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"18"}} |
+| code-is | 201 |  |  |
+
+| comment | post a page:edit_save event |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"edit_save", "actor":{"id":"%%theuser_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"19"}} |
+| code-is | 201 |  |  |
+
+| comment | post a page:edit_save event |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"edit_save", "actor":{"id":"%%theuser_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"20"}} |
+| code-is | 201 |  |  |
+
+| comment | post a page:edit_save event |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"edit_save", "actor":{"id":"%%theuser_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"21"}} |
+| code-is | 201 |  |  |
+
+| comment | post a page:edit_save event |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"edit_save", "actor":{"id":"%%theuser_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"22"}} |
+| code-is | 201 |  |  |
+
+| comment | post a page:edit_save event |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"edit_save", "actor":{"id":"%%theuser_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"23"}} |
+| code-is | 201 |  |  |
+
+| comment | post a page:edit_save event |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"edit_save", "actor":{"id":"%%theuser_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"24"}} |
+| code-is | 201 |  |  |
+
+| comment | post a page:edit_save event |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"edit_save", "actor":{"id":"%%theuser_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"25"}} |
+| code-is | 201 |  |  |
+
+| comment | post a page:edit_save event |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"edit_save", "actor":{"id":"%%theuser_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"26"}} |
+| code-is | 201 |  |  |
+
+| comment | post a page:edit_save event |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"edit_save", "actor":{"id":"%%theuser_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"27"}} |
+| code-is | 201 |  |  |
+
+| comment | post a page:edit_save event |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"edit_save", "actor":{"id":"%%theuser_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"28"}} |
+| code-is | 201 |  |  |
+
+| comment | post a page:edit_save event |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"edit_save", "actor":{"id":"%%theuser_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"29"}} |
+| code-is | 201 |  |  |
+
+
+| comment         | check filtering of events                       | . | .. |
+| get              | /data/events/activities/%%username%% | application/json    |    |
+| code-is         | 200                                             |   |    |
+| json-parse      |                                                 |   |    |
+| json-array-size | 21                                              |   |    |
+| body-unlike       | "testkey":"1"                                   |   |    |
+| body-unlike       | "testkey":"2"                                   |   |    |
+| body-like       | "testkey":"3"                                   |   |    |
+| body-like       | "testkey":"4"                                   |   |    |
+| body-unlike     | "testkey":"5"                                   |   |    |
+| body-like       | "testkey":"6"                                   |   |    |
+| body-unlike     | "testkey":"7"                                   |   |    |
+| body-like       | "testkey":"8"                                   |   |    |
+| body-like       | "testkey":"9"                                   |   |    |
+| body-like       | "testkey":"10"                                  |   |    |
+| body-like       | "testkey":"11"                                  |   |    |
+| body-like       | "testkey":"12"                                  |   |    |
+| body-unlike     | "testkey":"13"                                  |   |    |
+| body-unlike     | "testkey":"14"                                  |   |    |
+| body-unlike     | "testkey":"15"                                  |   |    |
+| body-unlike     | "testkey":"16"                                  |   |    |
+| body-like       | "testkey":"17"                                  |   |    |
+| body-like       | "testkey":"18"                                  |   |    |
+| body-like       | "testkey":"19"                                  |   |    |
+| body-like       | "testkey":"20"                                  |   |    |
+| body-like       | "testkey":"22"                                  |   |    |
+| body-like       | "testkey":"23"                                  |   |    |
+| body-like       | "testkey":"24"                                  |   |    |
+| body-like       | "testkey":"25"                                  |   |    |
+| body-like       | "testkey":"26"                                  |   |    |
+| body-like       | "testkey":"27"                                  |   |    |
+| body-like       | "testkey":"28"                                  |   |    |
+| body-like       | "testkey":"29"                                  |   |    |
+
+| Comment         | Set-up LDAP user                                   | .       |
+| st-clear-events |                                                    |         |
+| clear-ldap-users |                                                   |         |
+| st-ldap         | start                                              |         |
+| st-admin        | add-workspace-admin --w %%workspace%% --u devnull3 |         |
+| http-user-pass  | devnull3                                           | ldapd3v |
+
+| Comment | Get the LDAP user's ID number | |
+| get  | /data/users/devnull3 | application/json  |
+| set-from-content | ldap_user_id | qr/"user_id":"(\d+)"/ |
+
+| Comment | POST some events for the LDAP user | . |
+| post-json | /data/events | {"event_class":"person", "action":"edit_save", "actor":{"id":"%%ldap_user_id%%"}, "person":{"id":"%%ldap_user_id%%"}, "context":{"testkey":"100"}} |
+| code-is | 201 |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"edit_save", "actor":{"id":"%%ldap_user_id%%"}, "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"101"}} |
+| code-is | 201 |  |  |
+| post-json | /data/events | {"event_class":"page", "action":"comment", "page":{"id":"%%page%%","workspace_name":"%%workspace%%"}, "context":{"testkey":"102"}} |
+| code-is | 201 |  |  |
+
+| Comment         | Check that the LDAP user got recorded properly  |
+| get             | /data/events/activities/%%ldap_user_id%% | application/json |
+| code-is         | 200                                             |
+| json-parse      |                                                 |
+| json-array-size | 3                                               |
+| body-like       | "testkey":"100"                                 |
+| body-like       | "testkey":"101"                                 |
+| body-like       | "testkey":"102"                                 |
+| body-like       | qr/"actor":{[^}]*"id":"%%ldap_user_id%%"/       |
+| body-like       | qr/"person":{[^}]*"id":"%%ldap_user_id%%"/      |

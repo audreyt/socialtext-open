@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+# N.B. Run this script as the instance user.
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+
+# check the schema of "User", if it's already changed, check for schema of
+# "UserId", "UserMetadata", punt, otherwise:
+
+expected_user_sum=bcaa4c7943d3d05fc0625581c72bdb28
+
+user_sum=`psql -U $DB_USER -d $DB -t -c '\d "User"' | awk '{print $1}' | md5sum | awk '{print $1}'`
+
+if [ "$user_sum" != "$expected_user_sum" ]; then
+    echo "User table already migrated.  Aborting."
+    exit 1
+fi
+
+# output the count of "User" to /tmp/user-count
+psql -U $DB_USER -d $DB -c 'select count(*) from "User";' > /tmp/user-count || exit 2;

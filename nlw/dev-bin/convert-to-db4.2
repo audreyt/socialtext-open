@@ -1,0 +1,33 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+#
+# This is needed when transferring files from a system where
+# mod_auth_db and DB_File are linked against Berkeley DB 2.x (Debian
+# stable) from one where they are linked against Berkeley DB 4.x
+# (Ubuntu & Debian sarge).
+#
+
+use strict;
+use warnings;
+
+use File::Basename;
+use File::Copy;
+use File::Find::Rule;
+
+my $dir = shift || '.';
+
+for my $f ( File::Find::Rule->file->name('*.db')->in($dir) )
+{
+    my $name = basename($f);
+    system( '/usr/bin/db_dump', '-f', "/tmp/$name.txt", $f )
+        and die "dump of $f failed: $!";
+    move( $f, '/tmp' )
+        or die "Cannot move $f to /tmp";
+    system( '/usr/bin/db4.2_load', '-f', "/tmp/$name.txt", $f )
+        and die "load of $f failed: $!";
+    unlink "/tmp/$name.txt"
+        or die "Cannot unlink /tmp/$name.txt: $!";
+    unlink "/tmp/$name"
+        or die "Cannot unlink /tmp/$name: $!";
+}

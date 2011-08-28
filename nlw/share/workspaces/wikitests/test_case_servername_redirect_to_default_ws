@@ -1,0 +1,38 @@
+| *Comment* | Test Case: Servername redirect to default ws |
+| *Comment* | Test Case: Servername redirect to default ws is based on "http colon slash slash servername goes to default workspace" |
+
+| st-admin | enable-plugin --account "%%defaultaccount%%" --p dashboard |  |
+
+| st-config | set default_workspace '' | Wrote updated config file to |
+| open_ok | / |  |
+| wait_for_element_visible_ok | link=Add Widget | 60000 |
+| st-config | set default_workspace %%workspace%% | Wrote updated config file to |
+| open_ok | / |  |
+| wait_for_element_visible_ok | st-edit-button-link | 60000 |
+| wait_for_element_visible_ok | link=Socialtext Documentation | 30000 |
+| wait_for_element_visible_ok | link=start here | 30000 |
+| text_like | Every once in a while, visit What's new (next to Quick jump, at the top) to see recent changes and additions, and see |  |
+| st-config | set default_workspace '' | Wrote updated config file to |
+| open_ok | / |  |
+| wait_for_element_visible_ok | link=Add Widget | 60000 |
+| text_unlike | //body | Every once in a while, visit What's new (next to Quick jump, at the top) to see recent changes and additions, and see |
+
+| *Comment* | Test case: Servername redirect to default ws COMPLETED |  |
+
+^ DONE_TESTING
+
+TODO: implement some of these other tests:
+
+| *Test* | *Dev State* | *QA State* |
+| Admin puts a workspace name in the default_workspace field of socialtext.conf (or `st-config`) | yes -lc | yes |
+| User's primary account has dashboard enabled | ... | ... |
+| ... the default workspace is public. User navigates to $servername and is navigated to the default workspace | yes -lc | mrh |
+| ... the default workspace is private. user logs in. they navigate to the default workspace | yes -lc | mrh |
+| ... user clicks "home" - they navigate to dashboard | yes -lc | mrh |
+| User's primary account has dashboard disabled. | ... | ... |
+| ... the default workspace is public. user navigates to $servername and is navigated to the default workspace. | yes -lc | mrh |
+| ... the default workspace is private. user logs in. they navigate to the default workspace | yes -lc | mrh |
+| ... user clicks home. they navigate to the default workspace | yes -lc | mrh |
+| The default_workspace is not set or is invalid | ... | ... |
+| ... Dashboard is enabled. User navigates to dashboard upon login | yes -lc | yes mrh |
+| ... Dashboard is disabled. User navigates to workspace list upon login. | yes -lc | mrh |

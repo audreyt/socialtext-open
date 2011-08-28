@@ -1,0 +1,18 @@
+| *Comment* | Test Case: Replies. Start |  |
+
+* Fixture: SocialWidgets
+
+| set | reply_prefix | Reply at %%start_time%% |
+| set | topic_signal | Topic for %%reply_prefix%% |
+
+| include | [Test Case: Replies Seeder] |  |
+
+| include | [Test Case: Replies Includer] |  |
+
+| include | [Test Case: Replies Checker] |  |
+
+| include | [Test Case: Mobile Replies FF] |  |
+
+| include | [Test Case: Mobile Replies IE] |  |
+
+| *Comment* | Test Case: Replies COMPLETED |  |

@@ -1,0 +1,46 @@
+#!/usr/bin/python
+
+import time
+import base64
+import httplib
+import urllib
+import os
+import sys
+
+def genuserauth():
+    username='devnull1@socialtext.com'
+    password='d3vnu11l'
+    base64string=base64.encodestring('%s:%s' % (username, password))[:-1]
+    return (username, base64string)
+
+numsignals = 1000
+if len(sys.argv) > 1:
+    numsignals = int(sys.argv[1])
+
+print "Sending %d signals:" % numsignals
+
+(user, auth) = genuserauth()
+headers={}
+headers['Authorization']=("Basic %s" % auth)
+headers['User-Agent']='SIGNALS LOADER'
+headers['Content-Type']='application/json'
+success = 0
+for x in range(0,numsignals):
+    jsonstring='{"signal":"foo %d Signal at %f"}' % (x, time.time())
+    port = 20000+os.getuid()
+    conn = httplib.HTTPConnection('localhost:%d' % port)
+    conn.request('POST', '/data/signals', jsonstring, headers)
+
+    
+    result = conn.getresponse()
+    if (result.status != 201):
+        print "OOPS",x
+        print result.status, result.reason
+    else:
+        success = success + 1
+    result.read()
+
+    if (x % 100) == 99:
+        print x+1
+print "Sent %d signals!" % success 
+

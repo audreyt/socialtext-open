@@ -1,0 +1,48 @@
+#!/usr/bin/env perl
+use warnings;
+use strict;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::MLDBMAccess;
+use YAML qw/Dump Load/;
+use Getopt::Long;
+
+my $restore = 0;
+GetOptions(
+	'restore!' => \$restore,
+        'help' => \&usage,
+);
+my $from = shift;
+my $to = shift;
+
+if ($restore) {
+	$from ||= 'attachments.yaml';
+	$to ||= 'attachments.db';
+        usage() unless -f $from;
+	open my $fromfile, '<:utf8', $from;
+	my $raw = do { local $/; <$fromfile> };
+	my $yaml = Load($raw);
+	my $db = Socialtext::MLDBMAccess::tied_hashref(filename=>$to, writing=>1);
+	%$db = %$yaml;
+	undef $db;
+}
+else {
+	$from ||= 'attachments.db';
+	$to ||= 'attachments.yaml';
+        usage() unless -f $from;
+	my $db = Socialtext::MLDBMAccess::tied_hashref(filename=>$from, writing=>0);
+	open my $tofile, '>:utf8', $to;
+	print $tofile Dump(\%$db);
+}
+
+exit 0;
+
+sub usage {
+    print <<USAGE
+USAGE: $0 my.db my.yaml
+       $0 --restore my.yaml my-new.db
+
+Copies database files in MLDBM format to (or from) YAML.
+
+USAGE
+}

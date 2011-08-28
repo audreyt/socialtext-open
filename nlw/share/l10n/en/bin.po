@@ -1,0 +1,84 @@
+# @COPYRIGHT@
+msgid ""
+msgstr ""
+"Project-Id-Version: Socialtext i18n\n"
+"PO-Revision-Date: 2011-02-24 01:39+0800\n"
+"Language-Team: Socialtext i18n team\n"
+"Last-Translator: Socialtext i18n team\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: bin/ceq-stat:83
+msgid "info.verbose"
+msgstr "HINT try --verbose for a key and extra columns"
+
+#. ($cleaned)
+#: bin/ceq-cleanup:20
+msgid "job.cleaned=count"
+msgstr "Done cleaning %1 job types."
+
+#: bin/ceq-stat:33
+msgid "job.count-delay"
+msgstr "Number of jobs with a delayed start time"
+
+#: bin/ceq-stat:31
+msgid "job.count-enqueued"
+msgstr "Number of jobs enqueued"
+
+#: bin/ceq-stat:35
+msgid "job.count-failed"
+msgstr "Failed job count"
+
+#: bin/ceq-stat:32
+msgid "job.count-grabbed"
+msgstr "Number of jobs \"grabbed\" for work"
+
+#: bin/ceq-stat:34
+msgid "job.count-success"
+msgstr "Successful job count"
+
+#. ($job_name)
+#: bin/ceq-cleanup:18
+msgid "job.deprecated=type"
+msgstr "Job type %1 has been deprecated. Removing it."
+
+#: bin/ceq-stat:72
+msgid "job.key:"
+msgstr "Key:"
+
+#: bin/ceq-stat:37
+msgid "job.last-failure"
+msgstr "Most recent failure time"
+
+#: bin/ceq-stat:36
+msgid "job.last-success"
+msgstr "Most recent success time"
+
+#: bin/ceq-stat:38
+msgid "job.newest"
+msgstr "Most recently (latest) enqueued time"
+
+#: bin/ceq-stat:39
+msgid "job.newest-without-delay"
+msgstr "Most recently (latest) enqueued time, without a delayed start"
+
+#: bin/ceq-stat:40
+msgid "job.oldest"
+msgstr "Earliest (oldest) enqueued time"
+
+#: bin/ceq-stat:41
+msgid "job.oldest-without-delay"
+msgstr "Earliest (oldest) enqueued time, without a delayed start"
+
+#: bin/ceq-stat:69
+msgid "job.total"
+msgstr "Total"
+
+#: bin/ceq-stat:68
+msgid "job.type"
+msgstr "Job Type"
+
+#: bin/ceq-stat:134
+msgid "time.never"
+msgstr "Never"

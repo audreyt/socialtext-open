@@ -1,0 +1,80 @@
+* Fixture: SocialRest
+
+| set | page | my_page_%%start_time%%                            |
+| set | url  | /data/workspaces/admin/pages/%%page%%/attachments |
+| set | hdrs | Content-Type=text/plain |
+
+| edit-page | admin                      | %%page%%         | Hello there |
+| post      | %%url%%?name=test.txt      | %%hdrs%%         | Hi You      |
+| code-is | 201 |
+| body-like |                            |                  |             |
+
+| get-json  | %%url%%                    |
+| code-is   | 200                        |
+| body-like | content-type":"text/plain" |
+| body-like | "name":"test.txt"          |
+
+| set-from-content | id            | qr/"id":"([^"]+)"/ |
+| body-like | qr/"uri":"\/data\/workspaces\/admin\/attachments\/%%page%%:%%id%%\/original\/test.txt"/ |
+| set-from-content | file_url            | qr/"uri":"([^"]+)"/ |
+
+| get        | %%file_url%%        |                     |
+| code-is    | 200                 |                     |
+| body-is    | Hi You              |                     |
+| has-header | Content-type        | text/plain          |
+| has-header | Content-Disposition | filename="test.txt" |
+
+* Try out the permalink URL
+
+| get         | %%url%%/test.txt    |                     |
+| code-is     | 200                 |                     |
+| body-like   | Hi You              |                     |
+| has-header  | Content-type        | text/plain          |
+| header-like | Content-Disposition | filename="test.txt" |
+
+# Sort Order, sleep to ensure that we don't get the same time.
+| POST    | %%url%%?name=Test.txt         | %%hdrs%% | Capital T test                |
+| code-is | 201                           |          |                               |
+| sleep   | 1                             |
+| POST    | %%url%%?name=another-test.txt | %%hdrs%% | Just trying Again big big big |
+| code-is | 201                           |          |                               |
+
+# date ascending by default
+| GET-json         | %%url%%                |              |
+| json-response-is | 200                    | 3            |
+| json-path-is     | $[0].name              | test.txt     |
+| json-path-is     | $[0]['content-type']   | text/plain   |
+| json-path-is     | $[0]['content-length'] | 6            |
+| json-path-is     | $[0]['page-id']        | %%page%%     |
+| json-path-is     | $[0]['uploader']       | %%username%% |
+*TODO* Add id, uuid, uri, date, uploader_name, uploader_id, size, local_date
+
+| json-path-is     | $[1].name | Test.txt         |
+| json-path-is     | $[2].name | another-test.txt |
+
+# lowercase alpha, then date
+| GET-json         | %%url%%?order=alpha_date |                  |
+| json-response-is | 200                      | 3                |
+| json-path-is     | $[0].name                | another-test.txt |
+| json-path-is     | $[1].name                | test.txt         |
+| json-path-is     | $[2].name                | Test.txt         |
+
+| GET-json         | %%url%%?order=size |                  |
+| json-response-is | 200                | 3                |
+| json-path-is     | $[0].name          | another-test.txt |
+| json-path-is     | $[1].name          | Test.txt         |
+| json-path-is     | $[2].name          | test.txt         |
+
+| GET-json         | %%url%%?order=alpha |                  |
+| json-response-is | 200                | 3                |
+| json-path-is     | $[0].name          | another-test.txt |
+| json-path-is     | $[1].name          | test.txt         |
+| json-path-is     | $[2].name          | Test.txt         |
+
+# using 'q' for filtering, though it is a little crippled
+| st-process-jobs |
+| GET-json | %%url%%?q=filename:txt&order=date |
+| json-response-is | 200       | 3                |
+| json-path-is     | $[0].name | another-test.txt |
+| json-path-is     | $[1].name | Test.txt         |
+| json-path-is     | $[2].name | test.txt         |

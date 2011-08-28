@@ -1,0 +1,22 @@
+#!/bin/bash -e
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+
+
+# check the schema of "Workspace" to see if homepage_weblog is already not null
+
+IS_NOT_NULL=`psql --no-align --tuples-only -U $DB_USER -d $DB -c "
+SELECT COUNT(*)
+FROM pg_class, pg_attribute
+WHERE relname = 'Workspace' AND
+      pg_class.oid = pg_attribute.attrelid AND
+      pg_attribute.attname = 'homepage_weblog' AND
+      pg_attribute.attnotnull = 't';
+"`
+
+if [ "$IS_NOT_NULL" != "1" ]; then
+    echo "Workspace.hompage_weblog is still not null.  Call the police!"
+    exit 1
+fi
+

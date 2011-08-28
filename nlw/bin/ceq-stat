@@ -1,0 +1,186 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+use Getopt::Long;
+use Pod::Usage 1.12;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::Jobs;
+use Socialtext::l10n qw/loc/;
+use Socialtext::DaemonUtil;
+use List::Util qw/max/;
+use List::MoreUtils qw/first_index/;
+use POSIX qw/strftime/;
+
+# don't run as root
+Socialtext::DaemonUtil->Check_and_drop_privs();
+
+my $skip_test = 1;
+my $verbose = 0;
+GetOptions(
+    'h|help|?' => sub {pod2usage({-verbose => 1, -input => $0}); exit},
+    'H|man'    => sub {pod2usage({-verbose => 2, -input => $0}); exit},
+    'v|verbose!' => \$verbose,
+    'skip-test!' => \$skip_test,
+) or die;
+
+my $Interval = shift;
+
+my %label = (
+    queued => loc('job.count-enqueued'),
+    grabbed => loc('job.count-grabbed'),
+    delayed => loc('job.count-delay'),
+    num_ok => loc('job.count-success'),
+    num_fail => loc('job.count-failed'),
+    last_ok => loc('job.last-success'),
+    last_fail => loc('job.last-failure'),
+    latest => loc('job.newest'),
+    latest_nodelay => loc('job.newest-without-delay'),
+    earliest => loc('job.oldest'),
+    earliest_nodelay => loc('job.oldest-without-delay'),
+);
+
+my %header = (
+    queued => '#Job',
+    grabbed => '#Grb',
+    delayed => '#Dly',
+    num_ok => '#OK',
+    num_fail => '#Fail',
+    last_ok => 'Last-OK',
+    last_fail => 'Last-Fail',
+    latest => 'Latest',
+    latest_nodelay => 'Latest-NDly',
+    earliest => 'Earliest',
+    earliest_nodelay => 'Earliest-NDly',
+);
+
+my @stat_order = qw(queued grabbed delayed num_ok last_ok num_fail last_fail);
+push @stat_order, qw(latest latest_nodelay earliest earliest_nodelay)
+    if $verbose;
+
+# keep these in the same order as @stat_order:
+my @max_stats = grep /^(?:last_|latest)/, @stat_order;
+my @min_stats = grep /^(?:earliest)/, @stat_order;
+my @time_stats = grep /^(?:last_|latest|earliest)/, @stat_order;
+my @sum_stats = qw(queued grabbed delayed num_ok num_fail); 
+
+my $name_header = loc('job.type');
+my $total = loc('job.total');
+
+if ($verbose) {
+    print loc('job.key:'),$/;
+    for my $key (@stat_order) {
+        print "\t$header{$key}: $label{$key}\n";
+    }
+    print "\n";
+}
+
+if ($verbose) {
+    print "ceq-stat\n";
+}
+else {
+    print "ceq-stat: ".loc('info.verbose')."\n";
+}
+
+while (1) {
+    print show_total();
+    last unless $Interval;
+    select(undef, undef, undef, $Interval);
+    print "\n";
+}
+
+sub show_total {
+    my $stats = Socialtext::Jobs->stat_jobs();
+
+    my %display_name =
+        map { /Socialtext::Job::(.+)/; $_ => ($1 || $_) }
+        keys %$stats;
+
+    my @table;
+    my %total;
+    $total{$_} = 0 for @max_stats;
+    $total{$_} = 0x7FFFFFFF for @min_stats;
+    while (my ($job_name, $job_stats) = each %$stats) {
+        next if ($skip_test && $job_name =~ /^Socialtext::Job::Test/);
+
+        my @row;
+        push @row, $display_name{$job_name};
+        push @row, $job_stats->{$_} for @stat_order;
+        push @table, \@row;
+
+        $total{$_} += $job_stats->{$_} for @sum_stats;
+        for (@max_stats) {
+            $total{$_} = $job_stats->{$_} if $job_stats->{$_} > $total{$_};
+        }
+        for (@min_stats) {
+            $total{$_} = $job_stats->{$_} if $job_stats->{$_} < $total{$_};
+        }
+    }
+
+    for (@min_stats) {
+        $total{$_} = 0 if $total{$_} eq 0x7FFFFFFF;
+    }
+
+    @table = sort { $a->[0] cmp $b->[0] } @table;
+    push    @table, [$total,       map { $total{$_} }  @stat_order];
+
+    for my $stat (@time_stats) {
+        my $i = first_index { $_ eq $stat } @stat_order;
+        $i+=1; # offset for name
+        for my $row (@table) {
+            $row->[$i] = $row->[$i] > 0
+                ? strftime('%m/%d@%T',localtime($row->[$i]))
+                : loc('time.never');
+        }
+    }
+
+    unshift @table, [$name_header, map { $header{$_} } @stat_order];
+
+    my $cols = 1 + scalar @stat_order;
+    my @width;
+    for my $col (0 .. $cols-1) {
+        push @width, max map {length($_->[$col]||'')} @table;
+    }
+
+    # underline the header and data segments
+    my $lines = [ map { '-' x $_ } @width ];
+    splice @table, 1, 0, $lines;
+    splice @table, -1, 0, $lines;
+
+    my $format = '%' . $width[0] . 's  ';
+    $format .= " %-$width[$_]s" for (1 .. $#{$table[0]});
+    $format .= "\n";
+
+    my $output = '';
+    $output .= sprintf $format, @$_ for @table;
+    return $output;
+}
+
+sub _column_widths {
+    my $table = shift;
+}
+
+=head1 NAME
+
+ceq-stat - Provide a human-readable summary of the jobs in
+ceqlotron's queue.
+
+=head1 SYNOPSIS
+
+  B<ceq-stat>
+  B<ceq-stat> 1.5  # periodically re-queries
+
+=head1 OPTIONS
+
+    --help      This help page
+    --man       Manual page
+    --verbose   Display extra columns and a key
+
+An optional delay interval can be provided to repeat the output.
+
+=head1 SEE ALSO
+
+L<celqlotron(1)>, L<ceq-read(1)>
+
+=cut

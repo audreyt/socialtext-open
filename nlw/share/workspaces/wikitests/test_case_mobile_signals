@@ -1,0 +1,37 @@
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Mobile Signals |  |
+
+| *Comment* | Test Case: Mobile Signals. Click mobile from Dashboard, opens mobile signals |  |
+| open_ok | /st/dashboard |  |
+| wait_for_element_visible_ok | link=Mobile | 30000 |
+| click_and_wait | link=Mobile |  |
+
+| pause | 8000 | I Hate Pause |
+
+| *Comment* | Test Case: Mobile Signals. Word but not Link |  |
+| wait_for_text_present_ok | %%miki_signal_text%% | 30000 |
+| wait_for_text_present_ok | Signals | 3000 |
+
+| *Comment* | Test Case: Mobile Signals. Send a signal |  |
+| wait_for_element_visible_ok | %%miki_signal_submit%% | 3000 |
+| st-type-signal | Siggy Siggy Siggy %%start_time%% Sig | 1 |
+| st_pause_click | 5000 | %%miki_signal_submit%% |
+
+| *Comment* | Test Case: Mobile Signals. Verify a signal |  |
+| wait_for_text_present_ok | less than a minute ago | 3000 |
+| wait_for_text_present_ok | Siggy Siggy Siggy %%start_time%% Sig | 3000 |
+
+| *Comment* | Test Case: Mobile Signals. Verify in people I follow, pausing for repaint |  |
+| click_and_pause | link=%%miki_people_i_follow%% |  |
+| wait_for_text_present_ok | Siggy Siggy Siggy %%start_time%% Sig | 3000 |
+| click_ok | link=%%miki_everyone%% |  |
+
+| *Comment* | Test Case: Mobile Signals. Send 20 more signals to fill up the display |  |  |
+| http-user-pass | %%username%% | %%password%% |  |
+| post-signals | 20 | Siggy Siggy Siggy %%start_time%% | 1 |
+
+| include | [Test Case: Miki Dropdowns WikiWyg] |
+| include | [Test Case: Miki Dropdowns IE] |
+
+| *Comment* | Test Case: Mobile Signals COMPLETED |  |

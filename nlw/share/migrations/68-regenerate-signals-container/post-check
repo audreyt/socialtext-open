@@ -1,0 +1,22 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+use Socialtext::SQL 'sql_singlevalue';
+
+
+# the number of signals containers 
+my $signals_containers = sql_singlevalue(q{
+    SELECT COUNT(1)
+      FROM container 
+     WHERE container_type = 'signals' 
+});
+
+if ($signals_containers > 0) {
+    print "Signals containers found ($signals_containers). Migration failed...\n";
+    exit 1;
+}
+
+print "No signals containers found. Migration complete.\n";
+exit 0;

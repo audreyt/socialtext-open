@@ -1,0 +1,68 @@
+Test action=users_listall
+
+| standard-test-setup |
+
+* Fixture: SocialRest
+
+| comment  | users                                                                      |                                        |
+| set      | busadmin                                                                   | %%start_time%%-busadmin@socialtext.com |
+| set      | wsadmin                                                                    | %%start_time%%-wsadmin@socialtext.com  |
+| set      | user                                                                       | %%start_time%%-user@socialtext.com     |
+| st-admin | create-user --email %%user%% --password password     --account %%account%% |                                        |
+| st-admin | create-user --email %%busadmin%% --password password --account %%account%% |                                        |
+| st-admin | create-user --email %%wsadmin%% --password password  --account %%account%% |                                        |
+| st-admin | give-accounts-admin --email %%busadmin%%                                   |                                        |
+
+| comment  | Create our group                                     |
+| st-admin | add-member --group %%group_id%% --email %%user%%     |
+| st-admin | add-member --group %%group_id%% --email %%busadmin%% |
+| st-admin | add-member --group %%group_id%% --email %%wsadmin%%  |
+
+| comment | set up all-user workspace | |
+| set      | auws_name                                                                                                | %%start_time%%-auws        |
+| set      | auws_title                                                                                               | %%start_time%%-auWorkspace |
+| st-admin | create-workspace --name %%auws_name%% --title %%auws_title%% --account %%account%% --all-users-workspace |                            |
+| st-admin | add-workspace-admin --email %%wsadmin%% --workspace %%auws_name%%                                        |                            |
+| st-admin | add-member --email %%user%% --workspace %%auws_name%%                                                    |                            |
+
+| comment  | Set up normal workspace                                                        |                          |
+| set      | ws_name                                                                        | %%start_time%%-ws        |
+| set      | ws_title                                                                       | %%start_time%%-Workspace |
+| st-admin | create-workspace --name %%ws_name%% --title %%ws_title%% --account %%account%% |                          |
+| st-admin | add-workspace-admin --email %%wsadmin%% --workspace %%ws_name%%                |                          |
+| st-admin | give-accounts-admin --email %%busadmin%%                                       |                          |
+| st-admin | add-member --email %%user%% --workspace %%ws_name%%                            |                          |
+| st-admin | add-member --workspace %%ws_name%% --group %%group_id%%                        |                          |
+
+| comment        | regular user |          |
+| http-user-pass | %%user%%     | password |
+
+| comment   | User can see group in non auw         |
+| get       | /%%ws_name%%/?action=users_listall    |
+| body-like | qr/<label>Groups<\/label>.+%%group%%/ |
+
+| comment     | User cannot see groups in an auw     |
+| get         | /%%auws_name%%/?action=users_listall |
+| body-unlike | <label>Groups</label>                |
+
+| comment        | ws admin    |          |
+| http-user-pass | %%wsadmin%% | password |
+
+| comment   | Workspace admin can see group in non auw |
+| get       | /%%ws_name%%/?action=users_listall       |
+| body-like | qr/<label>Groups<\/label>.+%%group%%/    |
+
+| comment     | Workspace admin cannot see groups in an auw |
+| get         | /%%auws_name%%/?action=users_listall        |
+| body-unlike | <label>Groups</label>                       |
+
+| comment        | business admin |          |
+| http-user-pass | %%busadmin%%   | password |
+
+| comment   | Business admin can see group in non auw |
+| get       | /%%ws_name%%/?action=users_listall      |
+| body-like | qr/<label>Groups<\/label>.+%%group%%/   |
+
+| comment   | Business admin can see groups in an auw |
+| get       | /%%auws_name%%/?action=users_listall    |
+| body-like | qr/<label>Groups<\/label>.+%%group%%/   |

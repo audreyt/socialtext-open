@@ -1,0 +1,10 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use File::Basename qw/dirname/;
+
+for my $makefile (<$ENV{NLW_DIR}/share/plugin/*/Makefile>) {
+    my $dir = dirname($makefile);
+    system("cd $dir && make --quiet") and die "failed to make in $dir: $?";
+}

@@ -1,0 +1,94 @@
+| *Comment* | Test Case: Active Content Setup |  |
+
+| *Comment* | Test Case: Active Content Setup. Create objects. Use st-admin to avoid wikiD code errors. |  |
+| st-admin | create_user -e %%conv_email%% -p %%password%% |  |
+| st-admin | create_workspace -n %%acw%% -t %%acw%% |  |
+| st-admin | create_workspace -n %%acwnoresults%% -t %%acwnoresults%% |  |
+| st-admin | add-member -u %%username%% -w %%acw%% |  |
+| st-admin | add-member -e %%conv_email%% -w %%acw%% |  |
+| st-admin | add-member -u %%username%% -w %%acwnoresults%% |  |
+| st-admin | add-member -e %%conv_email%% -w %%acwnoresults%% |  |
+
+| *Comment* | Test Case: Active Content Setup. Be sure you are logged in as %%email%% |  |
+| st-logoutin |  |  |
+
+| *Comment* | Test Case: Active Content Create Pages to test length limits of widget |  |
+| st-create-pages | %%acwnoresults%% | 20 |
+| st-page-multi-view | /%%acwnoresults%%/?test_page_1 | 1 |
+| st-page-multi-view | /%%acwnoresults%%/?test_page_2 | 6 |
+| st-page-multi-view | /%%acwnoresults%%/?test_page_3 | 1 |
+
+| st-create-pages | %%acw%% | 21 |
+| st-page-multi-view | /%%acw%%/?test_page_1 | 1 |
+| st-page-multi-view | /%%acw%%/?test_page_2 | 1 |
+| st-page-multi-view | /%%acw%%/?test_page_3 | 1 |
+| st-page-multi-view | /%%acw%%/?test_page_4 | 1 |
+| st-page-multi-view | /%%acw%%/?test_page_5 | 1 |
+| st-page-multi-view | /%%acw%%/?test_page_14 | 1 |
+| st-page-multi-view | /%%acw%%/?test_page_15 | 3 |
+| st-page-multi-view | /%%acw%%/?test_page_16 | 3 |
+| st-page-multi-view | /%%acw%%/?test_page_17 | 3 |
+| st-page-multi-view | /%%acw%%/?test_page_18 | 3 |
+| st-page-multi-view | /%%acw%%/?test_page_19 | 3 |
+| st-page-multi-view | /%%acw%%/?test_page_20 | 3 |
+
+| *Comment* | Test Case: Active Content Setup Create Tag page though GUI |  |
+| st-create-wikipage | %%acw%% | Active Content Tag %%start_time%% |
+| st-page-multi-view | /%%acw%%/?Active Content Tag %%start_time%% | 2 |
+
+| *Comment* | Test Case: Active Content Setup Create Edit page though GUI |  |
+| st-create-wikipage | %%acw%% | Active Content Edit %%start_time%% |
+| st-page-multi-view | /%%acw%%/?Active Content Edit %%start_time%% | 2 |
+
+| *Comment* | Test Case: Active Content Setup Create Comment page though GUI |  |
+| st-create-wikipage | %%acw%% | Active Content Comment %%start_time%% |
+| st-page-multi-view | /%%acw%%/?Active Content Comment %%start_time%% | 2 |
+
+| *Comment* | Test Case: Active Content Setup Create Watch page though GUI |  |
+| st-create-wikipage | %%acw%% | Active Content Watch %%start_time%% |
+| st-page-multi-watch | 4 |
+| st-page-multi-view | /%%acw%%/?Active Content Watch %%start_time%% | 4 |
+
+| *Comment* | Test Case: Active Content Setup Create Emailed page though GUI |  |  |
+| st-create-wikipage | %%acw%% | Active Content Emailed %%start_time%% |  |
+
+| *Comment* | Test Case: Active Content Setup Email the page to itself just to create an Email event |  |  |
+| st-email-page | /%%acw%%/?Active Content Emailed %%start_time%% | %%workspace%%@%%wikiemail%% |  |
+| st-page-multi-view | /%%acw%%/?Active Content Emailed %%start_time%% | 4 |  |
+
+| *Comment* | Test Case: Active Content Setup Login as %%conv_email%% |  |
+| st-logoutin | %%conv_email%% | %%password%% |
+
+| *Comment* | Test Case: Active Content Setup Edit a page |  |
+| open_ok | /%%acw%%/?Active Content Edit %%start_time%% |  |
+| wait_for_element_visible_ok | st-edit-button-link |  |
+| click_ok | st-edit-button-link |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| type_ok | wikiwyg_wikitext_textarea | %%conv_user%% edits |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| st-page-save |  |  |
+| st-page-multi-view | /%%acw%%/?Active Content Edit %%start_time%% | 5 |
+
+| *Comment* | Test Case: Active Content Setup comment on a page |  |
+| open_ok | /%%acw%%/?Active Content Comment %%start_time%% |  |
+| wait_for_element_visible_ok | link=Comment | 30000 |
+| click_ok | link=Comment |  |
+| wait_for_element_visible_ok | comment | 30000 |
+| type_ok | comment | %%conv_user%% comments |
+| wait_for_element_visible_ok | link=Save | 30000 |
+| st_click_pause | link=Save | 5000 |
+| wait_for_element_visible_ok | link=Comment | 30000 |
+| st-page-multi-view | /%%acw%%/?Active Content Comment %%start_time%% | 5 |
+
+| *Comment* | Test Case: Active Content Setup tag a page |  |
+| st-add-page-tag | /%%acw%%/?Active Content Tag %%start_time%% | %%conv_user%% tags |
+| st-page-multi-view | /%%acw%%/?Active Content Tag %%start_time%% | 5 |
+
+| *Comment* | Test Case: Active Content Widget if you logout now, IE raises an authen dialog for no reason |  |
+| *Comment* | Try to find a workaround by leaving page |  |
+| open_ok | /%%acw%%/?action=recent_changes |  |
+| wait_for_element_visible_ok | link=Dashboard | 30000 |
+
+| *Comment* | Test Case: Active Content Setup COMPLETED FOR %%conv_email%% |  |

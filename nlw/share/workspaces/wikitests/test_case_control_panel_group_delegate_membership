@@ -1,0 +1,72 @@
+
+| *Comment* | Test Case: Control Panel Group Delegate Membership |  |
+
+| set | deg_acct | deg_account_%%start_time%% |
+| set | deg_group | deg_group_%%start_time%% |
+| set | deg_user_1 | deg-user-1-%%start_time%%@david.socialtext.net |
+| set | deg_user_2 | deg-user-2-%%start_time%%@david.socialtext.net |
+
+| create_account | %%deg_acct%% |  |  |
+| create_user | %%deg_user_1%% | %%password%% | %%deg_acct%% |
+| create_user | %%deg_user_2%% | %%password%% | %%deg_acct%% |
+| create-group | %%deg_group%% | %%deg_acct%% | %%deg_user_1%% |
+| set | deg_group_id | %%group_id%% |  |
+| add-user-to-group | %%deg_user_2%% | %%deg_group_id%% |  |
+
+| *Comment* | Test Case: Control Panel Group Delegate Membership change member to admin with dropdown |  |
+| open_ok | /nlw/control/group/%%deg_group_id%% |  |
+| wait_for_element_visible_ok | userTable-dropdown-1-1 | 30000 |
+| wait_for_element_visible_ok | userTable-dropdown-1-1 | 30000 |
+| is_selected_ok | userTable-dropdown-1-1 | label=Member |
+| select_ok | userTable-dropdown-1-1 | label=Admin |
+| wait_for_text_present_ok | Group role changes were successful |  |
+| is_selected_ok | userTable-dropdown-1-1 | label=Admin |
+
+| *Comment* | Test Case: Control Panel Group Delegate Membership change admin to member with dropdown |  |
+| open_ok | /nlw/control/group/%%deg_group_id%% |  |
+| wait_for_element_visible_ok | userTable-dropdown-1-1 | 30000 |
+| is_selected_ok | userTable-dropdown-1-1 | label=Admin |
+| select_ok | userTable-dropdown-1-1 | label=Member |
+| wait_for_text_present_ok | Group role changes were successful |  |
+| is_selected_ok | userTable-dropdown-1-1 | label=Member |
+
+| *Comment* | Test Case: Control Panel Group Delegate Membership attempt to remove last admin with dropdown |  |
+| is_selected_ok | userTable-dropdown-1-0 | label=Admin |
+| select_ok | userTable-dropdown-1-0 | label=Member |
+| wait_for_text_present_ok | The group needs to include at least one admin | 30000 |
+| is_selected_ok | userTable-dropdown-1-0 | label=Admin |
+
+| *Comment* | Test Case: Control Panel Group Delegate Membership change member to admin with checkbox |  |
+| click_ok | userTable-select-1 |  |
+| is_checked_ok | userTable-select-1 |  |
+| wait_for_element_visible_ok | userTable-action-1 | 30000 |
+| click_ok | userTable-action-1 |  |
+| wait_for_text_present_ok | Group role changes were successful |  |
+
+| *Comment* | Test Case: Control Panel Group Delegate Membership try to remove both admins with checkbox, see no change |  |
+| click_ok | userTable-select-0 |  |
+| is_checked_ok | userTable-select-0 |  |
+| click_ok | userTable-select-1 |  |
+| is_checked_ok | userTable-select-1 |  |
+| wait_for_element_visible_ok | userTable-action-2 | 30000 |
+| click_ok | userTable-action-2 |  |
+| wait_for_text_present_ok | The group needs to include at least one admin | 30000 |
+| is_selected_ok | userTable-dropdown-1-0 | label=Admin |
+| is_selected_ok | userTable-dropdown-1-1 | label=Admin |
+
+| *Comment* | Test Case: Control Panel Group Delegate Membership change admin to member with checkbox |  |
+| click_ok | userTable-select-1 |  |
+| is_checked_ok | userTable-select-1 |  |
+| wait_for_element_visible_ok | userTable-action-2 | 30000 |
+| click_ok | userTable-action-2 |  |
+| wait_for_text_present_ok | Group role changes were successful |  |
+| is_selected_ok | userTable-dropdown-1-1 | label=Member |
+
+| *Comment* | Test Case: Control Panel Group Delegate Membership TEARDOWN |  |
+| st-process-jobs |  |  |
+| st-admin | deactivate-user --email %%deg_user_1%% |  |
+| st-admin | deactivate-user --email %%deg_user_2%% |  |
+| delete-group | %%deg_group_id%% | Recklessly deleting |
+| delete-account | %%deg_acct%% |  |
+
+| *Comment* | Test Case: Control Panel Group Delegate Membership COMPLETED |  |

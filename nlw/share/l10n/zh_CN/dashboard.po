@@ -1,0 +1,134 @@
+# @COPYRIGHT@
+msgid ""
+msgstr ""
+"Project-Id-Version: Socialtext i18n\n"
+"PO-Revision-Date: 2011-05-18 04:24-0700\n"
+"Last-Translator: Socialtext i18n team\n"
+"Language-Team: Socialtext i18n team\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: share/plugin/dashboard/template/dashboard_links:3
+msgid "dashboard.add-widget"
+msgstr "新增小工具"
+
+#: share/plugin/dashboard/template/dashboard_links:60
+msgid "dashboard.admin"
+msgstr "管理显示板"
+
+#: share/plugin/dashboard/share/javascript/lightbox/revert-layout.tt2:4
+msgid "dashboard.confirm-revert?"
+msgstr "您确认要恢复到Socialtext的默认设置么？"
+
+#. (account.name)
+#: share/plugin/dashboard/template/dashboard_hello:5
+msgid "dashboard.for=account"
+msgstr "%1 的显示板"
+
+#: share/plugin/dashboard/share/javascript/lightbox/save-layout.tt2:31
+msgid "dashboard.force-update"
+msgstr "同时强制升级现有用户的显示板"
+
+#: share/plugin/dashboard/template/widget_editor_links:3
+msgid "dashboard.preview"
+msgstr "预览"
+
+#: share/plugin/dashboard/template/widget_editor_links:8
+msgid "dashboard.publish"
+msgstr "发布"
+
+#: share/plugin/dashboard/share/widgets/widget_editor/widget.js:211
+msgid "dashboard.publish-widget-now"
+msgstr "小工具生成正确但是尚未保存。点击发布来更新小工具库。"
+
+#: share/plugin/dashboard/share/javascript/lightbox/revert-layout.tt2:2
+msgid "dashboard.revert"
+msgstr "恢复为默认"
+
+#: share/plugin/dashboard/template/dashboard_links:11
+msgid "dashboard.save"
+msgstr "保存..."
+
+#: share/plugin/dashboard/share/javascript/lightbox/save-layout.tt2:2
+msgid "dashboard.save-confirmation"
+msgstr "确认保存"
+
+#: share/plugin/dashboard/share/javascript/lightbox/save-layout.js:58
+msgid "dashboard.successfully-reset"
+msgstr "成功重置所选帐户的所有显示板"
+
+#: share/plugin/dashboard/share/javascript/lightbox/save-layout.js:74
+msgid "dashboard.successfully-saved"
+msgstr "成功保存所选帐户的默认布局。"
+
+#. (account.name)
+#: share/plugin/dashboard/template/dashboard_notice:2
+msgid "dashboard.switch-from=account:"
+msgstr "这是帐户\"%1\"下面所有用户共享的默认显示板。切换到帐户："
+
+#: share/plugin/dashboard/template/dashboard_hello:14
+msgid "dashboard.welcome"
+msgstr "欢迎"
+
+#: share/plugin/dashboard/share/javascript/lightbox/save-layout.tt2:12
+msgid "dashboard.widgets-to-push:"
+msgstr "下面的小工具将会被推送："
+
+#: share/plugin/dashboard/share/widgets/widget_editor/config.yaml:5
+msgid "description.widget_editor"
+msgstr "编辑小工具"
+
+#: share/plugin/dashboard/share/javascript/lightbox/save-layout.tt2:20
+#: share/plugin/dashboard/template/dashboard_links:18
+#: share/plugin/dashboard/template/widget_editor_links:13
+msgid "do.cancel"
+msgstr "取消"
+
+#: share/plugin/dashboard/share/javascript/lightbox/revert-layout.tt2:13
+msgid "do.no"
+msgstr "否"
+
+#: share/plugin/dashboard/template/dashboard_links:25
+msgid "do.revert-to-default"
+msgstr "恢复为默认…"
+
+#: share/plugin/dashboard/share/javascript/lightbox/save-layout.tt2:25
+msgid "do.save"
+msgstr "保存"
+
+#: share/plugin/dashboard/share/javascript/lightbox/revert-layout.tt2:8
+msgid "do.yes"
+msgstr "是"
+
+#: share/plugin/dashboard/share/javascript/lightbox/save-layout.js:44
+msgid "error.dashboard-push-widget"
+msgstr "推送到显示板发生错误"
+
+#: share/plugin/dashboard/share/javascript/lightbox/save-layout.js:65
+msgid "error.dashboard-reset"
+msgstr "重置显示板发生错误"
+
+#: share/plugin/dashboard/share/javascript/lightbox/save-layout.js:82
+msgid "error.dashboard-save-default-layout"
+msgstr "保存默认布局错误。"
+
+#: share/plugin/dashboard/share/widgets/widget_editor/widget.js:261
+msgid "error.unsaved-widget"
+msgstr "您有未保存的更改。"
+
+#: share/plugin/dashboard/share/javascript/lightbox/save-layout.tt2:33
+msgid "info.dashboard-force-update"
+msgstr "如果您强制升级当前显示板，您会替换这个帐户下面所有人现有的显示板。"
+
+#: share/plugin/dashboard/share/javascript/lightbox/save-layout.tt2:9
+msgid "info.dashboard-push-widget"
+msgstr "推送小工具到用户的显示板，会导致每个用户载入显示板的时候，该小工具出现在在您选择的列的顶部，也就是现有小工具的上方。"
+
+#: share/plugin/dashboard/share/javascript/lightbox/save-layout.tt2:4
+msgid "info.dashboard-save-layout"
+msgstr "点击下面的<b>保存</b>使当前显示板成为您帐户的默认显示板。在新用户第一次登录的时候，他们都会有这个显示板。点击下面“强制升级”复选框来使强制老用户帐户也如此。"
+
+#: share/plugin/dashboard/share/widgets/widget_editor/config.yaml:4
+msgid "title.widget_editor"
+msgstr "小工具编辑器"

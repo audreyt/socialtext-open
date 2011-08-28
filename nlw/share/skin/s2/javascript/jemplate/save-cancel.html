@@ -1,0 +1,6 @@
+<div class="st-widget-buttons">
+    [%- JAVASCRIPT -%]stash.set("save_cancel_button_st_widget_save_button",loc('Save'));[%- END -%]
+    [%- JAVASCRIPT -%]stash.set("save_cancel_button_st_widget_cancel_button",loc('Cancel'));[%- END -%]
+    <span class="st-widget-savebutton"><input id=st-widget-savebutton  type="submit" value=[% save_cancel_button_st_widget_save_button %] /></span>
+    <span class="st-widget-cancelbutton"><input id=st-widget-cancelbutton type="reset" value=[% save_cancel_button_st_widget_cancel_button %] /></span>
+</div>

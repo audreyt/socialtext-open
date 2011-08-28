@@ -1,0 +1,89 @@
+# This is a list of files that should not be checked when diffing
+# SF vs. ST.  It's used by dev-bin/sf-st-diff.
+
+# The metacharacters are:
+#   ^ match the beginning of the string, as in Perl
+#   $ match the end of the string, as in Perl
+#   . match a period, as in file-globbing
+#   * match any string, as in file-globbing
+#   = match this string exactly, if at the beginning of the pattern
+#      "=x" is identical to "^=$", but is more readable
+#
+#  However, I should make these match MANIFEST.SKIP
+
+# Appliance- and hosted-building items.
+# Not stored in SF repo
+^appliance-bin/
+^build/custom-ws-config/
+
+# Workspace-specific build items
+# Not stored in SF repo
+^share/*/angel/
+^share/*/drkw/
+^share/*/dvp/
+^share/*/glg/
+^share/*/ideo/
+^share/*/lp/
+^share/*/referencemd/
+^share/*/rhio/
+^share/*/sap/
+^share/*/symantec/
+^share/*/target/
+^share/*/web2con/
+
+# Dev items not useful to the general public
+# Not stored in SF repo
+^bench/
+=dev-bin/add-dependency
+=dev-bin/bad-bot-does-not-follow-redirect
+=dev-bin/catch.cgi
+=dev-bin/convert-to-db4.2
+=dev-bin/dev-ceqlotron-runner
+=dev-bin/import-user-data-1
+=dev-bin/import-workspace-user-data-2
+=dev-bin/make-branch
+=dev-bin/make-release
+=dev-bin/memory-watchdog
+=dev-bin/move-htaccess-files
+=dev-bin/nlwcommit
+=dev-bin/nlw-downgrade
+=dev-bin/nlw-upgrade
+=dev-bin/poster.pl
+=dev-bin/uj-demo-update
+=dev-bin/update-st-bundles
+=dev-bin/upload-deb
+^share/js-test/
+^t/selenium/
+^t/Test-Less/
+
+# Part of the control panel, which doesn't ship with OSR
+# Not stored in SF repo
+=lib/Socialtext/WebApp/Control.pm
+=lib/Socialtext/AccessHandler/IsBusinessAdmin.pm
+
+# Test data
+# Not stored in SF repo
+^t/test-data/page-stats-log/
+
+# Residue of doing work and/or builds.  These are listed here because
+# I always forget to do a "make clean" before diffing my trees.
+^blib/
+^pm_to_blib
+^build/tmp/
+^t/tmp*/
+=etc/init.d/ceqlotron
+=etc/init.d/st-apache
+=share/html/502.html
+=Makefile
+=lib/Socialtext/Build/ConfigureValues.pm
+
+# Other detritrus that might be lying around.
+.zip$
+.tar.gz$
+.zip$
+.orig$
+.rej$
+tmp-*$
+~$
+
+

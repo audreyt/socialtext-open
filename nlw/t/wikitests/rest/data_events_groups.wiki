@@ -1,0 +1,162 @@
+* Fixture: SocialRest
+
+| standard-test-setup |
+| st-clear-events |
+
+| set | blah_user_id | %%user_id%% |
+
+| GET_json  | /data/events/groups/999999 |
+| code-is   | 404                        |
+| body-like | not found                  |
+
+| set          | g1     | g1-%%start_time%%             |
+| create-group | %%g1%% |                               |
+| set          | g1_id  | %%group_id%%                  |
+| set          | g1_uri | /data/events/groups/%%g1_id%%?html=0 |
+
+| set          | g2     | g2-%%start_time%%             |
+| create-group | %%g2%% | %%account%% | %%username%% | Foo | self-join |
+| set          | g2_id  | %%group_id%%                  |
+| set          | g2_uri | /data/events/groups/%%g2_id%%?html=0 |
+
+* not authorized to see this group - 403
+
+| GET_json | %%g1_uri%% |
+| code-is  | 403        |
+
+* self-join groups events are visible to auth'd users
+| GET_json | %%g2_uri%% |
+| code-is  | 200 |
+
+| http_user_pass | | |
+| GET_json | %%g1_uri%% |
+| code-is  | 401 |
+
+| http_user_pass | %%username%% | %%password%% |
+
+* group with no events
+
+| set-business-admin | %%username%% | 1 |
+| GET_json           | %%g1_uri%%   |   |
+| json-response-is | 200 | 0 |
+
+| GET_json           | %%g2_uri%%   |   |
+| json-response-is | 200 | 1 |
+| json-path-is | $[0].event_class | group            |
+| json-path-is | $[0].action      | add_user         |
+| json-path-is | $[0].person.id   | %%blah_user_id%% |
+| json-path-is | $[0].group.id    | %%g2_id%%        |
+
+* user added to group
+
+| set         | joey     | joey@%%start_time%%.ken.socialtext.net |
+| create-user | %%joey%% | password                               |
+| set         | joey_id  | %%user_id%%                            |
+
+| add-user-to-group | %%joey%%    | %%g1_id%% |
+| GET_json          | %%g1_uri%%  |           |
+| json-response-is | 200 | 1 |
+| json-path-is | $[0].event_class          | group             |
+| json-path-is | $[0].action               | add_user          |
+| json-path-is | $[0].person.id            | %%joey_id%%       |
+| json-path-is | $[0].actor.best_full_name | System User       |
+| json-path-is | $[0].group.name           | %%g1%%            |
+| json-path-is | $[0].group.id             | %%g1_id%%         |
+| json-path-is | $[0].group.uri            | /?group/%%g1_id%% |
+
+| GET     | %%g1_uri%% | text/plain |
+| code-is | 200        |            |
+| body-like | System User (less than a minute ago) added joey to the group %%g1%% |
+
+* user removed from group
+
+| remove-user-from-group | %%joey%% | %%g1_id%% |
+| GET_json          | %%g1_uri%%  |           |
+| json-response-is | 200 | 2 |
+| json-path-is | $[0].event_class          | group             |
+| json-path-is | $[0].action               | remove_user          |
+| json-path-is | $[0].person.id            | %%joey_id%%       |
+| json-path-is | $[0].actor.best_full_name | System User       |
+| json-path-is | $[0].group.name           | %%g1%%            |
+| json-path-is | $[0].group.id             | %%g1_id%%         |
+| json-path-is | $[0].group.uri            | /?group/%%g1_id%% |
+
+| GET     | %%g1_uri%% | text/plain |
+| code-is | 200        |            |
+| body-like | System User (less than a minute ago) removed joey from the group %%g1%% |
+
+* group added to workspace
+
+| add-group-to-workspace | %%g1_id%% | %%workspace%% |
+| GET_json          | %%g1_uri%%  |           |
+| json-response-is | 200 | 3 |
+| json-path-is | $[0].event_class | group            |
+| json-path-is | $[0].action      | add_to_workspace |
+| json-path-is | $[0].group.id    | %%g1_id%%        |
+
+| GET     | %%g1_uri%% | text/plain |
+| code-is | 200        |            |
+| body-like | User (less than a minute ago) added %%g1%% to the workspace %%workspace%% |
+
+* group removed from workspace
+
+| remove-group-from-workspace | %%g1_id%% | %%workspace%% |
+| GET_json          | %%g1_uri%%  |           |
+| json-response-is | 200 | 4 |
+| json-path-is | $[0].event_class | group            |
+| json-path-is | $[0].action      | remove_from_workspace |
+| json-path-is | $[0].group.id    | %%g1_id%%        |
+
+| GET     | %%g1_uri%% | text/plain |
+| code-is | 200        |            |
+| body-like | User (less than a minute ago) removed %%g1%% from the workspace %%workspace%% |
+
+
+* signal sent to group
+
+| http-user-pass    | %%joey%%      | password                                         |
+| add-user-to-group | %%joey%%      | %%g1_id%%                                        |
+| post-json         | /data/signals | {"signal":"hi there", "group_ids":["%%g1_id%%"]} |
+| code-is           | 201           |                                                  |
+| set-from-header | last_signal_id | X-Signal-Id |
+
+| GET_json         | %%g1_uri%%       |                    |
+| json-response-is | 200              | 6                  |
+| json-path-is     | $[0].event_class | signal             |
+| json-path-is     | $[0].signal_id   | %%last_signal_id%% |
+| json-path-is     | $[1].event_class | group              |
+| json-path-is     | $[1].action      | add_user           |
+| json-path-is     | $[1].person.id   | %%joey_id%%        |
+| json-path-is     | $[2].action | remove_from_workspace |
+| json-path-is     | $[3].action | add_to_workspace |
+| json-path-is     | $[4].action | remove_user |
+| json-path-is     | $[5].action | add_user |
+
+| http-user-pass   | %%username%%     | password           |
+| GET_json         | %%g1_uri%%       |                    |
+| json-response-is | 200              | 5                  |
+
+| json-path-is     | $[0].event_class | group              |
+| json-path-is     | $[0].action      | add_user           |
+| json-path-is     | $[0].person.id   | %%joey_id%%        |
+| json-path-is     | $[1].action | remove_from_workspace |
+| json-path-is     | $[2].action | add_to_workspace |
+| json-path-is     | $[3].action | remove_user |
+| json-path-is     | $[4].action | add_user |
+
+Later on ...
+* group details changed
+* adding group to an account
+* removing group from an account
+
+| set | outsider      | outsider@%%start_time%%.ken.socialtext.net |
+| set | outsider_acct | outsiders%%start_time%%                    |
+
+| create-account | outsiders%%start_time%% |          |                   |
+| create-user    | %%outsider%%            | password | %%outsider_acct%% |
+
+| http-user-pass | %%outsider%% | password |
+
+| GET-json    | /data/events |
+| code-is     | 200          |
+| body-unlike | group        |

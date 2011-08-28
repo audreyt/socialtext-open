@@ -1,0 +1,18 @@
+# Lists the NTLM domains and the primary/backup Domain Controllers that are
+# used for performing NTLM Authentication.
+#
+# Fore more information on the configuration options, please refer to the
+# documentation in Socialtext::NTLM::Config.
+#
+# Example:
+#   ---
+#   domain: SOCIALTEXT
+#   primary: PRIMARY_DC
+#   backup:
+#       - BACKUP_DC_ONE
+#       - BACKUP_DC_TWO
+#   ---
+#   domain: EXAMPLE
+#   primary: EXAMPLE_PRIMARY_DC
+#   backup: EXAMPLE_BACKUP_DC
+#

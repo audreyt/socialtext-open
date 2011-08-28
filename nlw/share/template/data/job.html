@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <title>Job 10</title>
+</head>
+<body>
+<style type="text/css">
+[% INCLUDE data/jobs.css %]
+</style>
+<h1>[% entity_name %]</h1>
+<table class="job[% IF job.delayed %] jobdelay[%END%]">
+[% FOREACH col IN columns %]
+    [% IF col == 'delayed' %][% NEXT %][% END %]
+    <tr>
+        <th>
+            [%- SWITCH col -%]
+               [%- CASE 'jobid'%][% loc('job.id') -%]
+               [%- CASE 'funcname'%][% loc('job.class') -%]
+               [%- CASE 'uniqkey'%][% loc('job.key') -%]
+               [%- CASE 'priority'%][% loc('job.prio') -%]
+               [%- CASE 'insert_time'%][% loc('job.created') -%]
+               [%- CASE 'run_after'%][% loc('job.run-after') -%]
+               [%- CASE 'grabbed_until'%][% loc('job.grabbed-until') -%]
+               [%- CASE 'coalesce'%][% loc('job.coalesce') -%]
+               [%- CASE 'arg'%][% loc('job.args') -%]
+               [%- CASE %][% col -%]
+            [%- END -%]
+        </th>
+        <td class="jobcol[%col%]">
+            [% IF col == 'funcname' %]
+                <a href="/data/jobs/class/[% job.funcname %]#job[%job.jobid%]">
+                    [%- job.funcname %]</a>
+            [% ELSIF col == 'arg' %]
+                <pre>
+                [%- job.arg -%]
+                </pre>
+            [% ELSE %]
+                [%- job.$col |html -%]
+            [% END %]
+        </td>
+    </tr>
+[% END %]
+</table>
+<p><a href="/data/jobs">Go up to summary</a></p>
+</body>
+</html>
+

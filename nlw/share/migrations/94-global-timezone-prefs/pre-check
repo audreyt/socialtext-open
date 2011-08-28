@@ -1,0 +1,20 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_singlevalue/;
+
+my $count = sql_singlevalue(qq{
+    SELECT COUNT(1)
+      FROM user_workspace_pref
+     WHERE pref_blob LIKE '%timezone%'
+});
+
+if ($count > 0) {
+    exit 0;
+}
+else {
+    print "no timezone settings needing migration, skipping\n";
+    exit 1;
+}
+

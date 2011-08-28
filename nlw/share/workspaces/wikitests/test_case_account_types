@@ -1,0 +1,99 @@
+| *Comment* | Test Case: Account Types |
+
+* Fixture: ApplianceConfig
+
+| set | Free50 | acctfree50-%%start_time%% |
+| set | Standard | acctstandard-%%start_time%% |
+| set | Comped | acctcomped-%%start_time%% |
+| set | Paid | acctpaid-%%start_time%% |
+| set | blanktype | acctblanktype-%%start_time%% |
+| set | badtype | acctbadtype-%%start_time%% |
+| set | GUI1 | acctgui1-%%start_time%% |
+| set | GUI2 | acctgui2-%%start_time%% |
+
+| st-admin | give-accounts-admin --u %%username%% | has accounts admin access |
+
+| *Comment* | Test Case: Account Types - Set is_socialtext_hosted to 'UNDEF' |  |
+| st-appliance-config-set | is_socialtext_hosted 0 |  |
+| open_ok | /nlw/control/account |  |
+| wait_for_element_visible_ok | st-new-account-name | 30000 |
+| wait_for_element_not_present_ok | st-new-account-type | 2000 |
+
+| *Comment* | Test Case: Account Types - Set is_socialtext_hosted to '1' |  |
+| st-appliance-config-set | is_socialtext_hosted 1 |  |
+| open_ok | /nlw/control/account |  |
+| wait_for_element_visible_ok | st-submit-new-account-submit | 30000 |
+| wait_for_element_visible_ok | st-new-account-name | 30000 |
+| wait_for_element_visible_ok | st-new-account-type | 30000 |
+
+| *Comment* | Test Case: Account Types create a Paid account %%GUI1%% |  |
+| type_ok | st-new-account-name | %%GUI1%% |
+| select_ok | st-new-account-type | Paid |
+| click_and_wait | st-submit-new-account-submit |  |
+| wait_for_text_present_ok | The %%GUI1%% account has been created. | 30000 |
+
+| *Comment* | Test Case: Account Types verify Paid account %%GUI1%% |  |
+| wait_for_element_visible_ok | st-search-by-name | 30000 |
+| type_ok | st-search-by-name | %%GUI1%% |
+| wait_for_element_visible_ok | st-submit-search-by-name | 30000 |
+| click_and_wait | st-submit-search-by-name |  |
+| wait_for_element_visible_ok | link=%%GUI1%% | 30000 |
+| click_and_wait | link=%%GUI1%% | 30000 |
+| wait_for_text_present_ok | Paid | 30000 |
+| text_like | qr/Account type.+Paid/ism |  |
+
+| *Comment* | Test Case: Account Types Create a Standard account %%GUI2%% |  |
+| open_ok | /nlw/control/account |  |
+| wait_for_element_visible_ok | st-submit-new-account-submit | 30000 |
+| wait_for_element_visible_ok | st-new-account-name | 30000 |
+| wait_for_element_visible_ok | st-new-account-type | 30000 |
+| type_ok | st-new-account-name | %%GUI2%% |
+| select_ok | st-new-account-type | Standard |
+| click_and_wait | st-submit-new-account-submit |  |
+| wait_for_text_present_ok | The %%GUI2%% account has been created. | 30000 |
+
+| *Comment* | Test Case: Account Types Verify Standard account %%GUI2%% |  |
+| wait_for_element_visible_ok | st-search-by-name | 30000 |
+| type_ok | st-search-by-name | %%GUI2%% |
+| wait_for_element_visible_ok | st-submit-search-by-name | 30000 |
+| click_and_wait | st-submit-search-by-name |  |
+| wait_for_element_visible_ok | link=%%GUI2%% | 30000 |
+| click_and_wait | link=%%GUI2%% | 30000 |
+| wait_for_text_present_ok | Standard | 30000 |
+| text_like | qr/Account type.+Standard/ism |  |
+
+| *Comment* | Test Case: Account Types Change account %%GUI2%% to Comped |  |
+| wait_for_element_visible_ok | st-new-account-type | 30000 |
+| wait_for_element_visible_ok | st-submit-account-type-submit | 30000 |
+| select_ok | st-new-account-type | value=Comped |
+| click_and_wait | st-submit-account-type-submit |  |
+| wait_for_text_present_ok | Comped | 30000 |
+| text_like | qr/The %%GUI2%% account type has been changed/ism |  |
+| text_like | qr/Account type.+Comped/ism |  |
+
+| *Comment* | Test Case: Account Types Create through CLI Interface |  |
+| st-admin | create-account --name %%Free50%% --type "Free 50" | A new account named "%%Free50%%" was created |
+| st-admin | show-account-config --account %%Free50%% | : Free 50 |
+| st-admin | create-account --name %%Standard%% --type "Standard" | A new account named "%%Standard%%" was created |
+| st-admin | show-account-config --account %%Standard%% | : Standard |
+| st-admin | create-account --name %%Comped%% --type "Comped" | A new account named "%%Comped%%" was created |
+| st-admin | show-account-config --account %%Comped%% | : Comped |
+| st-admin | create-account --name %%Paid%% --type "Paid" | A new account named "%%Paid%%" was created |
+| st-admin | show-account-config --account %%Paid%% | : Paid |
+| st-admin | create-account --name %%blanktype%% | A new account named "%%blanktype%%" was created |
+| st-admin | show-account-config --account %%blanktype%% | : Standard |
+| st-admin | create-account --name %%badtype%% --type foody | Account type (foody) is not valid! |
+| st-admin | show-account-config --account %%badtype%% | There is no account named "%%badtype%%". |
+
+| *Comment* | Test Case: Account types TEARDOWN |  |
+| st-appliance-config-set | is_socialtext_hosted 0 |  |
+| st-process-jobs |  |  |
+| delete-account | %%Free50%% |  |
+| delete-account | %%Standard%% |  |
+| delete-account | %%Comped%% |  |
+| delete-account | %%Paid%% |  |
+| delete-account | %%blanktype%% |  |
+| delete-account | %%GUI1%% |  |
+| delete-account | %%GUI2%% |  |
+
+| *Comment* | Test Case: Account Types COMPLETED |  |

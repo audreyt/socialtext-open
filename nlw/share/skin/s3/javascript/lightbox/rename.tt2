@@ -1,0 +1,38 @@
+[%# vim: set et sts=2 sw=2: %]
+<div class="lightbox" id="st-rename-lightbox">
+  <form id="st-rename-form">
+    <input type="hidden" name="action" value="rename_page" />
+    <input type="hidden" name="json" value="1" />
+    <input type="hidden" name="page_name" value="[% page_title | html_encode %]" />
+    <div class="title">
+      [% loc('do.rename') %]
+      <span id="st-rename-pagetitle">"[% page_title %]"</span>
+    </div>
+    <div class="error" id="st-rename-error">&nbsp;</div>
+    [% loc('page.new-name') %]:
+    <input type="text" id="st-rename-newname" name="new_title" size="34" />
+    <br/>
+
+    [% loc('tag.keep') %]:
+    <input type="checkbox" name="keep_categories" value="1" checked="true" />
+    <br />
+
+    [% loc('file.keep') %]:
+    <input type="checkbox" name="keep_attachments" value="1" checked="true" />
+    <br />
+
+    <div class="buttons">
+        <ul class="widgetButton" style="float:left; padding:10px">
+          <li class="flexButton">
+              <a id="st-rename-savelink" class="submit genericOrangeButton" href="#">[% loc('do.rename') %]</a>
+          </li>
+        </ul>
+        <ul class="widgetButton" style="float:left; padding:10px">
+          <li class="flexButton">
+              <a id="st-rename-cancellink" class="close genericOrangeButton" href="#">[% loc('do.cancel') %]</a>
+          </li>
+        </ul>
+    </div>
+  </form>
+</div>
+

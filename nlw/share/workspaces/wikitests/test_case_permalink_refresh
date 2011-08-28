@@ -1,0 +1,85 @@
+* Fixture: SocialWidgets
+* Fixture: SocialRest
+
+| *Comment* | Test Case: Permalink Refresh |  |
+
+| *Comment* | Test Case: Permalink Refresh. Do it for a group |  |
+
+| set | ps1 | psignal 001 %%start_time%% |
+| set | pr1 | preply 001 %%start_time%% |
+| set | pr2 | preply 002 %%start_time%% |
+| set | pr3 | preply 003 %%start_time%% |
+| set | pr4 | preply 004 %%start_time%% |
+| set | p_prgroup | p-pr-group-%%start_time%% |
+
+| *Comment* | Test Case: Permalink Refresh. create group %%p_prgroup%% |  |  |
+| create-group | %%p_prgroup%% | %%defaultaccount%% | %%username%% |
+| set | ps_id | %%group_id%% |  |
+
+| *Comment* | Test Case: Permalink Refresh. post a topic and two replies to %%p_prgroup%% |  |
+| post-signal | %%ps1%% | `{"group_ids":[%%ps_id%%],"account_ids":[]}` |
+| set | parent | %%last_signal_id%% |
+| post-json | /data/signals | `{"signal":"%%pr1%%", "in_reply_to":{"signal_id":%%parent%%},"group_ids":[%%ps_id%%]}` |
+| post-json | /data/signals | `{"signal":"%%pr2%%", "in_reply_to":{"signal_id":%%parent%%},"group_ids":[%%ps_id%%]}` |
+
+| *Comment* | Test Case: Permalink Refresh. Open the group permalinks page and verify received |  |
+| open_ok | /st/signals/%%parent%% |  |
+
+| wait_for_text_present_ok | %%ps1%% | 10000 |
+| wait_for_text_present_ok | %%pr1%% | 10000 |
+| wait_for_text_present_ok | %%pr2%% | 10000 |
+
+| *Comment* | Test Case: Permalink Refresh. Verify auto updates |  |
+| wait_for_text_present_ok | less than a minute ago | 10000 |
+| wait_for_text_present_ok | one minute ago | 120000 |
+
+| *Comment* | Test Case: Permalink Refresh. Send new group reply and wait for it |  |
+| post-json | /data/signals | `{"signal":"%%pr3%%", "in_reply_to":{"signal_id":%%parent%%},"group_ids":[%%ps_id%%]}` |
+| wait_for_text_present_ok | %%pr3%% | 20000 |
+
+| *Comment* | Test Case: Permalink Refresh. Click group Reply to Conversation and reply |  |  |
+| st-send-reply | %%pr4%% |
+
+| *Comment* | Test Case: Permalink Refresh. Wait for the new group reply |  |
+| wait_for_text_present_ok | %%pr4%% | 20000 |
+
+| *Comment* | Test Case: Permalink Refresh. Verify reply auto updates |  |
+| wait_for_text_present_ok | less than a minute ago | 10000 |
+| wait_for_text_present_ok | one minute ago | 120000 |
+
+| *Comment* | Test Case: Permalink Refresh. Now do it for the primary account |  |
+
+| set | s1 | signal 001 %%start_time%% |
+| set | r1 | reply 001 %%start_time%% |
+| set | r2 | reply 002 %%start_time%% |
+| set | r3 | reply 003 %%start_time%% |
+| set | r4 | reply 004 %%start_time%% |
+
+| *Comment* | Test Case: Permalink Refresh. send one sig and two replies to primary account |  |
+| send-signal | %%s1%% |  |
+| set | parent | %%signal_id%% |
+| send-signal-reply | %%parent%% | %%r1%% |
+| send-signal-reply | %%parent%% | %%r2%% |
+
+| *Comment* | Test Case: Permalink Refresh. Open the permalinks page and verify received |  |
+| open_ok | /st/signals/%%parent%% |  |
+
+| wait_for_text_present_ok | %%s1%% | 10000 |
+| wait_for_text_present_ok | %%r1%% | 10000 |
+| wait_for_text_present_ok | %%r2%% | 10000 |
+
+| *Comment* | Test Case: Permalink Refresh. Send new reply and wait for it |  |
+| send-signal-reply | %%parent%% | %%r3%% |
+| wait_for_text_present_ok | %%r3%% | 30000 |
+
+| *Comment* | Test Case: Permalink Refresh. Click Reply to Conversation and reply |  |
+| st-send-reply | %%r4%% |  |
+
+| *Comment* | Test Case: Permalink Refresh. Wait for the new reply |  |
+| wait_for_text_present_ok | %%r4%% | 30000 |
+
+| *Comment* | Test Case: Permalink Refresh TEARDOWN |  |
+| st-process-jobs |  |  |
+| st-admin | delete-group --g %%ps_id%% | Deleted group id |
+
+| *Comment* | Test Case: Permalink Refresh COMPLETED |  |

@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_execute/;
+
+
+sql_execute( q{ 
+                INSERT INTO "Permission" (permission_id, name)
+                VALUES (nextval('"Permission___permission_id"'), 'self_join')
+                }
+); 
+
+exit 0;

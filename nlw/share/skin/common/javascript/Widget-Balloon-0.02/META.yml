@@ -1,0 +1,12 @@
+---
+name: Widget-Balloon
+version: 0.02
+author:
+  - 'Kang-min Liu <gugod@gugod.org>'
+abstract: Generate pop-up balloons above objects as a hint.
+license: perl
+provides:
+  Widget.Balloon:
+    file: lib/Widget/Balloon.js
+    version: 0.02
+generated_by: Module::Build version 0.2611

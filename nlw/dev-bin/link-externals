@@ -1,0 +1,265 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use DirHandle;
+use Fatal qw(chdir mkdir symlink chmod);
+use File::Basename qw(basename dirname);
+use File::Find qw(find);
+use File::Path qw(mkpath);
+use File::Spec;
+use Getopt::Long;
+use Pod::Usage;
+use Term::ANSIColor;
+use Socialtext::File qw(set_contents);
+use Socialtext::System qw(shell_run);
+
+my $all;
+my $plugin;
+my $reports;
+my $console;
+my $libonly;
+my ($help, $man);
+
+GetOptions(
+    'all'      => \$all,
+    'plugin:s' => \$plugin,
+    'reports'  => \$reports,
+    'console'  => \$console,
+    'lib-only' => \$libonly,
+    'help|?'   => \$help,
+    'man'      => \$man,
+) || pod2usage(1);
+
+pod2usage(1) if ($help);
+pod2usage(1) unless ($all || $plugin || $reports || $console);
+pod2usage( -exitstatus=>0, -verbose=>2 ) if ($man);
+
+my $dot_nlw = "$ENV{HOME}/.nlw";
+
+###############################################################################
+# Make sure we're in the "nlw/" directory.
+if (-d './nlw') {
+    chdir './nlw';
+}
+elsif ($ENV{ST_CURRENT} && -d $ENV{ST_CURRENT}) {
+    chdir "$ENV{ST_CURRENT}/nlw";
+}
+else {
+    die "no ./nlw or ST_CURRENT env-var";
+}
+
+###############################################################################
+# Link in everything we were asked to.
+link_plugins() if ($plugin  || $all);
+link_reports() if ($reports || $all);
+link_console() if ($console || $all);
+exit;
+
+
+
+
+
+
+sub link_plugins {
+    my $base = "$FindBin::Bin/../../plugins";
+
+    # Get the full list of plugins to link in
+    my @plugins = ($plugin);
+    if ($all) {
+        my %skip = map { $_ => 1 } qw(mediawiki workspaces);
+        @plugins = grep { !$skip{$_} } _subdirs_under($base);
+    }
+
+    # Link all of the plugins in
+    foreach my $p (@plugins) {
+        status("Linking the $p plugin");
+
+        my $root = File::Spec->catdir($base, $p);
+        unless (-d $root) {
+            die "... plugin $p doesn't exist!\n";
+        }
+
+        _link_contents($root, 'lib',   "$FindBin::Bin/..");
+        next if ($libonly);
+
+        _link_contents($root, 'bin',   "$FindBin::Bin/..");
+        _link_contents($root, 't',     "$FindBin::Bin/..");
+        _link_contents($root, 'build', "$FindBin::Bin/..");
+        _link_contents($root, 'etc/socialtext', $dot_nlw);
+    }
+}
+
+sub link_reports {
+    my $base = "$FindBin::Bin/../../socialtext-reports";
+
+    status("Linking Reports");
+    _link_directory($base, 'lib/Socialtext/Reports', "$FindBin::Bin/..");
+    _link_contents($base, 'lib/Socialtext/WikiFixture', "$FindBin::Bin/..");
+    return if ($libonly);
+
+    shell_run("cd $base && ./setup-dev-env");
+}
+
+sub link_console {
+    my $base = "$FindBin::Bin/../../appliance/libsocialtext-appliance-perl";
+
+    status("Linking Console");
+    _link_contents($base, 'lib', "$FindBin::Bin/..");
+    return if ($libonly);
+
+    _link_contents($base, 'template', "$FindBin::Bin/../share/console-template");
+
+    # Create the "index.cgi" script for a dev-env
+    my $cgidir = "$dot_nlw/root/console";
+    unless (-d $cgidir) {
+        mkpath [$cgidir] or die "Cannot mkpath $cgidir: $!";
+    }
+
+    my $console_cgi = "$cgidir/index.cgi";
+    unlink $console_cgi;
+    set_contents($console_cgi, <<EOT);
+#!/bin/bash
+export ST_APP_CONFIG=$dot_nlw/etc/socialtext/appliance.conf
+perl -I$ENV{HOME}/src/st/current/nlw/lib $base/cgi/appliance.cgi
+EOT
+    chmod 0755, $console_cgi;
+}
+
+sub _link_directory {
+    my ($fromdir, $subdir, $todir) = @_;
+    return unless -d "$fromdir/$subdir";
+
+    my $from = "$fromdir/$subdir";
+    my $to   = "$todir/$subdir";
+
+    my $parent = dirname($to);
+    unless (-d $parent) {
+        mkpath [$parent] or die "Cannot mkpath $parent; $!";
+    }
+
+    unlink $to if -l $to;
+    error("$to already exists! Remove it first\n") if -e $to;
+    symlink $from, $to;
+
+    _ensure_scm_ignored($to, $todir);
+}
+
+sub _ensure_scm_ignored {
+    my ($path, $under) = @_;
+    $path =~ s{^$under/}{} if ($under);
+    unless (`grep $path .gitignore`) {
+        system("echo $path >> .gitignore");
+        system("git commit -m 'Added $path to gitignore' .gitignore");
+    }
+}
+
+sub _link_contents {
+    my ($fromdir, $subdir, $todir) = @_;
+    return unless -d "$fromdir/$subdir";
+
+    if (!-d $todir) {
+        status("Making directory $todir");
+        mkpath [$todir] or die "Cannot mkpath $todir: $!";
+    }
+
+    find( {
+        wanted => sub {
+            return if m{/\.(?:svn|git)/};
+            return if basename($_) =~ m{^\.};
+            my $from = $_;
+            (my $to = $from) =~ s{^$fromdir}{$todir};
+
+            if (-d $from) {
+                unlink $to if -l $to;
+                if (!-d $to) {
+                    status("Making directory $to");
+                    unlink $to if (-l $to);
+                    mkpath [$to] or die "Cannot mkpath $to: $!";
+                }
+            }
+            else {
+                unlink $to if (-l $to);
+                error("$to already exists and is a file! Remove it first\n")
+                    if -e $to;
+
+                symlink $from, $to;
+                _ensure_scm_ignored($to, $todir);
+            }
+        },
+        no_chdir => 1,
+    }, "$fromdir/$subdir");
+}
+
+sub status {
+    my $msg = shift;
+    chomp $msg;
+    print "$msg\n";
+}
+
+sub error {
+    my $error = shift;
+
+    print color 'yellow';
+    print "\n\n$error\n\n";
+    print color 'reset';
+
+    exit;
+}
+
+sub _subdirs_under {
+    my $path = shift;
+    my @dirs;
+
+    my $dirh = DirHandle->new($path);
+    while (my $entry = $dirh->read) {
+        next if ($entry =~ /^\./);
+        next if ($entry eq 'debian');
+        push @dirs, $entry if (-d "$path/$entry");
+    }
+    return @dirs;
+}
+
+=head1 NAME
+
+link-externals - Links in external files for Socialtext build
+
+=head1 SYNOPSIS
+
+  link-externals [options]
+
+=head1 DESCRIPTION
+
+F<link-externals> links in files from external repos into the source tree, so
+that the files will be present for a Socialtext build.
+
+=head1 OPTIONS
+
+=over
+
+=item --all
+
+Links B<everything>, all in one command.
+
+=item --plugin <plugin>
+
+Links the one specified plugin.
+
+=item --reports
+
+Link in the reports repo.
+
+=item --console
+
+Link in the console repo.
+
+=item --lib-only
+
+Only link in files from F<lib/>; do B<not> link anything else in or perform any
+other actions.
+
+=back
+
+=cut

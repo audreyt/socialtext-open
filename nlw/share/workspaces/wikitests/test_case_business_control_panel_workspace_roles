@@ -1,0 +1,200 @@
+| *Comment* | Test Case: Business Control Panel Workspace Roles |
+
+| *Comment* | Test Case: Business Control Panel Workspace Roles Setup create group, ws, member |  |  |
+| st-setup-a-group | 1 | 1 | 1 |
+| st-admin | remove-member --g %%group_id%% --w %%group_ws%% |  |  |
+| st-admin | remove-member --g %%group_id%% --e %%group_user%% |  |  |
+| st-admin | add-member --e %%group_user%% --w %%group_ws%% |  |  |
+
+| set | user2 | wrs-2-%%start_time%%@matt.socialtext.net |
+| set | user2_esc | wrs-2-%%start_time%%\@matt.socialtext.net |
+| create_user | %%user2%% | %%password%% |
+| set | user2_id | %%user_id%% |
+
+| set | user3 | wrs-3-%%start_time%%@matt.socialtext.net |
+| create_user | %%user3%% | %%password%% |
+| set | user3_id | %%user_id%% |
+| set | user3_esc | wrs-3-%%start_time%%\@matt.socialtext.net |
+
+| set | user4 | wrs-4-%%start_time%%@matt.socialtext.net |
+| create_user | %%user4%% | %%password%% |
+| set | user4_id | %%user_id%% |
+| set | user4_esc | wrs-4-%%start_time%%\@matt.socialtext.net |
+
+| *Comment* | Test Case: Business Control Panel Workspace Roles Setup create two new members, add them to workspace |  |
+| st-admin | add-member --w %%group_ws%% --e %%user2%% | now has the role of 'member' in the |
+| st-admin | add-member --w %%group_ws%% --e %%user3%% | now has the role of 'member' in the |
+| st-admin | add-member --w %%group_ws%% --e %%user4%% | now has the role of 'member' in the |
+| st-admin | add-workspace-admin --w %%group_ws%% -e %%user4%% |  |
+| setSpeed | 1500 |  |
+| st-search-cp-workspace | %%group_ws%% | 1 |
+
+| *Comment* | Test Case: Business Control Panel Workspace Roles Modify Promote member to admin role within workspace |  |
+| wait_for_element_visible_ok | userTable-dropdown-1-0 | 30000 |
+| wait_for_element_visible_ok | userTable-dropdown-1-1 | 30000 |
+| wait_for_element_visible_ok | userTable-dropdown-1-2 | 30000 |
+| wait_for_element_visible_ok | userTable-dropdown-1-3 | 30000 |
+| is_selected_ok | userTable-dropdown-1-0 | label=Member |
+| is_selected_ok | userTable-dropdown-1-1 | label=Member |
+| is_selected_ok | userTable-dropdown-1-2 | label=Member |
+| is_selected_ok | userTable-dropdown-1-3 | label=Admin |
+| select_ok | userTable-dropdown-1-0 | label=Admin |
+| wait_for_text_present_ok | Workspace role changes were successful. | 30000 |
+| is_selected_ok | userTable-dropdown-1-1 | label=Member |
+| select_ok | userTable-dropdown-1-1 | label=Admin |
+| pause | 5000 |  |
+| st-search-cp-workspace | %%group_ws%% | 1 |
+| wait_for_element_visible_ok | userTable-dropdown-1-0 | 30000 |
+| is_selected_ok | userTable-dropdown-1-0 | label=Admin |
+| is_selected_ok | userTable-dropdown-1-1 | label=Admin |
+| is_selected_ok | userTable-dropdown-1-2 | label=Member |
+| is_selected_ok | userTable-dropdown-1-3 | label=Admin |
+| select_ok | userTable-dropdown-1-3 | label=Member |
+| wait_for_text_present_ok | Workspace role changes were successful. | 30000 |
+| select_ok | userTable-dropdown-1-1 | label=Member |
+| pause | 5000 |  |
+| wait_for_text_present_ok | Workspace role changes were successful. | 30000 |
+| select_ok | userTable-dropdown-1-0 | label=Member |
+| wait_for_text_present_ok | Workspaces need to include at least one admin | 30000 |
+| is_selected_ok | userTable-dropdown-1-0 | label=Admin |
+| st-search-cp-workspace | %%group_ws%% | 1 |
+| wait_for_element_visible_ok | userTable-dropdown-1-0 | 30000 |
+| is_selected_ok | userTable-dropdown-1-0 | label=Admin |
+| is_selected_ok | userTable-dropdown-1-1 | label=Member |
+| is_selected_ok | userTable-dropdown-1-2 | label=Member |
+| is_selected_ok | userTable-dropdown-1-3 | label=Member |
+
+| *Comment* | Test Case: Business Control Panel Workspace Roles Modify batch of promote member to admin role within workspace |  |
+| *Comment* | Test Case: Business Control Panel Workspace Roles action 0 is remove from wskspce, action 1 is promote to admin, action2 is remove admin |  |
+| wait_for_element_visible_ok | userTable-clearSelected |
+| wait_for_element_visible_ok | userTable-action-0 | 30000 |
+| wait_for_element_visible_ok | userTable-action-1 | 30000 |
+| wait_for_element_visible_ok | userTable-action-2 | 30000 |
+| wait_for_element_visible_ok | userTable-select-1 | 30000 |
+| wait_for_element_visible_ok | userTable-select-2 | 30000 |
+| click_ok | userTable-select-1 |  |
+| click_ok | userTable-select-2 |  |
+| click_ok | userTable-action-1 |  |
+| wait_for_text_present_ok | Workspace role changes were successful. | 30000 |
+| st-search-cp-workspace | %%group_ws%% | 1 |
+| wait_for_element_visible_ok | userTable-dropdown-1-0 | 30000 |
+| is_selected_ok | userTable-dropdown-1-0 | label=Admin |
+| is_selected_ok | userTable-dropdown-1-1 | label=Admin |
+| is_selected_ok | userTable-dropdown-1-2 | label=Admin |
+| is_selected_ok | userTable-dropdown-1-3 | label=Member |
+| *Comment* | Test Case: Business Control Panel Workspace Roles Batch of demote all to member Fails |  |
+| click_ok | userTable-select-0 |  |
+| click_ok | userTable-select-1 |  |
+| click_ok | userTable-select-2 |  |
+| click_ok | userTable-action-2 |  |
+| wait_for_text_present_ok | Workspaces need to include at least one admin | 30000 |
+| st-search-cp-workspace | %%group_ws%% | 1 |
+| wait_for_element_visible_ok | userTable-dropdown-1-0 | 30000 |
+| is_selected_ok | userTable-dropdown-1-0 | label=Admin |
+| is_selected_ok | userTable-dropdown-1-1 | label=Admin |
+| is_selected_ok | userTable-dropdown-1-2 | label=Admin |
+| is_selected_ok | userTable-dropdown-1-3 | label=Member |
+
+| *Comment* | Test Case: Business Control Panel Workspace Roles Batch of two users to member succeeds |  |
+| click_ok | userTable-select-0 |  |
+| click_ok | userTable-select-1 |  |
+| click_ok | userTable-action-2 |  |
+| wait_for_text_present_ok | Workspace role changes were successful. | 30000 |
+| text_like | //body | Users (4) |
+| is_selected_ok | userTable-dropdown-1-0 | label=Member |
+| is_selected_ok | userTable-dropdown-1-1 | label=Member |
+| is_selected_ok | userTable-dropdown-1-2 | label=Admin |
+| is_selected_ok | userTable-dropdown-1-3 | label=Member |
+| st-search-cp-workspace | %%group_ws%% | 1 |
+| wait_for_element_visible_ok | userTable-dropdown-1-0 | 30000 |
+| is_selected_ok | userTable-dropdown-1-0 | label=Member |
+| is_selected_ok | userTable-dropdown-1-1 | label=Member |
+| is_selected_ok | userTable-dropdown-1-2 | label=Admin |
+| is_selected_ok | userTable-dropdown-1-3 | label=Member |
+| text_like | //body | Users (4) |
+
+| *Comment* | Test Case: Business Control Panel Workspace Roles Batch remove two members succeeds |  |
+| click_ok | userTable-select-0 |  |
+| click_ok | userTable-select-1 |  |
+| click_ok | userTable-action-0 |  |
+| VerifyConfirmation | Remove the selected 2 users from this workspace? |  |
+| wait_for_text_present_ok | Workspace role changes were successful. | 30000 |
+| text_like | //body | Users (2) |
+| st-search-cp-workspace | %%group_ws%% | 1 |
+| wait_for_element_visible_ok | userTable-dropdown-1-0 | 30000 |
+| text_unlike | //body | %%user2%% |
+| text_unlike | //body | %%group_user%% |
+| text_like | //body | %%user3%% |
+| text_like | //body | %%user4%% |
+
+| is_selected_ok | userTable-dropdown-1-0 | label=Admin |
+| is_selected_ok | userTable-dropdown-1-1 | label=Member |
+
+| *Comment* | Test Case: Business Control Panel Workspace Roles Batch remove only admin fails |  |
+| click_ok | userTable-select-0 |  |
+| click_ok | userTable-select-1 |  |
+| click_ok | userTable-action-2 |  |
+| wait_for_text_present_ok | Workspaces need to include at least one admin | 30000 |
+| text_like | //body | Users (2) |
+| is_selected_ok | userTable-dropdown-1-0 | label=Admin |
+| is_selected_ok | userTable-dropdown-1-1 | label=Member |
+
+| *Comment* | Test Case: Business Control Panel Group Role Add an admin GROUP, now batch remove Admin succeeds |  |
+| st-admin | add-workspace-admin --g %%group_id%% --w %%group_ws%% |  |
+| st-search-cp-workspace | %%group_ws%% | 1 |
+| wait_for_element_visible_ok | userTable-dropdown-1-0 | 30000 |
+| text_like | //body | Users (2) |
+| wait_for_element_visible_ok | groupTable-dropdown-2-0 | 30000 |
+| is_selected_ok | groupTable-dropdown-2-0 | label=Admin |
+| st-search-cp-workspace | %%group_ws%% | 1 |
+| wait_for_element_visible_ok | userTable-select-0 | 30000 |
+| click_ok | userTable-select-0 |  |
+| click_ok | userTable-select-1 |  |
+| click_ok | userTable-action-2 |  |
+| wait_for_text_present_ok | Workspace role changes were successful. | 30000 |
+| text_like | //body | Users (2) |
+| pause | 5000 |  |
+| is_selected_ok | userTable-dropdown-1-0 | label=Member |
+| is_selected_ok | userTable-dropdown-1-1 | label=Member |
+
+| *Comment* | Test Case: Business Control Panel Group Role Add an admin GROUP, now batch remove membership for ws entirely succeeds |  |
+| st-admin | add-workspace-admin --e %%group_user%% --w %%group_ws%% |  |
+| st-search-cp-workspace | %%group_ws%% | 1 |
+| wait_for_element_visible_ok | userTable-dropdown-1-0 | 30000 |
+| wait_for_text_present_ok | Users (3) | 30000 |
+| is_selected_ok | userTable-dropdown-1-1 | label=Member |
+| is_selected_ok | userTable-dropdown-1-2 | label=Member |
+| click_ok | userTable-select-0 |  |
+| click_ok | userTable-select-1 |  |
+| click_ok | userTable-action-0 |  |
+| verifyConfirmation | Remove the selected 2 users from this workspace? |  |
+| wait_for_text_present_ok | Workspace role changes were successful. | 30000 |
+| wait_for_text_present_ok | Users (1) | 30000 |
+| text_unlike | //body | %%user3%% |
+| text_unlike | //body | %%group_user%% |
+| text_like | //body | %%user4%% |
+
+| *Comment* | Test Case: Business Control Panel Group Role Add an admin GROUP, now select remove Admin for Users |  |
+| st-admin | add-workspace-admin --e %%group_user%% --w %%group_ws%% |  |
+| st-search-cp-workspace | %%group_ws%% | 1 |
+| wait_for_element_visible_ok | userTable-dropdown-1-0 | 30000 |
+| text_like | //body | Users (2) |
+| is_selected_ok | userTable-dropdown-1-0 | label=Admin |
+| select_ok | userTable-dropdown-1-0 | label=Member |
+| wait_for_text_present_ok | Workspace role changes were successful. | 30000 |
+| is_selected_ok | userTable-dropdown-1-0 | label=Member |
+| st-search-cp-workspace | %%group_ws%% | 1 |
+| wait_for_element_visible_ok | userTable-dropdown-1-1 | 30000 |
+| is_selected_ok | userTable-dropdown-1-0 | label=Member |
+
+| *Comment* | Test Case: Business Control Panel Workspace Roles Teardown |
+| setSpeed | 0 |
+| st-process-jobs |  |  |
+| deactivate-user | %%user2%% |  |
+| deactivate-user | %%user3%% |  |
+| deactivate-user | %%user4%% |  |
+| deactivate-user | %%group_user%% |  |
+| st-admin | delete-group --g %%group_id%% |
+| st-admin | delete-workspace --w %%group_ws%% --no-export |
+| delete-account | %%group_acct%% |  |
+| *Comment* | Test Case: Business Control Panel Workspace Roles COMPLETED |

@@ -1,0 +1,54 @@
+This is the notes from cdent's patches to nlw/modules/XML-Atom,
+and the diff vs. XML::Atom 0.19.
+
+------------------------------------------------------------------------
+r9892 | cdent | 2006-05-12 19:21:33 -0500 (Fri, 12 May 2006) | 18 lines
+
+Upgrade to XML-Atom 0.19. Unfortunately it still doesn't
+have Atom 1.0 quite right yet, so we need to keep our own
+version. The patch is quite small though.
+
+The issue is with the <content> element of an <entry>.
+In 0.3 this had a mode attribute. Now it has a type attribute.
+Both are sort of wack, unfortunately. In order to make things
+work for us when we have unprintable content, we still need 
+to send base64 some time, and there is, as far as I can tell,
+no compliant way to send text that is base64 encoded. So 
+we are doing it the 0.3 way, and thus far that's okay with the 
+aggregators I've tried.
+
+:(
+
+I'm gonna talk with miyagawa some.
+
+
+------------------------------------------------------------------------
+r8606 | cdent | 2006-03-03 02:12:14 -0600 (Fri, 03 Mar 2006) | 6 lines
+
+To get our atom feeds to 1.0 compliance, we need a hacked XML::Atom.
+I've sent a patch to miyagawa. The patch is a lame ass hack. I hope
+to have a real fix soon, but for the time being, here's this.
+
+More in the next commit.
+
+
+diff -urN --exclude=.svn /usr/src/XML-Atom-0.19/lib/XML/Atom/Content.pm /home/alester/src/st/trunk/nlw/modules/XML-Atom/lib/XML/Atom/Content.pm
+--- /usr/src/XML-Atom-0.19/lib/XML/Atom/Content.pm	2006-03-18 06:11:19.000000000 -0800
++++ /home/alester/src/st/trunk/nlw/modules/XML-Atom/lib/XML/Atom/Content.pm	2006-06-21 12:12:47.000000000 -0700
+@@ -95,14 +95,14 @@
+             };
+             if (!$@ && $node) {
+                 $elem->appendChild($node);
+-                $elem->setAttribute('mode', 'xml');
++                $elem->setAttribute('type', 'xhtml');
+             } else {
+                 if (LIBXML) {
+                     $elem->appendChild(XML::LibXML::Text->new($data));
+                 } else {
+                     $elem->appendChild(XML::XPath::Node::Text->new($data));
+                 }
+-                $elem->setAttribute('mode', 'escaped');
++                $elem->setAttribute('type', ($data =~ /^\s*</) ? 'html' : 'text');
+             }
+         }
+     } else {

@@ -1,0 +1,147 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+
+use Socialtext::Hub;
+use Socialtext::Formatter;
+use Getopt::Long;
+use YAML;
+use UNIVERSAL qw(isa);
+
+sub usage {
+    print <<'END_OF_HELP';
+
+USAGE: pdump [OPTIONS] [INPUT]
+
+    Produces a dump of a wikitext parse tree.  If INPUT is not specified,
+    reads from standard input.
+
+    Options
+
+    --yaml -y                   Produce a YAML-format dump.
+    --from-workspace -w         INPUT should be a workspace name followed by
+                                a page name, and the page will be extracted
+                                from the workspace.
+    --no-next-unit -n           Removes references to "next_unit" from units in 
+                                the parse tree, sometimes they muddy the waters.
+                                Only makes sense with -y or --yaml.
+    --help -h                   This message.
+
+EXAMPLES
+
+    echo '* foo\n** bar\n* baz' | pdump
+    pdump --yaml mystery.wiki
+    pdump -yw admin formatting test             # dumps admin/Formatting\ Test
+                                                # in YAML
+END_OF_HELP
+    exit 0;
+}
+# Send some wikitext to STDIN, get a parse tree in either YAML or a simple
+# indented format on STDOUT.
+
+our $Dump_yaml = 0;
+our $Page_from_workspace = 0;
+our $Want_help = 0;
+our $Remove_Next_Unit = 0;
+
+Getopt::Long::Configure('bundling');
+GetOptions(
+    'yaml|y'           => \$Dump_yaml,
+    'from-workspace|w' => \$Page_from_workspace,
+    'no-next-unit|n'   => \$Remove_Next_Unit,
+    'help|h'           => \$Want_help,
+) or usage();
+
+usage() if $Want_help;
+
+my $parsed = parse_text(get_text());
+
+if ($Dump_yaml) {
+    print Dump($parsed);
+} else {
+    dump_parsed($parsed);
+    print "\n";
+}
+
+sub parse_text {
+    my($text) = @_;
+
+    my $hub = Socialtext::Hub->new;
+    my $formatter = Socialtext::Formatter::Parser->new( 
+        table => $hub->formatter->table,
+        wafl_table => $hub->formatter->wafl_table
+    ) or die "Can't create formatter";
+    $hub->formatter($formatter);
+
+    my $parsed = $formatter->text_to_parsed($text) or die "Can't parse text";
+
+    # This cleans up the YAML dump.
+    delete $parsed->{hub};
+    delete $hub->{formatter};
+
+    remove_next_unit($parsed) if $Remove_Next_Unit;
+    return $parsed;
+}
+
+sub dump_parsed {
+    my($parsed) = @_;
+
+    dump_parsed_at_level($parsed, 0);
+}
+
+sub dump_parsed_at_level {
+    my($parsed, $level) = @_;
+
+    if (ref $parsed) {
+        if (defined $parsed->text) {
+            dump_text_at_level($parsed->text, $level);
+        } else {
+            dump_id_at_level($parsed->formatter_id, $level);
+            foreach my $unit (@{ $parsed->units }) {
+                dump_parsed_at_level($unit, $level + 1);
+            }
+        }
+    } else {
+        dump_text_at_level($parsed, $level);
+    }
+}
+
+sub dump_text_at_level {
+    my($text, $level) = @_;
+
+    $text =~ s/\n/\\n/g;
+
+    print ' ' x $level, "$text\n";
+}
+
+sub dump_id_at_level {
+    my($id, $level) = @_;
+
+    print ' ' x $level, "<$id>\n";
+}
+
+sub get_text {
+    if ($Page_from_workspace) {
+        open WSUTIL, "$FindBin::Bin/wsutil wikicat @ARGV |"
+            or die "wsutil: $!";
+        return join '', <WSUTIL>;
+    } else {
+        return join '', <>;
+    }
+}
+
+sub remove_next_unit {
+    my $tree = shift;
+    return unless isa($tree, 'HASH');
+    for my $u (@{$tree->{units} || []}) {
+        if (isa($u, 'HASH')) {
+            delete $u->{next_unit};
+            remove_next_unit($u);
+        }
+    }
+}
+

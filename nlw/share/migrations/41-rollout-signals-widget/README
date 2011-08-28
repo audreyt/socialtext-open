@@ -1,0 +1,9 @@
+For [Story: Roll out Signals Widget], this migration pushes the signals widget
+to all users' dashboards that *do not already have it installed*. Only users
+in accounts that actually have signals enabled will see the widget.
+
+This migration needs to make sure to only do this push *once* ever, no matter
+how many times the script is run. The intent here is that some users didn't
+get the signals widget when signals was rolled out due to a set of
+circumstances that no longer exist - PM has decided the way to remedy this is
+a one-time push.

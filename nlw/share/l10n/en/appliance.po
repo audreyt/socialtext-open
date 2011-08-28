@@ -1,0 +1,680 @@
+# @COPYRIGHT@
+msgid ""
+msgstr ""
+"Project-Id-Version: Socialtext i18n\n"
+"PO-Revision-Date: 2011-05-13 07:49-0700\n"
+"Language-Team: Socialtext i18n team\n"
+"Last-Translator: Socialtext i18n team\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "appliance.archiving-system-config-files"
+msgstr "Archiving system config files ..."
+
+msgid "appliance.backup-id"
+msgstr "Backup ID"
+
+msgid "appliance.backup-time"
+msgstr "Backup Time"
+
+msgid "appliance.backups-for-restore:"
+msgstr "Backups available for restore:"
+
+msgid "appliance.cleanup-previous-snapshot"
+msgstr "Cleaning up previous snapshot ..."
+
+msgid "appliance.taking-database-snapshot"
+msgstr "Taking database snapshot ..."
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:54
+msgid "backup.about-automatic-backup"
+msgstr "Backups can be taken automatically after the latest backup reaches the age selected for the \"Backup schedule\". The \"Day(s) of the week\" specifies when it is acceptable to make the online backup, so choose day(s) with low traffic. If you are using Continuous Archiving, periodic Full Backups are recommended to reduce restoration times and increase safety."
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:80
+msgid "backup.about-automatic-expiry"
+msgstr "Backups can be automatically expired when they reach a certain age. The last remaining backup will never be expired. Automatic expiry takes place every day. If an automatic backup is required on the same day, automatic expiry occurs after that backup takes place."
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:144
+msgid "backup.about-destination"
+msgstr "Backup files can be stored on a Windows shared directory (a SMB/CIFS share). Choosing an \"Archive Directory\" will store backups inside that sub-directory within the share."
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:18
+msgid "backup.archived-sequence-id"
+msgstr "Archived Sequence ID"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:53
+msgid "backup.automatic-backups"
+msgstr "Automatic Backups"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:79
+msgid "backup.automatic-cleanup"
+msgstr "Automatic Cleanup"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backups.inc:19
+msgid "backup.cannot-delete-last-backup"
+msgstr "It is required that at least one backup exists. If only one backup is present then it cannot be deleted."
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:46
+msgid "backup.choose-days-of-week-for-full-backup"
+msgstr "Automatic Full backups will be initiated on the selected days of the week. Unselect all to disable."
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:61
+msgid "backup.choose-time-of-day-for-maintenance"
+msgstr "Backup maintenance tasks are scheduled at this time every day. Choose a time of day with low traffic."
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:10
+msgid "backup.continuous-archiving"
+msgstr "Continuous Archiving"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:25
+msgid "backup.date"
+msgstr "Backup Date"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:49
+msgid "backup.days-of-week:"
+msgstr "Day(s) of the week:"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:98
+msgid "backup.delete-expired-files"
+msgstr "Delete expired files"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backups.inc:10
+msgid "backup.delete=label?"
+msgstr "Delete \"%1\" backup?"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:12
+msgid "backup.directory"
+msgstr "Directory"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:13
+msgid "backup.directory-writable"
+msgstr "Directory Writable"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:95
+msgid "backup.expiry-action:"
+msgstr "Expiry action:"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:17
+msgid "backup.in-progress-sequence-id"
+msgstr "In-progress Sequence ID"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:86
+msgid "backup.indefinitely"
+msgstr "indefinitely"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:6
+msgid "backup.information"
+msgstr "Backup Information"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:24
+msgid "backup.label"
+msgstr "Backup Label"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:20
+msgid "backup.list"
+msgstr "Backup List"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:10
+msgid "backup.logical-dumps"
+msgstr "Logical Dumps"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:40
+msgid "backup.maintenance-schedule"
+msgstr "Backup Maintenance Schedule"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:106
+msgid "backup.maintenance-window"
+msgstr "Maintenance Window"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:60
+msgid "backup.manually"
+msgstr "manually"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:10
+msgid "backup.method"
+msgstr "Method"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:23
+msgid "backup.mode"
+msgstr "Backup Mode"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:30
+msgid "backup.mode-checkpoint"
+msgstr "checkpoint"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:30
+msgid "backup.mode-full"
+msgstr "full"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:101
+msgid "backup.move-expired-files-to-expired-sub-folder"
+msgstr "Move expired files to \"expired\" sub-folder"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:11
+msgid "backup.no"
+msgstr "No"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:11
+msgid "backup.paused"
+msgstr "Paused"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:13
+msgid "backup.postgresql-running?"
+msgstr "PostgreSQL running?"
+
+#. ('/help-adminguide/#backup', 'https://www.socialtext.net/help-adminguide/#backup')
+#. ("/help-adminguide/#backup", "https://www.socialtext.net/help-adminguide/#backup")
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:7
+msgid "backup.read-this-first=guide-url-1,guide-url-2"
+msgstr "Please read the Socialtext Admin Guide <a href=\"%1\">Backup</a> documentation before proceeding. A copy of this documentation is available publicly <a href=\"%2\">here</a>."
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:57
+msgid "backup.schedule:"
+msgstr "Backup schedule:"
+
+#. ('/help-adminguide/#backup', 'https://www.socialtext.net/help-adminguide/#backup')
+#. ("/help-adminguide/#backup", "https://www.socialtext.net/help-adminguide/#backup")
+#: ../appliance/libsocialtext-appliance-perl/template/backups.inc:18
+msgid "backup.see-admin-guide-about-backup-mode"
+msgstr "See the <a href=\"%1\">Admin Guide</a> for an explanation of Backup Mode. A copy of this documentation is available publically <a href=\"%2\">here</a>."
+
+#: ../appliance/libsocialtext-appliance-perl/template/backups.inc:6
+msgid "backup.select-backup-to-delete"
+msgstr "You must select a backup to delete."
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:8
+msgid "backup.status"
+msgstr "Backup Status"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:24
+msgid "backup.status-unavailable-check-error-log"
+msgstr "Backup status unavailable, check logs for errors"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:13
+msgid "backup.unwritable"
+msgstr "unwritable"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:62 ../appliance/libsocialtext-appliance-perl/template/backup.html:88
+msgid "backup.week=count"
+msgstr "%*(%1,week)"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:83
+msgid "backup.weeks-to-keep-backups:"
+msgstr "Weeks to keep backups:"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:13
+msgid "backup.writable"
+msgstr "writable"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:11
+msgid "backup.yes"
+msgstr "Yes"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:52
+msgid "console.about-authentication-token-timeout"
+msgstr "For security reasons, authentication tokens automatically expire after a pre-defined period of time, even if users have chosen \"Remember me on this computer\". Minimum is \"1 day\", maximum is \"365 days\", default is \"14 days\".  You can change the period here."
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:51
+msgid "console.about-backup-settings"
+msgstr "The appliance can store backup files on a Windows- or SMB-compatible shared directory/folder on another computer. Set the backup server, directory and username here."
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:12
+msgid "console.about-captcha-setting"
+msgstr "If your Socialtext appliance is exposed to the public internet, spammers and automated \"bots\" can try to register themselves.  A \"Captcha\" service requires registrants to prove they are human by recognizing text (a Captcha).  USE THIS SETTING IF YOUR APPLIANCE IS EXPOSED TO THE PUBLIC INTERNET."
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:100
+msgid "console.about-desktop-nav-setting"
+msgstr "Note: If this option is disabled, the <tt>Desktop</tt> link will disappear from the global navigation menu."
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:90
+msgid "console.about-disable-automatic-updates"
+msgstr "You may disable automatic updates by unchecking this checkbox and clicking Submit."
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:140
+msgid "console.about-initialize-wikis"
+msgstr "This action will delete all existing workspaces and users on this appliance, and create the Admin workspace."
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:54
+msgid "console.about-invalid-limit"
+msgstr "After the Invalid limit has been reached, the system will force the user to log back in."
+
+#: ../appliance/libsocialtext-appliance-perl/template/popup.html:53
+msgid "console.about-login-after-initialize-wikis"
+msgstr "You will be asked to log into the Console after you click \"Initialize Workspaces\"."
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:37
+msgid "console.about-login-message"
+msgstr "You can add a message that people will see <a href=\"/challenge\">on their login screen</a>."
+
+#: ../appliance/libsocialtext-appliance-perl/template/form.tmpl:17
+msgid "console.about-maximum-signal-length"
+msgstr "You can set a server-wide maximum length for signals. Each account can impose a smaller limit for signals posted to that account or groups in that account."
+
+#: ../appliance/libsocialtext-appliance-perl/template/console_wrapper.tmpl:39
+msgid "console.about-navigation-tabs"
+msgstr "Navigation tabs to select different sections of the control panel."
+
+#. ('<a href="http://en.wikipedia.org/wiki/Network_Time_Protocol">http://en.wikipedia.org/wiki/Network_Time_Protocol</a>')
+#. ("<a href=\"http://en.wikipedia.org/wiki/Network_Time_Protocol\">http://en.wikipedia.org/wiki/Network_Time_Protocol</a>")
+#: ../appliance/libsocialtext-appliance-perl/template/form.tmpl:9
+msgid "console.about-ntp-server=help-link"
+msgstr "You can synchronize the appliance clock with another computer using the NTP protocol. The appliance must be able to contact that server via port 123. See %1 for more information."
+
+#. (link)
+#: ../appliance/libsocialtext-appliance-perl/template/form.tmpl:14
+msgid "console.about-poxy-server=help-link"
+msgstr "You can set a proxy server that allows users to access Web Services including Dashboard Widgets and RSS feeds. For more information see: %1."
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:73
+msgid "console.about-support-contact"
+msgstr "Set this to the email or web address where users can get help with login, application access, and directory access."
+
+#: ../appliance/libsocialtext-appliance-perl/template/popup.html:54
+msgid "console.about-username-password-after-initialize-wikis"
+msgstr "Use the email address you entered above as the username, and <strong>password</strong> as the password. You can change your password later."
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:130 ../appliance/libsocialtext-appliance-perl/template/setup.html:135
+msgid "console.add-administrator"
+msgstr "Add Administrator"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:130 ../appliance/libsocialtext-appliance-perl/template/setup.html:131
+msgid "console.add-appliance-administrators"
+msgstr "Add Appliance Administrators"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:53
+msgid "console.after-renew-limit"
+msgstr "After the Renew limit has been reached, the User will be prompted to re-authenticate, but will not be logged out if they are in the middle of work, such as editing a page, viewing a page, or reading Signals"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:97
+msgid "console.allow-automatic-updating"
+msgstr "Allow Automatic Updating"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:174 ../appliance/libsocialtext-appliance-perl/template/setup.html:175
+msgid "console.apache-error-log"
+msgstr "Apache error log"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:173
+msgid "console.apache-logs"
+msgstr "Apache Logs"
+
+#: ../appliance/libsocialtext-appliance-perl/template/console_wrapper.tmpl:63
+msgid "console.appliance"
+msgstr "Appliance Console"
+
+msgid "console.automatic-backup-schedule"
+msgstr "Automatic Backup Schedule"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:88
+msgid "console.automatic-updating"
+msgstr "Automatic Updating"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:1 ../appliance/libsocialtext-appliance-perl/template/backup.html:2 ../appliance/libsocialtext-appliance-perl/template/console_wrapper.tmpl:42
+msgid "console.backup"
+msgstr "Backup"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:47
+msgid "console.backup-destination"
+msgstr "Backup Destination"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:13
+msgid "console.backup-now"
+msgstr "Backup Now"
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:67
+msgid "console.building-diagnostic-tarball"
+msgstr "Building Diagnostic Tarball..."
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:124
+msgid "console.contact-socialtext-support"
+msgstr "Contact Socialtext Support"
+
+#: ../appliance/libsocialtext-appliance-perl/template/overview.html:6
+msgid "console.control-panel"
+msgstr "Control Panel"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:139 ../appliance/libsocialtext-appliance-perl/template/setup.html:141 ../appliance/libsocialtext-appliance-perl/template/setup.html:142
+msgid "console.create-initial-wiki"
+msgstr "Create Initial Workspace"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:89
+msgid "console.default-desktop-update-url"
+msgstr "By default, <a _target=\"blank\" href=\"http://www.socialtext.com/products/desktop.php\">Socialtext Desktop</a> automatically updates itself from www.socialtext.com."
+
+#: ../appliance/libsocialtext-appliance-perl/template/overview.html:11
+msgid "console.disk-usage"
+msgstr "Disk Usage"
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:121
+msgid "console.documentation"
+msgstr "Appliance Documentation"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:121 ../appliance/libsocialtext-appliance-perl/template/setup.html:124
+msgid "console.email-for-testing:"
+msgstr "Email address for testing:"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:18
+msgid "console.enable-captcha"
+msgstr "Enable Captcha that requires registering users to prove they are human"
+
+#: ../appliance/libsocialtext-appliance-perl/template/overview.html:13
+msgid "console.free"
+msgstr "free"
+
+#: ../appliance/libsocialtext-appliance-perl/template/form.tmpl:12
+msgid "console.how-to-configure-web-proxy"
+msgstr "How to configure a web proxy"
+
+#: ../appliance/libsocialtext-appliance-perl/template/popup.html:41
+msgid "console.initial-admin-email"
+msgstr "Initial Appliance Administrator Email"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:63
+msgid "console.invalid-after-days"
+msgstr "Invalid After (in days)"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:110 ../appliance/libsocialtext-appliance-perl/template/setup.html:115
+msgid "console.leave-blank-to-use-built-in-smtp-server"
+msgstr "(leave blank to use appliance's built-in SMTP server)"
+
+#: ../appliance/libsocialtext-appliance-perl/template/overview.html:8
+msgid "console.link-to-control-panel"
+msgstr "To view and manage the Workspaces, Accounts, Groups and Users on the system, go to the <a href=\"/nlw/control/\">Control Panel</a> tool."
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:44
+msgid "console.login-message"
+msgstr "Login Message"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:10
+msgid "console.login-screen-setup"
+msgstr "Login Screen Setup"
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:122
+msgid "console.manual-wiki"
+msgstr "Appliance Manual Workspace"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:130 ../appliance/libsocialtext-appliance-perl/template/setup.html:133
+msgid "console.new-admin-email-address:"
+msgstr "New administrator email address:"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:42
+msgid "console.no-files-available-to-restore"
+msgstr "No files available to restore."
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:158 ../appliance/libsocialtext-appliance-perl/template/setup.html:162
+msgid "console.ntp-server-rfc-1305"
+msgstr "NTP server (RFC 1305)"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:109
+msgid "console.other-settings"
+msgstr "Other Settings"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:110 ../appliance/libsocialtext-appliance-perl/template/setup.html:113
+msgid "console.outgoing-mail-server"
+msgstr "Outgoing mail server"
+
+#: ../appliance/libsocialtext-appliance-perl/template/console_wrapper.tmpl:42 ../appliance/libsocialtext-appliance-perl/template/overview.html:1 ../appliance/libsocialtext-appliance-perl/template/overview.html:2
+msgid "console.overview"
+msgstr "Overview"
+
+#: ../appliance/libsocialtext-appliance-perl/template/overview.html:13
+msgid "console.percent-free"
+msgstr "percent free"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:8
+msgid "console.perform-backup-now"
+msgstr "Perform Backup Now"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:18
+msgid "console.perform-restore"
+msgstr "Perform Restore"
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:135
+msgid "console.problem-description:"
+msgstr "Problem description:"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:147 ../appliance/libsocialtext-appliance-perl/template/setup.html:148
+msgid "console.proxy-server-for-web-services"
+msgstr "Proxy Server for Web Services"
+
+#: ../appliance/libsocialtext-appliance-perl/template/shutdown.html:12
+msgid "console.reboot-appliance"
+msgstr "Reboot Appliance"
+
+#: ../appliance/libsocialtext-appliance-perl/template/shutdown.html:15
+msgid "console.reboot-now"
+msgstr "Reboot Now"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:23
+msgid "console.recaptcha-private-key"
+msgstr "reCaptcha Private Key"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:28
+msgid "console.recaptcha-public-key"
+msgstr "reCaptcha Public Key"
+
+#: ../appliance/libsocialtext-appliance-perl/template/form.tmpl:7
+msgid "console.refresh"
+msgstr "refresh"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:26
+msgid "console.refresh-file-list"
+msgstr "Refresh file list"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:24
+msgid "console.refresh-this-page"
+msgstr "Refresh this page"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:59
+msgid "console.renew-after-in-days"
+msgstr "Renew After (in days)"
+
+#: ../appliance/libsocialtext-appliance-perl/template/console_wrapper.tmpl:42
+msgid "console.report-problem"
+msgstr "Report a Problem"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:38
+msgid "console.restore-now"
+msgstr "Restore Now"
+
+msgid "console.save-backup-schedule"
+msgstr "Save Backup Schedule"
+
+#: ../appliance/libsocialtext-appliance-perl/template/form.tmpl:6
+msgid "console.screen-generate-time:"
+msgstr "Appliance clock when this screen was generated:"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:38
+msgid "console.script-tag-stripped-in-login-message"
+msgstr "Please feel free to use HTML in this message, but SCRIPT tags ( eg JavaScript ) will be stripped out before your message is saved."
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:121 ../appliance/libsocialtext-appliance-perl/template/setup.html:122 ../appliance/libsocialtext-appliance-perl/template/setup.html:126
+msgid "console.send-test-email"
+msgstr "Send Test Email"
+
+#. ('/nlw/control/settings')
+#. ("/nlw/control/settings")
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:5
+msgid "console.server-wide-settings-moved-to-control-panel=uri"
+msgstr "Server-wide access settings have moved to the <a href=\"%1\">Business Control Panel</a>."
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:51
+msgid "console.set-authentication-token-timeout"
+msgstr "Set Authentication Token Timeout"
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:62
+msgid "console.set-backup-destination"
+msgstr "Set Backup Destination"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:36
+msgid "console.set-custom-login-screen-message"
+msgstr "Set a Custom Login Screen Message"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:110 ../appliance/libsocialtext-appliance-perl/template/setup.html:111 ../appliance/libsocialtext-appliance-perl/template/setup.html:116
+msgid "console.set-email-configuration"
+msgstr "Set Email Configuration"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:158 ../appliance/libsocialtext-appliance-perl/template/setup.html:164
+msgid "console.set-ntp-server"
+msgstr "Set NTP Server"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:180 ../appliance/libsocialtext-appliance-perl/template/setup.html:182
+msgid "console.set-signals-size-limit"
+msgstr "Set Signals Size Limit"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:72
+msgid "console.set-support-contact"
+msgstr "Set Support Contact"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:147 ../appliance/libsocialtext-appliance-perl/template/setup.html:153
+msgid "console.set-web-proxy-server"
+msgstr "Set Web Proxy Server"
+
+#: ../appliance/libsocialtext-appliance-perl/template/console_wrapper.tmpl:42 ../appliance/libsocialtext-appliance-perl/template/setup.html:1 ../appliance/libsocialtext-appliance-perl/template/setup.html:2
+msgid "console.setup"
+msgstr "Setup"
+
+#: ../appliance/libsocialtext-appliance-perl/template/shutdown.html:6
+msgid "console.shut-down-appliance"
+msgstr "Shut Down Appliance"
+
+#: ../appliance/libsocialtext-appliance-perl/template/shutdown.html:9
+msgid "console.shut-down-now"
+msgstr "Shut Down Now"
+
+#: ../appliance/libsocialtext-appliance-perl/template/console_wrapper.tmpl:42 ../appliance/libsocialtext-appliance-perl/template/shutdown.html:1 ../appliance/libsocialtext-appliance-perl/template/shutdown.html:2
+msgid "console.shutdown"
+msgstr "Shutdown"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:179
+msgid "console.signals-size-limit"
+msgstr "Signals Size Limit"
+
+#: ../appliance/libsocialtext-appliance-perl/template/console_wrapper.tmpl:27 ../appliance/libsocialtext-appliance-perl/template/console_wrapper.tmpl:7
+msgid "console.socialtext-appliance"
+msgstr "Socialtext Appliance"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:87
+msgid "console.socialtext-desktop"
+msgstr "Socialtext Desktop"
+
+#: ../appliance/libsocialtext-appliance-perl/template/console_wrapper.tmpl:71
+msgid "console.socialtext-inc"
+msgstr "Socialtext, Inc."
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:63
+msgid "console.socialtext-support"
+msgstr "Socialtext Support"
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:125
+msgid "console.socialtext-support-form"
+msgstr "Socialtext Support Form"
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:141 ../appliance/libsocialtext-appliance-perl/template/setup.html:103 ../appliance/libsocialtext-appliance-perl/template/setup.html:33 ../appliance/libsocialtext-appliance-perl/template/setup.html:48 ../appliance/libsocialtext-appliance-perl/template/setup.html:69 ../appliance/libsocialtext-appliance-perl/template/setup.html:84
+msgid "console.submit"
+msgstr "Submit"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:79
+msgid "console.support-contact"
+msgstr "Support Contact"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:168 ../appliance/libsocialtext-appliance-perl/template/setup.html:169
+msgid "console.synchronize-appliance-clock-now"
+msgstr "Synchronize Appliance Clock Now"
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:60
+msgid "console.tarball-built"
+msgstr "Tarball Built"
+
+msgid "console.time-each-day:"
+msgstr "Time each day:"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:158 ../appliance/libsocialtext-appliance-perl/template/setup.html:159
+msgid "console.time-server"
+msgstr "Time Server"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:172
+msgid "console.time-settings"
+msgstr "Time Settings"
+
+#: ../appliance/libsocialtext-appliance-perl/template/overview.html:13
+msgid "console.total"
+msgstr "total"
+
+#. (download_link, mailto_link)
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:73
+msgid "console.upload-complete=download-link,mailto-link"
+msgstr "%1, Upload Complete. Your message has been submitted to %2."
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:127
+msgid "console.upload-support-tarball-to-socialtext"
+msgstr "Upload a Support Tarball to Socialtext"
+
+#. (download_link)
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:70
+msgid "console.uploading-tarball=download-link"
+msgstr "%1, Uploading Tarball to Socialtext..."
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:11
+msgid "console.use-captcha-to-prevent-automated-registration"
+msgstr "Use Captcha to prevent automated registration"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:147 ../appliance/libsocialtext-appliance-perl/template/setup.html:151
+msgid "console.web-service-proxy-address"
+msgstr "Web Service Proxy Address"
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:131
+msgid "console.your-email-address:"
+msgstr "Your email address:"
+
+#: ../appliance/libsocialtext-appliance-perl/template/setup.html:182
+msgid "control.update"
+msgstr "Update"
+
+#: ../appliance/libsocialtext-appliance-perl/template/popup.html:48
+msgid "do.cancel"
+msgstr "Cancel"
+
+#: ../appliance/libsocialtext-appliance-perl/template/popup.html:32
+msgid "do.close"
+msgstr "Close"
+
+msgid "error.backup-id-required"
+msgstr "Must supply a backup ID - or use --list to see available backups."
+
+#: ../appliance/libsocialtext-appliance-perl/template/backup.html:15
+msgid "error.backup-writability"
+msgstr "Writability Error"
+
+#: ../appliance/libsocialtext-appliance-perl/sbin/st-appliance-mount-samba:84
+msgid "error.create-test-file-on-samba-share!"
+msgstr "Cannot create test file on samba share!"
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:89
+msgid "error.email-and-description-required!"
+msgstr "Email and description are required!"
+
+#. (email)
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:93
+msgid "error.invalid=email"
+msgstr "\"%1\" is not a valid email address."
+
+msgid "error.socialtext-appliance-backup"
+msgstr "Error during Socialtext Appliance Backup"
+
+#. (status)
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:76
+msgid "error.unknown=status"
+msgstr "Unknown: %1"
+
+#: ../appliance/libsocialtext-appliance-perl/sbin/st-appliance-mount-samba:89
+msgid "error.unlink-test-file-on-samba-share!"
+msgstr "Cannot unlink test file on samba share!"
+
+#: ../appliance/libsocialtext-appliance-perl/sbin/st-appliance-mount-samba:87
+msgid "error.write-test-file-on-samba-share!"
+msgstr "Cannot write test file on samba share!"
+
+#: ../appliance/libsocialtext-appliance-perl/template/help.html:1 ../appliance/libsocialtext-appliance-perl/template/help.html:2
+msgid "nav.help"
+msgstr "Help"

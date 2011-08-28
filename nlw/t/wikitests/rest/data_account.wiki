@@ -1,0 +1,67 @@
+* Fixture: SocialRest
+
+## Setup
+| set            | ide      | ide-%%start_time%%                    |
+| create-account | %%ide%%  |                                       |
+| set            | ide_id   | %%account_id%%                        |
+| set            | sata     | sata%%start_time%%@ken.socialtext.net |
+| create-user    | %%sata%% | password                              |
+| set            | sata_id  | %%user_id%%                           |
+
+## NOT logged in
+| http-user-pass |
+
+## GET-json, Account does not exist
+| *Comment* | GET-json, Account does not exist |
+| GET-json  | /data/accounts/ENOSUCH           |
+| code-is   | 404                              |
+| body-like | Account not found                |
+
+## GET-json, User is not authorized
+| *Comment* | GET-json, User is not authorized |
+| GET-json  | /data/accounts/%%ide%%           |
+| code-is   | 401                              |
+| body-like | User not authorized              |
+
+## LOG in
+| http-user-pass | %%sata%% | password |
+
+## GET-json, User is forbidden
+| *Comment* | GET-json, User is forbidden |
+| GET-json  | /data/accounts/%%ide%%      |
+| code-is   | 403                         |
+| body-like | User not authorized         |
+
+## BUSINESS ADMIN
+| set-business-admin | %%sata%% | 1 |
+
+## GET-json, User is Business Admin
+| *Comment*        | GET-json, User is Business Admin |            |
+| GET-json         | /data/accounts/%%ide%%           |            |
+| code-is          | 200                              |            |
+| json-parse       |                                  |            |
+| json-path-is     | $.name                           | %%ide%%    |
+| json-path-is     | $.account_id                     | %%ide_id%% |
+| json-path-is     | $.account_type                   | Standard   |
+| json-path-is     | $.skin_name                      | s3         |
+| json-path-exists | $.restrict_to_domain             |            |
+| json-path-exists | $.plugins                        |            |
+
+## ADD USER as member
+| set-business-admin  | %%sata%% | 0       |
+| add-user-to-account | %%sata%% | %%ide%% |
+
+## GET-json, User is Member
+| *Comment* | GET-json, User is Member |
+| GET-json  | /data/accounts/%%ide%%   |
+| code-is   | 403                      |
+| body-like | User not authorized      |
+
+## ADD USER as admin
+| add-user-to-account | %%sata%% | %%ide%% | admin |
+
+## GET-json, User is Admin
+| *Comment* | GET-json, User is Admin |
+| GET-json  | /data/accounts/%%ide%%  |
+| code-is   | 403                     |
+| body-like | User not authorized     |

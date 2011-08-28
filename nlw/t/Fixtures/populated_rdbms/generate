@@ -1,0 +1,81 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+use lib "$ENV{NLW_DIR}/lib";
+
+use DateTime;
+use DateTime::Format::Pg;
+use Socialtext::Account;
+use Socialtext::User;
+use Socialtext::Workspace;
+
+# The purpose of this is to create a bunch of users and workspaces,
+# with multiple accounts and an _uneven_ distribution of users per
+# workspace and per account. This lets us test things like workspaces
+# queries which sort by user_count.
+
+my @accounts = (
+    Socialtext::Account->create( name => 'Other 1' ),
+    Socialtext::Account->create( name => 'Other 2' ),
+);
+
+my @users;
+# We don't want the user creation datetime to be greater than that for
+# the guest & system user entries.
+my $date = DateTime->now()->subtract( days => 1 );
+for my $x ( 1..7 ) {
+    my $username = "devnull$x\@socialtext.com";
+
+    next if Socialtext::User->new( username => $username );
+
+    my $creator =
+        $x >= 3
+        ? $users[-2]
+        : Socialtext::User->SystemUser();
+    my $account = $accounts[ ($x-1) % 2 ];
+
+    push @users,
+        Socialtext::User->create(
+            username           => $username,
+            email_address      => $username,
+            creation_datetime  =>
+                DateTime::Format::Pg->format_timestamptz($date),
+            created_by_user_id => $creator->user_id(),
+            primary_account_id => $account->account_id,
+        );
+
+    $date->subtract( days => 1 );
+}
+
+$date = DateTime->now();
+for my $x ( 0..9 ) {
+    my $name  = "workspace$x";
+    my $title = "Workspace Title $x";
+
+    next if Socialtext::Workspace->new( name => $name );
+
+    my $account = $accounts[ $x % 2 ];
+    my $creator = $users[ $#users - $x ];
+
+    my $ws =
+        Socialtext::Workspace->create(
+            name               => $name,
+            title              => $title,
+            creation_datetime  =>
+                DateTime::Format::Pg->format_timestamptz($date),
+            account_id         => $account->account_id(),
+            created_by_user_id => $creator->user_id(),
+        );
+
+    $date->subtract( days => 1 );
+
+    my @members =
+        $x >= @users ? @users : @users[ 0 .. $x ];
+
+    for my $user ( grep { $_->username() ne $creator->username() } @members ) {
+        $ws->add_user( user => $user );
+    }
+}

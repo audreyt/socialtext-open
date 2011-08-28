@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Common exit codes
+PROCEED_WITH_MIGRATION=0
+NO_MIGRATION_NEEDED=1
+ERROR_STOP_MIGRATION=2
+
+export PATH="./bin:../bin:$PATH"
+DATA_USER=${ST_MIGRATION_SUDO_USER:-"www-data"}
+
+# Get the list of workspaces, otherwise fail hard.
+WORKSPACES=$(sudo -u $DATA_USER env PATH="$PATH" st-admin list-workspaces) 
+if [ $? -ne 0 ]; then
+    echo "Could not get a list of workspaces!";
+    exit $ERROR_STOP_MIGRATION;
+fi
+
+# See if "help" is in the list of workspaces.  If so, proceed.
+if echo -e "$WORKSPACES" | grep -qe '^help$'; then
+    exit $PROCEED_WITH_MIGRATION;
+fi
+
+# If we get here we don't need this migration.
+exit $NO_MIGRATION_NEEDED

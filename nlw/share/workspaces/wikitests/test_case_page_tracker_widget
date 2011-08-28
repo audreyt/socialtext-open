@@ -1,0 +1,131 @@
+| *Comment* | Test Case: Page Tracker Widget |  |
+
+* Fixture: SocialWidgets
+
+| set | user | ptw.user.%%start_time%%@david.socialtext.net |
+| set | acct | ptw-account-%%start_time%% |
+| set | wiki | ptw-workspace-%%start_time%% |
+| set | wiki_prefix | ptw-work |
+| set | wiki_suffix | space-%%start_time%% |
+| set | page | tracked page %%start_time%% |
+| set | tag_1 | tracked tag 1 %%start_time%% |
+| set | tag_1_prefix | tracked |
+| set | tag_1_suffix | tag 1 %%start_time%% |
+| set | tag_2 | filtered tag 2 %%start_time%% |
+| set | tag_2_prefix | filtered |
+| set | tag_2_suffix | tag 2 %%start_time%% |
+| set | title | widget title %%start_time%% |
+| set | heading | heading %%start_time%% |
+| set | heading_note | heading note %%start_time%% |
+| set | other_note | other note %%start_time%% |
+
+| *Comment* | Test Case: Page Tracker Widget setup a page to tag and track |  |  |
+| create_account | %%acct%% |  |  |
+| create_workspace | %%wiki%% | %%acct%% |  |
+| create_user | %%user%% | %%password%% | %%acct%% |
+
+| st-admin | add-member --email %%user%% --workspace %%wiki%% | now has the role |
+| st-logoutin | %%user%% | %%password%% |
+
+| st-admin | update-page --w %%wiki%% --e %%user%% --p "%%page%%" < %%wikitest_client_files%%wikitest.txt | has been created |
+| st-process-jobs |  |  |
+| st-add-page-tag | /%%wiki%%/index.cgi?%%page%% | %%tag_1%% |
+| st-add-page-tag | /%%wiki%%/index.cgi?%%page%% | %%tag_2%% |
+
+| *Comment* | Test Case: Page Tracker put widget in dashboard, select proper frame |  |
+| st-single-widget-in-dashboard | gallery-widget-Page Tracker |  |
+| pause | 5000 |  |
+| selectFrame | //div[@class='widgetContent']//iframe[@class='widgetWindow'] |  |
+| text_like | //form[@id='formPrefs'] | Widget Title: |
+
+| *Comment* | Test Case: Page Tracker Widget fill the basics section |  |
+| text_like | //form[@id='formPrefs'] | Basics |
+| wait_for_element_visible_ok | Workspace | 30000 |
+| type_lookahead_ok | Workspace | %%wiki_prefix%% |
+| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%wiki_suffix%%')] | 30000 |
+| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%wiki_suffix%%')] |  |
+| pause | 2000 |  |
+| wait_for_element_visible_ok | //input[@name='Title'] | 30000 |
+| type_ok | Title | %%title%% |
+
+| *Comment* | Test Case: Page Tracker Widget fill the columns section |  |
+| text_like | //form[@id='formPrefs'] | Columns |
+| wait_for_element_visible_ok | StateTags-row-new | 30000 |
+| click_ok | StateTags-row-new |  |
+| wait_for_element_visible_ok | StateTags-PageTag-0 | 30000 |
+| wait_for_element_visible_ok | StateTags-PageTag-new | 30000 |
+| type_lookahead_ok | StateTags-PageTag-new | %%tag_1_prefix%% |
+| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag_1_suffix%%')] | 30000 |
+| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag_1_suffix%%')] |  |
+| pause | 2000 |  |
+| wait_for_element_visible_ok | StateTags-Heading-new | 30000 |
+| type_ok | StateTags-Heading-new | %%heading%% |
+| wait_for_element_visible_ok | StateTags-Notes-new | 30000 |
+| type_ok | StateTags-Notes-new | %%heading_note%% |
+
+| *Comment* | Test Case: Page Tracker Widget fill the page filtering section |  |
+| text_like | //form[@id='formPrefs'] | Page Filtering (optional) |
+| wait_for_element_visible_ok | IncludeTags-row-new | 30000 |
+| click_ok | IncludeTags-row-new |  |
+| wait_for_element_visible_ok | IncludeTags-PageTag-0 | 30000 |
+| wait_for_element_visible_ok | IncludeTags-PageTag-new | 30000 |
+| type_lookahead_ok | IncludeTags-PageTag-new | %%tag_2_prefix%% |
+| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag_2_suffix%%')] | 30000 |
+| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag_2_suffix%%')] |  |
+| pause | 2000 |  |
+| wait_for_element_visible_ok | ExcludeTags-PageTag-new | 30000 |
+| type_lookahead_ok | ExcludeTags-PageTag-new | zzzzzz |
+| wait_for_text_present_ok | No matches | 30000 |
+
+| *Comment* | Test Case: Page Tracker Widget fill the item background section |  |
+| text_like | //form[@id='formPrefs'] | Item Background (optional) |
+| wait_for_element_visible_ok | BackgroundTags-row-new | 30000 |
+| click_ok | BackgroundTags-row-new |  |
+| wait_for_element_visible_ok | BackgroundTags-PageTag-0 | 30000 |
+| wait_for_element_visible_ok | BackgroundTags-PageTag-new | 30000 |
+| type_lookahead_ok | BackgroundTags-PageTag-new | %%tag_2_prefix%% |
+| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag_2_suffix%%')] | 30000 |
+| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag_2_suffix%%')] |  |
+| pause | 2000 |  |
+| wait_for_element_visible_ok | BackgroundTags-BackgroundColor-new | 30000 |
+| type_ok | BackgroundTags-BackgroundColor-new | #ABCDEF |
+
+| *Comment* | Test Case: Page Tracker Widget fill the item notes section |  |
+| text_like | //form[@id='formPrefs'] | Item Notes (optional) |
+| wait_for_element_visible_ok | StampTags-row-new | 30000 |
+| click_ok | StampTags-row-new |  |
+| wait_for_element_visible_ok | StampTags-PageTag-0 | 30000 |
+| wait_for_element_visible_ok | StampTags-StampNote-new | 30000 |
+| wait_for_element_visible_ok | StampTags-PageTag-new | 30000 |
+| type_lookahead_ok | StampTags-PageTag-new | %%tag_2_prefix%% |
+| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag_2_suffix%%')] | 30000 |
+| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag_2_suffix%%')] |  |
+| pause | 2000 |  |
+| wait_for_element_visible_ok | StampTags-StampNote-new | 30000 |
+| type_ok | StampTags-StampNote-new | %%other_note%% |
+
+| *Comment* | Test Case: Page Tracker Widget save widget |  |
+| pause | 2000 |  |
+| wait_for_element_visible_ok | link-save | 30000 |
+| click_and_wait | link-save |  |
+| select_frame | relative=parent |  |
+
+| *Comment* | Test Case: Page Tracker Widget check widget in dashboard |  |
+| open_ok | /st/dashboard |  |
+| wait_for_element_visible_ok | //div[@class='regular widget'] | 30000 |
+| wait_for_text_present_ok | %%title%% | 30000 |
+| st-name-widget | 1 | tracker |
+| st-widget-title-like | tracker | %%title%% |
+| st-select-widget-frame | tracker |  |
+| wait_for_text_present_ok | %%other_note%% | 30000 |
+| wait_for_text_present_ok | %%page%% | 30000 |
+| wait_for_text_present_ok | %%heading%% | 30000 |
+| wait_for_text_present_ok | %%heading_note%% | 30000 |
+
+| *Comment* | Test Case: Page Tracker Widget TEARDOWN |  |
+| st-process-jobs |  |  |
+| st-admin | delete-workspace --workspace %%wiki%% --no-export | has been deleted |
+| deactivate-user | %%user%% | been removed |
+| delete-account | %%acct%% | Recklessly deleting |
+
+| *Comment* | Test Case: Page Tracker Widget COMPLETED |  |

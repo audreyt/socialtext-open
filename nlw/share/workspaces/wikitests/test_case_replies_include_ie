@@ -1,0 +1,15 @@
+| *Comment* | Test Case: Replies Include IE. %%i%% |  |
+
+| set | my_signal | Reply from %%my_user%%-%%i%% |
+
+| *Comment* | Test Case: Replies Include IE. Included loop %%i%% |  |
+| wait_for_element_visible_ok | //div[@class='wikiwyg'][last()] | 5000 |
+| click_ok | //div[@class='wikiwyg'][last()] |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 5000 |
+| type_ok | wikiwyg_wikitext_textarea | %%my_signal%% |
+| wait_for_element_visible_ok | //a[@class='btn post postReply'] | 5000 |
+| pause | %%post_pause%% |  |
+| click_ok | //a[@class='btn post postReply'] |  |
+| pause | %%my_wait%% |  |
+
+| *Comment* | Test Case: Replies Include IE %%i%% COMPLETED |  |

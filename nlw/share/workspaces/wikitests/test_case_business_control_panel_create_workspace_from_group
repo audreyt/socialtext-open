@@ -1,0 +1,137 @@
+.pre
+  Create a group named $group_name, populate %%group_id%% with the group id in account %%group_acct%%
+  Create a variable %%group_user%% also %%group_short%%
+  Create the user %%group_user%% with that user.  Use %%password%% as the password 
+  Add that user to group $group_name
+.pre
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Group |  |
+
+| st_setup_a_group | NOOP | 1 |
+| st-admin | give-accounts-admin --e %%group_user%% | now has accounts admin access |
+| st-logoutin | %%group_user%% | %%password%% |
+
+| set | groupname | %%group_name%% |
+| set | groupacct | %%group_acct%% |
+| set | wstitle | WS For Group %%start_time%% |
+| set | wsname | ws-for-group-%%start_time%% |
+| set | altname | alt-for-group-%%start_time%% |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Group - Use private group |  |
+
+| open_ok | /nlw/control/group/%%group_id%% |  |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Group - Create the Workspace |  |
+| wait_for_element_visible_ok | create-workspace | 30000 |
+| click_ok | create-workspace |  |
+| wait_for_text_present_ok | Create New Workspace | 10000 |
+| wait_for_element_visible_ok | new-workspace-next | 30000 |
+| wait_for_element_visible_ok | new_workspace_title | 30000 |
+| type_ok | new_workspace_title | %%wstitle%% |
+| st-pause-click | 2000 | new-workspace-next |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Group. verify Name, click Next |  |
+| wait_for_text_present_ok | URL: | 10000 |
+| wait_for_text_present_ok | %%wstitle%% | 10000 |
+| wait_for_element_visible_ok | new-workspace-next | 10000 |
+| wait_for_element_visible_ok | new-workspace-cancel | 10000 |
+| wait_for_element_visible_ok | new_workspace_name | 10000 |
+| verifyValue | new_workspace_name | %%wsname%% |
+| type_ok | new_workspace_name | %%altname%% |
+| click_and_wait | new-workspace-next | 60000 |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Group. verify workspace created |  |
+| *Comment* | There is one user but there should be zero users |  |
+| location_like | /nlw/control/workspace |  |
+| wait_for_text_present_ok | Groups (1) | 30000 |
+| text_like | //body | qr/%%altname%% workspace/ism |
+| text_like | //body | qr/Group.+Add Group To Workspace.+%%groupname%%/ism |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Group See the Workspace in the group in CP |  |
+| open_ok | /nlw/control/group/%%group_id%% |  |
+| text_like | //body | Workspaces (1) |
+| wait_for_element_visible_ok | link=%%altname%% | 30000 |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Group User has access to the Workspace |  |
+| open_ok | /st/dashboard |  |
+| open_ok | /%%altname%%/index.cgi?%%wstitle%% |  |
+| wait_for_text_present_ok | Welcome to the %%wstitle%% workspace. | 30000 |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Group. Verify private |  |
+| open_ok | /nlw/control/group/%%group_id%% |  |
+| wait_for_text_present_ok | Workspaces (1) | 30000 |
+| wait_for_text_present_ok | Users (1) | 30000 |
+
+| wait_for_element_visible_ok | st-group-permission-set-selector | 30000 |
+| is-editable-ok | st-group-permission-set-selector | 30000 |
+| is_selected_ok | st-group-permission-set-selector | label=Private: Only Members can see and access this group. |
+| wait_for_element_visible_ok | st-group-permission-set-submit | 30000 |
+| is-editable-ok | st-group-permission-set-submit |  |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Group - workspace buttons should be enabled. |  |
+| wait_for_element_visible_ok | add-workspace | 30000 |
+| wait_for_element_visible_ok | create-workspace | 30000 |
+| pause | 5000 | editable commands seem to need more time |
+| is-editable-ok | create-workspace |  |
+| is-editable-ok | add-workspace |  |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Group - add %%wsname%% to group. |  |
+| st-admin | create-workspace --n %%wsname%% --t %%wsname%% --account %%groupacct%% | created |
+| st-admin | add-member --g %%group_id%% --w %%wsname%% | now has the role of 'member' |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Group - %%group_user%% is not an admin of %%wsname%%. |  |
+| select_ok | st-group-permission-set-selector | label=Self-Join: Non-Members can view and join the group. |
+| st_pause_click | 2000 | st-group-permission-set-submit |
+| wait_for_text_present_ok | Error: user cannot manage workspaces this group is associated with | 30000 |
+| is_selected_ok | st-group-permission-set-selector | label=Private: Only Members can see and access this group. |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Group - remove %%wsname%% from group. |  |
+| st-admin | remove-member --g %%group_id%% --w %%wsname%% | is no longer a member of |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Group - Change to self-join |  |
+| select_ok | st-group-permission-set-selector | label=Self-Join: Non-Members can view and join the group. |
+| st_pause_click | 2000 | st-group-permission-set-submit |
+| pause | 10000 |  |
+| text_like | st-group-change-message | Done |
+| is_selected_ok | st-group-permission-set-selector | label=Self-Join: Non-Members can view and join the group. |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Group - add %%wsname%% to s-j group. |  |
+| st-admin | add-member --g %%group_id%% --w %%wsname%% | group and workspace do not have compatible permission sets |
+| st-admin | set-permissions --w %%wsname%% --p self-join | self-join |
+| st-admin | add-member --g %%group_id%% --w %%wsname%% | now has the role of |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Group - s-j %%group_user%% is not an admin of %%workspace%%. |  |
+| select_ok | st-group-permission-set-selector | label=Private: Only Members can see and access this group. |
+| st_pause_click | 2000 | st-group-permission-set-submit |
+| wait_for_text_present_ok | Error: user cannot manage workspaces this group is associated with | 30000 |
+| is_selected_ok | st-group-permission-set-selector | label=Self-Join: Non-Members can view and join the group. |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Group - remove %%wsname%% from s-j group. |  |
+| st-admin | remove-member --g %%group_id%% --w %%wsname%% | is no longer a member of |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Group - Change back to Private |  |
+| select_ok | st-group-permission-set-selector | label=Private: Only Members can see and access this group. |
+| is_selected_ok | st-group-permission-set-selector | label=Private: Only Members can see and access this group. |
+| wait_for_element_visible_ok | st-group-permission-set-submit | 30000 |
+| st_pause_click | 2000 | st-group-permission-set-submit |
+| pause | 10000 |  |
+| text_like | st-group-change-message | Done |
+| is_selected_ok | st-group-permission-set-selector | label=Private: Only Members can see and access this group. |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Group - workspace buttons should still be enabled. |  |
+| wait_for_element_visible_ok | add-workspace | 30000 |
+| wait_for_element_visible_ok | create-workspace | 30000 |
+| is-editable-ok | create-workspace |  |
+| is-editable-ok | add-workspace |  |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Group TEARDOWN |  |
+
+| st-process-jobs |  |  |
+| deactivate-user | %%group_user%% |  |
+| delete-group | %%group_id%% | Deleted group |
+| st-admin | delete-workspace --no-export --w %%wsname%% | has been deleted |
+| st-admin | delete-workspace --no-export --w %%altname%% | has been deleted |
+| st-admin | delete-workspace --no-export --w %%group_ws%% | has been deleted |
+| delete-account | %%group_acct%% |  |
+
+| *Comment* | Test Case: Business Control Panel Create Workspace from Group COMPLETED |

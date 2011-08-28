@@ -1,0 +1,10 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+my @files = glob("/etc/rc?.d/?20ceqlotron"),
+            glob("/etc/rc?.d/?90socialtext-solr");
+
+for my $f (@files) {
+    exit 0 if -e $f;
+}
+exit 1;

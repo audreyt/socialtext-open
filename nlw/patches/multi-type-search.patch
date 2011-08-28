@@ -1,0 +1,314 @@
+diff --git a/nlw/build/templates/socialtext/uri_map.yaml.tt2 b/nlw/build/templates/socialtext/uri_map.yaml.tt2
+index 4764098..b52ee81 100644
+--- a/nlw/build/templates/socialtext/uri_map.yaml.tt2
++++ b/nlw/build/templates/socialtext/uri_map.yaml.tt2
+@@ -43,6 +43,13 @@
+             'text/plain':             [Socialtext::Rest::JobsByClass, GET_text]
+         '*':                    [Socialtext::Rest::JobsByClass, bad_method]
+ -
++    '/data/search':
++        'GET':
++            'application/json':      [Socialtext::Rest::Search, GET_json]
++            'text/x-yaml':           [Socialtext::Rest::Search, GET_yaml]
++            'text/plain':   &default [Socialtext::Rest::Search, GET_text]
++        '*':                    [Socialtext::Rest::Search, bad_method]
++-
+     '/data/events':
+         'GET':
+             '*/*':           &default [Socialtext::Rest::Events, GET_html]
+diff --git a/nlw/lib/Socialtext/Rest/Search.pm b/nlw/lib/Socialtext/Rest/Search.pm
+new file mode 100644
+index 0000000..10b8ca0
+--- /dev/null
++++ b/nlw/lib/Socialtext/Rest/Search.pm
+@@ -0,0 +1,73 @@
++package Socialtext::Rest::Search;
++# @COPYRIGHT@
++use Moose;
++use Socialtext::HTTP ':codes';
++use Socialtext::Timer qw/time_scope/;
++use Socialtext::Search::AbstractFactory;
++use Socialtext::Search;
++
++extends 'Socialtext::Rest::Collection';
++with 'Socialtext::Rest::Pageable';
++
++has 'results' => (is => 'rw', isa => 'HashRef', lazy_build => 1);
++
++{
++    no strict 'refs';
++    *{__PACKAGE__.'::GET_yaml'} = Socialtext::Rest::Collection::_make_getter(
++        \&Socialtext::Rest::resource_to_yaml, 'text/x-yaml');
++    *{__PACKAGE__.'::GET_text'} = Socialtext::Rest::Collection::_make_getter(
++        \&Socialtext::Rest::resource_to_yaml, 'text/plain');
++}
++
++sub allowed_methods {'GET'}
++sub collection_name { loc('Search') }
++
++sub if_authorized {
++    my $self = shift;
++    my $method = shift;
++    my $call = shift;
++
++    return $self->bad_method
++        unless $self->allowed_methods =~ /\b\Q$method\E\b/;
++
++    return $self->$call(@_);
++}
++
++sub _build_results {
++    my $self = shift;
++    my $user = $self->rest->user;
++    my %opts = (
++        doctype => '*',
++    );
++
++    my $query = $self->rest->query->param('q');
++    my $factory = Socialtext::Search::AbstractFactory->GetFactory();
++    my @workspaces
++        = Socialtext::Search::_enumerate_workspaces('*', $user, '', \$query);
++    my ($hits, $hit_count) = $factory->search_on_behalf(
++        \@workspaces, $query, $user, sub {}, sub {}, %opts);
++
++    return {
++        hits => $hits,
++        count => $hit_count,
++    };
++}
++
++sub _get_total_results {
++    my $self = shift;
++    return $self->results->{count};
++}
++
++sub _get_entities {
++    my $self = shift;
++    my $hits = $self->results->{hits};
++
++    my @entities;
++    for my $hit (@$hits) {
++        my $result =  $hit->to_hash($self->hub);
++        push @entities, $result if $result;
++    }
++    return \@entities;
++}
++
++1;
+diff --git a/nlw/lib/Socialtext/Search/GroupHit.pm b/nlw/lib/Socialtext/Search/GroupHit.pm
+index ce40ceb..28b04fc 100644
+--- a/nlw/lib/Socialtext/Search/GroupHit.pm
++++ b/nlw/lib/Socialtext/Search/GroupHit.pm
+@@ -34,5 +34,15 @@ sub _build_group {
+     return Socialtext::Group->GetGroup(group_id => $self->group_id);
+ }
+ 
++
++sub to_hash {
++    my $self = shift;
++    return {
++        score => $self->score,
++        type => 'group',
++        user_id => $self->group->created_by_user_id,
++        hash => $self->group->to_hash,
++    };
++}
+ __PACKAGE__->meta->make_immutable;
+ 1;
+diff --git a/nlw/lib/Socialtext/Search/PersonHit.pm b/nlw/lib/Socialtext/Search/PersonHit.pm
+index febd679..86401cc 100644
+--- a/nlw/lib/Socialtext/Search/PersonHit.pm
++++ b/nlw/lib/Socialtext/Search/PersonHit.pm
+@@ -34,5 +34,18 @@ sub _build_profile {
+     return Socialtext::People::Profile->GetProfile($self->user_id);
+ }
+ 
++sub to_hash {
++    my $self = shift;
++    return {
++        score => $self->score,
++        type => 'person',
++        user_id => $self->user_id,
++        hash => {
++            %{ $self->profile->to_hash },
++            %{ $self->profile->user->to_hash },
++        },
++    };
++}
++
+ __PACKAGE__->meta->make_immutable;
+ 1;
+diff --git a/nlw/lib/Socialtext/Search/SignalHit.pm b/nlw/lib/Socialtext/Search/SignalHit.pm
+index 2d05589..e771d33 100644
+--- a/nlw/lib/Socialtext/Search/SignalHit.pm
++++ b/nlw/lib/Socialtext/Search/SignalHit.pm
+@@ -32,6 +32,16 @@ sub _build_signal {
+     return Socialtext::Signal->Get(signal_id => $self->signal_id);
+ }
+ 
++sub to_hash {
++    my $self = shift;
++    return {
++        score => $self->score,
++        type => 'signal',
++        user_id => $self->signal->user_id,
++        hash => $self->signal->as_hash,
++    };
++}
++
+ package Socialtext::Search::SignalAttachmentHit;
+ # @COPYRIGHT@
+ use Moose;
+@@ -76,4 +86,14 @@ sub _build_attachment {
+         $self->signal, $self->filename);
+ }
+ 
++sub to_hash {
++    my $self = shift;
++    return {
++        score => $self->score,
++        type => 'signal_attachment',
++        user_id => $self->signal->user_id,
++        hash => $self->attachment->as_hash,
++    };
++}
++
+ 1;
+diff --git a/nlw/lib/Socialtext/Search/SimpleAttachmentHit.pm b/nlw/lib/Socialtext/Search/SimpleAttachmentHit.pm
+index 576f99f..416060c 100644
+--- a/nlw/lib/Socialtext/Search/SimpleAttachmentHit.pm
++++ b/nlw/lib/Socialtext/Search/SimpleAttachmentHit.pm
+@@ -138,6 +138,30 @@ sub composed_key {
+     return "$workspace_name $page_uri $key";
+ }
+ 
++sub to_hash {
++    my $self = shift;
++    my $hub  = shift;
++
++    my $ws = Socialtext::Workspace->new(name => $self->workspace_name);
++    $hub->current_workspace($ws);
++    my $attachments = $hub->attachments->all(page_id => $self->page_uri);
++    my $latest;
++    for my $attach (@$attachments) {
++        next unless $attach->id eq $self->attachment_id;
++
++        next if $latest and $latest->timestampish > $attach->timestampish;
++        $latest = $attach;
++    }
++
++    return undef unless $latest;
++    return {
++        score => $self->hit->{score},
++        type => 'page_attachment',
++        user_id => $latest->uploaded_by->user_id,
++        hash => $latest->serialize,
++    };
++}
++
+ 1;
+ 
+ =head1 SEE ALSO
+diff --git a/nlw/lib/Socialtext/Search/SimplePageHit.pm b/nlw/lib/Socialtext/Search/SimplePageHit.pm
+index d64d716..d0895b3 100644
+--- a/nlw/lib/Socialtext/Search/SimplePageHit.pm
++++ b/nlw/lib/Socialtext/Search/SimplePageHit.pm
+@@ -28,6 +28,7 @@ This implementation simply stores a page URI in a blessed scalar.
+ package Socialtext::Search::SimplePageHit;
+ use base 'Socialtext::Search::PageHit';
+ use Socialtext::Encode;
++use Socialtext::Model::Pages;
+ 
+ =head1 CONSTRUCTOR
+ 
+@@ -124,6 +125,23 @@ sub composed_key     {
+     return "$workspace_name $key";
+ }
+ 
++sub to_hash {
++    my $self = shift;
++    my $ws = Socialtext::Workspace->new(name => $self->workspace_name);
++    my $page = Socialtext::Model::Pages->By_id(
++        workspace_id => $ws->workspace_id,
++        page_id => $self->page_uri,
++        do_not_need_tags => 1,
++    );
++
++    return {
++        score => $self->hit->{score},
++        type => 'page',
++        user_id => $page->last_edited_by->user_id,
++        hash => $page->to_result,
++    };
++}
++
+ 1;
+ 
+ =head1 SEE ALSO
+diff --git a/nlw/lib/Socialtext/Search/Solr/Searcher.pm b/nlw/lib/Socialtext/Search/Solr/Searcher.pm
+index 4be5698..2b8cc50 100644
+--- a/nlw/lib/Socialtext/Search/Solr/Searcher.pm
++++ b/nlw/lib/Socialtext/Search/Solr/Searcher.pm
+@@ -46,6 +46,7 @@ has_inflated 'query_parser' =>
+ 
+ my %DocTypeToFieldBoost = (
+     '' => 'title^4 tags^3 filename^2', # page + attachment
++    '*' => 'title^4 name_pf_t^3 tags^2 filename^1.1 body', # mixed type
+     page => 'title^4 tags^3',
+     attachment => 'filename^2 body^0.8',
+     signal => 'body^1.2 tag^3 filename^1.1',
+@@ -83,6 +84,7 @@ sub _search {
+     my ( $self, $raw_query_string, $authorizer, $workspaces, %opts) = @_;
+     $opts{limit}   ||= $self->_default_rows;
+     $opts{timeout} ||= Socialtext::AppConfig->search_time_threshold();
++    $opts{doctype} ||= '';
+ 
+     my @account_ids;
+     if ($opts{account_ids}) {
+@@ -114,20 +116,26 @@ sub _search {
+     # No $opts{doctype} indicates workspace search (legacy, could be changed)
+     if ($workspaces and @$workspaces) {
+         # Pages and attachments in my workspaces.
+-        push @filter_query, "(doctype:attachment OR doctype:page) AND ("
+-              . join(' OR ', map { "w:$_" }
++        my $ws_list = join(' OR ', map { "w:$_" }
+                 sort { $a <=> $b }
+                 map { Socialtext::Workspace->new(name => $_)->workspace_id }
+-                    @$workspaces) . ")";
+-        $field_boosts = $DocTypeToFieldBoost{''}; # default = attachment + page
++                    @$workspaces);
++        push @filter_query,
++            ($opts{doctype} eq '*'
++                ? $ws_list
++                : "(doctype:attachment OR doctype:page) AND ($ws_list)"
++            );
++
++        # default = attachment + page
++        $field_boosts = $DocTypeToFieldBoost{''};
+     }
+-    elsif ($opts{doctype}) {
++    if ($opts{doctype}) {
+         $field_boosts = $DocTypeToFieldBoost{$opts{doctype}};
+ 
+         if ($opts{doctype} eq 'signal') {
+             push @filter_query, "(doctype:signal OR doctype:signal_attachment)";
+         }
+-        else {
++        elsif ($opts{doctype} ne '*') {
+             push @filter_query, "doctype:$opts{doctype}";
+         }
+ 
+@@ -139,7 +147,12 @@ sub _search {
+                     : ()),
+                 (map { "g:$_" } @$group_ids),
+             );
+-            $filter_query[$#filter_query] .= " AND ($nets)";
++            if ($opts{doctype} eq '*') {
++                $filter_query[$#filter_query] .= " OR $nets";
++            }
++            else {
++                $filter_query[$#filter_query] .= " AND ($nets)";
++            }
+ 
+             if ($opts{doctype} eq 'signal') {
+                 # Find my public signals and private ones I sent or received

@@ -1,0 +1,7 @@
+<!-- @COPYRIGHT@ -->
+[% SET escaped_str = redirect_to | html %]
+<span class="error">
+  [% loc('error.login-to-set-preferences') %]
+  <br/>
+  [% loc('error.register-here=uri', escaped_str) %]
+</span>

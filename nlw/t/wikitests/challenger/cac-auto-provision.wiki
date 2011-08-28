@@ -1,0 +1,35 @@
+Verify that auto-provisioning of CAC authenticated Users works.
+
+* Fixture: SocialRest
+
+| set | https | https://%%hostname%%:%%https_port%% |
+
+| *Comment* | Create a test User to work with, and mark them as needing an External Id |                                                         |
+| set       | f_name                                                                   | Joan                                                    |
+| set       | m_name                                                                   | Marie-%%start_time%%                                    |
+| set       | l_name                                                                   | Larkin                                                  |
+| set       | edipin                                                                   | %%start_time%%                                          |
+| set       | email                                                                    | %%f_name%%.%%l_name%%.%%start_time%%@ken.socialtext.net |
+| set       | password                                                                 | abc123                                                  |
+| st-admin  | create-user --first-name %%f_name%% --middle-name %%m_name%% --last-name %%l_name%% --username %%email%% --email %%email%% --password %%password%% |
+| st-admin  | add-restriction --email %%email%% --restriction require_external_id                                                                                |
+
+| *Comment*     | Enable CAC support, and create a client-side SSL cert for our test User |                                             |
+| st-config     | set credentials_extractors CAC:Guest                                    |                                             |
+| st-client-ssl | server-on                                                               |                                             |
+| st-client-ssl | client-on                                                               | %%l_name%%.%%f_name%%.%%m_name%%.%%edipin%% |
+
+| *Comment* | Before auto-provisioning, User should have the restriction |                     |
+| st-admin  | list-restrictions --email %%email%%                        | require_external_id |
+
+| *Comment* | Check that the CAC credentials extractor works           |
+| GET       | %%https%%/st/dashboard                                   |
+| code-is   | 200                                                      |
+| body-like | Socialtext.username = "%%f_name%% %%m_name%% %%l_name%%" |
+
+| *Comment* | After auto-provisioning, restriction has been removed |                          |
+| st-admin  | list-restrictions --email %%email%%                   | No restrictions for user |
+
+| *Comment*     | CLEANUP: Reset the configuration                  |
+| st-config     | set credentials_extractors BasicAuth:Cookie:Guest |
+| st-client-ssl | server-off                                        |

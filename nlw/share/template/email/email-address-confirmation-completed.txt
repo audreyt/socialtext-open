@@ -1,0 +1,33 @@
+[% loc('email.hello') %]
+[% IF target_workspace %]
+[% SET escaped_str = title | html %]
+[% loc('email.email-confirmed-login-to=wiki', escaped_str) %]
+
+[% loc('email.to-do-so-go-to-this-web-address:') %] [% uri | html %]
+
+[% ELSE %]
+[% SET escaped_str = app_name | html -%]
+[% loc('email.email-confirmed-login-to=app', escaped_str) %]
+
+[% IF groups.size -%]
+[% loc('email.you-are-member-of-following-groups:') %]
+[% FOREACH group IN groups -%]
+* [% group.name %] : [% group.uri | html %]
+[% END -%]
+[%- ELSIF workspaces.size -%]
+[% loc('email.you-are-member-of-following-wikis:') %]
+[% FOREACH workspace IN workspaces -%]
+* [% workspace.title %] : [% workspace.uri | html %]
+[% END -%]
+[%- ELSE -%]
+[% loc('email.to-do-so-go-to-this-web-address:') %] [% uri | html %]
+[% END %]
+[% END %]
+[% loc('email.login-with-email-address:') %] [% user.email_address %]
+
+[% loc('email.keep-this-for-future-reference') %]
+
+[% loc('email.questions-contact-support=uri', appconfig.support_address) %]
+
+[% PROCESS 'email/standard-footer.txt'
+   support_link = 0 %]

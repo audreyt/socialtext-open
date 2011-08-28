@@ -1,0 +1,14 @@
+#!/bin/bash
+# @COPYRIGHT@
+set -e
+
+st-admin create-user --email goobox@gmail.com --password molly1 --first-name Molly --last-name Millions 
+st-admin create-user --email naomi.hayhurst@istori.com --password hosaka --first-name Naomi --last-name Hayhurst
+st-admin create-user --email lukas.young@istori.com --password hosaka --first-name Lukas --last-name Young
+st-admin create-user --email charlotte.zoucks@istori.com --password hosaka --first-name charlotte --last-name zoucks
+
+create-test-data-workspace hosaka.1.tar.gz
+st-admin change-password --email goobox@gmail.com --password molly1
+st-admin change-password --email l
+st-admin add-member --email naomi.hayhurst@istori.com --workspace Hosaka
+exit 0

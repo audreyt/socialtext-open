@@ -1,0 +1,163 @@
+* Fixture: ApplianceConfig
+
+| *Comment* | Test Case: Console Setup |  |
+
+| st-admin | give-system-admin --email %%email%% | now has system admin access |
+| open | /console |  |
+| text_like | Socialtext Appliance |  |
+| click_and_wait | link=Setup |  |
+
+| *Comment* | Test Case: Console Setup. top tabs |  |
+| is_element_present_ok | link=Overview |  |
+| is_element_present_ok | link=Backup |  |
+| is_element_present_ok | link=Setup |  |
+| is_element_present_ok | link=Shutdown |  |
+| is_element_present_ok | link=Report a Problem |  |
+
+| *Comment* | Test Case: Console Setup. All HTML elements |  |
+| is_element_present_ok | link=on their login screen |  |
+| is_element_present_ok | link=Socialtext Desktop |  |
+| is_element_present_ok | link=How to configure a web proxy |  |
+| is_element_present_ok | link=Socialtext, Inc. |  |
+| is_element_present_ok | login_message |  |
+| is_element_present_ok | support_href |  |
+| is_element_present_ok | web_proxy |  |
+| is_element_present_ok | web_proxy_config |  |
+| is_element_present_ok | timeserver |  |
+| is_element_present_ok | timeserver_config |  |
+| is_element_present_ok | timeserver_sync |  |
+| is_element_present_ok | smarthost |  |
+| is_element_present_ok | config_email |  |
+| is_element_present_ok | recipient_email |  |
+| is_element_present_ok | test_email |  |
+| is_element_present_ok | admin_email |  |
+| is_element_present_ok | add_admin |  |
+| is_element_present_ok | create_workspace |  |
+| is_element_present_ok | setup-support-href |  |
+| is_element_present_ok | setup-login-message |  |
+| is_element_present_ok | desktop_update_enabled |  |
+| is_element_present_ok | login_message |  |
+| wait_for_element_visible_ok | setup-login-message | 30000 |
+
+| *Comment* | Test Case: Console Setup. Set the server signal limit |  |
+| wait_for_element_visible_ok | signals_size_limit | 30000 |
+| wait_for_element_visible_ok | set_signals_size_limit | 30000 |
+| type_ok | signals_size_limit | -25 |
+| click_ok | set_signals_size_limit |  |
+| wait_for_page_to_load_ok | 30000 |  |
+| wait_for_text_present_ok | Signals maximum size must be an positive integer | 30000 |
+| text_unlike | //body | -25 |
+| wait_for_element_visible_ok | signals_size_limit | 30000 |
+| wait_for_element_visible_ok | set_signals_size_limit | 30000 |
+| type_ok | signals_size_limit | 0 |
+| click_ok | set_signals_size_limit |  |
+| wait_for_page_to_load_ok | 30000 |  |
+| wait_for_text_present_ok | Signals maximum size must be an positive integer | 30000 |
+| wait_for_element_visible_ok | signals_size_limit | 30000 |
+| wait_for_element_visible_ok | set_signals_size_limit | 30000 |
+| type_ok | signals_size_limit | 300 |
+| click_ok | set_signals_size_limit |  |
+| wait_for_page_to_load_ok | 30000 |  |
+| text_unlike | //body | Signals maximum size must be an positive integer |
+| verifyValue | signals_size_limit | 300 |
+
+| *Comment* | Test Case: Console Setup. Disable/Enable Desktop Update |  |
+| is_element_present_ok | setup-st-auto-update |  |
+| uncheck_ok | desktop_update_enabled |  |
+| text_like | //body | By default, Socialtext Desktop automatically updates itself from www.socialtext.com. |
+| text_like | //body | You may disable automatic updates by unchecking this checkbox and clicking Submit. |
+| click_ok | setup-st-auto-update |  |
+| wait_for_page_to_load_ok | 30000 |  |
+| open_ok | /console |  |
+| wait_for_element_visible_ok | link=Setup | 30000 |
+| click_and_wait | link=Setup |  |
+| config_is | desktop_update_enabled | 0 |
+| is_element_present_ok | setup-st-auto-update |  |
+| check_ok | desktop_update_enabled |  |
+| is_checked_ok | desktop_update_enabled |  |
+| click_and_wait | setup-st-auto-update |  |
+| open_ok | /console |  |
+| wait_for_element_visible_ok | link=Setup | 30000 |
+| click_ok | link=Setup |  |
+| wait_for_page_to_load_ok | 30000 |  |
+| config_is | desktop_update_enabled | 1 |
+
+| *Comment* | Test Case: Console Setup. Time server and Apache Logs |  |
+| open | /console |  |
+| text_like | Socialtext Appliance |  |
+| click_and_wait | link=Setup |  |
+| is_text_present_ok | Time Server |  |
+| is_text_present_ok | Appliance clock when this screen was generated: |  |
+| is_text_present_ok | You can synchronize the appliance clock with another computer using the NTP protocol. The appliance must be able to contact that server via port 123. |  |
+
+| *Comment* | Test Case: Console Setup. Email server, appliance admin, initial workspace |  |
+| is_text_present_ok | Set Email Configuration |  |
+| is_text_present_ok | Outgoing mail server |  |
+| is_text_present_ok | (leave blank to use appliance's built-in SMTP server) |  |
+| is_text_present_ok | Send Test Email |  |
+| is_text_present_ok | Email address for testing |  |
+| is_text_present_ok | Add Appliance Administrators |  |
+| is_text_present_ok | Create Initial Workspace |  |
+| is_text_present_ok | This action will delete all existing workspaces and users on this appliance, and create the Admin workspace. |  |
+
+| *Comment* | Test Case: Console Setup. mail server and test email |  |
+| type_ok | smarthost |  |
+| click_and_wait | config_email |  |
+| type_ok | recipient_email | %%workspace%%@%%wikiemail%% |
+| click_and_wait | test_email |  |
+| is_text_present_ok | Sent test email to %%workspace%%@%%wikiemail%% |  |
+
+| type_ok | smarthost | myeximhost |
+| click_and_wait | config_email |  |
+| config_is | eximsmarthost | myeximhost |
+
+| *Comment* | Test Case: Console Setup. appliance admin |  |
+| type_ok | admin_email | foo2bar.com |
+| click_and_wait | add_admin |  |
+| is_text_present_ok | Please enter a valid email address |  |
+| type_ok | admin_email | %%email%% |
+| click_and_wait | add_admin |  |
+| is_text_present_ok | %%email%% now has accounts admin access |  |
+
+| *Comment* | Test Case: Console Setup. proxy server |  |
+| type_ok | web_proxy | foo.bar.com |
+| click_and_wait | web_proxy_config |  |
+| is_text_present_ok | `Web proxy updated to http://foo.bar.com` |  |
+| type_ok | web_proxy |  |
+| click_and_wait | web_proxy_config |  |
+| is_text_present_ok | `Web proxy cleared` |  |
+
+| *Comment* | Test Case: Console Setup. time server |  |
+| type_ok | timeserver | mytimeserver |
+| click_and_wait | timeserver_config |  |
+| is_text_present_ok | ntpdate check failed |  |
+| type_ok | timeserver |  |
+| click_and_wait | timeserver_config |  |
+| value_is | timeserver | ntp.ubuntu.com |
+| click_and_wait | timeserver_sync |  |
+| is_text_present_ok | Synchronized time with ntp.ubuntu.com |  |
+
+| *Comment* | Set Login Message |  |
+| wait_for_element_visible_ok | login_message | 30000 |
+| set | message | Display this before login ( %%start_time%% ) |
+| type_ok | login_message | %%message%% |
+| wait_for_element_visible_ok | setup-login-message | 30000 |
+| click_and_wait | setup-login-message |  |
+
+| *Comment* | Test Case: Console Setup. TEARDOWN |  |
+| type_ok | timeserver |  |
+| click_and_wait | timeserver_config |  |
+| type_ok | smarthost |  |
+| click_and_wait | config_email |  |
+| st-admin | remove-system-admin --email %%email%% | no longer has system admin access |
+
+| *Comment* | Test Case: Console Setup. make sure the default setting is ntp.ubuntu.com |  |
+| value_is | timeserver | ntp.ubuntu.com |
+
+| *Comment* | Test Case: Console Setup. Test Login Message. |  |
+| open_ok | /st/dashboard |  |
+| st-logout |  |  |
+| refresh |  |  |
+| wait_for_text_present_ok | %%message%% | 30000 |
+
+| *Comment* | Test Case: Console Setup COMPLETED |  |

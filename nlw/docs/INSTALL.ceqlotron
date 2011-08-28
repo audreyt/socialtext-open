@@ -1,0 +1,38 @@
+INSTALL.ceqlotron -- How to install Socialtext's ceqlotron
+
+@COPYRIGHT@
+
+=== The Ceqlotron ===
+
+In addition to the Apache part of Socialtext, the ceqlotron runs in the
+background to do background change maintenance.  When a page changes, it
+must be reindexed, and that's handled by the ceqlotron.
+
+You can see the status of the ceqlotron's queue with the ceq-stat
+program:
+
+    $ ceq-stat
+    Changes in queue:
+      Attachment      2
+      Page           14
+      Workspace       0
+
+      TOTAL          16
+
+When you first install Socialtext, the Help workspace must get
+indexed.  When the ceqlotron fires up the first time, it will
+immediately get working on the Help workspace.  After a minute or
+two, depending on your machine speed, the queue will clear out.
+You can monitor it with the ceq-stat program.
+
+If you prefer to not have the ceqlotron running continuously in the
+background, it can be run as a cron job with the --once flag, to tell
+it to run through the queue once, and --foreground, to not spawn any
+background children.
+
+    # Crontab line for running the ceqlotron hourly at xx:17
+    17 * * * * ceqlotron --once --foreground
+
+If you use the cron method, make sure to use /etc/init.d/st-apache to
+start Apache, instead of /etc/init.d/socialtext which also starts up
+the ceqlotron.

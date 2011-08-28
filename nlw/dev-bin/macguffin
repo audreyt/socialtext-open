@@ -1,0 +1,32 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+
+# Use this in place of other programs where you want to verify arguments
+# and/or input.
+
+# For etymology, see http://en.wikipedia.org/wiki/MacGuffin
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+
+use YAML qw(Load Dump);
+use Fcntl qw(:flock :seek);
+use Socialtext::File;
+use Readonly;
+
+Readonly my $FILE => "/tmp/macguffin-$<.yaml";
+
+Socialtext::File::ensure_empty_file($FILE);
+open F, '+<', $FILE or die "open $FILE: $!";
+flock F, LOCK_EX or die "flock $FILE: $!";
+seek F, 0, SEEK_SET;
+
+my $list = Load(join '', <F>);
+$list ||= [];
+
+my $stdin = join '', <STDIN>;
+
+seek F, 0, SEEK_SET;
+print F Dump( [ @$list, { ARGV => \@ARGV, STDIN => $stdin } ] );

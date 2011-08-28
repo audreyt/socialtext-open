@@ -1,0 +1,59 @@
+* HighPermissions
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Signals Attachment SETUP |  |
+| *Comment* | wikitest_client_files at %%wikitest_client_files%% |  |
+
+| set_default | att_signaler | %%username%% |
+| set_default | att_signaler_pw | %%password%% |
+| set_default | jpg | wikitest.jpg |
+| set_default | txt | wikitest.txt |
+| set_default | zip | wikitestzip.zip |
+
+| set_default | scheme | http |
+| set_default | files_host | wikitest_files.topaz.socialtext.net |
+| set_default | jpg_file | %%scheme%%://%%files_host%%/%%jpg%% |
+| set_default | txt_file | %%scheme%%://%%files_host%%/%%txt%% |
+| set_default | zip_file | %%scheme%%://%%files_host%%/%%zip%% |
+| set_default | signal | TC: Signals Attachment %%start_time%% |
+
+| *Comment* | Test Case: Signals Attachment login as | %%att_signaler%% |
+| st-logoutin | %%att_signaler%% | %%att_signaler_pw%% |
+| open_ok | /st/signals |  |
+
+| *Comment* | Test Case: Signals Attachment. Insert file button |  |
+| wait_for_element_visible_ok | //a[contains(@class,'insertFile')] | 120000 |
+| click_ok | //a[contains(@class,'insertFile')] |  |
+| wait_for_element_visible_ok | //form[@name='attachForm']//input | 10000 |
+
+| *Comment* | Test Case: Signals Attachment. setSpeed 3000 for type-in, time to upload three files |  |
+| set_Speed | 3000 |  |
+| text_like | //body | select an image or file to upload |
+| attach_file_ok | //form[@name='attachForm']//input | %%jpg_file%% |
+| wait_for_text_present_ok | Uploaded files: %%jpg%% | 10000 |
+| attach_file_ok | //form[@name='attachForm']//input | %%txt_file%% |
+| wait_for_text_present_ok | Uploaded files: %%jpg%%, %%txt%% | 10000 |
+| attach_file_ok | //form[@name='attachForm']//input | %%zip_file%% |
+| wait_for_text_present_ok | Uploaded files: %%jpg%%, %%txt%%, %%zip%% | 10000 |
+| set_Speed | 0 |  |
+
+| *Comment* | Test Case: Signals Attachment. click Done |  |
+| wait_for_element_visible_ok | //a[@class='btn'] | 10000 |
+| click_ok | //a[@class='btn'] |  |
+| wait_for_element_not_visible_ok | //form[@name='attachForm'] | 30000 |
+
+| *Comment* | Test Case: Signals Attachment. post %%signal%%. Only works in Firefox |  |
+| wait_for_element_visible_ok | signalFrame | 5000 |
+| select_frame | signalFrame |  |
+| type_ok | //body | %%signal%% |
+| select_frame | relative=parent |  |
+| wait_for_element_visible_ok | link=Post | 5000 |
+| click_ok | link=Post |  |
+
+| *Comment* | Test Case: Signals Attachment. see signal and uploaded files |  |
+| wait_for_text_present_ok | %%signal%% | 30000 |
+| wait_for_element_visible_ok | link=%%jpg%% | 30000 |
+| wait_for_element_visible_ok | link=%%txt%% | 30000 |
+| wait_for_element_visible_ok | link=%%zip%% | 30000 |
+
+| *Comment* | Test Case: Signals Attachment COMPLETED |

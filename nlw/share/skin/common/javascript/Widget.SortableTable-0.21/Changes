@@ -1,0 +1,73 @@
+0.21  2006-05-31
+
+- Added the "onSortRowCallback" constructor parameter.
+
+- Fixed some bad example code in the docs. Reported by Kunz Ueli.
+
+
+0.20  2006-05-23
+
+- Add missing prereq, JSAN.
+
+- Improved sorting so that if a column contains cells with identical
+values, the widget falls back to sorting on another column for just
+those cells. In previous versions, the sort order for identical cells
+was basically random.
+
+- Added the "secondarySortColumn" constructor parameter.
+
+- Added "noInitialSort" constructor parameter based on a request by
+Jochen Stenzel.
+
+- If you created two widgets for the same table, this caused an error
+in IE6. Now the code detects this and does the right thing, which
+means skipping some code that just needs to run once per element,
+rather than once per widget constructed.
+
+- If a table had only one row (just a header), creating a widget for
+it threw an error because the initial sort failed. Reported by Jochen
+Stenzel.
+
+
+0.15  2006-01-28
+
+- IE fix: cannot set CSS class via setAttribute, so use className
+property instead.
+
+- Document class name changes for <tr> tags in table.
+
+
+0.14  2006-01-27
+
+- Add onClick attribute to generated <a> tags that resort columns in
+order to make the browser not move the page when it is clicked on.
+
+
+0.13  2006-01-26
+
+- Also add class names to rows, "w-st-odd-row" and "w-st-even-row", to
+allow for typical table styling of alternating background colors every
+other row.
+
+
+0.12  2006-01-26
+
+- Currency and number sorting were broken in 0.11. Added more tests.
+
+
+0.11  2006-01-26
+
+- If two cells contained identical text data, the sorting went
+haywire.
+
+- Improved detection of column type by better handling of whitespace.
+
+- Added detection for currency type.
+
+- Handle empty cells properly when sorting.
+
+
+0.10  2006-01-26
+
+- Initial release
+

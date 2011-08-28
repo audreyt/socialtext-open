@@ -1,0 +1,12 @@
+<!-- @COPYRIGHT@ -->
+<h3>Error</h3>
+
+[% IF debug %]
+  <p style="background-color:#dddddd">
+  <code>
+    [% FOREACH error IN errors %]
+      [% error | html %]
+    [% END %]
+  </code>
+  </p>
+[% END %]

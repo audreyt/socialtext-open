@@ -1,0 +1,91 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use FindBin '$Bin';
+use File::Path;
+use File::Basename;
+chdir $Bin;
+
+# Remove all files in t/ and mkdir it
+rmtree(['t']) if -d 't';
+mkdir 't';
+
+exit if @ARGV and $ARGV[0] eq '--clean';
+
+local $/;
+
+# Enumerate all test input dirs
+my %subdirs;
+for (<*>) {
+    my $output = "$_/".(split(/\./, $_))[0].".txt";
+    next unless -d and -f $output;
+    open my $in, $output or die "Can't open $output: $!";
+    $subdirs{$_} = <$in>;
+}
+
+for my $t_html (<*.t.html>) {
+    my $basename = $t_html;
+    $basename =~ s/-[^.]+\.t\.html//;
+    unlink $t_html unless $subdirs{$basename};
+}
+
+my $tmpl = <DATA>;
+
+# For each test/browser combination in input directory, create a corresponding test
+for my $dir (sort keys %subdirs) {
+    for my $input (<$dir/*.html>) {
+        my $wikitext = $subdirs{$dir};
+        my $name = $dir . "-" . (split(/\./, basename($input)))[0];
+
+        my $browser_specific_wikitext = $input;
+        $browser_specific_wikitext =~ s/html$/txt/;
+        if (-f $browser_specific_wikitext) {
+            open my $in, '<', $browser_specific_wikitext or die "Can't open $browser_specific_wikitext $!";
+            $wikitext = <$in>;
+        }
+
+        open my $in, '<', $input or die "Can't open $input: $!";
+        my $html = <$in>;
+
+        # Strip out comment sections in CSS
+        $html =~ s{/\*.*?\*/}{}sg;
+
+        my $test = $tmpl;
+        $test =~ s/__NAME__/$name/g;
+        $test =~ s/__HTML__/$html/g;
+        $test =~ s/__WIKITEXT__/$wikitext/g;
+
+        my $js = "t/$name.t.js";
+        open my $out, '>', $js or die "Can't write to $js: $!";
+        print $out $test;
+
+        print "$js\n";
+    }
+}
+
+__DATA__
+var t = new Test.Wikiwyg();
+
+var filters = {
+    html: ['html_to_wikitext']
+};
+
+t.plan(1);
+
+if ( Wikiwyg.is_safari ) {
+    t.skipAll("On Safari, we do not convert HTML to wikitext");
+}
+else {
+    t.filters(filters);
+    t.run_is('html', 'wikitext');
+}
+
+/* Test
+=== __NAME__
+--- html
+__HTML__
+--- wikitext
+__WIKITEXT__
+
+*/

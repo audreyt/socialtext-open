@@ -1,0 +1,56 @@
+[%# @COPYRIGHT@ -%]
+
+[% IF extra_text %]
+  [% extra_text -%]
+[% END %]
+
+<p>
+  [% loc('email.hi') %]
+</p>
+
+<p>
+  [% SET wksp_title = workspace_title | html %]
+  [% loc("email.inviting-you-to-join=wiki", wksp_title) %]
+  [% UNLESS requires_confirmation %]
+    [% loc('email.sign-in-using-information-below:') %]
+  [% END %]
+</p>
+
+[% IF requires_confirmation %]
+  <p>
+    [% SET confirm_uri = confirmation_uri | html %]
+    [% loc('email.click-to-confirm-email=uri', confirm_uri) %]
+  </p>
+
+  <p>
+    [% loc('email.once-confirmed-you-will-receive-second-email-with-login-details') %]
+  </p>
+[% ELSE %]
+  <p>
+    [% loc('email.web-address:') %] <a href="[% workspace_uri | html %]">[% workspace_uri | html %]</a><br />
+    [% loc('email.username:') %] [% username | html %]
+  </p>
+
+  [% IF appconfig.is_default('user_factories') %]
+    [% IF app_name; a = 'a'; ELSE; a = 'an'; END %]
+    <p>
+      [% loc("email.same-password-as-existing-wiki=a,app,app", a, app_name, app_name) %]
+      [% loc("email.follow-link-to-select-password:") %]
+      [% forgot_password_uri %]
+    </p>
+  [% END %]
+  <p>
+    [% loc('email.keep-this-for-future-reference') %]
+  </p>
+[% END %]
+
+<p>
+  [% loc('email.thanks') %]
+</p>
+
+<p>
+  [% inviting_user %]
+</p>
+
+[% PROCESS 'email/standard-footer.html'
+   support_link = 1 %]

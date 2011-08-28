@@ -1,0 +1,9 @@
+#!/bin/bash
+
+APT=/etc/apt/sources.list
+
+cp $APT $APT.bak
+grep -v stdev < $APT.bak > $APT
+rm $APT.bak
+
+exit 0;

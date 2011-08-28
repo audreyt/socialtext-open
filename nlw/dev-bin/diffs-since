@@ -1,0 +1,32 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use DateTime;
+
+use constant ONEDAY => DateTime::Duration->new(days => 1);
+
+sub usage {
+    die <<EOF;
+Usage: diffs-since yyyy-mm-dd
+   or: diffs-since yesterday
+EOF
+}
+
+my $current;
+usage unless @ARGV;
+if ($ARGV[0] =~ /^(\d{4})-(\d{2})-(\d{2})$/) {
+    $current = DateTime->new(year => $1, month => $2, day => $3);
+} elsif ($ARGV[0] =~ 'yesterday$') {
+    $current = DateTime->now() - ONEDAY;
+} else {
+    usage;
+}
+do {
+    my $day_after = $current + DateTime::Duration->new(days => 1);
+    my $current_str = $current->ymd('-');
+    my $day_after_str = $day_after->ymd('-');
+    print "=== $current_str ===\n";
+    system "svn diff -r'{$current_str}:{$day_after_str}'";
+    $current += ONEDAY;
+} while ($current < DateTime->now);

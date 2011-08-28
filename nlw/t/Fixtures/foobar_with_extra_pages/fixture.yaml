@@ -1,0 +1,14 @@
+fixtures:
+  - db
+  - help
+
+workspaces:
+  foobar:
+    extra_pages: 1
+    extra_users:
+      member: [devnull@socialtext.com]
+      impersonator: [devnull2@socialtext.com]
+
+conflicts:
+  - foobar
+  - foobar_with_ordered_pages

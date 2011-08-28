@@ -1,0 +1,156 @@
+| *Comment* | Test Case: Table Info |  |
+
+Don't even THINK about removing the extra wait_for and text_present "Additional interlocks" in this test.
+
+| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text | 30000 |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+
+| *Comment* | Test Case: Table Info. Enter a table one char at a time |  |
+| keyPress | wikiwyg_wikitext_textarea | \124 |
+| keyPress | wikiwyg_wikitext_textarea | a |
+| keyPress | wikiwyg_wikitext_textarea | \124 |
+| keyPress | wikiwyg_wikitext_textarea | b |
+| keyPress | wikiwyg_wikitext_textarea | \124 |
+| keyPress | wikiwyg_wikitext_textarea | \13 |
+| keyPress | wikiwyg_wikitext_textarea | \124 |
+| keyPress | wikiwyg_wikitext_textarea | c |
+| keyPress | wikiwyg_wikitext_textarea | \124 |
+| keyPress | wikiwyg_wikitext_textarea | d |
+| keyPress | wikiwyg_wikitext_textarea | \124 |
+| keyPress | wikiwyg_wikitext_textarea | \13 |
+| type_ok | st-newpage-pagename-edit | Table Info %%start_time%% |
+
+| st_pause_click | 2000 | link=Save | and_wait |
+
+| *Comment* | Test Case: Table Info. Verify the table content. |  |
+| wait_for_element_visible_ok | link=Edit | 30000 |
+| click_ok | link=Edit |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text | 30000 |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| verifyValue | wikiwyg_wikitext_textarea | `qr/a.+b.+c.+d/` |
+
+| *Comment* | Test Case: Table Info. Testing table info relies on cursor being in table when switch to Rich Text mode. |  |
+
+| *Comment* | Test Case: Table Info. Sort ON, Border OFF |  |
+| wait_for_element_visible_ok | link=Rich Text | 30000 |
+| click_ok | link=Rich Text |  |
+| wait_for_element_not_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| wait_for_element_visible_ok | st-page-editing-wysiwyg | 30000 |
+| wait_for_element_visible_ok | //img[@id='wikiwyg_button_table-settings' and @class='wikiwyg_button'] | 30000 |
+| st_pause_click | 3000 | wikiwyg_button_table-settings |
+| wait_for_element_visible_ok | st-table-settings | 30000 |
+
+| *Comment* | Test Case: Table Info. Additional interlocks 1 |  |
+| wait_for_text_present_ok | Edit Table | 30000 |
+| text_like | st-table-settings | Edit Table |
+| text_like | st-table-settings | qr/Table is Sortable/i |
+| text_like | st-table-settings | qr/Show Cell Borders/i |
+| pause | 3000 |  |
+| wait_for_element_visible_ok | sort | 30000 |
+| check_ok | sort |  |
+| is_checked_ok | sort |  |
+| wait_for_element_visible_ok | border | 30000 |
+| uncheck_ok | border |  |
+| st_unchecked_ok | border |  |
+| wait_for_element_visible_ok | table-info-save | 5000 |
+| st_pause_click | 3000 | table-info-save |
+| wait_for_element_not_visible_ok | st-table-settings | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| verifyValue | wikiwyg_wikitext_textarea | `qr/sort:on border:off/` |
+
+| *Comment* | Test Case: Table Info. Sort OFF, Border ON in Rich Text mode |  |
+| wait_for_element_visible_ok | link=Rich Text | 30000 |
+| click_ok | link=Rich Text |  |
+| wait_for_element_not_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| wait_for_element_visible_ok | st-page-editing-wysiwyg | 30000 |
+| wait_for_element_visible_ok | //img[@id='wikiwyg_button_table-settings' and @class='wikiwyg_button'] | 30000 |
+| st_pause_click | 3000 | wikiwyg_button_table-settings |
+| wait_for_element_visible_ok | st-table-settings | 30000 |
+
+| *Comment* | Test Case: Table Info. Additional interlocks 2 |  |
+| wait_for_text_present_ok | Edit Table | 30000 |
+| text_like | st-table-settings | Edit Table |
+| text_like | st-table-settings | qr/Table is Sortable/i |
+| text_like | st-table-settings | qr/Show Cell Borders/i |
+| pause | 3000 |  |
+| wait_for_element_visible_ok | border | 30000 |
+| check_ok | border |  |
+| is_checked_ok | border |  |
+| wait_for_element_visible_ok | sort | 30000 |
+| uncheck_ok | sort |  |
+| st_unchecked_ok | sort |  |
+| wait_for_element_visible_ok | table-info-save | 5000 |
+| st_pause_click | 3000 | table-info-save |
+| wait_for_element_not_visible_ok | st-table-settings | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| verifyValue | wikiwyg_wikitext_textarea | `qr/sort:off border:on/` |
+
+| *Comment* | Test Case: Table Info. Sort OFF, Border OFF |  |
+| wait_for_element_visible_ok | link=Rich Text | 30000 |
+| click_ok | link=Rich Text |  |
+| wait_for_element_not_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| wait_for_element_visible_ok | st-page-editing-wysiwyg | 30000 |
+| wait_for_element_visible_ok | //img[@id='wikiwyg_button_table-settings' and @class='wikiwyg_button'] | 30000 |
+| st_pause_click | 3000 | wikiwyg_button_table-settings |
+| wait_for_element_visible_ok | st-table-settings | 30000 |
+
+| *Comment* | Test Case: Table Info. Additional interlocks 3 |  |
+| wait_for_text_present_ok | Edit Table | 30000 |
+| text_like | st-table-settings | Edit Table |
+| text_like | st-table-settings | qr/Table is Sortable/i |
+| text_like | st-table-settings | qr/Show Cell Borders/i |
+| pause | 3000 |  |
+| wait_for_element_visible_ok | sort | 30000 |
+| uncheck_ok | sort |  |
+| st_unchecked_ok | sort |  |
+| wait_for_element_visible_ok | border | 30000 |
+| uncheck_ok | border |  |
+| st_unchecked_ok | border |  |
+| wait_for_element_visible_ok | table-info-save | 5000 |
+| st_pause_click | 3000 | table-info-save |
+| wait_for_element_not_visible_ok | st-table-settings | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| verifyValue | wikiwyg_wikitext_textarea | `qr/sort:off border:off/` |
+
+| *Comment* | Test Case: Table Info. Sort ON, Border ON |  |
+| wait_for_element_visible_ok | link=Rich Text | 30000 |
+| click_ok | link=Rich Text |  |
+| wait_for_element_not_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| wait_for_element_visible_ok | st-page-editing-wysiwyg | 30000 |
+| wait_for_element_visible_ok | //img[@id='wikiwyg_button_table-settings' and @class='wikiwyg_button'] | 30000 |
+| st_pause_click | 3000 | wikiwyg_button_table-settings |
+| wait_for_element_visible_ok | st-table-settings | 30000 |
+
+| *Comment* | Test Case: Table Info. Additional interlocks 4 |  |
+| wait_for_text_present_ok | Edit Table | 30000 |
+| text_like | st-table-settings | Edit Table |
+| text_like | st-table-settings | qr/Table is Sortable/i |
+| text_like | st-table-settings | qr/Show Cell Borders/i |
+| pause | 3000 |  |
+| wait_for_element_visible_ok | sort | 30000 |
+| check_ok | sort |  |
+| is_checked_ok | sort |  |
+| wait_for_element_visible_ok | border | 30000 |
+| check_ok | border |  |
+| is_checked_ok | border |  |
+| wait_for_element_visible_ok | table-info-save | 5000 |
+| st_pause_click | 3000 | table-info-save |
+| wait_for_element_not_visible_ok | st-table-settings | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| verifyValue | wikiwyg_wikitext_textarea | `qr/sort:on border:on/` |
+
+| *Comment* | Test Case: Table Info. Final verification that table cells still exist. |  |
+| *Comment* | We have no way to put a pipe literal in wikitext, so only can check the text. |  |
+| verifyValue | wikiwyg_wikitext_textarea | `qr/a.+b.+c.+d/` |
+
+| *Comment* | Test Case: Table Info. TEARDOWN |  |
+| st-admin | purge-page --w %%workspace%% --page table_info_%%start_time%% | was purged |
+
+| *Comment* | Test Case: Table Info. COMPLETED |  |

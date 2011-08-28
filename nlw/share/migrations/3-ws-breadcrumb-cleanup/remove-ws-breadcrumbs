@@ -1,0 +1,57 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+$| = 1;
+
+use lib 'lib/';
+use File::Path;
+use Socialtext;
+use Socialtext::Paths;
+use Socialtext::User;
+
+# Get all the users
+my @users = eval { Socialtext::User->All()->all() };
+if ($@) {
+    warn "Failed to get all users, which is annoying but harmless.\n";
+    warn "Error was: $@\n";
+    exit 0;
+}
+
+print "Starting to remove old per-user workspace breadcrumbs.\n";
+for my $user (@users) {
+    # Get the username
+    my $username = eval { $user->username };
+    if ($@) {
+        warn "Failed to get username for a user, SKIPPING(error: $@).\n";
+        next;
+    } elsif (not defined $username) {
+        warn "User has no username!  SKIPPING.\n";
+        next;
+    }
+
+    # Get the path
+    my $path = eval { Socialtext::Paths::user_directory($username) };
+    if ($@ or not defined $path) {
+        warn "Could not construct path name for $username. $@. SKIPPING.\n";
+        next;
+    } elsif (not -e $path) {
+        # This situation is okay, it's the most likely scenario.
+        next;
+    } elsif (not -d $path) {
+        warn "Path is not a directory: $path.  SKIPPING\n";
+        next;
+    }
+
+    # Try and delete the path
+    my $success = eval { File::Path::rmtree($path) };
+    if ($@ or not $success) {
+        warn "Failed to remove $path.  Error: $@\n";
+        next;
+    }
+
+    print "Removed $path\n";
+}
+print "DONE!  Finished removing old workspace breadcrumb data.\n";
+
+exit 0;

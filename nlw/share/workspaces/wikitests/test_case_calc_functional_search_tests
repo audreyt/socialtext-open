@@ -1,0 +1,262 @@
+Note: Heavily dependent on the default content of current test-data workspace
+
+| *Comment* | Test case: Calc Functional Search Tests easy searches |  |
+| st-search | =Payment | Pages matching 'title:Payment' |
+| st-result | 2 total |  |
+| st-result | House Payment |  |
+| st-result | Credit Card Payment |  |
+| st-search | tag: calculator | Pages matching 'tag: calculator' |
+| st-result | 5 total |  |
+| st-result | Salary |  |
+| st-result | Another Salary |  |
+| st-result | Credit Card Payment |  |
+| st-result | House Payment |  |
+| st-result | Car Loan |  |
+| st-search | 600 | Pages matching '600' |
+| st-result | 2 total |  |
+| st-result | House Payment |  |
+| st-result | Credit Card Payment |  |
+| st-search | 0.05 | Pages matching '0.05' |
+| st-result | 2 total |  |
+| st-result | House Payment |  |
+| st-result | Car Loan |  |
+
+| *Comment* | Test case: Calc Functional Search partial match |  |
+| st-search | sala | Pages matching 'sala' |
+| st-result | 0 results |  |
+| st-search | sala* | Pages matching 'sala*' |
+| st-result | 2 total |  |
+| st-result | Salary |  |
+| st-result | Another Salary |  |
+| st-search | mont | Pages matching 'mont' |
+| st-result | 0 results |  |
+| st-search | mont* | Pages matching 'mont*' |
+| st-result | 3 total |  |
+| st-result | House Payment |  |
+| st-result | Car Loan |  |
+| st-result | Credit Card Payment |
+
+| st-search | sal* OR mont* | Pages matching 'sal* OR mont*' |
+| st-result | 5 total |  |
+| st-result | Salary |  |
+| st-result | Another Salary |  |
+| st-result | House Payment |  |
+| st-result | Car Loan |  |
+| st-result | Credit Card Payment |  |
+
+| *Comment* | Test case: Calc Functional Search tag match and partial |  |
+| st-search | tag:calc | Pages matching 'tag:calc' |
+| st-result | 0 results |  |
+| *Comment* | Test case: Calc Functional Search tag match and partial |  |
+| st-search | tag:calc* | Pages matching 'tag:calc*' |
+| st-result | 5 total |  |
+| st-result | Salary |  |
+| st-result | Another Salary |  |
+| st-result | House Payment |  |
+| st-result | Car Loan |  |
+| st-result | Credit Card Payment |  |
+
+| *Comment* | Test case: Calc Functional Search title match and partial |  |
+| st-search | title:Sal | Pages matching 'title:Sal' |
+| st-result | 0 results |  |
+| *Comment* | Test case: Calc Functional Search tag match and partial |  |
+| st-search | title:Sal* | Pages matching 'title:Sal*' |
+| st-result | 2 total |  |
+| st-result | Salary |  |
+| st-result | Another Salary |  |
+
+*AND searches:*
+
+Title searches
+
+| *Comment* | Test case: Calc Functional Search Tests AND title searches |  |
+| st-search | =Credit* AND spen* | Pages matching 'title:Credit* AND spen*' |
+| st-result | 1 total |  |
+| st-result | Credit Card Payment |  |
+| st-search | =Credit* AND NOT amou* | Pages matching 'title:Credit* AND NOT amou*' |
+| st-result | 0 results |  |
+| st-search | =Sala* AND tag:retirement | Pages matching 'title:Sala* AND tag:retirement' |
+| st-result | 2 total |  |
+| st-result | Salary |  |
+| st-result | Another Salary |  |
+| st-search | =Sala* AND NOT tag:retirement | Pages matching 'title:Sala* AND NOT tag:retirement' |
+| st-result | 0 results |  |
+| st-search | =Sala* AND -tag:retirement | Pages matching 'title:Sala* AND -tag:retirement' |
+| st-result | 0 results |  |
+| st-search | ="Another Salary" AND tag:"Bob The Bellhop" | Pages matching 'title:"Another Salary" AND tag:"Bob The Bellhop"' |
+| st-result | 1 total |  |
+| st-result | Another Salary |  |
+| *Comment* | Use equal sign and title as second component of search |  |
+| st-search | tag:retirement AND title:Salary | Pages matching 'tag:retirement AND title:Salary' |
+| st-result | 2 total |  |
+| st-result | Salary |  |
+| st-result | Another Salary |  |
+| st-search | tag:retirement AND =Salary | Pages matching 'tag:retirement AND title:Salary' |
+| st-result | 2 total |  |
+| st-result | Another Salary |  |
+
+| *Comment* | Test case: Calc Functional Search Tests AND tag searches |  |
+| st-search | year AND tag:retirement | Pages matching 'year AND tag:retirement' |
+| st-result | 2 total |  |
+| st-result | Salary |  |
+| st-result | Another Salary |  |
+| st-search | tag:retirement AND tag:calculator | Pages matching 'tag:retirement AND tag:calculator' |
+| st-result | 2 total |  |
+| st-result | Salary |  |
+| st-result | Another Salary |  |
+| st-search | tag:retirement AND tag:foobar | Pages matching 'tag:retirement AND tag:foobar' |
+| st-result | 0 results |  |
+| st-search | tag:retirement AND tag:calculator AND tag:foobar | Pages matching 'tag:retirement AND tag:calculator AND tag:foobar' |
+| st-result | 0 results |  |
+| st-search | tag:"Bob The Bellhop" AND tag:retirement | Pages matching 'tag:"Bob The Bellhop" AND tag:retirement' |
+| st-result | 1 total |  |
+| st-result | Another Salary |  |
+
+| *Comment* | Test case: Calc Functional Search Tests AND token searches |  |
+| st-search | tag:retirement AND 2121.8 | Pages matching 'tag:retirement AND 2121.8' |
+| st-result | 2 total |  |
+| st-result | Salary |  |
+| st-result | Another Salary |  |
+| st-search | Salary AND 2121.8 | Pages matching 'Salary AND 2121.8' |
+| st-result | 2 total |  |
+| st-result | Salary |  |
+| st-result | Another Salary |  |
+| st-search | 0.05 AND 500 | Pages matching '0.05 AND 500' |
+| st-result | 1 total |  |
+| st-result | Car Loan |  |
+| st-search | tag:"Bob The Bellhop" AND 0.03 | Pages matching 'tag:"Bob The Bellhop" AND 0.03' |
+| st-result | 1 total |  |
+| st-result | Another Salary |  |
+
+| *Comment* | Test case: Calc Functional Search Tests OR title searches |  |
+| st-search | =Salary OR Month | Pages matching 'title:Salary OR Month' |
+| st-result | 5 total |  |
+| st-result | Salary |  |
+| st-result | Another Salary |  |
+| st-result | House Payment |  |
+| st-result | Car Loan |  |
+| st-result | Credit Card Payment |  |
+
+| st-search | Month OR title:Salary | Pages matching 'Month OR title:Salary' |
+| st-result | 5 total |  |
+| st-result | Salary |  |
+| st-result | Another Salary |  |
+| st-result | House Payment |  |
+| st-result | Car Loan |  |
+| st-result | Credit Card Payment |  |
+
+| st-search | ="Another Salary" OR tag:"my next thirty years" | Pages matching 'title:"Another Salary" OR tag:"my next thirty years"' |
+| st-result | 2 total |  |
+| st-result | House Payment |  |
+| st-result | Another Salary |  |
+
+| *Comment* | Test case: Calc Functional Search Tests OR tag searches |  |
+| st-search | Month OR tag:retirement | Pages matching 'Month OR tag:retirement' |
+| st-result | 5 total |  |
+| st-result | Salary |  |
+| st-result | Another Salary |  |
+| st-result | House Payment |  |
+| st-result | Car Loan |  |
+| st-result | Credit Card Payment |  |
+
+| st-search | tag:retirement OR tag:"my next thirty years" | Pages matching 'tag:retirement OR tag:"my next thirty years"' |
+| st-result | 3 total |  |
+| st-result | House Payment |  |
+| st-result | Another Salary |  |
+| st-result | Salary |  |
+
+| st-search | Biggie OR tag:retirement OR tag:mortgage | Pages matching 'Biggie OR tag:retirement OR tag:mortgage' |
+| st-result | 4 total |  |
+| st-result | Car Loan |  |
+| st-result | House Payment |  |
+| st-result | Another Salary |  |
+| st-result | Salary |  |
+
+| st-search | tag:"my next thirty years" OR tag:BMAC | Pages matching 'tag:"my next thirty years" OR tag:BMAC' |
+| st-result | 2 total |  |
+| st-result | Car Loan |  |
+| st-result | House Payment |  |
+
+| *Comment* | Test case: Calc Functional Search Tests OR token searches |  |
+| st-search | 500 OR 600 | Pages matching '500 OR 600' |
+| st-result | 3 total |  |
+| st-result | Car Loan |  |
+| st-result | House Payment |  |
+| st-result | Credit Card Payment |  |
+| st-search | =Salary OR 0.05 | Pages matching 'title:Salary OR 0.05' |
+| st-result | 4 total |  |
+| st-result | Salary |  |
+| st-result | Another Salary |  |
+| st-result | Car Loan |  |
+| st-result | House Payment |  |
+| st-search | tag:"my next thirty years" OR 600 | Pages matching 'tag:"my next thirty years" OR 600' |
+| st-result | 2 total |  |
+| st-result | House Payment |  |
+| st-result | Credit Card Payment |  |
+
+| *Comment* | Test case: Calc Functional Search Tests NOT title searches |  |
+| st-search | title:Salary NOT another | Pages matching 'title:Salary NOT another' |
+| st-result | 1 total |  |
+| st-result | Salary |  |
+| st-search | title:Salary OR sophocles | Pages matching 'title:Salary OR sophocles' |
+| st-result | 4 total |  |
+| st-result | Salary |  |
+| st-result | Another Salary |  |
+| st-result | Kinosearch test page: truth & falsity |  |
+| st-search | salary NOT title:salary | Pages matching 'salary NOT title:salary' |
+| st-result | 0 results |  |
+
+| st-search | ="Another Salary" NOT tag:"foo" | Pages matching 'title:"Another Salary" NOT tag:"foo"' |
+| st-result | 1 total |  |
+| st-result | Another Salary |
+
+| *Comment* | Test case: Calc Functional Search Tests NOT tag searches |  |
+| st-search | tag:calculator -BMAC | Pages matching 'tag:calculator -BMAC' |
+| st-result | 4 total |  |
+| st-result | House Payment |  |
+| st-result | Credit Card Payment |  |
+| st-result | Salary |  |
+| st-result | Another Salary |  |
+
+| st-search | tag:calculator NOT 600 | Pages matching 'tag:calculator NOT 600' |
+| st-result | 3 total |  |
+| st-result | Car Loan |  |
+| st-result | Another Salary |  |
+| st-result | Salary |  |
+
+| st-search | Salary -tag:calculator | Pages matching 'Salary -tag:calculator' |
+| st-result | 0 results |  |
+
+| st-search | Salary NOT tag:calculator | Pages matching 'Salary NOT tag:calculator | ' |
+| st-result | 0 results |  |
+
+| st-search | tag:"my next thirty years" NOT tag:BMAC | Pages matching 'tag:"my next thirty years" NOT tag:BMAC' |
+| st-result | 1 total |  |
+| st-result | House Payment |  |
+
+| *Comment* | Test case: Calc Functional Search Tests NOT token searches |  |
+| st-search | 600 NOT 1250 | Pages matching '600 NOT 1250' |
+| st-result | 1 total |  |
+| st-result | House Payment |  |
+
+| st-search | 200 NOT =Salary | Pages matching '200 NOT title:Salary' |
+| st-result | 1 total |  |
+| st-result | Credit Card Payment |  |
+
+| st-search | 200 NOT Salary | Pages matching '200 NOT Salary' |
+| st-result | 1 total |  |
+| st-result | Credit Card Payment |  |
+
+| st-search | tag:"my next thirty years" NOT 600 | Pages matching 'tag:"my next thirty years" NOT 600' |
+| st-result | 0 results |  |
+
+| *Comment* | Test case: Calc Functional Search Tests Phrase token searches |  |
+| st-search | "Biggie Motors" | Pages matching '"Biggie Motors"' |
+| st-result | 1 total |  |
+| st-result | Car Loan |  |
+
+| *Comment* | Test case: Calc Functional Search Tests COMPLETED |  |
+
+----
+
+[Scratch Test Plan]

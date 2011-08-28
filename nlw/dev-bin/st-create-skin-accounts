@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# This script is designed to be run after the script st-create-skin-wikis has
+# run and set up the wikis.  Run this script if you want each wiki to get a
+# unique account and a unique user so that the custom P/D skin can be seen.
+
+echo CREATING ACCOUNTS AND USERS FOR EACH SKIN WIKI
+
+for i in ` find $ST_CURRENT/nlw/share/skin  -maxdepth 1 -type l -printf "%f\n" | sort `  ; do
+    st-admin create-account --name $i ;
+    st-admin set-account-config --acc $i skin_name $i ;
+    ACC=`st-admin show-account-config --acc $i | grep account_id | sed 's/account_id                      ://';`
+    st-admin set-workspace-config --w st-$i-skin account_id $ACC;
+
+    st-admin create-user --e $i@q.q --p qqqqqq;
+    st-admin set-user-account --e $i@q.q --account $i;
+    st-admin add-workspace-admin --w st-$i-skin --e $i@q.q;
+done;
+
+echo ENABLING PEOPLE AND DASHBOARD FOR ALL ACCOUNTS
+st-admin enable-plugin --all-accounts --p dashboard
+st-admin enable-plugin --all-accounts --p people
+
+echo FINISHED CREATING SKIN ACCOUNTS AND USERS
+echo USE THE CONTROL PANEL TO SEE ACCOUNTS, USERS, AND WIKIS

@@ -1,0 +1,65 @@
+NAME
+    Ajax - Simple Javascript Ajaxing
+
+SYNOPSIS
+        var data = Ajax.get(url);
+
+DESCRIPTION
+    Ajax is a simple class for Ajax support in Javascript. It supports get,
+    put and post methods. It supports synchronous and asynchronous requests.
+    It supports basic auth for requests.
+
+BASIC STUFF
+    Ajax has the following methods:
+
+    * Ajax.get
+            Ajax.get(url [, callback, params]);
+
+    * Ajax.put
+            Ajax.put(url, data [, callback, params]);
+
+    * Ajax.post
+            Ajax.post(url, data [, callback, params]);
+
+    "url" is always required.
+
+    "data" is required for "put" and "post".
+
+    If you don't specify a "callback" for any of these, the function is
+    synchronous and returns the resulting content.
+
+    "params" is an object of extra parameters. The valid parameters are:
+
+    * url
+        The request url string.
+
+    * data
+        The data string to be sent on a "put" or "post". You may nee to call
+        "encodeURIComponent()" on this string.
+
+    * onComplete
+        The callback handler that gets passed the result string if
+        everything goes well.
+
+    * contentType
+        The content-type header.
+
+    * userid
+        The user id string for a request that uses basic auth. Use this
+        field to use basic auth.
+
+    * passwd
+        The password for a request that uses basic auth.
+
+AUTHORS
+    Ingy döt Net <ingy@cpan.org> Kang-min Liu <gugod@gugod.org> Chris Dent
+    <cdent@burningchrome.com>
+
+COPYRIGHT
+    Copyright (c) 2006, 2007. Ingy döt Net. All rights reserved.
+
+    This program is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+
+    See <http://www.perl.com/perl/misc/Artistic.html>
+

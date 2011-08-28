@@ -1,0 +1,9 @@
+fixtures:
+  - db
+  - help
+
+workspaces:
+  public: { }
+
+conflicts:
+  - public_with_extra_pages

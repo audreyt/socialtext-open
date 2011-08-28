@@ -1,0 +1,92 @@
+[%- USE decorate -%]
+[%- USE html_encode -%]
+
+[%- MACRO ago_text(minutes) BLOCK -%]
+    [%- IF minutes < 1 -%][% loc('ago.<1minute') -%]
+    [%- ELSIF minutes == 1 -%][% loc('ago.1minute') -%]
+    [%- ELSIF minutes < 50 -%][% loc('ago.minutes=count', minutes) -%]
+    [%- ELSIF minutes < 90 -%][% loc('ago.about-1hour') -%]
+    [%- ELSIF minutes < 1080 -%][% loc('ago.hours=count', round(minutes / 60)) -%]
+    [%- ELSIF minutes < 1440 -%][% loc('ago.1day') -%]
+    [%- ELSIF minutes < 2880 -%][% loc('ago.about-1day') -%]
+    [%- ELSE %][% loc('ago.days=count', round(minutes / 1440)) -%]
+    [%- END -%]
+[%- END -%]
+
+[%- IF out == 'html' -%]
+    [%- MACRO actor GET event.actor.id | decorate('user_link') -%]
+    [%- MACRO person GET event.person.id | decorate('user_link') -%]
+    [%- MACRO page_tag BLOCK -%]<a href="[% event.tag_uri %]">[% event.tag_name |html %]</a>
+    [%- END -%]
+    [%- MACRO person_tag BLOCK -%]<a href="[% event.tag_uri %]">[% event.tag_name |html %]</a>
+    [%- END -%]
+    [%- MACRO page BLOCK -%]<b><a href="[% event.page.uri %]">[% event.page.name |html %]</a></b>
+    [%- END %]
+    [%- MACRO workspace BLOCK -%]<a href="[% event.page.workspace_uri %]">[% event.page.workspace_title |html %]</a>
+    [%- END -%]
+    [%- MACRO group BLOCK -%]<a href="[% event.group.uri %]">[% event.group.name |html %]</a>
+    [%- END -%]
+    [%- MACRO ago BLOCK -%]
+        [%- UNLESS miki -%]
+            <span class="ago_raw" style="display:none">[% event.at %]</span>
+        [%- END -%]
+        [%- IF miki && event.context.uri -%]
+            <a rel="external" class="permalink" style="font-weight: normal; color: #666" href="[%- event.context.uri.replace('^/st/signals', '/m/signals') -%]">
+        [%- END -%]
+        <span class="ago"><span class="ago_text">[% ago_text(minutes_ago(event.at)) %]</span></span>
+        [%- IF miki && event.context.uri -%]
+            </a>
+        [%- END -%]
+    [%- END -%]
+[%- ELSE -%]
+    [%- MACRO actor GET event.actor.best_full_name %]
+    [%- MACRO person GET event.person.best_full_name %]
+    [%- MACRO page_tag GET event.tag_name %]
+    [%- MACRO person_tag GET event.tag_name %]
+    [%- MACRO page GET event.page.name %]
+    [%- MACRO workspace GET event.page.workspace_title %]
+    [%- MACRO group GET event.group.name %]
+    [%- MACRO ago BLOCK -%] ([% ago_text(minutes_ago(event.at)) %]) [%- END -%]
+[%- END -%]
+
+[%- MACRO page_in_workspace BLOCK -%]
+    [%- loc("event.in=page,wiki", page, workspace) -%]
+[%- END -%]
+
+[%- SET event_class=event.event_class -%]
+[%- SET event_class_icons=event_class _ ".icons" -%]
+
+[%- IF out == 'html' -%]
+    [%- event.actor.id | decorate('user_small_photo') -%]
+    <div class="mainSection">
+        <div class="metadata">
+            [% actor %]
+            [%- ago UNLESS no_ago -%]
+            [%- TRY -%]
+                [%- INCLUDE "data/events/${event_class}.meta" -%]
+            [%- CATCH -%]
+                <!-- no meta -->
+            [%- END -%]
+        </div>
+        <div class="eventText">
+            [%- TRY -%]
+                [%- INCLUDE "data/events/$event_class" -%]
+            [%- CATCH -%]
+                [%- loc('event.unknown=event-class', event.event_class) -%]
+            [%- END -%]
+        </div>
+    </div>
+
+    [%- TRY -%]
+        [%- INCLUDE "data/events/$event_class_icons" -%]
+    [%- CATCH -%]
+        <img class="asset-icon" src="[% skin_uri('/images/asset-icons/edit-16.png') %]"/>
+    [%- END -%]
+[%- ELSE -%]
+    [%- actor -%][%- ago UNLESS no_ago -%][%- ' ' IF no_ago -%]
+    [%- TRY -%]
+        [%- INCLUDE "data/events/$event_class" out=out -%]
+    [%- CATCH -%]
+        [%- loc('event.unknown=event-class', event.event_class) -%]
+    [%- END -%]
+[%- END -%]

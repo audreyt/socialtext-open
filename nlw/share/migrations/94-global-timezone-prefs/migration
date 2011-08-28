@@ -1,0 +1,92 @@
+#!/opt/perl/5.12.2/bin/perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Encode ();
+use Socialtext::SQL qw/sql_execute sql_txn/;
+use Socialtext::JSON qw/encode_json decode_json/;
+use Socialtext::Migration::Utils qw/ensure_socialtext_schema/;
+
+ensure_socialtext_schema('143');
+
+my $users_sth = sql_execute(qq{
+    SELECT user_id
+      FROM user_workspace_pref
+     WHERE pref_blob LIKE '%timezone%'
+  GROUP BY user_id
+});
+
+while (my $row = $users_sth->fetchrow_arrayref()) {
+    my $user_id = $row->[0];
+    my $ws_prefs = get_prefs_for_user($user_id);
+
+    sql_txn {
+        set_global_prefs($ws_prefs->[0]);
+        cleanup_workspace_prefs($ws_prefs);
+    };
+}
+
+exit 0;
+################################################################################
+
+sub cleanup_workspace_prefs {
+    my $rows = shift;
+
+    for my $row (@$rows) {
+        my $user_id = $row->{user_id};
+        my $workspace_id = $row->{workspace_id};
+        my $prefs = decode_json(Encode::encode_utf8($row->{pref_blob}));
+
+        delete $prefs->{timezone};
+
+        if (keys %$prefs) {
+            sql_execute(qq{
+                UPDATE user_workspace_pref
+                   SET pref_blob = ?,
+                       last_updated = NOW()
+                 WHERE user_id = ?
+                   AND workspace_id = ?
+            }, encode_json($prefs), $user_id, $workspace_id);
+        }
+        else {
+            sql_execute(qq{
+                DELETE FROM user_workspace_pref
+                 WHERE user_id = ?
+                   AND workspace_id = ?
+            }, $user_id, $workspace_id);
+        }
+    }
+
+    return;
+}
+
+sub set_global_prefs {
+    my $row = shift;
+
+    my $prefs = decode_json(Encode::encode_utf8($row->{pref_blob}));
+    my $timezone = $prefs->{timezone};
+
+    # format doesn't contain year, use default instead.
+    return unless $timezone->{date_display_format} =~ /y{2,4}/;
+
+    sql_execute(qq{
+        INSERT INTO user_pref (user_id, pref_blob)
+             VALUES (?, ?)
+    }, $row->{user_id}, encode_json({timezone=>$timezone}));
+
+    return;
+}
+
+sub get_prefs_for_user {
+    my $user_id = shift;
+
+    my $prefs_sth = sql_execute(qq{
+        SELECT *
+          FROM user_workspace_pref
+         WHERE user_id = ?
+           AND pref_blob LIKE '%timezone%'
+      ORDER BY last_updated DESC
+    }, $user_id);
+
+    return $prefs_sth->fetchall_arrayref({});
+}

@@ -1,0 +1,12 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_execute/;
+
+sql_execute(q{ 
+    INSERT INTO "Role" (role_id, name, used_as_default)
+    VALUES (nextval('"Role___role_id"'), 'account_user', false)
+}); 
+
+exit 0;

@@ -1,0 +1,1046 @@
+# @COPYRIGHT@
+msgid ""
+msgstr ""
+"Project-Id-Version: Socialtext i18n\n"
+"PO-Revision-Date: 2011-04-28 03:23+0800\n"
+"Last-Translator: Socialtext i18n team\n"
+"Language-Team: Socialtext i18n team\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: share/template/data/event:10
+msgid "ago.1day"
+msgstr "1 天前"
+
+#: share/template/data/event:6
+msgid "ago.1minute"
+msgstr "1 分钟前"
+
+#: share/template/data/event:5
+msgid "ago.<1minute"
+msgstr "不到 1 分钟前"
+
+#: share/template/data/event:11
+msgid "ago.about-1day"
+msgstr "大约 1 天前"
+
+#: share/template/data/event:8
+msgid "ago.about-1hour"
+msgstr "大约 1 小时前"
+
+#. (round(minutes / 1440)
+#. (round(minutes / 1440))
+#. (delta)
+#: share/template/data/event:12 share/template/email/page-details.html:11 share/template/email/page-details.txt:11
+msgid "ago.days=count"
+msgstr "%1 天前"
+
+#. (round(minutes / 60)
+#. (round(minutes / 60))
+#: share/template/data/event:9
+msgid "ago.hours=count"
+msgstr "%1 小时前"
+
+#. (minutes)
+#: share/template/data/event:7
+msgid "ago.minutes=count"
+msgstr "%1 分钟前"
+
+msgid "badge.close"
+msgstr "关闭"
+
+msgid "badge.err_airswf"
+msgstr "无法读取 Adobe@AIR™ 浏览器 API swf文件。"
+
+msgid "badge.err_airunavailable"
+msgstr "Adobe® AIR™ 不支持您的系统。"
+
+msgid "badge.err_params"
+msgstr "安装参数无效。"
+
+msgid "badge.error"
+msgstr "错误!"
+
+msgid "badge.help"
+msgstr "帮助"
+
+msgid "badge.helptext"
+msgstr "点击按钮开始。如有需要，Adobe® AIR™ 执行环境将会自动安装。"
+
+msgid "badge.install"
+msgstr "点击按钮开始"
+
+msgid "badge.installing"
+msgstr "正在安装"
+
+msgid "badge.installingtext"
+msgstr "请等待应用程序安装。"
+
+msgid "badge.launch"
+msgstr "点此启动"
+
+msgid "badge.launching"
+msgstr "启动程序中"
+
+msgid "badge.launchingtext"
+msgstr "请等待程序启动"
+
+msgid "badge.loading"
+msgstr "正在加载..."
+
+msgid "badge.tryagain"
+msgstr "重试"
+
+msgid "badge.upgrade"
+msgstr "点此更新"
+
+#: share/template/bugs_content.html:5
+msgid "bug.application-error"
+msgstr "程序错误"
+
+#: share/template/bugs_dump.html:5
+msgid "bug.application-error-dump"
+msgstr "清除程序错误"
+
+#: share/template/bugs_content.html:17
+msgid "bug.application-error-occurred"
+msgstr "在 Socialtext 系统内产生了一个错误。"
+
+#. (script_name, bug_id)
+#: share/template/bugs_content.html:20
+msgid "bug.comment-box=script,id"
+msgstr "您可以通过描述当错误发生时您所执行的操作，来帮助 Socialtext 团队来修复这个错误<a href=\"%1?action=bugs_dump;bug_id=%2\" style=\"text-color: black; text-decoration: none;\">。</a>请在底下的文本框输入："
+
+#: share/template/bugs_content.html:25
+msgid "bug.ignore"
+msgstr "忽略错误"
+
+#: share/template/bugs_content.html:24
+msgid "bug.report"
+msgstr "报告错误"
+
+msgid "desktop.admin-privilege-needed-to-install=target"
+msgstr "（您需要有本機的管理员权限，才能安装%1）"
+
+msgid "desktop.adobe-air-2"
+msgstr "Adobe AIR 2"
+
+msgid "desktop.after-installation-click-to-launch-desktop=link"
+msgstr "安装完成后，请%1以启动社会文本桌面。"
+
+msgid "desktop.after-installation-restart-browser"
+msgstr "安装完成后，请<b>重启浏览器</b>，然后再次开启此对话框。"
+
+msgid "desktop.click-here"
+msgstr "点此"
+
+msgid "desktop.download-and-run-installer=flash,air,target"
+msgstr "请%1%2以下载并运行%3的安装程序。"
+
+msgid "desktop.flash-player"
+msgstr "Flash 播放器"
+
+msgid "desktop.socialtext-desktop"
+msgstr "Socialtext 桌面"
+
+msgid "desktop.socialtext-desktop-flair"
+msgstr "Socialtext 酷炫桌面"
+
+msgid "desktop.thank-you"
+msgstr "感谢！ :-)"
+
+#. (inviting_user, group_name)
+#: share/template/email/st/group-invitation.txt:22
+msgid "email.added-you-to-group=user,group"
+msgstr "%1已将您加入“%2”群组"
+
+#. (group_name)
+#: share/template/email/st/group-invitation-body.html:36
+msgid "email.added-you-to=group"
+msgstr "已将您加入“%1”群组"
+
+#. (workspace_uri)
+#: share/template/email/st/workspace-admin-invitation.txt:5
+msgid "email.address-of-new-wiki-is=uri"
+msgstr "新工作区的网址是 %1"
+
+#. (escaped_str2)
+#: share/template/email/password-change.html:20
+msgid "email.any-questions-contact-support-link=uri"
+msgstr "如果您有任何疑问，请<a href=\"%1\">联系技术支持</a>。"
+
+#. (appconfig.support_address)
+#: share/template/email/password-change.txt:9
+msgid "email.any-questions-contact-support=uri"
+msgstr "如果您有任何疑问，请联系技术支持：%1。"
+
+#: share/template/email/st/group-invitation-body.html:39 share/template/email/st/group-invitation.txt:24
+msgid "email.as-member-you-can-send-signals-to-group-and-use-any-of-group-wikis"
+msgstr "作为成员，您可以发讯息到群组，并使用群组的所有工作区。"
+
+#. (workspace.title)
+#: share/template/email/recent-changes.txt:12
+msgid "email.change-email-preferences-at=wiki"
+msgstr "要停止或更改接收有关 %1 变动的电子邮件的频率，请访问"
+
+#. (escaped_title, escaped_uri)
+#: share/template/email/recent-changes.html:28
+msgid "email.change-email-preferences-at=wiki,uri"
+msgstr "要停止或更改接收有关 %1 变动的电子邮件的频率，您可以<a href=\"%2\">更改您的偏好</a>。"
+
+#. (escaped_title, escaped_uri)
+#: share/template/email/watchlist.html:28
+msgid "email.change-watchlist-preferences-at=wiki,uri"
+msgstr "要停止或更改接收有关 %1 中关注列表变动的电子邮件的频率，您可以<a href=\"%2\">更改您的偏好</a>。"
+
+#. (workspace.title)
+#: share/template/email/watchlist.txt:11
+msgid "email.change-watchlist-preferences-at=wiki:"
+msgstr "要停止或更改接收有关 %1 中关注列表变动的电子邮件的频率，请访问："
+
+#: share/template/email/password-change.html:6
+msgid "email.choose-new-password"
+msgstr "请选择新的 Socialtext 密码"
+
+#: share/template/email/password-change.txt:7
+msgid "email.click-to-choose-password"
+msgstr "当您点击该链接后，您将被带往一个页面，在那里您可以选择新密码。"
+
+#. (escaped_str1)
+#: share/template/email/password-change.html:16
+msgid "email.click-to-choose-password=uri"
+msgstr "当您<a href=\"%1\">点击该链接</a>后，您将被带往一个页面，在那里您可以选择新密码。"
+
+#. (uri)
+#: share/template/email/free50/account-invitation-body.html:11
+msgid "email.click-to-confirm-email-and-login=uri"
+msgstr "请<a target=\"blank\" title=\"（外部链接）\" href=\"%1&account_for=free50\">点击这里</a>以确认您的电子邮件地址并登录。"
+
+#: share/template/email/free50/account-invitation.txt:5 share/template/email/st/account-invitation.txt:8 share/template/email/st/group-invitation.txt:11 share/template/email/st/workspace-invitation.txt:8
+msgid "email.click-to-confirm-email:"
+msgstr "请点击该链接以确定您的电子邮件地址："
+
+#. (confirm_uri)
+#: share/template/email/st/group-invitation-body.html:20 share/template/email/st/workspace-invitation-body.html:22
+msgid "email.click-to-confirm-email=uri"
+msgstr "请<a href=\"%1\">点击该链接</a>以确认您的电子邮件地址。"
+
+#: share/template/email/st/workspace-admin-invitation.txt:1
+msgid "email.congratulations!"
+msgstr "恭喜！"
+
+#: share/template/email/email-address-confirmation-completed.html:56
+msgid "email.contact-support"
+msgstr "联系技术支持"
+
+#: share/template/email/free50/account-invitation-body.html:12
+msgid "email.copy-url-into-browser-to-confirm-email:"
+msgstr "如果您的电子邮件客户端不支持超链接，则可以将该网址复制并粘贴到浏览器中，以确认您的电子邮件地址："
+
+#: share/template/email/page-details.html:25 share/template/email/page-details.txt:24
+msgid "email.created-by"
+msgstr "创建者"
+
+#. (escaped_str)
+#: share/template/email/email-address-confirmation-completed.html:28 share/template/email/email-address-confirmation-completed.txt:10
+msgid "email.email-confirmed-login-to=app"
+msgstr "您已确认了您的电子邮件地址，已经可以登录到 %1 应用。"
+
+#. (escaped_str)
+#: share/template/email/email-address-confirmation-completed.html:15 share/template/email/email-address-confirmation-completed.txt:4
+msgid "email.email-confirmed-login-to=wiki"
+msgstr "您已确认了您的电子邮件地址，已经可以登录到 %1 工作区。"
+
+#: share/template/email/password-change.html:24 share/template/email/password-change.txt:11
+msgid "email.enjoy!"
+msgstr "祝您使用愉快！"
+
+#: share/template/email/email-address-confirmation.txt:8
+msgid "email.follow-link-to-confirm-address-and-update-your-info:"
+msgstr "请使用下列链接以确认您的地址，并更新您的信息："
+
+#. (confirmation_uri)
+#: share/template/email/email-address-confirmation.html:26
+msgid "email.follow-link-to-confirm-email-and-update-your-info=uri"
+msgstr "请使用<a href=\"%1\">该链接以确认您的电子邮件地址</a>。并更新您的信息。"
+
+#: share/template/email/free50/account-invitation.txt:16 share/template/email/st/account-invitation-body.html:38 share/template/email/st/account-invitation.txt:18 share/template/email/st/workspace-invitation-body.html:38 share/template/email/st/workspace-invitation.txt:18
+msgid "email.follow-link-to-select-password:"
+msgstr "如果您忘记了，可使用下列链接选择新密码："
+
+#: share/template/email/password-change.txt:3
+msgid "email.follow-this-link-to-change-password:"
+msgstr "要更改您的密码，请使用此链接："
+
+#. (workspace.uri, escaped_title, email_date, email_time)
+#: share/template/email/recent-changes.html:16
+msgid "email.following-pages-have-recently-changed=uri,wiki,date,time"
+msgstr "下列位于 <a href=\"%1\">%2</a> 的页面最近已被更改。本电子邮件生成于 %3，%4。"
+
+#. (workspace.title, email_date, email_time)
+#: share/template/email/recent-changes.txt:4
+msgid "email.following-pages-have-recently-changed=wiki,date,time"
+msgstr "%1 的下列页面最近被更改。本电子邮件于 %2 %3 发送。"
+
+#. (watchlist_uri, escaped_title, workspace.uri, email_date, email_time)
+#: share/template/email/watchlist.html:17
+msgid "email.following-pages-in-watchlist-have-recently-changed=watchlist,wiki,uri,date,time"
+msgstr "您在 <a href=\"%3\">%2</a> 的<a href=\"%1\">关注列表</a>中的下列页面最近被更改。本电子邮件于 %4 的 %5 创建。"
+
+#. (workspace.title, email_date, email_time)
+#: share/template/email/watchlist.txt:3
+msgid "email.following-pages-in-watchlist-have-recently-changed=wiki,date,time"
+msgstr "您在 %1 的关注列表中的下列页面最近被更改。本电子邮件于 %2 的 %3 创建。"
+
+#: share/template/email/st/group-invitation-body.html:41 share/template/email/st/group-invitation.txt:26
+msgid "email.go-to"
+msgstr "前往"
+
+#: share/template/email/st/workspace-admin-invitation.txt:9
+msgid "email.go-to-test-confirmation-message-home-page"
+msgstr "前往测试确认消息主页。"
+
+#: share/template/email/password-change.html:12 share/template/email/password-change.txt:1
+msgid "email.greetings-from-socialtext"
+msgstr "来自 Socialtext 的问候，"
+
+#: share/template/email/free50/account-invitation-body.html:39 share/template/email/free50/account-invitation.txt:28
+msgid "email.happy-collaborating!"
+msgstr "祝您协作愉快！"
+
+#: share/template/email/email-address-confirmation-completed.html:9 share/template/email/email-address-confirmation-completed.txt:1 share/template/email/openid/invite-request-email.html:8 share/template/email/openid/invite-request-email.txt:1 share/template/email/st/invite-request-email.html:8 share/template/email/st/invite-request-email.txt:1
+msgid "email.hello"
+msgstr "您好，"
+
+#: share/template/email/openid/workspace-invitation-body.html:11 share/template/email/openid/workspace-invitation.txt:3 share/template/email/st/account-invitation-body.html:8 share/template/email/st/account-invitation.txt:3 share/template/email/st/group-invitation-body.html:13 share/template/email/st/group-invitation.txt:7 share/template/email/st/workspace-invitation-body.html:8 share/template/email/st/workspace-invitation.txt:3
+msgid "email.hi"
+msgstr "您好，"
+
+#: share/template/email/st/group-invitation-body.html:41 share/template/email/st/group-invitation.txt:26
+msgid "email.home-page"
+msgstr "主页"
+
+#: share/template/email/free50/account-invitation.txt:26
+msgid "email.if-unsolicited-contact-abuse"
+msgstr "如果您没有申请加入您公司的协作群组，请联系 abuse@socialtext.com"
+
+#: share/template/email/free50/account-invitation-body.html:37
+msgid "email.if-unsolicited-contact-abuse-link"
+msgstr "如果您没有申请加入您公司的协作群组，请联系 <a href=\"mailto:abuse@socialtext.com\">abuse@socialtext.com</a>"
+
+#: share/template/email/openid/invite-request-email.html:4 share/template/email/st/invite-request-email.html:4
+msgid "email.invitation-request"
+msgstr "邀请请求"
+
+#: share/template/email/st/workspace-admin-invitation.txt:10
+msgid "email.invite-other-people-to-test-confirmation-message"
+msgstr "邀请其他人来测试确认消息。"
+
+#. (escaped_str)
+#: share/template/email/account-invitation.html:5 share/template/email/group-invitation.html:5 share/template/email/invitation.html:5 share/template/email/workspace-invitation.html:5
+msgid "email.invite-to-join=container"
+msgstr "邀请别人加入 %1"
+
+#. (workspace_title)
+#: share/template/email/st/workspace-admin-invitation.txt:3
+msgid "email.invited-as-admin-to-new=wiki"
+msgstr "您已受邀成为“%1”的管理员，这是一个全新的 Socialtext 工作区。"
+
+#. (workspace_title)
+#: share/template/email/openid/workspace-invitation.txt:5
+msgid "email.inviting-you-to-join-sign-in-below=wiki:"
+msgstr "我想邀请您加入 %1，这是我们共享的工作区。登录信息如下："
+
+#. (account_name)
+#: share/template/email/st/account-invitation.txt:5
+msgid "email.inviting-you-to-join=account"
+msgstr "我想邀请您加入 %1，这是我们共享的 Socialtext 工作区。"
+
+#. (group_name)
+#: share/template/email/st/group-invitation.txt:9
+msgid "email.inviting-you-to-join=group"
+msgstr "我想邀请您加入 %1，这是我们在 Socialtext 的群组。"
+
+#. (group_name, host)
+#: share/template/email/st/group-invitation-body.html:16
+msgid "email.inviting-you-to-join=group,host"
+msgstr "我想邀请您在 %2 加入 %1 群组。"
+
+#. (escaped_str_1)
+#. (workspace_title)
+#. (wksp_title)
+#: share/template/email/openid/workspace-invitation-body.html:15 share/template/email/st/workspace-invitation-body.html:13 share/template/email/st/workspace-invitation.txt:5
+msgid "email.inviting-you-to-join=wiki"
+msgstr "我正在邀请您加入 %1，这是我们共享的工作区。"
+
+#. (host)
+#: share/template/email/st/group-invitation-body.html:44 share/template/email/st/group-invitation.txt:28
+msgid "email.is-group-on=host"
+msgstr "是 %1 的一个群组。"
+
+#: share/template/email/email-address-confirmation-completed.html:53 share/template/email/email-address-confirmation-completed.txt:28 share/template/email/free50/account-invitation-body.html:32 share/template/email/free50/account-invitation.txt:20 share/template/email/openid/workspace-invitation-body.html:27 share/template/email/openid/workspace-invitation.txt:12 share/template/email/st/account-invitation-body.html:45 share/template/email/st/account-invitation.txt:22 share/template/email/st/workspace-invitation-body.html:43 share/template/email/st/workspace-invitation.txt:22
+msgid "email.keep-this-for-future-reference"
+msgstr "您不妨保留这份邮件，以备日后参考之用。"
+
+#: share/template/email/page-details.html:27 share/template/email/page-details.txt:26
+msgid "email.last-edited-by"
+msgstr "前次编辑"
+
+#: share/template/email/free50/account-invitation.txt:29
+msgid "email.leader-in-enterprise-social-software"
+msgstr "企业社会化软件的领导者"
+
+#: share/template/email/email-address-confirmation-completed.html:23 share/template/email/email-address-confirmation-completed.html:48 share/template/email/email-address-confirmation-completed.txt:26
+msgid "email.login-with-email-address:"
+msgstr "使用您的电子邮件地址登录："
+
+#: share/template/email/st/account-invitation.txt:10 share/template/email/st/group-invitation-body.html:23 share/template/email/st/group-invitation.txt:13 share/template/email/st/workspace-invitation-body.html:26 share/template/email/st/workspace-invitation.txt:10
+msgid "email.once-confirmed-you-will-receive-second-email-with-login-details"
+msgstr "一旦您确认了您的帐户，您将会收到包含登录信息的第二封电子邮件。"
+
+#. (action, escaped_name, profile_uri, edit_time)
+#: share/template/email/page-details.html:33
+msgid "email.page-edit=action,user,profile-uri,time"
+msgstr "%1 <a href=\"%3\">%2</a> %4"
+
+#. (action, escaped_name, escaped_editsummary, profile_uri, edit_time)
+#: share/template/email/page-details.html:31
+msgid "email.page-edit=action,user,summary,profile-uri,time"
+msgstr "%1 <a href=\"%4\">%2</a> %5：\"%3\""
+
+#. (action, user_name, page.edit_summary, edit_time)
+#: share/template/email/page-details.txt:30
+msgid "email.page-edit=action,user,summary,time"
+msgstr "%1 %2 %4：\"%3\""
+
+#. (action, user_name, edit_time)
+#: share/template/email/page-details.txt:32
+msgid "email.page-edit=action,user,time"
+msgstr "%1 %2 %3"
+
+#. (support_link)
+#: share/template/email/standard-footer.html:7
+msgid "email.questions-about-email-contact-support-link=uri"
+msgstr "如果您有关于该电子邮件的问题，请 %1"
+
+#. (appconfig.support_address)
+#: share/template/email/standard-footer.txt:3
+msgid "email.questions-about-email-contact-support=uri"
+msgstr "如果您有关于该电子邮件的问题，请联系技术支持：%1."
+
+#. (appconfig.support_address)
+#: share/template/email/email-address-confirmation-completed.txt:30
+msgid "email.questions-contact-support=uri"
+msgstr "如果您有问题，请联系技术支持：%1."
+
+#: share/template/email/email-address-confirmation-completed.html:54
+msgid "email.questions-please"
+msgstr "如果您有问题，请"
+
+#: share/template/email/st/workspace-admin-invitation.txt:7
+msgid "email.ready-to-set-up-new-wiki-choose-your-next-step:"
+msgstr "已准备好设置您的新工作区。请选择您的下一步操作："
+
+#. (escaped_title)
+#: share/template/email/recent-changes.html:6
+msgid "email.recent-changes-in=wiki"
+msgstr "%1 的近期变更"
+
+#. (inviting_user, workspace_title)
+#: share/template/email/openid/invite-request-email.html:10 share/template/email/openid/invite-request-email.txt:3 share/template/email/st/invite-request-email.html:10 share/template/email/st/invite-request-email.txt:3
+msgid "email.request-invite=user,wiki:"
+msgstr "%1 需要请您邀请新用户到 %2 工作区："
+
+#: share/template/email/st/workspace-admin-invitation.txt:11
+msgid "email.review-settings-for-test-confirmation-message:"
+msgstr "查看或变更测试确认消息设置："
+
+#. (a, app_name, app_name)
+#: share/template/email/free50/account-invitation.txt:15 share/template/email/st/account-invitation-body.html:37 share/template/email/st/account-invitation.txt:17
+msgid "email.same-password-as-existing-account=a,app,app"
+msgstr "因为您已拥有 %2 帐户，密码与您在 %3 群组中使用的密码相同。"
+
+#. (a, app_name, app_name)
+#: share/template/email/free50/account-invitation-body.html:26
+msgid "email.same-password-as-existing-group=a,app,app"
+msgstr "因为您已拥有 %2 群组，密码与您在 %3 群组中使用的密码相同。"
+
+#. (a, app_name, app_name)
+#: share/template/email/st/workspace-invitation-body.html:37 share/template/email/st/workspace-invitation.txt:17
+msgid "email.same-password-as-existing-wiki=a,app,app"
+msgstr "因为您已拥有 %2 帐户，密码与您在 %3 工作区中使用的密码相同。"
+
+#: share/template/email/openid/workspace-invitation-body.html:18 share/template/email/st/account-invitation-body.html:15 share/template/email/st/account-invitation.txt:5 share/template/email/st/group-invitation.txt:9 share/template/email/st/workspace-invitation-body.html:15 share/template/email/st/workspace-invitation.txt:5
+msgid "email.sign-in-using-information-below:"
+msgstr "使用下方信息登录："
+
+#: share/template/email/openid/workspace-invitation-body.html:24 share/template/email/openid/workspace-invitation.txt:10
+msgid "email.sign-in-with-openid-now"
+msgstr "您现在可以使用 OpenID 登录我们的系统。在 Socialtext 登录界面，请输入您的 OpenID 到指定区域，您即会被重定向至 OpenID 网站以确认您的身份。一旦您完成身份认证，您会返回至 Socialtext 网站并能够访问工作区。"
+
+#: share/template/email/free50/account-invitation-body.html:4 share/template/email/free50/account-invitation.txt:1
+msgid "email.thank-you-for-joining-company-collaboration-group-hosted-by-socialtext"
+msgstr "感谢您加入您公司的协作群组，该群组由 Socialtext 提供。"
+
+#: share/template/email/openid/workspace-invitation-body.html:32 share/template/email/openid/workspace-invitation.txt:14 share/template/email/st/account-invitation-body.html:50 share/template/email/st/account-invitation.txt:25 share/template/email/st/group-invitation-body.html:26 share/template/email/st/group-invitation.txt:15 share/template/email/st/workspace-invitation-body.html:48 share/template/email/st/workspace-invitation.txt:25
+msgid "email.thanks"
+msgstr "感谢，"
+
+#: share/template/email/email-address-confirmation-completed.html:19 share/template/email/email-address-confirmation-completed.txt:23 share/template/email/email-address-confirmation-completed.txt:6
+msgid "email.to-do-so-go-to-this-web-address:"
+msgstr "要这样做，请前往此网址："
+
+#: share/template/email/openid/invite-request-email.txt:11 share/template/email/st/invite-request-email.txt:11
+msgid "email.to-invite-users-visit-wiki-invite-page"
+msgstr "要邀请这些用户，请访问工作区的用户邀请页面，并复制以上列表粘贴到邀请框中。"
+
+#: share/template/email/openid/invite-request-email.html:25 share/template/email/st/invite-request-email.html:25
+msgid "email.to-invite-users-visit-wiki-invite-page-link:"
+msgstr "要邀请这些用户到工作区，请访问工作区的用户邀请页面，<br />并复制以上列表粘贴到邀请框中。<br />用户邀请页面的网址是："
+
+#: share/template/email/free50/account-invitation-body.html:14
+msgid "email.to-start-click-above"
+msgstr "点击上方链接后，您即可立即开始与您的同事分享微博讯息，并利用社交网络和共笔工作区来增进彼此的工作。您也可以设置自己的个人主页。"
+
+#: share/template/email/free50/account-invitation.txt:7
+msgid "email.to-start-click-above-link"
+msgstr "点击上方链接后，您即可立即开始与您的同事分享微博讯息，并利用社交网络和共笔工作区来增进彼此的工作。您也可以设置自己的个人主页。"
+
+#. (escaped_timestamp)
+#: share/template/email/page-details.html:9 share/template/email/page-details.txt:9
+msgid "email.today-at=time"
+msgstr "今天 %1"
+
+#: share/template/email/openid/invite-request-email.txt:12 share/template/email/st/invite-request-email.txt:12
+msgid "email.user-invite-page-at:"
+msgstr "用户邀请页面的网址是："
+
+#: share/template/email/free50/account-invitation.txt:11 share/template/email/openid/workspace-invitation-body.html:21 share/template/email/openid/workspace-invitation.txt:8 share/template/email/st/account-invitation-body.html:31 share/template/email/st/account-invitation.txt:13 share/template/email/st/workspace-invitation-body.html:31 share/template/email/st/workspace-invitation.txt:13
+msgid "email.username:"
+msgstr "用户名称："
+
+#. (escaped_title)
+#: share/template/email/watchlist.html:7
+msgid "email.watchlist-update-for=wiki"
+msgstr "%1 的关注列表更新"
+
+#: share/template/email/free50/account-invitation-body.html:36 share/template/email/free50/account-invitation.txt:24
+msgid "email.we-encourage-you-to-invite-others"
+msgstr "我们鼓励您邀请其他同事来加入您公司的协作群组。"
+
+#: share/template/email/free50/account-invitation.txt:10 share/template/email/openid/workspace-invitation-body.html:20 share/template/email/openid/workspace-invitation.txt:7 share/template/email/st/account-invitation-body.html:30 share/template/email/st/account-invitation.txt:12 share/template/email/st/workspace-invitation-body.html:30 share/template/email/st/workspace-invitation.txt:12
+msgid "email.web-address:"
+msgstr "网站地址："
+
+#: share/template/email/email-address-confirmation.html:6
+msgid "email.welcome-confirm-email-to-join"
+msgstr "欢迎来到 Socialtext 社区 – 请确认您的电子邮件地址来加入"
+
+#. (account_name)
+#: share/template/email/email-address-confirmation.html:8
+msgid "email.welcome-confirm-email-to-join=account"
+msgstr "欢迎来到 %1 社区 – 请确认您的电子邮件地址来加入"
+
+#: share/template/email/email-address-confirmation.html:17 share/template/email/email-address-confirmation.txt:1
+msgid "email.welcome-to"
+msgstr "欢迎来到"
+
+#: share/template/email/st/workspace-admin-invitation.txt:12
+msgid "email.wiki-appearance"
+msgstr "工作区外观"
+
+#: share/template/email/st/workspace-admin-invitation.txt:13
+msgid "email.wiki-features"
+msgstr "工作区功能"
+
+#. (target_workspace.title, account_name)
+#: share/template/email/email-address-confirmation.html:17 share/template/email/email-address-confirmation.txt:1
+msgid "email.wiki-in-group-at=wiki,group"
+msgstr "%2 群组中的 %1 工作区于"
+
+#: share/template/email/st/workspace-admin-invitation.txt:14
+msgid "email.wiki-privacy"
+msgstr "工作区隐私"
+
+#. (escaped_timestamp)
+#: share/template/email/page-details.html:10 share/template/email/page-details.txt:10
+msgid "email.yesterday-at=time"
+msgstr "昨天 %1"
+
+#: share/template/email/page-details.html:18 share/template/email/page-details.txt:19
+msgid "email.you"
+msgstr "您"
+
+#: share/template/email/email-address-confirmation-completed.html:32 share/template/email/email-address-confirmation-completed.txt:13
+msgid "email.you-are-member-of-following-groups:"
+msgstr "您是下列群组中的成员："
+
+#: share/template/email/email-address-confirmation-completed.html:39 share/template/email/email-address-confirmation-completed.txt:18
+msgid "email.you-are-member-of-following-wikis:"
+msgstr "您是下列工作区的成员："
+
+#: share/template/email/email-address-confirmation-completed.html:3
+msgid "email.your-email-has-been-confirmed"
+msgstr "已确认您的电子邮件地址"
+
+#. (account_name)
+#: share/template/email/email-address-confirmation.html:22 share/template/email/email-address-confirmation.txt:4
+msgid "email.your-profile-has-been-added-to-directory=account"
+msgstr "您的个人资料已被添加至 %1 目录。"
+
+#: share/template/email/email-address-confirmation.html:24 share/template/email/email-address-confirmation.txt:6
+msgid "email.your-profile-has-been-added-to-people-directory"
+msgstr "您的个人资料已被添加至人员目录。"
+
+#: share/template/errors/require_business_admin:2
+msgid "error.admin-privileges-needed-to-access-uri"
+msgstr "您必须拥有管理员权限来访问此网址。"
+
+#: share/template/errors/requires_confirmation:2
+msgid "error.confirm-email-to-activate-account"
+msgstr "您需要验证电子邮件地址来激活此帐户。"
+
+msgid "error.desktop-runtime-required=target"
+msgstr "必须要有 %1。"
+
+#: share/template/errors/requires_external_id:2
+msgid "error.external-id-needed-to-activate-account"
+msgstr "您必须使用外部ID来激活此帐户。"
+
+#: share/template/errors/requires_external_id:4
+msgid "error.for-more-info-contact-sysadmin"
+msgstr "如需更多信息，请联系您的系统管理员。"
+
+#. (workspace_name)
+#: share/template/errors/login_to_edit:3
+msgid "error.login-to-edit=wiki"
+msgstr "您必须登录才能编辑 %1 工作区。"
+
+#: share/template/errors/settings_requires_account:4
+msgid "error.login-to-set-preferences"
+msgstr "您必须登录才可以设定工作区的偏好设置。"
+
+#: share/template/errors/watchlist_requires_account:4
+msgid "error.login-to-use-watchlist-in-wiki"
+msgstr "您必须登录才可以在工作区内部使用观测表。"
+
+#. (workspace_name, redirect_to)
+#: share/template/errors/authenticate_to_read:3
+msgid "error.login-to-view=wiki,register-uri"
+msgstr "您必须登录才可以浏览 %1 工作区。如果您已经拥有帐户，请现在登录。<br />如果没有，您可以<a href=\"/nlw/register.html?redirect_to=%2\">创建一个新帐户。</a>"
+
+#. (escaped_str)
+#: share/template/errors/settings_requires_account:6 share/template/errors/watchlist_requires_account:6
+msgid "error.register-here=uri"
+msgstr "如果您还没有帐户，您可以<a href=\"/nlw/register.html?redirect_to=%1\">在此注册</a>."
+
+#: share/template/errors/requires_password_change:10
+msgid "error.resend-change-of-password"
+msgstr "重新发送密码变更"
+
+#: share/template/errors/requires_confirmation:10
+msgid "error.resend-confirmation"
+msgstr "重新发送确认函"
+
+#: share/template/errors/unauthorized_workspace:3
+msgid "error.you-are-not-authorized-to-view-this-wiki"
+msgstr "您不能访问此工作区。"
+
+#: share/template/errors/requires_password_change:2
+msgid "error.you-need-to-set-new-password-for-your-account"
+msgstr "您需要为您的帐户设定新的密码。"
+
+#: share/template/errors/requires_confirmation:4
+msgid "error.you-should-have-received-email-with-confirmation-link"
+msgstr "您应该已经收到一封含有认证链接的电子邮件。"
+
+#: share/template/errors/requires_password_change:4
+msgid "error.you-should-have-received-email-with-link-allowing-you-to-do-so"
+msgstr "您应该已经收到一封电子邮件，该邮件含有的链接可以让您如此操作。"
+
+#. (page_in_workspace, event.context.summary.remove('\s+$')
+#. (page_in_workspace, event.context.summary.remove("\\s+$"))
+#: share/template/data/events/page:17
+msgid "event.comment=page,summary"
+msgstr "对 %1 作出评论：“%2”"
+
+#. (page_in_workspace)
+#: share/template/data/events/page:15
+msgid "event.delete=page"
+msgstr "删除了 %1。"
+
+#. (page_in_workspace)
+#: share/template/data/events/page:11
+msgid "event.duplicate=page"
+msgstr "复制了 %1。"
+
+#. (page_in_workspace)
+#: share/template/data/events/page:8
+msgid "event.edit=page"
+msgstr "编辑了 %1。"
+
+#. (page_in_workspace, event.context.edit_summary)
+#: share/template/data/events/page:6
+msgid "event.edit=page,summary"
+msgstr "对 %1 作出编辑：“%2”"
+
+#. (event.action, page_in_workspace)
+#: share/template/data/events/page:27
+msgid "event.generic=action,page"
+msgstr "已对 %2 执行了 %1 操作。"
+
+#. (page, workspace)
+#: share/template/data/event:53
+msgid "event.in=page,wiki"
+msgstr "%2 内的 %1"
+
+#. (group)
+#: share/template/data/events/group:4
+msgid "event.join=group"
+msgstr "加入群组 %1。"
+
+#. (group, workspace)
+#: share/template/data/events/group:15
+msgid "event.join=group,wiki"
+msgstr "添加 %1 至 %2 工作区。"
+
+#. (person, group)
+#: share/template/data/events/group:11
+msgid "event.join=user,group"
+msgstr "添加 %1 至 %2 群组。"
+
+#. (group)
+#: share/template/data/events/group:6
+msgid "event.leave=group"
+msgstr "离开群组 %1。"
+
+#. (person, group)
+#: share/template/data/events/group:13
+msgid "event.leave=user,group"
+msgstr "从组 %2 中移除 %1。"
+
+#. (group, workspace)
+#: share/template/data/events/group:17
+msgid "event.leave=user,wiki"
+msgstr "从工作区 %2 中移除 %1。"
+
+msgid "event.like=page"
+msgstr "说 %1 很赞。"
+
+#. (page_in_workspace)
+#: share/template/data/events/page:13
+msgid "event.rename=page"
+msgstr "重命名了 %1。"
+
+#. (page_tag, page_in_workspace)
+#: share/template/data/events/page:21
+msgid "event.tag-delete=tag,page"
+msgstr "从 %2 移除了标签 %1。"
+
+#. (page_in_workspace, page_tag)
+#: share/template/data/events/page:19
+msgid "event.tag=page,tag"
+msgstr "为 %1 添加了标签 %2。"
+
+#. (event.event_class)
+#: share/template/data/event:75 share/template/data/event:90
+msgid "event.unknown=event-class"
+msgstr "未知分类的事件：%1"
+
+msgid "event.unlike=page"
+msgstr "取消对 %1 说赞。"
+
+#. (page_in_workspace)
+#: share/template/data/events/page:3
+msgid "event.view=page"
+msgstr "检视了 %1。"
+
+#. (page_in_workspace)
+#: share/template/data/events/page:25
+msgid "event.watch-delete=page"
+msgstr "停止关注 %1。"
+
+#. (page_in_workspace)
+#: share/template/data/events/page:23
+msgid "event.watch=page"
+msgstr "开始关注 %1。"
+
+#. (confirm_uri)
+#: share/template/email/st/account-invitation-body.html:22
+msgid "invite.click-to-confirm-email=uri"
+msgstr "请<a href=\"%1\">点击此链接</a>来确认您的电子邮件地址。"
+
+#. (acct_name, host)
+#: share/template/email/st/account-invitation-body.html:13
+msgid "invite.join=account,host"
+msgstr "我邀请您加入%2的群组%1。"
+
+#: share/template/email/free50/account-invitation-body.html:27
+msgid "invite.link-to-reset-password:"
+msgstr "如果您不记得了，请点击此链接以选择一个新密码："
+
+#: share/template/email/st/account-invitation-body.html:26
+msgid "invite.login-details-after-confirmation"
+msgstr "一旦您确认了您的帐户，您将收到第二封电子邮件，其中有登录的详细信息。"
+
+#: share/template/email/standard-footer.html:12 share/template/email/standard-footer.txt:5
+msgid "invite.socialtext-footer"
+msgstr "由 Socialtext 为您带来。"
+
+#: share/template/email/free50/account-invitation-body.html:20
+msgid "invite.username:"
+msgstr "用户名："
+
+#: share/template/email/free50/account-invitation-body.html:19
+msgid "invite.web-address:"
+msgstr "网址："
+
+#: share/template/data/job.html:25 share/template/data/job_list.html:29
+msgid "job.args"
+msgstr "参数"
+
+#: share/template/data/job.html:18 share/template/data/job_stats.html:25
+msgid "job.class"
+msgstr "类型"
+
+#: share/template/data/job.html:24 share/template/data/job_list.html:28
+msgid "job.coalesce"
+msgstr "合并"
+
+#: share/template/data/job.html:21 share/template/data/job_list.html:25
+msgid "job.created"
+msgstr "已创建"
+
+#: share/template/data/job_stats.html:27
+msgid "job.delayed"
+msgstr "已延迟"
+
+#: share/template/data/job_stats.html:36
+msgid "job.earliest-nodelay"
+msgstr "最早（无延迟）"
+
+#: share/template/data/job_stats.html:35
+msgid "job.earliest-queued"
+msgstr "最早（等候中）"
+
+#: share/template/data/job_stats.html:28
+msgid "job.grabbed"
+msgstr "已抓取"
+
+#: share/template/data/job.html:23 share/template/data/job_list.html:27
+msgid "job.grabbed-until"
+msgstr "已抓取至"
+
+#: share/template/data/job.html:17 share/template/data/job_list.html:22
+msgid "job.id"
+msgstr "编号"
+
+#: share/template/data/job.html:19 share/template/data/job_list.html:23
+msgid "job.key"
+msgstr "键值"
+
+#: share/template/data/job_stats.html:37
+msgid "job.last-5min"
+msgstr "前 5 分钟"
+
+#: share/template/data/job_stats.html:32
+msgid "job.last-fail"
+msgstr "上次失效"
+
+#: share/template/data/job_stats.html:31
+msgid "job.last-ok"
+msgstr "上次成功"
+
+#: share/template/data/job_stats.html:34
+msgid "job.latest-nodelay"
+msgstr "最新（无延迟）"
+
+#: share/template/data/job_stats.html:33
+msgid "job.latest-queued"
+msgstr "最新（等候中）"
+
+#: share/template/data/job_stats.html:30
+msgid "job.num-fail"
+msgstr "失败数"
+
+#: share/template/data/job_stats.html:29
+msgid "job.num-ok"
+msgstr "成功数"
+
+#: share/template/data/job.html:20 share/template/data/job_list.html:24
+msgid "job.prio"
+msgstr "优先等级"
+
+#: share/template/data/job_stats.html:26
+msgid "job.queued"
+msgstr "等候中"
+
+#: share/template/data/job.html:22 share/template/data/job_list.html:26
+msgid "job.run-after"
+msgstr "运行起始"
+
+#. (lite ? '/m/login' : '/challenge')
+#: share/template/authen/element/forgot_password_page:17
+msgid "login.back-to=uri"
+msgstr "返回 <a href=\"%1\">登录 Socialtext</a>。"
+
+#: share/template/authen/authenticated_join.html:4
+msgid "login.click"
+msgstr "点击"
+
+#: share/template/authen/element/choose_password_form:9 share/template/authen/register.html:6
+msgid "login.click-here-to-login-with-existing-account"
+msgstr "点击此处，以使用已有帐号登录。"
+
+#: share/template/authen/logout.html:21
+msgid "login.click-login-in-upper-right"
+msgstr "点击右上角的“登录”。"
+
+#: share/template/authen/element/register_form:10
+msgid "login.email-address:"
+msgstr "电子邮件地址："
+
+#. (from_address)
+#: share/template/authen/element/forgot_password_page:13
+msgid "login.email-we-send-will-come-from=address"
+msgstr "我们将向您发送的电子邮件来自 <strong>%1</strong>。为了确保您能够收到，请将 <strong>%1</strong> 添加到您的地址簿。"
+
+#: share/template/authen/element/forgot_password_page:6
+msgid "login.enter-email-below-to-recover-password"
+msgstr "在下方输入您用于 Socialtext 帐户的电子邮件地址。如果您是从电子邮件内的链接被带到此处，请查阅并输入该电子邮件的收件人地址。"
+
+#: share/template/authen/error.html:3 share/template/authen/error.html:7
+msgid "login.error"
+msgstr "错误"
+
+#: share/template/authen/register.html:5
+msgid "login.fill-in-info-to-create-account"
+msgstr "请填入以下信息来创建 Socialtext 帐户。"
+
+#. (to_create)
+#: share/template/authen/element/choose_password_form:8
+msgid "login.fill-in-info-to-create=account-type"
+msgstr "请填入以下信息来创建一个%1。"
+
+#: share/template/authen/join.html:28
+msgid "login.fill-in-info-to-register:"
+msgstr "如果您还没有申请 Socialtext 帐号，请键入以下资讯："
+
+#: share/template/authen/element/register_form:25
+msgid "login.first-name:"
+msgstr "名字："
+
+#: share/template/authen/element/forgot_password_link:4
+msgid "login.forgot-my-password"
+msgstr "我不知道我的密码。"
+
+#: share/template/authen/forgot_password.html:3
+msgid "login.forgot-password"
+msgstr "忘记密码"
+
+#: share/template/authen/authenticated_join.html:4
+msgid "login.here"
+msgstr "这里"
+
+#: share/template/authen/authenticated_join.html:3
+msgid "login.join"
+msgstr "加入"
+
+#. (target_workspace.title)
+#: share/template/authen/join.html:7
+msgid "login.join=wiki"
+msgstr "加入 %1"
+
+#: share/template/authen/element/register_form:30
+msgid "login.last-name:"
+msgstr "姓氏："
+
+#: share/template/authen/element/login_form:33 share/template/authen/element/login_form:40
+msgid "login.log-in"
+msgstr "登入"
+
+#: share/template/authen/logout.html:7
+msgid "login.logged-out-of-socialtext"
+msgstr "登出 Socialtext"
+
+#: share/template/authen/join.html:3 share/template/authen/login.html:3
+msgid "login.login"
+msgstr "登入"
+
+#: share/template/authen/nologin.html:1 share/template/authen/nologin.html:5
+msgid "login.login-disabled"
+msgstr "登入已禁用"
+
+#: share/template/authen/login.html:7
+msgid "login.login-to-socialtext"
+msgstr "登入到 Socialtext"
+
+#: share/template/authen/join.html:18
+msgid "login.login-with-socialtext-account:"
+msgstr "使用您的 Socialtext 帐户来登入："
+
+#: share/template/authen/logout.html:3
+msgid "login.logout"
+msgstr "登出"
+
+#: share/template/authen/element/forgot_password_page:2
+msgid "login.no-problem-we-can-send-you-email"
+msgstr "没问题，我们可以发送一封电子邮件给您，让您重新设定密码。"
+
+#: share/template/authen/element/register_form:26 share/template/authen/element/register_form:31
+msgid "login.optional"
+msgstr "(可选)"
+
+#: share/template/authen/element/login_form:17 share/template/authen/element/register_form:15
+msgid "login.password:"
+msgstr "密码："
+
+#: share/template/authen/element/choose_password_form:25 share/template/authen/element/register_form:20
+msgid "login.re-type-password:"
+msgstr "重新键入密码："
+
+#: share/template/authen/element/choose_password_form:35 share/template/authen/element/register_form:41 share/template/authen/register.html:3
+msgid "login.register"
+msgstr "注册"
+
+#: share/template/authen/element/login_form:24
+msgid "login.remember-me"
+msgstr "在这台电脑上保持登入。"
+
+msgid "login.remember-me-on-this-device"
+msgstr "在此设备上记住我"
+
+#: share/template/authen/forgot_password.html:3
+msgid "login.socialtext-password-help"
+msgstr "Socialtext 密码支持"
+
+#: share/template/authen/element/forgot_password_form:13
+msgid "login.submit"
+msgstr "提交"
+
+#: share/template/authen/authenticated_join.html:4
+msgid "login.to-continue"
+msgstr "以继续使用 Socialtext。"
+
+#: share/template/authen/element/choose_password_form:13
+msgid "login.username:"
+msgstr "用户名称："
+
+#. (target_workspace.title, target_workspace.account.name)
+#: share/template/authen/authenticated_join.html:4
+msgid "login.you-have-joined-click=wiki,group"
+msgstr "您已成功加入 %2 社群内的 %1 工作区。请点击"
+
+#: share/template/authen/logout.html:18
+msgid "login.you-have-logged-out-of-socialtext"
+msgstr "您已成功登出 Socialtext。"
+
+#: share/template/authen/element/choose_password_form:20
+msgid "password.choose:"
+msgstr "指定密码："
+
+#. (workspace_title)
+#: share/template/email/st/workspace-admin-invitation.txt:16
+msgid "wiki.visit-later=wiki"
+msgstr "您也可以在此工作区继续工作，稍后再转到“%1”。"

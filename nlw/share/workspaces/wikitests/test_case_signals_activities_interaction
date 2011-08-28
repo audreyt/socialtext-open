@@ -1,0 +1,218 @@
+| *Comment* | Test Case: Signals/Activities Interaction |  |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Signals/Activities Interaction - Setup |  |  |
+| set | mainuser | main-%%start_time%% |  |
+| set | emainuser | %%mainuser%%@ken.socialtext.net |  |
+| set | friend | friend-user-%%start_time%% |  |
+| set | efriend | %%friend%%@ken.socialtext.net |  |
+| set | followed | fuser%%start_time%% |  |
+| set | efollowed | %%followed%%@ken.socialtext.net |  |
+| set | conversant | conversant-user-%%start_time%% |  |
+| set | econversant | %%conversant%%@ken.socialtext.net |  |
+| set | second | seconduser%%start_time%% |  |
+| set | esecond | %%second%%@ken.socialtext.net |  |
+| set | wsadmin | wsadmin%%start_time%% |  |
+| set | ewsadmin | %%wsadmin%%@ken.socialtext.net |  |
+| set | acct | signalacct%%start_time%% |  |
+| set | ws | signalws%%start_time%%-ws |  |
+| set | secondaryacct | secondary%%start_time%% |  |
+| set | secondws | secondws-%%start_time%% |  |
+
+| *Comment* | Test Case: Signals/Activities Interaction - Creation |  |  |
+| create-account | %%acct%% |  |  |
+| create-account | %%secondaryacct%% |  |  |
+| create-workspace | %%ws%% | %%acct%% |  |
+| create-workspace | %%secondws%% | %%secondaryacct%% |  |
+| create-user | %%emainuser%% | %%password%% | %%acct%% |
+| create-user | %%efollowed%% | %%password%% | %%acct%% |
+| create-user | %%efriend%% | %%password%% | %%acct%% |
+| create-user | %%econversant%% | %%password%% | %%acct%% |
+| create-user | %%esecond%% | %%password%% | %%secondaryacct%% |
+| create-user | %%ewsadmin%% | %%password%% | %%acct%% |
+| add-member | %%emainuser%% | %%ws%% |  |
+| add-member | %%econversant%% | %%ws%% |  |
+| add-member | %%emainuser%% | %%secondws%% |  |
+| add-member | %%esecond%% | %%secondws%% |  |
+| add-member | %%efollowed%% | %%ws%% |  |
+| add_workspace_admin | %%ewsadmin%% | %%ws%% |  |
+| st-admin | enable-plugin --plugin people --account %%acct%% |  |  |
+| st-admin | enable-plugin --plugin signals --account %%acct%% |  |  |
+| st-admin | enable-plugin --plugin people --account %%secondaryacct%% |  |  |
+| st-admin | enable-plugin --plugin signals --account %%secondaryacct%% |  |  |
+
+| *Comment* | logoutin hangs in IE. Try explicit %%emainuser%% ... |
+
+| open_ok | /nlw/submit/logout |  |
+| open_ok | /challenge |  |
+| wait_for_element_visible_ok | password | 30000 |
+| wait_for_element_visible_ok | username | 30000 |
+| type_ok | username | %%emainuser%% |
+| type_ok | password | %%password%% |
+| click_and_wait | login_btn |  |
+
+| *Comment* | Test Case: Signals/Activities Interaction Summary Signal |  |
+| open_ok | /%%ws%%/index.cgi?Edit Summary Signal %%start_time%% |  |
+| wait_for_element_visible_ok | st-edit-button-link | 30000 |
+| click_ok | st-edit-button-link |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| wait_for_element_present_ok | st-edit-summary-text-area | 30000 |
+| click_ok | st-edit-summary-text-area |  |
+| type_ok | st-edit-summary-text-area | Super Edit Summary From Signal %%start_time%% |
+| click_ok | st-edit-summary-signal-checkbox |  |
+| st-page-save |  |  |
+
+| *Comment* | Test Case: Signals/Activities Add Activities widget |  |
+| st-single-widget-in-dashboard | gallery-widget-Activities |  |
+| wait_for_text_present_ok | Activities | 30000 |
+| st-name-widget | 1 | signals_widget |
+| st-widget-title-like | signals_widget | Activities |
+
+| *Comment* | Test Case: Signals/Activities Interaction Signal, Mention, Reply, Edit Summaries, Delete |  |
+| st-send-signal-via-activities-widget | signals_widget | %%mainuser%% simple signals |
+| open_ok | /st/dashboard |  |
+| st-send-signal-via-activities-widget | signals_widget | {user: %%efriend%%} mention |
+
+| *Comment* | Test Case:Signals/Activities Interaction Start following %%followed%% |  |
+| wait_for_element_visible_ok | link=People | 30000 |
+| click_and_wait | link=People |  |
+| text_like | All People |  |
+| wait_for_element_visible_ok | st-search-term | 30000 |
+| type_ok | st-search-term | %%efollowed%% |
+| click_and_wait | st-search-submit |  |
+| wait_for_element_visible_ok | link=%%followed%% | 30000 |
+| click_and_wait | link=%%followed%% |  |
+| wait_for_element_visible_ok | link=Follow this person | 30000 |
+| pause | 5000 | needed for IE7 |
+| click_ok | link=Follow this person |  |
+| wait_for_element_visible_ok | link=Stop following this person | 30000 |
+
+| *Comment* | logoutin hangs in IE. Try explicit %%efollowed%% ... |
+
+| open_ok | /nlw/submit/logout |  |
+| open_ok | /challenge |  |
+| wait_for_element_visible_ok | password | 30000 |
+| wait_for_element_visible_ok | username | 30000 |
+| type_ok | username | %%efollowed%% |
+| type_ok | password | %%password%% |
+| click_and_wait | login_btn |  |
+
+| *Comment* | Test Case: Signals/Activities Interaction As someone I follow |  |
+| st-single-widget-in-dashboard | gallery-widget-Activities |  |
+| wait_for_text_present_ok | Activities | 30000 |
+| st-name-widget | 1 | signals_widget |
+| st-widget-title-like | signals_widget | Activities |
+
+| *Comment* | Test Case: Signals/Activities Interaction %%efollowed%% Signal, Mention, Reply, Edit Summaries, Delete |  |
+| st-send-signal-via-activities-widget | signals_widget | %%followed%% simple signal |
+| open_ok | /st/dashboard |  |
+| st-send-signal-via-activities-widget | signals_widget | {user: %%emainuser%%} mention from %%followed%% |
+| open_ok | /st/dashboard |  |
+| st-send-signal-via-activities-widget | signals_widget | d {user: %%emainuser%%} direct from %%followed%% |
+
+| *Comment* | Wait for frame to appear before proceeding |  |
+| wait_for_element_visible_ok | link=Add Widget | 30000 |
+
+| *Comment* | logoutin hangs in IE. Try explicit %%efriend%% ... |
+
+| open_ok | /nlw/submit/logout |  |
+| open_ok | /challenge |  |
+| open_ok | /challenge |  |
+| wait_for_element_visible_ok | password | 30000 |
+| wait_for_element_visible_ok | username | 30000 |
+| type_ok | username | %%efriend%% |
+| type_ok | password | %%password%% |
+| click_and_wait | login_btn |  |
+
+| *Comment* | Test Case: Signals/Activities Interaction As %%efriend%% - just someone in my acct |  |
+
+| st-single-widget-in-dashboard | gallery-widget-Activities |  |
+| st-name-widget | 1 | signals_widget |
+| st-widget-title-like | signals_widget | Activities |
+| st-send-signal-via-activities-widget | signals_widget | %%friend%% simple signal |
+| open_ok | /st/dashboard |  |
+| st-send-signal-via-activities-widget | signals_widget | {user: %%emainuser%%} mention from %%friend%% |
+| open_ok | /st/dashboard |  |
+| st-send-signal-via-activities-widget | signals_widget | d {user: %%emainuser%%} direct from %%friend%% |
+
+| *Comment* | Wait for frame to appear before proceeding |  |
+| wait_for_element_visible_ok | link=Add Widget | 30000 |
+
+| *Comment* | logoutin hangs in IE. Try explicit %%econversant%% ... |
+
+| open_ok | /nlw/submit/logout |  |
+| open_ok | /challenge |  |
+| wait_for_element_visible_ok | password | 30000 |
+| wait_for_element_visible_ok | username | 30000 |
+| type_ok | username | %%econversant%% |
+| type_ok | password | %%password%% |
+| click_and_wait | login_btn |  |
+
+| *Comment* | Test Case: Signals/Activities Interaction Signal from someone else/conversation |  |
+
+| open_ok | /%%ws%%/index.cgi?Edit Summary Signal %%start_time%% |  |
+| wait_for_element_visible_ok | st-edit-button-link | 30000 |
+| click_ok | st-edit-button-link |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| wait_for_element_present_ok | st-edit-summary-text-area | 30000 |
+| click_ok | st-edit-summary-text-area |  |
+| type_ok | st-edit-summary-text-area | Someone Else's Edit Summary From Signal %%start_time%% |
+| click_ok | st-edit-summary-signal-checkbox |  |
+| st-page-save |  |  |
+
+| st-single-widget-in-dashboard | gallery-widget-Activities |  |
+| st-name-widget | 1 | signals_widget |
+| st-widget-title-like | signals_widget | Activities |
+| st-send-signal-via-activities-widget | signals_widget | %%conversant%% simple signal |
+| open_ok | /st/dashboard |  |
+| st-send-signal-via-activities-widget | signals_widget | {user: %%emainuser%%} mention from %%conversant%% |
+| open_ok | /st/dashboard |  |
+| st-send-signal-via-activities-widget | signals_widget | d {user: %%emainuser%%} direct from %%conversant%% |
+
+| *Comment* | Wait for frame to appear before proceeding |  |
+| wait_for_element_visible_ok | link=Add Widget | 30000 |
+
+| *Comment* | logoutin hangs in IE. Try explicit %%esecond%% ... |
+
+| open_ok | /nlw/submit/logout |  |
+| open_ok | /challenge |  |
+| wait_for_element_visible_ok | password | 30000 |
+| wait_for_element_visible_ok | username | 30000 |
+| type_ok | username | %%esecond%% |
+| type_ok | password | %%password%% |
+| click_and_wait | login_btn |  |
+
+| *Comment* | Test Case: Signals/Activities Interaction Signal from different account |  |
+
+| st-single-widget-in-dashboard | gallery-widget-Activities |  |
+| st-name-widget | 1 | signals_widget |
+| st-widget-title-like | signals_widget | Activities |
+| st-send-signal-via-activities-widget | signals_widget | %%second%% simple signal |
+| open_ok | /st/dashboard |  |
+| st-send-signal-via-activities-widget | signals_widget | {user: %%emainuser%%} mention from %%second%% |
+| open_ok | /st/dashboard |  |
+| st-send-signal-via-activities-widget | signals_widget | d {user: %%emainuser%%} direct from %%second%% |
+
+| *Comment* | Test Case: Signals/Activities Interaction TEARDOWN |  |
+| st-process-jobs |  |  |
+| delete-workspace | %%secondws%% | Recklessly |
+| delete-workspace | %%ws%% | Recklessly |
+
+| st-admin | deactivate-user --e %%emainuser%% |  |
+| st-admin | deactivate-user --e %%efollowed%% |  |
+| st-admin | deactivate-user --e%%efriend%% |  |
+| st-admin | deactivate-user --e %%econversant%% |  |
+| st-admin | deactivate-user --e %%esecond%% |  |
+| st-admin | deactivate-user --e %%ewsadmin%% |  |
+
+| delete_account | %%acct%% |  |
+| delete_account | %%secondaryacct%% |  |
+
+| *Comment* | Test Case: Signals/Activities Interaction COMPLETED |  |

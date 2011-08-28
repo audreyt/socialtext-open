@@ -1,0 +1,30 @@
+Verify that deactivated Users cannot login.
+
+* Fixture: SocialRest
+
+| *Comment*      | Setup        |                                                    |
+| set            | username     | deactivated-user-%%start_time%%@ken.socialtext.net |
+| create-user    | %%username%% | password                                           |
+| http-user-pass | %%username%% | password                                           |
+
+| *Comment* | When active, the User can access content |
+| GET       | /st/dashboard                            |
+| code-is   | 200                                      |
+
+| *Comment* | When active, the User can log in |                                         |
+| POST-form | /nlw/submit/login                | username=%%username%%&password=password |
+| code-is   | 302                              |                                         |
+| header-is | Location                         | /                                       |
+
+| *Comment* | Deactivate the User                  |
+| st-admin  | deactivate-user --email %%username%% |
+
+| *Comment* | Once deactivated, the User *cannot* access content |                          |
+| GET       | /st/dashboard                                      |                          |
+| code-is   | 302                                                |                          |
+| header-is | Location                                           | /challenge?/st/dashboard |
+
+| *Comment*   | Once deactivated, the User *cannot* login |                                         |
+| POST-form   | /nlw/submit/login                         | username=%%username%%&password=password |
+| code-is     | 302                                       |                                         |
+| header-like | Location                                  | /nlw/login.html                         |

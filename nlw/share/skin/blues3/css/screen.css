@@ -1,0 +1,208 @@
+/*
+ * Socialtext
+ *
+ * Name:        Blue Skin
+ * Developer:   Mark Schuber
+ * Date:        2008-10-3-08
+ */
+
+
+/* Image Swaps Start */
+
+body {
+	background: #084fa1 url(../images/bgBlue.png) repeat-x top left;
+}
+
+div#mainNav {
+	background: url(../images/mainNavTileBlue.png) repeat-x top left;
+}
+
+div#homeLink {
+	background: url(../images/mainNavLeftBlue.png) no-repeat top left;
+}
+
+div#mainNav div#workSpaceLink {
+	background: url(../images/mainNavRightBlue.png) no-repeat top right;
+}
+
+div#mainNav ul li a,div#homeLink a {
+	background: url(../images/mainNavDividerBlue.png) no-repeat center right;
+	}
+	
+div#mainNav ul.level1>li { 
+    background: url(../images/mainNavDividerBlue.png) no-repeat center right;
+}
+
+body#contentPage div#controls,body#settingsPage div#controls,body#dashBoard div#controls {
+	background: url(../images/contentControlsTileBlue.png) repeat-x top left;
+}
+
+body#contentPage div#controls div#st-editing-tools-edit,body#dashBoard div#controls div#st-editing-tools-edit,body#settingsPage div#controls div#st-editing-tools-edit {
+	background: url(../images/contentControlsLeftBlue.png) no-repeat top left;
+	}
+	
+body#contentPage div#controls div#controlsRight,body#dashBoard div#controls div#controlsRight,body#settingsPage div#controls div#controlsRight {
+	background: url(../images/contentControlsRightBlue.png) no-repeat top right;
+	}	
+		
+body#workspaceListPage div#controls, body#loginPage div#controls {
+    background: url(../images/contentControlsTileBlue.png) repeat-x top left;
+}
+body#workspaceListPage div#controls div#st-editing-tools-edit, body#loginPage div#controls div#st-editing-tools-edit {
+    background: url(../images/contentControlsLeftBlue.png) no-repeat top left;
+}
+body#workspaceListPage div#controls div#controlsRight, body#loginPage div#controls div#controlsRight {
+	background: url(../images/contentControlsRightBlue.png) no-repeat top right;
+}
+
+div#footer {
+	background: url(../images/footerTileBlue.png) repeat-x top left;
+}	
+
+div#footerGlobal {
+	background: url(../images/footerRightBlue.png) no-repeat top right;
+}
+
+div#footerLinks {
+	background: url(../images/footerLeftBlue.png) no-repeat top left;
+}
+
+div#footerGlobal ul li {
+	background: url(../images/footerDividerBlue.png) no-repeat center left;
+}
+
+div#footerLinks ul li {
+	background: url(../images/footerDividerBlue.png) no-repeat center left;
+}
+
+body#workSpace div.widget div.widgetHeader,body#dashBoard div.widget div.widgetHeader,body#settingsPage div.widget div.widgetHeader {
+	background: url(../images/dashWidgetHeaderBlue.png) no-repeat top right;
+}
+
+body#workSpace div.widget,body#settingsPage div.widget,body#dashBoard div.widget {
+	background: url(../images/dashWidgetTopBlue.png) no-repeat top left;
+}
+
+div#globalNav div input.searchButton {
+	background: url(../images/searchButtonBlue.png) no-repeat top left;
+	}
+
+/* Image Swaps End */
+
+a {
+	color: #039ef7;
+}
+
+a:hover {
+}
+
+div#header div#globalNav ul li a {
+	color: #1e4499;
+}
+
+div#header div#globalNav ul li {
+	border-right:1px dotted #1e4499;
+	}
+
+div#contentContainer {
+	border-left: #88a6ba 1px solid; 
+	border-right: #88a6ba 1px solid; 
+	}
+	
+div.tableTabs {
+	background: url(../images/tabsLeftBlue.png) no-repeat top left;
+}	
+
+div.tableFilter {
+	background: url(../images/tabsRightBlue.png) no-repeat top right;
+	}
+	
+div#st-display-mode-container div#tabs {
+	background: url(../images/tabTileBlue.png) repeat-x top left;
+}
+
+table.dataTable th {
+	background: #cfe6f3;
+	border-right: #fff 3px solid;
+	color: #005295;
+	
+}
+
+table.dataTable tr:hover td,table.dataTable tr.oddRow:hover td {
+	background: #cfe6f3;
+	}
+	
+	
+	
+/* Button Styles Start */
+
+
+ul li a.addContentButton {
+	background: url(../images/addContentButtonBlue.png) no-repeat;
+}
+
+ul li a.newPostButton {
+	background: url(../images/newPostButtonBlue.png) no-repeat;
+	}
+
+a.newPostButton {
+	background: url(../images/newPostButtonBlue.png) no-repeat;
+	}
+
+
+a.editButton {
+	background: url(../images/editButtonBlue.png) no-repeat;
+	}
+	
+a.editButton:hover {
+	background-position: bottom right;
+}	
+
+
+div.widget ul.widgetButton li a.addTagButton {
+	background: url(../images/addTagButtonBlue.png) no-repeat;
+	}
+	
+ul li a.addTagButton {
+	background: url(../images/addTagButtonBlue.png) no-repeat;
+	}
+	
+	
+
+ul li a.commentButton {
+	background: url(../images/commentButtonBlue.png) no-repeat;
+	}
+
+ul li a.commentButton:hover {
+	background-position: top right;
+}	
+
+a.saveButton {
+	background: url(../images/saveButtonBlue.png) no-repeat;
+	background-position: top right;
+	}
+	
+
+a.cancelButton {
+	background: url(../images/cancelButtonBlue.png) no-repeat;
+	background-position: top right;
+}	
+
+
+	
+div.widgetHeader a.settings {
+	background: url(../images/settingsIconBlue.png) no-repeat top left;
+	}
+
+div.widgetHeader a.minimize {
+	background: url(../images/minIconBlue.png) no-repeat top left;
+	}
+
+div.widgetHeader a.close {
+	background: url(../images/closeIconBlue.png) no-repeat top left;
+	
+}
+
+
+/* Button Styles End */
+	

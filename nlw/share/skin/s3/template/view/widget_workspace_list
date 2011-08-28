@@ -1,0 +1,7 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[% USE decorate %]
+[% WRAPPER layout/simple_html id="widgetWorkspaceListPage" %]
+  [% INCLUDE 'element/workspace_list/my_workspaces' %]
+  [% INCLUDE 'element/workspace_list/public_workspaces' %]
+[% END %]

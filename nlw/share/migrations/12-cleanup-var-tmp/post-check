@@ -1,0 +1,15 @@
+#!/bin/bash
+set -e
+
+# Nothing to post-check.  We use find(1) / rm(1) to clean things up, and the
+# obvious post-check would just do a find(1) again which wouldn't tell us
+# anything.  If it failed the first time wouldn't it just fail again?
+#
+# If rm failed to remove files then that would be signaled by the migration
+# failing, since rm checks for that itself.  
+
+# So there's nothing to test here since the migration employs such low-level
+# tools that tend to work if used right.  The only way to test if they're used
+# to right is to test the migration by hand.
+
+exit 0

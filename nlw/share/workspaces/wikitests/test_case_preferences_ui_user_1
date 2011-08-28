@@ -1,0 +1,86 @@
+| *Comment* | Test Case: Preferences UI User 1 |  |
+
+| set | new_account | userPrefs.%%start_time%%.1 |
+| set | new_ws | userprefs-%%start_time%%-1 |
+| set | new_user | userPrefs1.%%start_time%%@ken.socialtext.net |
+| set | new_name | userPrefs1 %%start_time%% |
+| include | [Test Case: Preferences UI User Setup] |  |
+
+| *Comment* | Test Case: Preferences UI User 1. Signals notification. Default is on |  |
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=Private Messages |  |
+| text_like | Send Socialtext Signals private messages as email |  |
+| value_is | dm_sends_email | on |
+
+| *Comment* | Test Case: Preferences UI User 1. Signals notification. Turn it off |  |
+| uncheck_ok | dm_sends_email |  |
+| value_is | dm_sends_email | off |
+| click_and_wait | link=Save |  |
+| text_like | qr/Changes Saved/i |  |
+| value_is | dm_sends_email | off |
+
+| *Comment* | Test Case: Preferences UI User 1. Signals notification. Save without changing value. |  |
+| click_and_wait | link=Save |  |
+| text_like | qr/Changes Saved/i |  |
+| value_is | dm_sends_email | off |
+
+| *Comment* | Test Case: Preferences UI User 1. Signals notification. Cancel chooses previous values |  |
+| check_ok | dm_sends_email |  |
+| value_is | dm_sends_email | on |
+| click_ok | link=Cancel |  |
+| value_is | dm_sends_email | off |
+
+| *Comment* | Test Case: Preferences UI User 1. Signals notification. Navigate away, return, verify value |  |
+| click_and_wait | link=My Settings |  |
+| click_and_wait | link=Private Messages |  |
+| value_is | dm_sends_email | off |
+
+| *Comment* | Test Case: Preferences UI User 1. Signals notification. Turn it back on |  |
+| check_ok | dm_sends_email |  |
+| value_is | dm_sends_email | on |
+| click_and_wait | link=Save |  |
+| text_like | qr/Changes Saved/i |  |
+| value_is | dm_sends_email | on |
+
+| *Comment* | Test Case: Preferences UI User 1: Signals does appear if signals is disabled for account but is enabled for another acct |  |
+| st-admin | enable-plugin --plugin signals --account %%hostname%% |  |
+| st-admin | add-member --email %%new_user%% --workspace %%workspace%% | now has the role of 'member' in the |
+| disable_account_plugin | %%new_account%% | signals |
+| click_and_wait | link=Settings |  |
+| wait_for_element_present_ok | link=Private Messages | 10000 |
+| st-admin | remove-member --email %%new_user%% --workspace %%workspace%% | no longer has the role of 'member' |
+
+| *Comment* | Test Case: Preferences UI User 1: Signals does not appear if signals plugin is disabled for account |  |
+| open_ok | /%%new_ws%%/?action=users_settings |  |
+| text_unlike | //body | Private Messages |
+| st-admin | enable-plugin --plugin signals --account %%new_account%% |  |
+
+| *Comment* | Test Case: Preferences UI User 1: My Workspaces |  |
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=My Workspaces |  |
+| text_like | contentRight | %%new_ws%% |
+| text_unlike | contentRight | help-en |
+| add_member | %%new_user%% | %%workspace%% |
+| click_and_wait | link=My Workspaces |  |
+| text_like | contentRight | %%new_ws%% |
+| text_like | contentRight | %%title%% |
+| text_like | contentRight | %%workspace%% |
+| text_unlike | contentRight | help-en |
+| st-admin | remove-member --w %%workspace%% --e %%new_user%% | no longer has the role of 'member' |
+| click_and_wait | link=My Workspaces |  |
+| text_like | contentRight | %%new_ws%% |
+| text_unlike | contentRight | %%workspace%% |
+| text_unlike | contentRight | help-en |
+
+| *Comment* | Test Case: Preferences UI User 1: List All |  |
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=List All Users |  |
+| text_like | contentRight | %%new_name%% |
+| add_member | %%username%% | %%new_ws%% |
+| click_and_wait | link=List All Users |  |
+| text_like | contentRight | %%new_name%% |
+| text_like | contentRight | %%username%% |
+
+| include | [Test Case: Preferences UI User Teardown] |  |
+
+| *Comment* | Test Case: Preferences UI User 1 COMPLETED |  |

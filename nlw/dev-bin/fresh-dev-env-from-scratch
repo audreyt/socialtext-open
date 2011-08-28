@@ -1,0 +1,137 @@
+#!/bin/bash -e
+# @COPYRIGHT@
+
+# '-m' option ( minimal ) will set up ony 'admin_no_pages' fixture, 'ALL' is default
+# '-w' option will _not_ upadte widgets/galleries
+# '-j' option will _not_ minify javascript
+# '-p' option will _not_ start up nlw in this script
+# '-h' option will import the help-en wiki
+# '-s' option will import staging users and signals
+# '-C' option will use "C" as the database locale (default is "en_US.UTF-8"
+
+HELPEN=0
+FIXTURE='ALL'
+PAUSE=0
+UPDATE_WIDGETS=1
+MINIFY_JS=1
+CONTEXTUAL=0
+STAGING=0
+DATABASE_LOCALE=en_US.UTF-8
+while getopts "jhmbpwscC" OPT; do
+  case $OPT in
+    h) HELPEN=1;;
+    m) FIXTURE=admin_no_pages;;
+    j) MINIFY_JS=0;;
+    s) STAGING=1;;
+    p) PAUSE=1;;
+    w) UPDATE_WIDGETS=0;;
+    c) CONTEXTUAL=1;;
+    C) DATABASE_LOCALE=C;;
+  esac
+done
+
+if [ "$ST_CURRENT" != "" ]; then
+    echo "Changing to $ST_CURRENT/nlw"
+    cd $ST_CURRENT/nlw
+fi
+
+# Clean up dead symlinks
+find -L -type l -delete 2>/dev/null || gfind -L -type l -delete
+
+perl -MCwd -le'print "Running ", Cwd::abs_path(shift)' $0
+
+START_PORT=21000 # for SSL
+
+function rm_dir {
+   DIR=`bin/st-config echo $1`
+   if [ -d $DIR ]; then rm -r $DIR; fi
+}
+
+cd $(dirname $0)/..
+
+./dev-bin/create-skinlinks
+
+set -x
+PORT=$(($START_PORT+$UID)) ./configure --dev=1 \
+    --server-admin=support@socialtext.com \
+    --support-address='http://www.socialtext.com/customers/support_request.php'
+set +x
+
+# Remove a bunch of stuff
+if [ -e t/tmp ]; then
+    dev-bin/nlwctl --test stop
+    sh -c 'rm -r t/tmp*'
+fi
+rm_dir "template_compile_dir";
+rm_dir "formatter_cache_dir";
+
+# Shut down any running copy of ST and/or OpenLDAP
+set -x
+NLWCTL_QUIET=1 dev-bin/nlwctl stop
+dev-bin/setup-supervisors stop
+bin/st-bootstrap-openldap stop
+
+# when switching to nginx you might have apache2 running still
+killall /usr/sbin/apache2 >/dev/null 2>&1 || true;
+# ditto for the old SCGI json proxy
+killall json-proxy.scgi 2>&1 || true;
+
+# Create the basic dev-env
+rm -rf $HOME/.nlw/
+dev-bin/link-externals --all --lib-only
+dev-bin/st-make-all @clean
+dev-bin/st-make-all @all
+
+# Build socialcalc because its makefile doesn't only build javascript
+(cd ../plugins/socialcalc && make)
+
+rm -f etc/socialtext/db/cache.*.sql
+dev-bin/make-test-fixture --home_dir $HOME --fixture clean
+dev-bin/make-test-fixture --home_dir $HOME --fixture base_config
+dev-bin/make-test-fixture --home_dir $HOME --fixture $FIXTURE
+[ $DATABASE_LOCALE != 'C' ] && bin/st-db reset_db_locale $DATABASE_LOCALE
+[ $HELPEN == 1 ] && dev-bin/make-test-fixture --home_dir $HOME --fixture help
+[ $CONTEXTUAL == 1 ] && dev-bin/build-contextual-account --name ContextualAccount
+
+# Setup robots.txt file to prevent dev-env heat death
+perl -le 'print "User-agent: *\nDisallow: /"' > ~/.nlw/root/docroot/robots.txt
+
+# Finish linking in external repos
+dev-bin/link-externals --all
+
+# Start the supervisor
+dev-bin/setup-supervisors start
+
+[ $MINIFY_JS == 0 ] && bin/st-config set minify_javascript 0
+
+if [ $PAUSE == 0 ]; then
+    echo "Starting nginx and apache-perl"
+    dev-bin/nlwctl start
+else
+    echo "Skipping NLW startup, you need do it manually"
+    dev-bin/nlwctl stop
+fi
+
+
+bin/st-admin enable-plugin --all-accounts --plugin dashboard \
+    --plugin signals --plugin groups --plugin push --plugin analytics
+
+bin/st-config set analytics_id UA-20106506-1 analytics_domains multiple-domains
+
+if [ $UPDATE_WIDGETS == 1 ]; then
+    set -x
+        bin/st-widgets update-gallery --force --verbose
+    set +x
+fi
+
+if [ $STAGING == 1 ]; then
+    create-staging-users
+fi
+
+# Clean up dead symlinks
+find -L -type l -delete  2>/dev/null || gfind -L -type l -delete
+
+# Purge json proxy cache
+bin/st-purge-json-proxy-cache
+
+echo "fresh-dev-env-from-scratch complete."

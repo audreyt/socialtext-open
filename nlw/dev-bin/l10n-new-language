@@ -1,0 +1,82 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use 5.12.0;
+use autodie;
+use warnings;
+use open qw(:std :utf8);
+use Getopt::Long;
+use FindBin '$RealBin';
+use lib "$RealBin/../lib";
+use Socialtext::l10n::DevUtils;
+use File::Slurp qw( read_file write_file );
+
+my $lang = shift or die "Usage: $0 lang\n";
+
+if (-d "share/l10n/$lang" and glob("share/l10n/$lang/*")) {
+    die "share/l10n/$lang is non-empty, aborting";
+}
+
+if ($lang ~~ [qw( zh_TW zz zq xx xq )]) {
+    die "Cannot generate templates for derived language $lang, aborting";
+}
+
+mkdir "share/l10n/$lang" unless -d "share/l10n/$lang";
+
+for my $in (glob("share/l10n/en/*.po")) {
+    (my $out = $in) =~ s!/en/!/$lang/!;
+    write_file($out => << ".");
+# \@COPYRIGHT@
+msgid ""
+msgstr ""
+"Project-Id-Version: Socialtext i18n\\n"
+"PO-Revision-Date: $po_revision_date\\n"
+"Last-Translator: Socialtext i18n team\\n"
+"Language-Team: Socialtext i18n team\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+
+.
+    say "*** Created stub dictionary: $out";
+}
+
+system("msgcat --width 99999 -s @{[reverse sort glob(qq[share/l10n/en/*.po])]} > tmp.po");
+system("./dev-bin/l10n-po-to-txt tmp.po >/dev/null 2>/dev/null");
+unlink("tmp.po");
+my @histogram = `grep '\\[\\[\\[' tmp.po.txt  | cut -d . -f 1 |  uniq -c  | sort -n`;
+my %sectionToChunk;
+
+my $cut = 250;
+my $sum = 0;
+my @bunch;
+my $chunkNumber = '01';
+for (@histogram) {
+    /(\d+)\W*(\w+)/ or next;
+    $sum += $1;
+    push @bunch, $2;
+    if ($sum >= $cut) {
+        $sectionToChunk{$_} = $chunkNumber for @bunch;
+        $chunkNumber++;
+        $sum = 0;
+        @bunch = ();
+    }
+}
+if ($sum) {
+    $sectionToChunk{$_} = $chunkNumber for @bunch;
+}
+
+local $/ = "\n\n";
+open my $fh, '<:crlf', "tmp.po.txt";
+my %chunks;
+while (<$fh>) {
+    /^\[\[\[(\w+)\..*\]\]\]/ or next;
+    $chunks{$sectionToChunk{$1} // die "Impossible - Unknown section: $1"} .= $_;
+}
+close $fh;
+unlink("tmp.po.txt");
+
+for (sort keys %chunks) {
+    my $out = "share/l10n/$lang/$_.po.txt";
+    write_file($out => $chunks{$_});
+    say "*** myGengo input generated successfully: $out";
+}

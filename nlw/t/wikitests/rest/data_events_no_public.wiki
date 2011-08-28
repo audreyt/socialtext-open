@@ -1,0 +1,95 @@
+Test that event feeds don't contain events from public-read-only and
+public-comment-only workspaces, except for my conversations eventswhere the
+reader is part of the conversation
+
+
+* Fixture: SocialRest
+
+* create workspaces: pro (public read only) and pco (public comment only)
+* create users: other, reader
+* other and reader post in a conversation and individually (comment back and forht)
+* confirm that reader gets no events, except in the conversation feed and only for those they are in conversation for
+
+
+| comment | Setup |
+| set | account| account%%start_time%% |
+| create-account | %%account%% |
+
+| set | workspace| workspace%%start_time%% |
+
+| st-clear-events |
+
+| create-workspace   | %%workspace%% | %%account%%                             |             |
+| set                | other         | other%%start_time%%@ken.socialtext.net  |             |
+| set                | reader        | reader%%start_time%%@ken.socialtext.net |             |
+| create-user        | %%other%%     | password                                | %%account%% |
+| create-user        | %%reader%%    | password                                | %%account%% |
+| set-ws-permissions | %%workspace%% | public-read-only                        |             |
+| add-member         | %%other%%     | %%workspace%%                           |             |
+
+
+* Ensure a post to a pro workspace doesn't generate events in any feed for non-members
+
+| comment         | From public read only workspace                     |                         |              |
+| http-user-pass  | %%other%%                                           | password                |              |
+| edit-page       | %%workspace%%                                       | FirstPage               | Some Comment |
+| POST            | /data/workspaces/%%workspace%%/pages/FirstPage/tags | Content-Type=text/plain | firsttag     |
+| code-is         | 201                                                 |                         |              |
+| http-user-pass  | %%reader%%                                          | password                |              |
+| GET             | /data/events                                        | application/json        |              |
+| code-is         | 200                                                 |                         |              |
+| json-parse      |                                                     |                         |              |
+| json-array-size | 0                                                   |                         |              |
+| http-user-pass  | %%reader%%                                          | password                |              |
+| GET             | /data/events/conversations/%%reader%%               | application/json        |              |
+| code-is         | 200                                                 |                         |              |
+| json-parse      |                                                     |                         |              |
+| json-array-size | 0                                                   |                         |              |
+
+| st-clear-events |
+
+* Change the workspace to public (anyone can edit), confirm the events returned are the same, then have reader comment (and other respond), and should see that event show up on reader's conversation feed.
+| comment            | From public workspace                 |                  |
+| set-ws-permissions | %%workspace%%                         | public           |
+| http-user-pass     | %%reader%%                            | password         |
+| GET                | /data/events                          | application/json |
+| code-is            | 200                                   |                  |
+| json-parse         |                                       |                  |
+| json-array-size    | 0                                     |                  |
+| http-user-pass     | %%reader%%                            | password         |
+| GET                | /data/events/conversations/%%reader%% | application/json |
+| code-is            | 200                                   |                  |
+| json-parse         |                                       |                  |
+| json-array-size    | 0                                     |                  |
+
+* in public ws, reader user posts a comments, should show up in events feed, but not in conversations feed
+| Comment         | Reader post in public ws                                |                                     |                               |
+| http-user-pass  | %%reader%%                                              | password                            |                               |
+| POST            | /data/workspaces/%%workspace%%/pages/FirstPage/comments | Content-Type=text/x.socialtext-wiki | This is a comment from reader |
+| code-is         | 204                                                     |                                     |                               |
+| GET             | /data/events                                            | application/json                    |                               |
+| code-is         | 200                                                     |                                     |                               |
+| json-parse      |                                                         |                                     |                               |
+| json-array-size | 0                                                       |                                     |                               |
+| http-user-pass  | %%reader%%                                              | password                            |                               |
+| GET             | /data/events/conversations/%%reader%%                   | application/json                    |                               |
+| code-is         | 200                                                     |                                     |                               |
+| json-parse      |                                                         |                                     |                               |
+| json-array-size | 1                                                       |                                     |                               |
+
+* in public ws, now other user issues a response comment. reader should see one new event in conversations feed, no new event in all events feed
+| Comment         | Other comments in public ws                             |                        |                              |
+| http-user-pass  | %%other%%                                               | password               |                              |
+| POST            | /data/workspaces/%%workspace%%/pages/FirstPage/comments | Content-Type=text/x.socialtext-wiki | This is a comment from other  |
+| code-is         | 204                                                     |                                     |                               |
+| http-user-pass  | %%reader%%                                              | password               |                              |
+| GET             | /data/events                                            | application/json       |                              |
+| code-is         | 200                                                     |                        |                              |
+| json-parse      |                                                         |                        |                              |
+| json-array-size | 0                                                       |                        |                              |
+| http-user-pass  | %%reader%%                                              | password               |                              |
+| GET             | /data/events/conversations/%%reader%%                   | application/json       |                              |
+| code-is         | 200                                                     |                        |                              |
+| json-parse      |                                                         |                        |                              |
+| json-array-size | 2                                                       |                        |                              |
+

@@ -1,0 +1,924 @@
+/* 
+Site: Socialtext Wiki
+Author: Mark Schuber :: Aracuaria Design
+Date: March 13, 2008
+*/
+
+/* CSS Style Reset Start */
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+
+/* remember to define focus styles! */
+:focus {
+	outline: 0;
+}
+
+/* remember to highlight inserts somehow! */
+ins {
+	text-decoration: none;
+}
+del {
+	text-decoration: line-through;
+}
+
+/* tables still need 'cellspacing="0"' in the markup */
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+/* CSS Style Reset End */
+
+
+body {
+	text-align: center;
+	background: #c4d3df url(../images/bodyTile.png) repeat-x top right;
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 10px;
+}
+
+a {
+	color: #0e93d8;
+	font-size: 10px;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+div#shadowTile {
+	background: url(../images/shadowTile.png) repeat-y top left;
+	width: 924px;
+	margin: 0 auto;
+}
+
+div#mainWrap {
+	margin: 0 auto;
+	text-align: left;
+	width: 895px;
+	border: #FFFFFF 3px solid;
+	background: #FFFFFF;
+}
+
+/* header Styles Start */
+
+div#headerWrap {
+	height: 77px;
+	width: 100%;
+	background: url(../images/header.png) no-repeat top left;
+}
+
+div#headerWrap div {
+	margin-left: 17px;
+	position: relative;
+	top: 19px;
+}
+
+div#headerWrap div img {
+	height: 34px;
+	width: 199px;
+}
+
+/* header Styles End */
+
+
+/* main navigation Styles Start */
+
+div#mainNav {
+	width: 100%;
+	background: #ececec url(../images/navTile.png) repeat-x bottom left;
+	border-top: #e3e3e3 1px solid;
+	border-bottom: #cdcdcd 1px solid;
+}
+
+
+div#mainNav ul {	
+	float: left;
+}
+
+div#mainNav ul li {
+	float: left;
+}
+
+div#mainNav ul li a {
+	float: left;	
+	font-size: 15px;
+	color: #005295;
+	text-decoration: none;
+	line-height: 31px;
+	background: url(../images/navDivider.png) no-repeat left center;
+	padding: 0 17px 0 17px;	
+}
+
+
+div#mainNav ul li.first a {
+	background: none;
+}
+
+div#mainNav ul li a:hover,div#mainNav ul li.first a:hover,div#mainNav ul li a.selected {
+	background-color: #ccdeed;
+	color: #666;
+}
+
+div#mainNav div#search {
+	float: right;
+	line-height: 31px;
+	margin-right: 17px;
+}
+
+div#greeting {
+	float: left;
+	line-height: 31px;
+        text-align: center;
+}
+
+input.searchText {
+	position: relative;
+	top: 2px;
+	color: #666;
+}
+
+input.searchButton {
+	background: url(../images/searchButton.png) no-repeat top left;
+	height: 21px;
+	width: 59px;
+	border: none;
+	color: #005295;
+	position: relative;
+	top: 2px;
+}
+
+
+input.searchButton:hover {
+	color: #00a0f4;
+}
+
+input.lightboxButton {
+	background: url(../images/searchButton.png) no-repeat top left;
+	height: 21px;
+	width: 59px;
+	border: none;
+	color: #005295;
+	position: relative;
+	top: 2px;
+}
+
+input.lightboxButton:hover {
+	color: #00a0f4;
+}
+
+input.lightboxButtonCancel {
+	background: url(../images/searchButton.png) no-repeat top left;
+	height: 21px;
+	width: 59px;
+	border: none;
+	color: #005295;
+        padding-left: 9px;
+	position: relative;
+	top: 2px;
+}
+
+input.lightboxButtonCancel:hover {
+	color: #00a0f4;
+}
+
+div#mainNav div#search input {
+	margin-right: 11px;
+}
+
+
+span.logout {
+	padding-left: 11px;
+	background: url(../images/navDivider.png) no-repeat left center;
+}
+
+span.logout a {
+	color: #005295;
+	text-decoration: none;
+}
+
+div.clear {
+	clear: both;
+}
+
+/* main navigation Styles End */
+
+/* main content Styles Start */
+
+div#mainContent {
+	width: 100%;
+	background: #ececec url(../images/contentTile.png) repeat-x top left;
+}
+
+
+div#mainContent div#toolBar {
+	width: 100%;
+	height: 40px;
+}
+
+div#mainContent div#toolBar ul {
+	float: right;
+	line-height: 20px;
+	margin-right: 7px;
+	position: relative;
+	top: 9px;
+}
+
+div#mainContent div#toolBar ul li {
+	float: left;
+	margin-right: 10px;
+	background: url(../images/buttonLeft.png) no-repeat top left;	
+}
+
+div#mainContent div#toolBar ul li:hover {
+	background-image: url(../images/buttonLeftHover.png);
+}
+
+div#mainContent div#toolBar ul li a {
+	padding: 0 10px 0 23px;
+	float: left;
+	display: block;
+	text-transform: uppercase;
+	height: 20px;
+	color: #fff;
+	text-decoration: none;
+	font-weight: bold;
+	background: url(../images/buttonRight.png) no-repeat top right;
+}
+
+div#mainContent div#toolBar ul li a:hover {
+	background-image: url(../images/buttonRightHover.png);
+}
+
+div#mainContent div#widgetContainer {
+	width: 100%;
+	height: 200px;
+}
+
+div#columnCombined {
+	float: left;
+	margin-left: 16px;
+	width: 592px;
+}
+
+
+div#columnCombined div#columnLeft {
+	float: left;
+	width: 50%;
+}
+
+div#columnCombined div#columnMiddle {
+	float: right;
+	width: 50%;
+}
+
+div#columnRight {
+	float: left;
+}
+
+div#footerWrap {
+	clear: both;
+	border-top: #fff 3px solid;
+	width: 100%;
+}
+
+/* main content Styles End */
+
+
+/* widget Styles Start */
+
+div#widgetWrap {
+	width: 276px;
+	background: url(../images/widgetTile.png) repeat-y top left;
+	margin-bottom: 20px;
+}
+
+div#bigWidgetWrap {
+	width: 571px;
+	background: url(../images/bigWidgetTile.png) repeat-y top left;
+	margin-bottom: 20px;
+}
+
+div#widgetWrap div#widgetHeader {
+	width: 100%;
+	height: 34px;
+	margin-bottom: 10px;
+	background: url(../images/widgetHeader.png) no-repeat top left;
+
+}
+
+div#bigWidgetWrap div#bigWidgetHeader {
+	width: 100%;
+	height: 34px;
+	margin-bottom: 10px;
+	background: url(../images/bigWidgetHeader.png) no-repeat top left;
+
+}
+
+div#widgetHeader h3,div#bigWidgetHeader h3 {
+	display: inline;
+	color: #5f6062;
+	text-transform:uppercase;
+	font-size: 12px;
+	margin-left: 13px;
+	position: relative;
+	top: 13px;
+	float: left;
+}
+
+div#widgetHeader img,div#bigWidgetHeader img {
+	margin-left: 14px; 
+	vertical-align: top;
+	position: relative;
+	top: 10px;
+	float: left;
+}
+
+div#widgetHeader img.iconPeople {
+	top: 8px;	
+}
+
+div#widgetHeader img.iconCalendar {
+	top: 8px;	
+}
+
+div#widgetHeader input,div#bigWidgetHeader input {
+	float: right;
+	height: 15px;
+	width: 15px;
+	border: none;
+	margin-right: 4px;
+	position: relative;
+	top: 12px;
+}
+	
+div#widgetHeader a,div#bigWidgetHeader a {
+	float: right;
+	height: 15px;
+	width: 15px;
+	border: none;
+	margin-right: 34px;
+	position: relative;
+}
+
+	div#widgetHeader input.settings,div#bigWidgetHeader input.settings {
+		background: url(../images/iconSettings.png) no-repeat top left;
+	}
+
+        div#widgetHeader edit {
+        	background: url(../images/iconSettings.png) no-repeat top left;
+        }
+
+	div#widgetHeader input.minimize,div#bigWidgetHeader input.minimize {
+		background: url(../images/iconMinimize.png) no-repeat top left;
+	}
+	
+	div#widgetHeader input.close,div#bigWidgetHeader input.close {
+		background: url(../images/iconClose.png) no-repeat top left;
+		margin-right: 17px;
+	}
+	
+div#widgetWrap div#widgetContent {
+	width: 100%;
+	background: url(../images/widgetBottom.png) no-repeat bottom left;
+	text-align: center;
+	padding-bottom: 20px;
+}
+
+div#bigWidgetWrap div#bigWidgetContent {
+	width: 100%;
+	background: url(../images/bigWidgetBottom.png) no-repeat bottom left;
+	text-align: center;
+	padding-bottom: 20px;
+}
+
+img.avatar {
+	width: 27px;
+	height: 27px;
+	border: #c5c5c5 1px solid;
+} 
+
+img.bigAvatar {
+	width: 62px;
+	height: 62px;
+	border: #c5c5c5 1px solid;
+	float: left;
+} 
+
+div#widgetContent div.border {
+	width: 263px;
+	border-bottom: #cacaca 1px dotted;
+	clear: both; 
+	margin: 0 auto 10px;
+	height: 10px;
+	
+}
+
+div#bigWidgetContent div.border {
+	width: 558px;
+	border-bottom: #cacaca 1px dotted;
+	clear: both; 
+	margin: 0 auto 10px;
+	height: 10px;
+	
+}
+
+div#widgetContent div.clear {
+	clear: both;
+}
+
+div#bigWidgetContent div.clear {
+	clear: both;
+}
+
+/* widget Styles Start */
+
+/* profile widget Start */
+
+div#widgetContent div#profile {
+	width: 240px;
+	margin: 0 auto;
+	text-align: left;
+	line-height: 16px;
+	color: #666;
+}
+
+
+div#widgetContent div#profile dl.mainInfo {
+	float: left;
+	margin-left: 15px;
+}
+
+div#widgetContent div#profile dl dt {
+	font-weight: bold;
+	font-size: 11px;
+	text-transform: uppercase;
+}
+
+
+div#widgetContent div#profile dl.mainInfo dt {
+	font-size: 13px;
+	text-transform: capitalize;
+	}
+
+/* profile widget End */
+
+/* editProfile widget Start */
+
+div#bigWidgetContent div#editProfile {
+	/* width: 240px; */
+        margin: 0 auto;
+	text-align: left;
+	line-height: 16px;
+	color: #666;
+}
+
+
+div#bigWidgetContent div#editProfile dl dt {
+	font-weight: bold;
+	font-size: 11px;
+	text-transform: uppercase;
+        margin-left: 15px;
+}
+
+div#bigWidgetContent div#editProfile dl dd {
+        margin-left: 15px;
+}
+
+div#bigWidgetContent div#editProfile dt {
+	font-size: 13px;
+	text-transform: capitalize;
+}
+
+
+/* editProfile widget End */
+
+/* my content widget Start */
+
+div#widgetContent div#myContent {
+	width: 240px;
+	margin: 0 auto;
+	text-align: left;
+	line-height: 16px;
+	color: #666;
+}
+
+div#widgetContent div#myContent h4 {
+	color: #005295;
+	font-weight: normal;
+	font-size:12px;
+	line-height: 20px;
+}
+
+div#myContent div.commentInfo {
+	margin-top: 10px;
+}
+
+
+div#myContent div.commentInfo img {
+	float: left;
+
+}
+
+div#myContent div.commentInfo ul {
+	float: left;
+	margin-left: 10px;
+} 
+
+div#myContent div.commentInfo ul li.time {
+	font-style: italic;
+}
+
+/* my content widget End */
+
+/* calendar widget End */
+
+div#widgetContent div#calendarControl {
+	width: 240px;
+	margin: 0 auto;
+	text-align: left;
+}
+
+div#widgetContent div#calendarControl ul {
+	width: 100%;
+	float: left;
+}
+
+div#widgetContent div#calendarControl ul li.previous {
+	float: left;
+}
+
+div#widgetContent div#calendarControl ul li.previous a {
+	background: url(../images/previousArrow.png) no-repeat center left;
+	padding-left: 15px;
+}
+
+div#widgetContent div#calendarControl ul li.next {
+	float: right;
+}
+
+div#widgetContent div#calendarControl ul li.next a {
+	background: url(../images/nextArrow.png) no-repeat center right;
+	padding-right: 15px;
+}
+
+div#widgetContent div#calendarList {
+	width: 265px;
+	margin: 0 auto;
+	text-align: left;
+	color: #005295;
+}
+
+
+div#widgetContent div#calendarList table {
+	width: 100%;
+	
+	}
+
+div#widgetContent div#calendarList table tr td,div#widgetContent div#calendarList table tr th {
+	line-height: 23px;
+	}	
+	
+div#widgetContent div#calendarList table tr th {
+	font-weight: normal;
+	text-indent: 17px;
+}	
+
+div#widgetContent div#calendarList table tr.oddRow td,div#widgetContent div#calendarList table tr.oddRow th {
+	background: #f1fbea;
+}	
+
+
+	
+/* calendar widget End */
+
+/* people list widget Start */
+
+div#widgetContent div#peopleList {
+	width: 265px;
+	text-align: left;
+	margin: 0 auto;
+}
+
+div#bigWidgetContent div#peopleList {
+	width: 558px;
+	text-align: left;
+	margin: 0 auto;
+}
+
+div#peopleList ul {
+	width: 100%;
+}
+
+
+div#peopleList ul li {
+	width: 100%;
+	line-height: 43px;
+	color: #005295;
+}
+
+
+div#peopleList ul li.oddRow {
+	background: #f1fbea;
+}
+
+
+div#peopleList ul li img {
+	margin-left: 14px;
+	position: relative;
+	top: 9px;
+	}
+
+div#peopleList ul li a {
+	margin-left: 14px;
+	line-height: 43px;
+}
+
+div#peopleList ul input {
+	margin-left: 17px;
+}
+
+/* people list widget End */
+
+/* activity list widget Start */
+
+div#widgetContent div#activityList {
+	width: 265px;
+	text-align: left;
+	margin: 0 auto;
+}
+
+div#bigWidgetContent div#activityList {
+	width: 558px;
+	text-align: left;
+	margin: 0 auto;
+}
+
+div#activityList ul {
+	width: 100%;
+}
+
+
+div#activityList ul li {
+	width: 100%;
+	line-height: 18px;
+	color: #005295;
+        margin-top: 10px;
+        margin-bottom: 10px;
+}
+
+
+div#activityList ul li.oddRow {
+	background: #f1fbea;
+}
+
+
+div#activityList ul li img {
+	margin-left: 14px;
+	position: relative;
+	top: 9px;
+	}
+
+div#activityList ul li a {
+	/* margin-left: 14px; */
+	line-height: 18px;
+}
+
+div#activityList ul input {
+	margin-left: 17px;
+}
+
+/* activity list widget End */
+
+/* workspaces list widget Start */
+
+div#widgetContent div#workList {
+	width: 265px;
+	text-align: left;
+	margin: 0 auto;
+}
+
+
+div#widgetContent div#workList ul {
+	width: 100%;
+}
+
+
+div#widgetContent div#workList ul li {
+	width: 100%;
+	line-height: 20px;
+	color: #005295;
+	text-indent: 14px;
+}
+
+
+div#widgetContent div#workList ul li.oddRow {
+	background: #f1fbea;
+}
+
+
+
+/* workspaces list widget End */
+
+/* tag edit widget Start */
+
+div#bigWidgetContent div#tagList {
+	width: 265px;
+	text-align: left;
+	margin: 0 auto;
+}
+
+
+div#bigWidgetContent div#tagList ul {
+	width: 100%;
+}
+
+
+div#bigWidgetContent div#tagList ul li {
+	width: 100%;
+	line-height: 20px;
+	color: #005295;
+	text-indent: 14px;
+}
+
+
+div#bigWidgetContent div#tagList ul li.oddRow {
+	background: #f1fbea;
+}
+
+/* tag edit widget End */
+
+.deleteTag {
+    display: inline;
+}
+
+/* tag widget Start */
+
+div#widgetContent div#tagWidget {
+	width: 240px;
+	text-align: left;
+	margin: 0 auto;
+}
+
+
+div#widgetContent div#tagWidget a { 
+	text-decoration: none;
+}
+
+div#widgetContent div#tagWidget a.cloudOne { 
+	font-size: 10px;
+}
+
+div#widgetContent div#tagWidget a.cloudTwo { 
+	font-size: 14px;
+}
+
+div#widgetContent div#tagWidget a.cloudThree { 
+	font-size: 20px;
+}
+div#widgetContent div#tagWidget a.cloudFour { 
+	font-size: 26px;
+}
+
+/* tag widget End */
+
+/* big tag widget Start */
+
+div#bigWidgetContent div#tagControl {
+	width: 545px;
+	margin: 0 auto;
+	text-align: left;
+}
+
+div#bigWidgetContent div#tagControl ul {
+	width: 100%;
+	float: left;
+}
+
+div#bigWidgetContent div#tagControl ul li.previous {
+	float: left;
+}
+
+div#bigWidgetContent div#tagControl ul li.previous a {
+	background: url(../images/previousArrow.png) no-repeat center left;
+	padding-left: 15px;
+}
+
+div#bigWidgetContent div#tagControl ul li.next {
+	float: right;
+}
+
+div#bigWidgetContent div#tagControl ul li.next a {
+	background: url(../images/nextArrow.png) no-repeat center right;
+	padding-right: 15px;
+}
+
+
+div#bigWidgetContent div#tagControl ul li.paging {
+	text-align: center;
+	float: left;
+	width: 440px;
+}
+
+
+div#bigWidgetContent div#tagControl ul li.paging span {
+	color: #666;
+}
+
+
+div#bigWidgetContent div#tagList {
+	width: 560px;
+	margin: 0 auto;
+	text-align: left;
+	color: #005295;
+}
+
+
+div#bigWidgetContent div#tagList table {
+	width: 100%;
+	
+	}
+
+div#bigWidgetContent div#tagList table tr td,div#bigWidgetContent div#tagList table tr th {
+	line-height: 23px;
+	}	
+	
+div#bigWidgetContent div#tagList table tr td {
+	text-align: right;
+	padding-right: 17px;
+}	
+	
+div#bigWidgetContent div#tagList table tr th {
+	font-weight: normal;
+	text-indent: 17px;
+}	
+
+div#bigWidgetContent div#tagList table tr.oddRow td,div#bigWidgetContent div#tagList table tr.oddRow th {
+	background: #f1fbea;
+}	
+
+/* big tag widget End */
+
+/* footer Start */
+
+div#footerWrap {
+	color: #666666;
+	background: #e4e4e4 url(../images/footerTile.png) repeat-x top left;
+	
+}
+
+div#footerWrap span {
+	line-height: 27px;
+	margin-left: 16px;
+	float: left;
+}
+
+div#footerWrap ul {
+	float: right;
+	margin-right: 17px;
+}
+
+div#footerWrap ul li {
+	float: left;
+	margin-left: 7px;
+}
+
+div#footerWrap ul li.first {
+	padding-right: 7px;
+	margin-left: 0;
+	background: url(../images/footerDivider.png) no-repeat center right;
+}
+
+div#footerWrap ul li a {
+	color: #666666;
+	float: left;
+	line-height: 27px;
+}
+
+/* footer End */

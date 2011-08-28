@@ -1,0 +1,26 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Data::UUID;
+use Socialtext::SQL qw/sql_execute sql_txn/;
+
+my $ug = Data::UUID->new;
+
+sql_txn {
+    my $stmt = sql_execute(q{
+        SELECT gadget_id FROM gadget
+         WHERE src IS NULL or src = ''
+    });
+    my $rows = $stmt->fetchall_arrayref();
+    for my $row (@$rows) {
+        my $gadget_id = $row->[0];
+        my $uri = "urn:uuid:" . lc($ug->create_str());
+        sql_execute(
+            'UPDATE gadget SET src = ? WHERE gadget_id = ?',
+            $uri, $gadget_id
+        );
+    }
+};
+
+exit 0;

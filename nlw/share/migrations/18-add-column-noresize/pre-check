@@ -1,0 +1,14 @@
+#!/bin/bash
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+
+empty=`psql -U $DB_USER -d $DB -t -c '\d "Workspace"' | grep no_max_image_size`
+
+if [ -z "$empty" ]; then
+    echo "no_max_image_size column doesn't yet exist!"
+    exit 0
+fi
+
+echo "no_max_image_size column already exists!"
+exit 1

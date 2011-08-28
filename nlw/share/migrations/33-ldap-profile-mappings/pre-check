@@ -1,0 +1,13 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+use Socialtext::LDAP::Config;
+
+my @config = Socialtext::LDAP::Config->load();
+if (!@config) {
+    warn "Skipping migration: No LDAP servers configured\n";
+    exit 1;
+}
+
+exit 0;

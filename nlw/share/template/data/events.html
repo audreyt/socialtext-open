@@ -1,0 +1,16 @@
+[%- USE decorate -%]
+<html>
+    <head>
+        <title>[% collection_name %]</title>
+    </head>
+    <body>
+        <ul width="100%">
+            [% FOR event = events %]
+            [% signal = PROCESS data/event e=event out='html' %]
+            <li class="timestamped[% IF event == events.last() %] last[% END %]">
+                [% signal %]
+            </li>
+            [% END %]
+        </ul>
+    </body>
+</html>

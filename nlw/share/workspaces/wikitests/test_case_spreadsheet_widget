@@ -1,0 +1,41 @@
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Spreadsheet Widget |  |
+
+| open_ok | /%%workspace%%/?action=display;page_type=spreadsheet;page_name=SW%20%%start_time%%#edit |  |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| st-page-save |  |  |
+
+| *Comment* | Test Case: Spreadsheet Widget. Create the widget |  |
+| st-single-widget-in-dashboard | gallery-widget-Spreadsheet Page |  |
+
+| *Comment* | Test Case: Spreadsheet Widget. Configure the widget |  |
+| st-name-widget | 1 | ss |
+| st-widget-title-like | ss | Spreadsheet Page |
+
+| wait_for_element_visible_ok | workspace_name | 30000 |
+| select_ok | workspace_name | label=%%title%% |
+| wait_for_element_visible_ok | //input[contains(@name,'page_title')] | 30000 |
+| type_ok | //input[contains(@name,'page_title')] | SW %%start_time%% |
+| wait_for_element_visible_ok | height | 30000 |
+| select_ok | height | label=400 |
+| wait_for_element_visible_ok | initial_coord | 30000 |
+| type_ok | initial_coord | B2 |
+
+| wait_for_element_visible_ok | st-savebutton-%%ss%% | 30000 |
+| click_ok | st-savebutton-%%ss%% |  |
+| wait_for_element_not_visible_ok | st-savebutton-%%ss%% | 30000 |
+
+| *Comment* | Test Case: Spreadsheet Widget. Use the widget |  |
+| wait_for_text_present_ok | SW %%start_time%% | 30000 |
+| st-name-widget | 1 | ss |
+| st-widget-title-like | ss | SW %%start_time%% |
+| select_frame_ok | //iframe |  |
+| wait_for_text_present_ok | View or Edit this spreadsheet | 10000 |
+| wait_for_text_present_ok | B2 | 10000 |
+| select_frame_ok | relative=parent |  |
+
+| *Comment* | Test Case: Spreadsheet TEARDOWN |  |
+| st-admin | purge-page --workspace %%workspace%% --page sw_%%start_time%% | was purged |
+
+| *Comment* | Test Case: Spreadsheet Widget COMPLETED |  |

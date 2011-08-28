@@ -1,0 +1,33 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::SQL qw(sql_singlevalue sql_execute disconnect_dbh);
+use YAML qw(Dump);
+
+my $pause = 2;
+my $latest_ts = sql_singlevalue(q{SELECT 'now'::timestamptz});
+
+while (1) {
+    my $sth = sql_execute(
+        q{SELECT * FROM event WHERE at > ?::timestamptz ORDER BY at ASC}, 
+        $latest_ts
+    );
+    if ($sth) {
+        while (my $event = $sth->fetchrow_hashref) {
+            display_event($event);
+            $latest_ts = $event->{at};
+        }
+    }
+    disconnect_dbh;
+    sleep $pause;
+}
+
+exit;
+
+sub display_event {
+    my $event = shift;
+    print Dump($event);
+}

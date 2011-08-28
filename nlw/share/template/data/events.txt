@@ -1,0 +1,3 @@
+[% FOR event = events -%]
+[% INCLUDE data/event e=event out=text %]
+[% END %]

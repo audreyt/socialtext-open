@@ -1,0 +1,46 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::Resting::RegressionTest;
+use Socialtext::JSON;
+use Socialtext::File qw/ensure_directory/;
+use File::Basename qw/dirname/;
+
+my $filename = shift || 'test-data.tar.gz';
+
+my $searched_name;
+if (! ($filename=~/test-data/)) {
+    $searched_name = $filename;   
+} else {
+    $searched_name = 'test-data.1.tar.gz';
+}
+
+my $rester = Socialtext::Resting::RegressionTest->new;
+
+$rester->accept('application/json');
+my $attachments = decode_json( $rester->get_page_attachments('Test data') );
+
+for my $a (@$attachments) {
+    next if $a->{name} ne $searched_name;
+
+    (my $attachment_id = $a->{uri}) =~ s#.+/attachments/([^/]+)/.+#$1#;
+    print "fetching $attachment_id\n";
+    my $tarball = $rester->get_attachment($attachment_id);
+    unless ((my $rc = $rester->response->code) == 200) {
+        die "Error downloading attachment ($attachment_id): $rc\n";
+    }
+
+    ensure_directory( dirname($filename) );
+    print "Saving to $filename\n";
+    open(my $fh, ">$filename") or die "Can't open $filename: $!";
+    binmode $fh;
+    print $fh $tarball;
+    close $fh or die "Can't write $filename: $!";
+
+    exit;
+}
+
+die "Couldn't find the test data tarball!\n";

@@ -1,0 +1,46 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::Migration::Utils qw/create_job_for_each_workspace create_job/;
+use Socialtext::AppConfig;
+use Socialtext::System qw/shell_run/;
+use Socialtext::Search::Solr::Indexer;
+use Socialtext::Workspace;
+use LWP::UserAgent;
+
+# Explicitly set kinosearch as our search_factory_class so we can change the
+# default for new appliances.
+Socialtext::AppConfig->set(
+    search_factory_class => 'Socialtext::Search::KinoSearch::Factory',
+);
+Socialtext::AppConfig->write;
+
+# Create jobs to re-index workspaces using Solr
+create_job_for_each_workspace('ReIndexWorkspace', -64,
+    except => [ Socialtext::Workspace->Help_workspaces ],
+);
+
+# Create a job to watch for Solr indexing to be done, then make Solr live.
+create_job('SwitchToSolr');
+
+warn "Clearing out old page & attachment data from solr\n";
+shell_run("/etc/init.d/socialtext-solr start");
+
+# Wait for Solr to start
+my $ua = LWP::UserAgent->new;
+while (my $resp = $ua->get("http://localhost:8983/solr/core0/admin/ping")) {
+    if ($resp->code == 200) {
+        last;
+    }
+    warn "Waiting for Solr to start ...\n";
+    sleep 3;
+}
+
+my $indexer = Socialtext::Search::Solr::Indexer->new;
+$indexer->solr->delete_by_query(q{doctype:page OR doctype:attachment});
+$indexer->solr->commit;
+shell_run("/etc/init.d/socialtext-solr stop");
+sleep 3;
+
+exit 0;

@@ -1,0 +1,25 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+use Socialtext::LDAP::Config;
+my $all_ok = 1;
+my $n = 1;
+
+sub ok ($;$) {
+    my $bool = (shift) ? 1 : 0;
+    my $comment = shift || '';
+    print STDERR (($bool) ? "ok " : "not ok ") , $n++ , " - " , $comment, "\n";
+    $all_ok &&= $bool;
+}
+
+my @configs = Socialtext::LDAP::Config->load();
+
+ok scalar(@configs), 'configs load okay';
+for my $cfg (@configs) {
+    ok $cfg->{attr_map}, 'attr_map loaded ok for config';
+    ok $cfg->{attr_map}{work_phone}, 'work_phone field added';
+}
+exit ($all_ok ? 0 : 1);

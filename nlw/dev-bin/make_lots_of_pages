@@ -1,0 +1,108 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use lib "$FindBin::Bin/..";
+use Test::Socialtext;
+use Socialtext::User;
+use Getopt::Long;
+use Time::HiRes qw/tv_interval gettimeofday/;
+use IO::All;
+
+$| = 1;
+srand(time);
+
+my $hub = new_hub($ENV{MAKE_LOTS_WS} || 'admin');
+my $page;
+my $pages = 5000;
+my $tags  = 100;
+my $tags_per_page = 3;
+my $attachment;
+my $start_at = 1;
+my $sleep = 0;
+GetOptions(
+    'pages=s' => \$pages,
+    'tags=s'  => \$tags,
+    'tags-per-page=s' => \$tags_per_page,
+    'attachment=s' => \$attachment,
+    'start=s' => \$start_at,
+    'sleep' => \$sleep,
+) or usage();
+
+die "No such attachment $attachment" if $attachment and !-f $attachment;
+
+my $words = load_words();
+
+my $overall_start = [gettimeofday];
+for ( $start_at .. $pages+$start_at ) {
+    my $tags = random_tags();
+    print "Creating Page $_ with " . scalar(@$tags) . " tags ... ";
+    my $start = [gettimeofday];
+    $page = Socialtext::Page->new( hub => $hub )->create(
+        title   => "Page $_",
+        content => _make_content($words, $_),
+        creator => Socialtext::User->SystemUser,
+        categories => random_tags(),
+    );
+    if ($attachment) {
+        my $attach = $hub->attachments->new_attachment(
+            id => 'blah',
+            page_id => $page->id,
+            filename => $attachment,
+        );
+        $attach->save($attachment);
+        $attach->store( user => Socialtext::User->SystemUser );
+    }
+    print tv_interval($start), "\n";
+    sleep 1 if $sleep;
+}
+print "Created $pages pages in " . tv_interval($overall_start) . "ms\n";
+
+exit;
+
+sub random_tags {
+    my $min = 0;
+    my $max = $tags_per_page * 2;
+    my $num = $min + rand($max - $min);
+    return [] unless $num > 0;
+    return [ map { "tag $_" } 1 .. $num ];
+}
+
+sub load_words {
+    open( my $fh, "/usr/share/dict/words") or die "Can't open dict file!";
+    local $/ = undef;
+    my $content = <$fh>;
+    my @words = split "\n", $content;
+    return \@words;
+}
+
+sub _make_content {
+    my $words = shift;
+    my $offset = shift;
+
+    my $content = '';
+    for (1 .. 1000) {
+        my $word = $offset + $_;
+        if ($word >= @$words) {
+            $word -= @$words;
+        }
+        $content .= $words->[$word] . ' ';
+    }
+    return $content;
+}
+
+sub usage {
+    die <<EOT;
+USAGE: $0 [--pages=30] [--tags=8] [--tags-per-page=3]
+
+Creates a bunch of pages.
+
+tags per page is a weighted average.
+
+Options:
+ --sleep    Sleeps for 1s in between each page
+ --start=XX Starts creating pages from "Page XX"
+EOT
+}

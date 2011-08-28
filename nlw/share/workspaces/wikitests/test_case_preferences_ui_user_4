@@ -1,0 +1,168 @@
+
+| *Comment* | Test Case: Preferences UI User 4 |  |
+
+
+| set | new_account | userPrefs.%%start_time%%.4 |
+| set | new_ws | userprefs-%%start_time%%-4 |
+| set | new_user | userPrefs4.%%start_time%%@ken.socialtext.net |
+| set | new_name | userPrefs4 %%start_time%% |
+| include | [Test Case: Preferences UI User Setup] |  |
+
+| *Comment* | Test Case: Preferences UI User 4: create new Blog |  |
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=Create New Blog |  |
+| text_like | contentContainer | Create A Blog |
+| type_ok | weblog_title | No Brackets %%start_time%% Blog |
+| click_and_wait | link=Save |  |
+| text_like | contentContainer | First Post in No Brackets %%start_time%% Blog |
+
+| *Comment* | Test Case: Preferences UI User 4: new Blog with brackets |  |
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=Create New Blog |  |
+| text_like | contentContainer | Create A Blog |
+| type_ok | weblog_title | `[Brackets] %%start_time%%` |
+| click_and_wait | link=Save |  |
+| text_like | contentContainer | `First Post in [Brackets] %%start_time%% Blog` |
+
+| *Comment* | Test Case: Preferences UI User 4. What's New. Defaults: Last week, display off, 4 items |  |
+| click_and_wait | link=Settings |  |
+| click_and_wait | //a[contains(@href,'preferences_class_id=recent_changes')] |  |
+| text_like | contentContainer | What time interval |
+| text_like | contentContainer | Display as a side box |
+| text_like | contentContainer | How many items from that time period |
+| is_selected_ok | recent_changes__changes_depth | label=Last Week |
+| value_is | recent_changes__include_in_pages | off |
+| is_selected_ok | recent_changes__sidebox_changes_depth | label=4 |
+
+| *Comment* | Test Case: Preferences UI User 4. What's New. Set: Last 2 Days, on, 20 items |  |
+| select_ok | recent_changes__changes_depth | label=Last 2 Days |
+| check_ok | recent_changes__include_in_pages |  |
+| select_ok | recent_changes__sidebox_changes_depth | label=20 |
+| is_selected_ok | recent_changes__changes_depth | label=Last 2 Days |
+| value_is | recent_changes__include_in_pages | on |
+| is_selected_ok | recent_changes__sidebox_changes_depth | label=20 |
+| click_and_wait | link=Save |  |
+| text_like | qr/Preferences Saved/i |  |
+| is_selected_ok | recent_changes__changes_depth | label=Last 2 Days |
+| value_is | recent_changes__include_in_pages | on |
+| is_selected_ok | recent_changes__sidebox_changes_depth | label=20 |
+| open_ok | /%%new_ws%% |
+| text_like | contentRight | What's New |
+| text_like | contentRight | First Post in No Brackets %%start_time%% Blog |
+| text_like | contentRight | `First Post in [Brackets] %%start_time%% Blog` |
+
+| *Comment* | Test Case: Preferences UI User 4. What's New. Set: Last Month, off, 2 items |  |
+| click_and_wait | link=Settings |  |
+| click_and_wait | //a[contains(@href,'preferences_class_id=recent_changes')] |  |
+| select_ok | recent_changes__changes_depth | label=Last Month |
+| uncheck_ok | recent_changes__include_in_pages |  |
+| select_ok | recent_changes__sidebox_changes_depth | label=2 |
+| is_selected_ok | recent_changes__changes_depth | label=Last Month |
+| value_is | recent_changes__include_in_pages | off |
+| is_selected_ok | recent_changes__sidebox_changes_depth | label=2 |
+| click_and_wait | link=Save |  |
+| text_like | qr/Preferences Saved/i |  |
+| is_selected_ok | recent_changes__changes_depth | label=Last Month |
+| value_is | recent_changes__include_in_pages | off |
+| is_selected_ok | recent_changes__sidebox_changes_depth | label=2 |
+| open_ok | /%%new_ws%% |  |
+| text_unlike | contentRight | What's New |
+| text_unlike | contentRight | First Post in No Brackets %%start_time%% Blog |
+| text_unlike | contentRight | `First Post in [Brackets] %%start_time%% Blog` |
+
+| *Comment* | Test Case: Preferences UI User 4. What's New. Save without changing values |  |
+| click_and_wait | link=Settings |  |
+| click_and_wait | //a[contains(@href,'preferences_class_id=recent_changes')] |  |
+| click_and_wait | link=Save |  |
+| text_like | qr/Preferences Saved/i |  |
+| is_selected_ok | recent_changes__changes_depth | label=Last Month |
+| value_is | recent_changes__include_in_pages | off |
+| is_selected_ok | recent_changes__sidebox_changes_depth | label=2 |
+
+| *Comment* | Test Case: Preferences UI User 4. What's New. Cancel chooses previous values |  |
+| select_ok | recent_changes__changes_depth | label=Last 2 Days |
+| check_ok | recent_changes__include_in_pages |  |
+| select_ok | recent_changes__sidebox_changes_depth | label=20 |
+| is_selected_ok | recent_changes__changes_depth | label=Last 2 Days |
+| value_is | recent_changes__include_in_pages | on |
+| is_selected_ok | recent_changes__sidebox_changes_depth | label=20 |
+| click_ok | link=Cancel |  |
+| is_selected_ok | recent_changes__changes_depth | label=Last Month |
+| value_is | recent_changes__include_in_pages | off |
+| is_selected_ok | recent_changes__sidebox_changes_depth | label=2 |
+
+| *Comment* | Test Case: Preferences UI User 4. Email Notification. Defaults: Every day, chronologically, full info |  |
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=Email Notification |  |
+| text_like | contentContainer | How often |
+| text_like | contentContainer | What order |
+| text_like | contentContainer | What information |
+| is_selected_ok | email_notify__notify_frequency | label=Every Day |
+| verifyValue | //input[@value='chrono'] | on |
+| verifyValue | //input[@value='expanded'] | on |
+
+| *Comment* | Test Case: Preferences UI User 4. Email Notification. Set: Every 15 Minutes, page name, expanded |  |
+| select_ok | email_notify__notify_frequency | label=Every 15 Minutes |
+| check_ok | //input[@value='name'] |  |
+| check_ok | //input[@value='expanded'] |  |
+| is_selected_ok | email_notify__notify_frequency | label=Every 15 Minutes |
+| verifyValue | //input[@value='name'] | on |
+| verifyValue | //input[@value='expanded'] | on |
+| click_and_wait | link=Save |  |
+| text_like | qr/Preferences Saved/i |  |
+| is_selected_ok | email_notify__notify_frequency | label=Every 15 Minutes |
+| verifyValue | //input[@value='name'] | on |
+| verifyValue | //input[@value='expanded'] | on |
+
+| *Comment* | Test Case: Preferences UI User 4. Email Notification. Set: Every week, reverse chronologically, condensed |  |
+| select_ok | email_notify__notify_frequency | label=Every Week |
+| check_ok | //input[@value='reverse'] |  |
+| check_ok | //input[@value='condensed'] |  |
+| is_selected_ok | email_notify__notify_frequency | label=Every Week |
+| verifyValue | //input[@value='reverse'] | on |
+| verifyValue | //input[@value='condensed'] | on |
+| click_and_wait | link=Save |  |
+| text_like | qr/Preferences Saved/i |  |
+| is_selected_ok | email_notify__notify_frequency | label=Every Week |
+| verifyValue | //input[@value='reverse'] | on |
+| verifyValue | //input[@value='condensed'] | on |
+
+| *Comment* | Test Case: Preferences UI User 4. Email Notification. Save without changing values |  |
+| click_and_wait | link=Save |  |
+| text_like | qr/Preferences Saved/i |  |
+| is_selected_ok | email_notify__notify_frequency | label=Every Week |
+| verifyValue | //input[@value='reverse'] | on |
+| verifyValue | //input[@value='condensed'] | on |
+
+| *Comment* | Test Case: Preferences UI User 4. Email Notification. Cancel chooses previous values |  |
+| select_ok | email_notify__notify_frequency | label=Never |
+| check_ok | //input[@value='chrono'] |  |
+| check_ok | //input[@value='expanded'] |  |
+| is_selected_ok | email_notify__notify_frequency | label=Never |
+| verifyValue | //input[@value='chrono'] | on |
+| verifyValue | //input[@value='expanded'] | on |
+| click_ok | link=Cancel |  |
+| is_selected_ok | email_notify__notify_frequency | label=Every Week |
+| verifyValue | //input[@value='reverse'] | on |
+| verifyValue | //input[@value='condensed'] | on |
+
+| *Comment* | Test Case: Preferences UI User 4. Email Notification. Navigate away, return, verify values |  |
+| click_and_wait | link=My Settings |  |
+| click_and_wait | link=Email Notification |  |
+| text_like | contentContainer | How often |
+| text_like | contentContainer | What order |
+| text_like | contentContainer | What information |
+| is_selected_ok | email_notify__notify_frequency | label=Every Week |
+| verifyValue | //input[@value='reverse'] | on |
+| verifyValue | //input[@value='condensed'] | on |
+
+| *Comment* | Test Case: Preferences UI User 4. Email Notification. Special case: Never |  |
+| select_ok | email_notify__notify_frequency | label=Never |
+| is_selected_ok | email_notify__notify_frequency | label=Never |
+| click_and_wait | link=Save |  |
+| text_like | qr/Preferences Saved/i |  |
+| is_selected_ok | email_notify__notify_frequency | label=Never |
+
+| include | [Test Case: Preferences UI User Teardown] |  |
+
+| *Comment* | Test Case: Preferences User UI 4 COMPLETED |  |

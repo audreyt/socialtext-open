@@ -1,0 +1,26 @@
+<html>
+
+<head>
+ <script type="text/javascript" src="lib/JSAN.js"></script>
+</head>
+
+<body>
+<script type="text/javascript">
+    JSAN.errorLevel = "die";
+    JSAN.use("Test.Harness");
+    JSAN.use("Test.Harness.Browser");
+
+    var t = new Test.Harness.Browser();
+    
+    t.runTests(
+        "constructor.t.html",
+        "basic.t.html",
+        "secondary-sort.t.html",
+        "no-initial-sort.t.html",
+        "header-only.t.html",
+        "on-sort-row-callback.t.html"
+    );
+</script>
+
+</body>
+</html>

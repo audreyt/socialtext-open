@@ -1,0 +1,26 @@
+#!/bin/bash -e
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+
+# check schema of "User", "UserId", and "UserMetadata"
+
+expected_user_sum=12adc5f0320b9994709086c302d2f5c4
+
+user_sum=`psql -U $DB_USER -d $DB -t -c '\d "User"' | awk '{print $1}' | md5sum | awk '{print $1}'`
+
+if [ "$user_sum" != "$expected_user_sum" ] ; then
+    echo "User table looks wrong.  Call the police!"
+    exit 1
+fi
+
+# ensure that there are the same number of rows in each as are in
+# /tmp/user-count
+expected_user_count=`cat /tmp/user-count`
+user_count=`psql -U $DB_USER -d $DB -c 'select count(*) from "User";'`
+
+if [ "$expected_user_count" != "$user_count" ] ; then
+    echo "User count changed during migration.  Phone INTERPOL!"
+    exit 1
+fi
+

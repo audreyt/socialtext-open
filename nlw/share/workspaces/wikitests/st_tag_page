@@ -1,0 +1,8 @@
+| setSpeed | 1000 |  |
+| wait_for_element_visible_ok | st-tags-addlink | 30000 |
+| click_ok | st-tags-addlink |  |
+| wait_for_element_visible_ok | st-tags-field | 30000 |
+| type_ok | st-tags-field | %%tag_to_apply%% |
+| click_ok | st-tags-plusbutton-link |  |
+| wait_for_element_visible_ok | link=%%tag_to_apply%% | 30000 |
+| setSpeed | 0 |  |

@@ -1,0 +1,10 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::System qw/shell_run/;
+
+my $timeout = 60 * 60 * 2;
+shell_run("ceq-exec --timeout $timeout st-widgets push-to-all --src 'local:signals:signals'");
+
+exit 0;

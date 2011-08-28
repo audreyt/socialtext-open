@@ -1,0 +1,28 @@
+#!/bin/bash
+
+if [ "$1" == "" ]; then
+    echo "Usage: $0 <workspace_id>";
+    exit 1;
+fi
+
+WS=$1
+ROLE="authenticated_user"
+ADDPERMS='attachments comment delete edit email_in email_out read'
+REMOVEPERMS='self_join'
+
+echo Converting $WS to public-authenticate-to-edit permission set
+
+for P in $ADDPERMS ; do
+    st-admin add-permission --w $WS --role $ROLE --p $P > /dev/null;
+done;
+
+for P in $REMOVEPERMS ; do
+    st-admin remove-permission --w $WS --role $ROLE --p $P > /dev/null;
+done;
+
+st-admin remove-permission --w $WS --role guest --p self_join > /dev/null
+
+st-admin add-permission    --w $WS --role guest --p edit_controls > /dev/null
+st-admin add-permission    --w $WS --role guest --p  read > /dev/null
+
+st-admin show-acls --w $WS

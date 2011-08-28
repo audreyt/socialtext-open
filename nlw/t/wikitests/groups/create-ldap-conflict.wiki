@@ -1,0 +1,25 @@
+Test that we can create a Group via ReST even when the name of that Group exists in LDAP.
+
+This *should* be possible, as Groups are not expected to be name-unique; it *is* expected
+that we could have multiple "Golfing Buddy" Groups in the system provided that they were
+created by different Users.
+
+* Fixture: SocialRest
+
+| *Comment*           | Setup, and enable LDAP        |
+| standard-test-setup |                               |
+| delete-all-groups   |                               |
+| st-config           | set users_can_create_groups 1 |
+| st-ldap             | start                         |
+
+| *Comment*        | Create Private Group via ReST |                                                       |
+| POST-json        | /data/groups                  | { "account_id":"%%account_id%%", "name":"Motorhead" } |
+| code-is          | 201                           |                                                       |
+| json-parse       |                               |                                                       |
+| set-from-content | group_id                      | qr/"group_id":"(\d+)"/                                |
+| GET-json         | /data/groups/%%group_id%%     |                                                       |
+| json-parse       |                               |                                                       |
+| json-like        | {"user_count":"1"}            |                                                       |
+
+| *Comment* | Cleanup |
+| st-ldap   | stop    |

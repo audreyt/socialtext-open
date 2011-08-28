@@ -1,0 +1,64 @@
+[%- IF config.is_dev %]
+error_log [% config.log_dir %]/error.log notice;
+[%- ELSE %]
+error_log [% config.log_dir %]/error.log;
+[%- END %]
+
+[% IF !config.is_dev %]
+  user       [% config.user %] [% config.group %];
+[% END %]
+pid        [% config.pid_dir %]/[% config.app_prefix %]nginx.pid;
+
+worker_processes [% config.servers.worker_processes %];
+ 
+worker_rlimit_nofile 8192;
+events {
+  worker_connections  4096;
+}
+ 
+http {
+  keepalive_requests [% config.servers.keep_alive_max_req %];
+  keepalive_timeout  [% config.servers.keep_alive_timeout %];
+[%- IF config.is_dev %]
+  fastcgi_temp_path [% config.cache_dir %]/nginx_fastcgi;
+[%- END %]
+
+  default_type application/octet-stream;
+  log_format   main '$remote_addr - $remote_user [$time_local]  $status '
+    '"$request" $body_bytes_sent "$http_referer" '
+    '"$http_user_agent" "$http_x_forwarded_for"';
+  [%- IF config.is_dev %]
+  access_log [% config.log_dir %]/access.log;
+  [%- ELSE %]
+  access_log [% config.log_dir %]/access.log;
+  [%- END %]
+  sendfile     on;
+  tcp_nopush   on;
+ 
+  # Enable run-time compression of everything *except* images
+  gzip             on;
+  gzip_min_length  1000;
+  gzip_buffers     16 8k;
+  gzip_proxied     expired no-cache no-store private auth;
+  gzip_types       text/css application/javascript;
+  gzip_disable     "MSIE [1-6]\.";
+  gzip_disable     "Mozilla/4(?!.*\bMSIE\s+[789])";
+  gzip_disable     "Mozilla/4\.0[678](?!.*\bMSIE\s+[789])";
+
+  # 16k seems to be the smallest we can set this to.  Increase it
+  # conservatively if needed.
+  limit_req_zone  $nginx_version zone=slowapi:16k rate=5r/s;
+  limit_req_log_level notice;
+
+  include [% config.nginx_etc_dir %]/proxy.conf;
+  include [% config.nginx_etc_dir %]/mime.conf;
+
+  server {
+      listen 80;
+      rewrite ^.*$ /under-resourced.html;
+      location ~ ".*" {
+          root [% config.data_root_dir %]/docroot;
+      }
+  }
+
+}

@@ -1,0 +1,15 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::Storage;
+my $profile = Socialtext::Storage->Search(type => 'profile');
+
+# If we have a profile page, run the migration
+if ($profile) {
+    warn "Re-initializing the profile container because it exists.\n";
+    exit 0;
+}
+
+warn "Skipping migration because there is no profile container\n";
+exit 1;

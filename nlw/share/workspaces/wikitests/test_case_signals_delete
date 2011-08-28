@@ -1,0 +1,54 @@
+| *Comment* | Test Case: Signals Delete |  |
+
+| set | del_user | delete_user_%%start_time%%@david.socialtext.net |
+| set | del_admin | delete_admin_%%start_time%%@david.socialtext.net |
+| set | del_acct | delete_account_%%start_time%% |
+| set | admin_sig | admin_signal_%%start_time%% |
+| set | user_sig | user_signal_%%start_time%% |
+
+| create_account | %%del_acct%% |  |  |
+| create_user | %%del_user%% | %%password%% | %%del_acct%% |
+| create_user | %%del_admin%% | %%password%% | %%del_acct%% |
+| st-admin | give-accounts-admin --email %%del_admin%% | accounts admin access |  |
+
+| *Comment* | Test Case: Signals Delete send one signal from user, one from admin |  |
+| http-user-pass | %%del_user%% | %%password%% |
+| post-signal | %%user_sig%% |  |
+| http-user-pass | %%del_admin%% | %%password%% |
+| post-signal | %%admin_sig%% |  |
+
+| *Comment* | Test Case: Signals Delete user can delete his own signal, but not admin's |  |
+| st-logoutin | %%del_user%% | %%password%% |
+| open_ok | /st/signals |  |
+| wait_for_text_present_ok | %%user_sig%% | 30000 |
+| wait_for_text_present_ok | %%admin_sig%% | 30000 |
+| wait_for_element_visible_ok | //a[@class='hoverLink hideLink'][1] | 30000 |
+| wait_for_element_not_present_ok | //a[@class='hoverLink hideLink'][2] | 30000 |
+| click_ok | //a[@class='hoverLink hideLink'][1] |  |
+| verifyConfirmation | Are you sure you want to delete this Signal?\nYou cannot undelete it. |  |
+| wait_for_text_not_present_ok | %%user_sig%% | 30000 |
+
+| *Comment* | Test Case: Signals Delete user sends a replacement signal |  |
+| http-user-pass | %%del_user%% | %%password%% |
+| post-signal | %%user_sig%% |  |
+
+| *Comment* | Test Case: Signals Delete admin can delete both signals |  |
+| st-logoutin | %%del_admin%% | %%password%% |
+| open_ok | /st/signals |  |
+| wait_for_text_present_ok | %%user_sig%% | 30000 |
+| wait_for_text_present_ok | %%admin_sig%% | 30000 |
+| wait_for_element_visible_ok | //a[@class='hoverLink hideLink'][1] | 30000 |
+| click_ok | //a[@class='hoverLink hideLink'][1] |  |
+| verifyConfirmation | Are you sure you want to delete this Signal?\nYou cannot undelete it. |  |
+| wait_for_text_not_present_ok | %%user_sig%% | 30000 |
+| click_ok | //a[@class='hoverLink hideLink'][1] |  |
+| verifyConfirmation | Are you sure you want to delete this Signal?\nYou cannot undelete it. |  |
+| wait_for_text_not_present_ok | %%admin_sig%% | 30000 |
+
+| *Comment* | Test Case: Signals Delete TEARDOWN |  |
+| st-process-jobs |  |  |
+| st-admin | deactivate-user --email %%del_user%% |  |
+| st-admin | deactivate-user --email %%del_admin%% |  |
+| delete-account | %%del_acct%% | Recklessly deleting |
+
+| *Comment* | Test Case: Signals Delete COMPLETED |  |

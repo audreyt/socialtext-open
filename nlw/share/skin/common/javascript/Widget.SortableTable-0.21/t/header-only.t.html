@@ -1,0 +1,43 @@
+<html>
+
+<head>
+
+ <script type="text/javascript" src="lib/JSAN.js"></script>
+ <script type="text/javascript">
+  JSAN.addRepository("lib", "../lib");
+  JSAN.use("Test.More");
+  JSAN.errorLevel = "die";
+ </script>
+ <style>
+  table { border-collapse: collapse; margin-bottom: 1em }
+  th, td { border: 1px solid black; padding: 1em; }
+  a.w-st-resort-column { text-decoration: none }
+  .w-st-current-sorted-column { background-color: #eee }
+ </style>
+
+</head>
+<body>
+
+ <table id="a-table">
+  <tr id="row0">
+   <th id="name-header">Name</th>
+   <th id="size-header">Size</th>
+  </tr>
+ </table>
+
+ <pre style="white-space: pre" id="test"><script>
+
+JSAN.use("Widget.SortableTable");
+plan( { tests: 1 } );
+
+{
+    table = new Widget.SortableTable( { tableId: "a-table" } );
+
+    table.sortOnColumn(1);
+    ok( 1, "sorting a table with only header cells does not blow up" );
+
+}
+ </script></pre>
+
+</body>
+</html>

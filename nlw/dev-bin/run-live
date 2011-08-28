@@ -1,0 +1,3 @@
+#!/bin/bash
+# @COPYRIGHT@
+prove -lv t/live/$1.t 2>&1 | less

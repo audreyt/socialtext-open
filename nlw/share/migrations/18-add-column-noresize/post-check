@@ -1,0 +1,13 @@
+#!/bin/bash
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+
+empty=`psql -U $DB_USER -d $DB -t -c '\d "Workspace"' | grep no_max_image_size`
+
+if [ -z "$empty" ]; then
+    echo "no_max_image_size column not added!"
+    exit -1
+fi
+echo "Added no_max_image_size column"
+exit 0

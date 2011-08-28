@@ -1,0 +1,63 @@
+=head1 NAME
+
+Widget.Balloon - Generate pop-up balloons above objects as a hint.
+
+=head1 SYNOPSIS
+
+  <img id="img_one" src="foo.jpg" />
+  <script type="text/javascript">
+     new Widget.Balloon({
+       elementId: "img_one",
+       innerHTML: "<h1>Balloon A</h1><p>Lorem Ipsum</p>"
+     })
+  </script>
+
+=head1 DESCRIPTION
+
+This library provides a ballon widget that could possibly be used to provide
+user hint, or some fancy in-place editing area. The balloon is shown when
+user's mouse is over the reference object, which could be an image or a div
+element. The content of the balloon is given in HTML. When user moves the
+mouse, the balloon will follow the mouse, and when user clicks the reference
+object, the balloon will freeze on current position. Clicking on the reference
+object again will release it. Clicking on the balloon will highlight it,
+clicking it again will cancel the highlight.
+
+=head1 METHODS
+
+Here is the API of C<Widget.Balloon> object.
+
+=over
+
+=item new({elementId: id, element: e, innerHTML: html })
+
+The constructor takes one argument, which is a hash with three possible keys:
+element, elementId, and innerHTML. The value to 'element' is the reference
+object, which you usually obtain by calling
+C<getElementById()>. Alternatively, you could give the constructor the
+element's ID. If the value of innerHTML is given, the constructor calls
+C<setInnerHTML()> automatically. If not, you could set the content of balloon
+by calling C<setInnerHTML()> method manually.
+
+Balloons' boundary are checked so that it always resides inside browser
+window.
+
+=item setInnerHTML(html)
+
+This method sets the innerHTML property of balloon.
+
+=back
+
+=head1 AUTHOR
+
+Kang-min Liu, <gugod@gugod.org>
+
+=head1 COPYRIGHT
+
+Copyright (c) 2006 Kang-min Liu. All rights reserved.
+
+This module is free software; you can redistribute it and/or modify it under
+the same terms as the Perl programming language (your choice of GPL or the
+Perl Artistic license).
+
+=cut

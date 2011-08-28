@@ -1,0 +1,25 @@
+[% WRAPPER layout/html id=id title=title %]
+<div id="st-display-mode-container" class="authentication">
+  <div id="controls">
+    <div id="st-editing-tools-edit">
+        <h2 id="st-page-titletext" class="tableTitle">[% heading || title %]</h2>
+    </div>
+    <div id="controlsRight">&nbsp;</div>
+  </div>
+
+  <div id="contentContainer">
+    [% INCLUDE errors_and_messages %]
+
+    <div id="contentColumns">
+      <div id="contentLeft">
+        [% content %]
+      </div>
+      <div id="contentRight" class="wiki">
+        [% INCLUDE $right_template IF right_template %]  
+        &nbsp;
+      </div>
+    </div>
+    <div class="clear"></div>
+  </div>
+</div>
+[% END %]

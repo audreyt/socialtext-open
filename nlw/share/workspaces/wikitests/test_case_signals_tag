@@ -1,0 +1,46 @@
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Signals Tag SETUP |  |  |
+| set | tag_acct | tag_account_%%start_time%% |  |
+| set | tag_user | tag_user_%%start_time%%@david.socialtext.net |  |
+| set | tag | awsbTAG%%start_time%% |  |
+| set | tag_prefix | awsb |  |
+| set | tag_suffix | TAG%%start_time%% |  |
+| create_account | %%tag_acct%% |  |  |
+| create_user | %%tag_user%% | %%password%% | %%tag_acct%% |
+
+| *Comment* | Test Case: Signals Tag post a tagged signal first to test for lookahead later |  |
+| st-logoutin | %%tag_user%% | %%password%% |
+| http-user-pass | %%tag_user%% | %%password%% |
+| post-signal | #%%tag%% |  |
+| st-process-jobs |  |  |
+| pause | 60000 |  |
+
+| *Comment* | Test Case: Signals Tag button is present |  |
+| open_ok | /st/signals |  |
+| wait_for_element_visible_ok | //a[@class='setupWikiwyg insertTag'] | 30000 |
+
+| *Comment* | Test Case: Signals click Tag |  |
+| click_ok | //a[@class='setupWikiwyg insertTag'] |  |
+
+| *Comment* | Test Case: Signals Tag setSpeed 3000 to allow for lookahead, test it |  |
+| set_Speed | 3000 |  |
+| type-lookahead-ok | //input[@class='lookahead-prompt'] | %%tag_prefix%% |
+| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag_suffix%%')] | 30000 |
+| wait_for_element_visible_ok | //a[@class='insert btn'] | 30000 |
+| wait_for_element_visible_ok | //a[@class='cancel btn'] | 30000 |
+| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag_suffix%%')] |  |
+| wait_for_element_not_visible_ok | //input[@class='lookahead-prompt'] | 5000 |
+
+| *Comment* | Test Case: Signals Tag setSpeed zero |  |
+| set_Speed | 0 |  |
+| wait_for_element_visible_ok | link=Post | 30000 |
+| pause | 3000 |  |
+| click_ok | link=Post |  |
+| wait_for_text_present_ok | less than a minute ago | 30000 |
+| text_like | qr/#%%tag%%.+#%%tag%%/ |  |
+
+| *Comment* | Test Case: Signals Tag TEARDOWN |  |
+| st-admin | deactivate-user --email %%tag_user%% |  |
+
+| *Comment* | Test Case: Signals Tag COMPLETED |

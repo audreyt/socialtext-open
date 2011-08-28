@@ -1,0 +1,116 @@
+| *Comment* | Test Case: Groups UI Filter Search Results by Group |
+
+| *Comment* | Test Case: Groups UI Filter Search Results by Group SETUP |  |  |
+| st-setup-a-group | 1 | 1 | 1 |
+
+| *Comment* | Test Case: Groups UI Filter Search Results by Group SETUP Users; user 3 is mbr, not member, by design |  |
+| st-logoutin | %%group_user%% | %%password%% |
+
+| set | member1_short | member%%start_time%% |
+| set | member1 | %%member1_short%%@matt.socialtext.net |
+| set | member2_short | member2-%%start_time%% |
+| set | member2 | %%member2_short%%@matt.socialtext.net |
+| set | member3_short | mbr3-%%start_time%% |
+| set | member3 | %%member3_short%%@matt.socialtext.net |
+| set | nonmember_short | nonmember-%%start_time%% |
+| set | nonmember | %%nonmember_short%%@matt.socialtext.net |
+
+| st-admin | create-user --e %%member1%% --p %%password%% --account %%group_acct%% | was created |
+| st-admin | add-member --e %%member1%% --g %%group_id%% | is now a member of the %%group_name%% Group |
+| st-admin | create-user --e %%member2%% --p %%password%% --account %%group_acct%% | was created |
+| st-admin | add-member --e %%member2%% --g %%group_id%% | is now a member of the %%group_name%% Group |
+| st-admin | create-user --e %%member3%% --p %%password%% --account %%group_acct%% | was created |
+| st-admin | add-member --e %%member3%% --g %%group_id%% | is now a member of the %%group_name%% Group |
+| st-admin | create-user --e %%nonmember%% --p %%password%% --account %%group_acct%% | was created |
+
+| *Comment* | Test Case: Groups UI Filter Search Results by Group SETUP "Other Account" Plus a user, workspace |  |
+| set | other_acct | GUIF-otheracct-%%start_time%% |
+| set | other_acct_mbr_short | GUIF-other-member-%%start_time%% |
+| set | other_acct_mbr | %%other_acct_mbr_short%%@matt.socialtext.net |
+| set | other_ws | GUIF-other-ws-%%start_time%% |
+| set | other_acct_diff_mbr_short | other_acct_diff_mbr_em%%start_time%%em |
+| set | other_acct_diff_mbr | %%other_acct_diff_mbr_short%%@matt.socialtext.ent |
+
+| st-admin | create-account --name %%other_acct%% | was created |
+| st-admin | enable-plugin --plugin people --account %%other_acct%% |  |
+| st-admin | enable-plugin --plugin groups --account %%other_acct%% |  |
+| st-admin | create-workspace --empty --name %%other_ws%% --title %%other_ws%% --account %%other_acct%% |  |
+| st-admin | create-user --email %%other_acct_mbr%% --password %%password%% --account %%other_acct%% | was created |
+| st-admin | create-user --email %%other_acct_diff_mbr%% --password %%password%% --account %%other_acct%% | was created |
+| st-admin | add-member --email %%other_acct_mbr%% --workspace %%other_ws%% | now has the role of 'member' |
+| st-admin | add-member --email %%group_user%% --workspace %%other_ws%% | now has the role of 'member' |
+| st-admin | add-member --email %%other_acct_diff_mbr%% --workspace %%other_ws%% | now has the role of 'member' |
+| st_process_jobs |  |  |
+
+| *Comment* | Test Case: Groups UI Filter Search Results by Group Put UTF-8 into my name |  |
+| set | utf8_first_name | memberfirstnameáäåéþðfx |
+| set | utf8_last_name | useráäåéþðfx |
+| open_ok | /?action=users_settings |  |
+| wait_for_element_visible_ok | //input[@name='first_name'] | 30000 |
+| type_ok | //input[@name='first_name'] | %%utf8_first_name%% |
+| type_ok | //input[@name='last_name'] | %%utf8_last_name%% |
+| click_and_wait | link=Save |  |
+
+| *Comment* | Test Case: Groups UI Filter Search Results by Group Search; see all members |  |
+| open_ok | / |  |
+| wait_for_element_visible_ok | st-search-action | 30000 |
+| st-search-for | Search People: | %%start_time%% |
+| wait_for_text_present_ok | People matching | 30000 |
+| text_like | contentContainer | qr/Showing 1 - 7 of 7 total/ism |
+| text_like | contentContainer | qr/%%utf8_first_name%% %%utf8_last_name%%/ism |
+| text_like | contentContainer | qr/%%member1_short%%/ism |
+| text_like | contentContainer | qr/%%member2_short%%/ism |
+| text_like | contentContainer | qr/%%member3_short%%/ism |
+| text_like | contentContainer | qr/%%nonmember_short%%/ism |
+| text_like | contentContainer | qr/%%other_acct_mbr_short%%/ism |
+| text_like | contentContainer | qr/%%other_acct_diff_mbr_short%%/ism |
+
+| *Comment* | Test Case: Groups UI Filter Search Results by Group Search - FILTER see group members |  |
+| wait_for_element_visible_ok | //select[@class='account-select'] | 30000 |
+| text_like | //body | ... %%group_name%% (4 People) |
+| text_like | //body | %%group_acct%% (5 People) |
+| text_like | //body | %%other_acct%% (3 People) |
+
+| select_and_wait | //select[@class='account-select'] | index=2 |
+| text_like | contentContainer | qr/Showing 1 - 4 of 4 total/ism |
+| text_like | contentContainer | qr/%%member1_short%%/ism |
+| text_like | contentContainer | qr/%%member2_short%%/ism |
+| text_like | contentContainer | qr/%%member3_short%%/ism |
+| text_like | contentContainer | qr/%%utf8_first_name%% %%utf8_last_name%%/ism |
+
+| *Comment* | Test Case: Groups UI Filter Search Results by Group Search - Search within group, don't see member3 |  |
+| wait_for_element_visible_ok | st-search-action | 30000 |
+| select_ok | st-search-action | Search People: |
+| wait_for_element_visible_ok | st-search-term | 30000 |
+| type_ok | st-search-term | member |
+| wait_for_element_visible_ok | st-search-submit | 30000 |
+| click_ok | st-search-submit |  |
+| wait_for_text_present_ok | People matching 'member' | 30000 |
+| text_like | contentContainer | qr/Showing 1 - 3 of 3 total/ism |
+| text_like | contentContainer | qr/%%member1_short%%/ism |
+| text_like | contentContainer | qr/%%member2_short%%/ism |
+| text_like | contentContainer | qr/%%utf8_first_name%% %%utf8_last_name%%/ism |
+
+| *Comment* | Test Case: Groups UI Filter Search Results by Group Search - Two users contain 'member', one does not |  |
+| select_and_wait | //select[@class='account-select'] | %%other_acct%% (3 People) |
+| wait_for_text_present_ok | People matching 'member' | 30000 |
+| text_like | contentContainer | qr/Showing 1 - 2 of 2 total/ism |
+| text_like | contentContainer | qr/%%utf8_first_name%% %%utf8_last_name%%/ism |
+| text_like | contentContainer | qr/%%other_acct_mbr_short%%/ism |
+
+| *Comment* | Test Case: Groups UI Filter Search Results by Group Teardown |  |
+
+| st-process-jobs |  |  |
+| deactivate-user | %%member1%% |  |
+| deactivate-user | %%member2%% |  |
+| deactivate-user | %%member3%% |  |
+| deactivate-user | %%nonmember%% |  |
+| deactivate-user | %%other_acct_mbr%% |  |
+| deactivate-user | %%other_acct_diff_mbr%% |  |
+| delete-group | %%group_id%% |  |
+| st-admin | delete-workspace --workspace %%other_ws%% --no-export | has been deleted |
+| st-admin | delete-workspace --workspace %%group_ws%% --no-export | has been deleted |
+| delete-account | %%group_acct%% |  |
+| delete-account | %%other_acct%% |  |
+
+| *Comment* | Test Case: Groups UI Filter Search Results by Group COMPLETED |  |

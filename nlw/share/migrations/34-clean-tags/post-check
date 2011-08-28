@@ -1,0 +1,16 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_execute sql_singlevalue/;
+
+print "Checking for empty tags\n";
+my $count = sql_singlevalue(
+    'SELECT count(*) FROM page_tag WHERE length(tag) = 0',
+);
+exit -1 if $count;
+
+
+# Skip the check for duplicate tags, as it is a slow query.
+
+exit 0;

@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+DIR=`dirname $0`
+$DIR/l10n-widget-to-js
+$DIR/l10n-nlw-to-wiki
+$DIR/l10n-wiki-to-po
+$DIR/nlwctl -1 restart
+
+echo
+echo "Remember to Force Reload your browser to clear its cache."
+echo

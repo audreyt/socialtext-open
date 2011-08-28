@@ -1,0 +1,196 @@
+| *Comment* | Test Case: Inter Workspace Search |  |
+
+| *Comment* | This test relies on the presence of test-data and deliberately overwrites fixed workspace names so subsequent runs will work with `workspaces:*` |  |
+
+| *Comment* | Test Case: Inter Workspace Search Clone test-data twice so we don't have to deal with ceq issues |  |
+
+| st-process-jobs |  |  |
+| st-admin | delete-workspace --workspace test-data2 --no-export |  |
+| st-admin | clone-workspace --workspace test-data --target test-data2 | The test-data workspace has been cloned to test-data2 |
+| st-admin | set-workspace-config --workspace test-data2 title test-data2 | The workspace config for test-data2 has been updated. |
+
+| st-admin | delete-workspace --workspace test-data3 --no-export |  |
+| st-admin | clone-workspace --workspace test-data --target test-data3 | The test-data workspace has been cloned to test-data3 |
+| st-admin | set-workspace-config --workspace test-data3 title test-data3 | The workspace config for test-data3 has been updated. |
+
+| *Comment* | Test Case: Inter Workspace Search process jobs for cloned workspaces |  |
+| pause | 10000 | give ceq some time |
+| st-process-jobs |  |  |
+
+| *Comment* | Test Case: Inter Workspace Search. Select My Workspaces in Dashboard-context |  |
+| open_ok | /st/dashboard |  |
+| select_ok | st-search-action | label=Search My Workspaces: |
+| st-search | wiki | Pages matching 'wiki' |
+| is_selected_ok | st-search-action | label=Search My Workspaces: |
+
+| *Comment* | Test Case: Inter Workspace Search in People Context |  |
+| open_ok | /?action=people |  |
+| select_ok | st-search-action | label=Search My Workspaces: |
+| st-search | wiki | Pages matching 'wiki' |
+| is_selected_ok | st-search-action | label=Search My Workspaces: |
+
+| *Comment* | Test Case: Inter Workspace Search Search all the workspaces where %%username%% is a member - in WS Context |  |
+| open_ok | /%%workspace%%/ |  |
+| select_ok | st-search-action | label=Search My Workspaces: |
+| st-search | jabber | Pages matching 'jabber' |
+| st-result | 15 total |  |
+| *Comment* | Sort by Workspace. Unstick the sort mode |  |
+| select_and_wait | sort-picker | label=Revisions |
+| select_and_wait | sort-picker | label=Workspace |
+
+| *Comment* | Test Case: Inter Workspace Search unsorted results can appear in any order, so don't check order |  |
+| st-result | qr/jabber.+test-data2/ |  |
+| st-result | qr/jabber.+test-data3/ |  |
+| st-result | qr/jabber.+%%title%%/ |  |
+
+| *Comment* | Test Case: Inter Workspace Search Remove %%username%% from test-data2 and search again |  |
+| st-admin | remove-workspace-admin --workspace test-data2 --email %%email%% |  |
+| st-admin | remove-member --workspace test-data2 --email %%email%% |  |
+
+| st-process-jobs |  |  |
+
+| select_ok | st-search-action | label=Search My Workspaces: |
+| st-search | jabber | Pages matching 'jabber' |
+| st-result | 10 total |  |
+| select_and_wait | sort-picker | label=Title |
+| select_and_wait | sort-picker | label=Workspace |
+
+| *Comment* | Test Case: Inter Workspace Search unsorted results can appear in any order, so don't check order |  |
+| st-result | qr/jabber.+test-data3/ |  |
+| st-result | qr/jabber.+%%title%%/ |  |
+
+| *Comment* | Test Case: Inter Workspace Search make test-data2 public so we can logout and still search |  |
+| st-admin | set-permissions --w test-data2 --p public | have been changed to public |
+| st-logout |  |  |
+| open_ok | /test-data2 |  |
+| st-search | jabber workspaces:* | Pages matching 'jabber workspaces:*' |
+| st-result | 5 total |  |
+
+| *Comment* | Test Case: Inter Workspace Search PRIVATE TO PUBLIC CONVERSION |  |
+| *Comment* | Test Case: Inter Workspace Search Test user is still LOGGED OUT but searching test-data3 ws |  |
+
+| st-search | jabber workspaces:test-data3 | Pages matching 'jabber workspaces:test-data3' |
+| st-result | 0 results |  |
+
+| st-admin | set-permissions --workspace test-data3 --permissions public-join-to-edit | The permissions for the test-data3 workspace have been changed to public-join-to-edit. |
+| st-search | jabber workspaces:test-data3 | Pages matching 'jabber workspaces:test-data3' |
+| st-result | 5 total |  |
+| select_and_wait | sort-picker | label=Title |
+| select_and_wait | sort-picker | label=Workspace |
+| st-result | qr/jabber.+test-data3/ |  |
+
+| *Comment* | Test Case: Inter Workspace Search Login to %%workspace%% ws and search again |  |
+| st-login |  |  |
+| wait_for_element_visible_ok | st-search-action | 30000 |
+| select_ok | st-search-action | label=Search My Workspaces: |
+| st-search | jabber | Pages matching 'jabber' |
+| st-result | 10 total |  |
+| select_and_wait | sort-picker | label=Title |
+| select_and_wait | sort-picker | label=Workspace |
+
+| st-result | qr/jabber.+test-data3/ |  |
+| st-result | qr/jabber.+%%title%%/ |  |
+
+| *Comment* | Test Case: Inter Workspace Search DELETE WORKSPACE |  |
+| *Comment* | add user back to test-data2, delete test-data2 |  |
+
+| st-admin | add-member --workspace test-data2 --email %%email%% | now has the role of 'member' in the test-data2 Workspace |
+| select_ok | st-search-action | label=Search My Workspaces: |
+| st-search | jabber | Pages matching 'jabber' |
+| st-result | 15 total |  |
+| select_and_wait | sort-picker | label=Title |
+| select_and_wait | sort-picker | label=Workspace |
+
+| st-result | qr/jabber.+test-data3/ |  |
+| st-result | qr/jabber.+test-data2/ |  |
+| st-result | qr/jabber.+%%title%%/ |  |
+
+| st-process-jobs |  |  |
+| st-admin | delete-workspace --workspace test-data2 --no-export | has been deleted |
+
+| select_ok | st-search-action | label=Search My Workspaces: |
+| st-search | jabber | Pages matching 'jabber' |
+
+| st-result | 10 total |  |
+| select_and_wait | sort-picker | label=Title |
+| select_and_wait | sort-picker | label=Workspace |
+
+| st-result | qr/jabber.+test-data3/ |  |
+| st-result | qr/jabber.+%%title%%/ |  |
+
+| *Comment* | Test Case: Inter Workspace Search PUBLIC TO PRIVATE CONVERSION |  |
+| *Comment* | Logout, search, change test-data3 back to private, search again. |  |
+
+| st-logout |  |  |
+| open_ok | /help-en |  |
+| st-search | jabber workspaces:test-data3 | Pages matching 'jabber workspaces:test-data3' |
+| st-result | 5 total |  |
+| select_and_wait | sort-picker | label=Title |
+| select_and_wait | sort-picker | label=Workspace |
+| st-result | qr/jabber.+test-data3/ |  |
+
+| st-admin | set-permissions --workspace test-data3 --permissions authenticated-user-only | The permissions for the test-data3 workspace have been changed to authenticated-user-only. |
+| st-search | jabber workspaces:test-data3 | Pages matching 'jabber workspaces:test-data3' |
+| st-result | 0 results |  |
+
+| *Comment* | Test Case: Inter Workspace Search UNSUBSCRIBE |  |
+| *Comment* | Add back test-data2, unsub from test-data3 via UI |  |
+| st-admin | clone-workspace --workspace test-data --target test-data2 --overwrite | The test-data workspace has been cloned to test-data2 |
+| st-admin | set-workspace-config --workspace test-data2 title test-data2 | The workspace config for test-data2 has been updated. |
+
+| st-login |  |  |
+| open_ok | /test-data3 |  |
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=Unsubscribe |  |
+| click_and_wait | Button |  |
+
+| open_ok | /%%workspace%% |  |
+| select_ok | st-search-action | label=Search My Workspaces: |
+| st-search | jabber | Pages matching 'jabber' |
+| st-result | 10 total |  |
+| select_and_wait | sort-picker | label=Title |
+| select_and_wait | sort-picker | label=Workspace |
+
+| st-result | qr/jabber.+test-data2/ |  |
+| st-result | qr/jabber.+%%title%%/ |  |
+
+| *Comment* | Test Case: Inter Workspace Search CREATE NEW WORKSPACE, ADD MEMBER |  |
+| *Comment* | Test Case: Inter Workspace Search Create new ws empty because ceq takes too long to index |  |
+| *Comment* | delete the ws first in case it already exists |  |
+
+| st-process-jobs |  |  |
+| st-admin | delete-workspace --workspace from-scratch --no-export |  |
+| st-admin | create-workspace --empty --name from-scratch --title From-Scratch --empty | A new workspace named "from-scratch" was created. |
+| st-admin | add-member --workspace from-scratch --email %%email%% | now has the role of 'member' in the from-scratch Workspace |
+| st-process-jobs |  |  |
+
+| open_ok | /from-scratch/?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| type_ok | st-newpage-pagename-edit | jabber |
+| type_ok | wikiwyg_wikitext_textarea | jabber |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| clickAndWait | st-save-button-link |  |
+
+| *Comment* | Test Case: Inter Workspace Search index new page explicitly just in case ceq is tetchy |  |
+| st-process-jobs | PageIndex | from-scratch |
+| select_ok | st-search-action | label=Search My Workspaces: |
+| st-search | jabber | Pages matching 'jabber' |
+| st-result | 11 total |  |
+| select_and_wait | sort-picker | label=Title |
+| select_and_wait | sort-picker | label=Workspace |
+| wait_for_element_visible_ok | sort-picker | 30000 |
+
+| st-result | qr/jabber.+test-data2/ |  |
+| st-result | qr/jabber.+%%title%%/ |  |
+| st-result | qr/jabber.+From-Scratch/ |  |
+
+| *Comment* | Test Case: Inter Workspace Search TEARDOWN |
+| st-process-jobs |  |  |
+| delete-workspace | test-data2 | Recklessly deleting |
+| delete-workspace | test-data3 | Recklessly deleting |
+| delete-workspace | from-scratch | Recklessly deleting |
+
+| *Comment* | Test Case: Inter Workspace Search COMPLETED |

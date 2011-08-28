@@ -1,0 +1,76 @@
+Make sure that the Workspace "trash" bin works as expected.
+
+Works to address parts of Bug {bz: 3717}, where it was found that the Control
+Panel was operating on the wrong User if two users had a user_id/username
+conflict (e.g. the "username" of one user num-ified to the "user_id" of
+another).
+
+* Fixture: SocialRest
+
+| *Comment*   | Create two conflicting Users; the "user_id" of one User is the "username" of the other    |                                            |
+| set         | user_one_email                                                                            | user_one_%%start_time%%@ken.socialtext.net |
+| set         | user_one_username                                                                         | %%user_one_email%%                         |
+| st-admin    | create-user --email %%user_one_email%% --username %%user_one_username%% --password abc123 |                                            |
+| set-user-id | user_one_id                                                                               | %%user_one_email%%                         |
+
+| set         | user_two_email                                                                            | user_two_%%start_time%%@ken.socialtext.net |
+| set         | user_two_username                                                                         | 000%%user_one_id%%                         |
+| st-admin    | create-user --email %%user_two_email%% --username %%user_two_username%% --password abc123 |                                            |
+| set-user-id | user_two_id                                                                               | %%user_two_email%%                         |
+
+| *Comment*           | Add both of these Users to the same Workspace |                   |
+| set                 | ws_name                                       | ws_%%start_time%% |
+| create-workspace    | %%ws_name%%                                   |                   |
+| add-workspace-admin | %%username%%                                  | %%ws_name%%       |
+| add-member          | %%user_one_email%%                            | %%ws_name%%       |
+| add-member          | %%user_two_email%%                            | %%ws_name%%       |
+
+| *Comment*       | Verify the membership list for the Workspace                                                                |                  |
+| GET             | /data/workspaces/%%ws_name%%/users                                                                          | application/json |
+| code-is         | 200                                                                                                         |                  |
+| json-parse      |                                                                                                             |                  |
+| json-array-size | 3                                                                                                           |                  |
+| json-like       | [ {"username":"%%username%%"}, {"username":"%%user_one_username%%"}, {"username":"%%user_two_username%%"} ] |                  |
+
+| *Comment*       | Remove the User with the "all-numeric username", and verify that *they* were the one that got removed |                                                                       |
+| POST-json       | /data/workspaces/%%ws_name%%/trash                                                                    | [ {"user_id":"%%user_two_id%%", "username":"%%user_two_username%%"} ] |
+| code-is         | 204                                                                                                   |                                                                       |
+| GET             | /data/workspaces/%%ws_name%%/users                                                                    | application/json                                                      |
+| code-is         | 200                                                                                                   |                                                                       |
+| json-parse      |                                                                                                       |                                                                       |
+| json-array-size | 2                                                                                                     |                                                                       |
+| json-like       | [ {"username":"%%username%%"}, {"username":"%%user_one_username%%"} ]                                 |                                                                       |
+
+| *Comment*       | Can remove user with just username                                    |                                          |
+| add-member      | %%user_two_email%%                                                    | %%ws_name%%                              |
+| POST-json       | /data/workspaces/%%ws_name%%/trash                                    | [ {"username":"%%user_two_username%%"} ] |
+| code-is         | 204                                                                   |                                          |
+| GET             | /data/workspaces/%%ws_name%%/users                                    | application/json                         |
+| code-is         | 200                                                                   |                                          |
+| json-parse      |                                                                       |                                          |
+| json-array-size | 2                                                                     |                                          |
+| json-like       | [ {"username":"%%username%%"}, {"username":"%%user_one_username%%"} ] |                                          |
+
+| *Comment*       | Can remove user with just user_id                                     |                                   |
+| add-member      | %%user_two_email%%                                                    | %%ws_name%%                       |
+| POST-json       | /data/workspaces/%%ws_name%%/trash                                    | [ {"user_id":"%%user_two_id%%"} ] |
+| code-is         | 204                                                                   |                                   |
+| GET             | /data/workspaces/%%ws_name%%/users                                    | application/json                  |
+| code-is         | 200                                                                   |                                   |
+| json-parse      |                                                                       |                                   |
+| json-array-size | 2                                                                     |                                   |
+| json-like       | [ {"username":"%%username%%"}, {"username":"%%user_one_username%%"} ] |                                   |
+
+| *Comment*       | Removing a non-user has no effect  |                                   |
+| add-member      | %%user_two_email%%                 | %%ws_name%%                       |
+| POST-json       | /data/workspaces/%%ws_name%%/trash | [ {"user_id":"1001%%user_two_id%%"} ] |
+| code-is         | 204                                |                                   |
+| GET             | /data/workspaces/%%ws_name%%/users | application/json                  |
+| code-is         | 200                                |                                   |
+| json-parse      |                                    |                                   |
+| json-array-size | 3                                  |                                   |
+
+| *Comment*    | Bad JSON returns error         |     |
+| POST-json    | /data/workspaces/%%ws_name%%/trash | abc |
+| code-is      | 400                                |     |
+| body-like | malformed JSON                     |     |

@@ -1,0 +1,61 @@
+[%# @COPYRIGHT@ -%]
+[%# @COPYRIGHT@ -%]
+[% ns = 'st-popup-copytoworkspace' %]
+[% USE html_encode %]
+[% PROCESS element/doctype %]
+<html>
+  <head>
+    <title>[% loc("Copy '[_1]' to another workspace", page_title) %]</title>
+    [% PROCESS element/popup_css_links + javascript_links.html %]
+  </head>
+  <body id="[% ns %]" class="st-popup">
+    <form method="post" action="[% script_name %]" enctype="application/x-www-form-urlencoded">
+      [% SET escaped_page_title = page_title | html %]
+      [% escaped_page_title = '<span id="st-copy-to-workspace-page-title">"' _ escaped_page_title _ '"</span>' %]
+      <p>[% loc('Copy the page [_1] to another workspace?', escaped_page_title) %]</p>
+
+      [% PROCESS page_title_too_long IF page_title_too_long %]
+      [% PROCESS title_error IF page_title_bad %]
+      [% PROCESS page_exists_error IF page_exists %]
+      <p>
+        [% loc('New workspace') %]:
+        <select name="target_workspace_id">
+          [% WHILE (workspace = workspaces.next) %]
+            <option value="[% workspace.workspace_id %]"[% IF workspace.workspace_id == target_workspace.workspace_id %] selected="selected"[% END %]>
+              [%workspace.title%] ([% workspace.name %])
+            </option>
+          [% END %]
+        </select>
+      </p>
+      [%
+        page_title_value = page_title;
+        SET page_title_value = new_title IF page_title_bad OR page_exists;
+      %]
+      <p id="st-copy-to-workspace-new-page-title" >[% loc('New page name') %]: <input type="text" name="new_title" value="[% page_title_value | html %]" size="34" /></p>
+      <p>[% loc('Keep categories') %]: <input type="checkbox" name="keep_categories" value="1" checked="checked" /></p>
+      <p>[% loc('Keep attachments') %]: <input type="checkbox" name="keep_attachments" value="1" checked="checked" /></p>
+      <p id="st-copy-to-workspace-buttons-container">[% PROCESS standard_popup_buttons.html submit_button_value = loc('Copy') %]</p>
+      <input type="hidden" name="action" value="copy_to_workspace" />
+      <input type="hidden" name="page_name" value="[% page_title | html %]" />
+      [% IF page_exists OR page_title_bad %]
+        <input type="hidden" name="clobber" value="[% new_title | html %]" />
+      [% END %]
+    </form>
+  </body>
+</html>
+
+[% BLOCK page_title_too_long %]
+  <p class="st-popup-errormessage">
+      [% loc('The page name you selected, "[_1]", is too long after URL encoding.', new_title) %]
+  </p>
+[% END %]
+
+[% BLOCK title_error %]
+  <p class="st-popup-errormessage">[% loc('The page name you selected, "[_1]", is not allowed. Please enter or change the page name.', new_title) %]</p>
+[% END %]
+
+[% BLOCK page_exists_error %]
+  <p class="st-popup-errormessage">[% loc('The new page name you selected, "[_1]", is already in use in workspace "[_2]"', new_title, target_workspace.name) %]
+  [% loc('Please choose a different name.') %]
+  [% loc('If you are sure you wish to overwrite the "[_1]" page on "[_2]", please press "Copy" again.', new_title, target_workspace.name) %]</p>
+[% END %]

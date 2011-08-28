@@ -1,0 +1,210 @@
+* HighPermissions
+
+*SlideShow Plus IS FOR FIREFOX ONLY - it augments SlideShow with operations that require HighPermissions*.
+*SlideShow is for IE and Safari*.
+*Use [FireShow] to run both*.
+
+This test case is an aid to visually observing each screen type in the application. The test case cycles through screens, printing out SEE instructions to the test person. The test person should observe the browser under test at each SEE point along the way. The test person may pause at any point to examine the screen visually using CTRL-Z to suspend the testing process and the unix command `fg` to resume it.
+
+Visit in Firefox:
+
+| *Comment* | SlideShow Plus: automation for visual inspection of UI screens needing High Permissions |  |
+
+| set_default | wiki | %%workspace%% | defaults to the test workspace |
+| set_default | wikititle | %%title%% | defaults to the test workspace |
+| set_default | pt | 5000 | defaults to five seconds |
+| set_default | popup | 8000 | cancel popups in 8 seconds |
+
+* Enable unplugged.
+
+| *Comment* | SlideShow Plus: enabling unplugged |  |
+| st-admin | set-workspace-config --workspace %%wiki%% enable_unplugged 1 |  |
+
+| *Comment* | STARTING SlideShow Plus |  |
+
+| *Comment* | SEE Miki in iPhone simulator |  |
+| include | [MobileShow] |  |
+
+* a page RSS feed
+
+| open_ok | /%%wiki%%/index.cgi?Announcements and Links |  |
+
+| wait_for_element_visible_ok | st-edit-button-link | 30000 |
+| wait_for_element_visible_ok | //img[contains(@src,'rss.png')] | 30000 |
+| click_ok | //img[contains(@src,'rss.png')] |  |
+
+| *Comment* | SEE page RSS feed |  |
+| *Comment* | Plus SEE Creator, Tags (if tags exist), Attachments(if attachments exist) |  |
+| pause | %%popup%% |  |
+| pause | %%popup%% |  |
+
+* page unplug
+
+| open_ok | /%%wiki%% |  |
+| click_ok | //img[contains(@src,'plug.png')] |  |
+| *Comment* | CANCEL UNPLUG popup |  |
+| pause | %%popup%% |  |
+| pause | %%popup%% |  |
+
+* what's new RSS feed
+
+| click_and_wait | link=What's New |  |
+| click_ok | //img[contains(@src,'rss.png')] |  |
+| *Comment* | SEE What's New RSS feed |  |
+| pause | %%popup%% |  |
+| pause | %%popup%% |  |
+
+* weblog popups
+
+| open_ok | /%%wiki%% |  |
+| open_ok | /%%wiki%%/index.cgi?action=weblog_display;category=recent%20changes |  |
+| click_ok | link=Subscribe to Feed |  |
+| *Comment* | SEE WEBLOG RSS |  |
+| pause | %%popup%% |  |
+| pause | %%popup%% |  |
+
+| open_ok | /%%wiki%% |  |
+| open_ok | /%%wiki%%/index.cgi?action=weblog_display;category=recent%20changes |  |
+| click_ok | link=Print |  |
+| *Comment* | CANCEL WEBLOG PRINT popup |  |
+| pause | %%popup%% |  |
+| pause | %%popup%% |  |
+
+| click_ok | link=Save the 50 most recent pages |  |
+| *Comment* | CANCEL WEBLOG UNPLUG popup |  |
+| pause | %%popup%% |  |
+| pause | %%popup%% |  |
+
+* multipage PDF export dialog
+
+| open_ok | /%%wiki%%/?action=recent_changes |  |
+| clickAndWait | link=Recently Viewed |  |
+| check_ok | page_selected |  |
+| click_ok | st-listview-submit-pdfexport |  |
+| *Comment* | CANCEL PDF Export POPUP |  |
+| pause | %%popup%% |  |
+| pause | %%popup%% |  |
+
+* multipage Word export dialog
+
+| click_ok | st-listview-submit-rtfexport |  |
+| *Comment* | CANCEL RTF Export POPUP |  |
+| pause | %%popup%% |  |
+| pause | %%popup%% |  |
+
+* single page PDF export
+
+| open_ok | /%%wiki%%/index.cgi?Announcements and Links |  |
+| click_ok | link=Export to PDF |  |
+| *Comment* | CANCEL Export to PDF popup |  |
+| pause | %%popup%% |  |
+| pause | %%popup%% |  |
+
+* single page Word export
+
+| click_ok | link=Export to Word |  |
+| *Comment* | CANCEL Export to Word popup |  |
+| pause | %%popup%% |  |
+| pause | %%popup%% |  |
+
+| click_ok | link=Export as HTML |  |
+| *Comment* | SlideShow SEE Exported HTML |  |
+| *Comment* | IF SEPARATE WINDOW, CTRL-W HTML ON WINDOWS |  |
+| *Comment* | IF SEPARATE WINDOW, APPLE-W HTML ON MAC |  |
+| pause | %%popup%% |  |
+| pause | %%pt%% | some extra time to close HTML window |
+
+* csv (socialcalc) export
+
+| open_ok | /%%workspace%%/index.cgi?car_loan |  |
+| click_ok | link=Export to CSV |  |
+| *Comment* | SlideShow SEE Exported CSV |  |
+| *Comment* | IF SEPARATE WINDOW, CTRL-W HTML ON WINDOWS |  |
+| *Comment* | IF SEPARATE WINDOW, APPLE-W HTML ON MAC |  |
+| pause | %%popup%% |  |
+| pause | %%pt%% | some extra time to close CSV window |
+
+| *Comment* | setup Account Logo test |  |
+| set | logo_acc | logo-acc-%%start_time%% |
+| set | logo_ws | logo-ws-%%start_time%% |
+| set | logo_user | `logo-%%start_time%%@ken.socialtext.net` |
+
+| st-admin | create-account --name %%logo_acc%% --title %%logo_acc%% | was created |
+| st-admin | create-user --email %%logo_user%% --password %%password%% --account %%logo_acc%% | was created |
+| st-admin | create-workspace --name %%logo_ws%% --title %%logo_ws%% --account %%logo_acc%% | was created |
+| st-admin | add-member --email %%logo_user%% --workspace %%logo_ws%% | now has the role |
+| st-admin | add-member --email %%logo_user%% --workspace %%workspace%% | now has the role |
+| st-admin | add-member --email %%username%% --workspace %%logo_ws%% | now has the role |
+| st-admin | give-accounts-admin --email %%logo_user%% | now has accounts admin access |
+| st-admin | enable-plugin --plugin dashboard --account %%logo_acc%% |  |
+
+| *Comment* | SEE: Login as %%logo_user%% |  |
+| open_ok | /%%wiki%% |  |
+| st-logoutin | %%logo_user%% | %%password%% |
+| open_ok | /nlw/control/account |  |
+| wait_for_element_visible_ok | link=%%logo_acc%% |  |
+| click_ok | link=%%logo_acc%% |  |
+| wait_for_element_visible_ok | link=Account Logo |  |
+| click_ok | link=Account Logo |  |
+| wait_for_element_visible_ok | new_logo_file |  |
+| type_ok | new_logo_file | %%wikitest_files%%wikitest.jpg |
+| wait_for_element_visible_ok | design_submit |  |
+| click_and_wait | design_submit |  |
+
+| *Comment* | SEE: New Logo file on Custom Logo page |  |
+| pause | %%pt%% |  |
+
+| open_ok | / |  |
+| *Comment* | SEE: New Logo file on dashboard |  |
+| pause | %%pt%% |  |
+
+| open_ok | /%%logo_ws%%/ |  |
+| *Comment* | SEE: New Logo file on a %%logo_ws%% |  |
+| pause | %%pt%% |  |
+
+| open_ok | /%%workspace%%/ |  |
+| *Comment* | SEE: OLD LOGO on %%workspace%% |  |
+| pause | %%pt%% |  |
+
+| st-logoutin |  |  |
+
+| open_ok | / |  |
+| *Comment* | SEE: %%username%%, dashboard, OLD LOGO |  |
+| pause | %%pt%% |  |
+
+| open_ok | /%%logo_ws%%/ |  |
+| *Comment* | SEE: NEW LOGO (%%username%%, workspace belongs to custom account) |  |
+| pause | %%pt%% |  |
+
+| open_ok | /%%workspace%%/ |  |
+| *Comment* | SEE: OLD LOGO (%%username%%, workspace belongs to non-custom account) |  |
+| pause | %%pt%% |  |
+
+| st-logoutin | %%logo_user%% | %%password%% |
+
+| open_ok | /nlw/control/account |  |
+| wait_for_element_visible_ok | link=%%logo_acc%% |  |
+| click_ok | link=%%logo_acc%% |  |
+| wait_for_element_visible_ok | link=Account Logo |  |
+| click_ok | link=Account Logo |  |
+| *Comment* | SEE: NEW LOGO STILL on Custom Logo page |  |
+| pause | %%pt%% |  |
+
+| wait_for_element_visible_ok | use_default |  |
+| click_and_wait | use_default |  |
+| *Comment* | SEE: OLD LOGO COMES BACK! |  |
+| pause | %%pt%% |  |
+
+| open_ok | / |  |
+| *Comment* | SEE: OLD LOGO ON DASHBOARD |  |
+| pause | %%pt%% |  |
+
+| open_ok | /%%logo_ws%%/ |  |
+| *Comment* | SEE: OLD LOGO ON %%logo_ws%% |  |
+| pause | %%pt%% |  |
+
+| *Comment* | SlideShow Plus TEARDOWN |  |
+
+| st-admin | delete-workspace --no-export --w %%logo_ws%% | has been deleted |
+
+| *Comment* | SlideShow Plus COMPLETED |  |

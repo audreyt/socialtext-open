@@ -1,0 +1,12 @@
+#!/bin/bash
+
+BAD_SECRET='blastoffs909 speeders989 overachiever580 pout120 taboo142 relieve756 unsuccessfully72 gallivanted101 climbers737 refract965'
+MY_SECRET=$(st-config echo MAC_secret)
+
+if [ "$MY_SECRET" = "$BAD_SECRET" ]; then
+    echo "Um, your MAC secret failed to update. This is not good."
+    exit 1
+fi
+
+echo "MAC secret successfully updated."
+exit 0

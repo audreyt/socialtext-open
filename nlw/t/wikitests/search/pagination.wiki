@@ -1,0 +1,139 @@
+* Fixture: Search
+
+| Comment | Skip tests |
+
+^ SKIP: while Solr Page & Attachment indexing is disabled.
+
+# Create lots of pages and then page through them
+
+| standard-test-setup |
+
+| edit-page       | %%workspace%% | page 1001  | Content 1  |
+| edit-page       | %%workspace%% | page 1002  | Content 2  |
+| edit-page       | %%workspace%% | page 1003  | Content 3  |
+| edit-page       | %%workspace%% | page 1004  | Content 4  |
+| edit-page       | %%workspace%% | page 1005  | Content 5  |
+| edit-page       | %%workspace%% | page 1006  | Content 6  |
+| edit-page       | %%workspace%% | page 1007  | Content 7  |
+| edit-page       | %%workspace%% | page 1008  | Content 8  |
+| edit-page       | %%workspace%% | page 1009  | Content 9  |
+| edit-page       | %%workspace%% | page 1010 | Content 10 |
+| edit-page       | %%workspace%% | page 1011 | Content 11 |
+| edit-page       | %%workspace%% | page 1012 | Content 12 |
+| edit-page       | %%workspace%% | page 1013 | Content 13 |
+| edit-page       | %%workspace%% | page 1014 | Content 14 |
+| edit-page       | %%workspace%% | page 1015 | Content 15 |
+| edit-page       | %%workspace%% | page 1016 | Content 16 |
+| edit-page       | %%workspace%% | page 1017 | Content 17 |
+| edit-page       | %%workspace%% | page 1018 | Content 18 |
+| edit-page       | %%workspace%% | page 1019 | Content 19 |
+| edit-page       | %%workspace%% | page 1020 | Content 20 |
+| edit-page       | %%workspace%% | page 1021 | Content 21 |
+| edit-page       | %%workspace%% | page 1022 | Content 22 |
+| edit-page       | %%workspace%% | page 1023 | Content 23 |
+| edit-page       | %%workspace%% | page 1024 | Content 24 |
+| edit-page       | %%workspace%% | page 1025 | Content 25 |
+| edit-page       | %%workspace%% | page 1026 | Content 26 |
+| edit-page       | %%workspace%% | page 1027 | Content 27 |
+| edit-page       | %%workspace%% | page 1028 | Content 28 |
+| edit-page       | %%workspace%% | page 1029 | Content 29 |
+| edit-page       | %%workspace%% | page 1030 | Content 30 |
+| edit-page       | %%workspace%% | page 1031 | Content 31 |
+| edit-page       | %%workspace%% | page 1032 | Content 32 |
+| edit-page       | %%workspace%% | page 1033 | Content 33 |
+| edit-page       | %%workspace%% | page 1034 | Content 34 |
+| edit-page       | %%workspace%% | page 1035 | Content 35 |
+| edit-page       | %%workspace%% | page 1036 | Content 36 |
+| edit-page       | %%workspace%% | page 1037 | Content 37 |
+| edit-page       | %%workspace%% | page 1038 | Content 38 |
+| edit-page       | %%workspace%% | page 1039 | Content 39 |
+| edit-page       | %%workspace%% | page 1040 | Content 40 |
+| edit-page       | %%workspace%% | page 1041 | Content 41 |
+| edit-page       | %%workspace%% | page 1042 | Content 42 |
+| job-count       | PageIndex     | 42      |            |
+| st-process-jobs |               |         |            |
+| job-count       | PageIndex     | 0       |            |
+
+# only search results from the current workspace are returned
+
+| GET       | /%%workspace%%/index.cgi?action=search&scope=_&search_term=content&sortby=Subject&direction=asc |
+| code-is   | 200                                                                                 |
+| body-like | Showing 1 - 20 of 42 total.                                                         |
+| body-like | <a title="Next Page" href="?action=search;scope=_;orig_search_term=content;sortby=Subject;direction=asc;summaries=1;offset=20;limit=20">Next</a> |
+| body-like | <a title="Last Page" href="?action=search;scope=_;orig_search_term=content;sortby=Subject;direction=asc;summaries=1;offset=40;limit=20">Last</a> |
+| body-like | page 1001 |
+| body-like | page 1002 |
+| body-like | page 1003 |
+| body-like | page 1004 |
+| body-like | page 1005 |
+| body-like | page 1006 |
+| body-like | page 1007 |
+| body-like | page 1008 |
+| body-like | page 1009 |
+| body-like | page 1010 |
+| body-like | page 1011 |
+| body-like | page 1012 |
+| body-like | page 1013 |
+| body-like | page 1014 |
+| body-like | page 1015 |
+| body-like | page 1016 |
+| body-like | page 1017 |
+| body-like | page 1018 |
+| body-like | page 1019 |
+| body-like | page 1020 |
+| body-unlike | page 1021 |
+
+| GET | /%%workspace%%/index.cgi?action=search;scope=_;orig_search_term=content;sortby=Subject;direction=asc;summaries=1;offset=20;limit=20&direction=asc |
+| code-is | 200 |
+| body-like | Showing 21 - 40 of 42 total.                                                         |
+| body-like | <a title="Next Page" href="?action=search;scope=_;orig_search_term=content;sortby=Subject;direction=asc;summaries=1;offset=40;limit=20">Next</a> |
+| body-unlike | page 1010 |
+| body-unlike | page 1020 |
+| body-like | page 1021 |
+| body-like | page 1022 |
+| body-like | page 1023 |
+| body-like | page 1024 |
+| body-like | page 1025 |
+| body-like | page 1026 |
+| body-like | page 1027 |
+| body-like | page 1028 |
+| body-like | page 1029 |
+| body-like | page 1030 |
+| body-like | page 1031 |
+| body-like | page 1032 |
+| body-like | page 1033 |
+| body-like | page 1034 |
+| body-like | page 1035 |
+| body-like | page 1036 |
+| body-like | page 1037 |
+| body-like | page 1038 |
+| body-like | page 1039 |
+| body-like | page 1040 |
+| body-unlike | page 1041 |
+
+| GET | /%%workspace%%/index.cgi?action=search;scope=_;orig_search_term=content;sortby=Subject;direction=asc;summaries=1;offset=40;limit=20&direction=asc |
+| code-is | 200 |
+| body-like | Showing 41 - 42 of 42 total.                                                         |
+| body-unlike | page 1010 |
+| body-unlike | page 1020 |
+| body-unlike | page 1040 |
+| body-like | page 1041 |
+| body-like | page 1042 |
+
+# Now add another page and "reload" the search
+
+| edit-page       | %%workspace%% | page 1043 | Content 43 |
+| job-count       | PageIndex     | 1      |            |
+| st-process-jobs |               |         |            |
+| job-count       | PageIndex     | 0       |            |
+
+| GET | /%%workspace%%/index.cgi?action=search;scope=_;orig_search_term=content;sortby=Subject;direction=asc;summaries=1;offset=40;limit=20&direction=asc |
+| code-is | 200 |
+| body-like | Showing 41 - 43 of 43 total.                                                         |
+| body-unlike | page 1010 |
+| body-unlike | page 1020 |
+| body-unlike | page 1040 |
+| body-like | page 1041 |
+| body-like | page 1042 |
+| body-like | page 1043 |
+

@@ -1,0 +1,238 @@
+| *Comment* | Test Case: User Likes a Signal |  |
+
+| set | user1 | uls.one.%%start_time%%@david.socialtext.net |
+| set | user1_short | uls one %%start_time%% |
+| set | user2 | uls.two.%%start_time%%@david.socialtext.net |
+| set | user2_short | uls two %%start_time%% |
+| set | user3 | uls.three.%%start_time%%@david.socialtext.net |
+| set | user3_short | uls three %%start_time%% |
+| set | user4 | uls.four.%%start_time%%@david.socialtext.net |
+| set | user4_short | uls four %%start_time%% |
+| set | user5 | uls.five.%%start_time%%@david.socialtext.net |
+| set | user5_short | uls five %%start_time%% |
+| set | user6 | uls.six.%%start_time%%@david.socialtext.net |
+| set | user6_short | uls six %%start_time%% |
+| set | user7 | uls.seven.%%start_time%%@david.socialtext.net |
+| set | user7_short | uls seven %%start_time%% |
+| set | user8 | uls.eight.%%start_time%%@david.socialtext.net |
+| set | user8_short | uls eight %%start_time%% |
+| set | user9 | uls.nine.%%start_time%%@david.socialtext.net |
+| set | user9_short | uls nine %%start_time%% |
+| set | user10 | uls.ten.%%start_time%%@david.socialtext.net |
+| set | user10_short | uls ten %%start_time%% |
+| set | user11 | uls.eleven.%%start_time%%@david.socialtext.net |
+| set | user11_short | uls eleven %%start_time%% |
+| set | acct | usl_acct_%%start_time%% |
+
+| create_account | %%acct%% |  |  |
+| create_user | %%user1%% | %%password%% | %%acct%% |
+| set | user1_id | %%user_id%% |  |
+| create_user | %%user2%% | %%password%% | %%acct%% |
+| create_user | %%user3%% | %%password%% | %%acct%% |
+| create_user | %%user4%% | %%password%% | %%acct%% |
+| create_user | %%user5%% | %%password%% | %%acct%% |
+| create_user | %%user6%% | %%password%% | %%acct%% |
+| create_user | %%user7%% | %%password%% | %%acct%% |
+| create_user | %%user8%% | %%password%% | %%acct%% |
+| create_user | %%user9%% | %%password%% | %%acct%% |
+| create_user | %%user10%% | %%password%% | %%acct%% |
+| create_user | %%user11%% | %%password%% | %%acct%% |
+
+| *Comment* | Test Case: User Likes a Signal wait for the stupid edit events after first login |  |
+| st-logoutin | %%user1%% | %%password%% |
+| open_ok | /st/dashboard |  |
+| wait_for_text_present_ok | %%acct%% | 60000 |
+| pause_ok | 8000 | Waited for all the edit events to post before posting signals |
+
+
+| http-user-pass | %%user1%% | %%password%% |
+| post-signal | ULS Signal %%start_time%% |  |
+| set | uls_signal_id | %%last_signal_id%% |
+| st-process-jobs |  |  |
+
+| *Comment* | Test Case: User Likes a Signal first user likes the signal, sees the proper icons |  |
+| open_ok | /st/signals |  |
+| wait_for_text_present_ok | ULS Signal %%start_time%% | 30000 |
+| wait_for_element_visible_ok | //a[contains(@class,'like-indicator ')] | 30000 |
+| st_click_pause | //a[contains(@class,'like-indicator ')] | 2000 |
+| open_ok | /st/signals |  |
+| wait_for_element_visible_ok | //a[contains(@class,'like-indicator me')] | 30000 |
+| text_like | //div[@class='like-signal'] | 1 |
+
+| *Comment* | Test Case: User Likes a Signal first user sees self in Like Bubble |  |
+| mouse_over_ok | //a[contains(@class,'like-indicator me')] |  |
+| wait_for_text_present_ok | Only you have liked this signal. | 10000 |
+| wait_for_element_visible_ok | link=All People | 10000 |
+| click_ok | link=All People |  |
+| wait_for_text_present_ok | Only you have liked this signal. | 10000 |
+| is_element_present_ok | //div[@class='likers'] | //a[contains(text(),'%%user1_short%%')] |
+
+| *Comment* | Test Case: User Likes a Signal second user likes the signal, sees the proper icons |  |
+| st-logoutin | %%user2%% | %%password%% |
+| open_ok | /st/signals |  |
+| wait_for_text_present_ok | ULS Signal %%start_time%% | 30000 |
+| wait_for_element_visible_ok | //a[contains(@class,'like-indicator others')] | 30000 |
+| text_like | //div[@class='like-signal'] | 1 |
+| st_click_pause | //a[contains(@class,'like-indicator others')] | 2000 |
+| open_ok | /st/signals |  |
+| wait_for_element_visible_ok | //a[contains(@class,'like-indicator me others')] | 30000 |
+| text_like | //div[@class='like-signal'] | 2 |
+
+| *Comment* | Test Case: User Likes a Signal follow user 1, then check mouseover bubble for colleague list |  |
+| open_ok | /st/profile/%%user1_id%% |  |
+| wait_for_element_visible_ok | link=Follow this person | 30000 |
+| pause_ok | 5000 | needed for IE7 |
+| click_ok | link=Follow this person |  |
+| wait_for_element_visible_ok | link=Stop following this person | 30000 |
+| open_ok | /st/signals |  |
+| wait_for_element_visible_ok | //a[contains(@class,'like-indicator me others')] | 30000 |
+| mouse_over_ok | //a[contains(@class,'like-indicator me others')] |  |
+| wait_for_text_present_ok | You and 1 person you follow have liked this signal. | 30000 |
+| is_element_present_ok | //div[@class='liker'] | //a[contains(text(),'%%user1_short%%')] |
+
+| *Comment* | Test Case: User Likes a Signal unfollow user 1, then check mouseover bubble for lack of colleague list |  |
+| open_ok | /st/profile/%%user1_id%% |  |
+| wait_for_element_visible_ok | link=Stop following this person | 30000 |
+| pause_ok | 5000 | needed for IE7 |
+| click_ok | link=Stop following this person |  |
+| wait_for_element_visible_ok | link=Follow this person | 30000 |
+| open_ok | /st/signals |  |
+| wait_for_element_visible_ok | //a[contains(@class,'like-indicator me others')] | 30000 |
+| mouse_over_ok | //a[contains(@class,'like-indicator me others')] |  |
+| wait_for_text_present_ok | Only you have liked this signal. | 30000 |
+| is_element_present_ok | //div[@class='liker'] | //a[contains(text(),'%%user2_short%%')] |
+| text_unlike | //div[@class='liker'] | %%user1_short%% |
+
+| *Comment* | Test Case: User Likes a Page users 3-11 like the signal in order to produce pagination in the list of likers |  |
+| http-user-pass | %%user3%% | %%password%% |
+| st_like_signal | %%uls_signal_id%% | %%user3%% |
+| http-user-pass | %%user4%% | %%password%% |
+| st_like_signal | %%uls_signal_id%% | %%user4%% |
+| http-user-pass | %%user5%% | %%password%% |
+| st_like_signal | %%uls_signal_id%% | %%user5%% |
+| http-user-pass | %%user6%% | %%password%% |
+| st_like_signal | %%uls_signal_id%% | %%user6%% |
+| http-user-pass | %%user7%% | %%password%% |
+| st_like_signal | %%uls_signal_id%% | %%user7%% |
+| http-user-pass | %%user8%% | %%password%% |
+| st_like_signal | %%uls_signal_id%% | %%user8%% |
+| http-user-pass | %%user9%% | %%password%% |
+| st_like_signal | %%uls_signal_id%% | %%user9%% |
+| http-user-pass | %%user10%% | %%password%% |
+| st_like_signal | %%uls_signal_id%% | %%user10%% |
+| http-user-pass | %%user11%% | %%password%% |
+| st_like_signal | %%uls_signal_id%% | %%user11%% |
+
+| *Comment* | Test Case: User Likes a Signal check the mouseover bubble of likes, including pagination |  |
+| st-logoutin | %%user3%% | %%password%% |
+| open_ok | /st/signals |  |
+| wait_for_element_visible_ok | //a[contains(@class,'like-indicator me others')] | 30000 |
+| mouse_over_ok | //a[contains(@class,'like-indicator me others')] |  |
+| wait_for_text_present_ok | Only you have liked this signal. | 30000 |
+| wait_for_element_visible_ok | link=All People | 30000 |
+| click_ok | link=All People |  |
+| wait_for_text_present_ok | You and 10 other people have liked this signal. | 30000 |
+| wait_for_element_visible_ok | link=%%user1_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user2_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user4_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user5_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user6_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user7_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user8_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user9_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user10_short%% | 30000 |
+| wait_for_element_not_present_ok | link=%%user11_short%% | 30000 |
+| wait_for_element_visible_ok | //a[@class='page2'] | 30000 |
+| click_ok | //a[@class='page2'] |  |
+| wait_for_element_not_present_ok | link=%%user4_short%% | 30000 |
+| wait_for_element_not_present_ok | link=%%user8_short%% | 30000 |
+| wait_for_element_not_present_ok | link=%%user10_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user11_short%% | 30000 |
+| wait_for_element_visible_ok | //a[@class='page1'] | 30000 |
+| click_ok | //a[@class='page1'] |  |
+| wait_for_element_visible_ok | link=%%user1_short%% | 30000 |
+
+| *Comment* | Test Case: User Likes a Signal create and like a second signal for searching purposes |  |
+| http-user-pass | %%user3%% | %%password%% |
+| post-signal | ULS Signal 2 %%start_time%% |  |
+| set | uls_signal_2_id | %%last_signal_id%% |
+| st-process-jobs |  |  |
+| http-user-pass | %%user3%% | %%password%% |
+| st_like_signal | %%uls_signal_2_id%% | %%user3%% |
+| st-process-jobs |  |  |
+
+| *Comment* | Test Case: User Likes a Signal search for both signals, verify initial sort order |  |
+| wait_for_element_visible_ok | st-search-term |  |
+| type_ok | st-search-term | ULS |
+| click_and_wait | st-search-submit |  |
+| wait_for_text_present_ok | ULS Signal %%start_time%% |
+| wait_for_text_present_ok | ULS Signal 2 %%start_time%% |
+| text_like | contentContainer | qr/1 like.+ULS Signal 2 %%start_time%%.+11 likes.+ULS Signal %%start_time%%/ |
+
+| *Comment* | Test Case: User Likes a Signal change the sort order to sort by likes, verify |  |
+| select_and_wait | sort-picker | label=Likes |
+| wait_for_text_present_ok | ULS Signal %%start_time%% |
+| wait_for_text_present_ok | ULS Signal 2 %%start_time%% |
+| text_like | contentContainer | qr/11 likes.+ULS Signal %%start_time%%.+1 like.+ULS Signal 2 %%start_time%%/ |
+
+| *Comment* | Test Case: User Likes a Signal check dashboard widget for liked signal |  |
+| open_ok | /st/dashboard |  |
+| wait_for_text_present_ok | liked %%user1_short%%'s signal | 30000 |
+| wait_for_text_present_ok | liked %%user3_short%%'s signal | 30000 |
+
+| *Comment* | Test Case: User Likes a Signal use two text_like tests to keep the test string short enough |  |
+| text_like | qr/You.+you.+%%user11_short%%.+%%user10_short%%.+%%user9_short%%.+%%user8_short%%.+%%user7_short%%.+%%user6_short%%/ism |  |
+| text_like | qr/%%user11_short%%.+%%user5_short%%.+%%user4_short%%.+You.+%%user2_short%%.+%%user1_short%%/ism |  |
+
+| *Comment* | Test Case: User Likes a Signal check profile widget for proper event |  |
+| open_ok | /st/profile |  |
+| wait_for_text_present_ok | liked %%user1_short%%'s signal, "ULS Signal %%start_time%%". | 30000 |
+| wait_for_text_present_ok | liked %%user3_short%%'s signal, "ULS Signal 2 %%start_time%%". | 30000 |
+
+| *Comment* | Test Case: User Likes a Signal user 3 unlikes the signal, no longer sees themselves in mouseover bubble |  |
+| open_ok | /st/signals |  |
+| wait_for_text_present_ok | ULS Signal %%start_time%% | 30000 |
+| wait_for_element_visible_ok | //a[contains(@class,'like-indicator me others')] | 30000 |
+| st_click_pause | //a[contains(@class,'like-indicator me others')] | 2000 |
+| text_like | `xpath=(//div[@class='like-signal'])[2]` | 10 |
+| open_ok | /st/signals |  |
+| wait_for_element_visible_ok | //a[contains(@class,'like-indicator others')] | 30000 |
+| mouse_over_ok | //a[contains(@class,'like-indicator others')] |  |
+| wait_for_text_present_ok | None of the people you follow have liked this signal. | 30000 |
+| wait_for_element_visible_ok | link=All People | 30000 |
+| click_ok | link=All People |  |
+| wait_for_text_present_ok | 10 people have liked this signal. | 30000 |
+| wait_for_element_visible_ok | link=%%user1_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user2_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user4_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user5_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user6_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user7_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user8_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user9_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user10_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%user11_short%% | 30000 |
+| text_unlike | //div[@class='likers'] | %%user3_short%% |
+
+| *Comment* | Test Case: User Likes a Signal dislike event is recorded in dashboard and profile widgets |  |
+| open_ok | /st/dashboard |  |
+| wait_for_text_present_ok | unliked %%user1_short%%'s signal, "ULS Signal %%start_time%%". | 30000 |
+| open_ok | /st/profile |  |
+| wait_for_text_present_ok | unliked %%user1_short%%'s signal, "ULS Signal %%start_time%%". | 30000 |
+
+| *Comment* | Test Case: User Likes a Signal TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%user1%% | was deactivated |
+| deactivate-user | %%user2%% | was deactivated |
+| deactivate-user | %%user3%% | was deactivated |
+| deactivate-user | %%user4%% | was deactivated |
+| deactivate-user | %%user5%% | was deactivated |
+| deactivate-user | %%user6%% | was deactivated |
+| deactivate-user | %%user7%% | was deactivated |
+| deactivate-user | %%user8%% | was deactivated |
+| deactivate-user | %%user9%% | was deactivated |
+| deactivate-user | %%user10%% | was deactivated |
+| deactivate-user | %%user11%% | was deactivated |
+| delete-account | %%acct%% | Recklessly deleting |
+
+| *Comment* | Test Case: User Likes a Signal COMPLETED |  |

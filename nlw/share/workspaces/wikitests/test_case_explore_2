@@ -1,0 +1,146 @@
+| *Comment* | Call ceq-rm on SignalIndex, which doesn't always remove all the jobs |  |
+| pause | 30000 |  |
+| st-ceq-rm | SignalIndex |  |
+
+| *Comment* | Test Case: Explore 2 set variables |  |
+| set | demo_user | socialtextdemo1@gmail.com |
+| set | demo_pass | socialtext |
+| set | group1 | Engineering |
+| set | group1_prefix | Engin |
+| set | group1_suffix | eering |
+| set | group2 | Green Team |
+| set | group2_prefix | Green |
+| set | group2_suffix | Team |
+| set | person1 | Caroline Sheppard |
+| set | person1_prefix | Caroline |
+| set | person1_suffix | Sheppard |
+| set | person2 | Carol Sutton |
+| set | person2_prefix | Carol |
+| set | person2_suffix | Sutton |
+| set | tag1 | casestudy |
+| set | tag1_prefix | case |
+| set | tag1_suffix | study |
+| set | tag2 | competition |
+| set | tag2_prefix | compe |
+| set | tag2_suffix | tition |
+| set | refresh_link | http://refresh.%%start_time%%.com |
+| set | refresh_tag | refresh_tag_%%start_time%% |
+
+| *Comment* | Test Case: Explore 2 Login as Demo User |  |
+| st-logoutin | %%demo_user%% | %%demo_pass%% |
+
+| *Comment* | Test Case: Explore 2 Test Refresh Button |  |
+| open_ok | /st/explore |  |
+| wait_for_text_present_ok | TODAY | 30000 |
+| wait_for_element_visible_ok | //a[contains(text(),'mention')] | 30000 |
+| http-user-pass | %%demo_user%% | %%demo_pass%% |
+| post-signal | %%refresh_link%% #%%refresh_tag%% |  |
+| pause | 3000 |  |
+| st_process_jobs | SignalIndex |  |
+| wait_for_element_visible_ok | explore-refresh | 30000 |
+
+| *Comment* | Test Case: Explore 2 Test must wait at least 30 seconds |  |
+| pause | 45000 |  |
+| click_ok | explore-refresh |  |
+| wait_for_element_visible_ok | link=%%refresh_link%% | 30000 |
+
+| *Comment* | Test Case: Explore 2 Test Date Filter |  |
+| open_ok | /?action=workspaces_listall |  |
+| open_ok | /st/explore#everything/all/2010-10-15/2010-11-03/any/any/any/any/recency |  |
+| wait_for_text_present_ok | TODAY | 30000 |
+| wait_for_element_visible_ok | //a[contains(text(),'mention')] | 30000 |
+| wait_for_element_visible_ok | link=Holiday Party Page | 30000 |
+| wait_for_element_visible_ok | link=home_solar_panels.jpg | 30000 |
+| wait_for_element_visible_ok | link=BigCo | 30000 |
+| wait_for_element_not_present_ok | link=%%refresh_link%% | 30000 |
+
+| *Comment* | Test Case: Explore 2 Test Group Filter |  |
+| open_ok | /?action=workspaces_listall |  |
+| open_ok | /st/explore |  |
+| wait_for_text_present_ok | TODAY | 30000 |
+| wait_for_element_visible_ok | //a[contains(text(),'mention')] | 30000 |
+| wait_for_element_visible_ok | //div[@class='filterSection networks']/input | 30000 |
+| type_lookahead_ok | //div[@class='filterSection networks']/input | %%group1_prefix%% |
+| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%group1_suffix%%')] | 10000 |
+| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%group1_suffix%%')] | 10000 |
+| wait_for_element_visible_ok | link=Sunpowered Systems | 30000 |
+| wait_for_element_visible_ok | link=Team Calendar | 30000 |
+| wait_for_element_visible_ok | link=Application Developers Webinar | 30000 |
+| wait_for_element_not_present_ok | link=%%refresh_link%% | 30000 |
+| wait_for_element_visible_ok | //div[@class='filterSection networks']/input | 30000 |
+| type_lookahead_ok | //div[@class='filterSection networks']/input | %%group2_prefix%% |
+| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%group2_suffix%%')] | 10000 |
+| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%group2_suffix%%')] | 10000 |
+| wait_for_element_visible_ok | link=Sales Presentations | 30000 |
+| wait_for_element_visible_ok | link=Sales Tactics And Best Practices - Part II.pptx | 30000 |
+| wait_for_element_visible_ok | link=VanCo Sales Presentation 123.docx | 30000 |
+| wait_for_element_not_present_ok | link=%%refresh_link%% | 30000 |
+| wait_for_element_visible_ok | //a[@class='remove'] | 10000 |
+| click_ok | //a[@class='remove'] |  |
+| wait_for_element_not_present_ok | link=Application Developers Webinar | 30000 |
+| wait_for_element_not_present_ok | link=Team Calendar | 30000 |
+| wait_for_element_visible_ok | link=Sales Presentations | 30000 |
+| wait_for_element_visible_ok | //a[@class='remove'] | 10000 |
+| wait_for_element_not_present_ok | link=%%refresh_link%% | 30000 |
+| click_ok | //a[@class='remove'] |  |
+| wait_for_element_visible_ok | link=%%refresh_link%% | 30000 |
+
+| *Comment* | Test Case: Explore 2 Test People Filter |  |
+| open_ok | /?action=workspaces_listall |  |
+| open_ok | /st/explore |  |
+| wait_for_text_present_ok | TODAY | 30000 |
+| wait_for_element_visible_ok | //a[contains(text(),'mention')] | 30000 |
+| wait_for_element_visible_ok | //div[@class='filterSection people']/input | 30000 |
+| type_lookahead_ok | //div[@class='filterSection people']/input | %%person1_prefix%% |
+| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%person1_suffix%%')] | 10000 |
+| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%person1_suffix%%')] | 10000 |
+| wait_for_element_visible_ok | link=Alternative Energy Tech | 30000 |
+| wait_for_element_visible_ok | link=Inventory Status Report | 30000 |
+| wait_for_element_visible_ok | link=Bay Area Home Owners Association | 30000 |
+| wait_for_element_not_present_ok | link=%%refresh_link%% | 30000 |
+| wait_for_element_visible_ok | //div[@class='filterSection people']/input | 30000 |
+| type_lookahead_ok | //div[@class='filterSection people']/input | %%person2_prefix%% |
+| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%person2_suffix%%')] | 10000 |
+| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%person2_suffix%%')] | 10000 |
+| wait_for_element_visible_ok | link=Solar Power Conference | 30000 |
+| wait_for_element_visible_ok | link=Alternative Energy Tech | 30000 |
+| wait_for_element_not_present_ok | link=%%refresh_link%% | 30000 |
+| wait_for_element_visible_ok | //a[@class='remove'] | 10000 |
+| click_ok | //a[@class='remove'] |  |
+| wait_for_element_not_present_ok | link=Alternative Energy Tech | 30000 |
+| wait_for_element_visible_ok | link=Solar Power Conference | 30000 |
+| wait_for_element_visible_ok | `link=http://bit.ly/WjgYQ` | 30000 |
+| wait_for_element_visible_ok | `link=http://demo.socialtext.net/project-demo/index.cgi?pearl_jam_contact_list` | 30000 |
+| wait_for_element_not_present_ok | link=%%refresh_link%% | 30000 |
+| wait_for_element_visible_ok | //a[@class='remove'] | 10000 |
+| click_ok | //a[@class='remove'] |  |
+| wait_for_element_visible_ok | link=%%refresh_link%% | 30000 |
+
+| *Comment* | Test Case: Explore 2 Test Tag Filter |  |
+| open_ok | /?action=workspaces_listall |  |
+| open_ok | /st/explore |  |
+| wait_for_text_present_ok | TODAY | 30000 |
+| wait_for_element_visible_ok | //a[contains(text(),'mention')] | 30000 |
+| wait_for_element_visible_ok | //div[@class='filterSection tags']/input | 30000 |
+| type_lookahead_ok | //div[@class='filterSection tags']/input | %%tag1_prefix%% |
+| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag1_suffix%%')] | 10000 |
+| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag1_suffix%%')] | 10000 |
+| wait_for_element_visible_ok | link=Alternative Energy Tech | 30000 |
+| wait_for_element_not_present_ok | link=%%refresh_link%% | 30000 |
+| wait_for_element_visible_ok | //div[@class='filterSection tags']/input | 30000 |
+| type_lookahead_ok | //div[@class='filterSection tags']/input | %%tag2_prefix%% |
+| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag2_suffix%%')] | 10000 |
+| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag2_suffix%%')] | 10000 |
+| wait_for_element_visible_ok | link=home_solar_panels.jpg | 30000 |
+| wait_for_element_visible_ok | link=Alternative Energy Tech | 30000 |
+| wait_for_element_not_present_ok | link=%%refresh_link%% | 30000 |
+| wait_for_element_visible_ok | //a[@class='remove'] | 10000 |
+| click_ok | //a[@class='remove'] |  |
+| wait_for_element_not_present_ok | link=Alternative Energy Tech | 30000 |
+| wait_for_element_visible_ok | link=home_solar_panels.jpg | 30000 |
+| wait_for_element_not_present_ok | link=%%refresh_link%% | 30000 |
+| wait_for_element_visible_ok | //a[@class='remove'] | 10000 |
+| click_ok | //a[@class='remove'] |  |
+| wait_for_element_visible_ok | link=%%refresh_link%% | 30000 |
+
+| *Comment* | Test Case: Explore 2 COMPLETED |  |

@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <title>performance comparison</title>
+        <script type="text/javascript" src="../lib/DOM/Events.js"></script>
+        <style type="text/css">
+            body {
+                font-family: sans-serif;
+            }
+        </style>
+    </head>
+    <body>
+        <form action="#">
+            <p>
+            <button type="button" onclick="withDE(true)">Set events with DOM.Events (compatibility mode)</button>
+            <button type="button" onclick="withDE(false)">Set events with DOM.Events (no compatibility mode)</button>
+            <br />
+            <button type="button" onclick="withW3C()">Set events with addEventListener</button>
+            <button type="button" onclick="withIE()">Set events with attachEvent</button>
+            </p>
+        </form>
+        <p>
+            <span id="clock">Set 2000 event listeners ... </span>
+        </p>
+        <div id="container"></div>
+        <script type="text/javascript">
+        //<![CDATA[
+            
+            var container = document.getElementById("container");
+            var eventTargets = [];
+            
+            for(var i=0; i<1000; i++) {
+                eventTargets[i] = document.createElement("span");
+                eventTargets[i].style.backgroundColor = "#eee";
+                eventTargets[i].appendChild(document.createTextNode("test "));
+                container.appendChild(eventTargets[i]);
+            }
+            
+            var clock = {
+                starttime:0,
+                endtime:0,
+                start: function () {
+                    this.starttime = new Date().getTime();
+                },
+                stop: function () {
+                    this.endtime = new Date().getTime();
+                    document.getElementById("clock").appendChild(
+                        document.createTextNode("took " + (this.endtime - this.starttime) + " ms.")
+                    );
+                }
+            };
+            
+            function disableButtons() {
+                var buttons = document.getElementsByTagName("button");
+                for(var i=0; i<buttons.length; i++)
+                    buttons[i].setAttribute("disabled", "disabled");
+            }
+            
+            function withDE(compat) {
+                lite_func = compat ? lite_std : lite_compat;
+                unlite_func = compat ? unlite_std : unlite_compat;
+                clock.start();
+                for(var i=0; i<eventTargets.length; i++) {
+                    DOM.Events.addListener(eventTargets[i], "mouseover", lite_func, compat);
+                    DOM.Events.addListener(eventTargets[i], "mouseout", unlite_func, compat);
+                }
+                clock.stop();
+                disableButtons();
+            }
+            
+            function withW3C() {
+                if(!document.addEventListener) {
+                    alert("Not with that browser, you ain't.");
+                    return;
+                }
+                clock.start();
+                for(var i=0; i<eventTargets.length; i++) {
+                    eventTargets[i].addEventListener("mouseover", lite_std, false);
+                    eventTargets[i].addEventListener("mouseout", unlite_std, false);
+                }
+                clock.stop();
+                disableButtons();
+            }
+            
+            function withIE() {
+                if(!document.attachEvent) {
+                    alert("Not with that browser, you ain't.");
+                    return;
+                }
+                clock.start();
+                for(var i=0; i<eventTargets.length; i++) {
+                    eventTargets[i].attachEvent("onmouseover", lite_compat);
+                    eventTargets[i].attachEvent("onmouseout", unlite_compat);
+                }
+                clock.stop();
+                disableButtons();
+            }
+            
+            function lite_std(e) {
+                e.currentTarget.style.backgroundColor = "#5e5";
+            }
+            
+            function unlite_std(e) {
+                e.currentTarget.style.backgroundColor = "#eee";
+            }
+            
+            function lite_compat(e) {
+                if(!e) e = window.event;
+                elt = e.target || e.srcElement;
+                elt.style.backgroundColor = "#5e5";
+            }
+            
+            function unlite_compat(e) {
+                if(!e) e = window.event;
+                elt = e.target || e.srcElement;
+                elt.style.backgroundColor = "#eee";
+            }
+            
+        //]]>
+        </script>
+    </body>
+</html>

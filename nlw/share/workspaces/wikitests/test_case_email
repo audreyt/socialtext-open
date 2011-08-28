@@ -1,0 +1,193 @@
+TODO: Mail can be sent with and without Note
+TODO: Mail can be sent with and without Attachments
+TODO: find a way to test user chooser
+
+| *Comment* | Test Case: Email |  |
+| st-admin | create-user --email %%start_time%%_one@ken.socialtext.net --password 123456 |  |
+| st-admin | add-member --email %%start_time%%_one@ken.socialtext.net --workspace %%workspace%% |  |
+| st-admin | create-user --email %%start_time%%_two@ken.socialtext.net --password 123456 |  |
+| st-admin | add-member --email %%start_time%%_two@ken.socialtext.net --workspace %%workspace%% |  |
+
+| open_ok | /%%workspace%%/?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| type_ok | wikiwyg_wikitext_textarea | `[Announcements and Links] àèéìòù` |
+| type_ok | st-newpage-pagename-edit | Email title %%start_time%% |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| st-page-save |  |  |
+
+| *Comment* | Test Case: Email. Default content. |  |
+| click_ok | st-pagetools-email |  |
+| wait_for_element_visible_ok | st-email-lightbox | 30000 |
+| wait_for_element_visible_ok | email_recipient | 30000 |
+| wait_for_element_visible_ok | email_page_user_choices | 30000 |
+| wait_for_element_visible_ok | email_page_send_copy | 30000 |
+| verifyValue | email_recipient | Type an email address or user name |
+| text_like | email_page_user_choices | qr/Use the Recipients box above to\s+add\s+recipients to this list/ism |
+| is_checked_ok | email_page_send_copy |  |
+
+| *Comment* | Test Case: Email. No recipient, then cancel |  |
+| wait_for_element_visible_ok | email_send | 30000 |
+| wait_for_element_visible_ok | email_page_send_copy | 30000 |
+| uncheck_ok | email_page_send_copy |  |
+| click_ok | email_send |  |
+| verifyAlert | Error: To send email, you must specify a recipient |  |
+| wait_for_element_visible_ok | email_cancel | 30000 |
+| click_ok | email_cancel |  |
+| wait_for_element_not_visible_ok | st-email-lightbox | 30000 |
+
+| *Comment* | Test Case: Email. Copy to me, no other recipients |  |
+| wait_for_element_visible_ok | st-pagetools-email | 30000 |
+| click_ok | st-pagetools-email |  |
+| wait_for_element_visible_ok | email_send | 30000 |
+| wait_for_element_visible_ok | email_page_send_copy | 30000 |
+| check_ok | email_page_send_copy |  |
+| is_checked_ok | email_page_send_copy |  |
+| click_ok | email_send |  |
+| wait_for_element_not_visible_ok | st-email-lightbox | 30000 |
+
+| *Comment* | Test Case: Email Popup Functionality |  |
+| click_ok | st-pagetools-email |  |
+| wait_for_element_visible_ok | st-email-lightbox | 30000 |
+| wait_for_element_visible_ok | email_page_subject | 30000 |
+| value_like | email_page_subject | Email title %%start_time%% |
+| text_like | st-email-lightbox | From |
+| text_like | st-email-lightbox | <%%email%%> |
+| type_ok | email_page_subject | Email subject %%start_time%% |
+
+| *Comment* | Test Case: Email Add Recipients |  |
+| type_ok | email_recipient | %%email%% |
+| click_ok | email_add |  |
+| text_like | email_page_user_choices | %%email%% |
+| text_unlike | email_page_user_choices | %%start_time%%_one@ken.socialtext.net |
+| text_unlike | email_page_user_choices | %%start_time%%_two@ken.socialtext.net |
+| type_ok | email_recipient | %%start_time%%_one@ken.socialtext.net |
+| click_ok | email_add |  |
+| text_like | email_page_user_choices | %%start_time%%_one@ken.socialtext.net |
+| type_ok | email_recipient | %%start_time%%_two@ken.socialtext.net |
+| click_ok | email_add |  |
+| text_like | email_page_user_choices | %%start_time%%_two@ken.socialtext.net |
+| text_like | email_page_user_choices | %%email%% |
+| text_like | email_page_user_choices | %%start_time%%_one@ken.socialtext.net |
+
+| *Comment* | Test Case: Email Remove Recipients |  |
+| select_ok | email_page_user_choices | %%email%% |
+| click_ok | email_remove |  |
+| text_like | email_page_user_choices | %%start_time%%_one@ken.socialtext.net |
+| text_like | email_page_user_choices | %%start_time%%_two@ken.socialtext.net |
+| text_unlike | email_page_user_choices | %%email%% |
+| click_ok | email_none |  |
+| text_unlike | email_page_user_choices | %%start_time%%_one@ken.socialtext.net |
+| text_unlike | email_page_user_choices | %%start_time%%_two@ken.socialtext.net |
+
+| *Comment* | Test Case: Email All Recipients |  |
+| click_ok | email_all |  |
+| pause | 10000 | nothing to wait for |
+| text_like | email_page_user_choices | %%start_time%%_one@ken.socialtext.net |
+| text_like | email_page_user_choices | %%start_time%%_two@ken.socialtext.net |
+| text_like | email_page_user_choices | %%email%% |
+| click_ok | email_none |  |
+| text_unlike | email_page_user_choices | %%start_time%%_one@ken.socialtext.net |
+| text_unlike | email_page_user_choices | %%start_time%%_two@ken.socialtext.net |
+| text_unlike | email_page_user_choices | %%email%% |
+
+| *Comment* | Test Case: Email Custom Recipient |  |
+| type_ok | email_recipient | foobar2ken.socialtext.net |
+| click_ok | email_add |  |
+| verifyAlert | "foobar2ken.socialtext.net" is not a valid email address. |  |
+| type_ok | email_recipient | %%workspace%%@%%wikiemail%% |
+| click_ok | email_add |  |
+| text_like | email_page_user_choices | %%workspace%%@%%wikiemail%% |
+
+| *Comment* | Test Case: Email Note and Attachments |  |
+| text_like | email_page_add_note | Hello, this is a page from the workspace that I wanted you to see. This page is also available for viewing or editing on the web at: |
+| text_like | email_page_add_note | /%%workspace%%/email_title_%%start_time%% |
+| type_ok | email_page_add_note | Note %%start_time%% from Test Case: Email |
+
+| *Comment* | Test Case: Email sending page to %%workspace%%@%%wikiemail%% |  |
+| click_ok | email_send |  |
+
+| *Comment* | Pausing 90 seconds for first email delivery |
+| pause | 90000 |
+
+| *Comment* | Test Case: Email Check Reception |  |
+| open_ok | /%%workspace%%/index.cgi?Email subject %%start_time%% |  |
+| wait_for_element_visible_ok | st-page-titletext | 30000 |
+| text_like | st-page-titletext | Email subject %%start_time%% |
+| text_like | st-page-content | qr/^\s*Announcements and Links àèéìòù$/m |
+
+| *Comment* | Test Case: Email Send an email to add to page contents the normal way |  |
+| wait_for_element_visible_ok | st-pagetools-email | 30000 |
+| click_ok | st-pagetools-email |  |
+| wait_for_element_visible_ok | email_recipient | 30000 |
+| type_ok | email_recipient | %%workspace%%@%%wikiemail%% |
+| click_ok | email_add |  |
+| text_like | email_page_user_choices | %%workspace%%@%%wikiemail%% |
+| type_ok | email_page_subject | Email subject %%start_time%% |
+| click_ok | email_send |  |
+
+| *Comment* | Pausing 90 seconds for second email delivery |
+| pause | 90000 |
+
+| *Comment* | Test Case: Email Check that the new page is there |  |
+| open_ok | /%%workspace%%/index.cgi?Email_subject_%%start_time%% |  |
+| wait_for_element_visible_ok | st-page-titletext | 30000 |
+| text_like | st-page-titletext | Email subject %%start_time%% |
+| text_like | st-page-content | qr/Announcements and Links àèéìòù/ |
+
+| *Comment* | Test Case: Email send another email with Fwd: Fw: Re: in front of the title |  |
+| click_ok | st-pagetools-email |  |
+| wait_for_element_visible_ok | st-email-lightbox | 30000 |
+| wait_for_element_visible_ok | email_recipient | 30000 |
+| type_ok | email_recipient | %%workspace%%@%%wikiemail%% |
+| click_ok | email_add |  |
+| text_like | email_page_user_choices | %%workspace%%@%%wikiemail%% |
+| type_ok | email_page_subject | Fw: Fwd: Re: Email subject %%start_time%% |
+| click_ok | email_send |  |
+| wait_for_element_not_visible_ok | st-email-lightbox | 30000 |
+
+| open_ok | /%%workspace%%/index.cgi?Email_subject_%%start_time%% |  |
+| click_ok | st-pagetools-email |  |
+| wait_for_element_visible_ok | st-email-lightbox | 30000 |
+| wait_for_element_visible_ok | email_recipient | 30000 |
+| type_ok | email_recipient | %%workspace%%@%%wikiemail%% |
+| click_ok | email_add |  |
+| text_like | email_page_user_choices | %%workspace%%@%%wikiemail%% |
+| type_ok | email_page_subject | Re: Fw: Fwd: Email subject %%start_time%% |
+| click_ok | email_send |  |
+| wait_for_element_not_visible_ok | st-email-lightbox | 30000 |
+
+| *Comment* | Pausing 90 seconds for third email delivery |
+| *Comment* | The page wants to receive itself, then send itself again |
+| pause | 90000 |
+
+| open_ok | /%%workspace%%/index.cgi?Email_subject_%%start_time%% |  |
+| click_ok | st-pagetools-email |  |
+| wait_for_element_visible_ok | st-email-lightbox | 30000 |
+| wait_for_element_visible_ok | email_recipient | 30000 |
+| type_ok | email_recipient | %%workspace%%@%%wikiemail%% |
+| click_ok | email_add |  |
+| text_like | email_page_user_choices | %%workspace%%@%%wikiemail%% |
+| type_ok | email_page_subject | Fwd: Fw: Re: Email subject %%start_time%% |
+| click_ok | email_send |  |
+
+| *Comment* | Pausing 90 seconds for fourth email delivery |
+| *Comment* | The page wants to send itself having received itself from the third mailing |
+| pause | 90000 |
+
+| *Comment* | Test Case: Email check that the new content from all mailings are added to the original page by counting the number of repetitions |  |
+| open_ok | /%%workspace%%/index.cgi?Email_subject_%%start_time%% |  |
+| wait_for_element_visible_ok | st-page-titletext | 10000 |
+| text_like | st-page-titletext | Email subject %%start_time%% |
+| text_like | st-page-content | qr/Announcements and Links àèéìòù.+Announcements and Links.+Announcements and Links.+Announcements and Links.+Announcements and Links.+Announcements and Links.+Announcements and Links àèéìòù.+Announcements and Links àèéìòù.+Announcements and Links.+Announcements and Links àèéìòù/ |
+
+| *Comment* | Test Case: Email Teardown |  |
+
+| st-admin | remove-member --email %%start_time%%_one@ken.socialtext.net --workspace %%workspace%% |  |
+| st-admin | remove-member --email %%start_time%%_two@ken.socialtext.net --workspace %%workspace%% |  |
+| st-admin | purge-page --w %%workspace%% --page email_title_%%start_time%% | was purged |
+| st-admin | purge-page --w %%workspace%% --page email_subject_%%start_time%% | was purged |
+
+| *Comment* | Test Case: Email COMPLETED |

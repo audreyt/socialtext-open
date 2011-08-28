@@ -1,0 +1,4 @@
+{var lastIndex = matches.length-1}
+{for t in matches}
+ &lt;a href="javascript:addTag('${t.name|escapespecial}')" title="Add ${t.name} to page" class="st-tags-suggestion"&gt;${t.name}&lt;/a&gt;{if t_index != lastIndex} : {/if}
+{/for}

@@ -1,0 +1,25 @@
+dn: cn=Oh\, the humanity,dc=example,dc=com
+objectClass: groupOfNames
+cn: Oh, the humanity
+member: CN=Smith\, John,DC=example,DC=com
+member: cn=Smith\, Jane,dc=example,dc=com
+
+dn: cn=Humans,dc=example,dc=com
+objectClass: groupOfNames
+cn: Humans
+member: CN=Smith\, John,DC=example,DC=com
+member: CN=Oh\, the humanity,DC=example,DC=com
+
+dn: cn=Smith\, John,dc=example,dc=com
+objectClass: inetOrgPerson
+mail: johnsmith@example.com
+gn: Smith
+sn: John
+cn: Smith, John
+
+dn: cn=Smith\, Jane,dc=example,dc=com
+objectClass: inetOrgPerson
+mail: janesmith@example.com
+gn: Smith
+sn: Jane
+cn: Smith, Jane

@@ -1,0 +1,686 @@
+@import url('../../wikiwyg/css/lightbox.css');
+
+/* Wafl Boxes */
+
+#st-page-content .wafl_container td {
+    border: none;
+    font-size: 1em;
+}
+
+.wafl_box {
+    background: #F4F4F4 none repeat scroll 0%;
+    border: 1px solid #AAAAAA;
+    color: #000000;
+    padding: 10px;
+}
+
+.wafl_box .wiki {
+    margin: 0px;
+    border: none;
+}
+
+.wafl_title {
+    font-weight: bold;
+    color: #000000;
+    text-align: center;
+    font-size: 1em;
+}
+
+.wafl_box ul {
+    list-style-type: disc;
+    padding-right: 10px;
+}
+
+/* Include page styles */
+
+.wiki-include-edit-link {
+    font-size: 10px;
+    font-weight: normal;
+}
+
+.wiki-include-page {
+    border-left: 1px solid #80a9f3;
+    padding-left: 5px;
+    padding-right: 10px;
+    margin-left: 12px;
+}
+
+.wiki-include-title {
+    font-size: 19px;
+    font-weight: bold;
+    margin-left: 6px;
+    background: none;
+}
+
+.wiki-include-title a {
+    text-decoration: none;
+    color: blue;
+}
+
+.wiki-include-title a:hover {
+    text-decoration: underline;
+}
+
+div.wiki-include-content {
+    margin-left: 6px;
+}
+
+/* Footer */
+
+#st-socialtext-attribution {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+#st-socialtext-attribution img {
+    border: none;
+}
+
+#st-footer {
+    clear: both;
+    margin-top: -7px;
+    font-size: 0.7em;
+    font-family: Georgia, serif;
+    font-style: italic;
+}
+
+#st-edit-actions-below-fold {
+    position: relative;
+    float: left;
+    padding-left: 20px;
+    margin-top: 4px;
+    width: 80px;
+}
+
+#st-page-details {
+    text-align: center;
+    margin-left: 18px;
+    margin-right: 18px;
+    padding-top: 4px;
+}
+
+html>body #st-page-details {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.st-page-details-feed-icon {
+    border: none;
+}
+
+#st-footer-actions {
+    position: relative;
+    float: right;
+    text-align: right;
+    width: 50px;
+    padding-right: 20px;
+    margin-top: 4px;
+}
+
+/* Wikiwyg */
+#st-page-editing-wysiwyg {
+    padding-top: 3px;
+}
+
+#wysiwyg-editable-div div.wiki {
+    margin:0; padding:0;
+}
+
+#wysiwyg-editable-div ol,
+#wysiwyg-editable-div ul,
+#wysiwyg-editable-div p {
+  margin-top:0;
+  margin-bottom:0;
+}
+
+/* Edit widget drop down menu css */
+#st-editing-insert-menu {
+    list-style: none;
+    line-height: 1em;
+    margin-top: 0px;
+    padding: 4px 0 0 0;
+}
+
+#st-editing-insert-menu ul {
+    background: #eee;
+    border: solid #888;
+    border-width: 1px;
+    list-style: none;
+    line-height: 1;
+    font-weight: bold;
+    padding: 0;
+}
+
+#st-editing-insert-menu a,
+#st-editing-insert-menu a:active,
+#st-editing-insert-menu a:link {
+    display: block;
+    width: 11.7em;
+    color: #000;
+    text-decoration: none;
+    padding: 0.25em;
+    line-height: 1em;
+}
+
+#st-editing-insert-menu a.daddy {
+    background: url("../images/rightarrow.gif") center right no-repeat;
+}
+
+#st-page-editing-widget-menu {
+    float: left;
+    margin-top: 1px;
+    padding: 0 5px 0 5px;
+    font-size: 9pt;
+    font-weight: bold;
+    font-family: Helvetica,Arial,sans-serif;
+}
+
+#st-editing-insert-menu li a {
+    background: transparent url('../../s2/images/arrow-down.gif') 40px 3px no-repeat;
+}
+
+#st-editing-insert-menu li li a {
+  background-image: none;
+}
+
+
+#st-editing-insert-menu li {
+    float: left;
+    padding: 0;
+    width: 8em;
+    text-decoration: none;
+}
+
+#st-editing-insert-menu li ul {
+    position: absolute;
+    left: -999em;
+    height: auto;
+    width: 12.5em;
+    w\idth: 12.5em;
+    font-weight: normal;
+    border-width: 1;
+    margin: 0;
+}
+
+#st-editing-insert-menu li li {
+    padding-right: 0;
+    width: 12.5em;
+}
+
+#st-editing-insert-menu li ul a {
+    width: 11.7em;
+    w\idth: 11.7em;
+}
+
+#st-editing-insert-menu li ul ul {
+    margin: -1.75em 0 0 12.5em;
+}
+
+#st-editing-insert-menu li:hover ul ul,
+#st-editing-insert-menu li:hover ul ul ul,
+#st-editing-insert-menu li.sfhover ul ul,
+#st-editing-insert-menu li.sfhover ul ul ul {
+        left: -999em;
+}
+
+#st-editing-insert-menu li:hover ul,
+#st-editing-insert-menu li li:hover ul,
+#st-editing-insert-menu li li li:hover ul,
+#st-editing-insert-menu li.sfhover ul,
+#st-editing-insert-menu li li.sfhover ul,
+#st-editing-insert-menu li li li.sfhover ul {
+        left: auto;
+}
+
+#st-editing-insert-menu li:hover,
+#st-editing-insert-menu li.sfhover {
+        background: #ccc;
+}
+
+
+/* Attachments Dialog */
+
+#st-attachments-attach-title {
+    font-weight: bold;
+    font-size: 120%;
+}
+
+#st-attachments-attach-buttons {
+    float: right;
+    margin-top: 20px;
+}
+
+#st-attachments-attach-uploadbutton {
+    float: right;
+    margin-right: 6px;
+    margin-top: 6px;
+    padding-bottom: 0;
+}
+
+#st-attachments-attach-fileprompt {
+    margin: 0.2em 0 0.4em 0;
+    padding-bottom: 0px;
+}
+
+#st-attachments-attach-submit {
+    font-weight: bold;
+}
+
+#st-attachments-attach-uploadmessage {
+    font-weight: bold;
+    margin-bottom: 1em;
+    display: none;
+}
+
+#st-attachments-attach-error {
+    font-weight: bold;
+    color: #f00;
+    margin-bottom: 1em;
+    display: none;
+}
+
+#st-attachments-attach-list {
+    display: none;
+    font-size: 90%;
+    color: #666;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    border-top: 1px solid #4949BA;
+    border-bottom: 1px solid #4949BA;
+    background-color: #F5F5F5;
+    padding: 3px;
+}
+
+#st-attachments-attach-limit {
+    font-size: 90%;
+    font-style: italic;
+}
+
+.st-attachments-attach-listlabel {
+    color: #4949BA;
+}
+
+/* Loading... message */
+div#bootstrap-loader {
+    float: left;
+    display: none;
+}
+
+/* pagetools : the top right New Page, Print, Email, and Tools items at top right */
+
+div#st-pagetools {
+    z-index: 300;
+    color: #484848; font-size: .7em; /* changed to a relative measure */
+    position: relative; float: right;
+    margin: 0px;
+}
+
+div#st-pagetools li {
+    position: relative; float: left;
+    list-style: none;
+    margin: 0px; padding-left: 21px;
+}
+
+#st-pagetools a {
+    text-decoration: none;
+    color: #484848; text-transform: uppercase; letter-spacing: .05em;
+    padding-left: 21px; padding-top: 5px; padding-bottom: 1px;
+}
+
+#st-pagetools li.submenu { 
+    margin-top: 6px;
+}
+
+#st-pagetools-tools, #st-pagetools-newpage {
+    color: #484848;
+    text-transform: uppercase; 
+    letter-spacing: .05em;
+    margin: 0px; 
+    padding-top: 5px;
+    padding-bottom: 1px;
+    padding-left: 21px; 
+}
+
+/* Page tools icons */
+
+#st-pagetools-newpage {
+    background: url("../images/add_16.gif") left center no-repeat;
+}
+
+#st-pagetools-print {
+    background: url("../images/print_16.gif") left center no-repeat;
+}
+
+#st-pagetools-email {
+    background: url("../images/mail_16.gif") left center no-repeat;
+}
+
+#st-pagetools-tools {
+    background: url("../images/tools_16.gif") left center no-repeat;
+}
+
+/* tool submenu formatting */
+
+div#st-pagetools ul.level2 {
+    z-index: 300;
+    margin: 0; padding: 0;
+    background: #FFF;
+    border: solid #CCC; border-width: 0 1px;
+}
+
+div#st-pagetools ul ul li:hover {
+    background: #BFE2FF;
+}
+
+div#st-pagetools li a {
+    display: block;
+    text-decoration: none;
+}
+
+div#st-pagetools>ul a {
+    width: auto;
+}
+
+div#st-pagetools ul ul {
+    position: absolute;
+    width: auto;
+    display: none;
+}
+
+div#st-pagetools ul ul li {
+    line-height: 1.5em;
+    width: 16em;
+    padding-left: 0px;
+}
+
+.first {
+    border-top: 1px solid #CCC;
+}
+
+.separator {
+    border-bottom: 1px solid #CCC;
+}
+
+div#st-pagetools ul ul li a {
+    border-bottom: 1px solid #CCC;
+    padding-left: 15px;
+    padding-right: 3px;
+    margin-right: 3px;
+    border: 0px;
+    text-transform: none; letter-spacing: 0em;
+}
+
+div#st-pagetools li.submenu li.submenu:hover {
+    z-index: 300;
+    background-color: #BFE2FF;
+}
+
+div#st-pagetools ul.level1 li.submenu:hover ul.level2 {
+    display: block;
+}
+
+div#st-pagetools ul.level2 {
+    top: 10px;
+    left: -8.0em;
+}
+
+#st-page-editing-toolbar {
+    overflow: hidden;
+    float: left;
+    margin-top: 0px;
+    padding-bottom: 0px;
+}
+#wikiwyg_toolbar {
+    display: none;
+    margin-left: 25px;
+    margin-bottom: -3px;
+}
+.wikiwyg_button {
+    border: 1px solid #F3F3F3;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    vertical-align: bottom;
+    margin-top: 4px;
+}
+.wikiwyg_button:hover {
+    border: 1px outset;
+}
+.wikiwyg_button:active {
+    border: 1px inset;
+}
+#st-page-editing-uploadbutton {
+    font-size: 9pt;
+    margin-top: 4px;
+    font-weight: bold;
+    z-index: 1500;
+    float:right;
+}
+#st-page-editing-tagbutton {
+    z-index: 1500;
+    margin-top: 4px;
+    float: right;
+    padding: 0 20px 0 8px;
+    font-size: 9pt;
+    font-weight: bold;
+}
+
+#st-page-editing-toolbar-container {
+    height: 29px;
+    background: transparent url("../../s2/images/wikiwyg_icons/background-left.gif") no-repeat left top;
+}
+
+#st-page-editing-toolbar-closer {
+    float: right;
+    height: 29px;
+    width: 20px;
+    background: transparent url("../../s2/images/wikiwyg_icons/background-right.gif") no-repeat right top;
+}
+
+#st-editing-prefix-container {
+    border-collapse: collapse;
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: -35px;
+}
+
+#st-editing-prefix-container a.button {
+    display:block;
+    padding: 1px 5px;
+    margin: 0;
+    color: #000;
+    line-height: 20px;
+    vertical-align: middle;
+    text-align: center;
+    text-decoration: none;
+}
+
+#st-editing-prefix-container a.button:hover {
+    background:#ccc;
+}
+
+/* Listview selectors */
+
+.query-results-row-title {
+    display: block;
+    float: left;
+    margin: 0;
+    padding: 0;
+    width: 90%;
+}
+
+.query-results-titles .query-results-row-title {
+    line-height: 35px;
+}
+
+.query-results-titles img {
+    display: block;
+    padding-top: 12px;
+}
+
+.query-results-row-title img {
+    float: left;
+}
+
+.query-results-row-title .avatar {
+    display: inline;
+    float: none;
+    padding: 0;
+}
+
+.query-results-row-title a {
+    font-weight: bold;
+    display: inline;
+    font-size:120%;
+    padding-left:8px;
+    line-height:21px;
+}
+
+.query-results-row-title-attached-to a,
+.query-results-row-workspace a,
+.person a {
+    padding-left:0;
+    font-size:100%;
+    font-weight:normal;
+}
+
+.query-results-row-summary strong {
+    background:#ffd;
+    padding:2px;
+}
+
+.query-results-row-title .query-results-row-summary {
+    display: block;
+    margin-left: 24px;
+}
+
+.query-results-row-revisions {
+    font-style: italic;
+    font-size: 90%;
+    white-space: nowrap;
+    color: gray;
+}
+
+.query-results-row-title .query-results-row-revisions a {
+    display: inline;
+    margin: 0;
+    font-size:12px;
+    line-height:100%;
+    padding:0;
+}
+
+.query-results-content {
+    font-size: 85%;
+}
+ 
+.query-results-row {
+    margin: 0.5em 0 0 0;
+    padding: 0;
+    clear: both;
+}
+ 
+.st-listview-select {
+    float: left;
+    display: block;
+    margin: 0;
+    padding: 0;
+    width: 2em;
+}
+
+.query-results-titles .st-listview-select {
+    padding-top: 12px;
+}
+
+.query-results-row-last-edited-by {
+    text-align: right;
+    font-style: italic;
+    color: #666;
+    white-space: nowrap;
+    clear: left;
+}
+
+.query-results-row-title .query-results-row-last-edited-by {
+    clear: none;
+}
+
+.query-results-row-last-edited-by .query-results-row-uploaded-by,
+.query-results-row-title .query-results-row-uploaded-by {
+    margin: 0;
+    padding: 0;
+    font-style: italic;
+    color: gray;
+    text-align: right;
+}
+
+.query-results-row-date {
+    margin: 0;
+    padding: 0;
+}
+
+.query-results-row a {
+    color: #00f;
+}
+
+.query-results-header-row {
+    border: 1px #ccc solid;
+    background: #f8f8f8;
+    padding: 4px 0;
+    height: 1.4em;
+    margin:0;
+}
+
+.query-results-row-watchlist {
+    float: right;
+}
+
+.query-results-row-title-attached-to {
+    margin:0;
+    padding:0;
+}
+/* END list-view selectors */
+ 
+#select-all {
+    display: block;
+    float:left;
+    margin:0;
+    padding:0 0.25em 0 0;
+    border-right:1px dashed #999;
+}
+
+#show-titles-or-summaries {
+    display: inline;
+    margin:0 0 0 0.75em;
+    padding:0;
+    line-height:20px;
+}
+
+#show-titles-or-summaries a.selected {
+    font-weight:bold;
+    text-decoration:none;
+    color:black;
+}
+
+#sort-by-picker {
+    height: 22px;
+    display:block;
+    float:right;
+    padding-right:1em;
+}
+
+#sort-by-picker select {
+    border: 1px #666 solid;
+    padding: 1px 2px;
+    margin:0;
+}
+
+#sort-picker {
+    padding:0;
+    margin:0;
+}
+
+#files-operations {
+    clear: left;
+}
+

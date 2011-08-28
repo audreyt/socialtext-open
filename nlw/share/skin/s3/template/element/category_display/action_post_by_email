@@ -1,0 +1,6 @@
+[% IF checker.check_permission('email_in') AND email_category_address %]
+  <div id="category-display-post-email">
+    [% loc("post.by-email:") %]
+    <a href="mailto:[% email_category_address %]">[% html_escaped_category %]</a>
+  </div>
+[% END %]

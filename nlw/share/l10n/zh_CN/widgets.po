@@ -1,0 +1,1872 @@
+# @COPYRIGHT@
+msgid ""
+msgstr ""
+"Project-Id-Version: Socialtext i18n\n"
+"PO-Revision-Date: 2011-07-29 10:31+0800\n"
+"Last-Translator: Socialtext i18n team\n"
+"Language-Team: Socialtext i18n team\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: share/plugin/widgets/share/javascript/template/activities/wikilink_popup.tt2:2
+msgid "activities.about-insert-wikilink"
+msgstr "选定一个工作区，然后搜索您想连接的工作区页面。您可以更改显示文字，也可以连接到该页面的特定段落。"
+
+#: share/plugin/widgets/share/javascript/template/activities/blocks.tt2:118 share/plugin/widgets/share/javascript/template/activities/event.tt2:83
+msgid "activities.add-tag"
+msgstr "添加标签"
+
+#: share/plugin/widgets/share/javascript/template/activities/blocks.tt2:121 share/plugin/widgets/share/javascript/template/activities/event.tt2:86
+msgid "activities.add-video-link"
+msgstr "添加视频连接"
+
+#: share/plugin/widgets/share/javascript/activities/appdata.js:329
+msgid "activities.all-events"
+msgstr "所有事件"
+
+#: share/plugin/widgets/share/javascript/activities/appdata.js:283
+msgid "activities.all-my-groups"
+msgstr "我的所有群组"
+
+#: share/plugin/widgets/share/javascript/template/activities/blocks.tt2:32
+msgid "activities.all-replies"
+msgstr "所有回复"
+
+#: share/plugin/widgets/share/javascript/activities/appdata.js:284
+msgid "activities.all-shared-groups"
+msgstr "所有共享群组"
+
+#: share/plugin/widgets/share/javascript/template/activities/blocks.tt2:117 share/plugin/widgets/share/javascript/template/activities/event.tt2:82
+msgid "activities.attach-file"
+msgstr "添加附件"
+
+msgid "activities.by-you"
+msgstr "来自您"
+
+msgid "activities.by=user"
+msgstr "来自 %1"
+
+#: share/plugin/widgets/share/javascript/template/activities/blocks.tt2:34
+msgid "activities.click-to-collapse"
+msgstr "（点击此处收回）"
+
+#: share/plugin/widgets/share/javascript/template/activities/blocks.tt2:164
+msgid "activities.click-to-enable-desktop-notifications"
+msgstr "点击此处启动桌面通知"
+
+#: share/plugin/widgets/share/javascript/template/activities/blocks.tt2:25
+msgid "activities.click-to-expand"
+msgstr "（点击此处展开）"
+
+#: share/plugin/widgets/share/javascript/template/activities/ui.signalthis.tt2:6
+msgid "activities.close-this-window"
+msgstr "关闭该窗口"
+
+#: share/plugin/widgets/share/javascript/activities/appdata.js:361
+msgid "activities.comments"
+msgstr "评论"
+
+#. (person)
+#: share/plugin/widgets/share/javascript/template/activities/message_notice.tt2:11
+msgid "activities.composing-message-to=user"
+msgstr "您正在编辑给 %1 的讯息"
+
+#. (person)
+#: share/plugin/widgets/share/javascript/template/activities/message_notice.tt2:5 share/plugin/widgets/share/javascript/template/activities/message_notice.tt2:9
+msgid "activities.composing-private-message-to=person"
+msgstr "您正在编辑给 %1 的私人讯息"
+
+#. (person)
+#: share/plugin/widgets/share/javascript/template/activities/message_notice.tt2:16
+msgid "activities.composing-reply-to=person"
+msgstr "您正在编辑回复给 %1 的讯息"
+
+#. (evt.replies.length ? loc('entire Conversation')
+#: share/plugin/widgets/share/javascript/activities/event_list.js:938
+msgid "activities.confirm-delete=target"
+msgstr ""
+"您确定要删除此%1？\n"
+"一旦删除，无法恢复。"
+
+#. (evt.replies.length ? loc('entire Conversation')
+#: share/plugin/widgets/share/javascript/activities/event_list.js:953
+msgid "activities.confirm-expunge=target"
+msgstr ""
+"您确定要将此%1从系统中删除？\n"
+"一旦删除，无法恢复。"
+
+#: share/plugin/widgets/share/javascript/activities/appdata.js:351
+msgid "activities.contributions"
+msgstr "贡献"
+
+#: share/plugin/widgets/share/javascript/template/activities/signal.icons.tt2:23
+msgid "activities.delete"
+msgstr "删除"
+
+#: share/plugin/widgets/share/javascript/activities/appdata.js:356
+msgid "activities.edits"
+msgstr "编辑"
+
+#: share/plugin/widgets/share/javascript/template/activities/video_popup.tt2:2
+msgid "activities.enter-video-url-here"
+msgstr "复制和粘贴以下视频的网址。我们支持插入来自YouTube，Vimeo，SlideShare 和 Google Video 的视频。"
+
+#: share/plugin/widgets/share/javascript/template/activities/weblink_popup.tt2:2
+msgid "activities.enter-weblink-url-here"
+msgstr "请在底下贴上或键入链接的目标（网址，如http://socialtext.com）。链接目标是必填的。"
+
+#: share/plugin/widgets/share/javascript/activities/event_list.js:938
+msgid "activities.entire-conversation"
+msgstr "整串对话"
+
+#: share/plugin/widgets/share/javascript/activities/appdata.js:328
+msgid "activities.events"
+msgstr "事件"
+
+#: share/plugin/widgets/share/javascript/activities/appdata.js:394
+msgid "activities.everyone"
+msgstr "每个人"
+
+#: share/plugin/widgets/share/javascript/template/activities/signal.icons.tt2:17
+msgid "activities.expunge"
+msgstr "删除"
+
+#: share/plugin/widgets/share/javascript/activities/appdata.js:401
+msgid "activities.following"
+msgstr "我关注的人"
+
+#: share/plugin/widgets/share/javascript/template/top_content.tt2:19 share/plugin/widgets/share/javascript/template/top_content.tt2:55 share/plugin/widgets/share/widgets/one_page/widget.html:30 share/plugin/widgets/share/widgets/one_spreadsheet/widget.html:37 share/plugin/widgets/share/javascript/template/activities/blocks.tt2:72
+msgid "activities.from"
+msgstr "来自"
+
+msgid "activities.info-using-wikilink-popup"
+msgstr "请先输入工作区名称的一部分，再从出现的列表中选择工作区。接下来再输入页面名称的一部分，再从出现的列表中选择页面。之后也可以再填入链接文字及页面段落名称。"
+
+#: share/plugin/widgets/share/javascript/template/activities/blocks.tt2:115 share/plugin/widgets/share/javascript/template/activities/event.tt2:80
+msgid "activities.insert:"
+msgstr "插入："
+
+#: share/plugin/widgets/share/javascript/template/activities/wikilink_popup.tt2:4
+msgid "activities.link-text:"
+msgstr "显示文字："
+
+#: share/plugin/widgets/share/javascript/template/activities/blocks.tt2:120 share/plugin/widgets/share/javascript/template/activities/event.tt2:85
+msgid "activities.link-to-web"
+msgstr "链接至网页"
+
+#: share/plugin/widgets/share/javascript/template/activities/blocks.tt2:119 share/plugin/widgets/share/javascript/template/activities/event.tt2:84
+msgid "activities.link-to-wiki"
+msgstr "链接至工作区页面"
+
+#: share/plugin/widgets/share/javascript/activities/editor.js:1398
+msgid "activities.loading-video"
+msgstr "下载中..."
+
+#: share/plugin/widgets/share/javascript/template/activities/message_notice.tt2:13
+msgid "activities.make-signal-private"
+msgstr "发布为私人讯息"
+
+#. (this.max_filesize)
+#: share/plugin/widgets/share/javascript/template/activities/attachment_popup.tt2:8
+msgid "activities.maximum-file-size=mb"
+msgstr "最大文件大小：%1MB"
+
+#: share/plugin/widgets/share/javascript/activities/appdata.js:414
+msgid "activities.me"
+msgstr "我"
+
+#: share/plugin/widgets/share/javascript/template/activities/event.tt2:16
+msgid "activities.mention"
+msgstr "  提及"
+
+#: share/plugin/widgets/share/javascript/template/activities/blocks.tt2:116 share/plugin/widgets/share/javascript/template/activities/event.tt2:81
+msgid "activities.mention-user"
+msgstr "提及另一个人"
+
+#: share/plugin/widgets/share/javascript/template/activities/ui.activities.tt2:21 share/plugin/widgets/share/javascript/template/activities/ui.mobile-signals.tt2:21 share/plugin/widgets/share/javascript/template/activities/ui.viewer.tt2:17
+msgid "activities.more"
+msgstr "更多"
+
+#: share/plugin/widgets/share/javascript/template/activities/assets.tt2:57
+msgid "activities.more-mentions"
+msgstr "更多提及..."
+
+#: share/plugin/widgets/share/javascript/activities/appdata.js:408
+msgid "activities.my-conversations"
+msgstr "我的对话"
+
+#. (new_events)
+#: share/plugin/widgets/share/javascript/activities/event_list.js:428
+msgid "activities.new-events=count"
+msgstr "%1 项活动"
+
+#. (self.mentionCount)
+#: share/plugin/widgets/share/javascript/activities/widget.js:475
+msgid "activities.new-mentions=count"
+msgstr "%1 项新提及..."
+
+#. (new_replies)
+#: share/plugin/widgets/share/javascript/activities/event_list.js:433
+msgid "activities.new-replies=count"
+msgstr "%1 项回复"
+
+#. (new_events + new_replies)
+#: share/plugin/widgets/share/javascript/activities/event_list.js:438
+msgid "activities.new=count"
+msgstr "%1 新的"
+
+#. (older)
+#: share/plugin/widgets/share/javascript/template/activities/blocks.tt2:20 share/plugin/widgets/share/javascript/template/activities/blocks.tt2:22
+msgid "activities.other-replies=count"
+msgstr "%1 项其它回复..."
+
+#: share/plugin/widgets/share/javascript/activities/appdata.js:366
+msgid "activities.page-tags"
+msgstr "页面标签"
+
+#: share/plugin/widgets/share/javascript/template/activities/wikilink_popup.tt2:12
+msgid "activities.page:"
+msgstr "页面："
+
+#: share/plugin/widgets/share/javascript/activities/appdata.js:371
+msgid "activities.people-events"
+msgstr "人际事件"
+
+#: share/plugin/widgets/share/javascript/template/activities/blocks.tt2:101 share/plugin/widgets/share/javascript/template/activities/blocks.tt2:148 share/plugin/widgets/share/javascript/template/activities/event.tt2:69
+msgid "activities.post"
+msgstr "发送"
+
+#: share/plugin/widgets/share/javascript/template/activities/blocks.tt2:137 share/plugin/widgets/share/javascript/template/activities/blocks.tt2:90
+msgid "activities.post-to"
+msgstr "发送至"
+
+#: share/plugin/widgets/share/javascript/template/activities/event.tt2:14
+msgid "activities.private"
+msgstr "  私人"
+
+#: share/plugin/widgets/share/javascript/template/activities/signal.meta.tt2:6
+msgid "activities.private-to-you"
+msgstr "给您的私人讯息"
+
+#. (signal.best_full_name)
+#: share/plugin/widgets/share/javascript/activities/widget.js:540
+msgid "activities.private-to-you=sender"
+msgstr "%1 给您的私人讯息"
+
+#: share/plugin/widgets/share/javascript/template/activities/blocks.tt2:112
+msgid "activities.private-to:"
+msgstr "发送私人讯息："
+
+#. (person)
+#: share/plugin/widgets/share/javascript/template/activities/signal.meta.tt2:8
+msgid "activities.private-to=user"
+msgstr "给 %1 的私人讯息"
+
+#. (page, workspace)
+#: share/plugin/widgets/share/javascript/template/activities/page.tt2:12
+msgid "activities.rename=page,wiki"
+msgstr "重命名 %2 中的 %1。"
+
+#: share/plugin/widgets/share/javascript/template/activities/page.icons.tt2:12 share/plugin/widgets/share/javascript/template/activities/signal.icons.tt2:8
+msgid "activities.reply"
+msgstr "回复"
+
+#: share/plugin/widgets/share/javascript/template/activities/event.tt2:74
+msgid "activities.reply-to-conversation"
+msgstr "回复对话 ..."
+
+#: share/plugin/widgets/share/javascript/template/activities/wikilink_popup.tt2:16
+msgid "activities.section:"
+msgstr "区域："
+
+#: share/plugin/widgets/share/javascript/template/activities/blocks.tt2:113
+msgid "activities.send-private-message"
+msgstr "发送私人讯息"
+
+#: share/plugin/widgets/share/javascript/template/activities/blocks.tt2:68
+msgid "activities.showing"
+msgstr "显示"
+
+#: share/plugin/widgets/share/javascript/activities/event_list.js:938 share/plugin/widgets/share/javascript/activities/event_list.js:953
+msgid "activities.signal"
+msgstr "讯息"
+
+#: share/plugin/widgets/share/javascript/template/activities/ui.signalthis.tt2:20
+msgid "activities.signal-sent!"
+msgstr "讯息发送成功！"
+
+#: share/plugin/widgets/share/javascript/template/activities/message_notice.tt2:18
+msgid "activities.signal-sent-click-to-adjust-filters"
+msgstr "您的讯息已成功发送. 点击此处自动调整筛选器，以显示新讯息."
+
+#: share/plugin/widgets/share/javascript/template/activities/ui.signalthis.tt2:9
+msgid "activities.signal-this-page"
+msgstr "发送一个至本页面的链接讯息"
+
+#: share/plugin/widgets/share/javascript/activities/appdata.js:344
+msgid "activities.signals"
+msgstr "讯息"
+
+#: share/plugin/widgets/template/mobile-signals.tt2:5
+msgid "activities.signals-permalink"
+msgstr "讯息 - 固定链接"
+
+#: share/plugin/widgets/template/activities.tt2:3
+msgid "activities.socialtext-activities"
+msgstr "Socialtext 活动"
+
+#. (self.signalCount, self._originalTitle)
+#: share/plugin/widgets/share/javascript/activities/widget.js:469
+msgid "activities.title=signal-count,original-title"
+msgstr "（%1）%2"
+
+#. (targets.size)
+#: share/plugin/widgets/share/javascript/template/activities/page.meta.tt2:5 share/plugin/widgets/share/javascript/template/activities/signal.meta.tt2:13
+msgid "activities.to-groups=count"
+msgstr "至 %1 群组"
+
+#. (signal.best_full_name,                    targets.join(', ')
+#: share/plugin/widgets/share/javascript/activities/widget.js:543
+msgid "activities.to=sender,targets"
+msgstr "%1 至 %2"
+
+#. (targets.0)
+#: share/plugin/widgets/share/javascript/template/activities/page.meta.tt2:9 share/plugin/widgets/share/javascript/template/activities/signal.meta.tt2:17
+msgid "activities.to=target"
+msgstr "至 %1"
+
+#. (as_string)
+#: share/plugin/widgets/share/javascript/activities/editor.js:951
+msgid "activities.uploaded=files"
+msgstr "已上传的文件：%1"
+
+#: share/plugin/widgets/share/javascript/template/activities/wikilink_popup.tt2:8
+msgid "activities.wiki:"
+msgstr "工作区："
+
+#: share/plugin/widgets/share/javascript/template/activities/blocks.tt2:76
+msgid "activities.within"
+msgstr "群组为"
+
+#: share/plugin/widgets/share/javascript/template/activities/event.tt2:23 share/plugin/widgets/share/javascript/template/activities/reply.tt2:14
+msgid "activities.you"
+msgstr "您"
+
+#: share/plugin/widgets/share/javascript/template/activities/ago.tt2:7
+msgid "ago.1day"
+msgstr "1 天前"
+
+#: share/plugin/widgets/share/javascript/template/activities/ago.tt2:3
+msgid "ago.1minute"
+msgstr "1 分钟前"
+
+#: share/plugin/widgets/share/javascript/template/activities/ago.tt2:2
+msgid "ago.<1minute"
+msgstr "不到 1 分钟前"
+
+#: share/plugin/widgets/share/javascript/template/activities/ago.tt2:8
+msgid "ago.about-1day"
+msgstr "大约 1 天前"
+
+#: share/plugin/widgets/share/javascript/template/activities/ago.tt2:5
+msgid "ago.about-1hour"
+msgstr "大约 1 小时前"
+
+#. (this.round(minutes / 1440)
+#. (this.round(minutes / 1440))
+#: share/plugin/widgets/share/javascript/template/activities/ago.tt2:9
+msgid "ago.days=count"
+msgstr "%1 天前"
+
+#. (this.round(minutes / 60)
+#. (this.round(minutes / 60))
+#: share/plugin/widgets/share/javascript/template/activities/ago.tt2:6
+msgid "ago.hours=count"
+msgstr "%1 小时前"
+
+#. (minutes)
+#: share/plugin/widgets/share/javascript/template/activities/ago.tt2:4
+msgid "ago.minutes=count"
+msgstr "%1 分钟前"
+
+#: share/plugin/widgets/share/javascript/template/activities/ui.activities.tt2:26
+msgid "bookmarklet.share-via-signals"
+msgstr "”书签，将网页透过讯息来分享给同事。"
+
+#: share/plugin/widgets/share/javascript/template/activities/ui.activities.tt2:26
+msgid "bookmarklet.signal-this!"
+msgstr "分享此页!"
+
+#: share/plugin/widgets/share/javascript/template/activities/ui.activities.tt2:26
+msgid "bookmarklet.tip"
+msgstr "小秘诀：您可利用“"
+
+msgid "dashboard.revert"
+msgstr "恢复为默认"
+
+msgid "date.never"
+msgstr "从未"
+
+msgid "description.active_members"
+msgstr "显示最活跃的用户列表。"
+
+#: share/plugin/widgets/share/widgets/activities.xml:5
+msgid "description.activities"
+msgstr "发布讯息及显示活动，包含讯息与工作区活动。"
+
+msgid "description.all_groups"
+msgstr "所有可用群组。"
+
+msgid "description.all_tags"
+msgstr "以标签云方式显示群组内的人员标签。"
+
+#: share/plugin/widgets/share/widgets/blockerbugs/config.yaml:4
+msgid "description.blockerbugs"
+msgstr "显示阻滞开发的瑕疵列表。"
+
+msgid "description.blognews2"
+msgstr "分页 theXblogs RSS 阅读器。编辑小工具设置，以查看最多 1 至 15 项。可选择长或短的摘要。个性化定制消息来源，包含焦点新闻，世界，商业，科技，体育，娱乐，政治等等。"
+
+msgid "description.bz_page_tracker"
+msgstr "以多栏方式呈现 Bugzilla 事项，以及具有特定标签的页面。"
+
+msgid "description.calc"
+msgstr "为您的个性化主页上最酷的计算器！这种简单实用的计算器，您可以执行绝大多数的基本算术运算。LabPixies 还提供了各式主题，使您的首页栩栩如生。只要按一下箭头按钮，就能从中选择您最喜欢的主题。酷吧！"
+
+msgid "description.calendar3"
+msgstr "谷歌日历（仅限 Firefox 浏览器。无法在 Internet Explorer 中使用。）"
+
+msgid "description.clock"
+msgstr "不错的数字时钟。您可以选择不同的时间格式（12/24h），不同的日期格式（英文，德文和法文），时区及启用夏令时间。"
+
+msgid "description.delicious"
+msgstr "我的 del.icio.us 小工具。在主页上显示 del.icio.us 热门网站！浏览您的书签或从您的人际网络上取得最新连结。轻松在用户之间切换，只需点击“我的 del.cio.us”按钮即可返回到您的书签。获取所有网站的相关信息，并轻松地将项目添加到您的列表。"
+
+msgid "description.edit_information"
+msgstr "编辑群组信息。"
+
+msgid "description.edit_people"
+msgstr "编辑群组成员。"
+
+msgid "description.explore"
+msgstr "发布讯息及显示活动，包含讯息与工作区活动。"
+
+msgid "description.explore_filters"
+msgstr "书签过滤器。"
+
+msgid "description.flickr_google"
+msgstr "显示任何 Flickr 帐户里的图像。"
+
+msgid "description.forbidden_profile"
+msgstr "个人档案。"
+
+msgid "description.group-workspaces"
+msgstr "列出所有与此群组相关的工作区。"
+
+msgid "description.information"
+msgstr "群组信息。"
+
+#: share/plugin/widgets/share/widgets/iterationbugs/config.yaml:4
+msgid "description.iterationbugs"
+msgstr "显示当前开发周期的错误列表。"
+
+msgid "description.membership"
+msgstr "编辑群组成员。"
+
+msgid "description.msoutlookwidget"
+msgstr "Microsoft Outlook 收件箱，日历，任务和联系人。"
+
+msgid "description.my_groups"
+msgstr "我的群组。"
+
+#: share/plugin/widgets/share/widgets/my_workspaces/config.yaml:5
+msgid "description.my_workspaces"
+msgstr "您所有的工作区。"
+
+msgid "description.mytweets"
+msgstr "显示您的的 Twitter 讯息列表。"
+
+#: share/plugin/widgets/share/widgets/one_page/config.yaml:5
+msgid "description.one_page"
+msgstr "在小工具里显示一个共笔页面。"
+
+#: share/plugin/widgets/share/widgets/one_spreadsheet/config.yaml:4
+msgid "description.one_spreadsheet"
+msgstr "在小工具里显示一个电子表格。"
+
+msgid "description.one_web_page"
+msgstr "在小工具里显示一份网页。"
+
+msgid "description.oneimage"
+msgstr "在小工具里显示一张图片。"
+
+msgid "description.page_tracker"
+msgstr "以多栏方式呈现具有特定标签的页面。"
+
+msgid "description.people"
+msgstr "群组内的成员。"
+
+msgid "description.profile"
+msgstr "个人档案。"
+
+msgid "description.profile_activities"
+msgstr "活动。"
+
+msgid "description.profile_edit"
+msgstr "编辑个人档案。"
+
+msgid "description.profile_network"
+msgstr "与您有关联的人。"
+
+msgid "description.profile_tags"
+msgstr "标签。"
+
+#: share/plugin/widgets/share/widgets/rest_api/config.yaml:4
+msgid "description.rest_api"
+msgstr "REST API 开发工具。"
+
+#: share/plugin/widgets/share/widgets/rss/config.yaml:4
+msgid "description.rss"
+msgstr "订阅一个 RSS 来源。"
+
+msgid "description.signals-profile"
+msgstr "创建及显示讯息。"
+
+msgid "description.slide-feeds"
+msgstr "分享您的 SlideShare 投影片。"
+
+#: share/plugin/widgets/share/widgets/tag_cloud/config.yaml:4
+msgid "description.tag_cloud"
+msgstr "以标签云方式，显示特定工作区中的页面标签。"
+
+#: share/plugin/widgets/share/widgets/tagged_pages/config.yaml:4
+msgid "description.tagged_pages"
+msgstr "显示具特定标签的页面列表。"
+
+msgid "description.teaser"
+msgstr "即将推出。"
+
+#: share/plugin/widgets/share/widgets/testrunner/config.yaml:4
+msgid "description.testrunner"
+msgstr "测试运行现况。"
+
+msgid "description.todo"
+msgstr "轻松管理和跟踪您的每日待办事项。您可以添加您的任务，以多种颜色显示，更改顺序，并且删除完成的任务 - 让您心想事成！"
+
+msgid "description.top_content"
+msgstr "显示您工作区内的各项活动状态。"
+
+#: share/plugin/widgets/share/widgets/userlist/config.yaml:5
+msgid "description.userlist"
+msgstr "发布讯息及显示活动，包含讯息与工作区活动。"
+
+msgid "description.widget_editor"
+msgstr "编辑小工具"
+
+msgid "description.wikigadget"
+msgstr "在维基百科搜索关键字，并将结果显示在新的窗口。可修改设置来选择语言。"
+
+#: share/plugin/widgets/share/widgets/workspace_activity/config.yaml:4
+msgid "description.workspace_activity"
+msgstr "显示编辑活动。"
+
+msgid "description.workspaces"
+msgstr "列出群组中的所有工作区。"
+
+msgid "description.youtubeplayer"
+msgstr "播放一段 YouTube 视频。"
+
+#: share/plugin/widgets/share/javascript/lightbox/opensocial-gallery.tt2:26 share/plugin/widgets/share/javascript/template/activities/video_popup.tt2:18 share/plugin/widgets/share/javascript/template/activities/weblink_popup.tt2:17 share/plugin/widgets/share/javascript/template/activities/wikilink_popup.tt2:23
+msgid "do.cancel"
+msgstr "取消"
+
+#: share/plugin/widgets/share/javascript/activities/event_list.js:775 share/plugin/widgets/share/javascript/lightbox/add-update-content.tt2:62
+msgid "do.close"
+msgstr "关闭"
+
+#: share/plugin/widgets/share/javascript/template/activities/attachment_popup.tt2:19
+msgid "do.done"
+msgstr "完成"
+
+#: share/plugin/widgets/share/javascript/lightbox/remove-content.tt2:18
+msgid "do.no"
+msgstr "否"
+
+#: share/plugin/widgets/share/javascript/template/activities/video_popup.tt2:17 share/plugin/widgets/share/javascript/template/activities/weblink_popup.tt2:16 share/plugin/widgets/share/javascript/template/activities/wikilink_popup.tt2:22
+msgid "do.ok"
+msgstr "确定"
+
+#: share/plugin/widgets/template/view/gallery:123
+msgid "do.remove"
+msgstr "移除"
+
+#: share/plugin/widgets/share/javascript/lightbox/remove-content.tt2:11
+msgid "do.yes"
+msgstr "是"
+
+msgid "error.at-least-one-column-required"
+msgstr "错误：请指定至少一个分栏。"
+
+#: share/plugin/widgets/share/widgets/one_page/widget.js:52 share/plugin/widgets/share/widgets/one_page/widget.js:57
+msgid "error.cannot-embed-page-within-itself"
+msgstr "错误：无法将页面嵌入到自身里。"
+
+#. (this.title, error)
+#: share/plugin/widgets/share/javascript/lightbox/remove-content.js:78
+msgid "error.delete=widget,message"
+msgstr "删除“%1”小工具时出错：%2"
+
+#: share/plugin/widgets/share/widgets/my_workspaces/widget.js:34
+msgid "error.display-list-of-wikis"
+msgstr "无法显示工作区列表。"
+
+#: share/plugin/widgets/share/javascript/activities/editor.js:376
+msgid "error.error"
+msgstr "错误"
+
+#: share/plugin/widgets/share/javascript/gadgets.js:353
+msgid "error.feature-not-supported-in-dashboard"
+msgstr "抱歉，显示板暂不支持此项特性。"
+
+#: share/plugin/widgets/share/javascript/top_content.js:75
+msgid "error.fetching-data"
+msgstr "撷取资料时发生错误。"
+
+#: share/plugin/widgets/share/javascript/activities/widget.js:423 share/plugin/widgets/share/javascript/activities/widget.js:589
+msgid "error.getting-activities"
+msgstr "读取活动时出错。"
+
+#: share/plugin/widgets/share/javascript/activities/editor.js:1439
+msgid "error.invalid-video-link"
+msgstr "请输入一个有效的视频链接。"
+
+#: share/plugin/widgets/share/javascript/activities/editor.js:1305
+msgid "error.invalid-weblink-url"
+msgstr "非有效网址（如 http://www.google.com）"
+
+#: share/plugin/widgets/share/javascript/activities/editor.js:1218
+msgid "error.invalid-wikilink-wiki"
+msgstr "非有效工作区。请输入一个包含网页链接的有效工作区。"
+
+#: share/plugin/widgets/share/widgets/one_page/widget.js:26
+msgid "error.loading-wiki-data"
+msgstr "载入工作区数据时出错。"
+
+#: share/plugin/widgets/share/widgets/one_page/widget.js:62
+msgid "error.nested-embedding-limit-reached"
+msgstr "错误：页面嵌入层数过多。"
+
+#. (action.error_title || action.title)
+#: share/plugin/widgets/share/javascript/template/activities/empty.tt2:4
+msgid "error.no-conversations-in-30days=title"
+msgstr "没有新的 %1，因为在过去的 30 天内，您没有与您的同事对话。"
+
+#. (action.error_title || action.title)
+#: share/plugin/widgets/share/javascript/template/activities/empty.tt2:2 share/plugin/widgets/share/javascript/template/activities/empty.tt2:8
+msgid "error.no-events-in-30days=title"
+msgstr "在过去 30 天内，没有新的 %1。"
+
+#. (action.error_title || action.title)
+#: share/plugin/widgets/share/javascript/template/activities/empty.tt2:6
+msgid "error.no-followed-events-in-30days=title"
+msgstr "没有新的 %1，可能是因为您还没有关注任何人，也可能是您关注的人在过去30天内还没有新的 %1。请访问您同事的个人档案，然后点击“关注此人”来开始关注同事。"
+
+#: share/plugin/widgets/share/javascript/activities/explore.js:15
+msgid "error.no-items-for-explore"
+msgstr "没有可显示的项目。可能是没人发布链接或附件，也可能是您添加了太多过滤器。"
+
+#: share/plugin/widgets/share/javascript/activities/editor.js:659
+msgid "error.no-such-wikilink-wiki"
+msgstr "您输入的工作区不存在，请重试"
+
+#. ('__UP_workspace_name__')
+#: share/plugin/widgets/share/widgets/one_page/widget.js:21
+msgid "error.no-such=wiki"
+msgstr "工作区“%1”不存在。"
+
+#. (ws)
+#. (workspace)
+#: share/plugin/widgets/share/javascript/activities/editor.js:1105 share/plugin/widgets/share/javascript/gadgets.js:256 share/plugin/widgets/share/javascript/gadgets.js:280
+msgid "error.no-wiki-on-server=wiki"
+msgstr "系统中不存在“%1”工作区"
+
+#. (this.title, error)
+#: share/plugin/widgets/share/javascript/lightbox/remove-content.js:75
+msgid "error.remove=widget,message"
+msgstr "移除“%1”小工具时出错：%2"
+
+#. (this.title, error)
+#: share/plugin/widgets/share/javascript/lightbox/remove-content.js:72
+msgid "error.restore=widget,message"
+msgstr "恢复“%1”小工具时出错：%2"
+
+#: share/plugin/widgets/share/javascript/activities/editor.js:663
+msgid "error.send-signal"
+msgstr "传递讯息时出错，请重试。"
+
+#. (self.maxSignalLength()
+#. (limit)
+#: share/plugin/widgets/share/javascript/activities/editor.js:357 share/plugin/widgets/share/javascript/activities/editor.js:653
+msgid "error.signal-too-long=max-length"
+msgstr "讯息长度限制为 %1，请编辑您的讯息"
+
+#. ('__UP_workspace_name__')
+#: share/plugin/widgets/share/widgets/one_page/widget.js:16
+msgid "error.view-forbidden=wiki"
+msgstr "您没有检视“%1”工作区的权限。"
+
+#: share/plugin/widgets/share/javascript/activities/editor.js:1210
+msgid "error.wikilink-page-required"
+msgstr "您必须指定一个页面."
+
+#: share/plugin/widgets/share/javascript/activities/editor.js:1205
+msgid "error.wikilink-wiki-required"
+msgstr "您必须指定一个工作区."
+
+#. (person_tag)
+#: share/plugin/widgets/share/javascript/template/activities/person.tt2:6
+msgid "event.add-tag-self=tag"
+msgstr "给自己加标签 %1。"
+
+#. (page, workspace, page_tag)
+#: share/plugin/widgets/share/javascript/template/activities/page.tt2:18
+msgid "event.add-tag=page,wiki,tag"
+msgstr "给 %2 中的 %1 加标签 %3。"
+
+#. (person, person_tag)
+#: share/plugin/widgets/share/javascript/template/activities/person.tt2:17
+msgid "event.add-tag=person,tag"
+msgstr "给 %1 加标签 %2。"
+
+#. (actor, widget_link(event.context)
+#. (actor, widget_link(event.context), event.context.description)
+#: share/plugin/widgets/share/javascript/template/activities/widget.tt2:6 share/plugin/widgets/share/javascript/template/activities/widget.tt2:7 share/plugin/widgets/template/data/events/widget:6 share/plugin/widgets/template/data/events/widget:7
+msgid "event.add-widget=user,widget,context"
+msgstr "%1 增加 %2 小工具（%3）。"
+
+#. (page, workspace, event.context.summary.replace("[\n ]+\$", '')
+#. (page, workspace, event.context.summary.replace("[\n ]+$", ""))
+#: share/plugin/widgets/share/javascript/template/activities/page.tt2:16
+msgid "event.comment=page,wiki,summary"
+msgstr "在 %2 中评论 %1：“%3”"
+
+#. (person_tag)
+#: share/plugin/widgets/share/javascript/template/activities/person.tt2:8
+msgid "event.delete-tag-self=tag"
+msgstr "给自己移除标签 %1。"
+
+#. (page_tag, page, workspace)
+#: share/plugin/widgets/share/javascript/template/activities/page.tt2:20
+msgid "event.delete-tag=tag,page,wiki"
+msgstr "从 %3 中的 %2 移除标签 %1。"
+
+#. (person_tag, person)
+#: share/plugin/widgets/share/javascript/template/activities/person.tt2:19
+msgid "event.delete-tag=tag,person"
+msgstr "给 %2 移除标签 %1。"
+
+#. (page, workspace)
+#: share/plugin/widgets/share/javascript/template/activities/page.tt2:14
+msgid "event.delete=page,wiki"
+msgstr "在 %2 中删除 %1。"
+
+#. (page, workspace)
+#: share/plugin/widgets/share/javascript/template/activities/page.tt2:10
+msgid "event.duplicate=page,wiki"
+msgstr "在 %2 中复制 %1。"
+
+#: share/plugin/widgets/share/javascript/template/activities/person.tt2:4
+msgid "event.edit-profile-self"
+msgstr "编辑自己的个人档案。"
+
+#. (person)
+#: share/plugin/widgets/share/javascript/template/activities/person.tt2:15
+msgid "event.edit-profile=person"
+msgstr "编辑 %1 的个人档案。"
+
+#. (page, workspace)
+#: share/plugin/widgets/share/javascript/template/activities/page.tt2:7
+msgid "event.edit=page,wiki"
+msgstr "在 %2 中编辑 %1。"
+
+#. (page, workspace, event.context.edit_summary)
+#: share/plugin/widgets/share/javascript/template/activities/page.tt2:5
+msgid "event.edit=page,wiki,summary"
+msgstr "在 %2 中编辑 %1：“%3”"
+
+#. (person)
+#: share/plugin/widgets/share/javascript/template/activities/person.tt2:21
+msgid "event.follow=person"
+msgstr "开始关注 %1。"
+
+#. (event.action)
+#: share/plugin/widgets/share/javascript/template/activities/person.tt2:10
+msgid "event.generic-self=action"
+msgstr "对自己执行动作 %1。"
+
+#. (event.action, page, workspace)
+#: share/plugin/widgets/share/javascript/template/activities/page.tt2:22
+msgid "event.generic=action,page,wiki"
+msgstr "在 %3 中的 %2 执行动作 %1."
+
+#. (event.action, person)
+#: share/plugin/widgets/share/javascript/template/activities/person.tt2:25
+msgid "event.generic=action,person"
+msgstr "在 %2 执行动作 %1。"
+
+#. (group)
+#: share/plugin/widgets/share/javascript/template/activities/group.tt2:4
+msgid "event.join=group"
+msgstr "加入群组 %1。"
+
+#. (group, workspace)
+#: share/plugin/widgets/share/javascript/template/activities/group.tt2:15
+msgid "event.join=group,wiki"
+msgstr "添加 %1 至 %2 工作区。"
+
+#. (person, group)
+#: share/plugin/widgets/share/javascript/template/activities/group.tt2:11
+msgid "event.join=user,group"
+msgstr "添加 %1 至 %2 群组。"
+
+#. (group)
+#: share/plugin/widgets/share/javascript/template/activities/group.tt2:6
+msgid "event.leave=group"
+msgstr "离开群组 %1。"
+
+#. (person, group)
+#: share/plugin/widgets/share/javascript/template/activities/group.tt2:13
+msgid "event.leave=user,group"
+msgstr "从组 %2 中移除 %1。"
+
+#. (group, workspace)
+#: share/plugin/widgets/share/javascript/template/activities/group.tt2:17
+msgid "event.leave=user,wiki"
+msgstr "从工作区 %2 中移除 %1。"
+
+msgid "event.like=page,wiki"
+msgstr "说 %2 里的 %1 很赞。"
+
+#. (person)
+#: share/plugin/widgets/share/javascript/template/activities/person.tt2:23
+msgid "event.unfollow=person"
+msgstr "停止关注 %1。"
+
+msgid "event.unlike=page,wiki"
+msgstr "取消对 %2 里的 %1 说赞。"
+
+#. (actor, widget_link(event.context)
+#. (actor, widget_link(event.context))
+#: share/plugin/widgets/share/javascript/template/activities/widget.tt2:9 share/plugin/widgets/template/data/events/widget:9
+msgid "event.update-widget=actor,widget"
+msgstr "%1 更新 %2 小工具。"
+
+#. (asset.count)
+#: share/plugin/widgets/share/javascript/template/activities/assets.tt2:8 share/plugin/widgets/share/javascript/template/activities/assets.tt2:9
+msgid "explore.click-to-collapse-mentions=count"
+msgstr "%1 项提及，点击此处收回"
+
+#. (asset.count)
+#: share/plugin/widgets/share/javascript/template/activities/assets.tt2:14 share/plugin/widgets/share/javascript/template/activities/assets.tt2:8
+msgid "explore.click-to-expand-mentions=count"
+msgstr "%1 项提及，点击此处展开"
+
+#. (asset.count, asset.eventList.size || 5)
+#: share/plugin/widgets/share/javascript/template/activities/assets.tt2:12 share/plugin/widgets/share/javascript/template/activities/assets.tt2:8
+msgid "explore.click-to-expand-mentions=count,first-page"
+msgstr "%1 项提及，点击此处查看最先的 %2 则"
+
+#. (asset.count)
+#: share/plugin/widgets/share/javascript/template/activities/assets.tt2:26
+msgid "explore.mentions=count"
+msgstr "%1 项提及"
+
+#: share/plugin/widgets/share/javascript/template/activities/assets.tt2:3
+msgid "explore.more"
+msgstr "更多"
+
+#: share/plugin/widgets/share/javascript/activities/explore.js:221
+msgid "explore.no-items"
+msgstr "（无项目展示）"
+
+#: share/plugin/widgets/share/javascript/activities/explore.js:196
+msgid "explore.oldies"
+msgstr "老人"
+
+#: share/plugin/widgets/share/javascript/activities/explore.js:188
+msgid "explore.past-month"
+msgstr "过去的一月"
+
+#: share/plugin/widgets/share/javascript/activities/explore.js:184
+msgid "explore.past-week"
+msgstr "过去的一周"
+
+#: share/plugin/widgets/share/javascript/activities/explore.js:192
+msgid "explore.past-year"
+msgstr "过去的一年"
+
+#: share/plugin/widgets/share/javascript/activities/explore.js:180
+msgid "explore.today"
+msgstr "今天"
+
+#: share/plugin/widgets/share/javascript/activities/event_list.js:1027
+msgid "file.size=bytes"
+msgstr "%1 字节"
+
+#. ((rawcl/1000)
+#: share/plugin/widgets/share/javascript/activities/event_list.js:1029 share/plugin/widgets/share/javascript/activities/event_list.js:1031 share/plugin/widgets/share/javascript/activities/event_list.js:1033
+msgid "file.size=kb"
+msgstr "%1K"
+
+#. ((rawcl/1000000)
+#: share/plugin/widgets/share/javascript/activities/event_list.js:1035 share/plugin/widgets/share/javascript/activities/event_list.js:1037 share/plugin/widgets/share/javascript/activities/event_list.js:1039
+msgid "file.size=mb"
+msgstr "%1M"
+
+#: share/plugin/widgets/share/javascript/template/activities/attachment_popup.tt2:15
+msgid "files.none"
+msgstr "无"
+
+#: share/plugin/widgets/share/widgets/active_members/prefs.xml:1 share/plugin/widgets/share/widgets/top_content/prefs.xml:1
+msgid "groups.group"
+msgstr "群组"
+
+#: share/plugin/widgets/share/javascript/template/activities/attachment_popup.tt2:5
+msgid "info.browse"
+msgstr "点击“浏览”并选择上传图片或文件。"
+
+#: share/plugin/widgets/share/javascript/template/activities/attachment_popup.tt2:6
+msgid "info.done"
+msgstr "点击“完成”关闭窗口。"
+
+#: share/plugin/widgets/share/javascript/activities/appdata.js:545 share/plugin/widgets/share/javascript/template/activities/ui.signalthis.tt2:18
+msgid "info.edit-summary-signal-visibility"
+msgstr "只有有权查看本页面的成员会收到讯息。"
+
+#: share/plugin/widgets/share/javascript/widgets-lightbox.js:9
+msgid "info.success"
+msgstr "成功"
+
+#: share/plugin/widgets/share/widgets/page_tracker/widget.html:168
+msgid "kanban.advanced"
+msgstr "进阶设置"
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:121
+msgid "kanban.background-color:"
+msgstr "…套用底色："
+
+#: share/plugin/widgets/share/widgets/page_tracker/widget.html:32
+msgid "kanban.basics"
+msgstr "基本设置"
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:169
+msgid "kanban.bug-columns"
+msgstr "瑕疵栏"
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:183
+msgid "kanban.bug-notes"
+msgstr "瑕疵标注"
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:187
+msgid "kanban.bug-stamp-color:"
+msgstr "…将字段值以此颜色显示："
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:173
+msgid "kanban.bz-search:"
+msgstr "…执行此项 BZ 搜寻："
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:172
+msgid "kanban.bz-sharer-id"
+msgstr "由此分享者 ID…"
+
+#: share/plugin/widgets/share/widgets/page_tracker/widget.html:38
+msgid "kanban.columns"
+msgstr "分栏"
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:105
+msgid "kanban.default-color:"
+msgstr "默认底色："
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:198
+msgid "kanban.editable?"
+msgstr "允许在字段之间拖放页面？"
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:89
+msgid "kanban.exclude-tags:"
+msgstr "…但不包含具有下列任一标签的页面："
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:47
+msgid "kanban.heading"
+msgstr "字段标题"
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:186
+msgid "kanban.if-bug-has-field"
+msgstr "如果瑕疵有此字段…"
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:117 share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:141
+msgid "kanban.if-page-has-tag"
+msgstr "如果页面有此标签…"
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:75
+msgid "kanban.include-tags:"
+msgstr "仅显示具有下列任一标签的页面："
+
+#: share/plugin/widgets/share/widgets/page_tracker/widget.html:100
+msgid "kanban.item-background"
+msgstr "项目背景色"
+
+#: share/plugin/widgets/share/widgets/page_tracker/widget.html:136
+msgid "kanban.item-notes"
+msgstr "项目标注"
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:51
+msgid "kanban.notes"
+msgstr "标注"
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:200
+msgid "kanban.omit-page-prefix:"
+msgstr "省略页面标题的开头部份："
+
+#: share/plugin/widgets/share/widgets/page_tracker/widget.html:100 share/plugin/widgets/share/widgets/page_tracker/widget.html:136 share/plugin/widgets/share/widgets/page_tracker/widget.html:168 share/plugin/widgets/share/widgets/page_tracker/widget.html:70
+msgid "kanban.optional"
+msgstr "（可选）"
+
+#: share/plugin/widgets/share/widgets/page_tracker/widget.html:70
+msgid "kanban.page-filtering"
+msgstr "筛选页面"
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:43
+msgid "kanban.page-tag"
+msgstr "页面标签"
+
+msgid "kanban.please-fill-in-wiki-field-first"
+msgstr "请先填入工作区字段。"
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:202
+msgid "kanban.query-suffix:"
+msgstr "额外的页面搜寻条件："
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:204
+msgid "kanban.refresh-interval"
+msgstr "内容自动刷新频率"
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:204
+msgid "kanban.seconds"
+msgstr "（秒）"
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:26
+msgid "kanban.settings"
+msgstr "设置"
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:149
+msgid "kanban.stamp-color:"
+msgstr "…文字颜色："
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:145
+msgid "kanban.stamp-note"
+msgstr "…显示此标注…"
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:36
+msgid "kanban.widget-title:"
+msgstr "小工具标题："
+
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:34
+msgid "kanban.wiki:"
+msgstr "工作区："
+
+#: share/plugin/widgets/share/javascript/activities/editor.js:852
+msgid "lookahead.start-typing"
+msgstr "开始键入..."
+
+#: share/plugin/widgets/template/mobile-signals.tt2:125
+msgid "nav.activity"
+msgstr "活动"
+
+#: share/plugin/widgets/share/javascript/widgets-lightbox.js:16
+msgid "nav.error"
+msgstr "错误"
+
+#: share/plugin/widgets/template/mobile-signals.tt2:99
+msgid "nav.logout"
+msgstr "登出"
+
+#: share/plugin/widgets/template/mobile-signals.tt2:121
+msgid "nav.people"
+msgstr "人员"
+
+#: share/plugin/widgets/template/mobile-signals.tt2:116 share/plugin/widgets/template/mobile-signals.tt2:118 share/plugin/widgets/template/mobile-signals.tt2:7
+msgid "nav.signals"
+msgstr "讯息"
+
+#: share/plugin/widgets/template/mobile-signals.tt2:131
+msgid "nav.wikis"
+msgstr "工作区"
+
+#: share/plugin/widgets/share/widgets/workspace_activity/widget.html:8
+msgid "page.comment"
+msgstr "评论"
+
+#: share/plugin/widgets/share/widgets/one_page/widget.html:28 share/plugin/widgets/share/widgets/one_spreadsheet/widget.html:34 share/plugin/widgets/share/widgets/workspace_activity/widget.html:7
+msgid "page.edit"
+msgstr "编辑"
+
+msgid "page.type-spreadsheet"
+msgstr "电子表格"
+
+#: share/plugin/widgets/share/widgets/one_page/prefs.xml:2
+msgid "page.type-wiki"
+msgstr "页面"
+
+#: share/plugin/widgets/share/javascript/activities/editor.js:1508
+msgid "signals.insert-mention:"
+msgstr "提及用户："
+
+#: share/plugin/widgets/share/javascript/activities/editor.js:1493
+msgid "signals.insert-tag:"
+msgstr "插入标签："
+
+msgid "signals.liked-theirs=uri,snippet"
+msgstr "说自己的这则<a href=\"%1\">讯息</a>很赞：“%2”。"
+
+msgid "signals.liked-yours=uri,snippet"
+msgstr "说您的这则<a href=\"%1\">讯息</a>很赞：“%2”。"
+
+msgid "signals.liked=creator,uri,snippet"
+msgstr "说 %1 的这则<a href=\"%2\">讯息</a>很赞：“%3”。"
+
+#: share/plugin/widgets/share/javascript/template/activities/weblink_popup.tt2:10
+msgid "signals.link-destination:"
+msgstr "链接目的地："
+
+#: share/plugin/widgets/share/javascript/template/activities/weblink_popup.tt2:5
+msgid "signals.link-text:"
+msgstr "显示文字："
+
+#. (acc.count)
+#. (this.count)
+#. (acc.user_count)
+#. (grp.user_count)
+#: share/plugin/widgets/share/javascript/activities/appdata.js:234 share/plugin/widgets/share/javascript/activities/appdata.js:253 share/plugin/widgets/share/javascript/network-dropdown.js:83 share/plugin/widgets/share/javascript/network-dropdown.js:86
+msgid "signals.network-count=users"
+msgstr "%1 名用户"
+
+#. (acc.count)
+#. (acc.user_count)
+#: share/plugin/widgets/share/javascript/activities/appdata.js:233 share/plugin/widgets/share/javascript/network-dropdown.js:82
+msgid "signals.primary-account=users"
+msgstr "主帐户，%1 名用户"
+
+#: share/plugin/widgets/share/javascript/activities/editor.js:1533
+msgid "signals.private-message-to:"
+msgstr "发送私人讯息给："
+
+msgid "signals.unliked-theirs=uri,snippet"
+msgstr "取消对自己的这则<a href=\"%1\">讯息</a>说赞：“%2”。"
+
+msgid "signals.unliked-yours=uri,snippet"
+msgstr "取消对您的这则<a href=\"%1\">讯息</a>说赞：“%2”。"
+
+msgid "signals.unliked=creator,uri,snippet"
+msgstr "取消对 %1 的这则<a href=\"%2\">讯息</a>说赞：“%3”。"
+
+#: share/plugin/widgets/share/javascript/template/activities/attachment_popup.tt2:15
+msgid "signals.uploaded-files:"
+msgstr "已上传的文件："
+
+#: share/plugin/widgets/share/javascript/activities/widget.js:27
+msgid "signals.what-are-you-working-on?"
+msgstr "您在做什么呢？"
+
+#: share/plugin/widgets/share/widgets/active_members/config.yaml:4
+msgid "title.active_members"
+msgstr "热门用户"
+
+#: share/plugin/signals/share/widgets/explore/prefs.xml:14 share/plugin/widgets/share/widgets/activities.xml:21 share/plugin/widgets/share/widgets/userlist/prefs.xml:14
+msgid "title.activities"
+msgstr "活动"
+
+msgid "title.all_tags"
+msgstr "所有人员标签"
+
+#: share/plugin/widgets/share/widgets/blockerbugs/config.yaml:3
+msgid "title.blockerbugs"
+msgstr "阻滞开发瑕疵"
+
+msgid "title.blognews2"
+msgstr "theXblogs™"
+
+msgid "title.bz_page_tracker"
+msgstr "页虫看板"
+
+msgid "title.calc"
+msgstr "LabPixies 计算器"
+
+msgid "title.calendar3"
+msgstr "谷歌日历"
+
+msgid "title.clock"
+msgstr "时钟及日期"
+
+msgid "title.delicious"
+msgstr "我的 del.icio.us 书签"
+
+msgid "title.edit_information"
+msgstr "信息"
+
+msgid "title.edit_people"
+msgstr "成员"
+
+msgid "title.flickr_google"
+msgstr "Flickr 照片 - 英文"
+
+msgid "title.forbidden_profile"
+msgstr "个人档案"
+
+msgid "title.group-workspaces"
+msgstr "工作区"
+
+msgid "title.information"
+msgstr "信息"
+
+#: share/plugin/widgets/share/widgets/iterationbugs/config.yaml:3
+msgid "title.iterationbugs"
+msgstr "开发周期瑕疵"
+
+msgid "title.msoutlookwidget"
+msgstr "微软 Outlook"
+
+msgid "title.my_groups"
+msgstr "我的群组"
+
+#: share/plugin/widgets/share/widgets/my_workspaces/config.yaml:4
+msgid "title.my_workspaces"
+msgstr "工作区"
+
+msgid "title.mytweets"
+msgstr "我的 Twitter 讯息"
+
+#: share/plugin/widgets/share/widgets/one_page/config.yaml:4
+msgid "title.one_page"
+msgstr "共笔页面"
+
+#: share/plugin/widgets/share/widgets/one_spreadsheet/config.yaml:3
+msgid "title.one_spreadsheet"
+msgstr "电子表格页面"
+
+msgid "title.one_web_page"
+msgstr "网页"
+
+#: share/plugin/widgets/share/widgets/oneimage/prefs.xml:2 share/plugin/widgets/share/widgets/empty/prefs.xml:1
+msgid "title.oneimage"
+msgstr "图片"
+
+msgid "title.page_tracker"
+msgstr "页面看板"
+
+msgid "title.profile"
+msgstr "个人档案"
+
+msgid "title.profile_edit"
+msgstr "编辑个人档案"
+
+msgid "title.profile_network"
+msgstr "同事"
+
+msgid "title.profile_tags"
+msgstr "标签"
+
+#: share/plugin/widgets/share/widgets/rest_api/config.yaml:3
+msgid "title.rest_api"
+msgstr "REST API 开发工具"
+
+#: share/plugin/widgets/share/widgets/rss/prefs.xml:2 share/plugin/widgets/share/widgets/rss/config.yaml:3
+msgid "title.rss"
+msgstr "RSS 阅读器"
+
+msgid "title.slide-feeds"
+msgstr "SlideShare 简报列表"
+
+#: share/plugin/widgets/share/widgets/tag_cloud/config.yaml:3
+msgid "title.tag_cloud"
+msgstr "工作区标签"
+
+#: share/plugin/widgets/share/widgets/tagged_pages/config.yaml:3
+msgid "title.tagged_pages"
+msgstr "具有某标签的页面"
+
+msgid "title.teaser"
+msgstr "工作区"
+
+#: share/plugin/widgets/share/widgets/testrunner/config.yaml:3
+msgid "title.testrunner"
+msgstr "测试结果"
+
+msgid "title.todo"
+msgstr "待办事项"
+
+#: share/plugin/widgets/share/widgets/top_content/config.yaml:4
+msgid "title.top_content"
+msgstr "热门内容"
+
+#: share/plugin/widgets/share/widgets/userlist/config.yaml:4
+msgid "title.userlist"
+msgstr "在线用户"
+
+msgid "title.wikigadget"
+msgstr "维基百科"
+
+#: share/plugin/widgets/share/widgets/workspace_activity/config.yaml:3
+msgid "title.workspace_activity"
+msgstr "报出个未来"
+
+msgid "title.workspaces"
+msgstr "工作区"
+
+msgid "title.youtubeplayer"
+msgstr "YouTube 视频播放器"
+
+#: share/plugin/widgets/share/javascript/template/activities/video_popup.tt2:9
+msgid "video.title:"
+msgstr "标题："
+
+#: share/plugin/widgets/share/javascript/template/activities/video_popup.tt2:5
+msgid "video.url:"
+msgstr "网址："
+
+#: share/plugin/widgets/template/view/gallery:116
+msgid "widget.about-delete"
+msgstr "删除"
+
+#: share/plugin/widgets/template/view/gallery:0 share/plugin/widgets/template/view/gallery:81
+msgid "widget.add-it-now"
+msgstr "现在添加"
+
+msgid "widget.add-now"
+msgstr "现在添加"
+
+#: share/plugin/widgets/template/view/container.setup:148
+msgid "widget.preview"
+msgstr "预览"
+
+#: share/plugin/widgets/template/widget/element:56 share/plugin/widgets/template/widget/element:57
+msgid "widget.push-all"
+msgstr "推送到所有显示板"
+
+#: share/plugin/widgets/share/widgets/active_members/prefs.xml:6 share/plugin/widgets/share/widgets/top_content/prefs.xml:9
+msgid "widgets.1day"
+msgstr "一天"
+
+#: share/plugin/widgets/share/widgets/active_members/prefs.xml:10 share/plugin/widgets/share/widgets/top_content/prefs.xml:13
+msgid "widgets.1month"
+msgstr "一个月"
+
+#: share/plugin/widgets/share/widgets/active_members/prefs.xml:8 share/plugin/widgets/share/widgets/top_content/prefs.xml:11
+msgid "widgets.1week"
+msgstr "一周"
+
+#: share/plugin/widgets/share/widgets/active_members/prefs.xml:13 share/plugin/widgets/share/widgets/top_content/prefs.xml:16
+msgid "widgets.1year"
+msgstr "一年"
+
+#: share/plugin/widgets/share/widgets/active_members/prefs.xml:9 share/plugin/widgets/share/widgets/top_content/prefs.xml:12
+msgid "widgets.2weeks"
+msgstr "两周"
+
+#: share/plugin/widgets/share/widgets/active_members/prefs.xml:7 share/plugin/widgets/share/widgets/top_content/prefs.xml:10
+msgid "widgets.3days"
+msgstr "三天"
+
+#: share/plugin/widgets/share/widgets/active_members/prefs.xml:11 share/plugin/widgets/share/widgets/top_content/prefs.xml:14
+msgid "widgets.3months"
+msgstr "三个月"
+
+#: share/plugin/widgets/share/widgets/active_members/prefs.xml:12 share/plugin/widgets/share/widgets/top_content/prefs.xml:15
+msgid "widgets.6months"
+msgstr "六个月"
+
+#: share/plugin/widgets/share/widgets/one_page/widget.html:5
+msgid "widgets.a-page-named"
+msgstr "页面名称"
+
+#: share/plugin/widgets/share/widgets/one_spreadsheet/widget.html:11
+msgid "widgets.a-sheet-named"
+msgstr "电子表格名称"
+
+#: share/plugin/widgets/share/widgets/workspace_activity/widget.html:13
+msgid "widgets.about-duration"
+msgstr "自起始时间起算，可以选择之后（正数）或是之前（负数）。例如：“1month”，“-3 weeks”，“48 minutes”，“1 year”"
+
+#: share/plugin/widgets/template/view/gallery:110
+msgid "widgets.about-restore"
+msgstr "恢复"
+
+#: share/plugin/widgets/share/javascript/lightbox/add-update-content.tt2:55 share/plugin/widgets/template/view/gallery:104
+msgid "widgets.about-update"
+msgstr "更新"
+
+#: share/plugin/widgets/share/widgets/active_members/widget.js:30
+msgid "widgets.active-contributions"
+msgstr "最活跃的编辑者"
+
+#: share/plugin/widgets/share/widgets/active_members/widget.js:36
+msgid "widgets.active-signalers"
+msgstr "最活跃的讯息用户"
+
+#: share/plugin/widgets/share/javascript/lightbox/add-update-content.tt2:55
+msgid "widgets.add"
+msgstr "添加"
+
+#: share/plugin/widgets/template/view/gallery:11 share/plugin/widgets/template/view/gallery:15
+msgid "widgets.add-to-gallery"
+msgstr "添加小工具至工具库"
+
+#: share/plugin/widgets/share/javascript/lightbox/add-update-content.tt2:31
+msgid "widgets.add-url:"
+msgstr "通过网址添加小工具："
+
+#: share/plugin/widgets/share/javascript/lightbox/add-update-content.tt2:3
+msgid "widgets.add-widget"
+msgstr "添加小工具"
+
+#: share/plugin/widgets/share/javascript/lightbox/add-update-content.js:61
+msgid "widgets.added"
+msgstr "成功添加您的小工具"
+
+#: share/plugin/widgets/share/widgets/tag_cloud/prefs.xml:3
+msgid "widgets.all"
+msgstr "全部"
+
+#: share/plugin/widgets/share/widgets/activities.xml:33
+msgid "widgets.always"
+msgstr "所有讯息"
+
+#: share/plugin/widgets/share/widgets/my_workspaces/jemplate/my_workspaces.tt2:14
+msgid "widgets.changes"
+msgstr "更改"
+
+#: share/plugin/widgets/share/widgets/one_page/widget.html:12 share/plugin/widgets/share/widgets/one_page/widget.html:18 share/plugin/widgets/share/widgets/one_spreadsheet/widget.html:18 share/plugin/widgets/share/widgets/one_spreadsheet/widget.html:24
+msgid "widgets.click"
+msgstr "点击"
+
+#. (this.title)
+#: share/plugin/widgets/share/javascript/lightbox/remove-content.js:46
+msgid "widgets.confirm-delete=widget?"
+msgstr "您确定要永久删除这 \"%1\" 小工具？"
+
+#. (this.title)
+#: share/plugin/widgets/share/javascript/lightbox/remove-content.js:42
+msgid "widgets.confirm-remove=widget?"
+msgstr "您确定要移除此 \"%1\" 小工具? 用户将无法在他们的工具库中看到此小工具. 您随时可以恢复此小工具。"
+
+#. (this.title)
+#: share/plugin/widgets/share/javascript/lightbox/remove-content.js:44
+msgid "widgets.confirm-restore=widget?"
+msgstr "您确定要恢复此 \"%1\" 小工具？"
+
+#. (ws.title)
+#: share/plugin/widgets/share/widgets/my_workspaces/jemplate/my_workspaces.tt2:21
+msgid "widgets.create-new-page-in=wiki"
+msgstr "在 %1 中创建新页面"
+
+#: share/plugin/widgets/template/view/gallery:119
+msgid "widgets.delete"
+msgstr "（删除）"
+
+#: share/plugin/widgets/share/widgets/one_page/widget.html:7 share/plugin/widgets/share/widgets/one_spreadsheet/widget.html:13
+msgid "widgets.does-not-exist-in"
+msgstr "不存在于"
+
+#: share/plugin/widgets/share/widgets/workspace_activity/widget.html:13
+msgid "widgets.duration"
+msgstr "持续时间"
+
+#: share/plugin/widgets/share/widgets/one_spreadsheet/widget.html:34
+msgid "widgets.edit"
+msgstr "编辑"
+
+#: share/plugin/widgets/share/widgets/top_content/widget.js:23
+msgid "widgets.edited"
+msgstr "编辑"
+
+#: share/plugin/widgets/share/widgets/top_content/widget.js:24
+msgid "widgets.edited-pages"
+msgstr "被编辑的页面"
+
+#: share/plugin/widgets/share/widgets/active_members/widget.js:29
+msgid "widgets.edits"
+msgstr "编辑"
+
+#: share/plugin/widgets/share/widgets/top_content/widget.js:35
+msgid "widgets.emailed"
+msgstr "寄出"
+
+#: share/plugin/widgets/share/widgets/top_content/widget.js:36
+msgid "widgets.emailed-pages"
+msgstr "被寄出的页面"
+
+#: share/plugin/widgets/share/widgets/one_page/widget.html:30 share/plugin/widgets/share/widgets/one_spreadsheet/widget.html:37
+msgid "widgets.from"
+msgstr "在"
+
+msgid "widgets.from-account"
+msgstr "于帐户"
+
+msgid "widgets.gallery"
+msgstr "工具库"
+
+#: share/plugin/widgets/template/view/gallery:34
+msgid "widgets.gallery-switch=account:"
+msgstr "这是“%1”帐户的工具库。转到帐户："
+
+#: share/plugin/widgets/share/widgets/top_content/prefs.xml:1
+msgid "widgets.group"
+msgstr "群组"
+
+#: share/plugin/widgets/share/widgets/empty/prefs.xml:2 share/plugin/widgets/share/widgets/one_spreadsheet/prefs.xml:3 share/plugin/widgets/share/widgets/one_web_page.xml:13
+msgid "widgets.height"
+msgstr "高度"
+
+#: share/plugin/widgets/share/widgets/one_page/widget.html:13 share/plugin/widgets/share/widgets/one_page/widget.html:19 share/plugin/widgets/share/widgets/one_spreadsheet/widget.html:19 share/plugin/widgets/share/widgets/one_spreadsheet/widget.html:25
+msgid "widgets.here"
+msgstr "这里"
+
+#: share/plugin/widgets/share/widgets/oneimage/prefs.xml:1
+msgid "widgets.image-source"
+msgstr "图片来源"
+
+#: share/plugin/widgets/share/javascript/gadgets.js:677
+msgid "widgets.in-layout-mode-click-save-or-cancel"
+msgstr "您现在位于布局模式。点击<b>保存</b>以保存更改，或<b>取消</b>将其舍弃。"
+
+#: share/plugin/widgets/share/javascript/template/activities/widget.tt2:2 share/plugin/widgets/template/data/events/widget:2
+msgid "widgets.install-this"
+msgstr "安装小工具"
+
+#: share/plugin/widgets/share/widgets/one_spreadsheet/widget.html:7
+msgid "widgets.is-not-sheet"
+msgstr "不是一份电子表格。"
+
+#: share/plugin/widgets/share/widgets/rss/prefs.xml:3
+msgid "widgets.items-displayed"
+msgstr "显示项目数量"
+
+#: share/plugin/widgets/share/widgets/iterationbugs/prefs.xml:2
+msgid "widgets.iteration"
+msgstr "开发周期"
+
+#: share/plugin/widgets/share/widgets/one_page/widget.js:66
+msgid "widgets.loading"
+msgstr "正在加载..."
+
+#: share/plugin/widgets/share/widgets/one_web_page.xml:12
+msgid "widgets.location"
+msgstr "网址"
+
+#: share/plugin/widgets/template/view/gallery:0 share/plugin/widgets/template/view/gallery:24
+msgid "widgets.manage-gallery-for-accounts"
+msgstr "管理各账戶工具库"
+
+#: share/plugin/widgets/share/widgets/rss/prefs.xml:10
+msgid "widgets.max-description-length"
+msgstr "内文字数上限"
+
+#: share/plugin/widgets/share/widgets/activities.xml:32
+msgid "widgets.mentions-and-private-signals-only"
+msgstr "提及我的讯息与私人讯息"
+
+#. (tabs.$action.noun, period)
+#: share/plugin/widgets/share/javascript/template/top_content.tt2:17
+msgid "widgets.most-active-in=noun,period"
+msgstr "<strong>%2</strong>以来，<strong>%1</strong>"
+
+#: share/plugin/widgets/share/widgets/my_workspaces/jemplate/my_workspaces.tt2:21
+msgid "widgets.new-page"
+msgstr "开新页面"
+
+#: share/plugin/widgets/share/widgets/active_members/widget.js:31
+msgid "widgets.no-active-contributors"
+msgstr "最活跃的编辑者会列在这里。当您开始建立您的工作区时，编辑活动也会随之增加。"
+
+msgid "widgets.no-active-edited-pages"
+msgstr "最常编辑的页面将在这里列出。不妨试试在您的新工作区里开始编辑页面。"
+
+msgid "widgets.no-active-emailed-pages"
+msgstr "被寄出次数最多的页面会列在这里。您可以在页面的工具栏上按“寄送”图示，透过电子邮件寄出页面。"
+
+#: share/plugin/widgets/share/widgets/active_members/widget.js:25
+msgid "widgets.no-active-readers"
+msgstr "最活跃的读者会列在这里。当您开始探索自己的新工作区之后，阅读活动也会随之增加。"
+
+#: share/plugin/widgets/share/widgets/active_members/widget.js:37
+msgid "widgets.no-active-signalers"
+msgstr "最活跃的讯息用户会列在这里。不妨试试从显示板上发送一则讯息！"
+
+#: share/plugin/widgets/share/widgets/top_content/widget.js:19
+msgid "widgets.no-active-viewed-pages"
+msgstr "被检视次数最多的页面会列在这里。当您开始探索自己的新工作区之后，最热门的页面会出现在这里。"
+
+#: share/plugin/widgets/share/widgets/active_members/widget.js:19
+msgid "widgets.no-active-viewed-profiles"
+msgstr "被检视次数最多的个人档案会列在这里。您可以检视自己的个人档案，或是邀请同事加入您的人际网络。"
+
+#: share/plugin/widgets/share/widgets/top_content/widget.js:31
+msgid "widgets.no-active-watched-pages"
+msgstr "最受关注的页面会列在这里。您可以在页面的工具栏上按“关注”图示，来开始关注页面。"
+
+#: share/plugin/widgets/template/view/gallery:75
+msgid "widgets.no-description"
+msgstr "无描述"
+
+#. ('__UP_workspace__')
+#: share/plugin/widgets/share/widgets/tag_cloud/widget.js:18
+msgid "widgets.no-tags-for=wiki"
+msgstr "<b>%1</b> 工作区目前没有标签。您可在工作区页面右侧区块添加标签。"
+
+#: share/plugin/widgets/share/widgets/activities.xml:10 share/plugin/widgets/share/widgets/userlist/prefs.xml:1
+msgid "widgets.number-of-activities-to-display"
+msgstr "显示活动笔数上限"
+
+#: share/plugin/widgets/share/widgets/tag_cloud/prefs.xml:2
+msgid "widgets.number-of-tags-to-show"
+msgstr "显示标签数量"
+
+#: share/plugin/widgets/share/widgets/one_page/widget.html:27 share/plugin/widgets/share/widgets/one_spreadsheet/widget.html:33
+msgid "widgets.or"
+msgstr "或"
+
+#: share/plugin/widgets/share/widgets/active_members/widget.js:24
+msgid "widgets.page-views"
+msgstr "页面检视次数最多的用戶"
+
+#. ('__UP_tag_name__')
+#: share/plugin/widgets/share/widgets/tagged_pages/widget.js:20
+msgid "widgets.pages-tagged=tag"
+msgstr "具有“%1”标签的页面"
+
+#: share/plugin/widgets/share/javascript/lightbox/remove-content.js:33
+msgid "widgets.permanent-remove"
+msgstr "永久移除小工具"
+
+#: share/plugin/widgets/share/widgets/bugzilla.xml:10
+msgid "widgets.priorities"
+msgstr "优先顺序"
+
+#: share/plugin/widgets/share/widgets/active_members/widget.js:23
+msgid "widgets.readers"
+msgstr "读者"
+
+#: share/plugin/widgets/share/widgets/one_page/widget.html:20
+msgid "widgets.reload-page-after-editing"
+msgstr "，以重新加载编辑后的页面。"
+
+#: share/plugin/widgets/share/widgets/one_spreadsheet/widget.html:26
+msgid "widgets.reload-sheet-after-editing"
+msgstr "，以重新加载编辑后的电子表格。"
+
+#: share/plugin/widgets/template/view/gallery:126
+msgid "widgets.remove"
+msgstr "（移除）"
+
+#: share/plugin/widgets/share/javascript/lightbox/remove-content.js:15
+msgid "widgets.remove-widget"
+msgstr "移除小工具"
+
+#. (this.title)
+#: share/plugin/widgets/share/javascript/lightbox/remove-content.js:93
+msgid "widgets.removed=widget"
+msgstr "成功移除“%1”小工具"
+
+#: share/plugin/widgets/template/view/gallery:113
+msgid "widgets.restore"
+msgstr "（恢复）"
+
+#: share/plugin/widgets/share/javascript/lightbox/remove-content.js:24
+msgid "widgets.restore-widget"
+msgstr "恢复小工具"
+
+#. (this.title)
+#: share/plugin/widgets/share/javascript/lightbox/remove-content.js:89
+msgid "widgets.restored=widget"
+msgstr "成功恢复“%1”小工具"
+
+#: share/plugin/widgets/share/javascript/template/top_content.tt2:24
+msgid "widgets.rotate-is-on"
+msgstr "（自动交替检视已启动）"
+
+#: share/plugin/widgets/share/widgets/active_members/prefs.xml:24 share/plugin/widgets/share/widgets/top_content/prefs.xml:27
+msgid "widgets.rotate?"
+msgstr "交替检视？"
+
+#: share/plugin/widgets/share/widgets/rss/prefs.xml:1 share/plugin/widgets/share/javascript/template/activities/ui.activities.tt2:24
+msgid "widgets.rss-feed"
+msgstr "RSS 订阅"
+
+#: share/plugin/widgets/share/widgets/one_spreadsheet/prefs.xml:11
+msgid "widgets.scroll-to"
+msgstr "卷动到"
+
+#: share/plugin/widgets/share/widgets/one_web_page.xml:14
+msgid "widgets.scrolling?"
+msgstr "显示卷动轴？"
+
+#: share/plugin/widgets/share/widgets/one_spreadsheet/prefs.xml:2
+msgid "widgets.sheet"
+msgstr "电子表格"
+
+#: share/plugin/widgets/share/widgets/activities.xml:30
+msgid "widgets.show-notifications"
+msgstr "显示通知"
+
+#: share/plugin/widgets/share/widgets/active_members/widget.js:35
+msgid "widgets.signals"
+msgstr "讯息"
+
+#: share/plugin/widgets/share/widgets/one_spreadsheet/widget.html:5
+msgid "widgets.sorry-but"
+msgstr "抱歉，但是"
+
+#: share/plugin/widgets/share/widgets/workspace_activity/widget.html:12
+msgid "widgets.start-date"
+msgstr "起始日"
+
+#: share/plugin/widgets/share/widgets/bugzilla.xml:9
+msgid "widgets.statuses"
+msgstr "状态"
+
+#: share/plugin/widgets/share/widgets/tag_cloud/widget.js:47
+msgid "widgets.tags-for=wiki"
+msgstr "%1 工作区的标签"
+
+#: share/plugin/widgets/share/widgets/one_page/widget.html:30
+msgid "widgets.this-page"
+msgstr "此页面"
+
+#: share/plugin/widgets/share/widgets/my_workspaces/jemplate/my_workspaces.tt2:6
+msgid "widgets.this-person-belongs-to-no-wikis"
+msgstr "此人不属于任何工作区。"
+
+#: share/plugin/widgets/share/widgets/one_spreadsheet/widget.html:36
+msgid "widgets.this-sheet"
+msgstr "此电子表格"
+
+#: share/plugin/widgets/share/widgets/active_members/prefs.xml:4 share/plugin/widgets/share/widgets/top_content/prefs.xml:7
+msgid "widgets.time"
+msgstr "时间"
+
+#: share/plugin/widgets/share/widgets/empty/prefs.xml:1 share/plugin/widgets/share/widgets/one_web_page.xml:11 share/plugin/widgets/share/widgets/oneimage/prefs.xml:2
+msgid "widgets.title"
+msgstr "标题"
+
+#: share/plugin/widgets/share/widgets/one_page/widget.html:14
+msgid "widgets.to-create-page"
+msgstr "以建立页面。"
+
+#: share/plugin/widgets/share/widgets/one_spreadsheet/widget.html:20
+msgid "widgets.to-create-sheet"
+msgstr "以建立电子表格。"
+
+#. ('__UP_workspace__')
+#: share/plugin/widgets/share/widgets/tag_cloud/widget.js:57
+msgid "widgets.unable-to-build-tag-cloud-for=wiki"
+msgstr "无法为 <b>%1</b> 工作区建立标签云。"
+
+#: share/plugin/widgets/share/widgets/rss/prefs.xml:13
+msgid "widgets.unlimited"
+msgstr "无限制"
+
+#: share/plugin/widgets/template/view/gallery:107
+msgid "widgets.update"
+msgstr "（更新）"
+
+#: share/plugin/widgets/share/javascript/lightbox/add-update-content.tt2:31
+msgid "widgets.update-from-url:"
+msgstr "通过网址更新小工具："
+
+#: share/plugin/widgets/share/javascript/lightbox/add-update-content.tt2:3
+msgid "widgets.update-widget"
+msgstr "更新小工具"
+
+#: share/plugin/widgets/share/javascript/lightbox/add-update-content.js:60
+msgid "widgets.updated=widget"
+msgstr "成功更新您的小工具"
+
+#: share/plugin/widgets/share/javascript/lightbox/add-update-content.tt2:18
+msgid "widgets.upload-xml:"
+msgstr "上传小工具 XML 文件："
+
+#: share/plugin/widgets/share/javascript/lightbox/add-update-content.tt2:44
+msgid "widgets.use-editor"
+msgstr "使用小工具编辑器"
+
+#: share/plugin/widgets/share/widgets/one_spreadsheet/widget.html:31 share/plugin/widgets/share/widgets/one_page/widget.html:25 share/plugin/widgets/share/widgets/active_members/prefs.xml:16 share/plugin/widgets/share/widgets/top_content/prefs.xml:19 share/plugin/widgets/share/widgets/workspace_activity/widget.html:6
+msgid "widgets.view"
+msgstr "检视"
+
+#: share/plugin/widgets/share/widgets/top_content/prefs.xml:23
+msgid "widgets.view-add_to_watchlist"
+msgstr "受关注的页面"
+
+#: share/plugin/widgets/share/widgets/active_members/prefs.xml:20
+msgid "widgets.view-contribs"
+msgstr "编辑"
+
+#: share/plugin/widgets/share/widgets/top_content/prefs.xml:22
+msgid "widgets.view-edit_page"
+msgstr "被编辑的页面"
+
+#: share/plugin/widgets/share/widgets/top_content/prefs.xml:24
+msgid "widgets.view-email_page"
+msgstr "被寄出的页面"
+
+#: share/plugin/widgets/share/widgets/active_members/prefs.xml:18
+msgid "widgets.view-profile_views"
+msgstr "个人档案"
+
+#: share/plugin/widgets/share/widgets/active_members/prefs.xml:19
+msgid "widgets.view-reads"
+msgstr "阅读"
+
+#: share/plugin/widgets/share/widgets/active_members/prefs.xml:21
+msgid "widgets.view-signals"
+msgstr "讯息"
+
+#: share/plugin/widgets/share/widgets/top_content/prefs.xml:21
+msgid "widgets.view-view_page"
+msgstr "被检视的页面"
+
+#: share/plugin/widgets/share/widgets/active_members/widget.js:17 share/plugin/widgets/share/widgets/top_content/widget.js:17
+msgid "widgets.viewed"
+msgstr "被检视"
+
+#: share/plugin/widgets/share/widgets/top_content/widget.js:18
+msgid "widgets.viewed-pages"
+msgstr "最热门的页面"
+
+#: share/plugin/widgets/share/widgets/active_members/widget.js:18
+msgid "widgets.viewed-profiles"
+msgstr "最热门的个人档案"
+
+#: share/plugin/widgets/share/widgets/my_workspaces/jemplate/my_workspaces.tt2:13
+msgid "widgets.views"
+msgstr "检视"
+
+#: share/plugin/widgets/share/widgets/top_content/widget.js:29
+msgid "widgets.watched"
+msgstr "受关注"
+
+#: share/plugin/widgets/share/widgets/top_content/widget.js:30
+msgid "widgets.watched-pages"
+msgstr "受关注的页面"
+
+#: share/plugin/widgets/share/widgets/iterationbugs/prefs.xml:1 share/plugin/widgets/share/widgets/one_page/prefs.xml:1 share/plugin/widgets/share/widgets/one_spreadsheet/prefs.xml:1 share/plugin/widgets/share/widgets/tagged_pages/prefs.xml:1 share/plugin/widgets/share/widgets/top_content/prefs.xml:4 share/plugin/widgets/share/widgets/workspace_activity/widget.html:3 share/plugin/widgets/share/widgets/blockerbugs/prefs.xml:1 share/plugin/widgets/share/widgets/tag_cloud/prefs.xml:1
+msgid "widgets.wiki"
+msgstr "工作区"
+
+#: share/plugin/widgets/share/widgets/my_workspaces/jemplate/my_workspaces.tt2:4
+msgid "widgets.you-belong-to-no-wikis"
+msgstr "您不属于任何工作区。"
+
+#: share/plugin/widgets/share/widgets/tagged_pages/prefs.xml:2
+msgid "wiki.tag"
+msgstr "标签"

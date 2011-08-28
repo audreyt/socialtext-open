@@ -1,0 +1,33 @@
+| *Comment* | Test Case: Direct URI |
+
+| st-admin | create-user --email %%start_time%%@ken.socialtext.net --password 123456 |  |
+| st-admin | create-workspace --empty --name duri-%%start_time%% --title DURI |  |
+| st-admin | enable-plugin --account "%%defaultaccount%%" --p dashboard |  |
+| st-logoutin | %%start_time%%@ken.socialtext.net | 123456 |
+
+| *Comment* | Test Case: Direct URI: should return to the Help home page silently because you are not a member of the help workspace. |  |
+| open_ok | /help-en/index.cgi?action=users_invitation |  |
+| text_like | This is an index of the help topics available. |  |
+
+| *Comment* | Test Case: Direct URI: see error page, click to Dashboard |  |
+| open_ok | /help-en/index.cgi?action=no_such_action |  |
+| text_like | An invalid action, no_such_action, was entered. |  |
+| text_like | Please contact your administrator and see if this feature has been disabled. |  |
+| wait_for_element_visible_ok | link=Return to the front page | 30000 |
+| click_and_wait | link=Return to the front page |  |
+| wait_for_text_present_ok | Welcome, New User | 30000 |
+
+| *Comment* | Test Case: Direct URI: sent to login page because not a member of the workspace |  |
+| open_ok | /duri-%%start_time%%/index.cgi?action=users_listall |  |
+| text_like | errors-and-messages | You are not authorized to view this workspace. |
+| st-admin | add-member --email %%start_time%%@ken.socialtext.net --workspace duri-%%start_time%% |  |
+
+| *Comment* | Test Case: Direct URI: users listall because a member of the workspace |  |
+| open_ok | /duri-%%start_time%%/index.cgi?action=users_listall |  |
+| wait_for_element_visible_ok | contentRight | 10000 |
+| text_like | contentRight | %%start_time%%@ken.socialtext.net |
+
+| *Comment* | Test Case: Direct URI Teardown |  |
+| st-admin | delete-workspace --workspace duri-%%start_time%% --no-export | has been deleted |
+
+| *Comment* | Test Case: Direct URI COMPLETED |

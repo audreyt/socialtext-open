@@ -1,0 +1,57 @@
+body {
+    font-family: Sans-serif;
+    font-size: 85%;
+}
+td, th {
+    /* font-size: 85%; */
+    white-space: nowrap;
+    text-align:left;
+    vertical-align:top;
+    padding-right: 1em;
+}
+table.jobs tr:nth-child(odd) td {
+    background:#eeeeee;
+}
+table.jobs {
+    border-collapse: collapse;
+}
+table.jobs td {
+}
+table.jobs th {
+}
+table.jobs thead {
+    border-bottom: 2px solid black;
+}
+
+table.job {
+    border-collapse: collapse;
+}
+table.job tr:nth-child(odd) td {
+    background:#eeeeee;
+}
+table.job tr:nth-child(odd) th {
+    background:#dddddd;
+}
+table.job td {
+    padding-left: 0.5em;
+}
+table.job th {
+    text-align: right;
+    padding-right: 0.5em;
+}
+
+.jobcolarg {
+    font-family: Inconsolata, Fixed;
+    font-size: smaller;
+    white-space: pre-line;
+    word-wrap: nowrap;
+}
+.jobcolcoalesce, .jobcolkey {
+    font-family: Inconsolata, Fixed;
+    font-size: smaller;
+    word-wrap: break-word;
+}
+
+.jobdelay .jobcolrun_after {
+    color: #880;
+}

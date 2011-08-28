@@ -1,0 +1,66 @@
+dn: ou=people,dc=example,dc=com
+objectClass: organizationalUnit
+description: current employees
+ou: people
+
+dn: ou=terminated,dc=example,dc=com
+objectClass: organizationalUnit
+description: terminated employees go here
+ou: terminated
+
+dn: cn=John Doe,dc=example,dc=com
+objectClass: inetOrgPerson
+cn: John Doe
+gn: John
+sn: Doe
+mail: john.doe@example.com
+telephoneNumber: +1 234 555-1212
+userPassword: foobar
+ou: people
+
+dn: cn=Jane Smith,dc=example,dc=com
+objectClass: inetOrgperson
+cn: Jane Smith
+gn: Jane
+sn: Smith
+mail: jane.smith@example.com
+userPassword: bleargh
+ou: people
+
+dn: cn=Bubba Bo Bob Brain,dc=example,dc=com
+objectClass: inetOrgperson
+cn: Bubba Bo Bob Brain
+gn: Bubba
+sn: Brain
+mail: bubba.brain@example.com
+userPassword: abc123
+ou: people
+
+dn: cn=Jim Smith (IT),dc=example,dc=com
+objectClass: inetOrgperson
+cn: Jim Smith (IT)
+gn: Jim
+sn: Smith
+mail: jim.smith@example.com
+userPassword: 123abc
+ou: people
+
+dn: cn=Smith\, Jim (Marketing),dc=example,dc=com
+objectClass: inetOrgperson
+cn: Smith, Jim (Marketing)
+gn: Jim
+sn: Smith
+mail: jim.q.smith@example.com
+userPassword: 987qwe
+ou: people
+
+dn: cn=Ray Parker,dc=example,dc=com
+objectClass: inetOrgperson
+cn: Ray Parker
+gn: Ray
+sn: Parker
+mail: ray.parker@example.com
+userPassword: qwertyuiop
+ou: people
+
+

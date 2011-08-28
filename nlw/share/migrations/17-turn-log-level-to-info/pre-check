@@ -1,0 +1,11 @@
+#!/bin/bash -e
+
+log=$(st-config get syslog_level | awk '{print $2}');
+
+if [ $log != "debug" ]; then
+  echo "system_log is not being overly verbose. Aborting."
+  exit 1
+fi
+
+echo "syslog_level is currently set to debug. Setting it to info."
+

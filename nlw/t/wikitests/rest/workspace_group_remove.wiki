@@ -1,0 +1,37 @@
+Test to make sure that Groups can be properly removed from a Workspace via ReST API
+
+* Fixture: SocialRest
+
+| *Comment*           | Test setup     | .                                  |
+| set                 | username       | u%%start_time%%@ken.socialtext.net |
+| create-user         | %%username%%   | %%password%%                       |
+| http-user-pass      | %%username%%   | %%password%%                       |
+
+| set                 | workspace      | w%%start_time%%                    |
+| create-workspace    | %%workspace%%  |                                    |
+| add-workspace-admin | %%username%%   | %%workspace%%                      |
+
+| set                 | group_name     | g%%start_time%%                    |
+| create-group        | %%group_name%% |                                    |
+| set                 | test_group_id  | %%group_id%%                       |
+
+| set                 | bogus_group_id | 321%%group_id%%123                 |
+
+| *Comment* | Can't remove non-existing Group from WS                  | . |
+| DELETE    | /data/workspaces/%%workspace%%/groups/%%bogus_group_id%% |   |
+| code-is   | 404                                                      |   |
+
+| *Comment* | Can't remove non-member Group from WS                   | . |
+| DELETE    | /data/workspaces/%%workspace%%/groups/%%test_group_id%% |   |
+| code-is   | 404                                                     |   |
+
+| *Comment*              | Remove Group from Workspace                                                      | .             |
+| add-group-to-workspace | %%test_group_id%%                                                                | %%workspace%% |
+| st-clear-log           |                                                                                  |               |
+| DELETE                 | /data/workspaces/%%workspace%%/groups/%%test_group_id%%                          |               |
+| code-is                | 204                                                                              |               |
+| log-like               | WEB,DELETE,/DATA/WORKSPACES/:WS/GROUPS/:GROUP_ID.*"group_id":"%%test_group_id%%" |               |
+
+| *Comment* | Workspace should no longer have our Group in it         | . |
+| DELETE    | /data/workspaces/%%workspace%%/groups/%%test_group_id%% |   |
+| code-is   | 404                                                     |   |

@@ -1,0 +1,17 @@
+<html>
+<head>
+    <title>[% index_title %]</title>
+    <script type="text/javascript" src="lib/Test/Harness.js"></script>
+    <script type="text/javascript" src="lib/Test/Harness/Browser.js"></script>
+</head>
+<body>
+<a href="#" onclick="location = String(location).replace(/static\/[^\/]+\/skin/, 'static/'+(new Date).getTime()+'/skin')">re-test</a>
+<script type="text/javascript">
+    var t = new Test.Harness.Browser({w: 1024, h: 200});
+    
+    t.runTests(
+        "[% all_test_files.join("\",\n        \"") %]"
+    );
+</script>
+</body>
+</html>

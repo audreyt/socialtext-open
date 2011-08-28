@@ -1,0 +1,25 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_singlevalue/;
+
+my $count = sql_singlevalue(q{
+    SELECT
+        COUNT(*)
+    FROM
+        profile_relationship
+    WHERE
+        NOT shares_account(user_id, other_user_id)
+});
+
+if ($count == 0) {
+    print "All bad profile relationships deleted, continuing...\n";
+    exit 0; # migration was successful
+}
+
+print "Something is not right here:\n  "
+    ."$count bad relationships still exist, "
+    ."migration failed.\n";
+
+exit 1; # migration failed

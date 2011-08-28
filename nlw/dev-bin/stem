@@ -1,0 +1,57 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+
+use Getopt::Long;
+use Lingua::Stem::Snowball qw(stem stemmers);
+
+my %opts;
+Getopt::Long::Configure('no_ignore_case');
+GetOptions(
+    'file|f=s' => \$opts{file},
+    'list|L'   => \$opts{list_langs},
+    'lang|l=s' => \$opts{lang},
+    'help|h'   => \$opts{help},
+) || ( $opts{help} = 1 );
+my @words = @ARGV;
+$opts{lang} ||= 'en';
+
+if ( $opts{list_langs} ) {
+    print join( "\n", sort, stemmers() ) . "\n";
+    exit 0;
+}
+
+die_with_usage() if $opts{help} or not( $opts{file} or @words );
+
+# Stem words from the command line
+if (@words) {
+    print join( "\n", stem( $opts{lang}, [ map lc, @words ] ) ) . "\n";
+}
+
+# Stem words from a file
+if ( $opts{file} ) {
+    open( my $fh, $opts{file} ) || die "Could not open $opts{file}\n";
+    my @words = map lc, grep /\w/, split /\b/, join "", <$fh>;
+    print join( "\n", stem( $opts{lang}, \@words ) ) . "\n";
+}
+
+sub die_with_usage {
+    die <<HELP
+Usage: $0 [options] [word1 ...]
+
+*NOTE:*  This program does not tokenize input, it just uses
+Lingua::Stem::Snowball to give you an idea of what words stem to.
+
+    -f --file filename
+        Stem the words in the file.
+
+    -L --list
+        List available language codes for languages we can stem .
+
+    -l --lang lang_code
+        Set the language to stem for . Defaults to 'en', which is English.
+        Use -L to get a list of language code.
+
+HELP
+}

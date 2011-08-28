@@ -1,0 +1,151 @@
+| *Comment* | Test Case: Groups UI mismatched Workspace |  |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Groups UI mismatched Workspace SETUP Workspaces |  |
+| set | ws_private | ws-private-%%start_time%% |
+| st-admin | create-workspace --empty --name %%ws_private%% --title %%ws_private%% | was created |
+| st-admin | add-workspace-admin --e %%username%% --w %%ws_private%% | now has the role of 'admin' |
+
+| *Comment* | Test Case: Groups UI mismatched Workspace Create Self-join Group |  |  |
+| set | group_self_join | grp-self-join-%%start_time%% |  |
+| st-create-group | %%group_self_join%% | group description | self-join-radio |
+
+| wait_for_element_visible_ok | create-group | 30000 |
+| wait_for_text_present_ok | Information | 10000 |
+| wait_for_text_present_ok | Workspaces | 10000 |
+| wait_for_text_present_ok | Members | 10000 |
+| st-name-widget | 2 | workspaces_widget |
+| st-select-widget-frame | workspaces_widget |  |
+| text_like | qr/Use the input above to select workspaces to associate with this group. You can only associate self-join\s*workspaces with a self-join\s*group. All of the members in the Group account can see the workspace content.\s*You must be an Admin of the workspace in order to associate it with this group./ism |  |
+| select-frame | relative=parent |  |
+| click_and_wait | create-group |  |
+| get_id_from_url | first_group_id |  |
+
+| *Comment* | Test Case: Groups UI mismatched Workspace Group is created |  |
+| wait_for_text_present_ok | Information | 10000 |
+| wait_for_text_present_ok | Workspaces | 10000 |
+| wait_for_text_present_ok | Members | 10000 |
+
+| wait_for_element_visible_ok | st-edit-group | 30000 |
+
+
+| *Comment* | Test Case: Groups UI mismatched Workspace Change group to private |  |
+| open_ok | /st/edit_group/%%first_group_id%% |  |
+| st-name-widget | 1 | information_widget |
+| st-select-widget-frame | information_widget |  |
+| wait_for_element_visible_ok | permission-change | 30000 |
+| click_ok | permission-change |  |
+| pause | 6000 |  |
+| select-frame | relative=parent |  |
+| wait_for_element_present_ok | st-create-group-next | 30000 |
+| wait_for_element_present_ok | private-radio | 30000 |
+| check_ok | private-radio |  |
+| click_ok | st-create-group-next |  |
+| pause | 6000 |  |
+
+| *Comment* | Test Case: Groups UI mismatched Workspace Verify private ready to change |  |
+| st-select-widget-frame | information_widget |  |
+| text_like | permission-set-loc | Private |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Groups UI mismatched Workspace Save the change |  |
+| click_and_wait | create-group |  |
+| wait_for_text_present_ok | Activities | 10000 |
+| wait_for_text_present_ok | Information | 10000 |
+| wait_for_text_present_ok | Workspaces | 10000 |
+| wait_for_text_present_ok | Membership | 10000 |
+
+| *Comment* | Test Case: Groups UI mismatched Workspace Verify change to private |  |
+
+| wait_for_element_visible_ok | st-edit-group | 30000 |
+
+
+| open_ok | /st/edit_group/%%first_group_id%% |  |
+| st-name-widget | 1 | information_widget |
+| st-select-widget-frame | information_widget |  |
+
+| wait_for_element_visible_ok | name | 30000 |
+| wait_for_element_visible_ok | description | 30000 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Groups UI mismatched Workspace Verify private group language |  |
+| st-name-widget | 2 | workspaces_widget |
+| st-select-widget-frame | workspaces_widget |  |
+| wait_for_text_present_ok | Use the input | 30000 |
+| text_like | qr/Use the input.+above to select.+workspaces to associate.+with this group./ |  |
+| text_like | qr/You can only associate\s*Member Only\s*workspaces with a\s*private\s*group/ism |  |
+| wait_for_element_present_ok | lookahead | 30000 |
+| wait_for_element_present_ok | new_workspace | 30000 |
+| select-frame | relative=parent |  |
+| click_and_wait | st-cancel-create-group |  |
+
+| *Comment* | Test Case: Groups UI mismatched Workspace (Group that became a) private Group Does show change button |  |
+
+| st-admin | add-member --g %%first_group_id%% --w %%ws_private%% |  |
+| open_ok | / |  |
+| wait_for_element_present_ok | link=%%group_self_join%% | 30000 |
+| click_and_wait | link=%%group_self_join%% |  |
+
+| wait_for_element_visible_ok | st-edit-group | 30000 |
+
+
+| open_ok | /st/edit_group/%%first_group_id%% |  |
+| st-name-widget | 1 | information_widget |
+| st-select-widget-frame | information_widget |  |
+
+| wait_for_element_visible_ok | name | 30000 |
+| wait_for_element_visible_ok | description | 30000 |
+| wait_for_element_visible_ok | permission-change | 30000 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Groups UI mismatched Workspace SETUP Private Group becomes Self-join |  |  |
+| set | group_private | grp-private-%%start_time%% |  |
+| st-create-group | %%group_private%% | group description | private-radio |
+| wait_for_element_visible_ok | create-group | 30000 |  |
+| click_and_wait | create-group |  |  |
+| get_id_from_url | private_id |  |  |
+
+
+| wait_for_element_visible_ok | st-edit-group | 30000 |  |
+
+
+| open_ok | /st/edit_group/%%private_id%% |  |
+| st-name-widget | 1 | information_widget |
+| st-select-widget-frame | information_widget |  |
+| wait_for_element_visible_ok | permission-change | 30000 |
+| click_ok | permission-change |  |
+| pause | 6000 |  |
+| select-frame | relative=parent |  |
+| wait_for_element_present_ok | st-create-group-next | 30000 |
+| wait_for_element_present_ok | self-join-radio | 30000 |
+| check_ok | self-join-radio |  |
+| click_ok | st-create-group-next |  |
+| click_and_wait | create-group |  |
+
+| wait_for_element_visible_ok | st-edit-group | 30000 |
+
+
+| open_ok | /st/edit_group/%%private_id%% |  |
+| st-name-widget | 1 | information_widget |
+| st-select-widget-frame | information_widget |  |
+
+| wait_for_element_visible_ok | name | 30000 |  |
+| wait_for_element_visible_ok | description | 30000 |  |
+| select-frame | relative=parent |  |  |
+
+| st-name-widget | 2 | workspaces_widget |  |
+| st-select-widget-frame | workspaces_widget |  |  |
+| wait_for_text_present_ok | You can only associate | 30000 |  |
+| text_like | qr/You can only associate self-join\s*workspaces with a self-join\s*group/ism |  |  |
+| select-frame | relative=parent |  |  |
+| click_and_wait | create-group |  |  |
+
+TODO: add second workspace to group that belongs to a different group, then try to change group type. Should not be possible.
+
+| *Comment* | Test Case: Groups UI mismatched Workspace TEARDOWN |  |
+| st-admin | delete-group --g %%first_group_id%% | Deleted group id |
+| st-admin | delete-group --g %%private_id%% | Deleted group id |
+| st-admin | delete-workspace --workspace %%ws_private%% --no-export | has been deleted |
+
+| *Comment* | Test Case: Groups UI mismatched Workspace COMPLETED |  |

@@ -1,0 +1,322 @@
+#!/usr/bin/python
+import time
+import base64
+import random
+import optparse
+import simplejson
+import urllib
+import sys
+import string
+import datetime
+
+from eventlet import coros, httpc, util, api
+
+parser = optparse.OptionParser()
+
+parser.add_option("-s", "--signalsleep", dest="signalsleep", type="int", help="Time to sleep between requests", default=3)
+parser.add_option("-P", "--postsleep", dest="postsleep", type="int", help="Time to sleep between signal post requests", default=5)
+parser.add_option("-E", "--eventsleep", dest="eventsleep", type="int", help="Time to sleep between event polling requests", default=5)
+parser.add_option("-S", "--background-sleep", dest="backsleep", type="int", help="Time to sleep between background page load requests", default=3)
+parser.add_option("-c", "--signalsclients", dest="signalsclients", type="int", help="Number of clients", default=100)
+parser.add_option("-p", "--postclients", dest="postclients", type="int", help="Number of signals posting clients", default=10)
+parser.add_option("-e", "--eventclients", dest="eventclients", type="int", help="Number of event polling clients", default=100)
+parser.add_option("-G", "--background-clients", dest="backclients", type="int", help="Number of background page load clients", default=100)
+parser.add_option("-u", "--use-at", dest="useat", action="store_true", help="Use the at paramete on signals")
+parser.add_option("-a", "--get-avs", dest="getavs", action="store_true", help="Get avatars listed in a signal, forcing 304s")
+parser.add_option("-l", "--server", dest="serverurl", help="Server base url to request (no trailing slash)", default="http://dev8.socialtext.net")
+parser.add_option("-L", "--limit", dest="limit", type="int", help="limit for each request", default=10)
+parser.add_option("-r", "--rampup", dest="rampup", type="int", help="number of clients to start per second (rampup)", default=10)
+parser.add_option("-f", "--followers", dest="followpercent", type="int", help="Percentage of signals getters to be requesting follow-only", default=100)
+parser.add_option("-z", "--sleeptime", dest="sleeptime", type="int", help="How long to run for", default=60)
+parser.add_option("-b", "--base", dest="base", type="string", help="the base string for constructing usernames, accounts, etc", default=None)
+parser.add_option("-n", "--users", dest="users", type="int", help="the number of test users in the system", default=2000)
+
+(options, args) = parser.parse_args()
+if options.base is None:
+    sys.exit("Must supply a -b/--base base value")
+
+print "# OPTIONS:",options
+print "# PARAMS: "+ string.join(sys.argv[1:]," ")
+
+pages=[u'/help-en/index.cgi?advanced_formatting',
+        u'/help-en/index.cgi?advanced_getting_around',
+        u'/help-en/index.cgi?aerospace_market_news',
+        u'/help-en/index.cgi?all_shook_up',
+        u'/help-en/index.cgi?announcements_and_links',
+        u'/help-en/index.cgi?apache',
+        u'/help-en/index.cgi?attached_files',
+        u'/help-en/index.cgi?authentication_authorization_and_access_control_in_socialtext',
+        u'/help-en/index.cgi?browse',
+        u'/help-en/index.cgi?business_class_jet_november_2008',
+        u'/help-en/index.cgi?can_i_change_something',
+        u'/help-en/index.cgi?central_page_important_links',
+        u'/help-en/index.cgi?changing_the_workspace',
+        u'/help-en/index.cgi?click_links',
+        u'/help-en/index.cgi?comment',
+        u'/help-en/index.cgi?congratulations_you_know_how_to_use_a_workspace',
+        u'/help-en/index.cgi?connections',
+        u'/help-en/index.cgi?conversations',
+        u'/help-en/index.cgi?coordinated_universal_time',
+        u'/help-en/index.cgi?create_a_new_workspace',
+        u'/help-en/index.cgi?d_school',
+        u'/help-en/index.cgi?dashboard',
+        u'/help-en/index.cgi?document_library_template',
+        u'/help-en/index.cgi?document_templates',
+        u'/help-en/index.cgi?documents_that_people_are_working_on',
+        u'/help-en/index.cgi?editing',
+        u'/help-en/index.cgi?email',
+        u'/help-en/index.cgi?email_notification_of_recent_changes',
+        u'/help-en/index.cgi?expense_report_template',
+        u'/help-en/index.cgi?export_multiple_pages_to_pdf_or_word',
+        u'/help-en/index.cgi?exterior_design_meeting_august_20_2007',
+        u'/help-en/index.cgi?finding_your_way_around',
+        u'/help-en/index.cgi?glossary',
+        u'/help-en/index.cgi?go_to_market_plan_india_2008',
+        u'/help-en/index.cgi?how_do_i_find_my_way_around',
+        u'/help-en/index.cgi?how_do_i_make_a_new_page',
+        u'/help-en/index.cgi?how_do_i_make_links',
+        u'/help-en/index.cgi?ie_mixed_content_instructions',
+        u'/help-en/index.cgi?include_page',
+        u'/help-en/index.cgi?insert_menu_catalog',
+        u'/help-en/index.cgi?intimacy_gradient',
+        u'/help-en/index.cgi?learning_resources',
+        u'/help-en/index.cgi?linking',
+        u'/help-en/index.cgi?list_views',
+        u'/help-en/index.cgi?lists_of_pages',
+        u'/help-en/index.cgi?log_in',
+        u'/help-en/index.cgi?make_a_link',
+        u'/help-en/index.cgi?marketing_team_calendar',
+        u'/help-en/index.cgi?meeting_agendas',
+        u'/help-en/index.cgi?meeting_minutes_template',
+        u'/help-en/index.cgi?member_directory',
+        u'/help-en/index.cgi?miki_the_mobile_wiki',
+        u'/help-en/index.cgi?page_revision_history',
+        u'/help-en/index.cgi?people',
+        u'/help-en/index.cgi?people_directory',
+        u'/help-en/index.cgi?profile',
+        u'/help-en/index.cgi?project_plans',
+        u'/help-en/index.cgi?project_summary_template',
+     u'/help-en/index.cgi?props',
+     u'/help-en/index.cgi?public_workspaces',
+     u'/help-en/index.cgi?quick_start',
+     u'/help-en/index.cgi?reading_the_workspace',
+     u'/help-en/index.cgi?recent_changes',
+     u'/help-en/index.cgi?release_notes_for_socialtext_1_0',
+     u'/help-en/index.cgi?release_notes_for_socialtext_1_1',
+     u'/help-en/index.cgi?release_notes_for_socialtext_1_10',
+     u'/help-en/index.cgi?release_notes_for_socialtext_1_3',
+     u'/help-en/index.cgi?release_notes_for_socialtext_1_4',
+     u'/help-en/index.cgi?release_notes_for_socialtext_1_5',
+     u'/help-en/index.cgi?release_notes_for_socialtext_1_5_5',
+     u'/help-en/index.cgi?release_notes_for_socialtext_1_6',
+     u'/help-en/index.cgi?release_notes_for_socialtext_1_6_5',
+     u'/help-en/index.cgi?release_notes_for_socialtext_1_7',
+     u'/help-en/index.cgi?release_notes_for_socialtext_1_7_1',
+     u'/help-en/index.cgi?release_notes_for_socialtext_1_7_2',
+     u'/help-en/index.cgi?release_notes_for_socialtext_1_8',
+     u'/help-en/index.cgi?release_notes_for_socialtext_1_8_2',
+     u'/help-en/index.cgi?release_notes_for_socialtext_1_8_3',
+     u'/help-en/index.cgi?release_notes_for_socialtext_1_8_4',
+     u'/help-en/index.cgi?release_notes_for_socialtext_1_8_6',
+     u'/help-en/index.cgi?release_notes_for_socialtext_1_9',
+     u'/help-en/index.cgi?release_notes_for_socialtext_1_9_4',
+     u'/help-en/index.cgi?release_notes_for_socialtext_1_9_6',
+     u'/help-en/index.cgi?release_notes_for_socialtext_2_0',
+     u'/help-en/index.cgi?release_notes_for_socialtext_2_11_export_to_word_and_pdf',
+     u'/help-en/index.cgi?release_notes_for_socialtext_2_12_wikiwidgets',
+     u'/help-en/index.cgi?release_notes_for_socialtext_2_15_unplugged',
+     u'/help-en/index.cgi?release_notes_for_socialtext_2_16_inter_wiki_search',
+     u'/help-en/index.cgi?release_notes_for_socialtext_2_17_skins_and_miki_the_mobile_wiki',
+     u'/help-en/index.cgi?release_notes_for_socialtext_2_18_2_editor_upgrade',
+     u'/help-en/index.cgi?release_notes_for_socialtext_2_18_feed_improvements',
+     u'/help-en/index.cgi?release_notes_for_socialtext_2_2',
+     u'/help-en/index.cgi?release_notes_for_socialtext_2_20_3_new_edit_toolbar',
+     u'/help-en/index.cgi?release_notes_for_socialtext_2_20_interaction_upgrade',
+     u'/help-en/index.cgi?release_notes_for_socialtext_2_21_improved_searching_and_summary_views',
+     u'/help-en/index.cgi?release_notes_for_socialtext_2_6_3_kinosearch',
+     u'/help-en/index.cgi?release_notes_for_socialtext_3_0_personal_dashboard_social_networking_new_design',
+     u'/help-en/index.cgi?release_notes_for_socialtext_3_1_2_people_search_search_paging_who_s_following_me_and_more',
+     u'/help-en/index.cgi?release_notes_for_socialtext_3_2_0_improved_table_editing_page_templates',
+     u'/help-en/index.cgi?release_notes_for_socialtext_3_3_0_socialtext_signals_social_messaging',
+     u'/help-en/index.cgi?reports',
+     u'/help-en/index.cgi?rich_text_mode',
+     u'/help-en/index.cgi?roles_and_permission_sets',
+     u'/help-en/index.cgi?rss_tutorial',
+     u'/help-en/index.cgi?s2_transition_guide',
+     u'/help-en/index.cgi?sam_clemens',
+     u'/help-en/index.cgi?sample_pages_and_templates',
+     u'/help-en/index.cgi?searching',
+     u'/help-en/index.cgi?settings_and_administration',
+     u'/help-en/index.cgi?shared_language',
+     u'/help-en/index.cgi?sidebar',
+     u'/help-en/index.cgi?socialtext_2_0_released',
+     u'/help-en/index.cgi?socialtext_announcements',
+     u'/help-en/index.cgi?socialtext_announces_rss_support',
+     u'/help-en/index.cgi?socialtext_announces_simple_editing',
+     u'/help-en/index.cgi?socialtext_dashboard',
+     u'/help-en/index.cgi?socialtext_data_security_and_privacy_policy',
+     u'/help-en/index.cgi?socialtext_documentation',
+     u'/help-en/index.cgi?socialtext_people',
+     u'/help-en/index.cgi?socialtext_releases_simple_editing',
+     u'/help-en/index.cgi?socialtext_signals',
+     u'/help-en/index.cgi?socialtext_workspace',
+     u'/help-en/index.cgi?spike',
+     u'/help-en/index.cgi?start_here',
+     u'/help-en/index.cgi?table_of_contents',
+     u'/help-en/index.cgi?tags',
+     u'/help-en/index.cgi?template_retrospective',
+     u'/help-en/index.cgi?third_party_widgets',
+     u'/help-en/index.cgi?top_page',
+     u'/help-en/index.cgi?ultralite_turboprop_technologies',
+     u'/help-en/index.cgi?utc',
+     u'/help-en/index.cgi?walkthrough_to_unplug_recent_changes',
+     u'/help-en/index.cgi?watchlist',
+     u'/help-en/index.cgi?weblogs',
+     u'/help-en/index.cgi?welcome',
+     u'/help-en/index.cgi?welcome_widget',
+     u'/help-en/index.cgi?what_else_is_here',
+     u'/help-en/index.cgi?what_if_i_make_a_mistake',
+     u'/help-en/index.cgi?what_s_a_wiki',
+     u'/help-en/index.cgi?what_s_new',
+     u'/help-en/index.cgi?what_s_the_funny_punctuation',
+     u'/help-en/index.cgi?what_s_web_2_0',
+     u'/help-en/index.cgi?where_did_my_workspace_dashboard_go',
+     u'/help-en/index.cgi?wiki_101',
+     u'/help-en/index.cgi?wiki_text_mode',
+     u'/help-en/index.cgi?working_offline_with_unplugged',
+     u'/help-en/index.cgi?workspace_tour_table_of_contents',
+     u'/help-en/index.cgi?workspaces',
+     u'/help-en/index.cgi?wysiwyg']
+
+
+util.wrap_socket_with_coroutine_socket()
+
+def genuserauth():
+    username="user-%d-%s@ken.socialtext.net" % (random.randrange(1, options.users), options.base)
+    password="password"
+    base64string=base64.encodestring('%s:%s' % (username, password))[:-1]
+    return (username, base64string)
+        
+def fetchsignals(url, threadnum):
+    # startup clients jittered over a period of CLIENTS/10 seconds (rampup of
+    # 20 clients per second)
+    api.sleep(random.random() * (options.signalsclients / options.rampup)) 
+    (user, auth) = genuserauth()
+    theaders={}
+    theaders['Authorization']=("Basic %s" % auth)
+    theaders['accept']="application/json"
+    theaders['Accept']="application/json"
+    lastat=None
+    while True:
+        then = time.time()
+        urlstring=url+("?limit=%d" % options.limit)
+        if lastat and options.useat:
+            urlstring=urlstring+";after="+urllib.quote_plus(lastat)
+        if (random.randint(1,100) <= options.followpercent):
+            urlstring=urlstring+";following=1"
+        result=httpc.get_(urlstring, headers=theaders)
+        now=time.time()
+        if options.useat:
+            res=simplejson.loads(result[2])
+            if (len(res) > 0):
+                lastat=res[0]['at']
+        if options.getavs:
+            for signal in res:
+                user = signal['user_id']
+                
+                avthen=time.time()
+                imstime=(datetime.datetime.utcnow() - datetime.timedelta(seconds=1)).strftime("%a, %d %b %Y %H:%M:%S +0000")
+
+                avheaders={'Accept': 'image/png', 'accept':'image/png', 
+                        'Authorization':'Basic %s' % auth,
+                        'If-Modified-Since':imstime,
+                        'User-Agent':'Torture'
+                        }
+                avurl=options.serverurl+"/data/people/"+user+"/small_photo"
+                avresult=httpc.get_(avurl, headers=avheaders, ok=(200, 201, 204, 304))
+                avnow=time.time()
+                print "At %f, avatar-signals-%d fetched %s as user %s with time %.3f result code %s" % (avnow, threadnum, avurl, user, avnow-avthen, avresult[0])
+            
+        print "At %f, signals-%d fetched %s as user %s with time %.3f result code %s" % (now, threadnum, urlstring, user, now-then, result[0])
+        api.sleep(options.signalsleep)
+
+def postsignals(url, threadnum):
+    # startup clients jittered over a period of CLIENTS/20 seconds
+    api.sleep(random.random() * (options.postclients / options.rampup)) 
+    while True:
+        (user, auth) = genuserauth()
+        theaders={}
+        theaders['Authorization']=("Basic %s" % auth)
+        theaders['User-Agent']='Torture'
+        then = time.time()
+        jsonstring='Signal at %f' % time.time()
+        result=httpc.post_(url, data=jsonstring, headers=theaders)
+        now = time.time()
+        print "At %f, postsignal-%d posted to %s as user %s with time %.3f result code %s" % (now, threadnum, url, user, now-then, result[0])
+        api.sleep(options.postsleep)
+
+
+
+def fetchpages(pagelist, threadnum):
+    api.sleep(random.random() * (options.backclients / options.rampup))
+    while True:
+        (user, auth) = genuserauth()
+        theaders={}
+        theaders['Authorization']=("Basic %s" % auth)
+        theaders['accept']="application/json"
+        theaders['Accept']="application/json"
+        theaders['User-Agent']='Torture'
+        page=random.choice(pagelist) 
+        url=options.serverurl+page
+        then = time.time()
+        result=httpc.get_(url, headers=theaders)
+        now=time.time()
+        print "At %f, fetchpages-%d fetched %s as user %s with time %.3f result code %s" % (now, threadnum, url, user, now-then, result[0])
+        api.sleep(options.backsleep)
+
+def fetchevents(threadnum):
+    # startup clients jittered over a period of CLIENTS/20 seconds
+    api.sleep(random.random() * (options.eventclients / options.rampup)) 
+    while True:
+        (user, auth) = genuserauth()
+        theaders={}
+        theaders['Authorization']=("Basic %s" % auth)
+        theaders['accept']="application/json"
+        theaders['Accept']="application/json"
+        theaders['User-Agent']='Torture'
+        quoteduser=urllib.quote_plus(user)
+        page=random.choice(
+                ('/data/events', 
+                    '/data/events/followed/'+quoteduser, 
+                    '/data/events/conversations/'+quoteduser,
+                    '/data/events/activities/'+quoteduser )
+                )
+        since=time.strftime("%Y-%m-%d %H:%M:%SZ",time.gmtime(time.time()-10))
+        url=options.serverurl+page+"?after="+urllib.quote_plus(since)
+        then = time.time()
+        result = httpc.get_(url, headers=theaders)
+        now = time.time()
+        print "At %f, fetchevents-%d fetched %s as user %s with time %.3f result code %s" % (now, threadnum, url, user, now-then, result[0])
+        api.sleep(options.eventsleep)
+
+def sleepa(delay):
+    api.sleep(delay)
+
+pool = coros.CoroutinePool(max_size=options.signalsclients+options.backclients+options.postclients+options.eventclients+2)
+
+for x in range(0, options.backclients):
+   pool.execute(fetchpages, pages, x)
+
+for x in range(0, options.postclients):
+   pool.execute(postsignals, options.serverurl+'/data/signals', x)
+
+for x in range(0, options.eventclients):
+   pool.execute(fetchevents, x)
+
+for x in range(0,options.signalsclients):
+   pool.execute(fetchsignals, options.serverurl+'/data/signals', x)
+
+
+sleepawaita=pool.execute(sleepa, options.sleeptime)
+
+sleepawaita.wait()

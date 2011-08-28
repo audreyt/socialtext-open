@@ -1,0 +1,246 @@
+=head1 NAME
+
+Widget.SortableTable - A widget to make a table sortable
+
+=head1 SYNOPSIS
+
+
+=head1 DESCRIPTION
+
+Instruments a table so that each of its headers is a clickable link
+that resorts the table based on that column.
+
+=head1 METHODS
+
+=over 4
+
+=item * new Widget.SortableTable( { tableId: "table-id", ... } )
+
+Returns a new C<Widget.SortableTable> object for the specified
+element.
+
+This method expects an anonymous object as its only parameter. The
+only required property for this object is "tableId".
+
+The columns of the table are numbered starting at 0, from left to
+right
+
+The object passed to the constructor can have several additional
+properties:
+
+=over 8
+
+=item * initialSortColumn
+
+If "initialSortColumn" is specified, it tells the widget what column
+it should sort the table on when the widget is created.
+
+By default it does the initial sort of the table on column 0.
+
+=item * noInitialSort
+
+If this is true, then no initial sort of table is done when the widget
+is constructed.
+
+The appropriate even/odd CSS class names will still be added to each
+row, but no cells will have their CSS class set to
+"w-st-current-sorted-column". See L<HOW THE WIDGET ALTERS THE TABLE>
+for details about what this means.
+
+=item * secondarySortColumn
+
+The "secondarySortColumn" parameter specifies which column the widget
+should use for secondary sorting. This is necessary when it tries to
+sort on a column where some cells contain identical values. In this
+case, it will fall back to sorting those particular rows on the data
+in the "secondarySortColumn". You should use a column which contains
+unique data in each cell. This defaults to column 0.
+
+=item * columnSpecs
+
+The "columnSpecs" property is an array containing information about
+each column in the table.
+
+The spec for a single column is an anonymous object which can contain
+three properties, "skip", "sort", and "defaultDir". If "skip" is true,
+then this column will not be sortable. The "sort" property may be a
+custom sort function for that column, or a type name. See L<TYPES AND
+SORTING> for more details on what type names are allowed. Finally, the
+"defaultDir" property may be either "asc" or "desc". This specifies
+which direction the column will be sorted on by default.
+
+If you want do not want to give a spec for a column you can use "null"
+to fill its place in the array.
+
+An example:
+
+  var table = new Widget.SortableTable( {
+    "tableId":           "my-table",
+    "initialSortColumn": 1,
+    "columnSpecs": [
+      null,                   no spec for column 0
+      { skip: true },         do not sort column 1
+      { sort: "text" },       sort column 2 as text
+      { defaultDir: "desc" }, sort column 3 in descending order by default
+      { sort: mySortFunc,     sort column 4 with a custom function ...
+        defaultDir: "desc" }, ... sort in descending order by default
+    ]
+  } );
+
+=item * onSortRowCallback
+
+If this option is given, this callback will be called when the rows
+are resorted. It will be passed the row and its new row number
+(starting at 1) in the table.
+
+This is primarily provided to allow for row numbering:
+
+  function renumberRow (row, idx) {
+      row.cells[0].innerHTML = "row number " + idx;
+  }
+
+
+=back
+
+Since this class uses C<DOM.Ready> to get the table, you can create a
+widget object whenever you want during the course of page rendering.
+
+=item * sortOnColumn(number)
+
+Tells the widget to sort the table on the specified column. If the
+widget is not ready (the table is not in the DOM yet), then this
+method will simply return.
+
+=back
+
+=head2 Tables with One Row
+
+You can create a widget for a table with one row, but sorting will be
+a no-op. Creating the widget will still alter the table, but since no
+initial sort will be done, its CSS will not be altered.
+
+=head1 TYPES AND SORTING
+
+By default, C<Widget.SortTable> tries to figure out the type of a
+column based on its text contents. It currently recognizes four types
+of data, numeric (integer or floating point), currency (a number
+preceded by "$" or the Euro symbol), dates in YYYY-MM-DD format, and
+text.
+
+Text is sorted case-insensitively. Dates are sorted in descending
+order by default.
+
+It detects the type by looking at the second cell in the column (which
+may change depending on previous sorts). If this is blank for a
+column, it will assume that the type is text. If you have blank cells
+in a column and the data is not text, you should always specify its
+type when constructing the C<Widget.SortTable> object.
+
+Empty cells are sorted as being less than non-empty cells for all
+types.
+
+=head1 HOW THE WIDGET ALTERS THE TABLE
+
+When the widget object is first instantiated, it makes a number of
+changes to the DOM for the table. It assumes that the first row
+contains column headers. For each cell, it takes the contents of the
+cell, whatever they may be, and wraps them in a new C<< <a> >>
+tag. The href for this tag is "#". The tag has an "onClick" event set
+which calls C<sortOnColumn()> with the appropriate column number. Its
+class name is "w-st-resort-column". It also has an "onClick" attribute
+set to "return false;" so that clicking it does not cause the browser
+to scroll the page.
+
+Note that the addition of this C<< <a> >> tag may have break existing
+CSS rules you are using.
+
+The widget will call C<sortOnColumn()> as soon as it can in order to
+establish an initial sort order for the table, unless you passed set
+the "noInitialSort" constructor parameter to true. If no initial
+sorting is done, then there is no current sort-by column, but all the
+other CSS changes are still applied.
+
+When the table is sorted, the widget will make a number of changes to
+the class names for table elements. The changes are as follows:
+
+=over 4
+
+=item * Current sort-by column
+
+All cells in this column will have the "w-st-current-sorted-column"
+class added. In addition, the header cell, at the top of the column,
+will also have the class "w-st-asc-column-header" or
+"w-st-desc-column-header", depending on the current sort order.
+
+=item * Other column header cells
+
+All other header cells will be given the "w-st-unsorted-column-header"
+class.
+
+=item * Sort-by column changes
+
+When the column upon which the widget is sorting changes, it removes
+the "w-st-current-sorted-column" class from the previous sort-by
+column and remove the "w-st-asc-column-header" or
+"w-st-desc-column-header" class from that column's header cell.
+
+=item * All rows besides the header row
+
+These rows (C<< <tr> >> tags) will be given a class of either
+"w-st-odd-row" or "w-st-even-row". The first row below the headers
+will be even.
+
+=back
+
+Any class names you originally assigned in your HTML will be left
+untouched by the widget.
+
+=head2 Current Sort Indicators
+
+This widget does not add any DOM elements to show which column is the
+current sort-by column. Instead, you can take advantage of the CSS
+class names it uses to get the same effect.
+
+For example, let's start with this HTML for a column header cell:
+
+  <th>Name
+      <img class="none" src="none.png" />
+      <img class="asc"  src="asc.png" />
+      <img class="desc" src="desc.png" />
+  </th>
+
+Then in your CSS you can define the following style rules:
+
+ img.asc, img.desc {
+     display: none;
+ }
+
+ th.w-st-current-sorted-column img.none {
+     display: none;
+ }
+
+ th.w-st-asc-column-header   img.asc  {
+     display: inline;
+ }
+
+ th.w-st-desc-column-header  img.desc  {
+     display: inline;
+ }
+
+With these rules, the appropriate image will be displayed simply based
+on the class name changes that the widget makes.
+
+=head1 AUTHOR
+
+Dave Rolsky, <autarch@urth.org>.
+
+=head1 COPYRIGHT
+
+Copyright (c) 2006 Dave Rolsky.  All rights reserved.
+
+This module is free software; you can redistribute it and/or modify it
+under the same terms as the Perl programming language (your choice of
+GPL or the Perl Artistic license).
+
+
+=cut

@@ -1,0 +1,107 @@
+| *Comment* | Test Case: Business Control Panel Group Add to Workspace Verifies Group Add to Workspace PLUS add-as-admin |
+| *Comment* | Test Case: Business Control Panel Group Add to Workspace Create a WS, a group, two users |  |  |
+
+| set | ws | wsgiw-%%start_time%% |  |
+| set | account | acctgiw-%%start_time%% |  |
+| set | workspaceforadmin | wgiwadmin-%%start_time%% |  |
+| set | group | groupa-%%start_time%% |  |
+
+| create-account | %%account%% |  |  |
+| create-workspace | %%ws%% | %%account%% |  |
+| create-workspace | %%workspaceforadmin%% | %%account%% |  |
+| st-admin | give-accounts-admin --username %%username%% |  |  |
+| create-group | %%group%% | %%account%% | %%username%% |
+
+| *Comment* | Test Case: Business Control Panel Group Add to Workspace Test User In Group |  |
+| set | testuseringroup | `testusering%%start_time%%@ken.socialtext.net` |
+| set | short_testuser | testusering%%start_time%% |
+| create-user | %%testuseringroup%% | %%password%% |
+| add-user-to-group | %%testuseringroup%% | %%group_id%% |
+
+| *Comment* | Test Case: Business Control Panel Group Add to Workspace Test User In Workspace |  |
+| set | testuserinworkspace | `testuserinws-%%start_time%%@ken.socialtext.net` |
+| create-user | %%testuserinworkspace%% | %%password%% |
+| add-member | %%testuserinworkspace%% | %%ws%% |
+
+| *Comment* | Test Case: Business Control Panel Group Add to Workspace Visual inspection of add to workspace |  |
+| open-ok | /nlw/control/group/%%group_id%% |  |
+| wait_for_element_visible_ok | add-workspace | 30000 |
+| wait_for_element_visible_ok | link=%%short_testuser%% <%%testuseringroup%%> | 30000 |
+| wait_for_text_present_ok | Workspaces (0) | 10000 |
+| wait_for_text_present_ok | Users (2) | 10000 |
+| wait_for_element_visible_ok | add-workspace | 30000 |
+| click_and_wait | add-workspace |  |
+| wait_for_text_present_ok | Send invitation email | 10000 |
+| text_like | //body | qr/Add Group To Workspace/ism |
+
+| *Comment* | Test Case: Business Control Panel Group Add to Workspace Verify Checkboxes |  |
+| wait_for_element_visible_ok | send-invite-message | 30000 |
+| wait_for_element_visible_ok | invite-as-admins | 30000 |
+
+| *Comment* | Test Case: Business Control Panel Group Add to Workspace Add To a workspace |  |
+| wait_for_element_visible_ok | //select | 30000 |
+| select-ok | //select | %%ws%% |
+| click-and-wait | //input[@value='Add to Workspace'] |  |
+
+| *Comment* | Test Case: Business Control Panel Group Add to Workspace Verify redirect, message |  |
+| wait_for_element_visible_ok | link=%%short_testuser%% <%%testuseringroup%%> | 30000 |
+| wait_for_element_present_ok | link=%%ws%% | 30000 |
+| text_like | workspaces | %%ws%% |
+| wait_for_text_present_ok | %%group%% Group | 10000 |
+| wait_for_text_present_ok | Workspaces (1) | 10000 |
+| wait_for_text_present_ok | Users (2) | 10000 |
+| text_like | //body | qr/Group '%%group%%' now has the role of member in the %%ws%% Workspace/ism |
+
+| *Comment* | Test Case: Business Control Panel Group Add to Workspace Verify that the added WS does not appear in the WS select list |  |
+| open-ok | /nlw/control/group/%%group_id%% |  |
+| wait_for_element_visible_ok | add-workspace | 30000 |
+| click_and_wait | add-workspace |  |
+
+| wait_for_element_visible_ok | //select[@name='workspace_id'] | 30000 |
+| wait_for_element_present_ok | //select[@name='workspace_id']/option[contains(text(),'%%workspace%%')] | 5000 |
+| wait_for_element_not_present_ok | //select[@name='workspace_id']/option[contains(text(),'%%ws%%')] | 5000 |
+
+| *Comment* | Test Case: Business Control Panel Group Add to Workspace Add as admin |  |
+| open-ok | /nlw/control/group/%%group_id%% |  |
+| wait_for_element_visible_ok | link=%%short_testuser%% <%%testuseringroup%%> | 30000 |
+| wait_for_text_present_ok | Workspaces (1) | 10000 |
+| wait_for_text_present_ok | Users (2) | 10000 |
+
+| wait_for_element_visible_ok | add-workspace | 30000 |
+| click_and_wait | add-workspace |  |
+
+| wait_for_text_present_ok | Send invitation email | 10000 |
+| text_like | //body | qr/Add Group To Workspace/ism |
+
+| wait_for_element_visible_ok | invite-as-admins | 30000 |
+| check_ok | invite-as-admins |  |
+| is_checked_ok | invite-as-admins |  |
+
+| wait_for_element_visible_ok | //select | 30000 |
+| select-ok | //select | %%workspaceforadmin%% |
+| wait_for_element_visible_ok | //input[@value='Add to Workspace'] | 30000 |
+| click-and-wait | //input[@value='Add to Workspace'] |  |
+
+| wait_for_element_visible_ok | link=%%short_testuser%% <%%testuseringroup%%> | 30000 |
+| wait_for_element_present_ok | link=%%workspaceforadmin%% | 30000 |
+| text_like | workspaces | %%workspaceforadmin%% |
+| wait_for_text_present_ok | %%group%% Group | 10000 |
+| wait_for_text_present_ok | Workspaces (2) | 10000 |
+| wait_for_text_present_ok | Users (2) | 10000 |
+| text_like | //body | qr/Group '%%group%%' now has the role of admin in the %%workspaceforadmin%% Workspace/ism |
+
+| *Comment* | Test Case: Business Control Panel Group Add to Workspace Verify membership via command line tools |  |
+| st-admin | show-members -w %%ws%% | member |
+| st-admin | show-members -w %%workspaceforadmin%% | admin |
+
+| *Comment* | Test Case: Business Control Panel Group Add to Workspace TEARDOWN |  |
+
+| st-process-jobs |  |  |
+| deactivate-user | %%testuseringroup%% |  |
+| deactivate-user | %%testuserinworkspace%% |  |
+| st-admin | delete-workspace --workspace %%ws%% --no-export | has been deleted |
+| st-admin | delete-workspace --workspace %%workspaceforadmin%% --no-export | has been deleted |
+| delete-group | %%group_id%% |  |
+| delete-account | %%account%% |  |
+
+| *Comment* | Test Case: Business Control Panel Group Add to Workspace COMPLETED |

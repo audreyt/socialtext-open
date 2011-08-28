@@ -1,0 +1,148 @@
+| *Comment* | WidgetShow |  |
+
+| set | ws_user | widgetshow_user_%%start_time%%@david.socialtext.net |
+| set | ws_acct | widgetshow_account_%%start_time%% |
+| set | ws_grp | widgetshow_group_%%start_time%% |
+| set | ws_wiki | widgetshow_wiki_%%start_time%% |
+| set_default | pt | 5000 |
+
+| create-account | %%ws_acct%% |  |  |
+| create-user | %%ws_user%% | %%password%% | %%ws_acct%% |
+| create-group | %%ws_grp%% | %%ws_acct%% | %%ws_user%% |
+| create-workspace | %%ws_wiki%% | %%ws_acct%% |  |
+| st-admin | add-member --email %%ws_user%% --workspace %%ws_wiki%% | now has the role |  |
+
+| st-logoutin | %%ws_user%% | %%password%% |
+
+| open_ok | /st/dashboard |  |
+| wait_for_element_visible_ok | link=Add Widget | 30000 |
+| click_and_wait | link=Add Widget |  |
+
+| *Comment* | SEE Widget Gallery |  |
+| pause | %%pt%% |  |
+| *Comment* | SEE widgets from ST on left: All People Tags, Active Content, Active People, Activities, Workspaces, Wiki Page, Web Page, Spreadsheet Page, Image, Page Tracker, RSS Viewer, Workspace Tags |  |
+| pause | %%pt%% |  |
+| pause | %%pt%% |  |
+| *Comment* | SEE 3rd-party widgets on right: Microsoft Outlook, Google Calender, Youtube, Slideshare, theXblogs, Wikipedia, Flickr, LabPixies Calculator, Clock & Date, ToDo |  |
+| pause | %%pt%% |  |
+| pause | %%pt%% |  |
+
+| click_and_wait | gallery-widget-All People Tags |  |
+| wait_for_text_present_ok | All People Tags | 30000 |
+| *Comment* | SEE All People Tags widget in right-side column of dashboard. In default setup, SEE "no tags yet" message. |  |
+| pause | %%pt%% |  |
+
+| click_ok | xpath=(//a[@class='settings'])[5] |  |
+| *Comment* | SEE All People Tags widget is now showing widget preferences, Number of Tags to Show |  |
+| pause | %%pt%% |  |
+
+| click_ok | xpath=(//input[@class='searchButton st-savebutton'])[5] |  |
+| *Comment* | SEE All People Tags widget is back to showing content |  |
+| pause | %%pt%% |  |
+
+| click_ok | xpath=(//a[@class='close'])[5] |  |
+| *Comment* | SEE All People Tags widget has disappeared |  |
+| pause | %%pt%% |  |
+
+| open_ok | /st/profile |  |
+| wait_for_element_visible_ok | st-edit-layout | 30000 |
+| click_ok | st-edit-layout |  |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+| click_ok | st-add-widget |  |
+| *Comment* | SEE Insert Widget Lightbox with ST widgets on top, 3rd-party widgets on bottom |  |
+| pause | %%pt%% |  |
+
+| wait_for_element_visible_ok | gallery-widget-Youtube Video Player | 30000 |
+| click_ok | gallery-widget-Youtube Video Player |  |
+| *Comment* | SEE Lightbox gallery disappears, YouTube Video Player widget appears in right-side column of profile |  |
+| pause | %%pt%% |  |
+
+| click_ok | xpath=(//a[@class='settings'])[4] |  |
+| *Comment* | SEE Youtube widget now has text boxes for entering video or playlist link |  |
+| pause | %%pt%% |  |
+
+| type_ok | //input[@name='vlink'] | http://www.youtube.com/watch?v=lH4lcrxP8mo |
+| click_ok | xpath=(//input[@class='searchButton st-savebutton'])[4] |  |
+| *Comment* | SEE Ross Mayfield YouTube video in widget |  |
+| pause | %%pt%% |  |
+
+| click_ok | xpath=(//a[@class='close'])[3] |  |
+| *Comment* | SEE Youtube widget is gone |  |
+| pause | %%pt%% |  |
+
+| open_ok | /st/group/%%group_id%% |  |
+| wait_for_element_visible_ok | st-edit-layout | 30000 |
+| click_ok | st-edit-layout |  |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+| click_ok | st-add-widget |  |
+| *Comment* | SEE Widget Gallery |  |
+| pause | %%pt%% |  |
+
+| click_ok | gallery-widget-Image |  |
+| *Comment* | SEE Image widget with ST logo in right-side column of group page |  |
+| pause | %%pt%% |  |
+
+| click_ok | xpath=(//a[@class='settings'])[5] |  |
+| *Comment* | SEE Image widget now displays settings, Image Source and Title |  |
+| pause | %%pt%% |  |
+
+| type_ok | //input[@name='title'] | New Title |
+| click_ok | xpath=(//input[@class='searchButton st-savebutton'])[5] |  |
+| *Comment* | SEE Image Widget now has title, "New Title" |  |
+| pause | %%pt%% |  |
+
+| click_ok | xpath=(//a[@class='close'])[5] |  |
+| *Comment* | SEE Image Widget is gone |  |
+| pause | %%pt%% |  |
+
+| open_ok | /%%ws_wiki%%/%%start_time%% |  |
+| wait_for_element_visible_ok | st-create-content-savelink | 30000 |
+| click_and_wait | st-create-content-savelink |  |
+| wait_for_element_visible_ok | st-mode-wikitext-button |  |
+| click_ok | st-mode-wikitext-button |  |
+| wait_for_element_visible_ok | wikiwyg_button_widget | 30000 |
+| click_ok | wikiwyg_button_widget |  |
+| wait_for_element_visible_ok | gallery-widget-Web Page | 30000 |
+
+| *Comment* | SEE Widget Gallery |  |
+| pause | %%pt%% |  |
+
+| click_ok | gallery-widget-Web Page |  |
+| *Comment* | SEE Edit Widget lightbox for web page widget |  |
+| pause | %%pt%% |  |
+
+| click_ok | //input[@value='Preview'] |  |
+| *Comment* | SEE web page widget with Google in lightbox |  |
+| pause | %%pt%% |  |
+
+| click_ok | st-widget-opensocial-setup-save |  |
+| *Comment* | SEE plaintext code for widget in Editing box |  |
+| pause | %%pt%% |  |
+
+| click_ok | st-mode-wysiwyg-button |  |
+| *Comment* | SEE widget is displayed as a grey lozange in Rich Text mode |  |
+| pause | %%pt%% |  |
+
+| st-page-save |  |  |
+| *Comment* | SEE Web Page widget displaying Google in page |  |
+| pause | %%pt%% |  |
+
+| wait_for_element_visible_ok | st-edit-button-link | 30000 |
+| click_ok | st-edit-button-link |  |
+| wait_for_element_visible_ok | st-mode-wikitext-button | 30000 |
+| click_ok | st-mode-wikitext-button |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea |  |
+| type_ok | wikiwyg_wikitext_textarea | New Content |
+| *Comment* | SEE widget code is gone from Editing box |  |
+| pause | %%pt%% |  |
+
+| st-page-save |  |  |
+| *Comment* | SEE widget is gone from page |  |
+| pause | %%pt%% |  |
+
+| *Comment* | WidgetShow TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%ws_user%% | been removed |
+| delete-group | %%group_id%% | Recklessly deleting |
+| delete-workspace | %%ws_wiki%% | Recklessly deleting |
+| delete-account | %%ws_acct%% | Recklessly deleting |

@@ -1,0 +1,31 @@
+#!/usr/bin/env perl
+
+use 5.12.0;
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+
+use Test::Socialtext::DotProve qw(load save);
+
+my @files  = @ARGV;
+my $target = pop @files;
+
+my $into  = load($target);
+my $tests = $into->{tests};
+foreach my $file (@files) {
+    my $from = load($file);
+    while (my ($k, $v) = each %{$from->{tests}}) {
+        # Copy the whole test across if it doesn't exist in the target
+        $tests->{$k} = $v unless exists ($tests->{$k});
+
+        # Merge selected portions across into the target
+        # ... last fail time
+        my $from_fail = $v->{last_fail_time};
+        my $into_fail = $tests->{$k}->{last_fail_time};
+        if ($from_fail > $into_fail) {
+            $into->{tests}->{$k} = $v;  # keep most recent fail timestamp
+        }
+    }
+}
+
+save($into, $target);

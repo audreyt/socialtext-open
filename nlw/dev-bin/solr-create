@@ -1,0 +1,47 @@
+#!/bin/bash
+# @COPYRIGHT@
+set -e
+#
+# Create a Solr core named after the current user.
+#
+# This assumes the custom socialtext layout for Solr; the Ubuntu layout cannot
+# be used. The current user must also be a member of the www-data UNIX group.
+#
+
+DATA_DIR="/var/lib/socialtext-solr/cores"
+
+if [ ! -d "$DATA_DIR" ]; then
+    echo "Cannot find $DATA_DIR; skipping solr-create"
+    exit 0
+fi
+
+DATA_GROUP=`stat -c %G $DATA_DIR/ || gstat -c %G $DATA_DIR/`
+echo -n "Creating solr core ..."
+
+inthegroup=`groups 2>&1 | grep $DATA_GROUP || true`
+if [ -z "$inthegroup" ]; then
+    echo "ERROR: You must be a member of the $DATA_GROUP UNIX group" >&2
+    exit 1
+fi
+
+EXTRA=""
+if [ -n "$HARNESS_ACTIVE" ]; then
+    EXTRA="_testing"
+fi
+if [ -n "$HARNESS_JOB_NUMBER" ]; then
+    EXTRA="_testing_$HARNESS_JOB_NUMBER"
+fi
+CORE="$USER$EXTRA"
+DEV_CONF="$ST_SRC_BASE/socialtext/appliance/socialtext-solr/conf"
+SOLR_ADMIN="http://localhost:8983/solr/admin/cores"
+CORE_DIR="$DATA_DIR/$CORE"
+
+wget -q -O /dev/null "$SOLR_ADMIN?action=UNLOAD&core=$CORE" || true
+rm -rf $CORE_DIR
+mkdir $CORE_DIR
+cp -r $DEV_CONF $CORE_DIR/conf
+chown -R $USER:$DATA_GROUP $CORE_DIR
+chmod ug+w $CORE_DIR
+
+wget -q -O /dev/null "$SOLR_ADMIN?action=CREATE&name=$CORE&instanceDir=cores/$CORE"
+echo " - done, created $CORE ($?)"

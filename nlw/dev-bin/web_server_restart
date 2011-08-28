@@ -1,0 +1,26 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+# this is a utility script to be used with a cron job for 
+# restarting the apache web server when experimenting with
+# mod_perl handler versions of NLW
+#
+# This is NOT meant to be a permanent solution of any kind, just
+# useful for the nonce.
+
+use strict;
+use warnings;
+
+use constant RESTART => 'apachectl restart';
+
+my $pid_file = $ARGV[0];
+my $config_dir = $ARGV[1];
+
+die "baby, i gotta have a pid file and config directory\n"
+    unless ($pid_file && $config_dir);
+
+if ( -M $pid_file >= -M $config_dir) {
+    system(RESTART)
+}
+
+

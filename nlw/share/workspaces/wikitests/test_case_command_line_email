@@ -1,0 +1,29 @@
+| *Comment* | STARTED Test Case: Command Line Tests EMAIL |  |
+
+TODO: create a second wiki and add the test user as member.
+add the email of that wiki to the test workspace as a member.
+Set up immediate email and watchlist notification intervals for the member in the test workspace.
+Create email and watchlist notification events in the test workspace.
+See that email and watchlist notifications arrive in the subscribed wiki.
+
+send_email_notifications --workspace --page
+send_watchlist_emails --workspace --page
+
+| *Comment* | Test Case: Command Line Tests EMAIL. create a page in %%workspace%% for notification |  |
+| st-admin | update-page --w %%workspace%% --e %%email%% --p "CMDLine %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |
+
+| *Comment* | Test Case: Command Line Tests EMAIL. send notifications |  |
+| st-admin | set-workspace-config --workspace %%workspace%% email_notify_is_enabled 1 |  |
+| st-admin | send_email_notifications --workspace %%workspace%% --page cmdline_%%start_time%%_xxx | qr/There is no page with the id "cmdline_%%start_time%%_xxx" in the %%workspace%% workspace/ |
+| st-admin | send_email_notifications --workspace %%workspace%% --page cmdline_%%start_time%% | qr/Email notifications were sent for the CMDLine %%start_time%% page/ |
+| st-admin | send_watchlist_emails --workspace %%workspace%% --page cmdline_%%start_time%% | qr/Watchlist emails were sent for the CMDLine %%start_time%% page/ |
+
+deliver-email --workspace
+
+| *Comment* | Test Case: Command Line Tests deliver-email need email in on stdin-- used by exim to hand off mail to ST |  |
+| st-admin | deliver-email | qr/The command you called \(deliver-email\) requires a workspace to be specified/ |
+
+| *Comment* | Test Case: Command Line Tests Teardown |  |
+| st-admin | purge-page --w %%workspace%% --p cmdline_%%start_time%% | was purged |
+
+| *Comment* | Test Case: Command Line Tests EMAIL COMPLETED |  |

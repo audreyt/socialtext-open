@@ -1,0 +1,31 @@
+[%# @COPYRIGHT@ -%]
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>[% loc('bug.application-error') %]</title>
+    <style>
+      #app-bug-title {
+          color: red;
+          font-weight: bold;
+      }
+      p, form, textarea { width: 35em }
+      textarea { display: block }
+    </style>
+  </head>
+  <body>
+    <p id="app-bug-title">
+      [% loc('bug.application-error-occurred') %]
+    </p>
+    <p>
+      [% loc('bug.comment-box=script,id', script_name, bug_id) %]
+    </p>
+    <form>
+      <textarea name="user_comment" rows="10" cols="60"></textarea>
+      <input type="submit" name="Button" value="[% loc('bug.report') %]" />
+      <input type="submit" name="Button" value="[% loc('bug.ignore') %]" />
+      <input type="hidden" name="action" value="bugs_report" />
+      <input type="hidden" name="bug_id" value="[% bug_id %]" />
+    </form>
+  </body>
+</html>
+

@@ -1,0 +1,89 @@
+* Fixture: Search
+
+| Comment | Skip tests |
+
+^ SKIP: while Solr Page & Attachment indexing is disabled.
+
+# Sort pages in different ways
+
+| standard-test-setup |
+
+| edit-page       | %%workspace%% | page 1001  | Content 1  |
+| edit-page       | %%workspace%% | page 1002  | Content 2  |
+| edit-page       | %%workspace%% | page 1003  | Content 3  |
+| edit-page       | %%workspace%% | page 1004  | Content 4  |
+| edit-page       | %%workspace%% | page 1005  | Content 5  |
+| edit-page       | %%workspace%% | Page 1006  | Content 6  |
+| edit-page       | %%workspace%% | page 1007  | Content 7  |
+| edit-page       | %%workspace%% | page 1008  | Content 8  |
+| edit-page       | %%workspace%% | page 1009  | Content 9  |
+| edit-page       | %%workspace%% | page 1010 | Content 10 |
+| edit-page       | %%workspace%% | page 1011 | Content 11 |
+| edit-page       | %%workspace%% | page 1012 | Content 12 |
+| edit-page       | %%workspace%% | page 1013 | Content 13 |
+| edit-page       | %%workspace%% | page 1014 | Content 14 |
+| edit-page       | %%workspace%% | page 1015 | Content 15 |
+| edit-page       | %%workspace%% | page 1016 | Content 16 |
+| edit-page       | %%workspace%% | page 1017 | Content 17 |
+| edit-page       | %%workspace%% | page 1018 | Content 18 |
+| edit-page       | %%workspace%% | page 1019 | Content 19 |
+| edit-page       | %%workspace%% | page 1020 | Content 20 |
+| edit-page       | %%workspace%% | page 1021 | Content 21 |
+| edit-page       | %%workspace%% | page 1022 | Content 22 |
+| job-count       | PageIndex     | 22      |            |
+| st-process-jobs |               |         |            |
+| job-count       | PageIndex     | 0       |            |
+
+# only search results from the current workspace are returned
+
+| GET       | /%%workspace%%/index.cgi?action=search&scope=_&search_term=content&sortby=Date&direction=asc                                                  |
+| code-is   | 200                                                                                                                                           |
+| body-like | Showing 1 - 20 of 22 total.                                                                                                                   |
+| body-like | <a title="Next Page" href="?action=search;scope=_;orig_search_term=content;sortby=Date;direction=asc;summaries=1;offset=20;limit=20">Next</a> |
+| body-like | <a title="Last Page" href="?action=search;scope=_;orig_search_term=content;sortby=Date;direction=asc;summaries=1;offset=20;limit=20">Last</a> |
+| body-unlike | Last Edited By |
+| body-unlike | Created By |
+
+| GET         | /%%workspace%%/index.cgi?action=search&scope=_&search_term=content&sortby=Subject&direction=asc                                                  |
+| code-is     | 200                                                                                                                                              |
+| body-like   | Showing 1 - 20 of 22 total.                                                                                                                      |
+| body-like   | <a title="Next Page" href="?action=search;scope=_;orig_search_term=content;sortby=Subject;direction=asc;summaries=1;offset=20;limit=20">Next</a> |
+| body-like   | <a title="Last Page" href="?action=search;scope=_;orig_search_term=content;sortby=Subject;direction=asc;summaries=1;offset=20;limit=20">Last</a> |
+| body-like   | qr/page 1001.+page 1002.+page 1003.+page 1004.+page 1005.+Page 1006.+page 1007.+page 1008.+page 1009.+page 1010/                                 |
+| body-like   | qr/page 1011.+page 1012.+page 1013.+page 1014.+page 1015.+page 1016.+page 1017.+page 1018.+page 1019.+page 1020/                                 |
+| body-unlike | page 1021                                                                                                                                        |
+
+| GET         | /%%workspace%%/index.cgi?action=search&scope=_&search_term=content&sortby=Subject&direction=desc                                                  |
+| code-is     | 200                                                                                                                                              |
+| body-like   | Showing 1 - 20 of 22 total.                                                                                                                      |
+| body-like   | <a title="Next Page" href="?action=search;scope=_;orig_search_term=content;sortby=Subject;direction=desc;summaries=1;offset=20;limit=20">Next</a> |
+| body-like   | <a title="Last Page" href="?action=search;scope=_;orig_search_term=content;sortby=Subject;direction=desc;summaries=1;offset=20;limit=20">Last</a> |
+| body-like   | qr/page 1022.+page 1021.+page 1020.+page 1019.+page 1018.+page 1017.+page 1016.+page 1015.+page 1014.+page 1013.+page 1012.+page 1011/ |
+| body-like   | qr/page 1010.+page 1009.+page 1008.+page 1007.+Page 1006.+page 1005.+page 1004.+page 1003/ |
+| body-unlike | page 1002                                                                                                                                        |
+| body-unlike | page 1001                                                                                                                                        |
+
+# Edit some pages again and increase the revision count
+
+| edit-page       | %%workspace%% | page 1016 | Content 16 - 2 |
+| edit-page       | %%workspace%% | page 1018 | Content 18 - 2 |
+| job-count       | PageIndex     | 2         |                |
+| st-process-jobs |               |           |                |
+| job-count       | PageIndex     | 0         |                |
+
+| GET         | /%%workspace%%/index.cgi?action=search&scope=_&search_term=content&sortby=revision_count&direction=desc                                                  |
+| code-is     | 200                                                                                                                                              |
+| body-like   | Showing 1 - 20 of 22 total.                                                                                                                      |
+| body-like   | <a title="Next Page" href="?action=search;scope=_;orig_search_term=content;sortby=revision_count;direction=desc;summaries=1;offset=20;limit=20">Next</a> |
+| body-like   | <a title="Last Page" href="?action=search;scope=_;orig_search_term=content;sortby=revision_count;direction=desc;summaries=1;offset=20;limit=20">Last</a> |
+| body-like   | page 1016 |
+| body-like   | page 1018 |
+
+| GET         | /%%workspace%%/index.cgi?action=search&scope=_&search_term=content&sortby=revision_count&direction=asc                                                  |
+| code-is     | 200                                                                                                                                              |
+| body-like   | Showing 1 - 20 of 22 total.                                                                                                                      |
+| body-like   | <a title="Next Page" href="?action=search;scope=_;orig_search_term=content;sortby=revision_count;direction=asc;summaries=1;offset=20;limit=20">Next</a> |
+| body-like   | <a title="Last Page" href="?action=search;scope=_;orig_search_term=content;sortby=revision_count;direction=asc;summaries=1;offset=20;limit=20">Last</a> |
+| body-unlike   | page 1016 |
+| body-unlike   | page 1018 |
+

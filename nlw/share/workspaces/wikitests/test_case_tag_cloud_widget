@@ -1,0 +1,40 @@
+| *Comment* | STARTING Test case: Tag Cloud Widget |  |
+| *Comment* | This test uses data in the test-data workspace |  |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Tag Cloud Widget. Create the workspace tags widget |  |
+| st-single-widget-in-dashboard | gallery-widget-Workspace Tags |  |
+
+| *Comment* | Test Case: Tag Cloud Widget. See the tags for workspace help-en |  |
+| wait_for_text_present_ok | Tags for help-en workspace | 30000 |
+| st-name-widget | 1 | tag_cloud |
+| st-widget-title-like | tag_cloud | Tags for help-en workspace |
+
+| *Comment* | Test Case: Tag Cloud Widget. Verify some help-en tags |  |
+| st-select-widget-frame | tag_cloud |  |
+| wait_for_element_visible_ok | link=Socialtext weblog | 30000 |
+| wait_for_element_visible_ok | link=Top Page | 30000 |
+| wait_for_element_visible_ok | link=Project Dakota | 30000 |
+| wait_for_element_visible_ok | link=Help | 30000 |
+
+| *Comment* | Test Case: Tag Cloud Widget. Set the widget for workspace test-data |  |
+| select-frame | relative=parent |  |
+| st-widget-settings | tag_cloud |  |
+| wait_for_element_visible_ok | workspace | 30000 |
+| select-ok | workspace | Canonical Test Data Set |
+| wait_for_element_visible_ok | st-savebutton-%%tag_cloud%% | 30000 |
+| click_ok | st-savebutton-%%tag_cloud%% |  |
+| wait_for_element_not_visible_ok | st-savebutton-%%tag_cloud%% | 30000 |
+
+| *Comment* | Test Case: Tag Cloud Widget. Verify some test-data tags |  |
+| st-select-widget-frame | tag_cloud |  |
+| wait_for_element_visible_ok | link=Welcome | 30000 |
+| wait_for_element_visible_ok | link=jabber | 1000 |
+| wait_for_element_visible_ok | link=mortgage | 500 |
+| wait_for_element_visible_ok | link=carroll | 200 |
+| wait_for_element_visible_ok | link=carroll's poem | 100 |
+| wait_for_element_visible_ok | link=my next thirty years | 50 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Tag Cloud Widget COMPLETED |

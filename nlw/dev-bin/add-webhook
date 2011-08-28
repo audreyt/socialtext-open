@@ -1,0 +1,44 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+use Socialtext::Resting::Getopt qw/get_rester/;
+use Getopt::Long;
+
+my $port = $> + 20000;
+my %args;
+GetOptions( \%args,
+    'class=s',
+    'url=s',
+    'account-id=s',
+    'workspace-id=s',
+    'dev-env',
+) or usage();
+
+usage() unless %args;
+
+my $r = get_rester();
+$r->server("http://localhost:$port") if !$r->server or $args{'dev-env'};
+$r->username('devnull1@socialtext.com') if !$r->username or $args{'dev-env'};
+$r->password('d3vnu11l') if !$r->password or $args{'dev-env'};
+
+
+$args{account_id} = delete $args{'account-id'} if $args{'account-id'};
+$args{workspace_id} = delete $args{'workspace-id'} if $args{'workspace-id'};
+
+print "Setting webhook on " . $r->server . "\n";
+$r->put_webhook( %args );
+print $r->response->status_line, "\n";
+
+exit;
+
+sub usage {
+    die <<EOT
+USAGE: $0 --class=foo --url=foo
+
+--account-id=foo
+--workspace-id=foo
+--dev-env force to create in your dev-env
+EOT
+}

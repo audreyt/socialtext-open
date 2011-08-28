@@ -1,0 +1,26 @@
+  <table class="standard-table page-stats-content">
+   <caption>Page [% action %]</caption>
+   <thead>
+    <tr>
+     <th>User</th>
+     <th>Last View</th>
+     <th>[% action %]</th>
+    </tr>
+   </thead>
+   <tbody>
+   [% FOREACH row IN rows %]
+    <tr class="[% loop.count % 2 ? 'odd' : 'even' %]">
+     <td>[% row.user | html %]</td>
+     <td>[% row.date | html %]</td>
+     <td>[% row.total %]</td>
+    <tr>
+   [% END %]
+   </tbody>
+   <tfoot>
+    <tr>
+     <td>Total [% action %]</td>
+     <td></td>
+     <td>[% total %]</td>
+    <tr>
+   </tfoot>
+  </table>

@@ -1,0 +1,12 @@
+fixtures:
+  - db
+  - help
+
+workspaces:
+  admin:
+    ordered_pages: 1
+
+conflicts:
+  - admin
+  - admin_no_pages
+  - admin_with_extra_pages

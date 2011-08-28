@@ -1,0 +1,20 @@
+#!/bin/bash
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+COL=skin_name
+PREVIOUS=st
+
+workspaces=`psql -U $DB_USER -d $DB -t -c "
+    select name from \"Workspace\" where $COL = '$PREVIOUS'
+"`
+
+if [ -z "$workspaces" ]; then
+    echo "$COL is not set to $PREVIOUS in any workspaces"
+    exit 1
+fi
+
+echo $COL is set to $PREVIOUS in:
+echo "$workspaces"
+exit 0
+

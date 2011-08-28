@@ -1,0 +1,3 @@
+As pointed out in {bz: 4694}, when we delete a signal, we don't delete all of
+the signal assets that we should. As a part of fixing that bug, we need to
+retroactively delete all the assets we've missed in the past.

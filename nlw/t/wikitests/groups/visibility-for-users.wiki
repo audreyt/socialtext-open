@@ -1,0 +1,85 @@
+Tests for [Story: Group List shown on People Profile]
+## Skipping most tests for private groups, we already have coverage in t/wikitests/groups/by-user.wiki
+
+* Fixture: SocialRest
+
+| standard-test-setup |
+
+## Create 2 accounts and 1 workspace
+| set              | acct1     | acct1%%start_time%% |
+| create-account   | %%acct1%% |                     |
+| set              | acct1_id  | %%account_id%%      |
+| set              | acct2     | acct2%%start_time%% |
+| create-account   | %%acct2%% |                     |
+| set              | acct2_id  | %%account_id%%      |
+| set              | wksp      | wksp%%start_time%%  |
+| create-workspace | %%wksp%%  | %%acct2%%           |
+
+## Create three users
+## * user1 and user2 will share a primary account
+## * user1 and user3 will be related by account (through a workspace)
+## * user2 and user3 will have no account relationships
+| set         | user1     | user1%%start_time%%@ken.socialtext.net |           |
+| create-user | %%user1%% | password                               | %%acct1%% |
+| set         | user1_id  | %%user_id%%                            |           |
+| set         | user2     | user2%%start_time%%@ken.socialtext.net |           |
+| create-user | %%user2%% | password                               | %%acct1%% |
+| set         | user2_id  | %%user_id%%                            |           |
+| set         | user3     | user3%%start_time%%@ken.socialtext.net |           |
+| create-user | %%user3%% | password                               | %%acct2%% |
+| set         | user3_id  | %%user_id%%                            |           |
+| add-member  | %%user1%% | %%wksp%%                               |           |
+
+
+## group1 is private, user1 is a member
+| set          | group1     | group1%%start_time%% |           |  |         |
+| create-group | %%group1%% | %%acct1%%            | %%user1%% |  | private |
+| set          | group1_id  | %%group_id%%         |           |  |         |
+
+## user2 views user1's groups, sees nothing
+| http-user-pass  | %%user2%%                    | password |
+| GET-json        | /data/users/%%user1%%/groups |          |
+| code-is         | 200                          |          |
+| json-parse      |                              |          |
+| json-array-size | 0                            |          |
+
+## group2 is self-join, user1 is a member
+| set          | group2     | group2%%start_time%% |           |  |           |
+| create-group | %%group2%% | %%acct1%%            | %%user1%% |  | self-join |
+| set          | group2_id  | %%group_id%%         |           |  |           |
+
+## user2 views user1's groups, can see group2
+| http-user-pass  | %%user2%%                    | password      |
+| GET-json        | /data/users/%%user1%%/groups |               |
+| code-is         | 200                          |               |
+| json-parse      |                              |               |
+| json-array-size | 1                            |               |
+| json-path-is    | $[0].group_id                | %%group2_id%% |
+
+## user3 views user1's groups, cannot see group2
+| http-user-pass  | %%user3%%                    | password      |
+| GET-json        | /data/users/%%user1%%/groups |               |
+| code-is         | 200                          |               |
+| json-parse      |                              |               |
+| json-array-size | 0                            |               |
+
+
+## Create a self-join group in acct2, add user3 as a member
+| set          | group3     | group3%%start_time%% |           |  |           |
+| create-group | %%group3%% | %%acct2%%            | %%user3%% |  | self-join |
+| set          | group3_id  | %%group_id%%         |           |  |           |
+
+## user1 views user3's groups, can see group3 (related to account via a workspace)
+| http-user-pass  | %%user1%%                    | password      |
+| GET-json        | /data/users/%%user3%%/groups |               |
+| code-is         | 200                          |               |
+| json-parse      |                              |               |
+| json-array-size | 1                            |               |
+| json-path-is    | $[0].group_id                | %%group3_id%% |
+
+## user2 views user3's groups, cannot set group3 (no relationships)
+| http-user-pass  | %%user2%%                    | password      |
+| GET-json        | /data/users/%%user3%%/groups |               |
+| code-is         | 200                          |               |
+| json-parse      |                              |               |
+| json-array-size | 0                            |               |

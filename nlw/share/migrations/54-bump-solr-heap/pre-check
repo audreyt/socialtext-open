@@ -1,0 +1,10 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+my $setting = `/usr/sbin/st-appliance-config get solr_heap`;
+if ($setting =~ /The solr_heap config is set to '(\d+)'/ && $1 >= 384) {
+    print "solr_heap is sufficiently large, skipping migration\n";
+    exit 1;
+}
+exit 0; # run migration

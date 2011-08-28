@@ -1,0 +1,70 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+# Script to gather the DISPLAY/EDIT/DOWNLOAD/UPLOAD stats from
+# /var/log/nlw.log and aggregate it into the workspace plugin
+# directory for all workspaces where the page stats reporting is
+# turned on.  Since this is a prototype, we will do our best to
+# be light on the server
+
+use strict;
+use warnings;
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+
+use Getopt::Long;
+use Socialtext::File;
+use Socialtext::AppConfig;
+use Socialtext::System qw(shell_run);
+
+$Socialtext::System::SILENT_RUN = 1;
+
+my %opts = ( verbose => 0 );
+GetOptions(
+    'help'    => \$opts{help},
+    'verbose' => \$opts{verbose},
+) or exit 1;
+
+show_help() if $opts{help};
+
+my $cache_dir = Socialtext::AppConfig->code_base . '/widgets';
+
+msg("Widget cache: $cache_dir\n");
+
+msg("Checking to see if cache directory exists\n");
+my @dirs = Socialtext::File::all_directory_directories(Socialtext::AppConfig->code_base);
+if (grep { /widgets/ } @dirs) {
+    msg("Remove existing cache\n");
+    shell_run("rm -rf $cache_dir");
+}
+
+msg("Create new cache\n");
+Socialtext::File::ensure_directory( $cache_dir );
+
+# Ensures that the stats files are owned by the right user/group
+#my ( $uid, $gid ) = ( stat Socialtext::AppConfig->data_root_dir() )[4, 5];
+#$> = $uid;
+#$) = $gid;
+
+sub msg {
+    print @_ if $opts{verbose};
+}
+
+sub show_help {
+    print <<"EOF";
+
+ st-purge-widget-images
+
+ Purge the cahced widget images.
+
+ This script accepts the following options. You only need to run this script
+ when the style or font of the images has changed.
+
+ --verbose   Tells you what the script is doing as it does it
+
+ --help      Produce this output.
+
+EOF
+    exit(0);
+}

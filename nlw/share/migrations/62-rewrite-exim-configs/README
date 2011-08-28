@@ -1,0 +1,7 @@
+This migration is a requirement for [Story: modify exim4 to reduce email load
+on appliances].
+
+One of our customers ran into a problem where 22k emails were being sent to
+their users at once, and it was overloading both their their email server and
+the appliance. We made these changes which we think should be made on all
+appliances.

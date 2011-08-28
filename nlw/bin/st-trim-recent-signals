@@ -1,0 +1,17 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::SQL qw(:exec);
+
+my $interval = shift || die "USAGE: $0 <interval> (eg. 4 weeks)\n";
+
+# Store when in case this takes a long time and the date changes inbetween
+# calls
+my $when = sql_singlevalue(q{
+    SELECT 'now'::timestamptz - ?::interval
+}, $interval);
+
+sql_execute(q{ DELETE FROM recent_signal WHERE at < ?::timestamptz }, $when);

@@ -1,0 +1,26 @@
+[%# @COPYRIGHT@ -%]
+[% WRAPPER layout/html content_id = 'st-listview' box_javascript = 0 actions = 'element/listview/actionbar' subnav = 'element/wiki/subnav-listview' %]
+<div id="st-page-wiki-title">[% wiki.title %]</div>
+
+<div>
+<div id="st-list-title">
+    [% loc("Pages You're Watching") %]
+    [% INCLUDE rss_link %]
+</div>
+<div id="st-actions-bar-spacer-clear">&nbsp;</div>
+</div>
+
+<p />[% empty_message %]<p />
+<p />[% loc('Look for <img border="0" src="[_1]/images/st/pagetools/watch-hover.gif"/> on a page you want to watch and then click on it to add the page to your Watchlist.', wiki.skin_uri('s2')) %]<p />
+[% END %]
+
+[% BLOCK rss_link %]
+    [% IF feeds.rss.page %]
+        <a href="[% feeds.rss.page.url %]"><img border="0" src="[% wiki.skin_uri('s2') %]/images/feed-icon-14x14.png"/></a>
+    [% END %]
+    [% IF enable_unplugged %]
+    [% IF unplug_uri %]
+        <a title="[% unplug_phrase %]" href="[% unplug_uri %]"><img border="0" src="[% wiki.skin_uri('s2') %]/images/unplug-icon.png"/></a>
+    [% END %]
+    [% END %]
+[% END %]

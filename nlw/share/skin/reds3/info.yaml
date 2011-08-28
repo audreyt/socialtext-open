@@ -1,0 +1,22 @@
+---
+abstract: RED
+cascade_css: 1
+depends:
+  - s3
+desktop:
+  2nd_bg_color: '#FFB2B2'
+  bg_color: '#FFEBEB'
+  header_gradient_bottom: '#825151'
+  header_gradient_top: '#9C4C4C'
+  highlight_color: '#FFD4D4'
+  logo_uri: /static/skin/reds3/images/sd-logo-red.png
+license: CPAL
+mobile:
+  logo:
+    backgroundColor: '#7F1117'
+    color: '#7F1117'
+name: reds3
+no_common: 1
+no_workspace_dashboard: 1
+parent: s3
+version: 1.0.0

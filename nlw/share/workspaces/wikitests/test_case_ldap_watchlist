@@ -1,0 +1,12 @@
+| *Comment* | Test Case: LDAP Watchlist |  |
+
+| *Comment* | Run a fairly complex testcase logged in as the LDAP user |  |
+
+| set | username | devnullx |
+| set | email | devnullx@socialtext.com |
+| set | password | ldapd3v |
+| set | email_esc | devnullx\@socialtext.com |
+| st-login | %%username%% | %%password%% |
+| include | [Test Case: Watchlist] |  |
+
+| *Comment* | Test Case: LDAP Watchlist COMPLETED |  |

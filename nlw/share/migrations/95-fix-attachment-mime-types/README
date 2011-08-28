@@ -1,0 +1,5 @@
+See [Task: fix mime-type mismatch of attachments].
+
+At some unknown point in our past, mime-types for certain attachments were not
+being properly recorded. This migration seeks to fix that issue and re-index
+said attachments so that these documents can be indexed in solr.

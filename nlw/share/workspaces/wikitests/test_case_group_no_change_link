@@ -1,0 +1,197 @@
+| *Comment* | Test Case: Group No Change Link |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Group No Change Link Define Users, Accounts |  |
+| set | account | sj-acct-%%start_time%% |
+| set | group | sj-group-%%start_time%% |
+| set | user_short | sj-user-%%start_time%% |
+| set | user | `%%user_short%%@matt.socialtext.net` |
+| set | joiner_short | sj-joiner-%%start_time%% |
+| set | joiner | `%%joiner_short%%@matt.socialtext.net` |
+
+| set | ws | sj-ws-%%start_time%% |
+| set | wstwo | sj-ws-two%%start_time%% |
+
+| set | other_account | other-acct-%%start_time%% |
+| set | other_user | `other-user-%%start_time%%@matt.socialtext.net` |
+| set | other_group | other-group-%%start_time%% |
+
+| set | public_group | public-group-%%start_time%% |
+| set | public_group_desc | Public Group %%start_time%% |
+| set | private_group | private-group-%%start_time%% |
+| set | private_group_desc | Private Group %%start_time%% |
+| set | other_private_group | other-private-group-%%start_time%% |
+| set | other_private_group_desc | Other Private Group %%start_time%% |
+
+| *Comment* | Test Case: Group No Change Link CREATE users, accounts |  |
+| st-admin | create-account --name %%account%% | was created |
+| st-admin | create-user --email %%user%% --password %%password%% --account %%account%% | was created |
+| st-admin | create-user --email %%joiner%% --password %%password%% --account %%account%% | was created |
+| st-admin | create-account --name %%other_account%% | was created |
+| st-admin | create-user --email %%other_user%% --password %%password%% --account %%other_account%% | was created |
+| st-admin | create-workspace --n %%ws%% --t %%ws%% -account %%account%% | was created |
+| st-admin | set-permissions --w %%ws%% --e %%user%% --p self-join | The permissions for the %%ws%% workspace have been changed to self-join |
+| st-admin | add-workspace-admin --w %%ws%% --e %%user%% | now has the role of 'admin' in the |
+| st-admin | create-workspace --n %%wstwo%% --t %%wstwo%% --account %%account%% | was created |
+| st-admin | add-workspace-admin --w %%wstwo%% --e %%user%% | now has the role of 'admin' in the |
+
+| *Comment* | Test Case: Group No Change Link Create A Self-Join Group |  |
+| st-logoutin | %%user%% | %%password%% |
+| create-group | %%other_group%% |  |
+| set | other_group_id | %%group_id%% |
+| st-admin | set-permissions --g %%other_group_id%% --p self-join | have been changed to self-join |
+
+| *Comment* | Test Case: Group No Change Link add group members |  |
+| st-admin | add-member --g %%other_group_id%% --e %%user%% | is now a member |
+| st-admin | add-group-admin --g %%other_group_id%% --e %%user%% | is now a admin |
+| st-admin | add-member --g %%other_group_id%% --w %%ws%% | now has the role of 'member' |
+
+| *Comment* | Test Case: Group No Change Link Create %%public_group%% |  |  |
+| st-create-group | %%public_group%% | %%public_group_desc%% | self-join-radio |
+
+| *Comment* | Test Case: Group No Change Link Self-Join group is open for editing |  |
+| st-name-widget | 1 | information_widget |
+| st-widget-title-like | information_widget | Information |
+| st-select-widget-frame | information_widget |  |
+| wait_for_text_present_ok | Change | 30000 |
+| wait_for_element_visible_ok | permission-change | 30000 |
+| text_like | //span[@id='permission-set-loc'] | qr/self-join/ism |
+| text_unlike | //span[@id='permission-set-loc'] | qr/private/ism |
+| select-frame | relative=parent |  |
+| wait_for_element_visible_ok | create-group | 30000 |
+| click_and_wait | create-group |  |
+| get_id_from_url | public_group_id |  |
+| wait_for_text_present_ok | %%public_group%% | 30000 |
+| text_like | //div[@class='groupsTitle'] | %%public_group%% |
+| get_id_from_url | public_group_id |  |
+
+| *Comment* | Test Case: Group No Change Link Save Group, add shared workspace to two groups |  |
+| st-process-jobs |  |  |
+| st-admin | add-member --g %%public_group_id%% --w %%ws%% | now has the role of 'member' |
+
+| *Comment* | Test Case: Group No Change Link Save Group, %%public_group%% no change link |  |
+| st-process-jobs |  |  |
+| open_ok | /st/edit_group/%%public_group_id%% |  |
+| wait_for_text_present_ok | Edit Group: | 30000 |
+| st-name-widget | 1 | information_widget |
+| st-select-widget-frame | information_widget |  |
+| wait_for_element_not_present_ok | permission-change | 15000 |
+| text_unlike | //span[@id='permission-set-loc'] | qr/private/ism |
+| text_like | //span[@id='permission-set-loc'] | qr/self-join/ism |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Group No Change Link Save Group, %%other_group%% no change link |  |
+| open_ok | /st/edit_group/%%other_group_id%% |  |
+| wait_for_text_present_ok | Edit Group: | 30000 |
+| st-name-widget | 1 | information_widget |
+| st-select-widget-frame | information_widget |  |
+| wait_for_element_not_present_ok | permission-change | 15000 |
+| text_unlike | //span[@id='permission-set-loc'] | qr/private/ism |
+| text_like | //span[@id='permission-set-loc'] | qr/self-join/ism |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Group No Change Link Create %%other_private_group%% |  |
+| create-group | %%other_private_group%% |  |
+| set | other_priv_id | %%group_id%% |
+
+| st-admin | add-member --g %%other_priv_id%% --e %%user%% | is now a member |
+| st-admin | add-group-admin --g %%other_priv_id%% --e %%user%% | is now a admin |
+| st-admin | add-member --w %%wstwo%% --g %%other_priv_id%% | now has the role of 'member' |
+
+| *Comment* | Test Case: Group No Change Link Create %%private_group%% |  |  |
+| st-create-group | %%private_group%% | %%private_group_desc%% | private-radio |
+
+| wait_for_element_visible_ok | create-group | 30000 |
+| click_and_wait | create-group |  |
+| get_id_from_url | private_group_id |  |
+| wait_for_text_present_ok | %%private_group%% | 30000 |
+
+| *Comment* | Test Case: Group No Change Link Save Group, add %%wstwo%% to two groups |  |
+| st-admin | add-member --w %%wstwo%% --g %%private_group_id%% | has the role of 'member' |
+| st-process-jobs |  |  |
+
+| *Comment* | Test Case: Group No Change Link for %%other_private_group%% |  |
+| open_ok | /st/edit_group/%%other_priv_id%% |  |
+| wait_for_text_present_ok | Edit Group: | 30000 |
+| st-name-widget | 1 | information_widget |
+| st-widget-title-like | information_widget | Information |
+| st-select-widget-frame | information_widget |  |
+| wait_for_element_not_present_ok | permission-change | 15000 |
+| text_unlike | //span[@id='permission-set-loc'] | qr/self-join/ism |
+| text_like | //span[@id='permission-set-loc'] | qr/private/ism |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Group No Change Link for %%private_group%% |  |
+| open_ok | /st/edit_group/%%private_group_id%% |  |
+| wait_for_text_present_ok | Edit Group: | 30000 |
+| st-name-widget | 1 | information_widget |
+| st-widget-title-like | information_widget | Information |
+| st-select-widget-frame | information_widget |  |
+| wait_for_element_not_present_ok | permission-change | 15000 |
+| text_unlike | //span[@id='permission-set-loc'] | qr/self-join/ism |
+| text_like | //span[@id='permission-set-loc'] | qr/private/ism |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Group No Change Link Save Group, remove %%wstwo%% from private group |  |
+| st-admin | remove-member --w %%wstwo%% --g %%private_group_id%% | is no longer a member |
+
+| *Comment* | Test Case: Group No Change Link Restore %%other_private_group%% |  |
+| st-process-jobs |  |  |
+| open_ok | /st/edit_group/%%other_priv_id%% |  |
+| wait_for_text_present_ok | Edit Group: | 30000 |
+| st-name-widget | 1 | information_widget |
+| st-widget-title-like | information_widget | Information |
+| st-select-widget-frame | information_widget |  |
+| wait_for_element_visible_ok | permission-change | 15000 |
+| text_unlike | //span[@id='permission-set-loc'] | qr/self-join/ism |
+| text_like | //span[@id='permission-set-loc'] | qr/private/ism |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Group No Change Link Restore %%private_group%% |  |
+| open_ok | /st/edit_group/%%private_group_id%% |  |
+| wait_for_text_present_ok | Edit Group: | 30000 |
+| st-name-widget | 1 | information_widget |
+| st-widget-title-like | information_widget | Information |
+| st-select-widget-frame | information_widget |  |
+| wait_for_element_visible_ok | permission-change | 15000 |
+| text_unlike | //span[@id='permission-set-loc'] | qr/self-join/ism |
+| text_like | //span[@id='permission-set-loc'] | qr/private/ism |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Group No Change Link Save Group, remove %%ws%% from s-j group |  |
+| st-admin | remove-member --g %%public_group_id%% --w %%ws%% | is no longer a member |
+
+| *Comment* | Test Case: Group No Change Link Save Group, %%public_group%% restore change link |  |
+| st-process-jobs |  |  |
+| open_ok | /st/edit_group/%%public_group_id%% |  |
+| wait_for_text_present_ok | Edit Group: | 30000 |
+| st-name-widget | 1 | information_widget |
+| st-select-widget-frame | information_widget |  |
+| wait_for_element_visible_ok | permission-change | 15000 |
+| text_unlike | //span[@id='permission-set-loc'] | qr/private/ism |
+| text_like | //span[@id='permission-set-loc'] | qr/self-join/ism |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Group No Change Link Save Group, %%other_group%% restore change link |  |
+| open_ok | /st/edit_group/%%other_group_id%% |  |
+| wait_for_text_present_ok | Edit Group: | 30000 |
+| st-name-widget | 1 | information_widget |
+| st-select-widget-frame | information_widget |  |
+| wait_for_element_visible_ok | permission-change | 15000 |
+| text_unlike | //span[@id='permission-set-loc'] | qr/private/ism |
+| text_like | //span[@id='permission-set-loc'] | qr/self-join/ism |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Group No Change Link TEARDOWN |  |
+| st-process-jobs |  |  |
+| st-admin | delete-workspace --w %%ws%% --no-export | has been deleted |
+| st-admin | delete-workspace --w %%wstwo%% --no-export | has been deleted |
+
+| delete-group | %%private_group_id%% | Deleted group id %%private_group_id%% |
+| delete-group | %%public_group_id%% | Deleted group id %%public_group_id%% |
+| delete-group | %%group_id%% | Deleted group id %%group_id%% |
+| delete-group | %%other_group_id%% | Deleted group id %%other_group_id%% |
+| delete-group | %%other_priv_id%% | Deleted group id %%other_priv_id%% |
+
+| *Comment* | Test Case: Group No Change Link COMPLETED |  |

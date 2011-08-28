@@ -1,0 +1,97 @@
+NAME
+
+    Widget.Lightbox - Lightbox effect made easy
+
+SYNOPSIS
+
+      # Just show something
+      var box = Widget.Lightbox.show(contentHTML);
+      # Hide it
+      box.hide();
+    
+      # OO-style
+      var box = new Widget.Lightbox;
+      box.content(contentHTML);
+      box.show();
+      setTimeout(box.hide, 50000);
+    
+      # different box effects and tyles
+      var box = new Widget.Lightbox();
+      box.effect('RoundedCorners');
+      box.content(contentHTML);
+      box.show();
+
+DESCRIPTION
+
+    Widget.Lightbox is an objective re-implementation of Lightbox JS
+    (http://www.huddletogether.com/projects/lightbox/). It has several nice
+    features:
+
+    Requires no extra image files
+
+    Requires no extra CSS files and rules
+
+    Optionally supports script.aculo.us effects library.
+
+    Optionally supports JSAN effects library.
+
+    Works on IE, Firefox, and Safari.
+
+    It's made easy to use for javascript programmers who wants to show off
+    some cool stuff quickly with too much bothering about CSS and IE
+    issues.
+
+    Here's the code for a "Hello World" lightbox:
+
+        Widget.Lightbox.show("Hello World");
+
+    It creates a default white box on top of a default grey transparent
+    background with "Hello World" inside. You may click anywhere to close
+    that hello-world lightbox, that is the default behaviour. Or if you're
+    doing some serious stuffs, here's the OO veresion of "Hello World":
+
+        var box = new Widget.Lightbox;
+        box.content("Hello World");
+        box.show();
+
+    If you want to close the lightbox in the code, do this:
+
+        box.hide();
+
+    If you have script.aculo.us effects library loaded, you could have
+    fancy effetcs using OO interface:
+
+        var box = new Widget.Lightbox;
+        box.content("Hello World");
+        box.effects("Appear");
+        box.show();
+
+    The box.effects() methods sets the effect that will be applied to the
+    box when it's showing. It takes strings which means effect names.
+    Currently support values are: 'Appear', 'Grow', 'BlindDown', 'Shake',
+    and 'RoundedCorners'. Except for 'RoundedCorners', which is available
+    on JSAN as Effect.RoundedCorners, the rest four are availale in
+    script.aculo.us effects library. You must load these libraries on your
+    own if you want to see these effects.
+
+    'RoundedCorners' could be combined with others. For example:
+
+        box.effects('RoundedCorners', 'Appear');
+
+    This means to have a box with rounded corners fading in.
+
+    That's pretty much about everything you should know to use this
+    library.
+
+AUTHOR
+
+    Kang-min Liu, <gugod@gugod.org>
+
+COPYRIGHT
+
+    Copyright (c) 2006 Kang-min Liu. All rights reserved.
+
+    This module is free software; you can redistribute it and/or modify it
+    under the same terms as the Perl programming language (your choice of
+    GPL or the Perl Artistic license).
+

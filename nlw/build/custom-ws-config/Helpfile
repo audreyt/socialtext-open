@@ -1,0 +1,39 @@
+This is the help file for making custom workspaces with permission sets and/or custom skins.
+
+N.B. The script will DELETE existing instances of these workspaces
+
+    * make help
+        print this file
+
+    * make clean
+        delete the tarballs in /tmp for these workspaces
+
+    * make dev  [MEMBER=someone@socialtext.com]
+        create the custom spaces for the dev env
+        making MEMBER an admin in each space
+        default MEMBER=devnull1@socialtext.com
+
+    * make staging  [MEMBER=someone@socialtext.com]
+        same as make dev but on staging server
+        default MEMBER=ken.pier@socialtext.com
+        
+    * make all
+        make only the custom skins
+        this is "all" for backwards compatibility
+        default MEMBER=devnull1@socialtext.com
+
+The public workspace titles are:
+    Test Member Only
+    Test Authenticated User Only
+    Test Public Read Only
+    Test Fully Public
+    Test Public Comment Only
+    Test Public Authenticate to Edit
+    Test Intranet
+    
+The custom skins titles are:
+    Test DrKW
+    Test Symantec    
+    Test LoanPerformance
+    Test ReferenceMD
+                                                    

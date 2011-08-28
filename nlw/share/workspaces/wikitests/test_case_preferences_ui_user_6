@@ -1,0 +1,114 @@
+| *Comment* | Test Case: Preferences UI User 6 |  |
+
+| set | new_account | userPrefs.%%start_time%%.6 |
+| set | new_ws | userprefs-%%start_time%%-6 |
+| set | new_user | userPrefs6.%%start_time%%@ken.socialtext.net |
+| set | new_name | userPrefs6 %%start_time%% |
+| include | [Test Case: Preferences UI User Setup] |  |
+
+| *Comment* | Test Case: Preferences UI User 6. Screen Layout. Defaults: hover on, include breadcrumbs off |  |
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=Screen Layout |  |
+| text_like | contentContainer | Should hovering |
+| text_like | contentContainer | Include Recently |
+| value_is | display__mouseover_length | on |
+| value_is | display__include_breadcrumbs | off |
+
+| *Comment* | Test Case: Preferences UI User 6. Screen Layout. hover on, include breadcrumbs on |  |
+| check_ok | display__include_breadcrumbs |  |
+| value_is | display__include_breadcrumbs | on |
+| click_and_wait | link=Save |  |
+| text_like | qr/Preferences Saved/i |  |
+| value_is | display__mouseover_length | on |
+| value_is | display__include_breadcrumbs | on |
+| open_ok | /%%new_ws%% |  |
+| text_like | contentContainer | Recently Viewed |
+
+| *Comment* | Test Case: Preferences UI User 6. hover off, include breadcrumbs off |  |
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=Screen Layout |  |
+| text_like | contentContainer | Should hovering |
+| text_like | contentContainer | Include Recently |
+| value_is | display__mouseover_length | on |
+| value_is | display__include_breadcrumbs | on |
+| uncheck_ok | display__mouseover_length |  |
+| uncheck_ok | display__include_breadcrumbs |  |
+| value_is | display__mouseover_length | off |
+| value_is | display__include_breadcrumbs | off |
+| click_and_wait | link=Save |  |
+| text_like | qr/Preferences Saved/i |  |
+| value_is | display__mouseover_length | off |
+| value_is | display__include_breadcrumbs | off |
+| open_ok | /%%new_ws%% |  |
+| text_unlike | contentContainer | Recently Viewed |
+
+| *Comment* | Test Case: Preferences UI User 6. Screen Layout. Navigate away, return, verify off value |  |
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=Screen Layout |  |
+| value_is | display__mouseover_length | off |
+| value_is | display__include_breadcrumbs | off |
+
+| *Comment* | Test Case: Preferences UI User 6. hover off, breadcrumbs on |  |
+| uncheck_ok | display__mouseover_length |  |
+| check_ok | display__include_breadcrumbs |  |
+| value_is | display__mouseover_length | off |
+| value_is | display__include_breadcrumbs | on |
+| click_and_wait | link=Save |  |
+| text_like | qr/Preferences Saved/i |  |
+| value_is | display__mouseover_length | off |
+| value_is | display__include_breadcrumbs | on |
+| open_ok | /%%new_ws%% |  |
+| text_like | contentContainer | Recently Viewed |
+
+| *Comment* | Test Case: Preferences UI User 6. Save Screen Layout without modifications |  |
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=Screen Layout |  |
+| text_like | contentContainer | Should hovering |
+| text_like | contentContainer | Include Recently |
+| value_is | display__mouseover_length | off |
+| value_is | display__include_breadcrumbs | on |
+| click_and_wait | link=Save |  |
+| text_like | qr/Preferences Saved/i |  |
+| value_is | display__mouseover_length | off |
+| value_is | display__include_breadcrumbs | on |
+
+| *Comment* | Test Case: Preferences UI User 6. Screen Layout cancel |  |
+| check_ok | display__mouseover_length |  |
+| uncheck_ok | display__include_breadcrumbs |  |
+| value_is | display__mouseover_length | on |
+| value_is | display__include_breadcrumbs | off |
+| click_ok | link=Cancel |  |
+| value_is | display__mouseover_length | off |
+| value_is | display__include_breadcrumbs | on |
+
+| *Comment* | Test Case: Preferences UI User 6. Screen Layout. Navigate away, return, verify value |  |
+| click_and_wait | link=Page Editing |  |
+| click_and_wait | link=Screen Layout |  |
+| value_is | display__mouseover_length | off |
+| value_is | display__include_breadcrumbs | on |
+
+| *Comment* | Test Case: Preferences UI User 6. Screen Layout. Restore Defaults: hover on, include breadcrumbs off |  |
+| click_and_wait | link=Screen Layout |  |
+| text_like | contentContainer | Should hovering |
+| text_like | contentContainer | Include Recently |
+| check_ok | display__mouseover_length |  |
+| uncheck_ok | display__include_breadcrumbs |  |
+| value_is | display__mouseover_length | on |
+| value_is | display__include_breadcrumbs | off |
+| click_and_wait | link=Save |  |
+| text_like | qr/Preferences Saved/i |  |
+| value_is | display__mouseover_length | on |
+| value_is | display__include_breadcrumbs | off |
+
+| *Comment* | Test Case: Preferences UI User 6: User test unsubscribe functionality |  |
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=Unsubscribe |  |
+| wait_for_element_present_ok | //input[@value='Unsubscribe from the %%new_ws%% workspace'] | 30000 |
+| click_and_wait | //input[@value='Unsubscribe from the %%new_ws%% workspace'] |  |
+| st-logoutin | %%new_user%% | 123456 |
+| open_ok | /%%new_ws%% |  |
+| text_like | errors-and-messages | You are not authorized to view this workspace. |
+
+| include | [Test Case: Preferences UI User Teardown] |  |
+
+| *Comment* | Test Case: Preferences UI User 6 COMPLETED |  |

@@ -1,0 +1,13 @@
+[%# @COPYRIGHT@ -%]
+<script type="text/javascript">
+  // XXX - These functions is duplicated in two other places.
+    function nlw_make_s2_path(rest) {
+        return "[% wiki.skin_uri('s2') %]" + rest;
+    }
+    function nlw_make_skin_path(rest) {
+        return "[% wiki.skin_uri() %]" + rest;
+    }
+    function nlw_make_static_path(rest) {
+        return "[% wiki.static_path %]" + rest;
+    }
+</script>

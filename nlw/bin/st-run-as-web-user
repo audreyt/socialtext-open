@@ -1,0 +1,12 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::Build qw(get_build_setting);
+use Socialtext::System qw(shell_run);
+
+my $www = get_build_setting('st-user');
+shell_run( 'sudo', '-u', $www, @ARGV );

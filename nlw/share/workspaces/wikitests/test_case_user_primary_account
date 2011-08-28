@@ -1,0 +1,93 @@
+| *Comment* | Test Case: User: Primary Account |  |
+
+| st-config | set self_registration 1 |  |
+| st-config | set allow_network_invitation 1 |  |
+| st-appliance-config | set captcha_enabled 0 | Set captcha_enabled to 'UNDEF' |
+
+| set | join_acct | join_accout_%%start_time%% |
+| set | join_admin | join_admin_%%start_time%%@david.socialtext.net |
+| set | join_wiki | join_wiki_%%start_time%% |
+| set | invite_user_1 | invite_user_1_%%start_time%%@david.socialtext.net |
+| set | invite_user_1_short | invite_user_1_%%start_time%% |
+| set | invite_user_2 | invite_user_2_%%start_time%%@david.socialtext.net |
+| set | invite_user_2_short | invite user 2 %%start_time%% |
+| set | invite_user_3 | invite_user_3_%%start_time%%@david.socialtext.net |
+| set | invite_user_3_short | invite_user_3_%%start_time%% |
+| set | invite_user_4 | invite_user_4_%%start_time%%@david.socialtext.net |
+| set | invite_user_4_short | invite user 4 %%start_time%% |
+
+| *Comment* | Test Case: User: Primary Account create some stuff for users to join |  |  |
+| create_account | %%join_acct%% |  |  |
+| set | join_acct_id | %%account_id%% |  |
+| create_user | %%join_admin%% | %%password%% | %%join_acct%% |
+| st-admin | give-accounts-admin --email %%join_admin%% | admin access |  |
+| create_workspace | %%join_wiki%% | %%join_acct%% |  |
+| add_workspace_admin | %%join_admin%% | %%join_wiki%% |  |
+| set_ws_permissions | %%join_wiki%% | public-join-to-edit |  |
+
+| *Comment* | Test Case: User: Primary Account invite user to account through Invite! UI, check their account |  |
+| st-logoutin | %%join_admin%% | %%password%% |
+| open_ok | /?action=invite |  |
+| wait_for_element_visible_ok | //textarea[@name='users_new_ids'] | 30000 |
+| type_ok | //textarea[@name='users_new_ids'] | %%invite_user_1%% |
+| click_and_wait | link=Invite |  |
+| wait_for_text_present_ok | The following 1 user was successfully invited into this Group: | 30000 |
+| open_ok | /nlw/control/account/%%join_acct_id%% |  |
+| wait_for_text_present_ok | %%invite_user_1%% |  |
+| click_and_wait | link=%%invite_user_1_short%% <%%invite_user_1%%> |  |
+| wait_for_text_present_ok | Accounts (1) | 30000 |
+| text_like | accountTable | qr/%%join_acct%%.+Primary Account/ |
+
+| *Comment* | Test Case: User: Primary Account add single user to account via Control Panel, check |  |
+| open_ok | /nlw/control/account/%%join_acct_id%%/add_user |  |
+| wait_for_element_visible_ok | email_address | 30000 |
+| type_ok | email_address | %%invite_user_2%% |
+| click_and_wait | add_user |  |
+| wait_for_text_present_ok | Added user %%invite_user_2%% | 30000 |
+| open_ok | /nlw/control/account/%%join_acct_id%% |  |
+| wait_for_text_present_ok | %%invite_user_2%% |  |
+| click_and_wait | link=%%invite_user_2_short%% <%%invite_user_2%%> |  |
+| wait_for_text_present_ok | Accounts (1) | 30000 |
+| text_like | accountTable | qr/%%join_acct%%.+Primary Account/ |
+
+| *Comment* | Test Case: User: Primary Account add multiple users to account via Control Panel, check |  |
+| *Comment* | *Needs CSV file* |  |
+
+| *Comment* | Test Case: User: Primary Account invite user to wiki via wiki invite UI, check |  |
+| open_ok | /%%join_wiki%%/?action=users_invitation |  |
+| wait_for_element_visible_ok | //textarea[@name='users_new_ids'] | 30000 |
+| type_ok | //textarea[@name='users_new_ids'] | %%invite_user_3%% |
+| click_and_wait | -savelink |  |
+| wait_for_text_present_ok | The following 1 user was invited into this Workspace: | 3000 |
+| open_ok | /nlw/control/account/%%join_acct_id%% |  |
+| wait_for_text_present_ok | %%invite_user_3%% |  |
+| click_and_wait | link=%%invite_user_3_short%% <%%invite_user_3%%> |  |
+| wait_for_text_present_ok | Accounts (1) | 30000 |
+| text_like | accountTable | qr/%%join_acct%%.+Primary Account/ |
+
+| *Comment* | Test Case: User: Primary Account new user self-joins the wiki, check |  |
+| st-logout |  |  |
+| open_ok | /nlw/join.html?workspace_name=%%join_wiki%% |  |
+| wait_for_element_visible_ok | email_address | 30000 |
+| type_ok | email_address | %%invite_user_4%% |
+| type_ok | register_password | %%password%% |
+| type_ok | register_password2 | %%password%% |
+| click_and_wait | register_btn |  |
+| wait_for_text_present_ok | An email confirming your registration has been sent to %%invite_user_4%%. | 30000 |
+| st-login | %%join_admin%% | %%password%% |
+| open_ok | /nlw/control/account/%%join_acct_id%% |  |
+| wait_for_text_present_ok | %%invite_user_4%% |  |
+| click_and_wait | link=%%invite_user_4_short%% <%%invite_user_4%%> |  |
+| wait_for_text_present_ok | Accounts (1) | 30000 |
+| text_like | accountTable | qr/%%join_acct%%.+Primary Account/ |
+
+| *Comment* | Test Case: User: Primary Account TEARDOWN |  |
+| st-process-jobs |  |  |
+| st-admin | deactivate-user --email %%join_admin%% |  |
+| st-admin | deactivate-user --email %%invite_user_1%% |  |
+| st-admin | deactivate-user --email %%invite_user_2%% |  |
+| st-admin | deactivate-user --email %%invite_user_3%% |  |
+| st-admin | deactivate-user --email %%invite_user_4%% |  |
+| delete-workspace | %%join_wiki%% | Recklessly deleting |
+
+| *Comment* | Test Case: User: Primary Account COMPLETED |  |

@@ -1,0 +1,39 @@
+| *Comment* | Test Case: Test Case: Business Control Panel Invite Users to Existent Workspace |  |
+
+| set | email1 | group-1-ews-%%start_time%%@ken.socialtext.com |
+| create_user | %%email1%% | %%password%% |
+| set | user1 | %%user_id%% |
+| set | email2 | group-2-ews-%%start_time%%@ken.socialtext.com |
+| create_user | %%email2%% | %%password%% |
+| set | user2 | %%user_id%% |
+| set | new_ws_title | exist-add-to-ws-%%start_time%% |
+| st-admin | create_workspace --name %%new_ws_title%% --title %%new_ws_title%% |  |
+
+| *Comment* | Test Case: Control Panel Add To Workspace - Add Via /CP UI |  |
+| open_ok | /nlw/control/user |  |
+| wait_for_element_visible_ok | link=Invite to Workspace(s) | 30000 |
+| wait_for_element_visible_ok | username | 30000 |
+| wait_for_element_visible_ok | st-username-search-submit | 30000 |
+| type_ok | username | %%start_time%% |
+| click_and_wait | st-username-search-submit |  |
+| wait_for_element_visible_ok | %%user1%% | 30000 |
+| click_ok | %%user1%% |  |
+| wait_for_element_visible_ok | %%user2%% | 30000 |
+| click_ok | %%user2%% |  |
+| click_and_wait | link=Invite to Workspace(s) | 30000 |
+| wait_for_element_visible_ok | todo-invite | 30000 |
+| click_ok | todo-invite |  |
+| wait_for_element_visible_ok | workspaceLookahead | 30000 |
+| type-lookahead-ok | workspaceLookahead | %%new_ws_title%% |
+| wait_for_element_visible_ok | link=%%new_ws_title%% - %%new_ws_title%% | 30000 |
+| click_ok | link=%%new_ws_title%% - %%new_ws_title%% |  |
+| click_and_wait | //input[@id='invite-button'] |  |
+| wait_for_text_present_ok | Congratulations! You successfully added 2 users to 1 workspace. They will receive an invitation message to each workspace. | 30000 |
+| wait_for_text_present_ok | Search by username: | 30000 |
+| wait_for_element_visible_ok | link=Clear Selection | 30000 |
+| click_ok | link=Clear Selection |  |
+
+| *Comment* | Test Case: Business Control Panel Invite Users to Existent Workspace TEARDOWN |  |
+| st-admin | delete-workspace --w %%new_ws_title%% --no-export | has been deleted |
+
+| *Comment* | Test Case: Business Control Panel Invite Users to Existent Workspace COMPLETED |

@@ -1,0 +1,9 @@
+[%# @COPYRIGHT@ -%]
+[%# vim: set et sts=2 sw=2: %]
+[% WRAPPER authen/wrapper title=loc('login.register') %]
+  <dl class="form">
+    <dd>[% loc("login.fill-in-info-to-create-account") %]</dd>
+    <dd><a href="/challenge?[% redirect_to | html %]">[% loc('login.click-here-to-login-with-existing-account') %]</a></dd>
+  </dl>
+  [% INCLUDE 'authen/element/register_form' %]
+[% END %]

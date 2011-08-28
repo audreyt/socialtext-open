@@ -1,0 +1,19 @@
+[% extra_text -%]
+
+[% loc('email.hi') %]
+
+[% loc("email.inviting-you-to-join-sign-in-below=wiki:", workspace_title) %]
+
+[% loc('email.web-address:') %] [% workspace_uri | html %]
+[% loc('email.username:') %][% username | html %]
+
+[% loc('email.sign-in-with-openid-now') %]
+
+[% loc('email.keep-this-for-future-reference') %]
+
+[% loc('email.thanks') %]
+
+[% inviting_user %]
+
+[% PROCESS 'email/standard-footer.txt'
+   support_link = 1 %]

@@ -1,0 +1,36 @@
+#!/bin/bash -e
+
+USAGE="USAGE: run-backup-test -v VE [-t TEST (pgiptr)] [-r RELEASE (none)] -h(elp) -d(ry)"
+
+TEST="pgpitr"
+RELEASE=""
+DRY=""
+
+while getopts "v:r:t:dh" optionName; do
+        case "$optionName" in
+          v) VE="$OPTARG";;
+          r) RELEASE="$OPTARG";;
+          t) TEST="$OPTARG";;
+          d) DRY="1";;
+          h) echo $USAGE; exit;;
+          [?]) echo $USAGE; exit;;
+        esac
+done
+
+if [[ "$VE" =~ "dev" ]]; then VEHOST="zircon"; else VEHOST="willemite"; fi
+if [ $DRY ]; then
+        echo "VE: $VE, RELEASE: $RELEASE, TEST: $TEST, VEHOST: $VEHOST"
+fi
+
+cd $ST_CURRENT
+if [ $VE ] && [ $RELEASE ]; then
+    echo "running: vest -v $VE -r $RELEASE"
+    if [ "$DRY" == "" ]; then vest -v $VE -r $RELEASE; fi
+fi
+
+cd $ST_CURRENT/appliance/libsocialtext-appliance-perl
+export ST_VE_NAME=$VE
+export ST_VE_HOST=$VEHOST.socialtext.net
+echo "running: perl -Ilib t/test-$TEST.pl"
+if [ "$DRY" == "" ]; then perl -Ilib ./t/test-$TEST.pl; fi
+cd $ST_CURRENT

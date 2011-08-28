@@ -1,0 +1,53 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+
+use Getopt::Long;
+use Socialtext::File;
+
+my %opts = ( root => '/var/www/socialtext' );
+
+GetOptions( \%opts, 'root:s', 'help', 'nochange', 'verbose' ) or exit 1;
+
+if ( $opts{help} ) {
+    print <<'.' ;
+USAGE: import-user-data-1 [ OPTIONS ]
+
+    This script imports workspace, user, and account data into the DBMS
+
+OPTIONS
+
+    --root=/path/to/data        Specify directory where root of data directory is.
+    --help                      See this message.
+.
+    exit;
+}
+
+print <<'EOF';
+
+*******************WARNING*******************
+
+This script will delete old workspace and user data from the
+system. Run it at your own risk. We recommend backing up your NLW data
+first.
+
+Press Ctrl-C to abort now, or hit Enter to continue.
+
+EOF
+
+{ my $foo = <STDIN>; }
+
+for my $path ( ( map { Socialtext::File::catfile( $opts{root}, $_ ) }
+                 qw( usernames.db users.db workspaces.db htpasswd.db htgroup workspace ) ),
+               glob Socialtext::File::catfile( $opts{root}, 'plugin', '*', 'users.db' ),
+             ) {
+    print "Removing $path\n";
+    system( 'rm', '-fr', $path )
+        and die "rm -fr $path failed: $!";
+}
+

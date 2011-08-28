@@ -1,0 +1,20 @@
+INSTALL.email -- How to install email support for Socialtext Open
+
+@COPYRIGHT@
+
+=== Email support ===
+
+Socialtext Open supports email both inbound and outbound.  Besides having
+the wiki able to send email notifications, you can create pages by
+mailing to the wiki.  In order for this to happen, your email aliases
+file needs to have aliases for each workspace:
+
+    admin: "|/usr/local/bin/st-admin deliver-email --workspace admin"
+    sales: "|/usr/local/bin/st-admin deliver-email --workspace sales"
+    dev: "|/usr/local/bin/st-admin deliver-email --workspace dev"
+
+Socialtext Open will add lines to your aliases file when workspaces are
+created if the aliases file is called "aliases.deliver", and it resides
+in /etc or your /etc/socialtext directory.  Otherwise, you'll need to
+create an alias line by hand.
+

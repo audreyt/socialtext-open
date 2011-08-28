@@ -1,0 +1,92 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+use Socialtext::Account;
+use Socialtext::User;
+use Socialtext::SQL qw(sql_execute sql_txn);
+use List::MoreUtils qw/part/;
+
+my $deleted_acct = Socialtext::Account->Deleted();
+
+# go get the user_id for all Users having the Deleted Acct as their Pri Acct
+my $sth = sql_execute(qq{
+        SELECT user_id, driver_username
+          FROM "UserMetadata"
+          JOIN users USING (user_id)
+         WHERE primary_account_id = ?
+         AND NOT is_system_created
+    }, $deleted_acct->account_id
+);
+
+my $deleted_users = $sth->fetchall_arrayref({});
+
+print "Fixing up ".scalar(@$deleted_users)." users in the Deleted account\n";
+sql_txn {
+    foreach my $user_hash (@$deleted_users) {
+        print "\tdeactivating $user_hash->{driver_username}\n";
+        my $user = Socialtext::User->new(user_id => $user_hash->{user_id});
+        $user->deactivate();
+    }
+};
+
+print "Checking for users with disabled passwords that don't belong to the Deleted account...\n";
+# find all the users that are members of Deleted, but aren't owned by deleted:
+my $sth2 = sql_execute(q{
+    SELECT user_id, password, driver_key, driver_username
+      FROM users
+     WHERE user_id in (
+        SELECT from_set_id
+        FROM user_set_include
+        WHERE into_set_id = ?
+          AND from_set_id NOT IN (
+            SELECT user_id
+            FROM "UserMetadata"
+            WHERE primary_account_id = ?
+              AND NOT is_system_created
+        )
+    )
+      AND driver_key = 'Default'
+    ORDER BY user_id
+}, $deleted_acct->user_set_id, $deleted_acct->account_id);
+
+my $strange_users = $sth2->fetchall_arrayref({});
+my ($enabled, $disabled) = part {
+    ($_->{password} =~ /^\*(?:no-)?password\*$/) ? 1 : 0
+} @$strange_users;
+
+ # These users still have a password, so we'll say they should not be Deleted
+if ($enabled and my $enabled_count = scalar @$enabled) {
+    print "\tRemoving roles in Deleted for $enabled_count apparently-enabled users.\n";
+    sql_txn {
+        for my $user_hash (@$enabled) {
+            print "\t\tremoving $user_hash->{driver_username} from Deleted account\n";
+            my $user = Socialtext::User->new(user_id => $user_hash->{user_id});
+            $deleted_acct->remove_user(user => $user);
+        }
+    };
+}
+else {
+    print "\tNo apparently-enabled users have a role in Deleted (this is good).\n";
+}
+
+# These users have the nopassword password, so we'll say they should be
+# de-activated.
+if ($disabled and my $disabled_count = scalar @$disabled) {
+    print "\tDeactivating $disabled_count users that have should have been owned by Deleted.\n";
+    sql_txn {
+        for my $user_hash (@$disabled) {
+            print "\t\tdeactivating $user_hash->{driver_username}\n";
+            my $user = Socialtext::User->new(user_id => $user_hash->{user_id});
+            $user->deactivate();
+        }
+    };
+}
+else {
+    print "\tAll apparently-disabled users are owned by the Deleted account (this is good).\n";
+}
+
+print "Done fixing up user roles in the Deleted account\n";
+exit 0;

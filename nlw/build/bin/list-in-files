@@ -1,0 +1,21 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+use File::Find;
+use Cwd qw(abs_path);
+use File::Basename qw(dirname);
+use File::Spec::Functions qw(catdir);
+
+my $chop_dot_in = shift;
+
+my $dir = abs_path( catdir( dirname(__FILE__), '..', '..' ) );
+my @files;
+find( sub { 
+    return if $File::Find::name =~ /blib/ or not /\.in$/;
+    push @files, $File::Find::name;
+}, $dir );
+@files = map {s/\.in$//; $_} @files if $chop_dot_in;
+print join("\n", @files);
+print "\n";

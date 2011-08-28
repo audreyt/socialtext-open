@@ -1,0 +1,106 @@
+[%# @COPYRIGHT@ -%]
+[% PROCESS element/settings/start %]
+<tr>
+ <td>
+  <div class="workspace-entry-header">[% loc('Workspace Email Receive Setting') %]</div>
+  <div class="workspace-entry">
+   <div class="workspace-entry-p">
+       [% loc('When the workspace receives an email, the subject of the email becomes the title of a page, and the body of the email becomes the body of the page.') %]<br/><br/>
+       [% loc('If there is already an existing page with that title, where should the body of the email be added?') %]
+       </div>
+   <input type="radio" name="incoming_email_placement"
+   [%- IF workspace.incoming_email_placement == 'top' %]
+    checked="checked"
+   [%- END %]
+    value="top" />
+   [% loc('Top of page') %]<br/>
+   <input type="radio" name="incoming_email_placement"
+   [%- IF workspace.incoming_email_placement == 'bottom' %]
+    checked="checked"
+   [%- END %]
+    value="bottom" />
+    [% loc('Bottom of page') %]<br/>
+   <input type="radio" name="incoming_email_placement"
+   [%- IF workspace.incoming_email_placement == 'replace' %]
+    checked="checked"
+   [%- END %]
+    value="replace" />
+   [% loc('Replace existing page') %]<br/>
+  </div>
+ </td>
+</tr>
+
+<tr>
+ <td>
+  <div class="workspace-entry-header">[% loc('Workspace Email Notify Setting') %]</div>
+  <div class="workspace-entry">
+   <div class="workspace-entry-p">
+    [% loc('Should users of this workspace receive email notifications of changes to this workspace?') %]
+    </div>
+   <div class="workspace-entry-p">
+    [% loc('Enable email notifications for this workspace?') %]
+    </div>
+
+   <input type="radio" name="email_notify_is_enabled"
+   [%- IF workspace.email_notify_is_enabled %]
+    checked="checked"
+   [%- END %]
+    value="1" />
+   [% loc('Yes') %]<br/>
+
+   <input type="radio" name="email_notify_is_enabled"
+   [%- UNLESS workspace.email_notify_is_enabled %]
+    checked="checked"
+   [%- END %]
+    value="0" />
+   [% loc('No') %]<br/>
+
+  </div>
+ </td>
+</tr>
+
+<tr>
+ <td>
+     <div class="workspace-entry-header">[% loc('Workspace Weblog Sort Order') %]</div>
+  <div class="workspace-entry">
+   <div class="workspace-entry-p">
+     [% loc('You can choose to sort weblog entries by the date an entry is updated, or by the date an entry was first posted.') %]
+     </div>
+   <input type="radio" name="sort_weblogs_by_create"
+   [%- UNLESS workspace.sort_weblogs_by_create %]
+    checked="checked"
+   [%- END %]
+    value="0" />
+   [% loc('Sort entries by last updated time') %]<br/>
+   <input type="radio" name="sort_weblogs_by_create"
+   [%- IF workspace.sort_weblogs_by_create %]
+    checked="checked"
+   [%- END %]
+    value="1" />
+    [% loc('Sort entries by first posted time') %]<br/>
+ </td>
+</tr>
+
+<tr>
+<td>
+  <div class="workspace-entry-header">[% loc('Socialtext Unplugged') %]</div>
+    <div class="workspace-entry">
+     <div class="workspace-entry-p">
+[% loc('Socialtext Unplugged allows users to read and edit workspace pages while offline. Users can "unplug" one or more pages to read and edit. Changes can be synchronized with the workspace.') %]
+   </div>
+   <input type="radio" name="enable_unplugged"
+   [%- IF workspace.enable_unplugged %]
+    checked="checked"
+   [%- END %]
+    value="1" />
+   [% loc('Socialtext Unplugged enabled') %]<br/>
+   <input type="radio" name="enable_unplugged"
+   [%- UNLESS workspace.enable_unplugged %]
+    checked="checked"
+   [%- END %]
+    value="0" />
+    [% loc('Socialtext Unplugged disabled') %]<br/>
+</td>
+</tr>
+
+[% PROCESS element/settings/end %]

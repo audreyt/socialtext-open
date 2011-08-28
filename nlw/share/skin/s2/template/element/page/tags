@@ -1,0 +1,48 @@
+[% USE JSON %]
+
+<div id="st-tags" class="st-page-box st-page-box-first">
+    <div id="st-tags-title" class="st-page-box-title">[% loc('Tags') %]</div>
+    <form onsubmit="return false;">
+    [% INCLUDE element/jst/template id='st-tags-tagtemplate', jst='tag/name' %]
+    [% INCLUDE element/jst/template id='st-tags-suggestiontemplate', jst='tag/suggestion' %]
+    [% INCLUDE element/json id='st-tags-initial', json=initialtags %]
+    [% INCLUDE element/json id='st-tags-workspace', json=workspacetags %]
+    </form>
+    <div id="st-no-tags-placeholder"[% IF tag_count %] style="display: none"[% END %]>[% loc('There are no tags for this page.') %]</div>
+    <ul id="st-tags-listing" class="st-page-box-listing">
+    [% FOREACH tags.tags %]
+        <li class="st-tags-tagline st-page-box-listing-entry">
+            <span>
+                <a href="?action=category_display;category=[% name | uri %];tag=/[% name | uri %]"
+                    class="st-tags-tagline-link">[% name | html %]</a>
+            </span>
+            [% IF checker.check_permission('edit') %]
+            <span class="st-tags-tagdelete">
+                <a href="#" id="st-tags-delete-[% loop.index() %]"
+                    title="[% loc('Remove [_1] tag from page', $name) %]" class="st-tags-tagdelete">[x]</a>
+            <span></>
+            <script type="text/javascript">
+            jQuery(function($) {
+                $("#st-tags-delete-[% loop.index() %]").bind("click", function() {
+                    Tags.deleteTag([% name.json %]);
+                    return false;
+                });
+            });
+            </script>
+            [% END %]
+        </li>
+    [% END %]
+    </ul>
+    <div id="st-tags-deletemessage"></div>
+    [% IF checker.check_permission('edit') %]
+    <div id="st-tags-addblock">[% INCLUDE element/button id="st-tags-addlink", tooltip=loc("Click this button to add a tag to the page"), label = loc("Add tag") %]</div>
+    <div id="st-tags-addinput">
+        <form onsubmit="return false;">
+        <input id="st-tags-field" name="tagfield" class="st-tags-input" type="text" />
+        [% INCLUDE element/button id="st-tags-addbutton", tooltip=loc("Click this button to save your tag"), label = loc("Save tag") %]
+        </form>
+    </div>
+    <div id="st-tags-message"></div>
+    <div id="st-tags-suggestion"><span class="st-tags-hint">[% loc("Suggestions:") %] </span><span id="st-tags-suggestionlist"></span></div>
+    [% END %]
+</div>

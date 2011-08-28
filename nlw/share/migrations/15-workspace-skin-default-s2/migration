@@ -1,0 +1,19 @@
+#!/bin/bash
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+TABLE=Workspace
+COLUMN=skin_name
+DEFAULT=s2
+PREVIOUS=st
+
+# Set default workspae_template to 's2'
+SQL="UPDATE \"$TABLE\" SET \"$COLUMN\" = '$DEFAULT' WHERE \"$COLUMN\" = '$PREVIOUS'";
+
+echo $SQL;
+psql -U $DB_USER -d $DB -t -c "$SQL"
+
+SQL="ALTER TABLE \"$TABLE\" ALTER COLUMN \"$COLUMN\" SET DEFAULT '$DEFAULT'"
+echo $SQL;
+psql -U $DB_USER -d $DB -t -c "$SQL"
+

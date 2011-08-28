@@ -1,0 +1,140 @@
+| *Comment* | Test Case: SJ Groups UI Create New Workspace |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: SJ Groups UI Create New Workspace setup a group |  |  |
+| st-setup-a-group | 1 | 1 | 1 |
+| st-admin | add-group-admin --g %%group_id%% -e %%group_user%% |  |  |
+
+| set | test_delete_ws | sj-test-delete-%%start_time%% |  |
+| set | test_delete_ws_title | sj-test-delete-title-%%start_time%% |  |
+| set | addme_ws | sj-addme-ws-%%start_time%% |  |
+| set | createme_ws_name | sjcreateme-%%start_time%% |  |
+| set | createme_ws_title | sjcreateme-title-%%start_time%% |  |
+
+| *Comment* | Test Case: SJ Groups UI Create New Workspace create %%test_delete_ws%% |  |  |
+| create_workspace | %%test_delete_ws%% | %%defaultaccount%% | %%test_delete_ws_title%% |
+| set | delete_ws_id | %%workspace_id%% |  |
+| st-admin | add-member --w %%test_delete_ws%% --g %%group_id%% | now has the role of |  |
+| st-admin | add-workspace-admin --w %%test_delete_ws%% --e %%group_user%% |  |  |
+| st-admin | create-workspace --empty --name %%addme_ws%% --title %%addme_ws%% |  |  |
+| st-admin | add-member -w %%addme_ws%% --g %%group_id%% | now has the role of |  |
+| st-admin | set-permissions --g %%group_id%% --permissions self-join | have been changed to self-join |  |
+
+| *Comment* | Test Case: SJ Groups UI Create New Workspace login as %%group_user%% |  |
+| st-logoutin | %%group_user%% | %%password%% |
+
+| *Comment* | Test Case: SJ Groups UI Create New Workspace Get to Workspaces Widget |  |
+| open_ok | /?group/%%group_id%%/ |  |
+| st-name-widget | 2 | workspaces_widget |
+| st-widget-title-like | workspaces_widget | Workspaces |
+
+| *Comment* | Test Case: SJ Groups UI Create New Workspace Is the %%test_delete_ws%% workspace there? |  |
+| st-select-widget-frame | workspaces_widget |  |
+| text_like | //body | %%test_delete_ws_title%% |
+| wait_for_element_visible_ok | link=%%test_delete_ws_title%% | 30000 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: SJ Groups UI Create New Workspace open group for editing |  |
+| open_ok | /st/edit_group/%%group_id%% |  |
+| wait_for_text_present_ok | Edit Group: | 30000 |
+
+| st-name-widget | 1 | information_widget |
+| st-select-widget-frame | information_widget |  |
+| wait_for_text_present_ok | Self-Join | 30000 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: SJ Groups UI Create New Workspace Get to Workspaces Widget |  |
+| st-name-widget | 2 | workspaces_widget |
+| st-widget-title-like | workspaces_widget | Workspaces |
+| st-select-widget-frame | workspaces_widget |  |
+
+| *Comment* | Test Case: SJ Groups UI Create New Workspace Get to Workspaces Widget check for %%group_ws%% |  |
+| text_like | //body | workspace |
+
+| *Comment* | Test Case: SJ Groups UI Create New Workspace Prepare new workspace |  |
+| wait_for_element_visible_ok | new_workspace | 30000 |
+| click_ok | new_workspace |  |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: SJ Groups UI Create New Workspace fill in title and url |  |
+| wait_for_element_visible_ok | new-workspace-next | 30000 |
+| wait_for_element_visible_ok | new_workspace_title | 30000 |
+| type_ok | new_workspace_title | %%createme_ws_title%% |
+| click_ok | new-workspace-next |  |
+| wait_for_element_visible_ok | new-workspace-create | 30000 |
+| wait_for_element_visible_ok | new-workspace-cancel | 30000 |
+| wait_for_element_visible_ok | new_workspace_name | 30000 |
+| type_ok | new_workspace_name | %%createme_ws_name%% |
+| click_ok | new-workspace-create |  |
+
+| *Comment* | Test Case: SJ Groups UI Create New Workspace Save - is the new workspace there? |  |
+| st-select-widget-frame | workspaces_widget |  |
+| wait_for_element_visible_ok | %%createme_ws_name%% | 30000 |
+| wait_for_text_present_ok | %%createme_ws_title%% | 30000 |
+| select-frame | relative=parent |  |
+| wait_for_element_visible_ok | create-group | 30000 |
+| click_and_wait | create-group |  |
+
+| *Comment* | Test Case: SJ Groups UI Create New Workspace Look for Workspace name in widget |  |
+| st-name-widget | 2 | workspaces_widget |
+| st-widget-title-like | workspaces_widget | Workspaces |
+| st-select-widget-frame | workspaces_widget |  |
+
+| *Comment* | Test Case: Groups UI Create New Workspace FAILS IN IE7 due to 3540 |  |
+| wait_for_element_visible_ok | link=%%createme_ws_title%% | 30000 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: SJ Groups UI Create New Workspace check /workspace-you-just-created URL |  |
+| open_ok | /%%createme_ws_name%%/ |  |
+| wait_for_element_visible_ok | st-edit-button-link | 30000 |
+
+| *Comment* | Test Case: SJ Groups UI Create New Workspace st-admin remove-member should fail for my user (belong's by group) |  |
+| *Comment* | Test Case: SJ Groups UI Create New Workspace st-admin remove-member - Fails due to {bz: 3518} - check removed |  |
+| st-admin | remove-member --w %%group_ws%% --e %%group_user%% |  |
+
+| *Comment* | Test Case: SJ Groups UI Create New Workspace st-admin list-workspaces - workspace shows up for me |  |
+| st-admin | list-workspaces --e %%group_user%% | %%group_ws%% |
+| st-admin | list-workspaces --e %%group_user%% | %%addme_ws%% |
+| st-admin | list-workspaces --e %%group_user%% | %%createme_ws_name%% |
+
+| *Comment* | Test Case: SJ Groups UI Create New Workspace check /workspace-you-just-created URL |  |
+| open_ok | /%%addme_ws%%/ |  |
+| wait_for_element_visible_ok | st-edit-button-link | 30000 |
+
+| *Comment* | Test Case: SJ Groups UI Create New Workspace select %%test_delete_ws%% for removal |  |
+| open_ok | /st/edit_group/%%group_id%% |  |
+| wait_for_text_present_ok | Edit Group: | 30000 |
+| st-name-widget | 2 | workspaces_widget |
+| st-widget-title-like | workspaces_widget | Workspaces |
+| st-select-widget-frame | workspaces_widget |  |
+| wait_for_element_visible_ok | %%delete_ws_id%% | 30000 |
+| text_like | //body | %%test_delete_ws_title%% |
+| click_ok | %%delete_ws_id%% |  |
+| pause | 4000 | waiting for js to remove element. It's not disabled, but there, can't wait_for |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: SJ Groups UI Create New Workspace Now delete %%test_delete_ws%% from group |  |
+| wait_for_element_visible_ok | create-group | 30000 |
+| click_and_wait | create-group |  |
+
+| *Comment* | Test Case: SJ Groups UI Create New Workspace Verify deleted %%test_delete_ws%% from group |  |
+| open_ok | /?group/%%group_id%%/ |  |
+| st-name-widget | 2 | workspaces_widget |
+| st-widget-title-like | workspaces_widget | Workspaces |
+| st-select-widget-frame | workspaces_widget |  |
+| text_unlike | //body | %%test_delete_ws%% |
+| text_unlike | //body | %%test_delete_ws_title%% |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: SJ Groups UI Create New Workspace TEARDOWN |  |
+
+| st-process-jobs |  |  |
+| st-admin | delete-workspace --no-export --w %%test_delete_ws%% | been deleted |
+| st-admin | delete-workspace --no-export --w %%group_ws%% | been deleted |
+| st-admin | delete-workspace --no-export --w %%addme_ws%% | been deleted |
+| st-admin | delete-workspace --no-export --w %%createme_ws_name%% | been deleted |
+| delete-group | %%group_id%% | Deleted group %%group_id%% |
+| delete-account | %%group_acct%% |  |
+
+| *Comment* | Test Case: SJ Groups UI Create New Workspace COMPLETED |  |

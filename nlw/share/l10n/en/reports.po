@@ -1,0 +1,504 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Socialtext i18n\n"
+"PO-Revision-Date: 2011-02-24 01:39+0800\n"
+"Language-Team: Socialtext i18n team\n"
+"Last-Translator: Socialtext i18n team\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report/GrowthByAppliance.pm:16 ../socialtext-reports/lib/Socialtext/Reports/Report/UsageByAppliance.pm:17
+msgid "error.html-report-not-implemented"
+msgstr "HTML Report is not implemented"
+
+#. ($report_module, $@)
+#: ../socialtext-reports/lib/Socialtext/Reports/REST.pm:125
+msgid "error.invalid-report=module,message"
+msgstr "Invalid report (%1): %2"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report/UsageByAccount.pm:18
+msgid "error.report-account_id-required"
+msgstr "account_id is mandatory"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report/UsageByWorkspace.pm:20
+msgid "error.report-wiki-required"
+msgstr "workspace is mandatory"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report/GrowthByAccount.pm:62
+msgid "error.reports-account-id-required!"
+msgstr "Account ID is mandatory!"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report/UserWorkspaceUsage.pm:29
+msgid "error.reports-current-user-required"
+msgstr "this report does not work without a current user"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/REST.pm:135
+msgid "error.reports-date-required!"
+msgstr "This report requires a date!"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:29
+msgid "error.reports-duration-required!"
+msgstr "duration is mandatory!"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report/UserWorkspaceUsage.pm:33
+msgid "error.reports-invalid=user"
+msgstr "'%1' is an invalid user"
+
+#. ($acct_name)
+#: ../socialtext-reports/lib/Socialtext/Reports/Report/TopContent.pm:87
+msgid "error.reports-no-account=name"
+msgstr "No account named %1"
+
+#. ($group_id)
+#: ../socialtext-reports/lib/Socialtext/Reports/Report/GroupWorkspaceUsage.pm:23
+msgid "error.reports-no-group=id"
+msgstr "Can't find group '%1'"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report/Growth.pm:47
+msgid "error.reports-no-growth-data-available"
+msgstr "No growth data available."
+
+#. ($ws_name)
+#: ../socialtext-reports/lib/Socialtext/Reports/Report/TopContent.pm:74
+msgid "error.reports-no-wiki=name"
+msgstr "No workspace named %1"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:28
+msgid "error.reports-start_time-required!"
+msgstr "start_time is mandatory!"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report/SocialByUser.pm:18
+msgid "error.reports-username-required!"
+msgstr "Username is mandatory!"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report/ViewersByPage.pm:16
+msgid "error.reports-wiki-and-page_id-required"
+msgstr "workspace and page_id are mandatory!"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report/WorkspaceGrowth.pm:40
+msgid "error.reports-wiki-required!"
+msgstr "Workspace is mandatory!"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report/WorkspaceActionByTime.pm:34
+msgid "error.reports-wiki-required-specify-on-url"
+msgstr "Workspace is mandatory! - Give a workspace=name on the URL"
+
+#. ($type)
+#: ../socialtext-reports/lib/Socialtext/Reports/Report/TopUsers.pm:48
+msgid "error.unknown-report=type"
+msgstr "Unknown report (%1)"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:244
+msgid "heading.account_id"
+msgstr "account_id"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:245
+msgid "heading.action"
+msgstr "action"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:246
+msgid "heading.actor"
+msgstr "actor"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:247
+msgid "heading.contributions"
+msgstr "contributions"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:248
+msgid "heading.count"
+msgstr "count"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:249
+msgid "heading.detail_headings"
+msgstr "detail_headings"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:250
+msgid "heading.gadget_id"
+msgstr "gadget_id"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:251
+msgid "heading.page_id"
+msgstr "page_id"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:252
+msgid "heading.page_views"
+msgstr "page_views"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:253
+msgid "heading.pages"
+msgstr "pages"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:254
+msgid "heading.period"
+msgstr "period"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:255
+msgid "heading.period_start"
+msgstr "period_start"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:256
+msgid "heading.tally"
+msgstr "tally"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:257
+msgid "heading.title"
+msgstr "title"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:258
+msgid "heading.unique_contributors"
+msgstr "unique_contributors"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:259
+msgid "heading.unique_members"
+msgstr "unique_members"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:260
+msgid "heading.unique_visitors"
+msgstr "unique_visitors"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:261
+msgid "heading.user_id"
+msgstr "user_id"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:262
+msgid "heading.username"
+msgstr "username"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:263
+msgid "heading.views"
+msgstr "views"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:264
+msgid "heading.workspace"
+msgstr "workspace"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report.pm:265
+msgid "heading.workspaces"
+msgstr "workspaces"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report/GrowthByAccount.pm:19
+msgid "reports.account-growth"
+msgstr "Account Growth"
+
+#: ../socialtext-reports/template/workspace_dashboard.tmpl:30 ../socialtext-reports/template/workspace_dashboard.tmpl:31
+msgid "reports.actions-by-wiki"
+msgstr "Actions by Workspace"
+
+#: ../socialtext-reports/template/user_dashboard.tmpl:40 ../socialtext-reports/template/user_dashboard.tmpl:41 ../socialtext-reports/template/user_dashboard.tmpl:47 ../socialtext-reports/template/user_dashboard.tmpl:48
+msgid "reports.audience-by-user"
+msgstr "Audience by User"
+
+#: ../socialtext-reports/template/available_reports.tmpl:1
+msgid "reports.available-reports:"
+msgstr "Available Reports:"
+
+#. ($opts)
+#: ../socialtext-reports/lib/Socialtext/Reports/REST.pm:196
+msgid "reports.cgi=options"
+msgstr "CGI options: %1"
+
+#: ../socialtext-reports/template/user_dashboard.tmpl:33 ../socialtext-reports/template/user_dashboard.tmpl:34
+msgid "reports.coeditors-by-user"
+msgstr "Coeditors by User"
+
+#: ../socialtext-reports/template/usage_by.tmpl:22 ../socialtext-reports/template/usage_by_workspace.tmpl:22
+msgid "reports.collaborativeness:"
+msgstr "Collaborativeness:"
+
+#: ../socialtext-reports/template/user_dashboard.tmpl:24 ../socialtext-reports/template/user_dashboard.tmpl:25
+msgid "reports.comments-per-wiki"
+msgstr "Comments per Workspace"
+
+#: ../socialtext-reports/template/usage_by.tmpl:32 ../socialtext-reports/template/usage_by.tmpl:35 ../socialtext-reports/template/usage_by_workspace.tmpl:30 ../socialtext-reports/template/workspace_growth.tmpl:29
+msgid "reports.contributions"
+msgstr "Contributions"
+
+#: ../socialtext-reports/template/usage_by.tmpl:29 ../socialtext-reports/template/usage_by.tmpl:30
+msgid "reports.dashboard"
+msgstr "Dashboard"
+
+#: ../socialtext-reports/template/account_growth.tmpl:30
+msgid "reports.dashboard-views"
+msgstr "Dashboard Views"
+
+#: ../socialtext-reports/template/user_dashboard.tmpl:2
+msgid "reports.dashboard=user"
+msgstr "%1 User Dashboard"
+
+#. (workspace)
+#: ../socialtext-reports/template/workspace_dashboard.tmpl:2
+msgid "reports.dashboard=wiki"
+msgstr "%1 Workspace Dashboard"
+
+#: ../socialtext-reports/template/account_growth.tmpl:23 ../socialtext-reports/template/workspace_growth.tmpl:23
+msgid "reports.date"
+msgstr "Date"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/REST.pm:130
+msgid "reports.date-supplied-but-this-report-needs-none!"
+msgstr "Date supplied, but this report doesn't need one!"
+
+#: ../socialtext-reports/template/analytics.tmpl:46
+msgid "reports.duration:"
+msgstr "Duration:"
+
+#: ../socialtext-reports/template/workspace_dashboard.tmpl:16 ../socialtext-reports/template/workspace_dashboard.tmpl:17
+msgid "reports.edits-by-user"
+msgstr "Edits by User"
+
+#. (username)
+#: ../socialtext-reports/template/user_dashboard.tmpl:40 ../socialtext-reports/template/user_dashboard.tmpl:42
+msgid "reports.edits-pages-read-by-these-people=user:"
+msgstr "%1 edits pages read by these people:"
+
+#. (username)
+#: ../socialtext-reports/template/user_dashboard.tmpl:33 ../socialtext-reports/template/user_dashboard.tmpl:36
+msgid "reports.edits-pages-with-these-people=user:"
+msgstr "%1 edits pages with these people:"
+
+#: ../socialtext-reports/template/user_dashboard.tmpl:10 ../socialtext-reports/template/user_dashboard.tmpl:11
+msgid "reports.edits-per-wiki"
+msgstr "Edits per Workspace"
+
+#: ../socialtext-reports/template/available_reports.tmpl:4
+msgid "reports.example-actions-today-1month-txt"
+msgstr "Example: /actions/today/-1month.txt"
+
+#: ../socialtext-reports/template/usage_by.tmpl:16 ../socialtext-reports/template/usage_by_workspace.tmpl:16
+msgid "reports.from-through=start,end"
+msgstr "From %1 through %2"
+
+#: ../socialtext-reports/template/controls.tmpl:4
+msgid "reports.generate!"
+msgstr "Generate!"
+
+#: ../socialtext-reports/template/analytics.tmpl:15
+msgid "reports.healthy"
+msgstr "Healthy"
+
+#: ../socialtext-reports/template/analytics.tmpl:27
+msgid "reports.healthy-csv"
+msgstr "Healthy CSV"
+
+#: ../socialtext-reports/template/analytics.tmpl:50
+msgid "reports.healthy-wikis"
+msgstr "Healthy Workspaces"
+
+#. (r.name)
+#: ../socialtext-reports/template/available_reports.tmpl:12
+msgid "reports.in-past-week=name"
+msgstr "%1 in the past week"
+
+#: ../socialtext-reports/template/inline_report.tmpl:9
+msgid "reports.loading-report"
+msgstr "Loading Report..."
+
+#: ../socialtext-reports/template/analytics.tmpl:23
+msgid "reports.mean"
+msgstr "Mean"
+
+#: ../socialtext-reports/template/analytics.tmpl:30
+msgid "reports.median"
+msgstr "Median"
+
+#: ../socialtext-reports/template/usage_by.tmpl:58 ../socialtext-reports/template/usage_by_workspace.tmpl:48
+msgid "reports.no-user-stats-for-this-period"
+msgstr "No user stats are available for this period."
+
+#: ../socialtext-reports/template/analytics.tmpl:27
+msgid "reports.other-csv"
+msgstr "Other CSV"
+
+#: ../socialtext-reports/template/analytics.tmpl:54
+msgid "reports.other-wikis"
+msgstr "Other Workspaces"
+
+#: ../socialtext-reports/template/analytics.tmpl:16
+msgid "reports.others"
+msgstr "Others"
+
+#: ../socialtext-reports/template/usage_by.tmpl:34 ../socialtext-reports/template/usage_by.tmpl:35 ../socialtext-reports/template/usage_by_workspace.tmpl:29 ../socialtext-reports/template/usage_by_workspace.tmpl:30
+msgid "reports.page"
+msgstr "Page"
+
+#: ../socialtext-reports/template/account_growth.tmpl:34 ../socialtext-reports/template/workspace_growth.tmpl:28
+msgid "reports.page-views"
+msgstr "Page Views"
+
+#: ../socialtext-reports/template/account_growth.tmpl:33 ../socialtext-reports/template/workspace_growth.tmpl:27
+msgid "reports.pages"
+msgstr "Pages"
+
+#: ../socialtext-reports/template/usage_by.tmpl:31 ../socialtext-reports/template/usage_by.tmpl:32
+msgid "reports.people"
+msgstr "People"
+
+#: ../socialtext-reports/template/account_growth.tmpl:29
+msgid "reports.people-views"
+msgstr "People Views"
+
+#: ../socialtext-reports/template/usage_by.tmpl:30
+msgid "reports.personalizations"
+msgstr "Personalizations"
+
+#: ../socialtext-reports/template/account_growth.tmpl:27
+msgid "reports.personalized-dashboards"
+msgstr "Personalized Dashboards"
+
+#: ../socialtext-reports/template/account_growth.tmpl:28
+msgid "reports.personalized-profiles"
+msgstr "Personalized Profiles"
+
+#. (username)
+#: ../socialtext-reports/template/user_dashboard.tmpl:47 ../socialtext-reports/template/user_dashboard.tmpl:49
+msgid "reports.reads-pages-edited-by-these-people=user:"
+msgstr "%1 reads pages edited by these people:"
+
+#: ../socialtext-reports/template/controls.tmpl:3 ../socialtext-reports/template/usage_by.tmpl:17 ../socialtext-reports/template/usage_by_workspace.tmpl:17
+msgid "reports.report-duration:"
+msgstr "Report duration:"
+
+#: ../socialtext-reports/template/controls.tmpl:2
+msgid "reports.report-start-date:"
+msgstr "Report Start Date:"
+
+#: ../socialtext-reports/template/analytics.tmpl:45
+msgid "reports.report-start-time:"
+msgstr "Report Start time:"
+
+#: ../socialtext-reports/template/usage_by.tmpl:16 ../socialtext-reports/template/usage_by_workspace.tmpl:16
+msgid "reports.report-starting-on:"
+msgstr "Report starting on:"
+
+#: ../socialtext-reports/template/dashboard.tmpl:2 ../socialtext-reports/template/wrapper.tmpl:3
+msgid "reports.reports-dashboard"
+msgstr "Reports Dashboard"
+
+#: ../socialtext-reports/template/usage_by.tmpl:33
+msgid "reports.sent"
+msgstr "Sent"
+
+#: ../socialtext-reports/template/usage_by.tmpl:33
+msgid "reports.signals"
+msgstr "Signals"
+
+#: ../socialtext-reports/template/account_growth.tmpl:31
+msgid "reports.signals-sent"
+msgstr "Signals Sent"
+
+#: ../socialtext-reports/template/analytics.tmpl:36
+msgid "reports.stddev"
+msgstr "StdDev"
+
+#: ../socialtext-reports/template/analytics.tmpl:47
+msgid "reports.submit"
+msgstr "Submit"
+
+#: ../socialtext-reports/template/new_users.tmpl:24
+msgid "reports.time-of-first-action"
+msgstr "Time of First Action"
+
+#: ../socialtext-reports/template/usage_by.tmpl:21 ../socialtext-reports/template/usage_by_workspace.tmpl:21
+msgid "reports.total-members-current:"
+msgstr "Total members (current):"
+
+#: ../socialtext-reports/template/usage_by.tmpl:19 ../socialtext-reports/template/usage_by_workspace.tmpl:19
+msgid "reports.total-unique-contributors:"
+msgstr "Total unique contributors:"
+
+#: ../socialtext-reports/template/usage_by.tmpl:20 ../socialtext-reports/template/usage_by_workspace.tmpl:20
+msgid "reports.total-unique-visitors:"
+msgstr "Total unique visitors:"
+
+#: ../socialtext-reports/template/account_growth.tmpl:26 ../socialtext-reports/template/workspace_growth.tmpl:26
+msgid "reports.unique-contributors"
+msgstr "Unique Contributors"
+
+#: ../socialtext-reports/template/usage_by.tmpl:22 ../socialtext-reports/template/usage_by_workspace.tmpl:22
+msgid "reports.unique-contributors-as-percent-of-unique-visitors"
+msgstr "(unique contributors as a percent of unique visitors)"
+
+#: ../socialtext-reports/template/account_growth.tmpl:24 ../socialtext-reports/template/workspace_growth.tmpl:24
+msgid "reports.unique-members"
+msgstr "Unique Members"
+
+#: ../socialtext-reports/template/account_growth.tmpl:25 ../socialtext-reports/template/workspace_growth.tmpl:25
+msgid "reports.unique-visitors"
+msgstr "Unique Visitors"
+
+#: ../socialtext-reports/template/analytics.tmpl:10 ../socialtext-reports/template/user_dashboard.tmpl:3 ../socialtext-reports/template/workspace_dashboard.tmpl:3
+msgid "reports.up-to-main-dashboard"
+msgstr "Up to main dashboard"
+
+#: ../socialtext-reports/template/available_reports.tmpl:3
+msgid "reports.url-format-report-name-start-time-duration-type"
+msgstr "URL Format: /&lt;report_name&gt;/&lt;start_time&gt;/&lt;duration&gt;.&lt;type&gt;"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report/UsageByAccount.pm:12
+msgid "reports.usage-by-account"
+msgstr "Usage By Account"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report/UsageByWorkspace.pm:14
+msgid "reports.usage-by-wiki"
+msgstr "Usage By Workspace"
+
+#: ../socialtext-reports/template/new_users.tmpl:23
+msgid "reports.user"
+msgstr "User"
+
+#: ../socialtext-reports/template/usage_by.tmpl:28 ../socialtext-reports/template/usage_by_workspace.tmpl:28
+msgid "reports.username"
+msgstr "Username"
+
+#: ../socialtext-reports/template/usage_by.tmpl:29 ../socialtext-reports/template/usage_by.tmpl:31 ../socialtext-reports/template/usage_by.tmpl:34 ../socialtext-reports/template/usage_by_workspace.tmpl:29
+msgid "reports.views"
+msgstr "Views"
+
+#: ../socialtext-reports/template/dashboard.tmpl:15 ../socialtext-reports/template/dashboard.tmpl:16 ../socialtext-reports/template/workspace_dashboard.tmpl:24 ../socialtext-reports/template/workspace_dashboard.tmpl:25
+msgid "reports.views-by-page"
+msgstr "Views by Page"
+
+#: ../socialtext-reports/template/workspace_dashboard.tmpl:10 ../socialtext-reports/template/workspace_dashboard.tmpl:11
+msgid "reports.views-by-user"
+msgstr "Views by User"
+
+#: ../socialtext-reports/template/dashboard.tmpl:10 ../socialtext-reports/template/dashboard.tmpl:9
+msgid "reports.views-by-wiki"
+msgstr "Views by Workspace"
+
+#: ../socialtext-reports/template/user_dashboard.tmpl:17 ../socialtext-reports/template/user_dashboard.tmpl:18
+msgid "reports.views-per-wiki"
+msgstr "Views per Workspace"
+
+#: ../socialtext-reports/template/dashboard.tmpl:21 ../socialtext-reports/template/dashboard.tmpl:22
+msgid "reports.wiki-actions"
+msgstr "Workspace Actions"
+
+#: ../socialtext-reports/template/analytics.tmpl:9
+msgid "reports.wiki-analytics"
+msgstr "Wiki Analytics"
+
+#: ../socialtext-reports/template/account_growth.tmpl:35
+msgid "reports.wiki-contributions"
+msgstr "Workspace Contributions"
+
+#: ../socialtext-reports/template/dashboard.tmpl:29 ../socialtext-reports/template/dashboard.tmpl:30
+msgid "reports.wiki-edits-by-user"
+msgstr "Workspace Edits by User"
+
+#: ../socialtext-reports/lib/Socialtext/Reports/Report/WorkspaceGrowth.pm:13
+msgid "reports.wiki-growth"
+msgstr "Workspace Growth"
+
+#: ../socialtext-reports/template/usage_by.tmpl:46 ../socialtext-reports/template/usage_by_workspace.tmpl:41
+msgid "reports.wiki-total"
+msgstr "Workspace total"
+
+#: ../socialtext-reports/template/dashboard.tmpl:35 ../socialtext-reports/template/dashboard.tmpl:36
+msgid "reports.wiki-views-by-user"
+msgstr "Workspace Views by User"
+
+#: ../socialtext-reports/template/account_growth.tmpl:32
+msgid "reports.wikis"
+msgstr "Workspaces"

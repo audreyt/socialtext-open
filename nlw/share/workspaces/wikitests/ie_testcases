@@ -1,0 +1,40 @@
+*IE is required*
+
+*File testcases don't work in IE because iehta permissions not implemented in Selenium*
+*Socialcalc enabled is required because we run Calc Testcases*
+
+*It is possible to run as the default LDAP user*
+*if you first run `xwt enable_ldap` to get LDAP enabled so the default LDAP user may successfully login.*
+
+* [Disable Google Analytics]
+
+* [Test Case: A Enable LDAP]
+
+* [Control Panel Testcases]
+* [Core Testcases]
+* [User Groups UI Testcases]
+* [Calc Testcases]
+* [Signals Testcases]
+* [Localization Testcases]
+
+LDAP Testcases will Enable LDAP and use a known LDAP user instead of a Default user where required
+
+* [LDAP Testcases]
+
+Default User Testcases will Disable LDAP so it can test wiki functions that only work for the Default user
+It will re-enable LDAP when it finishes.
+
+* [Default User Testcases]
+
+People and Dasboard plugin tests. Keep these two cases together in alpha order.
+
+* [Test Case: People Dashboard Plugins]
+* [Test Case: People Dashboard Plugins Reset]
+
+People tests
+
+* [Profile Testcases]
+* [Test Case: People Search]
+* [Test Case: People Relevance Search]
+
+* [Dashboard Testcases]

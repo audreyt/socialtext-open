@@ -1,0 +1,26 @@
+<html>
+
+<head>
+ <script type="text/javascript" src="lib/JSAN.js"></script>
+ <script type="text/javascript">
+  JSAN.addRepository("lib", "../lib");
+  JSAN.errorLevel = "die";
+  JSAN.use("Test.More");
+ </script>
+</head>
+<body>
+
+ <pre style="white-space: pre" id="test"><script>
+plan({ tests: 2 });
+
+JSAN.use("DOM.Ready");
+DOM.Ready._resetClass();
+DOM.Ready._stopTimer();
+
+is( typeof DOM.Ready, "object", "namespace exists" );
+ok( DOM.Ready.VERSION, "found library VERSION" );
+
+ </script></pre>
+
+</body>
+</html>

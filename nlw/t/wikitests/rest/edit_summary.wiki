@@ -1,0 +1,57 @@
+Test edit summaries via the REST API
+
+* Fixture: SocialRest
+
+| comment | STARTING Test case: rest edit summaries |                                    |
+| set     | user_a                                  | %%start_time%%a@ken.socialtext.com |
+| set     | ws                                      | ws%%start_time%%                   |
+
+| comment          | create a bunch of workspaces and users and stuff |            |            |
+| create-workspace | %%ws%%                                           | Socialtext |            |
+| create-user      | %%user_a%%                                       | qwerty     | Socialtext |
+| add-member       | %%user_a%%                                       | %%ws%%     |            |
+| http-user-pass   | %%user_a%%                                       | qwerty     |            |
+
+
+| comment | update page with an edit summary    |                               |                                                                                           |
+| put     | /data/workspaces/%%ws%%/pages/page1 | Content-Type=application/json | {"content":"o hai", "date": "Sun, 06 Nov 1994 08:49:37 GMT", "edit_summary": "lol, cats"} |
+| code-is | 201                                 |                               |                                                                                           |
+
+| comment          | check the edit summary                        |                  |
+| get              | /data/workspaces/%%ws%%/pages/page1/revisions | application/json |
+| code-is          | 200                                           |                  |
+| json-parse       |                                               |                  |
+| json-array-size  | 1                                             |                  |
+| body-like        | qr/"edit_summary":"lol, cats"/                |                  |
+| set-from-content | revision_id                                   | qr/"revision_id":"([\d.]+)"/ |
+
+| comment | create a revision with no edit summary |                                     |                        |
+| put     | /data/workspaces/%%ws%%/pages/page1    | Content-Type=text/x.socialtext-wiki | i can has cheezeburger |
+| code-is | 204                                    |                                     |                        |
+
+| comment         | check that the new revision has an empty edit summary |                  |
+| get             | /data/workspaces/%%ws%%/pages/page1/revisions         | application/json |
+| code-is         | 200                                                   |                  |
+| json-parse      |                                                       |                  |
+| json-array-size | 2                                                     |                  |
+| body-like       | qr/"edit_summary":""/                                 |                  |
+
+| comment    | check the edit summary in a specific revision                 |                  |
+| get        | /data/workspaces/%%ws%%/pages/page1/revisions/%%revision_id%% | application/json |
+| code-is    | 200                                                           |                  |
+| json-parse |                                                               |                  |
+| body-like  | qr/"edit_summary":"lol, cats"/                                |                  |
+
+| comment | create long edit summary |                                                                                                                                                                                                                                                                |
+| set     | edit_summary | 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456ronnie |
+
+| comment | put long edit summary               |                               |                                                                                                     |
+| put     | /data/workspaces/%%ws%%/pages/page1 | Content-Type=application/json | {"content":"o hawaii", "date": "Sun, 06 Nov 1994 08:49:37 GMT", "edit_summary": "%%edit_summary%%"} |
+| code-is | 204                                 |                               |                                                                                                     |
+| comment | check that ReST edit summaries are limited to 250 characters |
+| get             | /data/workspaces/%%ws%%/pages/page1/revisions         | application/json |
+| code-is         | 200                                                   |                  |
+| json-parse      |                                                       |                  |
+| json-array-size | 3                                                     |                  |
+| body-like       | qr/"edit_summary":""/                                 |                  |
+| body-like  | qr/"edit_summary":"0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456ronnie"/                                |                  |

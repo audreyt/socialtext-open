@@ -1,0 +1,35 @@
+Verify that deactivated LDAP Users cannot login.
+
+* Fixture: SocialRest
+
+| *Comment*      | Setup        |                     |
+| st-ldap        | start        |                     |
+| set            | username     | Phil Taylor         |
+| set            | email        | phil@socialtext.com |
+| set            | password     | ld@pu53r            |
+| http-user-pass | %%username%% | %%password%%        |
+
+| *Comment* | When active, the User can access content |
+| GET       | /st/dashboard                            |
+| code-is   | 200                                      |
+
+| *Comment* | When active, the User can log in |                                             |
+| POST-form | /nlw/submit/login                | username=%%username%%&password=%%password%% |
+| code-is   | 302                              |                                             |
+| header-is | Location                         | /                                           |
+
+| *Comment* | Deactivate the User               |
+| st-admin  | deactivate-user --email %%email%% |
+
+| *Comment* | Once deactivated, the User *cannot* access content |                          |
+| GET       | /st/dashboard                                      |                          |
+| code-is   | 302                                                |                          |
+| header-is | Location                                           | /challenge?/st/dashboard |
+
+| *Comment*   | Once deactivated, the User *cannot* login |                                             |
+| POST-form   | /nlw/submit/login                         | username=%%username%%&password=%%password%% |
+| code-is     | 302                                       |                                             |
+| header-like | Location                                  | /nlw/login.html                             |
+
+| *Comment* | Cleanup |
+| st-ldap   | stop    |

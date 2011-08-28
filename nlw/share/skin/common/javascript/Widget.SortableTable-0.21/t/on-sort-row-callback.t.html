@@ -1,0 +1,75 @@
+<html>
+
+<head>
+
+ <script type="text/javascript" src="lib/JSAN.js"></script>
+ <script type="text/javascript">
+  JSAN.addRepository("lib", "../lib");
+  JSAN.use("Test.More");
+  JSAN.errorLevel = "die";
+ </script>
+ <style>
+  table { border-collapse: collapse; margin-bottom: 1em }
+  th, td { border: 1px solid black; padding: 1em; }
+  a.w-st-resort-column { text-decoration: none }
+  .w-st-current-sorted-column { background-color: #eee }
+ </style>
+
+</head>
+<body>
+
+ <table id="a-table">
+  <tr id="row0">
+   <th id="name-header">Name</th>
+   <th id="size-header">Size</th>
+  </tr>
+  <tr id="row1">
+   <td>A</td>
+   <td>1</td>
+  </tr>
+  <tr id="row2">
+   <td>B</td>
+   <td>2</td>
+  </tr>
+  <tr id="row3">
+   <td>C</td>
+   <td>3</td>
+  </tr>
+  <tr id="row4">
+   <td>D</td>
+   <td>4</td>
+  </tr>
+ </table>
+
+ <pre style="white-space: pre" id="test"><script>
+
+JSAN.use("Widget.SortableTable");
+plan( { tests: 8 } );
+
+{
+    function renumberRow (row, idx) {
+        row.cells[1].innerHTML = idx;
+    }
+
+    table = new Widget.SortableTable( { tableId: "a-table",
+                                        onSortRowCallback: renumberRow } );
+
+    table.sortOnColumn(1);
+    var rows = document.getElementById("a-table").rows;
+    is( rows[1].cells[1].innerHTML, "1", "row1 row number is 1" );
+    is( rows[2].cells[1].innerHTML, "2", "row1 row number is 2" );
+    is( rows[3].cells[1].innerHTML, "3", "row1 row number is 3" );
+    is( rows[4].cells[1].innerHTML, "4", "row1 row number is 4" );
+
+    table.sortOnColumn(1);
+    var rows = document.getElementById("a-table").rows;
+    is( rows[1].cells[1].innerHTML, "1", "row1 row number is 1" );
+    is( rows[2].cells[1].innerHTML, "2", "row1 row number is 2" );
+    is( rows[3].cells[1].innerHTML, "3", "row1 row number is 3" );
+    is( rows[4].cells[1].innerHTML, "4", "row1 row number is 4" );
+}
+
+ </script></pre>
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::Paths;
+use Socialtext::System qw/shell_run/;
+
+
+shell_run("nlwctl -c stop");
+
+my $QUEUE_DIR  = Socialtext::Paths::change_event_queue_dir();
+my @items = glob("$QUEUE_DIR/*");
+for my $i (@items) {
+    my $file = readlink($i);
+    next unless $file and $file =~ m/attachment/;
+    unlink $i or warn "Couldn't unlink $i: $!";
+}
+
+shell_run("nlwctl -c start");

@@ -1,0 +1,29 @@
+| *Comment* | Test Case: Home |  |
+
+| *Comment* | Test Case: Home home is Weblog |  |
+| open_ok | /%%workspace%%/index.cgi?action=users_settings |  |
+| click_and_wait | link=Workspace Appearance |  |
+
+| *Comment* | click the Weblog radio button |  |
+| click_ok | document.forms[1].homepage_is_weblog[1] |  |
+| type_ok | homepage_weblog | Home %%start_time%% Blog |
+| click_and_wait | link=Save |  |
+
+TODO: when Selenium checks the weblog box, the weblog text area does not enable. ??
+
+| wait_for_text_present_ok | Changes Saved | 30000 |
+
+click_and_wait | link=%%title%% | |
+text_like | Weblog: Home %%start_time%% Blog | |
+
+| *Comment* | Test Case: Home is Central Page |  |
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=Workspace Appearance |  |
+| check_ok | document.forms[1].homepage_is_weblog[0] |  |
+| click_and_wait | link=Save |  |
+| text_like | Changes Saved |  |
+
+| click_and_wait | link=%%title%% |  |
+| text_like | This is the home page for %%title%% |  |
+
+| *Comment* | Test case: Home COMPLETED |  |

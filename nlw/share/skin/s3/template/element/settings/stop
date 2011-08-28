@@ -1,0 +1,16 @@
+[%# vim: set et sts=2 sw=2: %]
+  <ul class="formButtons form-[% form_action || hub.action %]">
+    [% IF hub.action != 'users_listall' OR perm_admin %]
+      <li class="flexButton">
+        <a class="genericOrangeButton" id="[% ns %]-savelink" href="#" onclick="document.forms['settings'].submit(); return false">
+          [% save_button_value || loc('edit.save') %]
+        </a>
+      </li>
+    [% END %]
+    <li class="flexButton">
+      <a class="genericOrangeButton" id="[% ns %]-cancellink" href="#" onclick="document.forms['settings'].reset(); return false">
+        [% loc('do.cancel') %]
+      </a>
+    </li>
+  </ul>
+</form>

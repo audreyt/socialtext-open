@@ -1,0 +1,162 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../../lib";
+
+use File::Spec::Functions qw(catdir catfile);
+use File::Copy qw(copy);
+use File::Path qw(mkpath);
+use File::Temp qw(tempdir);
+use File::Basename qw(basename);
+use Socialtext::AppConfig;
+
+# Get the path to our juman dict directory
+my $sharedir = Socialtext::AppConfig->new->code_base;
+my $dicdir = catdir( $sharedir, "l10n", "mecab" );
+my %our_juman_dict = (
+    generated => $dicdir,
+    source => catdir( $dicdir, "dicsrc" ),
+);
+
+# Ensure our directories exist
+for my $kind (qw(generated source)) {
+    next if -e $our_juman_dict{$kind};
+    mkpath( $our_juman_dict{$kind} )
+        or die "Could not create directory $our_juman_dict{$kind}: $!\n";
+}
+
+# Path to the mecab dictionary indexer.
+# Default for Debian and derived systems.  Use /usr/libexec instead
+# on Fedora.
+my $mecab_dict_index = "/usr/lib/mecab/mecab-dict-index";
+
+# Path to the mecab juman dictionary sources.
+# Default for Debian and derived systems.
+# Use /usr/lib/mecab/dic/jumandic-EUCJP instead on Fedora
+my $mecab_dict_source = "/usr/share/mecab/dic/juman";
+
+# Ensure the Juman source dictionary exists.
+conversion_fails("$mecab_dict_source is not a valid directory")
+        unless -d $mecab_dict_source && -x _ && -r _;
+
+# Ensure the conversion program exists and we can run it.
+unless ( -f $mecab_dict_index && -r _ && -x _ ) {
+    conversion_fails("$mecab_dict_index is not found or is not executable");
+}
+
+my ($src, $dst, $in, $out);
+
+# Copy the source files while converting them to UTF-8,
+use Encode qw(encode_utf8 decode);
+
+my @files = glob "$mecab_dict_source/*";
+for $src (@files) {
+    $dst = catfile( $our_juman_dict{source}, basename($src) );
+
+    my $no_conversion = ($src =~ /matrix\.def$/);
+
+    if ($no_conversion) {
+	copy( $src => $dst)
+	    or conversion_fails("Could not convert $src to $dst: $!");
+	next;
+    }
+
+    my $skip_corrupted = (($src =~ /\.csv$/)
+			  ? Encode::FB_CROAK : Encode::FB_DEFAULT);
+
+    open($in, "<$src")
+	or die("Could not open $src: $!");
+    open($out, ">$dst") or die("Could not open $dst: $!");
+
+    while (<$in>) {
+	use utf8;
+
+	s/^(dictionary-charset =) euc-jp/$1 utf-8/;
+	eval {
+	    $_ = decode('euc-jp', $_, $skip_corrupted);
+	};
+	if ($@) {
+	    # print STDERR "Skipped one in $src\n";
+	    next;
+	}
+
+	# Canonicalize small AEIOU
+	s/ァ/ア/g; s/ェ/エ/g; s/ィ/イ/g; s/ゥ/ウ/g; s/ォ/オ/g;
+
+	$_ = encode_utf8($_);
+	print $out $_;
+    }
+    close($in);
+    close($out)
+	or conversion_fails("Could not close $dst: $!");
+}
+
+# Symlink the files that should exist in the generated dictionary
+# directory from the source, just like the default system install.
+for $src qw(dicrc left-id.def right-id.def rewrite.def) {
+    $dst = catfile($our_juman_dict{generated}, $src);
+    next if -l "$dst" || -f _;
+    symlink("dicsrc/$src", $dst)
+	or conversion_fails("Could not make symlink $dst to dicsrc/$src: $!");
+}
+
+# If the user has custom dictionary source, include it in the
+# generated dictionary.  Custom dictionaries are already in UTF-8.
+for $src (glob "$our_juman_dict{generated}/*.csv") {
+    $dst = catfile($our_juman_dict{source}, basename($src));
+    copy( $src => $dst)
+	or conversion_fails("Could not copy $src to $dst: $!");
+}
+
+# Munge our char.def
+$src = catfile($mecab_dict_source, "char.def");
+$dst = catfile($our_juman_dict{source}, "char.def");
+open($in, "<$src") or die "Could not open $src: $!\n";
+open($out, ">$dst") or die "Could not open $dst: $!\n";
+while (<$in>) {
+    if (/^KATAKANA\s+\d+\s+\d+\s+\d+\s*$/) {
+	$_ = "KATAKANA	0 1 2\n";
+    }
+    print $out $_;
+}
+close($in);
+close($out) or die "Could not close $dst: $!\n";
+
+# Run the conversion utility to generate the utf-8 files.
+system( 
+    $mecab_dict_index, 
+    "-d" => $our_juman_dict{source},
+    "-o" => $our_juman_dict{generated},
+    "-f" => "utf-8",
+    "-t" => "utf-8"
+) and conversion_fails("$mecab_dict_index failed to convert dictionary");
+
+print "Conversion successful\n";
+
+sub conversion_fails {
+    my $msg = shift;
+    my $readme = catfile( $our_juman_dict{generated}, "README" );
+    die <<MSG
+
+=====================
+
+$0 FAILED: $msg
+
+=====================
+
+This script  copies the default system-wide MeCab Juman dictionary and
+then converts the copy from EUC-JP to UTF-8.  Unfortunately this process
+failed (see above for the error message).
+
+This means that Japanese search and indexing will not work correctly.  This
+only affects you if you are using Socialtext with system-wide Japanese locale.
+
+You can attempt to rectify the situation by hand by reading: 
+
+    $readme.
+    
+That file contains instructions on how to convert the dictionary by hand.
+MSG
+}

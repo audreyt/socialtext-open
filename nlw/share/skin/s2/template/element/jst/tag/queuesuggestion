@@ -1,0 +1,7 @@
+{var lastIndex = matches.length-1}
+{for t in matches}
+ <a href="#" onclick="TagQueue.queue_tag('${t.name|escapespecial|quoter}'); return false"
+   title="Add ${t.name} to page"
+   class="st-tags-suggestion"
+>${t.name}</a>{if t_index != lastIndex}, {/if}
+{/for}

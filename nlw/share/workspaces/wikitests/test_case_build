@@ -1,0 +1,182 @@
+| *Comment* | Build Testcases |  |
+
+* Fixture: SocialWidgets
+
+| set | user | %%start_time%%.sunshine.user@david.socialtext.net |
+| set | user_short | %%start_time%%.sunshine.user |
+| set | user_with_spaces | %%start_time%% sunshine user |
+| set | user_prefix | %%start_time%% |
+| set | user_suffix | sunshine user |
+| set | acct | sunshine_account_%%start_time%% |
+| set | wiki | sunshine-wiki-%%start_time%% |
+| set | group | sunshine-group-%%start_time%% |
+| set | demo_user | socialtextdemo1@gmail.com |
+| set | demo_pass | socialtext |
+
+| create-account | %%acct%% |  |  |
+| create-user | %%user%% | %%password%% | %%acct%% |
+| st-admin | give-accounts-admin --email %%user%% | now has accounts |  |
+
+| *Comment* | Build Testcases use the demo account to check explore |  |
+| st-logoutin | %%demo_user%% | %%demo_pass%% |
+| wait_for_element_visible_ok | link=Explore | 30000 |
+| click_and_wait | link=Explore |  |
+| wait_for_element_visible_ok | //a[@class='close genericOrangeButton'] | 30000 |
+| click_ok | //a[@class='close genericOrangeButton'] |  |
+| wait_for_element_visible_ok | everything | 30000 |
+| wait_for_element_visible_ok | attachment | 30000 |
+| wait_for_element_visible_ok | wikilink | 30000 |
+| wait_for_element_visible_ok | weblink | 30000 |
+| wait_for_element_visible_ok | //div[@class='more'] | 30000 |
+| click_ok | //div[@class='more'] |  |
+| wait_for_element_visible_ok | link=Great Trends in Solar Panels and Solar Energy | 30000 |
+| wait_for_element_visible_ok | link=Big Company | 30000 |
+| wait_for_element_visible_ok | link=home_solar_panels.jpg | 30000 |
+| text_like | //div[@class='assetList'] | qr/Great Trends in Solar Panels and Solar Energy.+Big Company.+home_solar_panels.jpg/ |
+
+| *Comment* | Build Testcases login as %%user%% |  |
+| st-logoutin | %%user%% | %%password%% |  |
+
+| *Comment* | Build Testcases check the control panel |  |
+| wait_for_element_visible_ok | link=Control Panel | 30000 |
+| click_and_wait | link=Control Panel |  |
+| wait_for_text_present_ok | Welcome to the Socialtext Control Panel. | 30000 |
+| click_and_wait | link=Accounts |  |
+| wait_for_element_visible_ok | link=AnyCorp | 30000 |
+| click_and_wait | //a[@name='workspaces'] |  |
+| wait_for_element_visible_ok | link=admin | 30000 |
+| click_and_wait | link=Users |  |
+| wait_for_text_present_ok | %%user%% | 30000 |
+| click_and_wait | //a[@name='groups'] |  |
+| wait_for_text_present_ok | self-join | 30000 |
+| click_and_wait | link=Settings |  |
+| wait_for_text_present_ok | Server-Wide Account Permissions | 30000 |
+
+| *Comment* | Build Testcases create a new wiki |  |
+| open_ok | /nlw/control/workspaces/new |  |
+| wait_for_element_visible_ok | workspace_title | 30000 |
+| type_ok | workspace_title | %%wiki%% |
+| wait_for_element_visible_ok | addUserLookahead | 30000 |
+| type_lookahead_ok | addUserLookahead | %%user_prefix%% |
+| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%user_suffix%%')] | 30000 |
+| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%user_suffix%%')] |  |
+| wait_for_element_visible_ok | link=%%user%% | 30000 |
+| wait_for_element_visible_ok | userTable-dropdown-2-0 | 30000 |
+| select_ok | userTable-dropdown-2-0 | label=Admin |
+| pause | 5000 |  |
+| click_and_wait | create |  |
+| wait_for_text_present_ok | Usage Reports | 30000 |
+
+| *Comment* | Build Testcases create a new group |  |
+| open_ok | /st/groups |  |
+| wait_for_element_present_ok | link=Create Group... | 30000 |
+| click_ok | link=Create Group... |  |
+| wait_for_element_visible_ok | st-create-group-next | 30000 |
+| click_and_wait | st-create-group-next |  |
+| wait_for_element_visible_ok | name | 30000 |
+| type_ok | name | %%group%% |
+| wait_for_element_visible_ok | create-group | 30000 |
+| click_and_wait | create-group |  |
+| wait_for_text_present_ok | Administrators %%user_short%%, | 30000 |
+
+| *Comment* | Build Testcases check the dashboard |  |
+| open_ok | /st/dashboard |  |
+| wait_for_text_present_ok | Welcome, New User | 30000 |
+| st-name-widget | 1 | newbie |
+| st-widget-title-like | newbie | I'm new. What do I do? |
+| wait_for_text_present_ok | edited Example Page: Project Tracking in %%wiki%%. | 30000 |
+
+| *Comment* | Build Testcases check people directory and profile page |  |
+| click_and_wait | link=People |  |
+| wait_for_text_present_ok | %%user%% | 30000 |
+| click_and_wait | //a[@class='realName'] |  |
+| location_like | /st/profile/%%user_id%% |  |
+| st-name-widget | 5 | wikis |
+| st-widget-title-like | wikis | Workspaces |
+| st-select-widget-frame | wikis |  |
+| wait_for_text_present_ok | %%wiki%% | 30000 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Build Testcases check the group directory and group page |  |
+| click_and_wait | link=Groups |  |
+| wait_for_text_present_ok | All Available Groups | 30000 |
+| wait_for_element_visible_ok | link=%%group%% | 30000 |
+| click_and_wait | link=%%group%% |  |
+| wait_for_text_present_ok | (self-join) | 30000 |
+| wait_for_text_present_ok | joined the group %%group%%. | 30000 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Build Testcases check Signals page and send a signal and reply |  |
+| click_and_wait | link=Signals |  |
+| wait_for_text_present_ok | There are no new signals in the last 30 days. | 30000 |
+| st-name-widget | 1 | signals_widget |
+| st_send_signal_via_activities_widget | signals_widget | signal 1 %%start_time%% |
+| open_ok | /st/signals |  |
+| wait_for_text_present_ok | By you less than a minute ago to %%acct%% | 30000 |
+| wait_for_text_present_ok | signal 1 %%start_time%% | 30000 |
+| st-send-reply | reply 1 %%start_time%% |  |
+| open_ok | /st/signals |  |
+| wait_for_text_present_ok | reply 1 %%start_time%% | 30000 |
+| text_like | //div[@class='replies'] | qr/reply 1 %%start_time%%.+By you less than a minute ago/ism |
+
+| *Comment* | Build Testcases create a page in wiki |  |
+| click_and_wait | link=%%wiki%% |  |
+| wait_for_element_visible_ok | st-create-content-link | 30000 |
+| click_ok | st-create-content-link |  |
+| wait_for_element_visible_ok | st-create-content-savelink | 30000 |
+| click_and_wait | st-create-content-savelink |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| type_ok | wikiwyg_wikitext_textarea | page content |
+| type_ok | st-newpage-pagename-edit | page title |
+| st-page-save |  |  |
+| wait_for_text_present_ok | Created by | 30000 |
+| text_like | pageAttribution | qr/Created by.+%%user_with_spaces%%/ |
+| wait_for_text_present_ok | page content | 30000 |
+| wait_for_text_present_ok | page title | 30000 |
+
+| *Comment* | Build Testcases comment on the page |  |
+| click_ok | st-comment-button-link |  |
+| wait_for_element_visible_ok | comment | 30000 |
+| type_ok | comment | page comment |
+| wait_for_element_visible_ok | link=Save | 30000 |
+| click_ok | link=Save |  |
+| wait_for_text_present_ok | contributed by | 30000 |
+| text_like | st-page-content | qr/contributed by.+%%user_with_spaces%%/ |
+| wait_for_text_present_ok | page comment | 30000 |
+
+| *Comment* | Build Testcases check the what's new |  |
+| click_and_wait | link=What's New | 30000 |
+| wait_for_element_visible_ok | link=page title | 30000 |
+| text_like | st-listview-form | qr/page title.+%%wiki%%.+created by.+%%user_with_spaces%%.+updated by.+%%user_with_spaces%%.+2 Revisions/ |
+
+| *Comment* | Build Testcases check mobile |  |
+| click_and_wait | link=Mobile |  |
+| wait_for_text_present_ok | Recent Changes | 30000 |
+| wait_for_element_visible_ok | link=page title | 30000 |
+| click_and_wait | link=page title |  |
+| wait_for_text_present_ok | page content | 30000 |
+| text_like | //div[@class='wiki'] | qr/page content.+page comment.+contributed by.+%%user_with_spaces%%/ |
+| click_and_wait | mobile-signals |  |
+| wait_for_text_present_ok | By you | 30000 |
+| text_like | mobile_event_list | qr/signal 1 %%start_time%%.+By you.+reply 1 %%start_time%%.+By you/ism |
+| click_and_wait | mobile-activities |  |
+| wait_for_text_present_ok | commented on | 30000 |
+| text_like | //ul[@class='event_list'] | qr/%%user_with_spaces%%.+commented on.+page title.+%%wiki%%.+page comment.+%%user_with_spaces%%.+edited.+page title.+%%wiki%%/ |
+
+| *Comment* | Build Testcases change the user's name and check attributions |  |
+| st-admin | set-user-names --email %%user%% --first-name Primo --last-name Segundo | was updated |
+| open_ok | /%%wiki%%/page_title |  |
+| wait_for_text_present_ok | page comment | 30000 |
+| text_like | st-page-content | qr/contributed by.+Primo Segundo/ |
+| text_like | pageAttribution | qr/Created by.+Primo Segundo.+Updated by.+Primo Segundo/ |
+| text_like | globalNav | qr/Welcome.+Primo Segundo/ |
+
+| *Comment* | Build Testcases TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%user%% |  |
+| delete-workspace | %%wiki%% | Recklessly deleting |
+| delete-account | %%acct%% | Recklessly deleting |
+
+| *Comment* | Build Testcases COMPLETED |  |

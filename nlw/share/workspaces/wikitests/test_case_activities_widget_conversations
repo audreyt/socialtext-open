@@ -1,0 +1,137 @@
+| *Comment* | Test Case: Activities Widget Conversations |  |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Activities Widget Conversations SETUP |  |
+
+| set | actor | actor%%start_time%%@ken.socialtext.net |
+| set | actorshort | You |
+| set | wrkspc | act-conv-ws%%start_time%% |
+| set | convuser | convuser%%start_time%%@ken.socialtext.net |
+| set | convusershort | convuser%%start_time%% |
+| set | isolateduser | isolateduser%%start_time%%@ken.socialtext.net |
+| set | mypagename | mypagename%%start_time%% |
+| set | mycommentedpagename | mycommentedpagename%%start_time%% |
+| set | commentpagename | commentpagename%%start_time%% |
+| set | watchedpagename | watchedpagename%%start_time%% |
+| set | notconvpage | notconvpage%%start_time%% |
+| set | notconvpagetwo | notconvpagetwo%%start_time%% |
+| set | mentioncode | this is a mention %%start_time%% |
+
+| *Comment* | Test Case: Activities Widget Conversations create WS and members |  |
+| st-admin | create-workspace --empty --name %%wrkspc%% --title %%wrkspc%% |  |
+| st-admin | create-user --email %%convuser%% --password %%password%% |  |
+| st-admin | create-user --email %%isolateduser%% --password %%password%% |  |
+| st-admin | create-user --email %%actor%% --password %%password%% |  |
+
+| st-admin | add-member --email %%actor%% --workspace %%wrkspc%% |  |
+| st-admin | add-member --email %%convuser%% --workspace %%wrkspc%% |  |
+
+| st-admin | update-page --email %%isolateduser%% --workspace %%wrkspc%% --page %%mycommentedpagename%% < %%wikitest_client_files%%wikitest.txt | has been created |
+| st-admin | update-page --email %%isolateduser%% --workspace %%wrkspc%% --page %%watchedpagename%% < %%wikitest_client_files%%wikitest.txt | has been created |
+
+| *Comment* | Test Case: Activities Widget Conversations - %%actor%% creates a page, comments on a page, watches a page |  |
+| st-logoutin | %%actor%% | %%password%% |
+
+| *Comment* | Test Case: Activities Widget Conversations - %%actor%% creates a page, comments on a page, watches a page |  |
+| st-create-wikipage | %%wrkspc%% | %%mypagename%% |
+| st-comment-on-page | /%%wrkspc%%/?%%mycommentedpagename%% | Leaving a comment |
+| open_ok | /%%wrkspc%%/?%%watchedpagename%% |  |
+| wait_for_element_present_ok | st-watchlist-indicator | 30000 |
+| st-watch-page | 1 |  |
+
+| *Comment* | Test Case: Activities Widget Conversations - %%convuser%% logs in |  |
+| st-logoutin | %%convuser%% | %%password%% |
+
+| *Comment* | Test Case: Activities Widget Conversations - Mention of %%actor%% by %%convuser%% |  |
+| open_ok | /st/dashboard |
+| st-single-widget-in-dashboard | gallery-widget-Activities |  |
+| wait_for_text_present_ok | Activities | 30000 |
+| st-name-widget | 1 | signals_widget |
+| st-widget-title-like | signals_widget | Activities |
+| st-send-signal-via-activities-widget | signals_widget | simple signals %%start_time%% |
+| open_ok | /st/dashboard |  |
+| st-name-widget | 1 | signals_widget |
+| st-send-signal-via-activities-widget | signals_widget | {user: %%actor%%} %%mentioncode%% |
+
+| *Comment* | Test Case: Activities Widget Conversations - %%convuser%% edits, comments, makes a conversation (plus two pages that are not conversations) |  |
+| st-create-wikipage | %%wrkspc%% | %%notconvpage%% |
+| st-edit-page | /%%wrkspc%%/?%%mypagename%% | this is an edit by %%convuser%% |
+| st-edit-page | /%%wrkspc%%/?%%mycommentedpagename%% | this is another comment by %%convuser%% |
+| st-comment-on-page | /%%wrkspc%%/?%%watchedpagename%% | Comment on watched page by %%convuser%% |
+| st-create-wikipage | %%wrkspc%% | %%notconvpagetwo%% |
+
+| *Comment* | Test Case: Activities Widget Conversations - %%actor%% logs in |  |
+| st-logoutin | %%actor%% | %%password%% |
+| st-clear-json-cache |  |  |
+
+| *Comment* | Test Case: Activities Widget Conversations - Load %%actor%% Activity Widget |  |
+| st-single-widget-in-dashboard | gallery-widget-Activities |  |
+| st-name-widget | 1 | activities_widget |
+| st-widget-title-like | activities_widget | Activities |
+| st-widget-settings | activities_widget |  |
+| wait_for_element_visible_ok | limit | 30000 |
+| select-ok | limit | 25 |
+| wait_for_element_visible_ok | st-savebutton-%%activities_widget%% | 30000 |
+| click_ok | st-savebutton-%%activities_widget%% |  |
+| wait_for_element_not_visible_ok | limit | 30000 |
+| wait_for_element_not_visible_ok | st-savebutton-%%activities_widget%% | 30000 |
+
+| *Comment* | Test Case: Activities Widget Conversations reopen dashboard |  |
+| open_ok | /st/dashboard |  |
+
+| *Comment* | Test Case: Activities Widget Conversations Verify Edits and Comments |  |
+
+| set | r1 | %%convusershort%%.+minute.+ago.+edited.+%%notconvpagetwo%%.+in.+%%wrkspc%% |
+| set | r2 | %%convusershort%%.+minute.+ago.+commented.+on.+%%watchedpagename%%.+in.+%%wrkspc%% |
+| set | r3 | %%convusershort%%.+minute.+ago.+edited.+%%mycommentedpagename%%.+in.+%%wrkspc%% |
+| set | r4 | %%convusershort%%.+minute.+ago.+edited.+%%mypagename%%.+in.+%%wrkspc%% |
+| set | r5 | %%convusershort%%.+minute.+ago.+edited.+%%notconvpage%%.+in.+%%wrkspc%% |
+| set | r6 | %%actorshort%%.+minute.+ago.+commented.+on.+%%mycommentedpagename%%.+in.+%%wrkspc%% |
+| set | r7 | %%actorshort%%.+minute.+ago.+edited.+%%mypagename%%.+in.+%%wrkspc%% |
+
+| *Comment* | %%r1%%.+%%r2%%.+%%r3%%.+%%r4%%.+%%r5%%.+%%r6%%.+%%r7%% |  |
+
+| wait_for_text_present_ok | %%notconvpagetwo%% | 30000 |
+| wait_for_text_present_ok | %%watchedpagename%% | 30000 |
+
+| *Comment* | %%r1%% |  |
+| st_verify_text_in_activities_widget | activities_widget | qr/Showing.+%%r1%%/ism |
+| *Comment* | %%r2%% |  |
+| st_verify_text_in_activities_widget | activities_widget | qr/Showing.+%%r2%%/ism |
+| *Comment* | %%r3%% |  |
+| st_verify_text_in_activities_widget | activities_widget | qr/Showing.+%%r3%%/ism |
+| *Comment* | %%r4%% |  |
+| st_verify_text_in_activities_widget | activities_widget | qr/Showing.+%%r4%%/ism |
+| *Comment* | %%r5%% |  |
+| st_verify_text_in_activities_widget | activities_widget | qr/Showing.+%%r5%%/ism |
+| *Comment* | %%r6%% |  |
+| st_verify_text_in_activities_widget | activities_widget | qr/Showing.+%%r6%%/ism |
+| *Comment* | %%r7%% |  |
+| st_verify_text_in_activities_widget | activities_widget | qr/Showing.+%%r7%%/ism |
+| *Comment* | %%mentioncode%% |  |
+| st_verify_text_in_activities_widget | activities_widget | %%mentioncode%% |
+
+| *Comment* | Test Case: Activities Widget Conversations Changes to convos only, verify Edits, Comments, PRESENT - mention /is/ present |  |
+| wait_for_element_present_ok | link=my conversations | 5000 |
+| click_ok | link=my conversations |  |
+
+| st_verify_text_in_activities_widget | activities_widget | qr/Showing.+%%r2%%/ism |
+| st_verify_text_in_activities_widget | activities_widget | qr/Showing.+%%r3%%/ism |
+| st_verify_text_in_activities_widget | activities_widget | qr/Showing.+%%r4%%/ism |
+
+| st_text_unlike_in_activities_widget | activities_widget | qr/Showing.+%%r1%%/ism |
+| st_text_unlike_in_activities_widget | activities_widget | qr/Showing.+%%r5%%/ism |
+| st_verify_text_in_activities_widget | activities_widget | qr/Showing.+%%r6%%/ism |
+| st_verify_text_in_activities_widget | activities_widget | qr/Showing.+%%r7%%/ism |
+| st_verify_text_in_activities_widget | activities_widget | %%mentioncode%% |
+
+
+| *Comment* | Test Case: Activities Widget Conversations TEARDOWN |  |
+| st-process-jobs |  |  |
+| delete-workspace | %%wrkspc%% |  |
+| deactivate-user | %%convuser%% |  |
+| deactivate-user | %%isolateduser%% |  |
+| deactivate-user | %%actor%% |  |
+
+| *Comment* | Test Case: Activities Widget Conversations COMPLETED |  |

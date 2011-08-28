@@ -1,0 +1,13 @@
+Japanese fonts are not distributed with Socialtext, but can be manually set up
+using the following script:
+
+  nlw/dev-bin/fetch-japanese-fonts
+
+This script will download the fonts and extract them into the correct place.
+You should do this before install, and then everything should work.
+
+
+The fonts will be fetched from a Socialtext server, and after running the script
+you will see additional fonts in:
+
+  nlw/share/fonts

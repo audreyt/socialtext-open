@@ -1,0 +1,151 @@
+[%- MACRO vhost_common( for_ssl_vhost ) BLOCK %]
+    ServerAdmin [% config.server_admin %]
+    DocumentRoot [% config.data_root_dir %]/docroot
+    PerlSetEnv HOME [% config.prefix_dir %]/var/www
+
+[%- IF config.apache_status %]
+    # Status handlers
+    <Location /status>
+        SetHandler server-status
+        Order Deny,Allow
+        Deny from all
+        Allow from [% config.apache_status %]
+    </Location>
+    <Location /perl-status>
+        <Perl>
+            eval { require B::TerseSize };
+        </Perl>
+        SetHandler perl-script
+        PerlHandler +Apache::Status
+        PerlSetVar StatusOptionsAll On
+        PerlSetVar StatusTerseSizeMainSummary On
+        Order Deny,Allow
+        Deny from all
+        Allow from [% config.apache_status %]
+    </Location>
+[%- END %]
+
+    PerlCleanupHandler  +Socialtext::Handler::Cleanup
+    PerlPostReadRequestHandler +Socialtext::Apache::ForwardedFor
+
+# Order is important in these next three sections
+    <Location />
+        SetHandler perl-script
+        PerlInitHandler  +Socialtext::InitHandler
+        PerlHandler Socialtext::Handler::REST
+    </Location>
+
+    <Location /nlw>
+        SetHandler perl-script
+        PerlHandler Socialtext::Handler::Authen
+    </Location>
+
+    <Location /nlw/ntlm>
+        SetHandler          perl-script
+        PerlHandler         +Socialtext::Handler::NTLM
+        PerlAuthenHandler   +Socialtext::Apache::Authen::NTLM
+        AuthType            ntlm
+        Require             valid-user
+# In the event that NTLM SSO Authen fails, display a login page to the User
+# - isn't ideal as we lose the "auto-redirect to the page you wanted to go
+#   to", but its better than a generic 403 error page
+        ErrorDocument       403     /nlw/login.html
+    </Location>
+
+    <Location /nlw/control>
+        SetHandler  perl-script
+        PerlHandler +Socialtext::Handler::ControlPanel
+        PerlAccessHandler  +Socialtext::AccessHandler::IsBusinessAdmin
+    </Location>
+
+    <LocationMatch "^/[^/]+/index\.cgi">
+        ErrorDocument 404 /index.cgi
+    </LocationMatch>
+
+    # webplugin drop-ins should go in
+    # /var/www/socialtext/webplugin/PLUGIN-NAME
+    # two directories are expected there, a cgi directory scripts
+    # and a static directory for static files
+    # URI paths would be /webplugin/cgi/PLUGIN-NAME/script.cgi for scripts
+    #     or /webplugin/PLUGIN-NAME/foo.html for static files and resources
+    AliasMatch ^/webplugin/([^/c]+)(.*) [% config.data_root_dir %]/webplugin/$1/static$2
+    <LocationMatch "^/webplugin/[^/+].*.*">
+        SetHandler default-handler
+        Options -MultiViews +FollowSymlinks
+        Order allow,deny
+        Allow from all
+    </LocationMatch>
+
+    ScriptAliasMatch ^/webplugin/cgi/([^/]+)(.*) [% config.data_root_dir %]/webplugin/$1/cgi$2
+    <LocationMatch "^/webplugin/cgi/[^/+].*">
+        SetHandler cgi-script
+        Options +ExecCGI -MultiViews +FollowSymlinks
+        Order allow,deny
+        Allow from all
+    </LocationMatch>
+
+[%- END ~%][%# MACRO vhost_common %]
+
+[%-# Real code starts here %]
+# This file is the Socialtext-specific Apache configuration.
+
+# Memory
+
+# The maximum size of the Apache process, including both shared and unshared
+# memory.
+# PerlSetVar st_max_process_size 200000
+
+# The minimum amount of shared memory the process must have.
+# PerlSetVar st_min_shared_size   70000
+
+# The maximum amount of unshared memory the process can use.
+PerlSetVar st_max_unshared_size [% config.is_dev ? 368640 : 327680 %]
+[%# 368640 == 360MB, 327680 == 320MB -%]
+
+
+# Environment
+
+PerlSetEnv  NLW_CONFIG      [% config.nlw_config_file %]
+PerlSetEnv  APACHE_LOG_DIR  [% config.log_dir %]
+[%- IF ENV.HARNESS_ACTIVE %]
+PerlSetEnv  HARNESS_ACTIVE  [% ENV.HARNESS_ACTIVE %]
+[%- END %]
+[%- IF config.is_dev %]
+PerlSetEnv  NLW_FRONTEND_PORT [% config.frontend_ports.http %]
+PerlSetEnv  ST_APP_CONFIG [% config.appliance_config_file %]
+PerlSetEnv  NLW_DEV_MODE  1
+PerlPassEnv NLW_APPCONFIG
+PerlPassEnv ST_CURRENT
+[%- END %]
+
+# Perl Loading
+
+# only load in the master process
+PerlFreshRestart off
+
+<Perl>
+[%- IF config.inc %]
+    [%- FOREACH dirname IN config.inc %]
+    use lib '[% dirname %]';
+    [%- END %]
+    [%- IF config.is_dev %][%# TODO: better local::lib integration %]
+    use lib '[% ENV.HOME %]/perl5/lib/perl5';
+    [%- END %]
+[%- END %]
+    # pre-loader:
+    use Socialtext::ModPerl;
+    # top-level Request modules:
+    use Socialtext::Handler::REST;
+    use Socialtext::Handler::Authen;
+</Perl>
+
+# Virtual Hosts: one for http, one for https
+
+<VirtualHost *:[% config.backend_ports.http %]>
+[% vhost_common( 0 ) %]
+</VirtualHost>
+
+<VirtualHost *:[% config.backend_ports.https %]>
+    SetEnv  NLWHTTPSRedirect  1
+[% vhost_common( 1 ) %]
+</VirtualHost>

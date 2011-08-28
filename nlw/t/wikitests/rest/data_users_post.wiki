@@ -1,0 +1,31 @@
+Tests that POSTs to the "users" ReST API works correctly
+
+* Fixture: SocialRest
+
+| standard-test-setup |
+
+| *Comment*      | Accounts Admin can create a new User           |                               |                                                                                          |
+| set            | test_user1                                     | test_user1%%start_time%%@q.q  |                                                                                          |
+| set            | accounts_admin                                 | acct_admin%%start_time%%@q.q  |                                                                                          |
+| create-user    | %%accounts_admin%%                             | password                      | %%account%%                                                                              |
+| st-admin       | give-accounts-admin --email %%accounts_admin%% | now has                       |                                                                                          |
+| http-user-pass | %%accounts_admin%%                             | password                      |                                                                                          |
+| post           | /data/users                                    | Content-Type=application/json | { "username":"%%test_user1%%", "email_address":"%%test_user1%%", "password":"password" } |
+| code-is        | 201                                            |                               |                                                                                          |
+
+| *Comment*      | System Admin cannot create a new User      |                                |                                                                                          |
+| set            | test_user2                                 | test_user2%%start_time%%@q.q   |                                                                                          |
+| set            | system_admin                               | system_admin%%start_time%%@q.q |                                                                                          |
+| create-user    | %%system_admin%%                           | password                       | %%account%%                                                                              |
+| st-admin       | give-system-admin --email %%system_admin%% | now has                        |                                                                                          |
+| http-user-pass | %%system_admin%%                           | password                       |                                                                                          |
+| post           | /data/users                                | Content-Type=application/json  | { "username":"%%test_user2%%", "email_address":"%%test_user2%%", "password":"password" } |
+| code-is        | 403                                        |                                |                                                                                          |
+
+| *Comment*      | Non-Admin cannot create a new User |                               |                                                                                          |
+| set            | test_user3                         | test_user3%%start_time%%@q.q  |                                                                                          |
+| set            | non_admin                          | non_admin%%start_time%%@q.q   |                                                                                          |
+| create-user    | %%non_admin%%                      | password                      | %%account%%                                                                              |
+| http-user-pass | %%non_admin%%                      | password                      |                                                                                          |
+| post           | /data/users                        | Content-Type=application/json | { "username":"%%test_user3%%", "email_address":"%%test_user3%%", "password":"password" } |
+| code-is        | 403                                |                               |                                                                                          |

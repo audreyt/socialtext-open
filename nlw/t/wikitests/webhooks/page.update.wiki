@@ -1,0 +1,49 @@
+* Fixture: WebHook
+
+| standard-test-setup | foo                   |     |                |
+| standard-test-setup | bar                   |     |                |
+
+| new-webhook-testcase | Create a page, verify no webhooks fired |     |                |
+| edit-page            | %%bar_workspace%%                       | Bar | Sample Content |
+| job-count            | WebHook                                 | 0   |                |
+
+| new-webhook-testcase  | page.update should fire for a new page being created                                |               |                                         |
+| add-webhook           | page.update                                                                         | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%"} |
+| edit-page             | %%bar_workspace%%                                                                   | Foo           | Sample Content                          |
+| job-count             | WebHook                                                                             | 1             |                                         |
+| st-process-jobs       |                                                                                     |               |                                         |
+| job-count             | WebHook                                                                             | 0             |                                         |
+| webhook-payload-parse |                                                                                     |               |                                         |
+| json-like             | [{"class":"page.update"}]                                                             |               |                                         |
+| json-like             | [{"actor":{"id":%%user_id%%,"best_full_name":"bar user %%start_time%%"}}]             |               |                                         |
+| json-like             | [{"object":{"editor":{"id":%%user_id%%,"best_full_name":"bar user %%start_time%%"}}}] |               |                                         |
+| json-like             | [{"object":{"workspace":{"title":"%%bar_workspace%%","name":"%%bar_workspace%%"}}}]   |               |                                         |
+| json-like             | [{"object":{"id":"foo"}}]                                                             |               |                                         |
+| json-like             | [{"object":{"name":"Foo"}}]                                                           |               |                                         |
+| json-like             | [{"object":{"uri":"%%browser_url%%/%%bar_workspace%%/foo"}}]                |               |                                         |
+| json-like             | [{"object":{"edit_summary":""}}]                                                      |               |                                         |
+| json-like             | [{"object":{"tags":[]}}]                                                              |               |                                         |
+| json-like             | [{"object":{"tags_added":[]}}]                                                        |               |                                         |
+| json-like             | [{"object":{"tags_deleted":[]}}]                                                      |               |                                         |
+| json-like             | [{"object":{"type":"wiki"}}]                                                          |               |                                         |
+| json-like             | [{"object":{"revision_count":"1"}}]                                                   |               |                                         |
+| webhook-like          | "revision_id":"\d+\.\d+"                                                                 |               |                                         |
+| webhook-like          | "edit_time"                                                                         |               |                                         |
+| webhook-like          | "create_time"                                                                       |               |                                         |
+
+| new-webhook-testcase | creating OR tagging OR editing OR deleting creates a webhook call |      |                              |
+| add-webhook           | page.update                                                                         | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%"} |
+| job-count            | WebHook                                                           | 0    |                              |
+| edit-page            | %%bar_workspace%%                                                 | Oobu | This is a new page           |
+| job-count            | WebHook                                                           | 1    |                              |
+| edit-page            | %%bar_workspace%%                                                 | Oobu | This is an update            |
+| job-count            | WebHook                                                           | 2    |                              |
+| delete-page          | %%bar_workspace%%                                                 | Oobu |                              |
+| job-count            | WebHook                                                           | 3    |                              |
+| edit-page            | %%bar_workspace%%                                                 | Oobu | This should restore the page |
+| job-count            | WebHook                                                           | 4    |                              |
+| tag-page             | %%bar_workspace%%                                                 | Oobu | holy octopus                 |
+| job-count            | WebHook                                                           | 5    |                              |
+
+# For other filter tests, see t/wikitests/webhooks/page.tag.wiki
+# The code flow is the same, so these tests are omitted

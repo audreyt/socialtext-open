@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <script src="../../common/javascript/jquery-1.2.6.js">
+        </script>
+        <script src="../javascript/lookahead.js">
+        </script>
+    </head>
+    <body>
+        <input id="source"/>
+        <script>
+            jQuery('#source').lookahead({
+                url: '/data/workspaces',
+                linkText: function (i) {
+                    return [i.name, i.name];
+                }
+            });
+        </script>
+    </body>
+</html>

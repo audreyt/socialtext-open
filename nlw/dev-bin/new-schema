@@ -1,0 +1,62 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+use Fatal qw/open close/;
+
+my $dbdir = "$ENV{ST_CURRENT}/nlw/etc/socialtext/db";
+
+#INSERT INTO "System" VALUES ('socialtext-schema-version', '114');
+my $schema_ver_line =
+    `tail -n 1 $dbdir/socialtext-schema.sql`;
+die "can't extract schema version"
+    unless $schema_ver_line =~
+        /INSERT INTO "System" VALUES \('socialtext-schema-version', '(\d+)'\)/;
+my $cur_ver = $1;
+
+print "current version is $cur_ver\n";
+my $next_ver = $cur_ver+1;
+
+my $filename = "$dbdir/socialtext-${cur_ver}-to-${next_ver}.sql";
+
+die "migration for $next_ver already exists!\n"
+    if (-e $filename);
+
+open my $mig_fh, '>', $filename;
+print $mig_fh <<STUB;
+BEGIN;
+
+-- write your migration here
+
+UPDATE "System"
+   SET value = '$next_ver'
+ WHERE field = 'socialtext-schema-version';
+COMMIT;
+STUB
+close $mig_fh;
+
+my $editor = $ENV{EDITOR} || 'vi';
+
+if ($editor =~ /^vi/) {
+    exec $editor, $filename, '+3' # skip to 3rd line
+        or die "can't exec $editor: $!";
+}
+else {
+    exec $editor, $filename
+        or die "can't exec $editor: $!";
+}
+__END__
+
+=head1 NAME
+
+new-schema -- make a new SQL migration
+
+=head1 SYNOPSIS
+
+    bash$ new-schema
+
+=head1 DESCRIPTION
+
+Creates a new stub schema migration file, invokes C<$EDITOR>.
+
+=cut

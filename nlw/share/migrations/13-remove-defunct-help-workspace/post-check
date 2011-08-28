@@ -1,0 +1,19 @@
+#!/bin/bash
+
+export PATH="./bin:../bin:$PATH"
+DATA_USER=${ST_MIGRATION_SUDO_USER:-"www-data"}
+
+# Get the list of workspaces, otherwise fail hard.
+WORKSPACES=$(sudo -u $DATA_USER env PATH="$PATH" st-admin list-workspaces) 
+if [ $? -ne 0 ]; then
+    echo "Could not get a list of workspaces!";
+    exit 1;
+fi
+
+# See if "help" is in the list of workspaces.  If so, die.
+if echo -e "$WORKSPACES" | grep -qe '^help$'; then
+    echo "Migration failed to remove \"help\" workspace."
+    exit 1;
+fi
+
+exit 0;

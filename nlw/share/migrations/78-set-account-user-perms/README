@@ -1,0 +1,6 @@
+We have a new role for user's, Account User, which we must grant privs for.
+Since the Account User is a glorified Authenticated user that did not exist
+before now, we will copy all existing Authenticated user perms into Account
+User perms.
+
+This work is being done for [Story: Group admin creates workspace for self-join group].

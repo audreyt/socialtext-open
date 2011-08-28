@@ -1,0 +1,80 @@
+* Fixture: SocialRest
+
+| *Comment* | Create workspace |                               |
+| set       | ws               | email_test_%%start_time%%     |
+| set       | host             | ken.socialtext.net            |
+| set       | user             | user%%start_time%%@%%host%%   |
+| set       | pages_uri        | /data/workspaces/%%ws%%/pages |
+
+| create_workspace | %%ws%%   | Socialtext |            |
+| create-user      | %%user%% | password   | Socialtext |
+| add-member       | %%user%% | %%ws%%     |            |
+| http-user-pass   | %%user%% | password   |            |
+
+| *Comment*                | Indexing tests |                  |
+| set-from-subject         | subject        | simple           |
+| deliver-email            | %%ws%%         | simple           |
+| deliver-email-result-is  | 0              |                  |
+| deliver-email-error-like | qr/^$/         |                  |
+| get                      | %%pages_uri%%  | application/json |
+| body-like                | %%subject%%    |                  |
+
+| *Comment*                   | auth-error |                   |          |
+| remove-workspace-permission | %%ws%%     | Guest             | email_in |
+| remove-workspace-permission | %%ws%%     | AuthenticatedUser | email_in |
+| deliver-email               | %%ws%%     | guest-user        |          |
+| deliver-email-result-is     | 255        |                   |          |
+| deliver-email-error-like | qr/^You do not have permission to send email/ |
+| add-workspace-permission | %%ws%% | AuthenticatedUser | email_in |
+| add-workspace-permission | %%ws%% | Guest             | email_in |
+
+| *Comment*                | Email without subject |                  |
+| deliver-email            | %%ws%%                | no-subject       |
+| deliver-email-result-is  | 0                     |                  |
+| deliver-email-error-like | qr/^$/                |                  |
+| get                      | %%pages_uri%%         | application/json |
+| body-like     | Mail from devnull1, Mon, 18 Oct 2004 17:24:16 -0700 |
+
+| *Comment*                | Normal mail               |               |
+| deliver-email            | %%ws%%                    | EmailReceiver |
+| deliver-email-result-is  | 0                         |               |
+| deliver-email-error-like | qr/^$/                    |               |
+| set-from-subject         | subject                   | EmailReceiver |
+| get                      | %%pages_uri%%/%%subject%% | text/plain    |
+
+| body-like | From: <a href="mailto:williams@tni.com">John Williams</a> |
+| body-like | Date: Wed, 15 Sep 2004 13:32:14 -0600 (MDT) |
+
+| get       | %%pages_uri%%/%%subject%%/tags | text/plain |
+| body-like | Email                          |            |
+| body-like | ape                            |            |
+| body-like | monkey                         |            |
+
+| get     | %%pages_uri%%/%%subject%%/attachments | application/json |
+| body-is | []                                    |                  |
+
+| *Comment* | Case of workspace in to address is incorrect |
+| set              | ws        | foobar_%%start_time%%         |
+| set              | ws_wrong  | FooBar_%%start_time%%         |
+| set              | pages_uri | /data/workspaces/%%ws%%/pages |
+| create-workspace | %%ws%%    | Socialtext                    |
+| add-member       | %%user%%  | %%ws%%                        |
+| add-workspace-permission | %%ws%% | Guest             | email_in |
+
+| deliver-email            | %%ws_wrong%%              | EmailReceiver |
+| deliver-email-result-is  | 0                         |               |
+| deliver-email-error-like | qr/^$/                    |               |
+| set-from-subject         | subject                   | EmailReceiver |
+
+| get                      | %%pages_uri%%/%%subject%% | text/plain    |
+| body-like | From: <a href="mailto:williams@tni.com">John Williams</a> |
+
+| body-like | Date: Wed, 15 Sep 2004 13:32:14 -0600 (MDT)               |
+
+| get       | %%pages_uri%%/%%subject%%/tags | text/plain |
+| body-like | Email                          |            |
+| body-like | ape                            |            |
+| body-like | monkey                         |            |
+
+| get     | %%pages_uri%%/%%subject%%/attachments | application/json |
+| body-is | []                                    |                  |

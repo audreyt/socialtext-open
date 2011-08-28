@@ -1,0 +1,73 @@
+<html>
+
+<head>
+ <script type="text/javascript" src="lib/JSAN.js"></script>
+ <script type="text/javascript">
+  JSAN.addRepository("lib", "../lib");
+  JSAN.use("Test.More");
+  JSAN.errorLevel = "die";
+ </script>
+ <style>
+  table { border-collapse: collapse; }
+  th, td { border: 1px solid black; padding: 1em; }
+  a.w-st-resort-column { text-decoration: none }
+  .w-st-current-sorted-column { background-color: #eee }
+ </style>
+
+</head>
+<body>
+
+ <table id="a-table">
+  <tr id="row0">
+   <th id="name-header">Name</th>
+   <th id="size-header">Size</th>
+  </tr>
+  <tr id="row1">
+   <td>C</td>
+   <td>1</td>
+  </tr>
+  <tr id="row2">
+   <td>B</td>
+   <td>1</td>
+  </tr>
+  <tr id="row3">
+   <td>A</td>
+   <td>1</td>
+  </tr>
+ </table>
+
+ <pre style="white-space: pre" id="test"><script>
+
+JSAN.use("Widget.SortableTable");
+plan( { tests: 9 } );
+
+{
+    var table = new Widget.SortableTable( { tableId: "a-table",
+                                            noInitialSort: true } );
+
+    var rows = document.getElementById("a-table").rows;
+    is( rows[1].id, "row1", "row1 is now first - no initial sort" );
+    is( rows[2].id, "row2", "row2 is now second - no initial sort" );
+    is( rows[3].id, "row3", "row3 is now third - no initial sort" );
+
+    like( rows[1].className, /\bw-st-even-row\b/,
+          "without initial sort rows still get odd/even classes" );
+    like( rows[2].className, /\bw-st-odd-row\b/,
+          "without initial sort rows still get odd/even classes" );
+    like( rows[3].className, /\bw-st-even-row\b/,
+          "without initial sort rows still get odd/even classes" );
+}
+
+{
+    var table = new Widget.SortableTable( { tableId: "a-table" } );
+
+    var rows = document.getElementById("a-table").rows;
+    is( rows[1].id, "row3", "row3 is now first - with initial sort" );
+    is( rows[2].id, "row2", "row2 is now second - with initial sort" );
+    is( rows[3].id, "row1", "row1 is now third - with initial sort" );
+}
+
+ </script></pre>
+
+</body>
+</html>

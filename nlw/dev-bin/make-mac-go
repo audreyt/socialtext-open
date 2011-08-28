@@ -1,0 +1,17 @@
+#!/bin/bash
+# @COPYRIGHT@
+
+# XXX needs to be tested on a clean install. Completely untested.  I think
+# these are the steps I took to get dev-bin/fresh-dev-env-from-scratch working
+# on Tiger
+
+# The config looks for this, okay if empty
+sudo mkdir /etc/apache
+
+sudo ln -s /usr/sbin/httpd /usr/sbin/apache
+
+sudo mkdir -p /usr/lib/apache
+
+sudo ln -s /usr/libexec/httpd /usr/lib/apache/1.3
+
+sudo ln -s /usr/libexec/httpd/libperl.so /usr/libexec/httpd/mod_perl.so

@@ -1,0 +1,34 @@
+This is the test that opens a topic and creates seed replies.
+It should be included by the top-level replies testcase
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Replies Seeder. These vars may come in from the ENV where wikitest is executed using `export selenium_var_shared_account=Ken1` |  |
+| set_default | shared_account | Replies-%%start_time%% |
+| set_default | topic_signal | Topic for %%start_time%% |
+
+| *Comment* | Test Case: Replies Seeder. Setup and login %%shared_account%% |  |
+| set | my_acct | %%shared_account%% |
+| set | my_user | `%%my_acct%%-seeder@ken.socialtext.net` |
+
+| st-admin | create-account --name %%my_acct%% |  |
+| st-admin | create-user --account %%my_acct%% --e %%my_user%% --p %%password%% | was created |
+| st-process-jobs |  |  |
+| st-logoutin | %%my_user%% | %%password%% |
+
+| *Comment* | Test Case: Replies Seeder. Topic and three seed replies using [Test Case: Replies Include] |  |
+| open_ok | /st/signals |  |
+| st-send-signal-in-activities-widget | %%topic_signal%% |  |
+| wait_for_text_present_ok | %%topic_signal%% | 30000 |
+| open_ok | /st/signals |  |
+
+| set | i | 0-0 |
+| include | [Test Case: Replies Include] |  |
+
+| set | i | 0-1 |
+| include | [Test Case: Replies Include] |  |
+
+| set | i | 0-2 |
+| include | [Test Case: Replies Include] |  |
+
+| *Comment* | Test Case: Replies Seeder COMPLETED |  |

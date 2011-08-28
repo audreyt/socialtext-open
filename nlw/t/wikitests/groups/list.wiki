@@ -1,0 +1,332 @@
+Tests for [Story: Groups ReST API]
+
+* Fixture: Search
+
+| standard-test-setup |
+| delete-all-groups   |
+
+# Should be no groups to start
+
+| GET             | /data/groups  |         |
+| code-is         | 200           |         |
+| header-like     | Cache-Control | private |
+| json-parse      |               |         |
+| json-array-size | 0             |         |
+
+# Create a new group, make sure it shows up
+
+| set          | group_name     | group%%start_time%% |              |
+| create-group | %%group_name%% | %%account%%         | %%username%% |
+
+## visible by Group Creator (Creator sees Groups he created or is a member of)
+
+| GET             | /data/groups         |                |
+| code-is         | 200                  |                |
+| header-like     | Cache-Control        | private        |
+| json-parse      |                      |                |
+| json-array-size | 1                    |                |
+| json-path-is    | $[0].group_id        | %%group_id%%   |
+| json-path-is    | $[0].name            | %%group_name%% |
+| json-path-is    | $[0].user_count      | 1              |
+| json-path-is    | $[0].workspace_count | 0              |
+
+######## Quick & Lite interface for nav drop-down ########
+
+| Comment | Fast interface for nav |
+| GET-json | /data/groups?minimal=1 |
+| code-is | 200 |
+| json-parse |
+| json-path-is    | $[0].group_id        | %%group_id%%   |
+| json-path-is    | $[0].name            | %%group_name%% |
+| json-path-is    | $[0].user_count      |               |
+| json-path-is    | $[0].workspace_count |               |
+
+# Group Visibility Rules
+
+## visible by Business Admin (Business Admin can see all Groups)
+
+| set            | badmin     | badmin%%start_time%%@ken.socialtext.net |
+| create-user    | %%badmin%% | password                                |
+| http-user-pass | %%badmin%% | password                                |
+
+| set-business-admin | %%badmin%%         | 1       |
+| GET                | /data/groups?all=1 |         |
+| code-is            | 200                |         |
+| header-like        | Cache-Control      | private |
+| json-parse         |                    |         |
+| json-array-size    | 1                  |         |
+| json-path-is       | $[0].user_count    | 1       |
+
+| set-business-admin | %%badmin%%         | 0       |
+| GET                | /data/groups?all=1 |         |
+| code-is            | 200                |         |
+| header-like        | Cache-Control      | private |
+| json-parse         |                    |         |
+| json-array-size    | 0                  |         |
+
+## visible by Group Members (Members see Groups they are members of)
+## *not* visible by other Users (can't see Groups you have no relationship to)
+
+| set            | janefirst    | jane%%start_time%%                           |
+| set            | jane         | jane%%start_time%%@ken.socialtext.net        |
+| set            | bobemail     | bobfullname%%start_time%%@ken.socialtext.net |
+| set            | bobfirst     | bobfirst%%start_time%%                       |
+| set            | boblast      | boblast%%start_time%%                        |
+| create-user    | %%jane%%     | password                                     |
+| st-admin       | create-user --e %%bobemail%% --p password --first %%bobfirst%% --last %%boblast%%  |
+| http-user-pass | %%jane%%     | password                                     |
+
+| GET                | /data/groups  |         |
+| code-is            | 200           |         |
+| header-like        | Cache-Control | private |
+| json-parse         |               |         |
+| json-array-size    | 0             |         |
+
+| add-user-to-group | %%jane%%        | %%group_id%% |
+| add-user-to-group | %%bobemail%%    | %%group_id%% |
+| GET               | /data/groups    |              |
+| code-is           | 200             |              |
+| header-like       | Cache-Control   | private      |
+| json-parse        |                 |              |
+| json-array-size   | 1               |              |
+| json-path-is      | $[0].group_id   | %%group_id%% |
+| json-path-is      | $[0].user_count | 3            |
+
+| GET             | /data/groups?show_members=1                                        |         |
+| code-is         | 200                                                                |         |
+| header-like     | Cache-Control                                                      | private |
+| json-parse      |                                                                    |         |
+| json-array-size | 1                                                                  |         |
+| json-like       | [{"group_id":"%%group_id%%"}]                                        |         |
+| body-like       | "best_full_name":"%%bobfirst%% %%boblast%%","user_id":             |         |
+| body-like       | "best_full_name":"%%janefirst%%","user_id":                        |         |
+| body-like       | "username":"%%jane%%"                                              |         |
+| body-like       | "username":"%%bobemail%%"                                          |         |
+
+###################
+| *Comment* | Pageable group list |
+
+| set-business-admin | %%badmin%% | 1        |
+| http-user-pass     | %%badmin%% | password |
+
+
+| create-group | skrømt | | | moji |
+| st-process-jobs | |
+| add-user-to-group | %%badmin%% | %%group_id%% |
+
+###################
+| *Comment*       | UTF-8 diplays correctly |         |
+| GET-json        | /data/groups?q=moji     |         |
+| code-is         | 200                     |         |
+| json-parse      |                         |         |
+| json-array-size | 1                       |         |
+| json-path-is    | $[0].name               | skrømt  |
+| GET-json        | /data/groups?q=skrømt   |         |
+| code-is         | 200                     |         |
+| json-parse      |                         |         |
+| json-array-size | 1                       |         |
+| json-path-is    | $[0].name               | skrømt  |
+
+| delete-all-groups |
+| create-group | alpha   | | | booya |
+| create-group | beta    | | | booya |
+| create-group | gamma   | | | booya |
+| create-group | delta   | | | booya |
+| create-group | epsilon | | | booya |
+| create-group | zeta    | | | booya |
+| create-group | eta     | | | booya |
+| create-group | theta   | | | booya |
+| create-group | iota    | | | booya |
+| create-group | taliban | | | booya! come join us | self-join |
+| st-process-jobs | |
+
+| get-group-id      | alpha      | alpha_id     |
+| get-group-id      | delta      | delta_id     |
+| get-group-id      | gamma      | gamma_id     |
+| add-user-to-group | %%badmin%% | %%alpha_id%% |
+| add-user-to-group | %%badmin%% | %%delta_id%% |
+| add-user-to-group | %%badmin%% | %%gamma_id%% |
+
+####################
+| *Comment*       | Simple filter                         |       |
+| GET-json        | /data/groups?q=desc:booya             |       |
+| code-is         | 200                                   |       |
+| json-parse      |                                       |       |
+| json-array-size | 3                                     |       |
+| json-path-is    | $[0].name                             | alpha |
+
+####################
+| *Comment*       | Simple filter             |       |
+| GET-json        | /data/groups?filter=alpha |       |
+| code-is         | 200                       |       |
+| json-parse      |                           |       |
+| json-array-size | 1                         |       |
+| json-path-is    | $[0].name                 | alpha |
+
+####################
+| *Comment*       | Simple filter             |       |
+| GET-json        | /data/groups?q=name:alpha |       |
+| code-is         | 200                       |       |
+| json-parse      |                           |       |
+| json-array-size | 1                         |       |
+| json-path-is    | $[0].name                 | alpha |
+
+####################
+| *Comment*       | Simple filter              |       |
+| GET-json        | /data/groups?q=title:alpha |       |
+| code-is         | 200                        |       |
+| json-parse      |                            |       |
+| json-array-size | 1                          |       |
+| json-path-is    | $[0].name                  | alpha |
+
+####################
+| *Comment*       | Simple filter              |       |
+| GET-json        | /data/groups?q=sounds_like:alfa |       |
+| code-is         | 200                        |       |
+| json-parse      |                            |       |
+| json-array-size | 1                          |       |
+| json-path-is    | $[0].name                  | alpha |
+
+####################
+| *Comment*       | Simple filter                         |       |
+| GET-json        | /data/groups?filter=description:booya |       |
+| code-is         | 200                                   |       |
+| json-parse      |                                       |       |
+| json-array-size | 3                                     |       |
+| json-path-is    | $[0].name                             | alpha |
+
+####################
+| *Comment*         | OpenSocial filter                      |       |
+| GET-json          | /data/groups?startIndex=1&filter=booya |       |
+| code-is           | 200                                    |       |
+| json-parse        |                                        |       |
+| json-path-is      | $.entry[0].name                        | delta |
+| json-path-is      | $.entry[1].name                        | gamma |
+| json-path-missing | $.entry[2]                             |       |
+
+####################
+| *Comment*       | all field search     |
+| GET-json        | /data/groups?q=booya |
+| code-is         | 200                  |
+| json-parse      |                      |
+| json-array-size | 3                    |
+
+####################
+| *Comment*       | boolean AND search                      |
+| GET-json        | /data/groups?filter=booya+AND+alpha |
+| code-is         | 200                                 |
+| json-parse      |                                     |
+| json-array-size | 1                                   |
+
+####################
+| *Comment*       | boolean OR search               |
+| GET-json        | /data/groups?filter=alpha+delta |
+| code-is         | 200                             |
+| json-parse      |                                 |
+| json-array-size | 2                               |
+
+
+
+####################
+| *Comment* | Passing all shows all groups |
+
+| GET-json     | /data/groups?all=1&startIndex=0&FTW=1 |         |
+| code-is      | 200                                   |         |
+| header-like  | Cache-Control                         | private |
+| json-parse   |                                       |         |
+| json-path-is | $.startIndex                          | 0       |
+| json-path-is | $.itemsPerPage                        | 25      |
+| json-path-is | $.totalResults                        | 10      |
+| json-path-is | $.entry[0].name                       | alpha   |
+| json-path-is | $.entry[1].name                       | beta    |
+| json-path-is | $.entry[2].name                       | delta   |
+| json-path-is | $.entry[3].name                       | epsilon |
+| json-path-is | $.entry[4].name                       | eta     |
+| json-path-is | $.entry[5].name                       | gamma   |
+| json-path-is | $.entry[6].name                       | iota    |
+| json-path-is | $.entry[7].name                       | taliban    |
+| json-path-is | $.entry[8].name                       | theta   |
+| json-path-is | $.entry[9].name                       | zeta    |
+
+####################
+| *Comment* | Not passing all only shows the user groups |
+
+| GET-json     | /data/groups?startIndex=0&FTW=1 |         |
+| code-is      | 200                             |         |
+| header-like  | Cache-Control                   | private |
+| json-parse   |                                 |         |
+| json-path-is | $.startIndex                    | 0       |
+| json-path-is | $.itemsPerPage                  | 25      |
+| json-path-is | $.totalResults                  | 3       |
+| json-path-is | $.entry[0].name                 | alpha   |
+| json-path-is | $.entry[1].name                 | delta   |
+| json-path-is | $.entry[2].name                 | gamma   |
+
+#####################
+
+| Comment         | `discoverable=exclude` should be the default |
+| GET-json        | /data/groups                                 |
+| code-is         | 200                                          |
+| json-parse      |                                              |
+| json-array-size | 3                                            |
+
+| Comment         | `discoverable=exclude` should be the default |
+| GET-json     | /data/groups?discoverable=exclude;startIndex=0 |       |
+| code-is      | 200                                            |       |
+| json-parse   |                                                |       |
+| json-path-is | $.totalResults                                 | 3       |
+| json-path-is | $.entry[0].name                                | alpha |
+| json-path-is | $.entry[1].name                                | delta |
+| json-path-is | $.entry[2].name                                | gamma |
+
+| Comment      | `discoverable=only`                         |         |
+| GET-json     | /data/groups?discoverable=only;startIndex=0 |         |
+| code-is      | 200                                         |         |
+| json-parse   |                                             |         |
+| json-path-is | $.totalResults                              | 1       |
+| json-path-is | $.entry[0].name                             | taliban |
+
+| Comment      | `discoverable=include`                         |         |
+| GET-json     | /data/groups?discoverable=include;startIndex=0 |         |
+| code-is      | 200                                            |         |
+| json-parse   |                                                |         |
+| json-path-is | $.totalResults                                 | 4       |
+| json-path-is | $.entry[0].name                                | alpha   |
+| json-path-is | $.entry[1].name                                | delta   |
+| json-path-is | $.entry[2].name                                | gamma   |
+| json-path-is | $.entry[3].name                                | taliban |
+
+###### Now with Filtering ######
+
+| Comment         | `discoverable=exclude` should be the default |
+| GET-json        | /data/groups?filter=booya                    |
+| code-is         | 200                                          |
+| json-parse      |                                              |
+| json-array-size | 3                                            |
+
+| Comment      | `discoverable=exclude` should be the default                |       |
+| GET-json     | /data/groups?discoverable=exclude;startIndex=0;filter=booya |       |
+| code-is      | 200                                                         |       |
+| json-parse   |                                                             |       |
+| json-path-is | $.totalResults                                              | 3     |
+| json-path-is | $.entry[0].name                                             | alpha |
+| json-path-is | $.entry[1].name                                             | delta |
+| json-path-is | $.entry[2].name                                             | gamma |
+
+| Comment      | `discoverable=only`                                      |         |
+| GET-json     | /data/groups?discoverable=only;startIndex=0;filter=booya |         |
+| code-is      | 200                                                      |         |
+| json-parse   |                                                          |         |
+| json-path-is | $.totalResults                                           | 1       |
+| json-path-is | $.entry[0].name                                          | taliban |
+
+| Comment      | `discoverable=include`                                      |         |
+| GET-json     | /data/groups?discoverable=include;startIndex=0;filter=booya |         |
+| code-is      | 200                                                         |         |
+| json-parse   |                                                             |         |
+| json-path-is | $.totalResults                                              | 4       |
+| json-path-is | $.entry[0].name                                             | alpha   |
+| json-path-is | $.entry[1].name                                             | delta   |
+| json-path-is | $.entry[2].name                                             | gamma   |
+| json-path-is | $.entry[3].name                                             | taliban |
+

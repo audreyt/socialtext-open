@@ -1,0 +1,12 @@
+* Fixture: SocialRest
+
+| standard-test-setup |
+
+## POST an upload
+| Upload-file | t/widget/creepy_goat.jpg |
+
+## GET the upload we just created
+| *Comment* | GET the upload we just created |            |
+| GET       | /data/uploads/%%upload_id%%    |            |
+| code-is   | 200                            |            |
+| header-is | Content-type                   | image/jpeg |

@@ -1,0 +1,9 @@
+#!/bin/bash -e
+
+if [ -e /var/spool/cron/crontabs/root ]; then
+    echo "crontab still exists. Please contact Support."
+    exit 1
+fi
+
+echo "crontab removed successfully."
+exit 0

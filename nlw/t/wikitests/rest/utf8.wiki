@@ -1,0 +1,6 @@
+* Fixture: SocialRest
+
+| comment   | get utf-8 data                             |
+| get       | /data/test/haiku                           |
+| code-is   | 200                                        |
+| body-like | 富士の風や扇にのせて江戸土産               |

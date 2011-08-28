@@ -1,0 +1,10 @@
+[%# @COPYRIGHT@ -%]
+[%# vim: set et sts=2 sw=2: %]
+[% IF user AND NOT user.is_guest %]
+<div data-role="header" data-inline="true" data-position="inline" data-theme="c">
+  <h4>
+    [% loc('info.hello=user', '<b>' _ user.best_full_name _ '</b>') %]
+  </h4>
+  [% login_logout %]
+</div>
+[% END %]

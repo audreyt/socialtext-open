@@ -1,0 +1,5 @@
+#!/bin/bash
+set -e
+
+# Revoke escalated DB privileges
+st-db revoke_privs

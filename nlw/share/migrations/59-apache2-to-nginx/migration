@@ -1,0 +1,19 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::File qw/set_contents/;
+use Socialtext::System qw/shell_run/;
+
+print "Stopping Apache2, then starting nginx ...\n";
+shell_run("/etc/init.d/apache2 stop");
+shell_run("/etc/init.d/nginx start");
+
+print "Removing Apache2 ...\n";
+shell_run("apt-get remove --yes apache2-mpm-prefork "
+    . "libapache2-mod-xsendfile libapache2-mod-scgi");
+
+print "Renaming /etc/apache2 to /etc/apache2.disabled ...\n";
+shell_run("mv /etc/apache2 /etc/apache2.disabled");
+
+exit 0;

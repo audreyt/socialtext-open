@@ -1,0 +1,126 @@
+Note: The current configuration of this test is only applicable to the current default configuration of test-data workspace
+
+Comment: The user action is search for the words with stemming enabled. Create a dataset that will test the result.
+
+----
+
+ *user action* | *correct response* | *comment*
+wikis | find wiki and wikis |
+fish, fishing, fisher, fishes | find all except fisher
+stem, stemmer, stemming, stemmed | find all except stemmer
+zig zigging zigzag | find all except zigzag
+zigzag zigzagging | find all
+worship worshipful worships | find all
+wolf wolve wolves | find only wolf
+whole wholehearted wholesale wholesome | find only whole
+
+NOTE: every search should check for every search result
+
+| *Comment* | STARTING Test Case: stemming |  |
+| st-search | wikis | Pages matching 'wikis' |
+| st-result | 4 total |  |
+| st-result | Stemming test page 2 |  |
+| st-result | Announcements and Links |  |
+| st-result | Quick Start |  |
+| st-result | Sample Excel 2007 file.xlsx |  |
+
+| st-search | fish | Pages matching 'fish' |
+| st-result | 1 total |  |
+| st-result | Stemming test page 2 |  |
+
+| st-search | fishing | Pages matching 'fishing' |
+| st-result | 1 total |  |
+| st-result | Stemming test page 2 |  |
+
+| st-search | fishes | Pages matching 'fishes' |
+| st-result | 1 total |  |
+| st-result | Stemming test page 2 |  |
+
+QUESTION: is this the correct result for "fisher"? The word "fisher" is on test page 1.
+
+| st-search | fisher | Pages matching 'fisher' |
+| st-result | 1 total |  |
+| st-result | Stemming test page 1 |  |
+
+| st-search | stem | Pages matching 'stem' |
+| st-result | 3 total |  |
+| st-result | Stemming test page 1 |  |
+| st-result | Stemming test page 2 |  |
+| st-result | jabber |  |
+
+| st-search | stemmer | Pages matching 'stemmer' |
+| st-result | 0 results |  |
+| st-result |  |  |
+
+| st-search | stemming | Pages matching 'stemming' |
+| st-result | 3 total |  |
+| st-result | Stemming test page 1 |  |
+| st-result | Stemming test page 2 |  |
+| st-result | jabber |  |
+
+| st-search | stemmed | Pages matching 'stemmed' |
+| st-result | 3 total |  |
+| st-result | Stemming test page 1 |  |
+| st-result | Stemming test page 2 |  |
+| st-result | jabber |  |
+
+| st-search | zig | Pages matching 'zig' |
+| st-result | 0 results |  |
+
+| st-search | zigging | Pages matching 'zigging' |
+| st-result | 0 results |  |
+
+| st-search | zigzag | Pages matching 'zigzag' |
+| st-result | 1 total |  |
+| st-result | Stemming test page 2 |  |
+
+| st-search | zigzagging | Pages matching 'zigzagging' |
+| st-result | 1 total |  |
+| st-result | Stemming test page 2 |  |
+
+| st-search | worship | Pages matching 'worship' |
+| st-result | 2 total |  |
+| st-result | Stemming test page 2 |  |
+| st-result | jabber |  |
+
+| st-search | worshipful | Pages matching 'worshipful' |
+| st-result | 2 total |  |
+| st-result | Stemming test page 2 |  |
+| st-result | jabber |  |
+
+| st-search | worships | Pages matching 'worships' |
+| st-result | 2 total |  |
+| st-result | Stemming test page 2 |  |
+| st-result | jabber |  |
+
+QUESTION: missing test data for "wolf"?
+
+| st-search | wolf | Pages matching 'wolf' |
+| st-result | 0 results |  |
+| st-result |  |  |
+
+| st-search | wolve | Pages matching 'wolve' |
+| st-result | 0 results |  |
+| st-result |  |  |
+
+| st-search | wolves | Pages matching 'wolves' |
+| st-result | 0 results |  |
+| st-result |  |  |
+
+| st-search | whole | Pages matching 'whole' |
+| st-result | 1 total |  |
+| st-result | Stemming test page 2 |  |
+
+| st-search | wholehearted | Pages matching 'wholehearted' |
+| st-result | 0 results |  |
+| st-result |  |  |
+
+| st-search | wholesale | Pages matching 'wholesale' |
+| st-result | 1 total |  |
+| st-result | Stemming test page 1 |  |
+
+| st-search | wholesome | Pages matching 'wholesome' |
+| st-result | 0 results |  |
+| st-result |  |  |
+
+| *Comment* | Test Case: stemming COMPLETED |

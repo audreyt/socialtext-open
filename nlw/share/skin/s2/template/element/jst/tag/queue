@@ -1,0 +1,5 @@
+<span class="st-tagqueue-listlabel">${loc('Tags to apply:')} </span>
+{var lastIndex = queue.length-1}
+{for tag in queue}
+ &lt;span class="st-tagqueue-taglist-name">${tag}&nbsp;</span>&lt;a href="#" onclick="javascript:window.TagQueue.remove_index(${tag_index}); return false" title="${ loc('Remove [_1] from the queue', tag) }" class="st-tagqueue-taglist-delete">[x]&lt;/a>{if tag_index != lastIndex}, {/if}
+{/for}

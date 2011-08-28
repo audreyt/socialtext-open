@@ -1,0 +1,36 @@
+Received: from socialtext.com ([65.87.18.3] helo=server1.socialtext.com)
+	by leda.hmdnsgroup.com with esmtps (TLSv1:DES-CBC3-SHA:168)
+	(Exim 4.44)
+	id 1D856h-0006fy-AI
+	for peter.kaminski@socialtext.com; Sun, 06 Mar 2005 18:24:19 -0500
+Received: from mail.example.com ([192.168.0.36])
+	by server1.socialtext.com with esmtp 
+	(Cipher TLSv1:DES-CBC3-SHA:168) (Exim 3.35 #1 (Debian))
+	id 1D856h-0007Kq-00
+	for <peter.kaminski@socialtext.com>; Sun, 06 Mar 2005 15:24:19 -0800
+Received: from localhost (localhost [127.0.0.1])
+  (uid 522)
+  by mail.example.com with local; Sun, 06 Mar 2005 18:14:13 -0500
+From: devnull1@socialtext.com
+To: exchange@socialtext.net
+Subject: Bad Format=Flowed Category 2
+Date: Sun, 06 Mar 2005 18:14:13 -0500
+Mime-Version: 1.0
+Content-Type: text/plain; format=flowed; charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Message-ID: <courier.422B8EC5.00001A48.2@mail.example.com>
+X-Admonishment: The trailing spaces on certain lines are critical to the test!
+
+Category: Test1 
+Category: Test2 
+
+ 
+
+Three blank lines above this one. 
+
+One blank above this.
+No blank above. 
+
+ 
+
+The end. 

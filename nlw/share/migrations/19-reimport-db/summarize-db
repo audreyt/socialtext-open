@@ -1,0 +1,9 @@
+#!/bin/bash
+
+DB=${1:-NLW}
+USER=${2:-postgres}
+
+for table in Workspace Account User UserId Permission Role UserMetadata; do
+    COUNT=`psql -U $USER -t $DB -c "SELECT COUNT(*) FROM \"$table\""`
+    echo "Found $COUNT $table"
+done

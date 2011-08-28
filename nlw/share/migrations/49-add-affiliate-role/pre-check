@@ -1,0 +1,21 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_singlevalue/;
+
+my $has_affiliate = eval { 
+    sql_singlevalue(q{
+        SELECT COUNT(*)
+          FROM "Role"
+         WHERE name = 'affiliate'
+    });
+};
+
+if (defined($has_affiliate) && $has_affiliate == 1) {
+    print "Skipping migration 49: Affiliate Role already exists";
+    exit 1;
+}
+
+print "Running migration 49: create Affiliate Role";
+exit 0;

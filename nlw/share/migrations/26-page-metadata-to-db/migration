@@ -1,0 +1,47 @@
+#!/usr/bin/env perl
+#@COPYRIGHT@
+use strict;
+use warnings;
+
+use FindBin;
+use lib "$FindBin::Bin/lib";
+
+use Socialtext::Workspace;
+use Socialtext::Page::TablePopulator;
+use Socialtext::Schema;
+use Socialtext::Timer;
+
+my $wksp_timer = Socialtext::Timer->new;
+my $total_timer = Socialtext::Timer->new;
+
+my $workspaces = Socialtext::Workspace->All;
+my $failures = 0;
+
+$total_timer->start_timing(0);
+while (my $wksp = $workspaces->next) {
+    next unless $wksp->real;
+    $wksp_timer->start_timing(0);
+    my $name = $wksp->name;
+    print "Populating page table with data from $name workspace.\n";
+    eval {
+        my $populator = Socialtext::Page::TablePopulator->new(
+            workspace_name => $name );
+        $populator->populate;
+    };
+    if ($@) {
+        $failures++;
+        warn $@;
+    }
+   
+    my $elapsed = int($wksp_timer->elapsed*100 + 0.5)/100;
+    print "Spent " . $elapsed  . " seconds "
+        . " on workspace $name.\n\n";
+}
+
+print "TOTAL TIME: " . $total_timer->elapsed . " seconds.\n";
+
+if ($failures) {
+    warn "$failures workspaces failed to populate the DB\n";
+    exit $failures;
+}
+exit 0;

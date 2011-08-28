@@ -1,0 +1,37 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+
+use Socialtext::LDAP::Config;
+
+my @config = Socialtext::LDAP::Config->load();
+die "No LDAP servers configured" unless @config;
+
+# these defaults were chosen on the likelihood that they'd work for both
+# OpenLDAP and ActiveDirectory LDAP schemas
+my %defaults = qw(
+    homeTelephoneNumber        home_phone    
+    mobile                     mobile_phone  
+    telephoneNumber            work_phone    
+    company                    company       
+    physicalDeliveryOfficeName location      
+    wWWHomePage                personal_url  
+    title                      position      
+    manager                    supervisor    
+);
+
+foreach my $cfg (@config) {
+    add_in_defaults($cfg);
+}
+
+Socialtext::LDAP::Config->save(@config);
+exit 0;
+
+sub add_in_defaults {
+    my $cfg = shift;
+    $cfg->{attr_map} ||= {};
+    while (my ($ldap_attr, $profile_field) = each %defaults) {
+        $cfg->{attr_map}{$profile_field} ||= $ldap_attr;
+    }
+}

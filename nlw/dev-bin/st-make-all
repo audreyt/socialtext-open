@@ -1,0 +1,38 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Pod::Usage;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::MakeJS;
+
+pod2usage() unless (@ARGV);
+while (my $command = shift) {
+    $Socialtext::MakeJS::VERBOSE = $command !~ m/^\@/;
+    $command =~ s/^[\@-]+//;
+    if ($command eq 'clean') {
+        Socialtext::MakeJS->CleanAll;
+    }
+    elsif ($command eq 'all') {
+        Socialtext::MakeJS->BuildAll;
+    }
+    else {
+        die "Unknown command $command";
+    }
+}
+
+=head1 NAME
+
+st-make-all - Runs all makes in Socialtext
+
+=head1 SYNOPSIS
+
+  st-make-all [@][-][command]
+
+  Example:
+    st-make-all clean
+    st-make-all clean all
+    quiet: st-make-all @clean all
+
+=cut

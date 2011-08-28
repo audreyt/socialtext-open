@@ -1,0 +1,16 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_execute/;
+
+sql_execute(qq{
+    DELETE FROM signal_asset
+     WHERE signal_asset.signal_id IN (
+       SELECT signal_id
+         FROM signal
+        WHERE hidden = TRUE
+     )
+});
+
+exit 0;

@@ -1,0 +1,10 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Linux::MemInfo;
+my %mem = get_mem_info;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Spiffy ':XXX';
+XXX \%mem;

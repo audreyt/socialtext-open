@@ -1,0 +1,153 @@
+| *Comment* | Wikitests for {link: dev-tasks [Story: Login takes user to last workspace]} |
+
+| *Comment* | Test Case: Return to last login |  |
+| *Comment* | When Personal Dashboard is installed, this test is not relevant because logout followed by login takes you to the Dashboard. This test only works when Socialtext People and Dashboard are not installed. |  |
+| *Comment* | RESTORE THIS TEST IF WE TEST A CONFIGURATION WITHOUT People and Dashboard |  |
+
+| *Comment* | Test Case: Return to last login COMPLETED. |  |
+
+^ DONE_TESTING
+^ END UNTIL WE TEST A CONFIGURATION WITHOUT People and Dashboard
+
+| *Comment* | Create a test user, workspaces, give that user permissions to workspaces |  |
+
+| set | login_user | user_%%start_time%%@ken.socialtext.net |  |
+
+| st-admin | create-workspace --empty --name aaa-%%start_time%% --title 'AAA %%start_time%%' |  |
+| st-admin | create-workspace --empty --name aaa-public-%%start_time%% --title 'AAA Public %%start_time%%' |  |
+| st-admin | set-permissions --workspace aaa-public-%%start_time%% --permissions public |  |
+| st-admin | create-workspace --empty --name private-%%start_time%% --title 'Private %%start_time%%' |  |
+| st-admin | set-permissions --workspace private-%%start_time%% --permissions member-only |  |
+| st-admin | create-workspace --empty --name public-%%start_time%% --title 'Public %%start_time%%' |  |
+| st-admin | set-permissions --workspace public-%%start_time%% --permissions public |  |
+| st-admin | create-workspace --empty --name login-to-edit-%%start_time%% --title 'Login to Edit %%start_time%%' |  |
+| st-admin | set-permissions --workspace login-to-edit-%%start_time%% --permissions public-authenticate-to-edit |  |
+| st-admin | create-user --email %%login_user%% --password test%%start_time%% |  |
+| st-admin | add-member --email %%login_user%% --workspace aaa-%%start_time%% |  |
+| st-admin | add-member --email %%login_user%% --workspace private-%%start_time%% |  |
+| st-admin | add-member --email %%login_user%% --workspace public-%%start_time%% |  |
+| st-admin | add-member --email %%login_user%% --workspace login-to-edit-%%start_time%% |  |
+
+| *Comment* | Test Case: Return to last login |  |
+| *Comment* | Login, visit a workspace to create some breadcrumbs, logout. |  |
+| st_logout |  |  |
+| open_ok | private-%%start_time%% |  |
+| wait-for-element-present-ok | st-login-form | 1000 |
+| type_ok | username | %%login_user%% |
+| type_ok | password | test%%start_time%% |
+| clickAndWait | login_btn |  |
+| text_like | st-central-page-link | Private %%start_time%% |
+| click_and_wait | link=Private %%start_time%% |  |
+| text_like | st-page-wiki-title | Private %%start_time%% |
+| st_logout |  |  |
+
+| *Comment* | Test Case: Return to last login |  |
+| *Comment* | Fresh login goes to last visited workspace. In the past, we'd go to the first workspace name alphebetically we were a member of, which would be the aaa-%%start_time%% workspace. Now we should go to private-%%start_time%%. |  |
+| type_ok | username | %%login_user%% |
+| type_ok | password | test%%start_time%% |
+| clickAndWait | login_btn |  |
+| text_like | st-wiki-title | Dashboard: Private %%start_time%% |
+| st_logout |  |  |
+
+| *Comment* | Test Case: Return to last login |  |
+| *Comment* | Visit a login-to-edit workspace, logout, click 'Edit', should take you into edit mode after login. |  |
+| open_ok | login-to-edit-%%start_time%% |  |
+| text_like | st-page-wiki-title | Login to Edit %%start_time%% |
+| click_and_wait | link=Login |  |
+| wait-for-element-present-ok | st-login-form | 1000 |
+| type_ok | username | %%login_user%% |
+| type_ok | password | test%%start_time%% |
+| clickAndWait | login_btn |  |
+| text_like | st-page-wiki-title | Login to Edit %%start_time%% |
+| st_logout |  |  |
+| text_like | st-login-to-edit-button-link | Edit |
+| click_and_wait | link=Edit |  |
+| wait-for-element-present-ok | st-login-form | 1000 |
+| type_ok | username | %%login_user%% |
+| type_ok | password | test%%start_time%% |
+| clickAndWait | login_btn |  |
+| wait_for_text_present_ok | Editing: Login to Edit %%start_time%% |  |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| st-page-save |  |  |
+| st_logout |  |  |
+
+| *Comment* | Test Case: Return to last login |  |
+| *Comment* | Log in, visit a public workspace, log out, log in. you should go back to that public workspace. |  |
+| click_and_wait | link=Login |  |
+| type_ok | username | %%login_user%% |
+| type_ok | password | test%%start_time%% |
+| clickAndWait | login_btn |  |
+| open_ok | public-%%start_time%% |
+| wait_for_text_present_ok | Public %%start_time%% |  |
+| st_logout |  |  |
+| wait_for_text_present_ok | Public %%start_time%% |  |
+| click_and_wait | link=Login |  |
+| wait-for-element-present-ok | st-login-form | 1000 |
+| type_ok | username | %%login_user%% |
+| type_ok | password | test%%start_time%% |
+| clickAndWait | login_btn |  |
+| wait_for_text_present_ok | Public %%start_time%% |  |
+| st_logout |  |  |
+
+| *Comment* | Test Case: Return to last login |  |
+| *Comment* | Log in, visit a private workspace, log out, log in. you should go back to that private workspace. Is this identical to the first test? |  |
+| click_and_wait | link=Login |  |
+| type_ok | username | %%login_user%% |
+| type_ok | password | test%%start_time%% |
+| clickAndWait | login_btn |  |
+| open_ok | private-%%start_time%% |  |
+| text_like | st-wiki-title | Dashboard: Private %%start_time%% |
+| st_logout |  |  |
+| *Comment* | Support link like support@socialtext.com or root@talc.socialtext.net |  |
+| text_like | support_link | qr/.+\@.*\.?socialtext\..../ |
+| type_ok | username | %%login_user%% |
+| type_ok | password | test%%start_time%% |
+| clickAndWait | login_btn |  |
+| text_like | st-wiki-title | Dashboard: Private %%start_time%% |
+| st_logout |  |  |
+
+| *Comment* | Test Case: Return to last login |  |
+| *Comment* | Log in, visit a public workspace, log out, visit a different public workspace, click the log in link. you should go to the public workspace you most recently requested. |  |
+| text_like | support_link | qr/.+\@.*\.?socialtext\..../ |
+| type_ok | username | %%login_user%% |
+| type_ok | password | test%%start_time%% |
+| clickAndWait | login_btn |  |
+| open_ok | aaa-public-%%start_time%% |  |
+| wait_for_text_present_ok | AAA Public %%start_time%% |  |
+| st_logout |  |  |
+| open_ok | public-%%start_time%% |  |
+| wait_for_text_present_ok | Public %%start_time%% |  |
+| click_and_wait | link=Login |  |
+| text_like | support_link | qr/.+\@.*\.?socialtext\..../ |
+| type_ok | username | %%login_user%% |
+| type_ok | password | test%%start_time%% |
+| clickAndWait | login_btn |  |
+| wait_for_text_present_ok | Public %%start_time%% |  |
+| st_logout |  |  |
+
+| *Comment* | Test Case: Return to last login |  |
+| *Comment* | Log in, visit a workspace, log out, delete the workspace, log in. You should go to the last workspace you were at prior to the deleted workspace. |  |
+| open_ok | private-%%start_time%% |  |
+| wait-for-element-present-ok | st-login-form | 1000 |
+| type_ok | username | %%login_user%% |
+| type_ok | password | test%%start_time%% |
+| clickAndWait | login_btn |  |
+| text_like | st-wiki-title | Dashboard: Private %%start_time%% |
+| open_ok | aaa-%%start_time%% |  |
+| text_like | st-wiki-title | Dashboard: AAA %%start_time%% |
+| st_logout |  |  |
+| text_like | support_link | qr/.+\@.*\.?socialtext\..../ |
+| st-admin | delete-workspace --workspace aaa-%%start_time%% --no-export | has been deleted |
+| type_ok | username | %%login_user%% |
+| type_ok | password | test%%start_time%% |
+| clickAndWait | login_btn |  |
+| text_like | st-wiki-title | Dashboard: Private %%start_time%% |
+| st_logout |  |  |
+
+| *Comment* | Test Case: Return to last login teardown |  |
+| st-admin | delete-workspace --w aaa-public-%%start_time%% --no-export | has been deleted |
+| st-admin | delete-workspace --w private-%%start_time%% --no-export | has been deleted |
+| st-admin | delete-workspace --w public-%%start_time%% --no-export | has been deleted |
+| st-admin | delete-workspace --w login-to-edit-%%start_time%% --no-export | has been deleted |
+
+| *Comment* | Test Case: Return to last login COMPLETED. |  |

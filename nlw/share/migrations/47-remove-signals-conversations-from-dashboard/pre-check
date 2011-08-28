@@ -1,0 +1,17 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+use Socialtext::Migration::Utils qw/ensure_socialtext_schema/;
+
+ensure_socialtext_schema(76);
+
+my $st_widgets = '/usr/bin/st-widgets';
+if (-x $st_widgets) {
+    print "Removing Signals Widget and Recent Conversations widget.\n";
+    exit 0;
+}
+
+print "$st_widgets is not found - skipping migration.\n";
+exit -1;

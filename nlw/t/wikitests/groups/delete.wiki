@@ -1,0 +1,25 @@
+* Fixture: SocialRest
+
+| standard-test-setup |
+
+## Setup, User has no relation to group.
+| set               | name         | delete-%%start_time%% |       |
+| create-group      | %%name%%     |                       |       |
+
+## User cannot DELETE Group
+| *Comment* | User cannot DELETE Group  |
+| DELETE    | /data/groups/%%group_id%% |
+| code-is   | 404                       |
+
+## Add User as a Group admin
+| add-user-to-group | %%username%% | %%group_id%%          | admin |
+
+## Admin DELETEs Group
+| *Comment* | Admin DELETEs Group  |
+| DELETE    | /data/groups/%%group_id%% |
+| code-is   | 204                       |
+
+## Group is gone
+| *Comment* | Group is gone             |
+| GET       | /data/groups/%%group_id%% |
+| code-is   | 404                       |

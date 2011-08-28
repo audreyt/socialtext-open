@@ -1,0 +1,50 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use lib "$ENV{ST_SRC_BASE}/socialtext/nlw/lib";
+use lib "$ENV{ST_SRC_BASE}/socialtext/appliance/libsocialtext-appliance-perl/lib";
+use Socialtext::HealthReport;
+use Socialtext::Workspace;
+use Socialtext::Account;
+use Socialtext::User;
+use Socialtext;
+
+my $hr = Socialtext::HealthReport->new;
+my $sheet = $hr->sheet_source;
+my $user = Socialtext::User->SystemUser;
+
+my $ws = Socialtext::Workspace->new(name => 'st-health');
+unless ($ws) {
+    warn "Creating st-health workspace …\n";
+    my $acct = Socialtext::Account->new(name => 'Socialtext');
+    $ws = Socialtext::Workspace->create(
+        name => 'st-health',
+        title => 'Socialtext Health Reports',
+        skip_default_pages => 1,
+        account_id => $acct->account_id,
+    );
+    $ws->EnablePluginForAll('socialcalc');
+    my $u = Socialtext::User->new(username => 'devnull1@socialtext.com');
+    if ($u) {
+        $ws->add_user(user => $u);
+    }
+}
+
+my $socialtext = Socialtext->new;
+my $hub = $socialtext->new_hub(
+    current_workspace => $ws,
+    current_user => $user,
+);
+
+my $page_name = 'Health Report Template';
+my $page = $hub->pages->new_from_name($page_name);
+$page->update(
+    content => $sheet,
+    type => 'spreadsheet',
+    subject => $page_name,
+    user => $user,
+    revision => 1,
+    original_page_id => '',
+);
+print "Uploaded: " . $page->hash_representation->{page_uri} . "\n";

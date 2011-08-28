@@ -1,0 +1,101 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+
+use Socialtext::Migration::Utils qw/ensure_socialtext_schema/;
+use File::Basename qw(basename);
+use Socialtext::Storage;
+use Socialtext::SQL qw(sql_execute);
+use Socialtext::URI;
+use Socialtext;
+use Socialtext::User;
+use Socialtext::Workspace;
+
+use Socialtext::Pluggable::Plugin::Widgets;
+use Socialtext::Gadgets::XML;
+
+my $main = Socialtext->new();
+my $hub  = $main->load_hub(
+    current_workspace => Socialtext::NoWorkspace->new,
+    current_user      => Socialtext::User->SystemUser(),
+);
+$hub->registry()->load();
+my $plug = Socialtext::Pluggable::Plugin::Widgets->new;
+$plug->hub($hub);
+
+my %third_party = (
+    'MSOutlookWidget.xml'
+        => 'http://andyast.googlepages.com/MSOutlookWidget.xml',
+    'googlecalendarviewer.xml'
+        => 'http://www.google.com/ig/modules/calendar3.xml',
+    'ig-check.xml'
+        => 'http://www.google.com/ig/modules/calendar3.xml',
+    'flickr_google.xml'
+        => 'http://chinsonyeh.googlepages.com/flickr_google.xml',
+);
+
+sub transform_url {
+    my $src = shift;
+    if (my ($plugin, $file) = $src =~ m{^https?://(?:[^/]+)/nlw/plugin/([^/]+)/(.*)}) {
+        my $base = basename($file);
+        $src = $third_party{$base} ? $third_party{$base} : "file:$plugin/share/$file";
+    }
+    return $src;
+}
+
+# Iterate over each container in the storage table
+#    create the container
+#    for each widget
+#       create the gadget_instance
+my $sth = sql_execute("
+    SELECT distinct(class) as class, user_id
+      FROM storage
+ LEFT JOIN users
+     USING (user_id)
+     WHERE class LIKE 'container:%'
+       AND key = 'type'
+       AND value = 'dashboard'
+       AND users.user_id IS NOT NULL
+");
+while (my $row = $sth->fetchrow_hashref) {
+    my $container_store = Socialtext::Storage->new($row->{class});
+    my $gadgets = $container_store->get('gadgets');
+
+    my $container = Socialtext::Gadgets::Container->new($plug,
+        type => 'dashboard',
+        user_id => $row->{user_id},
+        no_gadgets => 0,
+    );
+    $container->clear_gadgets;
+
+    my %failed;
+
+    for my $g (sort { $b->{pos}[1] <=> $a->{pos}[1] } values %$gadgets) {
+        my $gstore = Socialtext::Storage->new("gadget:$g->{id}");
+        $gstore->preload(qw(user_prefs url));
+        if (my $url = $gstore->get('url')) {
+            $url = transform_url($url);
+            next if $failed{$url};
+            my $user_prefs = $gstore->get('user_prefs');
+            delete $user_prefs->{base_uri};
+
+            eval {
+                $container->install_gadget(
+                    src => $url,
+                    col => $g->{pos}[0],
+                    default_prefs => [
+                        map { [ $_, $user_prefs->{$_} ] } keys %$user_prefs,
+                    ],
+                );
+            };
+            if ($@) {
+                $failed{$url} = 1;
+                warn $@;
+            }
+        }
+        else {
+            warn "Missing gadget with id=$g->{id}"
+        }
+    }
+}

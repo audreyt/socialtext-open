@@ -1,0 +1,45 @@
+UPGRADE.1.x-to-2.0 -- How to upgrade Socialtext Open from 1.x to 2.0
+
+@COPYRIGHT@
+
+Upgrading your 1.x Socialtext Open to 2.0 is simple.  Database schema
+changes are handled automatically as part of the installation process,
+and the installation process has not changed.
+
+The one thing you'll need to do is upgrade your workspace navigation
+pages and homepages for all workspaces already installed.  We provide
+programs to handle this for you.
+
+== DETAILS ==
+
+1.  Install Socialtext Open 2.0 as you did before, using the instructions
+in INSTALL.  Don't start your Apache processes yet.
+
+2.  Run the workspace rename program:
+
+    $ sudo -u www-data dev-bin/migration/rename-workspace-navigation-to-announcements-and-links
+
+    This script renames the "Workspace Navigation" page to
+    "Announcements and Links", ensuring that it shows up on the
+    Dashboard (a feature new to 2.0).
+
+3.  Run the homepage/dashboard update program
+
+    $ sudo -u www-data dev-bin/migration/update-homepage-is-dashboard
+
+    This sets the "homepage_is_dashboard" configuration setting, based on
+    whether or not the workspace is readable by guests.
+
+4.  Start up Apache (and Apache2, if you're using the proxy).
+
+5.  Check that everything works to your satisfaction.
+
+6.  Delete the old workspace home pages
+
+    $ sudo -u www-data dev-bin/migration/rename-workspace-navigation-to-announcements-and-links --delete
+
+That's it.  Your Socialtext Open is ready to go.
+
+# END OF DOCUMENT
+# vi: set ts=8 sts=4 sw=4 expandtab
+# -*- text -*-

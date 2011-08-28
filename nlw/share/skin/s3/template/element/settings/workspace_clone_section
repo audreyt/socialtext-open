@@ -1,0 +1,43 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[% PROCESS element/settings/start %]
+
+<dl class="form">
+<dt><label>[% loc('wiki.clone') %]</label></dt>
+<dd>[% loc('wiki.clone-and-invite-members=wiki', workspace.title) %]</dd>
+</dl>
+
+<dl class="form">
+  <dt><label>[% loc('wiki.title') %]</label></dt>
+  <dd>
+    [% loc('info.wiki-title') %]
+  </dd>
+  <dd>
+    <input type="text" name="title" value="[% title || loc('wiki.clone=wiki', workspace.title ) %]" size="50" />
+    ([% loc('info.required') %])
+  </dd>
+  <dd>
+    <i>[% loc('example.title') %]</i>
+  </dd>
+</dl>
+
+<dl class="form">
+  <dt><label>[% loc('wiki.name') %]</label></dt>
+  <dd>
+    [% loc("info.wiki-id") %] 
+    [% loc('info.valid-wiki-name') %]
+  </dd>
+  <dd>
+    <input type="text" name="name" value="[% name || "clone-${workspace.name}" %]" size="30" />
+    ([% loc('info.required') %])
+  </dd>
+  <dd>
+    [% loc('example.wiki-url:') %]
+    http://[% appconfig.web_hostname %]/acme-product-dev
+    [% loc('example.wiki-email:') %]
+    acme-product-dev@[% appconfig.email_hostname %]
+  </dd>
+</dl>
+
+<input type="hidden" name="clone_pages_from" value="[% workspace.name %]" />
+[% PROCESS element/settings/stop %]

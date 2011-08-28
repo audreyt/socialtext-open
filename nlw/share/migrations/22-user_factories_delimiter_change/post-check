@@ -1,0 +1,24 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::AppConfig;
+
+my $cfg = Socialtext::AppConfig->instance();
+
+# Looks fine if it was the default
+exit 0 if ($cfg->is_default('user_factories'));
+
+# Up this point we've ONLY had options of "LDAP:Default" or "Default:LDAP"
+# (there were only two user factories).  Check to make sure that neither of
+# those persist.
+#
+# We (unfortunately) can't just check for "does it contain a colon?" as we are
+# now using the colon as a separate in driver names (e.g. "LDAP:MySetup").
+my $val = $cfg->user_factories();
+if (($val eq 'Default:LDAP') || ($val eq 'LDAP:Default')) {
+    die "Migration failed to update 'user_factories' delimiter.\n";
+}
+
+# Looks ok.
+exit 0;

@@ -1,0 +1,270 @@
+* Fixture: Search
+
+# Send a signal, make sure a job is created
+
+| standard-test-setup |               |                                        |             |
+| set | group1_id | %%group_id%% |
+| set | account1_id | %%account_id%% |
+| set-workspace-id | help_en_id | help-en |
+
+| set                 | user1_id      | %%user_id%%                            |             |
+| set                 | recipient     | recip%%start_time%%@ken.socialtext.net |             |
+| create-user         | %%recipient%% | abc123                                 | %%account%% |
+| set_user_id         | recipient_id  | %%recipient%%                          |             |
+| set                 | observer      | obser%%start_time%%@ken.socialtext.net |             |
+| create-user         | %%observer%%  | abc123                                 | %%account%% |
+| set-searcher        | Solr          |                                        |             |
+| add-user-to-group   | %%recipient%% | %%group1_id%%                           |             |
+
+| Comment | Create another group & account for testing |
+| create-group | g2-%%start_time%% |
+| set | group2_id | %%group_id%% |
+| create-account | acct2-%%start_time%% |
+| set | account2_id | %%account_id%% |
+
+| edit-page       | %%workspace%% | coolpage                                                               | Stupid plain content |
+| post-json       | /data/signals    | {"signal":"Stupid plain","account_ids":[%%account1_id%%],"group_ids":[%%group1_id%%]}                                               |                      |
+| code-is         | 201              |                                                                         |                      |
+| post-json       | /data/signals    | {"signal":"Simple Humbles Yes we can! {link: help-en [Start Here]}"}           |                      |
+| code-is         | 201              |                                                                         |                      |
+| post-json       | /data/signals    | {"signal":"Crime Breaking Hi {user: %%user1_id%%}"}                      |                      |
+| code-is         | 201              |                                                                         |                      |
+| post-json       | /data/signals    | {"signal":"Belligerant Pickles Check out this site http://awesnob.com"} |                      |
+| code-is         | 201              |                                                                         |                      |
+| job-count       | SignalIndex      | 4                                                                       |                      |
+| st-process-jobs |                  |                                                                         |                      |
+| job-count       | SignalIndex      | 0                                                                       |                      |
+
+| get       | /data/signals?q=stupid | application/json  |
+| code-is   | 200                             |   |
+| json-parse |
+| json-array-size | 1 |
+| json-like | [{"body":"Stupid plain"}] |
+
+| get             | /data/signals?q=%%start_time%% | application/json |
+| code-is         | 200                          |                  |
+| json-parse      |                              |                  |
+| json-array-size | 1                            |                  |
+| body-like       | Crime Breaking               |                  |
+
+| get             | /data/signals?q=link%3Aawesnob | application/json |
+| code-is         | 200                                  |                  |
+| json-parse      |                                      |                  |
+| json-array-size | 1                                    |                  |
+| body-like       | http://awesnob.com |
+
+* link_page_key is exact only
+
+| get             | /data/signals?q=link_page_key%3Astart | application/json |
+| code-is         | 200                                  |                  |
+| json-parse      |                                      |                  |
+| json-array-size | 0                                    |                  |
+
+| get             | /data/signals?q=link_page_key%3A%221%3Astart_here%22 | application/json |
+| code-is         | 200                                  |                  |
+| json-parse      |                                      |                  |
+| json-array-size | 1                                    |                  |
+| body-like       | Humbles |
+
+* Workspace id is numerical exact only
+
+| get             | /data/signals?q=link_w%3A%%help_en_id%% | application/json |
+| code-is         | 200                                  |                  |
+| json-parse      |                                      |                  |
+| json-array-size | 1                                    |                  |
+| body-like       | Humbles |
+
+# Create a DM, search as sender
+
+| post-json       | /data/signals          | {"signal":"first direct", "recipient":{"id":%%recipient_id%%}} |
+| code-is         | 201                    |                                                                |
+| job-count       | SignalIndex      | 1                                                                       |                      |
+| st-process-jobs |                  |                                                                         |                      |
+| job-count       | SignalIndex      | 0                                                                       |                      |
+
+# Now search for it
+
+| get             | /data/signals?q=direct | application/json                                               |
+| code-is         | 200                    |                                                                |
+| body-like       | first direct           |                                                                |
+| get             | /data/signals?q=pvt%3A1  | application/json                                               |
+| code-is         | 200                    |                                                                |
+| json-parse      |                        |                                                                |
+| json-array-size | 1                      |                                                                |
+| body-like       | first direct           |                                                                |
+
+# Create a DM, search as recipient
+
+| http-user-pass  | %%recipient%% | abc123                                                     |
+| post-json       | /data/signals | {"signal":"second direct", "recipient":{"id":%%user1_id%%}} |
+| code-is         | 201           |                                                            |
+| job-count       | SignalIndex   | 1                                                          |
+| st-process-jobs |               |                                                            |
+| job-count       | SignalIndex   | 0                                                          |
+
+| http-user-pass  | %%username%%                          | %%password%%                  |
+| get             | /data/signals?q=direct                | application/json              |
+| code-is         | 200                                   |                               |
+| body-like       | first direct                          |                               |
+| body-like       | second direct                         |                               |
+| get             | /data/signals?q=pvt%3A1               | application/json              |
+| code-is         | 200                                   |                               |
+| json-parse      |                                       |                               |
+| json-array-size | 2                                     |                               |
+| body-like       | first direct                          |                               |
+| body-like       | second direct                         |                               |
+| get             | /data/signals?q=NOT+pvt%3A1           | application/json              |
+| code-is         | 200                                   |                               |
+| json-parse      |                                       |                               |
+| json-array-size | 4                                     |                               |
+| get             | /data/signals?q=pvt%3A0           | application/json              |
+| code-is         | 200                                   |                               |
+| json-parse      |                                       |                               |
+| json-array-size | 4                                     |                               |
+| get             | /data/signals?q=pvt%3A1+AND+first     | application/json              |
+| code-is         | 200                                   |                               |
+| json-parse      |                                       |                               |
+| json-array-size | 1                                     |                               |
+| body-like       | first direct                          |                               |
+| body-unlike     | second direct                         |                               |
+| get             | /data/signals?q=NOT+pvt%3A1+AND+first | application/json              |
+| code-is         | 200                                   |                               |
+| json-parse      |                                       |                               |
+| json-array-size | 0                                     |                               |
+| post-json       | /data/signals                         | {"signal":"not first public"} |
+| code-is         | 201                                   |                               |
+| job-count       | SignalIndex                           | 1                             |
+| st-process-jobs |                                       |                               |
+| job-count       | SignalIndex                           | 0                             |
+| get             | /data/signals?q=NOT+pvt%3A1+AND+first | application/json              |
+| code-is         | 200                                   |                               |
+| json-parse      |                                       |                               |
+| json-array-size | 1                                     |                               |
+| body-like       | not first public                      |                               |
+| get             | /data/signals?q=pvt%3A0+AND+first | application/json              |
+| code-is         | 200                                   |                               |
+| json-parse      |                                       |                               |
+| json-array-size | 1                                     |                               |
+| body-like       | not first public                      |                               |
+| get             | /data/signals?q=first | application/json              |
+| code-is         | 200                                   |                               |
+| json-parse      |                                       |                               |
+| json-array-size | 2                                     |                               |
+| body-like       | not first public                      |                               |
+| body-like       | first direct                          |                               |
+
+* Verify a third person in that account can't see the private signal.
+
+| http-user-pass | %%observer%%          | abc123           |
+| get            | /data/signals?q=direct | application/json |
+| code-is        | 200                    |                  |
+| body-unlike      | first direct           |                  |
+| body-unlike      | second direct          |                  |
+| http-user-pass | %%username%%           | %%password%%     |
+
+creator, dm_recip
+| get             | /data/signals?q=creator%3A%%user1_id%%           | application/json |
+| code-is         | 200                                           |                  |
+| json-parse      |                                               |                  |
+| json-array-size | 6                                             |                  |
+| body-like       | Stupid plain                                  |                  |
+| body-like       | Simple Humbles                                |                  |
+| body-like       | Crime Breaking                                |                  |
+| body-like       | Belligerant Pickles                           |                  |
+| body-like       | not first public                              |                  |
+| body-like       | first direct                                  |                  |
+| get             | /data/signals?q=creator%3A%%user1_id%%+AND+pvt%3A1 | application/json |
+| code-is         | 200                                           |                  |
+| json-parse      |                                               |                  |
+| json-array-size | 1                                             |                  |
+| body-like       | first direct                                  |                  |
+
+| get             | /data/signals?q=dm_recip%3A%%user1_id%% | application/json |
+| code-is         | 200                                  |                  |
+| json-parse      |                                      |                  |
+| json-array-size | 1                                    |                  |
+| body-like       | second direct                        |                  |
+
+| get             | /data/signals?q=a%3A%%account1_id%% | application/json |
+| code-is         | 200                                  |                  |
+| json-parse      |                                      |                  |
+| json-array-size | 7                                    |                  |
+
+| get             | /data/signals?q=stupid;accounts=%%account1_id%% | application/json |
+| code-is         | 200                                  |                  |
+| json-parse      |                                      |                  |
+| json-array-size | 1                                    |                  |
+
+| get             | /data/signals?q=stupid;accounts=%%account2_id%% | application/json |
+| code-is         | 200                                  |                  |
+| json-parse      |                                      |                  |
+| json-array-size | 0                                    |                  |
+
+| get             | /data/signals?q=g%3A%%group1_id%% | application/json |
+| code-is         | 200                                  |                  |
+| json-parse      |                                      |                  |
+| json-array-size | 3                                    |                  |
+
+| get             | /data/signals?q=stupid;groups=%%group1_id%% | application/json |
+| code-is         | 200                                  |                  |
+| json-parse      |                                      |                  |
+| json-array-size | 1                                    |                  |
+
+| get             | /data/signals?q=stupid;groups=%%group2_id%% | application/json |
+| code-is         | 200                                  |                  |
+| json-parse      |                                      |                  |
+| json-array-size | 0                                    |                  |
+
+# Test date searches
+
+| get             | /data/signals?q=created%3A%5B%2A+TO+NOW%5D | application/json |
+| code-is         | 200                                  |                  |
+| json-parse      |                                      |                  |
+| json-array-size | 7                                    |                  |
+
+| post-json        | /data/signals | {"signal":"Hey there {user: %%recipient_id%%} how are you?"}   |
+| code-is          | 201           |                                                                |
+| get              | /data/signals | application/json                                               |
+| code-is          | 200           |                                                                |
+| set-from-content | signalid      | qr/"signal_id":"([^"]+)"/                                      |
+| http-user-pass   | %%recipient%% | abc123                                                         |
+| post-json        | /data/signals | {"signal":"i am superb!", "in_reply_to":{"signal_id":"%%signalid%%"}} |
+| code-is          | 201           |                                                                |
+| job-count        | SignalIndex   | 2                                                              |
+| st-process-jobs  |               |                                                                |
+| job-count        | SignalIndex   | 0                                                              |
+
+| http-user-pass  | %%username%%                             | %%password%%     |
+| get             | /data/signals?q=mention%3A%%recipient_id%% | application/json |
+| code-is         | 200                                      |                  |
+| json-parse      |                                          |                  |
+| json-array-size | 1                                        |                  |
+| body-like       | how are you |
+| body-unlike       | superb |
+
+| get             | /data/signals?q=reply_to%3A%%user1_id%% | application/json |
+| code-is         | 200                                  |                  |
+| json-parse      |                                      |                  |
+| json-array-size | 1                                    |                  |
+| body-like       | superb |
+
+| get             | /data/signals?q=is_question%3A1 | application/json |
+| code-is         | 200                                  |                  |
+| json-parse      |                                      |                  |
+| json-array-size | 1                                    |                  |
+| body-like       | how are you |
+
+
+# Testing searches with UTF8 characters
+
+| post-json        | /data/signals | {"signal":"I want to go to 日本 when I grow up."}   |
+| code-is          | 201           |                                                                |
+| job-count        | SignalIndex   | 1                                                              |
+| st-process-jobs  |               |                                                                |
+| job-count        | SignalIndex   | 0                                                              |
+
+| get             | /data/signals?q=日本 | application/json |
+| code-is         | 200                                      |                  |
+| json-parse      |                                          |                  |
+| json-array-size | 1                                        |                  |
+| body-like       | when I grow up |

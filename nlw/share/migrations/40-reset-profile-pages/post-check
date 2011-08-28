@@ -1,0 +1,20 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_singlevalue/;
+
+my $containers = sql_singlevalue(qq{
+  SELECT COUNT(*)
+    FROM container
+   WHERE container_type = ?
+}, 'profile');
+
+if ( $containers == 0 ) {
+    print "Profiles have been reset, moving on.\n";
+    exit 0;
+}
+
+print "Something has gone wrong, aborting!\n";
+exit 2;

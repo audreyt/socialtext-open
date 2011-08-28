@@ -1,0 +1,71 @@
+| *Comment* | Test Case: Preferences UI User 3 |  |
+
+| set | new_account | userPrefs.%%start_time%%.3 |
+| set | new_ws | userprefs-%%start_time%%-3 |
+| set | new_user | userPrefs3.%%start_time%%@ken.socialtext.net |
+| set | new_name | userPrefs3 %%start_time%% |
+| include | [Test Case: Preferences UI User Setup] |  |
+
+| *Comment* | Test Case: Preferences UI User 3 Blogs. Default: 10 posts |  |
+| click_and_wait | link=Settings |  |
+| click_and_wait | //a[contains(@href,'preferences_class_id=weblog')] |  |
+| text_like | contentContainer | How many posts should be displayed in blog view |
+| is_selected_ok | weblog__weblog_depth | label=10 |
+
+| *Comment* | Test Case: Preferences UI User 3 Blogs. 50 posts |  |
+| select_ok | weblog__weblog_depth | label=50 |
+| is_selected_ok | weblog__weblog_depth | label=50 |
+| click_and_wait | link=Save |  |
+| text_like | qr/Preferences Saved/i |  |
+| is_selected_ok | weblog__weblog_depth | label=50 |
+
+| *Comment* | Test Case: Preferences UI User 3 Blogs. Cancel preserves value |  |
+| select_ok | weblog__weblog_depth | label=25 |
+| is_selected_ok | weblog__weblog_depth | label=25 |
+| click_ok | link=Cancel |  |
+| is_selected_ok | weblog__weblog_depth | label=50 |
+
+| *Comment* | Test Case: Preferences UI User 3 Blogs. Save without changing values |  |
+| is_selected_ok | weblog__weblog_depth | label=50 |
+| click_and_wait | link=Save |  |
+| is_selected_ok | weblog__weblog_depth | label=50 |
+
+| *Comment* | Test Case: Preferences UI User 3 Blogs. Navigate away, come back, verify |  |
+| click_and_wait | link=Settings |  |
+| click_and_wait | //a[contains(@href,'preferences_class_id=weblog')] |  |
+| text_like | contentContainer | How many posts should be displayed in blog view |
+| is_selected_ok | weblog__weblog_depth | label=50 |
+
+| *Comment* | Test Case: Preferences UI User 3 Syndicate. Default: 10 posts |  |
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=Syndicate |  |
+| text_like | contentContainer | How many posts should be displayed in outgoing feeds |
+| is_selected_ok | syndicate__syndication_depth | label=10 |
+
+| *Comment* | Test Case: Preferences UI User 3 Syndicate. 50 posts |  |
+| select_ok | syndicate__syndication_depth | label=50 |
+| is_selected_ok | syndicate__syndication_depth | label=50 |
+| click_and_wait | link=Save |  |
+| text_like | qr/Preferences Saved/i |  |
+| is_selected_ok | syndicate__syndication_depth | label=50 |
+
+| *Comment* | Test Case: Preferences UI User 3 Syndicate. Cancel preserves value |  |
+| select_ok | syndicate__syndication_depth | label=25 |
+| is_selected_ok | syndicate__syndication_depth | label=25 |
+| click_ok | link=Cancel |  |
+| is_selected_ok | syndicate__syndication_depth | label=50 |
+
+| *Comment* | Test Case: Preferences UI User 3 Syndicate. Save without changing values |  |
+| is_selected_ok | syndicate__syndication_depth | label=50 |
+| click_and_wait | link=Save |  |
+| is_selected_ok | syndicate__syndication_depth | label=50 |
+
+| *Comment* | Test Case: Preferences UI User 3 Syndicate. Navigate away, come back, verify |  |
+| click_and_wait | link=Settings |  |
+| click_and_wait | link=Syndicate |  |
+| text_like | contentContainer | How many posts should be displayed in outgoing feeds |
+| is_selected_ok | syndicate__syndication_depth | label=50 |
+
+| include | [Test Case: Preferences UI User Teardown] |  |
+
+| *Comment* | Test Case: Preferences UI User 3 COMPLETED |  |

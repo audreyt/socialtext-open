@@ -1,0 +1,7 @@
+Migration for [Story: New Default Dashboard]
+
+Save the old default dashboard for existing accounts
+
+Takes an average of 0.116529666311373 seconds per account, 14 seconds for 123 accounts
+
+This is run as a job because www.socialtext.net has 29325 accounts and will take 57 minutes.

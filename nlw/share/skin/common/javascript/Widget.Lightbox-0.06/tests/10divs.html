@@ -1,0 +1,46 @@
+<html>
+<head>
+<title>10divs</title>
+<script type="text/javascript" src="lib/JSAN.js" charset="UTF-8"></script>
+<script type="text/javascript" src="lib/Test/Builder.js" charset="UTF-8"></script>
+<script type="text/javascript" src="../lib/Widget/Lightbox.js"></script>
+</head>
+<body>
+
+<div id="my-wrapper">
+  <div id="my-background"></div>
+  <div id="my-content-wrapper">
+    <div id="my-content">
+      <h1>Hello World</h1>
+      <p>How are you</p>
+    </div>
+  </div>
+</div>
+
+<pre id="test"></pre>
+
+<script type="text/javascript"><!--
+JSAN.use("Effect.RoundedCorners");
+
+var $ = function(id) { return document.getElementById(id) }
+
+var t = new Test.Builder();
+t.plan({tests: 1});
+
+$('my-content').onclick = function(){ alert("Hi"); return false; }
+
+var box = new Widget.Lightbox.show({
+        'divs': {
+            wrapper: $('my-wrapper'),
+            background: $('my-background'),
+            contentWrapper: $('my-content-wrapper'),
+            content: $('my-content')
+        },
+        'effects': ['RoundedCorners'] });
+
+t.ok( box.div == $('my-wrapper'), 'Use existing divs' );
+
+//--></script>
+</body>
+</html>
+

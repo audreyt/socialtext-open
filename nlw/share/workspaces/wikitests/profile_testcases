@@ -1,0 +1,14 @@
+Saving profile changes causes selenium top-level to disappear. Until we get that fixed, we split testing into two pieces that will run in two different instantiations of a Selenium browser. The first one modifies the profile, the second one verifies the modifications. They have to be run as a pair - Edit Profile fills in the profile and is forced to exit immediately after saving the profile, and Verify Profile checks it.
+
+I tried to hook these tests together using %%start_time%% and other tricks to pass a username between them, but failed. So the username is always `profile.editor@ken.socialtext.net`
+
+
+* [Test Case: Edit Profile]
+* [Test Case: Verify Profile]
+* [Test Case: Verify Avatar Popup]
+* [Test Case: Tagging Profile]
+* [Test Case: Profile Group List]
+* [Test Case: Clear Profile Fields]
+* [Test Case: Show Direct Reports]
+* [Test Case: Show Direct Reports Permissions]
+* [Test Case: Widgets in Profile]

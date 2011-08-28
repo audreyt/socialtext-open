@@ -1,0 +1,455 @@
+Test case to test `/data/events/conversations/:user`
+
+* check an empty conversation list for user A
+* insert some edit events as user A
+* check that those events do show up for user A's conversation list
+* insert some other edit event as user B
+* check that the event shows up on A's conversation list
+* insert some view events as user B
+* make sure that those pages don't show up on the conversation list
+
+* Fixture: SocialRest
+
+This test case assumes a logged in user.
+
+| comment | STARTING Test case: REST event activites | |
+| set | user_a | %%start_time%%a@ken.socialtext.com |
+| set | user_b | %%start_time%%b@ken.socialtext.com |
+| set | user_c | %%start_time%%c@ken.socialtext.com |
+| set | user_d | %%start_time%%d@ken.socialtext.com |
+| set | ws | ws%%start_time%% |
+
+| comment | create a bunch of workspaces and users and stuff |
+| create-workspace | %%ws%% | Socialtext |
+| create-user | %%user_a%% | qwerty | Socialtext |
+| create-user | %%user_b%% | qwerty | Socialtext |
+| create-user | %%user_c%% | qwerty | Socialtext |
+| create-user | %%user_d%% | qwerty | Socialtext |
+| add-member | %%user_a%% | %%ws%% |
+| add-member | %%user_b%% | %%ws%% |
+| add-member | %%user_c%% | %%ws%% |
+| add-member | %%user_d%% | %%ws%% |
+
+| comment| create a bunch of pages to work with |
+| http-user-pass | %%user_d%% | qwerty |
+| put | /data/workspaces/%%ws%%/pages/x00 | Content-Type=text/x.socialtext-wiki | x00 |
+| code-is   | 201                             |
+| put | /data/workspaces/%%ws%%/pages/x01 | Content-Type=text/x.socialtext-wiki | x01 |
+| code-is   | 201                             |
+| put | /data/workspaces/%%ws%%/pages/x05 | Content-Type=text/x.socialtext-wiki | x05 |
+| code-is   | 201                             |
+| put | /data/workspaces/%%ws%%/pages/x06 | Content-Type=text/x.socialtext-wiki | x06 |
+| code-is   | 201                             |
+| put | /data/workspaces/%%ws%%/pages/x07 | Content-Type=text/x.socialtext-wiki | x07 |
+| code-is   | 201                             |
+| put | /data/workspaces/%%ws%%/pages/x08 | Content-Type=text/x.socialtext-wiki | x08 |
+| code-is   | 201                             |
+| put | /data/workspaces/%%ws%%/pages/x09 | Content-Type=text/x.socialtext-wiki | x09 |
+| code-is   | 201                             |
+| put | /data/workspaces/%%ws%%/pages/x10 | Content-Type=text/x.socialtext-wiki | x10 |
+| code-is   | 201                             |
+| put | /data/workspaces/%%ws%%/pages/x11 | Content-Type=text/x.socialtext-wiki | x11 |
+| code-is   | 201                             |
+| put | /data/workspaces/%%ws%%/pages/x12 | Content-Type=text/x.socialtext-wiki | x12 |
+| code-is   | 201                             |
+| put | /data/workspaces/%%ws%%/pages/x13 | Content-Type=text/x.socialtext-wiki | x13 |
+| code-is   | 201                             |
+| put | /data/workspaces/%%ws%%/pages/x21 | Content-Type=text/x.socialtext-wiki | x21 |
+| code-is   | 201                             |
+
+| http-user-pass | %%user_c%% | qwerty |
+
+| comment | create a page as this user, but delete the event that creates it |
+| put | /data/workspaces/%%ws%%/pages/x20 | Content-Type=text/x.socialtext-wiki | x20 |
+| code-is   | 201                             |
+
+| comment | watch a page, but get rid of the `watch_add` event it generates |
+| get      | /%%ws%%/index.cgi?action=add_to_watchlist;page=x21       | application/json |
+| code-is | 200                                                             |
+
+| comment         | ensure that we're starting clean |
+| st-clear-events |                                  |
+| get              | /data/events                     | application/json |
+| code-is         | 200                              |
+| body-like       | []                               |
+
+| comment   | no conversations yet                  |                  |
+| get       | /data/events/conversations/%%user_c%% | application/json |
+| code-is   | 200                                   |                  |
+| body-like | []                                    |                  |
+
+Note that page x20 should show up as the 'created' special case and not because we made some event for it.
+
+| comment | post some events as the default user | . |
+| post-json | /data/events | {"context":{"tk":"00"},"page":{"id":"x00", "workspace_name":"%%ws%%"},"action":"view","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"01"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"05"},"page":{"id":"x05", "workspace_name":"%%ws%%"},"action":"tag_add","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"06"},"page":{"id":"x06", "workspace_name":"%%ws%%"},"action":"tag_delete","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"07"},"page":{"id":"x07", "workspace_name":"%%ws%%"},"action":"comment","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"08"},"page":{"id":"x08", "workspace_name":"%%ws%%"},"action":"rename","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"09"},"page":{"id":"x09", "workspace_name":"%%ws%%"},"action":"duplicate","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"10"},"page":{"id":"x10", "workspace_name":"%%ws%%"},"action":"watch_add","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"11"},"page":{"id":"x11", "workspace_name":"%%ws%%"},"action":"watch_delete","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"12"},"page":{"id":"x12", "workspace_name":"%%ws%%"},"action":"delete","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"13"},"page":{"id":"x13", "workspace_name":"%%ws%%"},"action":"fake","event_class":"page"} |
+| code-is | 201 |  |
+
+| comment | make some edits as a different user |
+| http-user-pass | %%user_a%% | qwerty |
+| post-json | /data/events | {"context":{"tk":"100"},"page":{"id":"x00", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"101-start"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_start","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"100-cancel"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_cancel","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"100-start-again"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_start","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"101"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"105"},"page":{"id":"x05", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"106"},"page":{"id":"x06", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"107"},"page":{"id":"x07", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"108"},"page":{"id":"x08", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"109"},"page":{"id":"x09", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"110"},"page":{"id":"x10", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"111"},"page":{"id":"x11", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"112"},"page":{"id":"x12", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"113"},"page":{"id":"x13", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"120"},"page":{"id":"x20", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"121"},"page":{"id":"x21", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"130"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"view","event_class":"page"} |
+| code-is | 201 |  |
+
+| comment | make some edits as another different user |
+| http-user-pass | %%user_b%% | qwerty |
+| post-json | /data/events | {"context":{"tk":"200"},"page":{"id":"x00", "workspace_name":"%%ws%%"},"action":"comment","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"201"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"comment","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"205"},"page":{"id":"x05", "workspace_name":"%%ws%%"},"action":"comment","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"206"},"page":{"id":"x06", "workspace_name":"%%ws%%"},"action":"comment","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"207"},"page":{"id":"x07", "workspace_name":"%%ws%%"},"action":"comment","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"208"},"page":{"id":"x08", "workspace_name":"%%ws%%"},"action":"comment","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"209"},"page":{"id":"x09", "workspace_name":"%%ws%%"},"action":"comment","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"210"},"page":{"id":"x10", "workspace_name":"%%ws%%"},"action":"comment","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"211"},"page":{"id":"x11", "workspace_name":"%%ws%%"},"action":"comment","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"212"},"page":{"id":"x12", "workspace_name":"%%ws%%"},"action":"comment","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"213"},"page":{"id":"x13", "workspace_name":"%%ws%%"},"action":"comment","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"220"},"page":{"id":"x20", "workspace_name":"%%ws%%"},"action":"rename","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"221"},"page":{"id":"x21", "workspace_name":"%%ws%%"},"action":"delete","event_class":"page"} |
+| code-is | 201 |  |
+| post-json | /data/events | {"context":{"tk":"230"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"view","event_class":"page"} |
+| code-is | 201 |  |
+
+
+page actions that constitute a contribution:
+* edit_save (tk: 01)
+* tag_add (tk: 05)
+* tag_delete (tk: 06)
+* comment (tk: 07)
+* rename (tk: 08)
+* duplicate (tk: 09)
+* delete (tk: 12)
+
+Page x20 was created by user_c.
+Page x21 is watched by user_c.
+
+When another person makes a contribution *after* your contribution, it should show up in the conversations feed.
+
+| comment         | get the conversations and check       | .      |
+| http-user-pass  | %%user_c%%                            | qwerty |
+| get              | /data/events/conversations/%%user_c%% | application/json |        |
+| code-is         | 200                                   |        |
+| json-parse      |                                       |        |
+| json-array-size | 25                                    |        |
+
+| comment     | check that the first user's events show up |
+| body-like   | "tk":"01" |
+| body-like   | "tk":"05" |
+| body-like   | "tk":"06" |
+| body-like   | "tk":"07" |
+| body-like   | "tk":"08" |
+| body-like   | "tk":"09" |
+| body-like   | "tk":"12" |
+| body-unlike | "tk":"100" |
+| body-like   | "tk":"101" |
+| body-unlike | "tk":"101-start"       |
+| body-unlike | "tk":"101-cancel"      |
+| body-unlike | "tk":"101-start-again" |
+| body-like   | "tk":"105" |
+| body-like   | "tk":"106" |
+| body-like   | "tk":"107" |
+| body-like   | "tk":"108" |
+| body-like   | "tk":"109" |
+| body-unlike | "tk":"110" |
+| body-unlike | "tk":"111" |
+| body-like   | "tk":"112" |
+| body-unlike | "tk":"113" |
+| body-like   | "tk":"120" |
+| body-like   | "tk":"121" |
+| body-unlike   | "tk":"130" |
+
+| comment     | check that the second user's events show up |
+| body-unlike | "tk":"200" |
+| body-like   | "tk":"201" |
+| body-like   | "tk":"205" |
+| body-like   | "tk":"206" |
+| body-like   | "tk":"207" |
+| body-like   | "tk":"208" |
+| body-like   | "tk":"209" |
+| body-unlike | "tk":"210" |
+| body-unlike | "tk":"211" |
+| body-like   | "tk":"212" |
+| body-unlike | "tk":"213" |
+| body-like   | "tk":"220" |
+| body-like   | "tk":"221" |
+| body-unlike   | "tk":"230" |
+
+Test the all-combined feed does not accidentally show edit_cancel and edit_start as well.
+
+| comment        | get the all-combined feed and check | .      |
+| http-user-pass | %%user_c%%                          | qwerty |
+| get              | /data/events/conversations/%%user_c%%?activity=all-combined;with_my_signals=1;limit=100;direct=both | application/json |
+| code-is         | 200 |
+| json-parse      |     |
+| json-array-size | 26  |
+
+| body-unlike | "tk":"100"             |
+| body-like   | "tk":"101"             |
+| body-unlike | "tk":"101-start"       |
+| body-unlike | "tk":"101-cancel"      |
+| body-unlike | "tk":"101-start-again" |
+
+| comment        | get the signal-only feed and check | .      |
+| http-user-pass | %%user_c%%                          | qwerty |
+| get              | /data/events/conversations/%%user_c%%?action=signal,comment,edit_save;signals=1;with_my_signals=1;limit=100;direct=both | application/json |
+| code-is         | 200 |
+| json-parse      |     |
+| json-array-size | 0   |
+
+Allow filtering on the event actions.
+
+| comment         | get the conversations and check action filtering | |
+| http-user-pass  | %%user_c%%                            | qwerty |
+| get              | /data/events/conversations/%%user_c%%?action=comment | application/json |        |
+| code-is         | 200                                   |        |
+| json-parse      |                                       |        |
+| json-array-size | 8                                     |        |
+
+| comment     | check that the first user's events show up |
+| body-unlike | "tk":"100" |
+| body-unlike | "tk":"101" |
+| body-unlike | "tk":"105" |
+| body-unlike | "tk":"106" |
+| body-unlike | "tk":"107" |
+| body-unlike | "tk":"108" |
+| body-unlike | "tk":"109" |
+| body-unlike | "tk":"110" |
+| body-unlike | "tk":"111" |
+| body-unlike | "tk":"112" |
+| body-unlike | "tk":"113" |
+| body-unlike | "tk":"120" |
+| body-unlike | "tk":"121" |
+| body-unlike | "tk":"130" |
+
+| comment     | check that the second user's events show up |
+| body-unlike | "tk":"200" |
+| body-like | "tk":"201" |
+| body-like | "tk":"205" |
+| body-like | "tk":"206" |
+| body-like | "tk":"207" |
+| body-like | "tk":"208" |
+| body-like | "tk":"209" |
+| body-unlike | "tk":"210" |
+| body-unlike | "tk":"211" |
+| body-like | "tk":"212" |
+| body-unlike | "tk":"213" |
+| body-unlike | "tk":"220" |
+| body-unlike | "tk":"221" |
+| body-unlike | "tk":"230" |
+
+These tests look to see if limit/count and offset work correctly.  
+They are also demonstrating that the events are sorted in reverse by time.
+
+| comment         | check limit 1                                 |
+| get              | /data/events/conversations/%%user_c%%?limit=1 | application/json |
+| code-is         | 200                                           |
+| json-parse      |                                               |
+| json-array-size | 1                                             |
+| body-like       | "tk":"221"                                    |
+
+| comment         | check limit 1 offset 1                                 |
+| get              | /data/events/conversations/%%user_c%%?limit=1&offset=1 | application/json |
+| code-is         | 200                                                    |
+| json-parse      |                                                        |
+| json-array-size | 1                                                      |
+| body-like       | "tk":"220"                                             |
+
+| comment         | check count 1 offset 2 (count is alias for limit)      |
+| get              | /data/events/conversations/%%user_c%%?count=1;offset=2 | application/json |
+| code-is         | 200                                                    |
+| json-parse      |                                                        |
+| json-array-size | 1                                                      |
+| body-like       | "tk":"212"                                             |
+
+| comment         | check limit 2 offset 3                                 |
+| get              | /data/events/conversations/%%user_c%%?limit=2&offset=3 | application/json |
+| json-parse      |                                                        |
+| json-array-size | 2                                                      |
+| code-is         | 200                                                    |
+| body-like       | "tk":"209"                                             |
+| body-like       | "tk":"208"                                             |
+
+The `before` and `after` clauses work.
+
+| comment        | get a single event, extract it's timestamp |        |
+| http-user-pass | %%user_c%%                                 | qwerty |
+
+| get              | /data/events/conversations/%%user_c%%?limit=1 | application/json |
+| code-is          | 200            |                  |
+| json-parse       |                |                  |
+| json-array-size  | 1              |                  |
+| set-from-content | first_event_at | qr/"at":"([^"]+)"/ |
+
+| comment | get the second event so we can query "before" that time | |
+| get              | /data/events/conversations/%%user_c%%?limit=1;offset=1 | application/json |
+| code-is          | 200            |                  |
+| json-parse       |                |                  |
+| json-array-size  | 1              |                  |
+| set-from-content | second_event_at | qr/"at":"([^"]+)"/ |
+
+| comment         | get the first event before the latest one                               |                  |
+| get             | /data/events/conversations/%%user_c%%?before=%%first_event_at%%;limit=1 | application/json |
+| code-is         | 200                                                                     |                  |
+| json-parse      |                                                                         |                  |
+| json-array-size | 1                                                                       |                  |
+| body-unlike     | %%first_event_at%%                                                      |                  |
+| body-like       | %%second_event_at%%                                                     |                  |
+
+| comment         | get the events after the second one                             |                  |
+| get             | /data/events/conversations/%%user_c%%?after=%%second_event_at%% | application/json |
+| code-is         | 200                                                             |                  |
+| json-parse      |                                                                 |                  |
+| json-array-size | 1                                                               |                  |
+| body-like       | %%first_event_at%%                                              |                  |
+| body-unlike     | %%second_event_at%%                                             |                  |
+
+| comment | create 50 more events that user_c will see |
+| http-user-pass | %%user_a%% | qwerty |
+| post-json | /data/events | {"context":{"tk":"400"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"401"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"402"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"403"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"404"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"405"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"406"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"407"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"408"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"409"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"410"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"411"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"412"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"413"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"414"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"415"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"416"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"417"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"418"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"419"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"420"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"421"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"422"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"423"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"424"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"425"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"426"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"427"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"428"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"429"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"430"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"431"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"432"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"433"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"434"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"435"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"436"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"437"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"438"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"439"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"440"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"441"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"442"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"443"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"444"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"445"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"446"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"447"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"448"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"449"},"page":{"id":"x01", "workspace_name":"%%ws%%"},"action":"edit_save","event_class":"page"} |
+| post-json | /data/events | {"context":{"tk":"450"},"person":{"id":"1"},"action":"edit_save","event_class":"person"} |
+| code-is | 201 |  |
+
+| http-user-pass | %%user_c%% | qwerty |
+
+| comment         | check that the default limit is 25    |                  |
+| get             | /data/events/conversations/%%user_c%% | application/json |
+| code-is         | 200                                   |                  |
+| json-parse      |                                       |                  |
+| json-array-size | 25                                    |                  |
+| body-unlike     | "tk":"450"                            |                  |
+
+| comment         | nonsense arguments are the default                         |                  |
+| get             | /data/events/conversations/%%user_c%%?limit=-9;offset=carl | application/json |
+| code-is         | 200                                                        |                  |
+| json-parse      |                                                            |                  |
+| json-array-size | 25                                                         |                  |
+
+| comment         | check that we can go up to at least 50         |                  |
+| get             | /data/events/conversations/%%user_c%%?limit=50 | application/json |
+| code-is         | 200                                            |                  |
+| json-parse      |                                                |                  |
+| json-array-size | 50                                             |                  |
+| body-unlike     | qr/"tk":"[12]/                                 |                  |
+
+| comment         | check that we can "page" the rest                        |
+| get              | /data/events/conversations/%%user_c%%?offset=50;limit=50 | application/json |
+| code-is         | 200                                                      |
+| json-parse      |                                                          |
+| json-array-size | 25                                                       |
+| body-unlike     | qr/"tk":"4/                                              |
+
+| comment | check that we can't access another user's conversations |
+| get              | /data/events/conversations/%%user_b%% | application/json |
+| code-is         | 403                                   |
+

@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Pull localizations from the local wikitests  workspace into a directory
+
+if [ "$1" != "" ] && [ "$1" != "testcase" ] && [ "$1" != "testset" ] && [ "$1" != "method" ]; then
+    echo "Usage: wikitests-from-wiki [testcase|testset|method]"
+    exit
+fi
+
+PORT=`perl -e 'print $> + 20000'`
+SERVER=http://`hostname`:$PORT
+DIR=$ST_CURRENT/nlw/share/workspaces/wikitests
+echo "Using: $SERVER"
+
+
+if [ "$1" == "testcase" ] || [ "$1" == "" ] ; then
+    stu-local-copy -s $SERVER -w wikitests  --username devnull1@socialtext.com -p d3vnu11l --to $DIR --tag testcase
+fi
+
+if [ "$1" == "testset" ] || [ "$1" == "" ]; then
+    stu-local-copy -s $SERVER -w wikitests  --username devnull1@socialtext.com -p d3vnu11l --to $DIR --tag testset
+fi
+
+if [ "$1" == "method" ] || [ "$1" == "" ]; then
+    stu-local-copy -s $SERVER -w wikitests  --username devnull1@socialtext.com -p d3vnu11l --to $DIR --tag method
+fi
+
+echo "$DIR has been updated."

@@ -1,0 +1,35 @@
+{
+    "resources": {
+        "license": "http://dev.perl.org/licenses/"
+    },
+    "generated_by": "Module::Build version 0.2801",
+    "meta-spec": {
+        "version": 1.2,
+        "url": "http://module-build.sourceforge.net/META-spec-v1.2.html"
+    },
+    "version": 0.21,
+    "name": "Widget.SortableTable",
+    "author": [
+        "Dave Rolsky <autarch@urth.org>"
+    ],
+    "license": "perl",
+    "build_requires": {
+        "Test.Simple": 0.11
+    },
+    "keywords": [
+        "widget",
+        "table"
+    ],
+    "provides": {
+        "Widget.SortableTable": {
+            "version": 0.21,
+            "file": "lib/Widget/SortableTable.js"
+        }
+    },
+    "requires": {
+        "JSAN": 0,
+        "DOM.Ready": 0.12,
+        "DOM.Events": 0
+    },
+    "abstract": "A widget to make a table sortable"
+}

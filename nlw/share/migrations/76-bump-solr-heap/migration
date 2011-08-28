@@ -1,0 +1,8 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+# The pre-check should prevent this from running if the heap size is already
+# higher.
+exec '/usr/sbin/st-appliance-config set solr_heap 512'
+    or die "cannot exec: $!";

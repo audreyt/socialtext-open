@@ -1,0 +1,53 @@
+This is not a test page, but it is tagged testcase so that it appears in the wiki after wikitests-from-wiki is run.
+
+This is the central page for the wikitests wiki. Each code branch has its own tests checked in to the branch at nlw/share/workspaces/wikitests/. These are the commands used to manipulate wikitests in a dev env:
+
+^^^ Wikitest Commands
+
+| Command | Effect |
+| wikitests-to-wiki | build a /wikitests wiki from the files in the branch |
+| wikitests-from-wiki | update the files in the branch from the /wikitests wiki |
+
+wikitests-from-wiki creates new versions of files that have to be committed to the git repo. wikitests-to-wiki is usually invoked from the `st-setup-wikitests` wrapper script.
+
+^^^ Working with wikitest files in a dev env
+
+Working with wikitest files in a dev env is a bit tricky. In addition to observing the development practices for shared code development as outlined below, there are additional steps required to move files to and from the /wikitests wiki. *If you don't do these steps correctly, you risk overwriting new versions of tests with old versions stored in your /wikitests wiki*.
+
+^^^^ Wikitests working session protocol
+
+* cdcur
+* refresh-branch (rb) to get the lastest code and wikitests
+* `wikitests-from-wiki` to dump any work that you have already performed in the wiki to the FS.
+* `git diff` (`gd`) to examine work to be committed AND TO SEE IF YOU HAVE INADVERTENTLY OVERWRITTEN new work.
+** `git checkout FILE` for any file you should not have overwritten with an old copy from your /wikitests.
+* `wikitests-to-wiki` to put all the latest files into /wikitests, including your own
+* modify files in /wikitests during your working session.
+* `rb` AGAIN to fetch any work that might have occurred while you were in your working session.
+* `wikitests-from-wiki` to copy files from /wikitests to your working copy
+** `git diff` (`gd`) to examine work to be committed AND TO SEE IF YOU HAVE INADVERTENTLY OVERWRITTEN new work.
+** `git checkout FILE` for any file you should not have overwritten with an old copy from your /wikitests.
+* `gciam` your new work and any resolved conflicts into your local repo
+* `guppy` to push your local changes to github
+* if the `rb` brought in new work by others, `wikitests-to-wiki` to move it into /wikitests
+
+^^^ Finding Orphan Testcases
+
+Use this SQL query to find pages tagged `testcase` that have no incoming links:
+
+.pre
+SELECT p.name FROM "page" p
+   JOIN "Workspace" w ON w.workspace_id = p.workspace_id
+   JOIN "page_tag" pt ON pt.workspace_id = p.workspace_id
+                     AND pt.page_id = p.page_id
+                     AND pt.tag = 'testcase'
+   WHERE w.name = 'wikitests'
+     AND NOT EXISTS (
+         SELECT * FROM page_link
+             WHERE to_workspace_id = w.workspace_id
+               AND to_page_id = p.page_id
+     );
+.pre
+
+
+[Test Case: SameTime Links] is not really an orphan, but it has to be run stand-alone on a Windows Desktop running the Sametime client

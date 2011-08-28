@@ -1,0 +1,43 @@
+#!/bin/bash
+
+CONF=/etc/exim4/conf.d
+
+
+INTERVAL=$(grep QUEUEINTERVAL /etc/default/exim4 | cut -d '=' -f 2)
+if [ "$INTERVAL" != "'1m'" ]; then
+    echo "Running migration(1)..."
+    exit 0
+fi
+
+MAX_STD=$(grep connection_max_messages \
+    $CONF/transport/30_exim4-config_remote_smtp | awk '{print $3}')
+if [ "$MAX_STD" != "15" ]; then
+    echo "Running migration(2)..."
+    exit 0
+fi
+
+MAX_SMART=$(grep connection_max_messages \
+    $CONF/transport/30_exim4-config_remote_smtp_smarthost | awk '{print $3}')
+if [ "$MAX_SMART" != "15" ]; then
+    echo "Running migration(3)..."
+    exit 0
+fi
+
+FILE=$CONF/main/04_exim4-config_socialtext
+if [ ! -e $FILE ]; then
+    echo "Running migration(4)..."
+    exit 0
+fi
+
+if [ -z "$(grep queue_only $FILE)" ]; then
+    echo "Running migration(5)..."
+    exit 0
+fi
+
+if [ -z "$(grep 'queue_run_max = 5' $FILE)" ]; then
+    echo "Running migration(6)..."
+    exit 0
+fi
+
+echo "Looks like exim4 has already been reconfigured."
+exit 1

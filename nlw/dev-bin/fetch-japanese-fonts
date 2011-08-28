@@ -1,0 +1,38 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use LWP::Simple qw/getstore/;
+use FindBin;
+use Term::ANSIColor;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::System qw/shell_run/;
+
+# Fetch the Japanese fonts needed for Socialtext Widgets
+#
+# These fonts will be placed into nlw/share/fonts
+#
+# The nlw/share/fonts/config.yaml is already configured to use
+# these fonts, but they will only be used if they exist there.
+
+my $font_url = 'http://s3.amazonaws.com/socialtext/Socialtext-ja-fonts.tar.gz';
+(my $font_tgz = $font_url) =~ s#.+/##;
+
+sub msg { print colored ['yellow'], @_ }
+
+my $font_dir = "$FindBin::Bin/../share/fonts";
+die "Couldn't find font_dir: $font_dir!" unless -d $font_dir;
+chdir $font_dir or die "Couldn't chdir to $font_dir: $!";
+
+unlink $font_tgz if -e $font_tgz;
+msg "Fetching fonts from $font_url ...\n";
+getstore($font_url, $font_tgz);
+die "Download of fonts from $font_url failed!" unless -e $font_tgz;
+msg "Extracting fonts from $font_tgz ...\n";
+shell_run("tar xvzf $font_tgz");
+unlink $font_tgz;
+
+msg "Fetched Japanese fonts.\n";
+exit;
+
+

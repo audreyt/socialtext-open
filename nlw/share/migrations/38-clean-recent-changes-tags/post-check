@@ -1,0 +1,13 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+use Socialtext::SQL qw/sql_singlevalue/;
+
+my $num_tags = sql_singlevalue(q{select count(*) from page_tag where tag = 'Recent Changes'});
+if ($num_tags == 0) {
+    exit 0;
+}
+
+print "There are still $num_tags Recent Changes tags remaining. Migration failed.\n";
+exit -1;

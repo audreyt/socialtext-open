@@ -1,0 +1,15 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_execute/;
+use Socialtext::Migration::Utils qw/create_job/;
+
+sql_execute(q{
+    DELETE FROM profile_relationship
+    WHERE NOT shares_account(user_id, other_user_id)
+});
+
+create_job('ReindexPeople', -64, {no_delete => 1});
+
+exit 0;

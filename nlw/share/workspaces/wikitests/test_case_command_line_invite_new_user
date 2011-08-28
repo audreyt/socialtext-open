@@ -1,0 +1,36 @@
+| *Comment* | Test Case: Command Line: INVITE NEW USER |  |
+
+Ticket inspiring this test case: {rt: 13214}.
+
+| *Comment* | Test Case: Command Line Tests: Inviting a new user |  |
+| set | inu_email_1 | inu-%%start_time%%-1@ken.socialtext.net |
+| set | inu_email_2 | inu-%%start_time%%-2@ken.socialtext.net |
+
+| *Comment* | Test Case: Command Line Tests: Inviting a new user: failure cases |  |
+| st-admin | invite-user | You must specify |
+| st-admin | invite-user --workspace %%workspace%% | You must specify an invitee |
+| st-admin | invite-user --from %%email%% --workspace %%workspace%% | You must specify an invitee |
+| st-admin | invite-user --from %%email%% --workspace %%workspace%% --email | You must specify an invitee |
+| st-admin | invite-user --workspace %%workspace%% --email %%inu_email_1%% | You must specify an inviter |
+
+| *Comment* | success case: invite a user that exists and isn't yet a member |  |
+| st-admin | invite-user --workspace %%workspace%% --email %%inu_email_1%% --from %%email%% | An invite has been sent to "%%inu_email_1%%" to join |
+
+| *Comment* | failure case: invite that user again |  |
+| st-admin | invite-user --workspace %%workspace%% --email %%inu_email_1%% --from %%email%% | is already a member |
+
+| *Comment* | success case: invite another user to the workspace, with secure |  |
+| st-admin | invite-user --secure --workspace %%workspace%% --email %%inu_email_2%% --from %%email%% | qr/An invite has been sent to "%%inu_email_2%%" to join the .+ workspace\./ |
+
+| *Comment* | force confirmation and ensure that the user can get into both workspaces |  |
+| st-logout |  |  |
+| st-force-confirmation | %%inu_email_1%% | inu_email_1 |
+| st-login | %%inu_email_1%% | inu_email_1 |
+| get_location_ok | /%%workspace%% |  |
+
+| *Comment* | items to verify manually in the confirmation email |  |
+| *Comment* | hostname is correct |  |
+| *Comment* | port is correct |  |
+| *Comment* | http vs https is correct |  |
+
+| *Comment* | Test Case: Command Line: INVITE NEW USER COMPLETED |  |

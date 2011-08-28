@@ -1,0 +1,123 @@
+| *Comment* | Test Case: Miki Workspace Search |
+
+| set | pws | pagemiki-workspace-%%start_time%% |  |  |
+| st-admin | create-workspace --name %%pws%% --title %%pws%% |  |  |  |
+| st-admin | add-member --username %%username%% --workspace %%pws%% |  |  |  |
+| st-create-pages | %%pws%% | 65 | hello | Some text that is identical |
+| st_process_jobs |  |  |  |  |
+
+
+| *Comment* | Test Case: Miki Workspace Search: Click and Do Search |  |
+| open_ok | /m/search/%%workspace%%/ |  |
+| wait_for_element_visible_ok | st-search-text | 30000 |
+| wait_for_element_visible_ok | st-search-submit | 30000 |
+| type_ok | st-search-text | jabber |
+| submit | searchform |  |
+| wait_for_element_visible_ok | link=Jabberwocky | 30000 |
+| wait_for_element_visible_ok | link=beamish boy | 30000 |
+| wait_for_element_visible_ok | link=jabber | 30000 |
+| wait_for_element_visible_ok | link=The Vorpal Sword | 30000 |
+| wait_for_element_visible_ok | link=Stemming test page 2 | 30000 |
+
+
+
+| *Comment* | Test Case: Miki Workspace Search: Setup Sortby |  |
+| open_ok | /%%pws%%/ |  |
+| st-search | hello | Pages matching 'hello' |
+| select_and_wait | sort-picker | label=Title |
+
+| *Comment* | Test Case: Miki Workspace Search: Test Pagination |
+| open_ok | /m/search/%%pws%%/ |
+| wait_for_element_visible_ok | st-search-text | 30000 |
+| wait_for_element_visible_ok | st-search-submit |
+| type_ok | st-search-text | hello |
+| submit | searchform |  |
+
+
+| *Comment* | Test case: Miki Workspace Search - Pagination First Page |  |
+| wait_for_element_visible_ok | link=hello0 | 30000 |
+| wait_for_element_visible_ok | link=hello10 | 30000 |
+| wait_for_element_visible_ok | link=hello15 | 30000 |
+| wait_for_element_visible_ok | link=hello20 | 30000 |
+| wait_for_element_visible_ok | link=hello26 | 30000 |
+| wait_for_element_visible_ok | link=hello26 | 30000 |
+| wait_for_element_not_present_ok | link=hello27 | 30000 |
+| wait_for_element_visible_ok | mobile-paging-next | 30000 |
+| wait_for_element_not_present_ok | mobile-paging-previous | 5000 |
+
+| *Comment* | Test Case: Miki Workspace Search - Pagination Page Two |  |
+| wait_for_element_visible_ok | mobile-paging-next | 30000 |
+| click_and_pause | mobile-paging-next |  |
+| wait_for_element_visible_ok | mobile-paging-previous | 30000 |
+| wait_for_element_visible_ok | mobile-paging-first | 30000 |
+| wait_for_element_visible_ok | link=hello27 | 30000 |
+| wait_for_element_visible_ok | link=hello27 | 30000 |
+| wait_for_element_visible_ok | link=hello30 | 30000 |
+| wait_for_element_visible_ok | link=hello40 | 30000 |
+| wait_for_element_visible_ok | link=hello44 | 30000 |
+| wait_for_element_not_present_ok | link=hello0 | 30000 |
+| wait_for_element_not_present_ok | link=hello10 | 30000 |
+| wait_for_element_not_present_ok | link=hello15 | 30000 |
+| wait_for_element_not_present_ok | link=hello20 | 30000 |
+| wait_for_element_not_present_ok | link=hello26 | 30000 |
+| wait_for_element_not_present_ok | link=hello45 | 30000 |
+
+| *Comment* | Test Case: Miki Workspace Search - Pagination Page Three And Four |  |
+| click_and_pause | mobile-paging-next |  |
+| wait_for_element_visible_ok | link=hello45 | 30000 |
+| wait_for_element_not_present_ok | link=hello44 | 30000 |
+| wait_for_element_not_present_ok | link=hello63 | 30000 |
+| wait_for_element_not_present_ok | link=hello11 | 30000 |
+| wait_for_element_visible_ok | mobile-paging-previous | 30000 |
+| wait_for_element_visible_ok | mobile-paging-first | 30000 |
+| wait_for_element_visible_ok | mobile-paging-next | 30000 |
+| click_and_pause | mobile-paging-next |  |
+| wait_for_element_visible_ok | link=hello63 | 30000 |
+| wait_for_element_visible_ok | link=hello64 | 30000 |
+| wait_for_element_visible_ok | link=hello7 | 30000 |
+| wait_for_element_visible_ok | link=hello8 | 30000 |
+| wait_for_element_visible_ok | link=hello9 | 30000 |
+| wait_for_element_not_present_ok | link=hello44 | 30000 |
+| wait_for_element_not_present_ok | link=hello45 | 30000 |
+| wait_for_element_not_present_ok | link=hello12 | 30000 |
+| wait_for_element_not_present_ok | link=hello22 | 30000 |
+| wait_for_element_visible_ok | mobile-paging-previous | 30000 |
+| wait_for_element_visible_ok | mobile-paging-first | 30000 |
+| click_and_pause | mobile-paging-previous |  |
+
+| *Comment* | Test case: Miki Workspace Search - Pagination Back to Page 2 |  |
+| wait_for_element_visible_ok | mobile-paging-previous | 30000 |
+| click_and_pause | mobile-paging-previous |  |
+| wait_for_element_visible_ok | link=hello27 | 30000 |
+| wait_for_element_visible_ok | link=hello30 | 30000 |
+| wait_for_element_visible_ok | link=hello40 | 30000 |
+| wait_for_element_visible_ok | link=hello44 | 30000 |
+| wait_for_element_not_present_ok | link=hello0 | 30000 |
+| wait_for_element_not_present_ok | link=hello10 | 30000 |
+| wait_for_element_not_present_ok | link=hello15 | 30000 |
+| wait_for_element_not_present_ok | link=hello20 | 30000 |
+| wait_for_element_not_present_ok | link=hello26 | 30000 |
+| wait_for_element_not_present_ok | link=hello45 | 30000 |
+
+| *Comment* | Test case: Miki Workspace Search - Pagination Back to page 1 |  |
+| click_and_pause | mobile-paging-previous |  |
+| wait_for_element_visible_ok | link=hello0 | 30000 |
+| wait_for_element_visible_ok | link=hello10 | 30000 |
+| wait_for_element_visible_ok | link=hello15 | 30000 |
+| wait_for_element_visible_ok | link=hello20 | 30000 |
+| wait_for_element_visible_ok | link=hello26 | 30000 |
+| wait_for_element_not_present_ok | link=hello27 | 30000 |
+| wait_for_element_visible_ok | mobile-paging-next | 30000 |
+| wait_for_element_not_present_ok | mobile-paging-previous | 5000 |
+
+| *Comment* | Test Case: Miki Workspace Search TODO: What's New Should link to all by date. Does not yet. |
+| open_ok | /%%pws%%/ |
+| wait_for_element_visible_ok | link=Mobile | 30000 |
+| click_and_wait | link=Mobile |  |
+| wait_for_element_visible_ok | link=What's New | 3000 |
+| click_ok | link=What's New |  |
+
+| *Comment* | Test Case: Miki Workspace Search TEARDOWN |
+| st-admin | delete-workspace --workspace %%pws%% --no-export | The %%pws%% workspace has been deleted |
+
+| *Comment* | Test Case: Miki Workspace Search COMPLETED |

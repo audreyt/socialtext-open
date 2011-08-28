@@ -1,0 +1,396 @@
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+form {
+    margin: 0;
+    padding: 0;
+}
+
+div.clear {
+    clear: both;
+}
+
+.content {
+    margin: 0 5px;
+}
+
+.search {
+    margin: 5px;
+}
+
+.wiki-include-page {
+    border-left: 1px solid #80a9f3;
+    padding: 0px 10px 0px 5px;
+    margin-left: 12px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.logo {
+    background: #17417F;
+    padding: 5px;
+}
+
+.globalnav {
+    background-color: #CEECFE;    
+    border-bottom: 1px solid #666;
+    padding: 3px 2px;
+}
+.bottom {
+    border-top: 1px solid #666;
+}
+.subnav {
+    background-color: #ddd;    
+    padding: 3px 2px;
+    border-bottom: 1px solid #666;
+}
+
+.paging {
+    border-top: 1px solid #666;
+    background-color: #ddd;    
+    padding: 3px 2px;
+}
+
+.tabs {
+    border-bottom: 1px solid #666;
+    background-color: #ddd;    
+    padding: 3px 2px;
+}
+
+.ui-mobile-viewport .tabs {
+    padding: 0;
+}
+
+.tabs .letter_set {
+    white-space: normal;
+}
+
+.globalnav a,
+.tabs a {
+    white-space: nowrap;
+}
+
+.tabs .current, .globalnav .current, .subnav .current {
+    font-weight: bold;
+}
+
+.feeds {
+    padding: 3px 2px;
+}
+
+.pageinfo {
+    padding: 3px 2px;
+    border-top: 1px solid #666;
+    background-color: #DDD;
+    padding-bottom: 5px;
+}
+
+.pageinfo ul, .pageinfo p {
+    margin: 0;
+}
+
+#errors-and-messages {
+    background-color: #fbffbe;
+    border: 1px solid #dedede;
+    padding: 5px;
+    font-weight: bold;
+}
+
+.signal_error {
+    color: #f00;
+    font-weight: bold;
+    padding: 10px 0 5px 5px;
+}
+
+.people_list,
+.event_list {
+    width: 100%;
+    margin: 5px 0;
+    border-collapse: collapse;
+    list-style: none;
+    padding: 0;
+}
+.event_list li, .people_list li {
+    border-top: 1px solid #666;
+    margin-left: 5px;
+    padding: 5px 0 3px 0;
+    clear: all;
+}
+
+.event_list li.first, .people_list li.first {
+    border-top: none;
+}
+.event_list img.avatar {
+    float: left;
+    border: 1px solid #666 !important;
+}
+.event_list .mainSection, .people_list .mainSection {
+    float: left;
+    margin-left: 5px;
+}
+.event_list .mainSection {
+    padding-left: 4px;
+    width: 85%;
+}
+.event_list img.asset-icon {
+    float: right;
+}
+.event_list li {
+    position: relative;
+}
+.ago_text {
+    font-style: italic;
+    color: #666;
+    width: 100%;
+    white-space: nowrap !important;
+}
+.destinationNetworks {
+    font-weight: bold;
+    white-space: nowrap !important;
+}
+
+.people_search {
+    padding: 5px;
+    border-bottom: 1px solid #666;
+}
+
+.people_search input {
+    vertical-align: middle;
+}
+
+.postsignal textarea,
+.postsignal textarea.ui-input-text {
+    width: 90%;
+    font-family: monaco, consolas, 'droid sans mono', monospace;
+}
+
+.postsignal h4 {
+    text-align: left;
+    padding-left: 5px;
+}
+
+.ui-mobile-viewport .nav-hint {
+    display: none;
+}
+
+.ui-mobile-viewport .menu-padding {
+    display: none;
+}
+
+.ui-mobile-viewport .permalink {
+    text-decoration: underline;
+}
+
+.permalink {
+    text-decoration: none;
+}
+
+.ui-mobile-viewport .postsignal {
+    text-align: center;
+}
+
+.postsignal {
+    padding: 5px;
+    border-bottom: 1px solid #666;
+}
+.postsignal form {
+    padding: 0;
+    margin: 0;
+}
+.postsignal textarea {
+    width: 300px;
+}
+
+.profile {
+    padding-top: 10px;
+}
+.profile img.avatar {
+    float: left;
+    margin-right: 5px;
+    margin-left: 5px;
+    border: 1px solid #666 !important;
+}
+.profile .info {
+    padding-bottom: 10px;
+    padding-left: 70px;
+    min-height: 75px;
+    border-bottom: 1px solid #666;
+}
+.profile .section {
+    border-top: 1px solid #666;
+}
+.profile .section.first {
+    border-top: none;
+}
+.profile .section {
+    padding-bottom: 10px;
+    padding-left: 5px;
+}
+.profile .section.last {
+    border-bottom: none;
+}
+.profile .section h3 {
+    text-transform: uppercase;
+}
+
+
+.people_list {
+    padding: 5px 0;
+}
+
+.people_list img {
+    border: none;
+}
+.people_list img.avatar {
+    float: left;
+    border: 1px solid #666;
+    vertical-align: middle;
+    width: 27px !important;
+}
+
+.people_list .user_link {
+    margin-bottom: 5px;
+}
+
+.attachments .attachment img {
+    vertical-align: middle;
+}
+
+.attachments .attachment {
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.ui-mobile-viewport #st-login-form dd {
+    margin-left: 5%;
+}
+
+.ui-mobile-viewport #st-login-form dd input {
+    width: 80%;
+}
+
+.ui-mobile-viewport #st-login-form .ui-checkbox {
+    margin-left: 2%;
+    width: 93%;
+}
+
+.tabs ul, .tabs li, .subnav ul, .subnav li, .paging a {
+    display: inline;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.ui-mobile-viewport .tabs ul, .ui-mobile-viewport .tabs li,
+.ui-mobile-viewport .subnav ul, .ui-mobile-viewport .subnav li,
+.ui-mobile-viewport .paging a {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+h4 {
+    margin: 0;
+}
+
+li.divider {
+    list-style: none;
+    margin-left: -20px;
+    font-weight: bold;
+}
+
+.ui-mobile-viewport li.divider {
+    margin-left: 0;
+}
+
+.ui-mobile-viewport #mobile-header .ui-btn-left {
+    display: none;
+}
+
+.ui-li-count {
+    display: none;
+}
+
+.ui-mobile-viewport .ui-li-count {
+    display: inline;
+}
+
+/* Work around Mobile WebKit bug: {bz: 4717} */
+
+.ui-btn-active .ui-btn-inner {
+    border: 0px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    background: transparent;
+}
+
+.ui-btn-active .ui-btn-text {
+    border: 0px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+    background: transparent;
+}
+
+.ui-btn-active .ui-btn-up-c {
+    background: transparent;
+    height: 0px;
+    border: 0px;
+}
+
+.ui-btn-inner {
+    max-height: 1em;
+}
+
+.edit_text_area {
+    font-family: monaco, consolas, droid sans mono, monospace !important;
+    width: 90% !important;
+    height: 400px !important;
+}
+
+.comment_text_area {
+    font-family: monaco, consolas, droid sans mono, monospace !important;
+    width: 90% !important;
+    height: 50px !important;
+}
+
+.wiki .syntaxhighlighter .toolbar {
+    display: none !important;
+}
+
+.wiki ul.waflWidget {
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+}
+.wiki ul.waflWidget .widgetHeaderButtons {
+    display: none;
+}
+
+caption, th, td {
+    font-weight: normal;
+    text-align: left;
+}
+
+.wiki div.widget div.widgetHeaderTitle img {
+    display: none;
+}
+
+.wiki div.widget div.widgetHeaderTitle {
+    font-size: 11px;
+    font-weight: bold;
+    padding-left: 12px;
+    padding-top: 6px;
+    white-space: nowrap;
+}
+
+
+.ui-icon-watch {
+    background: url("../images/watchIcon-mobile.png") no-repeat rgba(0, 0, 0, 0.4);
+}
+
+.ui-icon-watching {
+    background: url("../images/watchingIcon-mobile.png") no-repeat rgba(0, 0, 0, 0.4);
+}

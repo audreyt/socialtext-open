@@ -1,0 +1,16 @@
+#!/bin/bash -e
+
+# N.B. Run this script as the instance user.
+
+DB=`st-config echo db_name`
+DB_USER=`st-config echo db_user`
+
+empty=`psql -U $DB_USER -d $DB -t -c "SELECT COUNT(1) FROM \"Workspace\" WHERE email_notification_from_address = ''" | awk '{print $1}'`
+
+if [ "$empty" == "0" ]; then
+    echo "No empty email_notification_from_address. Aborting."
+    exit 1
+fi
+
+echo "Updating $empty empty workspaces."
+

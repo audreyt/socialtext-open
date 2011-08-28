@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::HTTP::Cookie;
+use Data::Dumper;
+
+my $cookie  = shift @ARGV;
+my $factory = Socialtext::HTTP::Cookie::_token_factory();
+my $token   = $factory->parse($cookie);
+print Dumper($token->data);

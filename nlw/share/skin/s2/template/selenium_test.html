@@ -1,0 +1,10 @@
+[%# @COPYRIGHT@ -%]
+[% IF ! selenium_enabled %]
+<span class="wafl_error">Selenium testing is not enabled on this workspace</span>
+[% ELSIF ! selenium_test_name %]
+<span class="wafl_error">Page must be named something like 'selenium:SomeTestName' for this Selenium test to be enabled</span>
+[% ELSE %]
+<a href="/static/1.1.1.1/selenium/TestRunner.html?select=[% selenium_test_name %]">Run Selenium Test: '[% selenium_test_name %]'</a>
+[% END %]
+<pre>
+[% selenium_test_text | html %]</pre>

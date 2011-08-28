@@ -1,0 +1,18 @@
+#!/bin/bash
+# @COPYRIGHT@
+
+# A simple tool for running the ceqlotron in a dev-env while doing
+# browser based testing. Usage:
+#
+# dev-bin/dev-ceqlotron-runner &
+#
+# It will run until you stop it, simulating a bin/ceqlotron cron 
+# job.
+
+CEQLOTRON=bin/ceqlotron
+SLEEPTIME=60
+
+while : ; do
+    nice -n18 $CEQLOTRON -o
+    sleep $SLEEPTIME
+done

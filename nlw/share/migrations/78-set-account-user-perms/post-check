@@ -1,0 +1,31 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_selectrow/;
+
+my ($account_users, $auth_users) = sql_selectrow(q{
+    SELECT (
+             SELECT COUNT(*)
+             FROM "WorkspaceRolePermission"
+             WHERE role_id IN (SELECT role_id FROM "Role"
+                               WHERE name = 'account_user' )
+         ) as account_users,
+         (
+             SELECT COUNT(*)
+             FROM "WorkspaceRolePermission"
+             WHERE role_id IN (SELECT role_id FROM "Role"
+                               WHERE name = 'authenticated_user')
+         ) as authenticated_users
+});
+
+if ($account_users == $auth_users) {
+    print "Setup looks reasonable, continuing...\n";
+    exit 0; # migration was successful
+}
+
+print "Something is not right here:\n  "
+    ."auth($auth_users) users have differing permissions from account($account_users), "
+    ."migration failed.\n";
+
+exit 1; # migration failed

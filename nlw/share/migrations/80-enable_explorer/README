@@ -1,0 +1,9 @@
+This is implemented for [Story: Explore is enabled after indexing].
+
+Explorer is a major feature that needs to launch as smoothly as possible. With
+that in mind, we should not be making the feature available to customers
+before it builds up its database.
+
+This migration will turn the explorer link off, then set up a monitoring job
+to keep an eye on the required signals re-indexing. When the re-index
+completes, we'll turn the link back on.

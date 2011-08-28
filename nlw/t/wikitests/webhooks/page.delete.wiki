@@ -1,0 +1,90 @@
+* Fixture: WebHook
+
+| standard-test-setup | foo                   |     |                |
+| standard-test-setup | bar                   |     |                |
+| clear-webhooks      |                       |     |                |
+| clear-webhook       |                       |     |                |
+
+| comment       | Delete a page, verify no webhooks fired |     |                |
+| st-clear-jobs |                                         |     |                |
+| edit-page     | %%bar_workspace%%                       | Bar | Sample Content |
+| delete-page   | %%bar_workspace%%                       | Bar |                |
+| job-count     | WebHook                                 | 0   |                |
+
+| comment               | page.delete should fire for a page being deleted                                    |               |                                         |
+| st-clear-jobs         |                                                                                     |               |                                         |
+| clear-webhook         |                                                                                     |               |                                         |
+| add-webhook           | page.delete                                                                         | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%"} |
+| edit-page             | %%bar_workspace%%                                                                   | Foo           | Sample Content                          |
+| job-count             | WebHook                                                                             | 0             |                                         |
+| delete-page           | %%bar_workspace%%                                                                   | Foo           |                                         |
+| job-count             | WebHook                                                                             | 1             |                                         |
+| st-process-jobs       |                                                                                     |               |                                         |
+| job-count             | WebHook                                                                             | 0             |                                         |
+| webhook-payload-parse |                                                                                     |               |                                         |
+| json-like             | [{"class":"page.delete"}]                                                             |               |                                         |
+| json-like             | [{"actor":{"id":%%bar_user_id%%,"best_full_name":"bar user %%start_time%%"}}]             |               |                                         |
+| json-like             | [{"object":{"editor":{"id":%%bar_user_id%%,"best_full_name":"bar user %%start_time%%"}}}] |               |                                         |
+| json-like             | [{"object":{"workspace":{"title":"%%bar_workspace%%","name":"%%bar_workspace%%"}}}]   |               |                                         |
+| json-like             | [{"object":{"id":"foo"}}]                                                             |               |                                         |
+| json-like             | [{"object":{"name":"Foo"}}]                                                           |               |                                         |
+| json-like             | [{"object":{"uri":"%%browser_url%%/%%bar_workspace%%/foo"}}]                |               |                                         |
+| json-like             | [{"object":{"edit_summary":""}}]                                                      |               |                                         |
+| json-like             | [{"object":{"tags":[]}}]                                                              |               |                                         |
+| json-like             | [{"object":{"tags_added":[]}}]                                                        |               |                                         |
+| json-like             | [{"object":{"tags_deleted":[]}}]                                                      |               |                                         |
+| json-like             | [{"object":{"type":"wiki"}}]                                                          |               |                                         |
+| json-like             | [{"object":{"revision_count":"2"}}]                                                   |               |                                         |
+| webhook-like          | "revision_id":"\d+.\d+"                                                                 |               |                                         |
+| webhook-like          | "edit_time"                                                                         |               |                                         |
+| webhook-like          | "create_time"                                                                       |               |                                         |
+
+| Comment   | delete the page again, no webhook fires      |   |
+| DELETE    | /data/workspaces/%%bar_workspace%%/pages/Foo |   |
+| code-is   | 409                                          |   |
+| body-is   | Page is already deleted.                     |   |
+| job-count | WebHook                                      | 0 |
+
+| Comment   | now update the page, verify no webhook fires |     |                        |
+| edit-page | %%bar_workspace%%                            | Foo | This is just an update |
+| job-count | WebHook                                      | 0   |                        |
+
+
+| comment         | Use a workspace_id +page_id filtered webhook |               |                                                                       |
+| clear-webhooks  |                                |               |                                                                       |
+| clear-webhook   |                                |               |                                                                       |
+| st-clear-jobs   |                                |               |                                                                       |
+| add-webhook     | page.delete                    | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%","details":{"page_id":"tarvu"}} |
+| edit-page       | %%bar_workspace%%              | Tarvu         | Tarvu is the best!                                                    |
+| edit-page       | %%bar_workspace%%              | Barvu         | Barvu is the best!                                                    |
+| delete-page     | %%bar_workspace%%              | Tarvu         |                                                                       |
+| delete-page     | %%bar_workspace%%              | Barvu         |                                                                       |
+| job-count       | WebHook                        | 1             |                                                                       |
+| st-process-jobs |                                |               |                                                                       |
+| job-count       | WebHook                        | 0             |                                                                       |
+| webhook-like    | tarvu                          |               |                                                                       |
+| webhook-unlike  | barvu                          |               |                                                                       |
+ 
+
+| comment               | Use a page_tag filtered webhook                  |                          |                             |               |
+* Need to set bizadmin because we are not including a workspace or account param
+| set-business-admin  | %%bar_email_address%% | 1   |                |
+| clear-webhooks        |                                                  |                          |                             |               |
+| clear-webhook         |                                                  |                          |                             |               |
+| st-clear-jobs         |                                                  |                          |                             |               |
+| add-webhook           | page.delete                                      | http://tou.ch            | {"details":{"tag":"fubar"}} |               |
+| edit-page             | %%bar_workspace%%                                | Page without tag         | New content                 |               |
+| edit-page             | %%bar_workspace%%                                | Page with matching tag   | New content                 | fubar, fubaz  |
+| edit-page             | %%bar_workspace%%                                | Page with different tags | New content                 | blubar, fubaz |
+| job-count             | WebHook                                          | 0                        |                             |               |
+
+| delete-page           | %%bar_workspace%%                                | Page without tag         |                             |               |
+| delete-page           | %%bar_workspace%%                                | Page with matching tag   |                             |               |
+| delete-page           | %%bar_workspace%%                                | Page with different tags |                             |               |
+| job-count             | WebHook                                          | 1                        |                             |               |
+| st-process-jobs       |                                                  |                          |                             |               |
+| job-count             | WebHook                                          | 0                        |                             |               |
+| webhook-payload-parse |                                                  |                          |                             |               |
+| json-like             | [{"object":{"name":"Page with matching tag"}}] |                          |                             |               |
+# For other filter tests, see t/wikitests/webhooks/page.tag.wiki
+# The code flow is the same, so these tests are omitted

@@ -1,0 +1,40 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_execute :txn/;
+use Socialtext::Account;
+use Socialtext::Workspace;
+use Socialtext::Role;
+
+my $sth = sql_execute(q{
+    SELECT account_id, all_users_workspace FROM "Account"
+        WHERE all_users_workspace IS NOT NULL
+    });
+my $ids = $sth->fetchall_arrayref;
+
+for my $row (@$ids) {
+    my $acct = Socialtext::Account->new(account_id => $row->[0]);
+    die "Can't find account_id: $row->[0]" unless $acct;
+    my $auw  = Socialtext::Workspace->new(workspace_id => $row->[1]);
+    die "Can't find workspace_id $row->[1]" unless $auw;
+
+    print "Migrating account " . $acct->name . "'s All users workspace "
+        . $auw->name . "\n";
+
+    sql_begin_work();
+    $auw->assign_role_to_account(
+        account => $acct,
+        role => Socialtext::Role->Member,
+    );
+
+    sql_execute(q{
+        UPDATE "Account" 
+            SET all_users_workspace = NULL
+            WHERE account_id = ?
+        }, $acct->account_id,
+    );
+    sql_commit();
+}
+
+exit 0;

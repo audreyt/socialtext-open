@@ -1,0 +1,90 @@
+| *Comment* | MikiShow IE. Watch the Mobile UI |  |
+| *Comment* | MikiShow expects to start at the Mobile home page |  |
+
+| set_default | pt | 5000 | defaults to five seconds |
+
+| wait_for_element_visible_ok | link=Workspaces | 30000 |
+
+| open_ok | /st/dashboard/ |  |
+| wait_for_element_visible_ok | link=Mobile | 30000 |
+| click_and_wait | link=Mobile |  |
+| *Comment* | SEE MIKI Home |  |
+| pause | %%pt%% |  |
+
+| *Comment* | SEE THIS IS OK - People I Follow/Mine Links ARE PRESENT! |  |
+| wait_for_element_visible_ok | link=People I follow | 30000 |
+| wait_for_element_visible_ok | link=Mine | 30000 |
+| pause | %%pt%% |  |
+
+| clickAndWait | link=Workspaces |
+| *Comment* | SEE MIKI Workspace List |
+| pause | %%pt%% |
+
+| clickAndWait | link=Canonical Test Data Set |
+| *Comment* | SEE MIKI Details on Canonical Test Data Workspace |
+| pause | %%pt%% |
+
+| clickAndWait | link=What's New |
+| *Comment* | SEE MIKI Recent Changes |
+| pause | %%pt%% |
+
+| clickAndWait | link=Tags |
+| *Comment* | SEE MIKI Tag List |
+| pause | %%pt%% |
+
+| wait_for_element_visible_ok | link=Next page > | 30000 |
+| clickAndWait | link=Next page > |  |
+| wait_for_element_visible_ok | link=Welcome | 30000 |
+| clickAndWait | link=Welcome |
+| *Comment* | SEE MIKI Pages in welcome category |
+| pause | %%pt%% |
+
+| clickAndWait | link=Search |
+| *Comment* | SEE MIKI Search Box |
+| pause | %%pt%% |
+
+| type_ok | search_term | wiki |
+| clickAndWait | search |  |
+| *Comment* | SEE MIKI search results for "wiki" |  |
+| pause | %%pt%% |  |
+
+| clickAndWait | link=Announcements and Links |
+| *Comment* | SEE MIKI Announcements and Links |
+| pause | %%pt%% |
+
+| clickAndWait | link=Edit |
+| *Comment* | SEE MIKI Edit |
+| pause | %%pt%% |
+
+| clickAndWait | link=Cancel |
+| *Comment* | SEE MIKI Edit Cancelled |
+| pause | %%pt%% |
+
+| clickAndWait | link=Edit |
+| *Comment* | SEE MIKI Edit again |
+| pause | %%pt%% |
+
+| clickAndWait | st-miki-edit-sumbit |
+| *Comment* | SEE MIKI Save |
+| pause | %%pt%% |
+
+| clickAndWait | link=Log out |
+| *Comment* | SEE MIKI Login page |
+| pause | %%pt%% |
+
+| clickAndWait | link=I don't know my password. |
+| *Comment* | SEE MIKI password reset page |
+| pause | %%pt%% |
+
+| clickAndWait | link=Log in to Socialtext |
+| *Comment* | SEE MIKI login |
+| pause | %%pt%% |
+
+| type_ok | username | %%username%% |
+| type_ok | password | %%password%% |
+| clickAndWait | //input[@value='Log in'] |  |
+
+| *Comment* | SEE MIKI logged in |
+| pause | %%pt%% |
+
+| *Comment* | MikShowIE COMPLETED |  |

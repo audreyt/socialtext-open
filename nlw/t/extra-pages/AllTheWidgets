@@ -1,0 +1,56 @@
+This is the page used to drive testing of Widget editing.
+Use it to regression test Widget editing and to develop Widget test automation.
+It contains an example of the base form (e.g. not full form) of every Link and WAFL type.
+
+----
+
+| *Non-Widget Links* |  |
+| Wiki page link | [Page Title] |
+| Network Share
+`"Ad Social"<\\ad-social\shared\testme.txt>`
+See {rt: 15184} | "AD Social"<file://ad-social/shared/testme.txt> |
+| Sharepoint | {sharepoint: SubFolder/filename.jpg} |
+| URL (plus irc ftp etc) | "Socialtext Hosted"<http://www.socialtext.net> |
+| Named link to external image | "Ken"<http://kenpier.org/ken.gif> |
+| Named Web link to wiki page | "Link to Socialtext search documentation"<http://www.socialtext.net/help/index.cgi?searching> |
+|  |  |
+| *Widgets* |  |
+| Spreadsheet | {ss: [My Little Spreadsheet] s3} |
+| Cross link | "Look over there"{link: foobar [Foobar Wiki] } |
+| File | "This is the name of a file"{file: O Star.txt} |
+| Image | "Click to see some talc"{image: talc.jpg} |
+| Relative link | http:base/images/docs/Search.png |
+| Section | {section: Link As You Think} |
+| Section link | {link: Link As You Think} |
+|  |  |
+| Weblog | "This is a weblog Name"{weblog: Socialtext Blog} |
+| Blog | "This is a blog Name"{blog: Socialtext Blog} |
+| Tag | "This is a tag name"{tag: Welcome} |
+| Category
+This WAFL will get canonicalized to tag | {category: Welcome} |
+| Table of contents | {toc: }|
+| Include page | {include: [page_title]} |
+| Recent changes | {recent_changes: }|
+|  |  |
+| Recent changes in tagged pages | {tag_list: tag_name}|
+| Recent changes in categorized pages
+This WAFL will get canonicalized to tag | {category_list: category_id}|
+| Recent changes in weblog | {weblog_list: weblog_name}|
+| Search (text/tag/title) | {search: search_term}|
+|  |  |
+| RSS feed | {fetchrss: rss_url}|
+| Atom feed | {fetchatom: atom_url}|
+| Google search | {googlesoap: atermnotlikelytobefoundbysearching}|
+| Technorati blog search | {technorati: technorati_url }|
+|  |  |
+| AIM | aim:aim_id |
+| Yahoo (yahoo) | yahoo:yahoo_id |
+| Yahoo (ymsgr) | ymsgr:yahoo_id |
+| Skype (skype) | skype:skype_id |
+| Skype (callme) | callme:skype_id |
+|  |  |
+| date | {date: YYYY-MM-DD HH:MM:SS GMT} |
+| user | {user: email_address} |
+| as is | {{ *literal* _text_ }} |
+| new form | {new_form_page: generic Generic} |
+| tm | {tm} |

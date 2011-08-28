@@ -1,0 +1,14 @@
+#!/bin/bash
+
+TMP="$HOME/st-make-js.log"
+
+echo Making clean all in known directories
+st-make-all -clean all >& $TMP
+
+echo Updating widgets
+st-widgets update-all --verbose --force >> $TMP 2>&1
+
+echo Updating widget gallery
+st-widgets update-gallery --verbose >> $TMP 2>&1
+
+echo logged to $TMP

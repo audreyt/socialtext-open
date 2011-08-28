@@ -1,0 +1,41 @@
+#!/bin/bash
+set -e
+
+local_delivery() {
+    sudo perl -pi -e "s/dc_eximconfig_configtype='[^']+'/dc_eximconfig_configtype='local'/" /etc/exim4/update-exim4.conf.conf
+    sudo update-exim4.conf
+}
+
+case "$1" in
+  disable)
+    echo DISABLING email for $HOSTNAME
+    local_delivery
+    sudo /etc/init.d/exim4 restart
+    ;;
+  hardstop)
+    echo PERMANENTLY DISABLING email for $HOSTNAME
+    local_delivery
+    sudo mv /usr/sbin/exim4 /usr/sbin/exim4.disabled
+    sudo ln -s /bin/true /usr/sbin/exim4
+    # so upgrades don't overwrite this symlink:
+    dpkg -S /usr/sbin/exim4 | \
+        awk -F: '{print $1 " hold"}' | \
+        dpkg --set-selections
+    sudo /etc/init.d/exim4 restart
+    ;;
+  enable)
+    echo ENABLING email for $HOSTNAME
+    sudo perl -pi -e "s/dc_eximconfig_configtype='local'/dc_eximconfig_configtype='internet'/" /etc/exim4/update-exim4.conf.conf
+    sudo update-exim4.conf
+    sudo /etc/init.d/exim4 restart
+    ;;
+  *)
+    echo "Usage: st-email [enable|disable|hardstop]"
+    echo
+    echo "  disable - set exim delivery to 'local' mode"
+    echo "  enable - sets exim delivery back to 'internet' mode"
+    echo "  hardstop - disables the exim binary and sets 'local' mode just in case"
+    ;;
+esac
+
+echo Done

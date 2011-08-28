@@ -1,0 +1,49 @@
+[%# @COPYRIGHT@ -%]
+[% ns = 'st-commentui' %]
+[% PROCESS element/doctype %]
+<html>
+  [% PROCESS comment_head %]
+  <body id="[% ns %]" class="popup" onload="comment_popup_setup()">
+    <div id="[% ns %]-container">
+      [% IF hub.current_workspace.comment_form_note_top %]
+        <div id="[% ns %]-notetop">[% hub.current_workspace.comment_form_note_top %]</div>
+      [% END %]
+      <form name="comment_form" method="post" action="[% script_name %]" enctype="application/x-www-form-urlencoded">
+        [% PROCESS comment_controls + comment_form_inputs %]
+      </form>
+    </div>
+  </body>
+</html>
+
+[% BLOCK comment_form_inputs %]
+  <textarea id="[% ns %]-textarea" name="comment" wrap="virtual"></textarea>
+  [% IF hub.current_workspace.comment_form_note_bottom %]
+    <div id="[% ns %]-notebottom">[% hub.current_workspace.comment_form_note_bottom %]</div>
+  [% END %]
+  [% FOREACH field = hub.current_workspace.comment_form_custom_fields %]
+   <div class="[% ns %]-customfield">
+     <label class="customfield-label" for="[% field %]">
+       [% field %]:
+       <input type="text" class="customfield-input" name="[% field %]" />
+     </label>
+   </div>
+  [% END %]
+  <input type="hidden" name="action" value="submit_comment" />
+  <input type="hidden" name="page_name" value="[% page_uri %]" />
+  <input type="hidden" name="caller_action" value="[% caller_action %]" />
+[% END %]
+
+[% BLOCK comment_controls %]
+  <div id="[% ns %]-controls">
+    <a id="[% ns %]-savelink" href="#" onclick="submit_comment(); return false">Save</a>
+    <a id="[% ns %]-cancellink" href="#" onclick="cancel_comment(); return false">Cancel</a>
+  </div>
+[% END %]
+
+[% BLOCK comment_head %]
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    [% PROCESS element/popup_css_links + javascript_links.html %]
+    <title>Add Comment to [% page_title %]</title>
+  </head>
+[% END %]

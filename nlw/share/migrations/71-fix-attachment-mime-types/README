@@ -1,0 +1,8 @@
+Migration for [Task: Clear out bad mime-type files]
+
+Mime-types for Office 2007 workspace attachments are currently cached on disk,
+causing problems when we search for those attachments because what we have
+cached does _not_ match what gets returned when we ask for a file's mime-type.
+Rather than be picky and choosy about the files we fix, we'll scan _every_
+file and clean up those who's cached mime-type does not match the output of
+ST::MIME::Type.

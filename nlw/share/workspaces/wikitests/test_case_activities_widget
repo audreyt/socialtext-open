@@ -1,0 +1,17 @@
+* Fixture: SocialWidgets
+
+| *Comment* | STARTING Test case: Activities Widget |
+
+| *Comment* | Test Case: Activities Widget Greeting moved to Stubborn Testcases |  |
+
+| include | [Test Case: Activities Widget Basic Events] |  |
+| include | [Test Case: Activities Widget Other Signals] |  |
+| include | [Test Case: Activities Widget Conversations] |  |
+| include | [Test Case: Activities Widget Tags and Tagging] |  |
+| include | [Test Case: Activities Widget Followers] |  |
+| include | [Test Case: Activities Widget Permalinks] |  |
+| include | [Test Case: Activities Widget with REAL Popout] |  |
+
+| *Comment* | Test Case: Activities Widget COMPLETED |  |
+
+TODO: write a second TC that exercises all signals, signals from followers only, older, newer, newest

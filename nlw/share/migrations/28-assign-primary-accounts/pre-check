@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::Migration::Utils qw/ensure_socialtext_schema/;
+use Socialtext::SQL qw/sql_singlevalue/;
+
+# Schema migration 10 introduces the primary_account_id field for users.
+ensure_socialtext_schema(10);
+
+# This migration should always run, as no users can already have primary
+# accounts when this migration is run.
+print "Assigning primary accounts to users.\n";
+exit 0;

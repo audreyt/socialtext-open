@@ -1,0 +1,48 @@
+| *Comment* | Test case: Business Control Panel Export Account Data export user data as CSV |  |
+
+| st-admin | give-accounts-admin --username %%username%% | %%username%% now has accounts admin access |
+
+| *Comment* | Test case: Business Control Panel Export Account Data create 2 accounts |  |
+| set | new_acct | ead_%%start_time%% |
+| set | new_acct_2 | ead_2_%%start_time%% |
+| create-account | %%new_acct%% |  |
+| create-account | %%new_acct_2%% |  |
+
+| *Comment* | Test case: Business Control Panel Export Account Data enable export from %%new_acct%% |  |
+| open_ok | /nlw/control/account |  |
+| wait_for_element_present_ok | st-search-by-name | 10000 |
+| type_ok | st-search-by-name | %%new_acct%% |
+| click_and_wait | st-submit-search-by-name |  |
+| wait_for_element_present_ok | link=%%new_acct%% | 10000 |
+| click_and_wait | link=%%new_acct%% |  |
+| wait_for_element_present_ok | //a[contains(text(),'Enable Export User Data')] | 10000 |
+| click_ok | //a[contains(text(),'Enable Export User Data')] |  |
+
+| *Comment* | Test case: Business Control Panel Export Account Data enable export from %%new_acct_2%% |  |
+| open_ok | /nlw/control/account |  |
+| wait_for_element_present_ok | st-search-by-name | 10000 |
+| type_ok | st-search-by-name | %%new_acct_2%% |
+| click_and_wait | st-submit-search-by-name |  |
+| wait_for_element_present_ok | link=%%new_acct_2%% | 10000 |
+| click_and_wait | link=%%new_acct_2%% |  |
+| wait_for_element_present_ok | //a[contains(text(),'Enable Export User Data')] | 10000 |
+| click_ok | //a[contains(text(),'Enable Export User Data')] |  |
+
+| *Comment* | Test case: Business Control Panel Export Account Data do the export |  |
+| open_ok | /nlw/control/account |  |
+| wait_for_element_visible_ok | //a[contains(text(),'Export user data for')] |  |
+| chooseCancelOnNextConfirmation |  |  |
+| click_ok | //a[contains(text(),'Export user data for')] |  |
+
+| *Comment* | Test case: Business Control Panel Account verify the export |  |
+| *Comment* | Test case: Business Control Panel Account should not leave Account page |  |
+| location_like | /nlw/control/account |  |
+| text_like | Socialtext Control Panel - Accounts |  |
+| text_like | Create New Account |  |
+
+| *Comment* | Test Cse: Business Control Panel Export Account Data TEARDOWN |  |
+| st-process-jobs |  |  |
+| delete-account | %%new_acct%% |  |
+| delete-account | %%new_acct_2%% |  |
+
+| *Comment* | Test case: Business Control Panel Export Account Data COMPLETED |  |

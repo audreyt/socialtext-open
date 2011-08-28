@@ -1,0 +1,16 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+# copied from migration 79-reindex-everything
+use strict;
+use warnings;
+use Socialtext::Workspace;
+use Socialtext::Migration::Utils qw/
+    create_job_for_each_workspace create_job/;
+
+create_job_for_each_workspace('ReIndexWorkspace', -64,
+    except => [ Socialtext::Workspace->Help_workspaces ],
+);
+
+create_job('ReindexPeople',  -64, {no_delete => 1});
+create_job('ReindexGroups',  -64, {no_delete => 1});
+create_job('ReindexSignals', -64, {no_delete => 1});

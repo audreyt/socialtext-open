@@ -1,0 +1,964 @@
+Dependency tree created Thu Nov 16 13:39:50 2006
+Created with Module::Depends::Tree 0.02
+$ /usr/bin/deptree build/Deps.yaml
+
+cc    -c -o test.o test.c
+make: `test.o' is up to date.
+Algorithm::Diff
+
+alzabo
+    class::factory::util
+    dbi
+    exception::class
+        class::data::inheritable
+        devel::stacktrace
+    params::validate
+    tie::ixhash
+
+Apache::Constants
+
+Apache::Request
+    Apache::Test
+
+Apache::Session::Store::Postgres
+    Test::Deep
+        Test::NoWarnings
+            Test::Tester
+        Test::Tester
+    Test::Exception
+        Sub::Uplevel
+        Test::Builder::Tester
+
+Apache::Session::Wrapper
+    Apache::Session
+        Test::Deep
+            Test::NoWarnings
+                Test::Tester
+            Test::Tester
+        Test::Exception
+            Sub::Uplevel
+            Test::Builder::Tester
+    Class::Container
+        Params::Validate
+    Exception::Class
+        Class::Data::Inheritable
+        Devel::StackTrace
+    Module::Build
+    Params::Validate
+
+Apache::SubProcess
+
+Apache::URI
+
+Archive::Tar
+    IO::Zlib
+        Compress::Zlib
+            Compress::Raw::Zlib
+            IO::Compress::Base
+            IO::Compress::Base::Common
+            IO::Compress::Gzip
+                Compress::Raw::Zlib
+                IO::Compress::Base
+                IO::Uncompress::Base
+            IO::Compress::Gzip::Constants
+                Compress::Raw::Zlib
+                IO::Compress::Base
+                IO::Uncompress::Base
+            IO::Uncompress::Base
+            IO::Uncompress::Gunzip
+                Compress::Raw::Zlib
+                IO::Compress::Base
+                IO::Uncompress::Base
+
+Archive::Zip
+    Compress::Zlib
+        Compress::Raw::Zlib
+        IO::Compress::Base
+        IO::Compress::Base::Common
+        IO::Compress::Gzip
+            Compress::Raw::Zlib
+            IO::Compress::Base
+            IO::Uncompress::Base
+        IO::Compress::Gzip::Constants
+            Compress::Raw::Zlib
+            IO::Compress::Base
+            IO::Uncompress::Base
+        IO::Uncompress::Base
+        IO::Uncompress::Gunzip
+            Compress::Raw::Zlib
+            IO::Compress::Base
+            IO::Uncompress::Base
+    File::Which
+
+Cache::FileCache
+    Digest::SHA1
+    Error
+
+Class::AlzaboWrapper
+    Alzabo
+        Class::Factory::Util
+        DBI
+        Exception::Class
+            Class::Data::Inheritable
+            Devel::StackTrace
+        Params::Validate
+        Tie::IxHash
+    Exception::Class
+        Class::Data::Inheritable
+        Devel::StackTrace
+    Module::Build
+    Params::Validate
+
+Class::AlzaboWrapper::Cursor
+    Alzabo
+        Class::Factory::Util
+        DBI
+        Exception::Class
+            Class::Data::Inheritable
+            Devel::StackTrace
+        Params::Validate
+        Tie::IxHash
+    Exception::Class
+        Class::Data::Inheritable
+        Devel::StackTrace
+    Module::Build
+    Params::Validate
+
+Class::Field
+    Test::Base
+        Spiffy
+
+Class::Singleton
+
+DBD::Pg
+    DBI
+
+DBI
+
+DB_File::Lock
+
+Data::UUID
+
+Date::Format
+
+DateTime
+    DateTime::Locale
+        Module::Build
+        Params::Validate
+    DateTime::TimeZone
+        Class::Singleton
+        Module::Build
+        Params::Validate
+    Params::Validate
+
+DateTime::Format::HTTP
+    DateTime
+        DateTime::Locale
+            Module::Build
+            Params::Validate
+        DateTime::TimeZone
+            Class::Singleton
+            Module::Build
+            Params::Validate
+        Params::Validate
+    HTTP::Date
+        Compress::Zlib
+            Compress::Raw::Zlib
+            IO::Compress::Base
+            IO::Compress::Base::Common
+            IO::Compress::Gzip
+                Compress::Raw::Zlib
+                IO::Compress::Base
+                IO::Uncompress::Base
+            IO::Compress::Gzip::Constants
+                Compress::Raw::Zlib
+                IO::Compress::Base
+                IO::Uncompress::Base
+            IO::Uncompress::Base
+            IO::Uncompress::Gunzip
+                Compress::Raw::Zlib
+                IO::Compress::Base
+                IO::Uncompress::Base
+        HTML::Parser
+            HTML::Tagset
+        URI
+
+DateTime::Format::Mail
+    DateTime
+        DateTime::Locale
+            Module::Build
+            Params::Validate
+        DateTime::TimeZone
+            Class::Singleton
+            Module::Build
+            Params::Validate
+        Params::Validate
+    Module::Build
+    Params::Validate
+
+DateTime::Format::Pg
+    DateTime
+        DateTime::Locale
+            Module::Build
+            Params::Validate
+        DateTime::TimeZone
+            Class::Singleton
+            Module::Build
+            Params::Validate
+        Params::Validate
+    DateTime::Format::Builder
+        Class::Factory::Util
+        DateTime
+            DateTime::Locale
+                Module::Build
+                Params::Validate
+            DateTime::TimeZone
+                Class::Singleton
+                Module::Build
+                Params::Validate
+            Params::Validate
+        DateTime::Format::Strptime
+            DateTime
+                DateTime::Locale
+                    Module::Build
+                    Params::Validate
+                DateTime::TimeZone
+                    Class::Singleton
+                    Module::Build
+                    Params::Validate
+                Params::Validate
+            DateTime::Locale
+                Module::Build
+                Params::Validate
+            DateTime::TimeZone
+                Class::Singleton
+                Module::Build
+                Params::Validate
+            Params::Validate
+        Module::Build
+        Params::Validate
+    DateTime::TimeZone
+        Class::Singleton
+        Module::Build
+        Params::Validate
+
+DateTime::Format::Strptime
+    DateTime
+        DateTime::Locale
+            Module::Build
+            Params::Validate
+        DateTime::TimeZone
+            Class::Singleton
+            Module::Build
+            Params::Validate
+        Params::Validate
+    DateTime::Locale
+        Module::Build
+        Params::Validate
+    DateTime::TimeZone
+        Class::Singleton
+        Module::Build
+        Params::Validate
+    Params::Validate
+
+Digest::SHA1
+
+Email::Address
+
+Email::MIME
+    Email::MIME::ContentType
+    Email::MIME::Encodings
+    Email::Simple
+    MIME::Types
+
+Email::MIME::Creator
+    Email::MIME
+        Email::MIME::ContentType
+        Email::MIME::Encodings
+        Email::Simple
+        MIME::Types
+    Email::MIME::Modifier
+        Email::MIME
+            Email::MIME::ContentType
+            Email::MIME::Encodings
+            Email::Simple
+            MIME::Types
+        Email::MIME::ContentType
+        Email::MIME::Encodings
+        Email::MessageID
+            Email::Address
+        Email::Simple
+    Email::Simple
+    Email::Simple::Creator
+        Email::Date
+            Date::Parse
+            Email::Abstract
+                Email::Simple
+                Module::Pluggable
+            Email::Simple
+            Time::Piece
+        Email::Simple
+
+Email::MessageID
+    Email::Address
+
+Email::Send
+    Class::Accessor::Fast
+    Email::Address
+    Email::Simple
+    Module::Pluggable
+    Return::Value
+
+Email::Send::Sendmail
+    Class::Accessor::Fast
+    Email::Address
+    Email::Simple
+    Module::Pluggable
+    Return::Value
+
+Email::Simple
+
+Email::Valid
+
+Exception::Class
+    Class::Data::Inheritable
+    Devel::StackTrace
+
+File::CounterFile
+
+File::Slurp
+
+File::chdir
+
+Filesys::DfPortable
+
+HTML::Entities
+    HTML::Tagset
+
+HTML::FillInForm
+    HTML::Parser
+        HTML::Tagset
+
+HTML::PrettyPrinter
+    HTML::Element
+        HTML::Parser
+            HTML::Tagset
+        HTML::Tagset
+    HTML::Tagset
+
+HTML::TreeBuilder
+    HTML::Parser
+        HTML::Tagset
+    HTML::Tagset
+
+HTML::WikiConverter
+    CSS
+        Parse::RecDescent
+    Class::Data::Inheritable
+    HTML::Element
+        HTML::Parser
+            HTML::Tagset
+        HTML::Tagset
+    HTML::Entities
+        HTML::Tagset
+    HTML::Tagset
+    HTML::Tree
+        HTML::Parser
+            HTML::Tagset
+        HTML::Tagset
+    Params::Validate
+    URI
+    URI::Escape
+
+HTML::WikiConverter::Socialtext
+    HTML::WikiConverter
+        CSS
+            Parse::RecDescent
+        Class::Data::Inheritable
+        HTML::Element
+            HTML::Parser
+                HTML::Tagset
+            HTML::Tagset
+        HTML::Entities
+            HTML::Tagset
+        HTML::Tagset
+        HTML::Tree
+            HTML::Parser
+                HTML::Tagset
+            HTML::Tagset
+        Params::Validate
+        URI
+        URI::Escape
+    URI
+
+IPC::Run
+    IO::Pty
+
+JSON
+    HTTP::Request
+        Compress::Zlib
+            Compress::Raw::Zlib
+            IO::Compress::Base
+            IO::Compress::Base::Common
+            IO::Compress::Gzip
+                Compress::Raw::Zlib
+                IO::Compress::Base
+                IO::Uncompress::Base
+            IO::Compress::Gzip::Constants
+                Compress::Raw::Zlib
+                IO::Compress::Base
+                IO::Uncompress::Base
+            IO::Uncompress::Base
+            IO::Uncompress::Gunzip
+                Compress::Raw::Zlib
+                IO::Compress::Base
+                IO::Uncompress::Base
+        HTML::Parser
+            HTML::Tagset
+        URI
+    HTTP::Response
+        Compress::Zlib
+            Compress::Raw::Zlib
+            IO::Compress::Base
+            IO::Compress::Base::Common
+            IO::Compress::Gzip
+                Compress::Raw::Zlib
+                IO::Compress::Base
+                IO::Uncompress::Base
+            IO::Compress::Gzip::Constants
+                Compress::Raw::Zlib
+                IO::Compress::Base
+                IO::Uncompress::Base
+            IO::Uncompress::Base
+            IO::Uncompress::Gunzip
+                Compress::Raw::Zlib
+                IO::Compress::Base
+                IO::Uncompress::Base
+        HTML::Parser
+            HTML::Tagset
+        URI
+
+LWP::UserAgent
+    Compress::Zlib
+        Compress::Raw::Zlib
+        IO::Compress::Base
+        IO::Compress::Base::Common
+        IO::Compress::Gzip
+            Compress::Raw::Zlib
+            IO::Compress::Base
+            IO::Uncompress::Base
+        IO::Compress::Gzip::Constants
+            Compress::Raw::Zlib
+            IO::Compress::Base
+            IO::Uncompress::Base
+        IO::Uncompress::Base
+        IO::Uncompress::Gunzip
+            Compress::Raw::Zlib
+            IO::Compress::Base
+            IO::Uncompress::Base
+    HTML::Parser
+        HTML::Tagset
+    URI
+
+List::MoreUtils
+
+Log::Dispatch
+    Module::Build
+    Params::Validate
+
+Log::Dispatch::Screen
+    Module::Build
+    Params::Validate
+
+Log::Dispatch::Syslog
+    Module::Build
+    Params::Validate
+
+MIME::Parser
+    IO::Stringy
+    Mail::Field
+    Mail::Header
+    Mail::Internet
+
+MIME::Types
+
+MLDBM
+
+
+Params::Validate
+
+REST::Application
+    Tie::IxHash
+
+Readonly
+
+Readonly::XS
+    Readonly
+
+SOAP::Lite
+    Compress::Zlib
+        Compress::Raw::Zlib
+        IO::Compress::Base
+        IO::Compress::Base::Common
+        IO::Compress::Gzip
+            Compress::Raw::Zlib
+            IO::Compress::Base
+            IO::Uncompress::Base
+        IO::Compress::Gzip::Constants
+            Compress::Raw::Zlib
+            IO::Compress::Base
+            IO::Uncompress::Base
+        IO::Uncompress::Base
+        IO::Uncompress::Gunzip
+            Compress::Raw::Zlib
+            IO::Compress::Base
+            IO::Uncompress::Base
+    Crypt::SSLeay
+    FCGI
+    HTTP::Daemon
+        Compress::Zlib
+            Compress::Raw::Zlib
+            IO::Compress::Base
+            IO::Compress::Base::Common
+            IO::Compress::Gzip
+                Compress::Raw::Zlib
+                IO::Compress::Base
+                IO::Uncompress::Base
+            IO::Compress::Gzip::Constants
+                Compress::Raw::Zlib
+                IO::Compress::Base
+                IO::Uncompress::Base
+            IO::Uncompress::Base
+            IO::Uncompress::Gunzip
+                Compress::Raw::Zlib
+                IO::Compress::Base
+                IO::Uncompress::Base
+        HTML::Parser
+            HTML::Tagset
+        URI
+    MIME::Lite
+    MIME::Parser
+        IO::Stringy
+        Mail::Field
+        Mail::Header
+        Mail::Internet
+    URI
+    XML::Parser
+
+SOAP::Transport::HTTP
+
+Template
+    AppConfig
+        File::HomeDir
+
+Template::Iterator::AlzaboWrapperCursor
+    Class::AlzaboWrapper
+        Alzabo
+            Class::Factory::Util
+            DBI
+            Exception::Class
+                Class::Data::Inheritable
+                Devel::StackTrace
+            Params::Validate
+            Tie::IxHash
+        Exception::Class
+            Class::Data::Inheritable
+            Devel::StackTrace
+        Module::Build
+        Params::Validate
+    Template
+        AppConfig
+            File::HomeDir
+
+Template::Plugin::FillInForm
+    HTML::FillInForm
+        HTML::Parser
+            HTML::Tagset
+    Template
+        AppConfig
+            File::HomeDir
+
+Text::Autoformat
+    Text::Reform
+
+Text::Flowed
+
+Tie::IxHash
+
+Time::Piece
+
+Time::Piece::Range
+    Date::Range
+        Date::Simple
+    Time::Piece
+
+URI::Escape
+
+URI::FromHash
+    URI
+
+URI::QueryParam
+
+XML::Atom
+    Class::Data::Inheritable
+    URI
+
+XML::Feed
+    Class::ErrorHandler
+    DateTime
+        DateTime::Locale
+            Module::Build
+            Params::Validate
+        DateTime::TimeZone
+            Class::Singleton
+            Module::Build
+            Params::Validate
+        Params::Validate
+    DateTime::Format::Mail
+        DateTime
+            DateTime::Locale
+                Module::Build
+                Params::Validate
+            DateTime::TimeZone
+                Class::Singleton
+                Module::Build
+                Params::Validate
+            Params::Validate
+        Module::Build
+        Params::Validate
+    DateTime::Format::W3CDTF
+        DateTime
+            DateTime::Locale
+                Module::Build
+                Params::Validate
+            DateTime::TimeZone
+                Class::Singleton
+                Module::Build
+                Params::Validate
+            Params::Validate
+    Feed::Find
+        Class::ErrorHandler
+        HTML::Parser
+            HTML::Tagset
+        LWP
+            Compress::Zlib
+                Compress::Raw::Zlib
+                IO::Compress::Base
+                IO::Compress::Base::Common
+                IO::Compress::Gzip
+                    Compress::Raw::Zlib
+                    IO::Compress::Base
+                    IO::Uncompress::Base
+                IO::Compress::Gzip::Constants
+                    Compress::Raw::Zlib
+                    IO::Compress::Base
+                    IO::Uncompress::Base
+                IO::Uncompress::Base
+                IO::Uncompress::Gunzip
+                    Compress::Raw::Zlib
+                    IO::Compress::Base
+                    IO::Uncompress::Base
+            HTML::Parser
+                HTML::Tagset
+            URI
+        URI
+    HTML::TokeParser
+        HTML::Tagset
+    LWP
+        Compress::Zlib
+            Compress::Raw::Zlib
+            IO::Compress::Base
+            IO::Compress::Base::Common
+            IO::Compress::Gzip
+                Compress::Raw::Zlib
+                IO::Compress::Base
+                IO::Uncompress::Base
+            IO::Compress::Gzip::Constants
+                Compress::Raw::Zlib
+                IO::Compress::Base
+                IO::Uncompress::Base
+            IO::Uncompress::Base
+            IO::Uncompress::Gunzip
+                Compress::Raw::Zlib
+                IO::Compress::Base
+                IO::Uncompress::Base
+        HTML::Parser
+            HTML::Tagset
+        URI
+    URI::Fetch
+        Class::ErrorHandler
+        LWP
+            Compress::Zlib
+                Compress::Raw::Zlib
+                IO::Compress::Base
+                IO::Compress::Base::Common
+                IO::Compress::Gzip
+                    Compress::Raw::Zlib
+                    IO::Compress::Base
+                    IO::Uncompress::Base
+                IO::Compress::Gzip::Constants
+                    Compress::Raw::Zlib
+                    IO::Compress::Base
+                    IO::Uncompress::Base
+                IO::Uncompress::Base
+                IO::Uncompress::Gunzip
+                    Compress::Raw::Zlib
+                    IO::Compress::Base
+                    IO::Uncompress::Base
+            HTML::Parser
+                HTML::Tagset
+            URI
+        URI
+    XML::Atom
+        Class::Data::Inheritable
+        URI
+    XML::RSS
+        DateTime
+            DateTime::Locale
+                Module::Build
+                Params::Validate
+            DateTime::TimeZone
+                Class::Singleton
+                Module::Build
+                Params::Validate
+            Params::Validate
+        DateTime::Format::Mail
+            DateTime
+                DateTime::Locale
+                    Module::Build
+                    Params::Validate
+                DateTime::TimeZone
+                    Class::Singleton
+                    Module::Build
+                    Params::Validate
+                Params::Validate
+            Module::Build
+            Params::Validate
+        DateTime::Format::W3CDTF
+            DateTime
+                DateTime::Locale
+                    Module::Build
+                    Params::Validate
+                DateTime::TimeZone
+                    Class::Singleton
+                    Module::Build
+                    Params::Validate
+                Params::Validate
+        HTML::Entities
+            HTML::Tagset
+        Test::Manifest
+        XML::Parser
+
+XML::RSS
+    DateTime
+        DateTime::Locale
+            Module::Build
+            Params::Validate
+        DateTime::TimeZone
+            Class::Singleton
+            Module::Build
+            Params::Validate
+        Params::Validate
+    DateTime::Format::Mail
+        DateTime
+            DateTime::Locale
+                Module::Build
+                Params::Validate
+            DateTime::TimeZone
+                Class::Singleton
+                Module::Build
+                Params::Validate
+            Params::Validate
+        Module::Build
+        Params::Validate
+    DateTime::Format::W3CDTF
+        DateTime
+            DateTime::Locale
+                Module::Build
+                Params::Validate
+            DateTime::TimeZone
+                Class::Singleton
+                Module::Build
+                Params::Validate
+            Params::Validate
+    HTML::Entities
+        HTML::Tagset
+    Test::Manifest
+    XML::Parser
+
+XML::SAX
+    XML::NamespaceSupport
+
+YAML
+
+
+Number of times each module is used
+ 83 Params::Validate
+ 53 Module::Build
+ 44 Compress::Raw::Zlib
+ 44 IO::Compress::Base
+ 44 IO::Uncompress::Base
+ 32 HTML::Tagset
+ 20 Class::Data::Inheritable
+ 20 Class::Singleton
+ 19 DateTime::TimeZone
+ 18 DateTime::Locale
+ 18 URI
+ 17 HTML::Parser
+ 16 DateTime
+ 14 Devel::StackTrace
+ 14 Exception::Class
+ 11 Compress::Zlib
+ 11 Email::Simple
+ 11 IO::Compress::Base::Common
+ 11 IO::Compress::Gzip
+ 11 IO::Compress::Gzip::Constants
+ 11 IO::Uncompress::Gunzip
+  6 Class::Factory::Util
+  6 DBI
+  6 Test::Tester
+  6 Tie::IxHash
+  5 Class::Container
+  5 Digest::SHA1
+  5 Email::Address
+  5 HTML::Entities
+  4 Alzabo
+  4 DateTime::Format::Mail
+  4 Email::MIME::ContentType
+  4 Email::MIME::Encodings
+  4 Error
+  4 MIME::Types
+  4 Sub::Uplevel
+  4 Test::Builder::Tester
+  4 Test::Exception
+  4 Time::Piece
+  3 AppConfig
+  3 Cache::Cache
+  3 Class::Accessor::Fast
+  3 Class::ErrorHandler
+  3 DateTime::Format::W3CDTF
+  3 Email::MIME
+  3 File::HomeDir
+  3 HTML::Element
+  3 LWP
+  3 Module::Pluggable
+  3 Template
+  3 Test::Deep
+  3 Test::NoWarnings
+  3 URI::Escape
+  3 XML::Parser
+  2 Apache::Session
+  2 Apache::Session::Wrapper
+  2 CSS
+  2 Class::AlzaboWrapper
+  2 DateTime::Format::Strptime
+  2 Email::MessageID
+  2 File::Slurp
+  2 HTML::FillInForm
+  2 HTML::Tree
+  2 HTML::WikiConverter
+  2 IO::Stringy
+  2 MIME::Parser
+  2 Mail::Field
+  2 Mail::Header
+  2 Mail::Internet
+  2 Parse::RecDescent
+  2 Readonly
+  2 Return::Value
+  2 Test::Manifest
+  2 XML::Atom
+  2 XML::RSS
+  1 Algorithm::Diff
+  1 Apache::Constants
+  1 Apache::Request
+  1 Apache::Session::Store::Postgres
+  1 Apache::SubProcess
+  1 Apache::Test
+  1 Apache::URI
+  1 Archive::Tar
+  1 Archive::Zip
+  1 Bit::Vector::Minimal
+  1 Cache::FileCache
+  1 Carp::Assert
+  1 Class::Accessor
+  1 Class::AlzaboWrapper::Cursor
+  1 Class::Field
+  1 Class::Virtual
+  1 Crypt::SSLeay
+  1 DBD::Pg
+  1 DB_File::Lock
+  1 Data::UUID
+  1 Date::Format
+  1 Date::Parse
+  1 Date::Range
+  1 Date::Simple
+  1 DateTime::Format::Builder
+  1 DateTime::Format::HTTP
+  1 DateTime::Format::Pg
+  1 Email::Abstract
+  1 Email::Date
+  1 Email::MIME::Creator
+  1 Email::MIME::Modifier
+  1 Email::Send
+  1 Email::Send::Sendmail
+  1 Email::Simple::Creator
+  1 Email::Valid
+  1 FCGI
+  1 Feed::Find
+  1 File::CounterFile
+  1 File::Which
+  1 File::chdir
+  1 Filesys::DfPortable
+  1 HTML::PrettyPrinter
+  1 HTML::TokeParser
+  1 HTML::TreeBuilder
+  1 HTML::WikiConverter::Socialtext
+  1 HTTP::Daemon
+  1 HTTP::Date
+  1 HTTP::Request
+  1 HTTP::Response
+  1 IO::Pty
+  1 IO::Scalar
+  1 IO::Zlib
+  1 IPC::Run
+  1 JSON
+  1 LWP::UserAgent
+  1 Lingua::GL::Stemmer
+  1 Lingua::PT::Stemmer
+  1 Lingua::Stem::En
+  1 Lingua::Stem::Fr
+  1 Lingua::Stem::It
+  1 Lingua::Stem::Ru
+  1 Lingua::Stem::Snowball::Da
+  1 Lingua::Stem::Snowball::No
+  1 Lingua::Stem::Snowball::Se
+  1 List::MoreUtils
+  1 Log::Dispatch
+  1 Log::Dispatch::Screen
+  1 Log::Dispatch::Syslog
+  1 MIME::Lite
+  1 MLDBM
+  1 REST::Application
+  1 Readonly::XS
+  1 SOAP::Lite
+  1 SOAP::Transport::HTTP
+  1 Spiffy
+  1 Template::Iterator::AlzaboWrapperCursor
+  1 Template::Plugin::FillInForm
+  1 Test::Base
+  1 Text::Autoformat
+  1 Text::Flowed
+  1 Text::German
+  1 Text::Reform
+  1 Tie::Array::Sorted
+  1 Time::Piece::Range
+  1 URI::Fetch
+  1 URI::FromHash
+  1 URI::QueryParam
+  1 XML::Feed
+  1 XML::NamespaceSupport
+  1 XML::SAX
+  1 YAML
+
+171 total modules
+

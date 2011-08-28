@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::AppConfig;
+
+my $ceq_dir = Socialtext::AppConfig->change_event_queue_dir;
+my @links = glob("$ceq_dir/*");
+if (@links) {
+    print "Jobs found in the ceqlotron queue dir, so we will run the "
+          . "migration.\n";
+    exit 0;
+}
+exit 1;

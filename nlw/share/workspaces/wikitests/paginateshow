@@ -1,0 +1,110 @@
+This is the slideshow for the paginated listviews.
+It is strictly for clicking and viewing, not functional testing.
+
+This test case is an aid to visually observing each screen type in the application. The test case cycles through screens, printing outSEE instructions to the test person. The test person should observe the browser under test at eachSEE point along the way. The test person may pause at any point to examine the screen visually using CTRL-Z to suspend the testing process and the unix command `fg` to resume it.
+
+| *Comment* | automation for visual inspection of control and console UI screens |  |
+
+| set | pws | pageme-workspace-%%start_time%% |  |
+| set_default | pt | 5000 | defaults to five seconds |
+| st-admin | create-workspace --name %%pws%% --title %%pws%% |  |  |
+| st-admin | add-member --username %%username%% --workspace %%pws%% |  |  |
+| st-create-pages | %%pws%% | 200 |  |
+
+| open_ok | /%%pws%%/ |  |
+| click_ok | link=What's New |  |
+| wait_for_element_visible_ok | link=2 | 30000 |
+| *Comment* | SEE First page of pagination UI |  |
+| *Comment* | SEE FIRST/PREVIOUS are not links |  |
+| pause | %%pt%% |  |
+
+| wait_for_element_visible_ok | link=2 | 30000 |
+| click_ok | link=2 |  |
+| wait_for_element_visible_ok | link=3 | 30000 |
+| *Comment* | SEE second page of pagination UI |  |
+| *Comment* | SEE first/previous ARE links |  |
+| pause | %%pt%% |  |
+
+| wait_for_element_visible_ok | link=4 | 30000 |
+| click_ok | link=4 |  |
+| *Comment* | SEE Page 4 displayed |  |
+| pause | %%pt%% |  |
+
+| click_ok | link=Next |  |
+| *Comment* | SEE NEXT clicked, Page 5 displayed |  |
+| pause | %%pt%% |  |
+
+| wait_for_element_visible_ok | link=Last | 30000 |
+| click_ok | link=Last |  |
+| *Comment* | SEE Results of clicking LAST link |  |
+| *Comment* | SEE Lastand Next disabled, display is at end of list |  |
+| pause | %%pt%% |
+
+| wait_for_element_visible_ok | link=Orphaned Pages |  |
+| click_ok | link=Orphaned Pages |  |
+| wait_for_element_visible_ok | link=2 | 30000 |
+| *Comment* | SEE First page of Orphan pagination UI |  |
+| *Comment* | SEE FIRST/PREVIOUS are not links |  |
+| pause | %%pt%% |  |
+
+| click_ok | link=2 |  |
+| wait_for_element_visible_ok | link=3 | 30000 |
+| *Comment* | SEE second page of Orphan pagination UI |  |
+| *Comment* | SEE first/previous ARE links |  |
+| pause | %%pt%% |  |
+
+| click_ok | link=4 |  |
+| *Comment* | SEE Page 4 displayed |  |
+| wait_for_element_visible_ok | link=Next | 30000 |
+| pause | %%pt%% |  |
+
+| click_ok | link=Next |  |
+| *Comment* | SEE NEXT clicked, Page 5 displayed |  |
+| wait_for_element_visible_ok | link=6 | 30000 |
+| wait_for_element_visible_ok | link=Last | 30000 |
+| pause | %%pt%% |  |
+
+| click_ok | link=Last |  |
+| pause | %%pt%% |  |
+| *Comment* | SEE Results of clicking LAST link |  |
+| *Comment* | SEE Results of clicking LAST and next disabled, display is at end of list |  |
+| pause | %%pt%% |  |
+
+| open_ok | /%%workspace%%/ |  |  |
+| wait_for_element_visible_ok | link=What's New | 30000 |
+| click_ok | link=What's New |  |
+| wait_for_element_visible_ok | link=All Files | 30000 |
+| click_ok | link=All Files |  |
+| wait_for_element_visible_ok | link=2 | 30000 |
+| *Comment* | SEE First page of All Files |  |
+| *Comment* | SEE FIRST/PREVIOUS are not links |  |
+| pause | %%pt%% |  |
+
+| click_ok | link=2 |  |
+| pause | %%pt%% |  |
+| *Comment* | SEE second page of All Files pagination UI |  |
+| *Comment* | SEE first/previous ARE links |  |
+| pause | %%pt%% |  |
+
+| click_ok | link=4 |  |
+| pause | %%pt%% |  |
+| *Comment* | SEE Page 4 displayed |  |
+| wait_for_element_visible_ok | link=Next | 30000 |
+| pause | %%pt%% |  |
+
+| click_ok | link=Next |  |
+| pause | %%pt%% |  |
+| *Comment* | SEE NEXT clicked, Page 5 displayed |  |
+| pause | %%pt%% |  |
+
+| click_ok | link=Last |  |
+| pause | %%pt%% |  |
+| *Comment* | SEE NEXT clicked, Page 6 displayed |  |
+| pause | %%pt%% |  |
+| *Comment* | SEE Results of clicking LAST link - LAST is no longer link |  |
+| *Comment* | SEE Only 5 pages displayed at a time, display is at end of list |  |
+| pause | %%pt%% |  |
+
+| st-admin | delete-workspace --w %%pws%% | and deleted |
+
+| *Comment* | PaginateShow COMPLETED |  |

@@ -1,0 +1,21 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::AppConfig;
+
+my $cfg = Socialtext::AppConfig->instance();
+
+# DON'T update if its the default
+exit 1 if ($cfg->is_default('user_factories'));
+
+# We're only interested in updating the value if:
+#   a) it has a colon-delimiter
+#   b) it DOESN'T have a semicolon-delimiter
+my $val = $cfg->user_factories();
+exit 1 unless ($val =~ /:/);
+exit 1 if     ($val =~ /;/);
+
+# Update the value
+print "user_factories is a colon-delimited value, changing to semicolon-delimited\n";
+exit 0;

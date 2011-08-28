@@ -1,0 +1,115 @@
+| *Comment* | Test Case: User Pages Thru Tags List |
+
+| *Comment* | Test Case: User Pages Thru Tags List this test might fail if run immediately after st-setup-wikitests if the account import is not yet complete |
+
+| set | demo_user | socialtextdemo1@gmail.com |
+| set | demo_pass | socialtext |
+| st-logoutin | %%demo_user%% | %%demo_pass%% |
+
+| *Comment* | Test Case: User Pages Thru Tags List all tags first page |  |
+| open_ok | /m/tag/rykerengineering |  |
+| wait_for_element_visible_ok | link=Approved | 30000 |
+| wait_for_element_visible_ok | link=Northeast Symposium | 30000 |
+| text_like | qr/Approved.+customers.+Launch Event.+Northeast Symposium/ |  |
+| wait_for_element_not_present_ok | link=Planning | 30000 |
+| wait_for_element_visible_ok | mobile-paging-next | 30000 |
+| wait_for_element_not_present_ok | mobile-paging-previous | 30000 |
+| wait_for_element_not_present_ok | mobile-paging-first | 30000 |
+
+| *Comment* | Test Case: User Pages Thru Tags List all tags second page |  |
+| click_and_wait | mobile-paging-next | 30000 |
+| wait_for_element_visible_ok | link=Planning | 30000 |
+| wait_for_element_visible_ok | link=Solar 1267367776 | 30000 |
+| text_like | qr/Planning.+Project Tracking.+solar.+Solar 1267367776/ |  |
+| wait_for_element_not_present_ok | link=Northeast Symposium | 30000 |
+| wait_for_element_not_present_ok | link=Solar 1267972576 | 30000 |
+| wait_for_element_visible_ok | mobile-paging-next | 30000 |
+| wait_for_element_visible_ok | mobile-paging-previous | 30000 |
+| wait_for_element_visible_ok | mobile-paging-first | 30000 |
+
+| *Comment* | Test Case: User Pages Thru Tags List all tags last page |  |
+| click_and_wait | mobile-paging-next | 30000 |
+| wait_for_element_visible_ok | link=Solar 1267972576 | 30000 |
+| wait_for_element_visible_ok | link=Workspace Usage Blog | 30000 |
+| text_like | qr/Solar 1267972576.+Solar 1270992975.+specifications.+Workspace Usage Blog/ |  |
+| wait_for_element_not_present_ok | link=Solar 1267367776 | 30000 |
+| wait_for_element_not_present_ok | mobile-paging-next | 30000 |
+| wait_for_element_visible_ok | mobile-paging-previous | 30000 |
+| wait_for_element_visible_ok | mobile-paging-first | 30000 |
+
+| *Comment* | Test Case: User Pages Thru Tags List test previous button |  |
+| click_and_wait | mobile-paging-previous | 30000 |
+| wait_for_element_visible_ok | link=Planning | 30000 |
+| wait_for_element_visible_ok | link=Solar 1267367776 | 30000 |
+| text_like | qr/Planning.+Project Tracking.+solar.+Solar 1267367776/ |  |
+| wait_for_element_not_present_ok | link=Northeast Symposium | 30000 |
+| wait_for_element_not_present_ok | link=Solar 1267972576 | 30000 |
+| wait_for_element_visible_ok | mobile-paging-next | 30000 |
+| wait_for_element_visible_ok | mobile-paging-previous | 30000 |
+| wait_for_element_visible_ok | mobile-paging-first | 30000 |
+
+| *Comment* | Test Case: User Pages Thru Tags List test first button |  |
+| click_and_wait | mobile-paging-first | 30000 |
+| wait_for_element_visible_ok | link=Approved | 30000 |
+| wait_for_element_visible_ok | link=Northeast Symposium | 30000 |
+| text_like | qr/Approved.+customers.+Launch Event.+Northeast Symposium/ |  |
+| wait_for_element_not_present_ok | link=Planning | 30000 |
+| wait_for_element_visible_ok | mobile-paging-next | 30000 |
+| wait_for_element_not_present_ok | mobile-paging-previous | 30000 |
+| wait_for_element_not_present_ok | mobile-paging-first | 30000 |
+
+| *Comment* | Test Case: User Pages Thru Tags List pages by tag first page |  |
+| open_ok | /m/tag/rykerengineering/Workspace Usage Blog |  |
+| wait_for_element_visible_ok | link=Ryker Engineering Workspace Usage - 2010-11-22 - past week | 30000 |
+| wait_for_element_visible_ok | link=Ryker Engineering Workspace Usage - 2010-05-17 - past week | 30000 |
+| text_like | qr/2010-11-22.+2010-09-27.+2010-07-19.+2010-05-17/ |  |
+| text_like | days ago |  |
+| wait_for_element_not_present_ok | link=Ryker Engineering Workspace Usage - 2010-05-10 - past week | 30000 |
+| wait_for_element_visible_ok | mobile-paging-next | 30000 |
+| wait_for_element_not_present_ok | mobile-paging-previous | 30000 |
+| wait_for_element_not_present_ok | mobile-paging-first | 30000 |
+
+| *Comment* | Test Case: User Pages Thru Tags List pages by tag second page |  |
+| click_and_wait | mobile-paging-next | 30000 |
+| wait_for_element_visible_ok | link=Ryker Engineering Workspace Usage - 2010-05-10 - past week | 30000 |
+| wait_for_element_visible_ok | link=Ryker Engineering Workspace Usage - 2009-08-03 - past week | 30000 |
+| text_like | qr/2010-05-10.+2010-03-29.+2010-02-01.+2009-08-03/ |  |
+| wait_for_element_not_present_ok | link=Ryker Engineering Workspace Usage - 2010-05-17 - past week | 30000 |
+| wait_for_element_not_present_ok | link=Ryker Engineering Workspace Usage - 2009-07-27 - past week | 30000 |
+| wait_for_element_visible_ok | mobile-paging-next | 30000 |
+| wait_for_element_visible_ok | mobile-paging-previous | 30000 |
+| wait_for_element_visible_ok | mobile-paging-first | 30000 |
+
+| *Comment* | Test Case: User Pages Thru Tags List pages by tag last page |  |
+| open_ok | /m/tag/rykerengineering/Workspace Usage Blog?page=3 |  |
+| wait_for_element_visible_ok | link=Ryker Engineering Workspace Usage - 2009-03-09 - past week | 30000 |
+| wait_for_element_visible_ok | link=Ryker Engineering Workspace Usage - 2008-12-01 - past week | 30000 |
+| text_like | qr/2009-03-09.+2009-02-02.+2008-12-01/ |  |
+| wait_for_element_not_present_ok | link=Ryker Engineering Workspace Usage - 2009-03-16 - past week | 30000 |
+| wait_for_element_not_present_ok | mobile-paging-next | 30000 |
+| wait_for_element_visible_ok | mobile-paging-previous | 30000 |
+| wait_for_element_visible_ok | mobile-paging-first | 30000 |
+
+| *Comment* | Test Case: User Pages Thru Tags List pages by tag test previous button |  |
+| click_and_wait | mobile-paging-previous | 30000 |
+| wait_for_element_visible_ok | link=Ryker Engineering Workspace Usage - 2009-07-27 - past week | 30000 |
+| wait_for_element_visible_ok | link=Ryker Engineering Workspace Usage - 2009-03-16 - past week | 30000 |
+| text_like | qr/2009-07-27.+2009-06-22.+2009-04-20.+2009-03-16/ |  |
+| wait_for_element_not_present_ok | link=Ryker Engineering Workspace Usage - 2009-08-03 - past week | 30000 |
+| wait_for_element_not_present_ok | link=Ryker Engineering Workspace Usage - 2009-03-09 - past week | 30000 |
+| wait_for_element_visible_ok | mobile-paging-next | 30000 |
+| wait_for_element_visible_ok | mobile-paging-previous | 30000 |
+| wait_for_element_visible_ok | mobile-paging-first | 30000 |
+
+| *Comment* | Test Case: User Pages Thru Tags List pages by tag test first button |  |
+| click_and_wait | mobile-paging-first | 30000 |
+| wait_for_element_visible_ok | link=Ryker Engineering Workspace Usage - 2010-11-22 - past week | 30000 |
+| wait_for_element_visible_ok | link=Ryker Engineering Workspace Usage - 2010-05-17 - past week | 30000 |
+| text_like | qr/2010-11-22.+2010-09-27.+2010-07-19.+2010-05-17/ |  |
+| text_like | days ago |  |
+| wait_for_element_not_present_ok | link=Ryker Engineering Workspace Usage - 2010-05-10 - past week | 30000 |
+| wait_for_element_visible_ok | mobile-paging-next | 30000 |
+| wait_for_element_not_present_ok | mobile-paging-previous | 30000 |
+| wait_for_element_not_present_ok | mobile-paging-first | 30000 |
+
+| *Comment* | Test Case: User Pages Thru Tags List COMPLETED |

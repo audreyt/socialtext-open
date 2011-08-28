@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo BUILDING WIKIS FOR ALL CUSTOM SKINS
+
+for i in ` find $ST_CURRENT/nlw/share/skin  -maxdepth 1 -type l -printf "%f\n" | sort `  ; do 
+    $ST_CURRENT/nlw/bin/st-admin create-workspace --n st-$i-skin  --t "Skin $i" || true ;
+    $ST_CURRENT/nlw/bin/st-admin add-workspace-admin --w st-$i-skin  --e devnull1@socialtext.com || true ;
+    $ST_CURRENT/nlw/bin/st-admin set-workspace-config --w st-$i-skin  skin_name $i || true  ;
+done ;
+
+$ST_CURRENT/nlw/bin/ceq-rm /.+/
+    
+echo FINISHED BUILDING WIKIS FOR ALL CUSTOM SKINS

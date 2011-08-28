@@ -1,0 +1,165 @@
+| *Comment* | Test Case: Group Home Has Widgets |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Group Home Has Widgets Setup |  |  |
+| st-setup-a-group | 1 | 1 | 1 |
+| set | just_a_member | justgroupmbr%%start_time%%@matt.socialtext.net |  |
+| st-admin | create-user --e %%just_a_member%% --p %%password%% --account %%group_acct%% | was created |  |
+| st-admin | add-member --e %%just_a_member%% --g %%group_id%% | is now a member of |  |
+| st-admin | add-group-admin --g %%group_id%% --e %%group_user%% | is now a admin of the |  |
+
+| *Comment* | Test Case: Group Home Has Widgets Promote to admin, *do* see edit group or edit layout buttons |  |
+| open_ok | /st/group/%%group_id%% |  |
+| wait_for_element_visible_ok | st-edit-group | 30000 |
+| wait_for_element_visible_ok | st-edit-layout | 30000 |
+| click_ok | st-edit-layout |  |
+
+| *Comment* | Test Case: Group Home Has Widgets Click Edit Layout Add widget, revert to default widget is gone |  |
+| setSpeed | 1000 | Lots of click_oks, not click_and_waits here. Slowing down ... |
+| wait_for_text_present_ok | You are in layout mode. Click Save to keep your changes, Cancel to discard them. | 30000 |
+| wait_for_element_visible_ok | st-revert-layout | 30000 |
+| wait_for_element_visible_ok | st-cancel-layout | 30000 |
+| wait_for_element_visible_ok | st-save-layout | 30000 |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+| click_and_wait | st-cancel-layout | 30000 |
+| text_unlike | contentContainer | You are in layout mode. Click Save to keep your changes, Cancel to discard them. |
+
+| *Comment* | Test Case: Group Home Has Widgets Click Edit Layout Add widget, click cancel widget is gone |  |
+| wait_for_element_visible_ok | st-edit-layout | 30000 |
+| click_ok | st-edit-layout |  |
+| wait_for_text_present_ok | You are in layout mode. Click Save to keep your changes, Cancel to discard them. | 30000 |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+| click_ok | st-add-widget |  |
+| wait_for_element_visible_ok | //a[@id='gallery-widget-Wikipedia'] | 30000 |
+| click_ok | st-widget-opensocial-gallery-cancel |  |
+| wait_for_element_not_present_ok | //a[@id='gallery-widget-Wikipedia'] | 30000 |
+| click_ok | st-add-widget |  |
+| wait_for_element_visible_ok | //a[@id='gallery-widget-Wikipedia'] | 30000 |
+| click_ok | //a[@id='gallery-widget-Wikipedia'] |  |
+| wait_for_text_present_ok | Wikipedia | 30000 |
+| click_and_wait | st-cancel-layout |  |
+| text_unlike | contentContainer | You are in layout mode. Click Save to keep your changes, Cancel to discard them. |
+
+| *Comment* | Test Case: Group Home Has Widgets TEMPORARILY re-open until Cancel bug is fixed |  |
+| open_ok | /st/group/%%group_id%% |  |
+| text_unlike | contentContainer | Wikipedia |
+| wait_for_element_visible_ok | st-edit-layout | 10000 |
+| click_ok | st-edit-layout |  |
+| wait_for_text_present_ok | You are in layout mode. Click Save to keep your changes, Cancel to discard them. | 30000 |
+
+| *Comment* | Test Case: Group Home Has Widgets Click Edit Layout Add widget, see widget, save widget is present |  |
+| wait_for_element_visible_ok | st-add-widget | 10000 |
+| click_ok | st-add-widget |  |
+| wait_for_element_visible_ok | //a[@id='gallery-widget-Wikipedia'] | 30000 |
+| click_ok | //a[@id='gallery-widget-Wikipedia'] |  |
+| wait_for_element_not_present_ok | //a[@id='gallery-widget-Wikipedia'] | 10000 |
+
+| wait_for_text_present_ok | Wikipedia | 30000 |
+| text_like | `xpath=(//div[@class='widgetHeaderTitle'])[5]` | Wikipedia |
+| click_ok | st-save-layout |  |
+| wait_for_element_visible_ok | st-edit-group | 30000 |
+| wait_for_element_visible_ok | st-edit-layout | 30000 |
+| text_unlike | contentContainer | You are in layout mode. Click Save to keep your changes, Cancel to discard them. |
+| wait_for_text_present_ok | Wikipedia | 30000 |
+
+| *Comment* | Test Case: Group Home Has Widgets try xpath to widget headers |  |
+| text_like | `xpath=(//div[@class='widgetHeaderTitle'])[1]` | Information |
+| text_like | `xpath=(//div[@class='widgetHeaderTitle'])[2]` | Workspaces |
+| text_like | `xpath=(//div[@class='widgetHeaderTitle'])[5]` | Wikipedia |
+
+| *Comment* | Test Case: Group Home Has Widgets change widget preferences |  |
+| click_ok | st-edit-layout |  |
+| wait_for_text_present_ok | You are in layout mode | 30000 |
+| wait_for_element_visible_ok | `xpath=(//a[@class='settings'])[5]` | 30000 |
+| click_ok | `xpath=(//a[@class='settings'])[5]` |  |
+| wait_for_text_present_ok | Language: | 30000 |
+| wait_for_element_visible_ok | //select[@name='lang'] | 30000 |
+| select_ok | //select[@name='lang'] | label=French |
+| is_selected_ok | //select[@name='lang'] | label=French |
+| wait_for_element_visible_ok | `xpath=(//input[@type='submit' and @value="Save"])[5]` | 30000 |
+| click_ok | `xpath=(//input[@type='submit' and @value="Save"])[5]` |  |
+| wait_for_element_not_visible_ok | `xpath=(//input[@type='submit' and @value="Save"])[5]` | 30000 |
+| click_ok | st-save-layout |  |
+| wait_for_element_visible_ok | st-edit-group | 30000 |
+| wait_for_element_visible_ok | st-edit-layout | 30000 |
+
+| *Comment* | Test Case: Group Home Has Widgets verify changed preferences |  |
+| *Comment* | Must reopen profile to refresh widget IDs for Selenium |  |
+| open_ok | /st/group/%%group_id%% |  |
+| wait_for_element_visible_ok | st-edit-layout | 30000 |
+| st-name-widget | 5 | wiki |
+| st-widget-title-like | wiki | Wikipedia |
+| st-select-widget-frame | wiki |  |
+| text_like | //body | Wiki Search (French) |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Group Home Has Widgets use X button to remove widget |  |
+| click_ok | st-edit-layout |  |
+| wait_for_text_present_ok | You are in layout mode | 30000 |
+| wait_for_element_visible_ok | `xpath=(//a[@class='close'])[5]` | 30000 |
+| click_ok | `xpath=(//a[@class='close'])[5]` |  |
+| wait_for_text_not_present_ok | Wikipedia | 30000 |
+| click_ok | st-save-layout |  |
+| wait_for_element_visible_ok | st-edit-group | 30000 |
+| wait_for_element_visible_ok | st-edit-layout | 30000 |
+| wait_for_text_not_present_ok | Wikipedia | 30000 |
+| text_like | `xpath=(//div[@class='widgetHeaderTitle'])[5]` | All People Tags |
+
+| *Comment* | Test Case: Group Home Has Widgets add widget back |  |
+| wait_for_element_visible_ok | st-edit-layout | 10000 |
+| click_ok | st-edit-layout |  |
+| wait_for_text_present_ok | You are in layout mode. | 30000 |
+| wait_for_element_visible_ok | st-add-widget | 10000 |
+| click_ok | st-add-widget |  |
+| wait_for_element_visible_ok | //a[@id='gallery-widget-Wikipedia'] | 30000 |
+| click_ok | //a[@id='gallery-widget-Wikipedia'] |  |
+| wait_for_element_not_present_ok | //a[@id='gallery-widget-Wikipedia'] | 10000 |
+| wait_for_text_present_ok | Wikipedia | 30000 |
+| text_like | `xpath=(//div[@class='widgetHeaderTitle'])[5]` | Wikipedia |
+| click_ok | st-save-layout |  |
+| wait_for_text_present_ok | Wikipedia | 30000 |
+| wait_for_element_visible_ok | st-edit-group | 30000 |
+| wait_for_element_visible_ok | st-edit-layout | 30000 |
+| text_like | `xpath=(//div[@class='widgetHeaderTitle'])[5]` | Wikipedia |
+| text_unlike | contentContainer | You are in layout mode. Click Save to keep your changes, Cancel to discard them. |
+
+| *Comment* | Test Case: Group Home Has Widgets Login as non-member, see widget |  |
+| st-logoutin | %%just_a_member%% | %%password%% |
+| open_ok | /st/group/%%group_id%% |  |
+| wait_for_text_present_ok | Wikipedia | 30000 |
+
+| *Comment* | Test Case: Group Home Has Widgets Edit Layout, revert, click "no, I'm not sure", wikipedia widget is still present |  |
+| st-logoutin | %%group_user%% | %%password%% |
+| open_ok | /st/group/%%group_id%% |  |
+| wait_for_text_present_ok | Wikipedia | 30000 |
+| click_ok | st-edit-layout |  |
+| wait_for_text_present_ok | You are in layout mode. Click Save to keep your changes, Cancel to discard them. | 30000 |
+| wait_for_element_visible_ok | st-revert-layout | 30000 |
+| click_ok | st-revert-layout |  |
+| wait_for_element_visible_ok | dashboard-revert-yes | 30000 |
+| wait_for_element_visible_ok | dashboard-revert-no | 30000 |
+| click_ok | dashboard-revert-no |  |
+| wait_for_element_not_present_ok | dashboard-revert-yes | 30000 |
+| wait_for_element_not_present_ok | dashboard-revert-no | 30000 |
+| wait_for_text_present_ok | Wikipedia | 30000 |
+
+| *Comment* | Test Case: Group Home Has Widgets Edit Layout, click "yes I am sure", widget is gone but we are still on the edit layout page |  |
+| click_ok | st-revert-layout |  |
+| wait_for_element_visible_ok | dashboard-revert-yes | 30000 |
+| wait_for_element_visible_ok | dashboard-revert-no | 30000 |
+| click_ok | dashboard-revert-yes |  |
+| wait_for_text_not_present_ok | Wikipedia | 30000 |
+| wait_for_element_visible_ok | st-revert-layout | 30000 |
+| wait_for_element_visible_ok | st-cancel-layout | 30000 |
+| wait_for_element_visible_ok | st-save-layout | 30000 |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+
+| *Comment* | Test Case: Group Home Has Widgets TEARDOWN |  |
+| setSpeed | 0 |  |
+| st-process-jobs |  |  |
+| delete-group | %%group_id%% | Recklessly deleting group |
+| st-admin | deactivate-user --e %%just_a_member%% |  |
+| delete-account | %%group_acct%% |  |
+
+| *Comment* | Test Case: Group Home Has Widgets COMPLETED |  |

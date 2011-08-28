@@ -1,0 +1,155 @@
+* Fixture: SocialRest
+
+| standard-test-setup |
+| set            | default_username | %%username%%              |
+| set            | default_user_id  | %%user_id%%               |
+| set            | heavy_metals     | acct-metals%%start_time%% |
+| create-account | %%heavy_metals%% |                           |
+| set            | metal_id         | %%account_id%%            |
+
+## Setup: Create a group, add an admin and a some users.
+| *Comment* | Set up Group, membership |
+| set               | group1_name      | group%%start_time%%                        |                  |
+| create-group      | %%group1_name%%  | %%heavy_metals%%                           |                  |
+| set               | group1_id        | %%group_id%%                               |                  |
+| set               | admin            | admin%%start_time%%@ken.socialtext.net     |                  |
+| create-user       | %%admin%%        | password                                   | %%heavy_metals%% |
+| set               | admin_id         | %%user_id%%                                |                  |
+| add-user-to-group | %%admin_id%%     | %%group1_id%%                              | admin            |
+| set               | mercury          | mercury%%start_time%%@ken.socialtext.net   |                  |
+| create-user       | %%mercury%%      | password                                   | %%heavy_metals%% |
+| set               | mercury_id       | %%user_id%%                                |                  |
+| add-user-to-group | %%mercury_id%%   | %%group1_id%%                              |                  |
+| set               | zinc             | zinc%%start_time%%@ken.socialtext.net      |                  |
+| create-user       | %%zinc%%         | password                                   | %%heavy_metals%% |
+| set               | zinc_id          | %%user_id%%                                |                  |
+| add-user-to-group | %%zinc_id%%      | %%group1_id%%                              |                  |
+| set               | cobalt           | cobalt%%start_time%%@ken.socialtext.net    |                  |
+| create-user       | %%cobalt%%       | password                                   | %%heavy_metals%% |
+| set               | cobalt_id        | %%user_id%%                                |                  |
+| add-user-to-group | %%cobalt_id%%    | %%group1_id%%                              |                  |
+| set               | lead             | lead%%start_time%%@ken.socialtext.net      |                  |
+| create-user       | %%lead%%         | password                                   | %%heavy_metals%% |
+| set               | lead_id          | %%user_id%%                                |                  |
+| add-user-to-group | %%lead_id%%      | %%group1_id%%                              |                  |
+| set               | copper           | copper%%start_time%%@ken.socialtext.net    |                  |
+| create-user       | %%copper%%       | password                                   | %%heavy_metals%% |
+| set               | copper_id        | %%user_id%%                                |                  |
+| add-user-to-group | %%copper_id%%    | %%group1_id%%                              |                  |
+| set               | plutonium        | plutonium%%start_time%%@ken.socialtext.net |                  |
+| create-user       | %%plutonium%%    | password                                   | %%heavy_metals%% |
+| set               | plutonium_id     | %%user_id%%                                |                  |
+| add-user-to-group | %%plutonium_id%% | %%group1_id%%                              |                  |
+################################################################################
+
+| http-user-pass | %%default_username%% | password |
+
+## POST, Group Not Found
+| *Comment* | POST, Group Not Found |
+| POST-json | /data/groups/0/trash | {"user_id":"1"} |
+| code-is   | 404                  |                 |
+
+## POST, User is not an Admin
+| *Comment* | POST, default user is un-related to group |
+| POST-json | /data/groups/%%group1_id%%/trash | {"user_id":"1"} |
+| code-is   | 404                             |                 |
+
+| *Comment*      | mercury is related by account to the group, but not an admin |
+| http-user-pass | %%mercury%%                     | password        |
+| POST-json      | /data/groups/%%group1_id%%/trash | {"user_id":"1"} |
+| code-is        | 403                             |                 |
+
+## Log in as a Group admin
+| *Comment* | Log in as a Group admin |
+| http-user-pass | %%admin%% | password |
+
+## Check Group for proper membership
+| *Comment*       | Check Group for proper membership |
+| GET-json        | /data/groups/%%group1_id%%/users   |
+| code-is         | 200                               |
+| json-parse      |                                   |
+| json-array-size | 7                                 |
+
+## Delete one user using user_id
+| *Comment* | Delete one user using user_id |
+| POST-json | /data/groups/%%group1_id%%/trash | {"user_id":"%%mercury_id%%"} |
+| code-is   | 204                             |                              |
+
+## Delete one user using username 
+| *Comment* | Delete one user using username |
+| POST-json | /data/groups/%%group1_id%%/trash | {"username":"%%zinc%%"} |
+| code-is   | 204                             |                         |
+
+## Delete multiple users
+| *Comment* | Delete multiple users |
+| POST-json | /data/groups/%%group1_id%%/trash | [{"username":"%%cobalt%%"},{"user_id":"%%lead_id%%"},{"user_id":"%%copper_id%%"}] |
+| code-is   | 204                             |                                                                                   |
+
+## Bad request for multiple delete doesn't delete anyone
+| *Comment*       | Bad request for multiple delete doesn't delete anyone |                                                           |
+| GET-json        | /data/groups/%%group1_id%%/users |                                                           |
+| code-is         | 200                             |                                                           |
+| json-parse      |                                 |                                                           |
+| json-array-size | 2                               |                                                           |
+
+| POST-json       | /data/groups/%%group1_id%%/trash | [{"username":"%%plutonium%%"},{"username":"enosuchname"}] |
+| code-is         | 400                             |                                                           |
+
+| GET-json        | /data/groups/%%group1_id%%/users |                                                           |
+| code-is         | 200                             |                                                           |
+| json-parse      |                                 |                                                           |
+| json-array-size | 2                               |                                                           |
+
+## Set up a new group with only an admin
+| set               | group2_name     | group2_%%start_time%% |           |
+| create-group      | %%group2_name%% | %%heavy_metals%%      | %%admin%% |
+| set               | group2_id       | %%group_id%%          |           |
+| add-user-to-group | %%mercury%%     | %%group2_id%%         |           |
+
+| *Comment* | Trying to remove the only admin from a group fails |
+| POST-json | /data/groups/%%group2_id%%/trash               | [{"username":"%%admin%%"}] |
+| code-is   | 409                                            |                            |
+| body-like | The group needs to include at least one admin. |                            |
+
+| *Comment*  | Try to remove all admins: check for rollback |
+| GET-json   | /data/groups/%%group2_id%%/users                |
+| code-is    | 200                                             |
+| json-parse |                                                 |
+| json-like  | [{"username":"%%admin%%", "role_name":"admin"}] |
+| json-like  | [{"username":"%%mercury%%"}]                    |
+
+## Group is self-join, non-admin user addition and removal
+| group-permission-set | %%group2_id%% | self-join |
+| http-user-pass       | %%copper%%    | password  |
+
+| *Comment* | non-admin can see self-join group |
+| GET-json   | /data/groups/%%group2_id%%/users                |
+| code-is    | 200                                             |
+
+### Add user to group
+| add-user-to-group | %%copper%% | %%group2_id%% |
+
+| *Comment* | user is in group |
+| GET-json  | /data/groups/%%group2_id%%/users |
+| code-is   | 200                              |
+| body-like | %%copper%%                       |
+
+| *Comment* | non-admin cannot remove other users |
+| POST-json | /data/groups/%%group2_id%%/trash    | [{"username":"%%mercury%%"}] |
+| code-is   | 403                                 |                              |
+
+| *Comment* | non-admins can remove themselves |
+| POST-json | /data/groups/%%group2_id%%/trash | [{"username":"%%copper%%"}] |
+| code-is   | 204                              |                             |
+
+## Private Group, non-admin self-removal
+| set               | group3     | group3-%%start_time%% |            |  |         |
+| create-group      | %%group3%% | %%account%%           | %%copper%% |  | private |
+| set               | group3_id  | %%group_id%%          |            |  |         |
+| add-user-to-group | %%lead%%   | %%group_id%%          | member     |  |         |
+
+## Log in as lead, try to remove self
+| *Comment* | Log in as lead, try to remove self |
+| http-user-pass | %%lead%%                         | password                |
+| POST-json      | /data/groups/%%group3_id%%/trash | {"username":"%%lead%%"} |
+| code-is        | 204                              |                         |

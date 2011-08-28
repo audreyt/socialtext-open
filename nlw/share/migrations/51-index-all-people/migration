@@ -1,0 +1,9 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::Migration::Utils qw/create_job/;
+
+create_job('ReindexPeople');
+
+exit 0;

@@ -1,0 +1,102 @@
+| *Comment* | Test Case: Activities Widget Followers |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Activities Widget Followers Create Account and Three users |  |
+| set | shortfollow | following%%start_time%% |
+| set | followinguser | %%shortfollow%%@ken.socialtext.net |
+| set | shortnot | justme%%start_time%% |
+| set | notfollowinguser | %%shortnot%%@ken.socialtext.net |
+| set | shortloggedin | awf%%start_time%% |
+| set | loggedinuser | %%shortloggedin%%@ken.socialtext.net |
+| set | followws | follow-ws-%%start_time%% |
+| set | followacct | followacct%%start_time%% |
+
+| st-admin | create-account --name %%followacct%% |  |
+| st-admin | enable-plugin --account %%followacct%% --plugin dashboard |  |
+| st-admin | enable-plugin --account %%followacct%% --plugin people |  |
+| st-admin | enable-plugin --account %%followacct%% --plugin signals |  |
+| st-admin | create-workspace --empty --name %%followws%% --title %%followws%% --account %%followacct%% |  |
+| st-admin | create-user --email %%followinguser%% --password %%password%% --account %%followacct%% |  |
+| st-admin | add-member --workspace %%followws%% --email %%followinguser%% |  |
+| st-admin | create-user --email %%notfollowinguser%% --password %%password%% --account %%followacct%% |  |
+| st-admin | add-member --workspace %%followws%% --email %%notfollowinguser%% |  |
+| st-admin | create-user --email %%loggedinuser%% --password %%password%% --account %%followacct%% |  |
+| st-admin | add-member --workspace %%followws%% --email %%loggedinuser%% |  |
+
+| *Comment* | Test Case: Activities Widget Followers Login as %%followinguser%% |  |
+| st-logoutin | %%followinguser%% | %%password%% |
+
+| *Comment* | Test Case: Activities Widget Followers%%followinguser%%, create a page and send a signal |  |
+| open_ok | /%%followws%%/ |  |
+| st-create-wikipage | %%followws%% | pageone |
+| st-single-widget-in-dashboard | gallery-widget-Activities |  |
+| st-name-widget | 1 | activities_widget |
+| st-send-signal-via-activities-widget | activities_widget | You should see this %%start_time%% |
+
+| *Comment* | Test Case: Activities Widget Followers Login as %%notfollowinguser%%, create a page and send a signal |  |
+| st-logoutin | %%notfollowinguser%% | %%password%% |
+| open_ok | /%%followws%%/ |  |
+| st-create-wikipage | %%followws%% | donotseethispage |
+| st-single-widget-in-dashboard | gallery-widget-Activities |  |
+| st-name-widget | 1 | activities_widget |
+| st-send-signal-via-activities-widget | activities_widget | Signal from not a follower %%start_time%% |
+
+| *Comment* | Test Case: Activities Widget Followers Login as %%loggedinuser%%, add widget, set length to 25 |  |
+| st-logoutin | %%loggedinuser%% | %%password%% |
+| open_ok | /%%followws%%/ |  |
+| st-find-user | %%shortfollow%% |  |
+| wait_for_element_visible_ok | new_tag | 30000 |
+| wait_for_element_visible_ok | link=Follow this person | 30000 |
+
+| pause_ok | 5000 | needed for IE7. Serious. Sorry about that. |
+| click_ok | link=Follow this person |  |
+| wait_for_element_visible_ok | link=Stop following this person | 30000 |
+| st-single-widget-in-dashboard | gallery-widget-Activities |  |
+| st-name-widget | 1 | activities_widget |
+| st-widget-settings | activities_widget |  |
+| wait_for_element_visible_ok | limit | 30000 |
+| select_ok | limit | 25 |
+| click_ok | st-savebutton-%%activities_widget%% |  |
+| wait_for_element_not_visible_ok | limit | 30000 |
+| wait_for_element_not_visible_ok | st-savebutton-%%activities_widget%% | 30000 |
+
+| set | r1 | Signal.+from.+not.+a.+follower.+%%start_time%%.+%%shortnot%%.+ago\s*to.+%%followacct%% |
+| set | r2 | %%shortnot%%.+ago.+edited.+donotseethispage.+in.+%%followws%% |
+| set | r3 | You.+should.+see.+this.+%%start_time%%.+ %%shortfollow%%.+ago\s*to.+%%followacct%% |
+| set | r4 | %%shortfollow%%.+ago.+edited.+pageone.+in.+%%followws%% |
+
+| *Comment* | Test Case: Activities Widget Followers reopen dashboard |  |
+| open_ok | /st/dashboard |  |
+
+| *Comment* | Test Case: Activities Widget Followers %%loggedinuser%%, see all activities |  |
+| st_verify_text_in_activities_widget | activities_widget | qr/%%r1%%/ism |
+| st_verify_text_in_activities_widget | activities_widget | qr/%%r2%%/ism |
+| st_verify_text_in_activities_widget | activities_widget | qr/%%r3%%/ism |
+| st_verify_text_in_activities_widget | activities_widget | qr/%%r4%%/ism |
+
+| *Comment* | Test Case: Activities Widget Followers %%loggedinuser%%, change to people I follow, see only %%shortfollow%%'s activity |  |
+| wait_for_element_present_ok | link=people I follow | 5000 |
+| click_ok | link=people I follow |  |
+| st_verify_text_in_activities_widget | activities_widget | qr/%%r3%%/ism |
+| st_verify_text_in_activities_widget | activities_widget | qr/%%r4%%/ism |
+| st_text_unlike_in_activities_widget | activities_widget | qr/%%r1%%/ism |
+| st_text_unlike_in_activities_widget | activities_widget | qr/%%r2%%/ism |
+
+| *Comment* | Test Case: Activities Widget Followers %%loggedinuser%%, change to everyone, see all activities |  |
+| wait_for_element_present_ok | link=everyone | 5000 |
+| click_ok | link=everyone |  |
+| st_verify_text_in_activities_widget | activities_widget | qr/%%r1%%/ism |
+| st_verify_text_in_activities_widget | activities_widget | qr/%%r2%%/ism |
+| st_verify_text_in_activities_widget | activities_widget | qr/%%r3%%/ism |
+| st_verify_text_in_activities_widget | activities_widget | qr/%%r4%%/ism |
+
+| *Comment* | Test Case: Activities Widget Followers TEARDOWN |  |
+| st-process-jobs |  |  |
+| delete-workspace | %%followws%% | Recklessly |
+| st-admin | deactivate-user --email %%followinguser%% |  |
+| st-admin | deactivate-user --email %%notfollowinguser%% |  |
+| st-admin | deactivate-user --email %%loggedinuser%% |  |
+| delete-account | %%followacct%% |  |
+
+| *Comment* | Test Case: Activities Widget Followers COMPLETED |

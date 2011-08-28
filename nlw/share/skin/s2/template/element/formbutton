@@ -1,0 +1,15 @@
+[% corners = 'straight' UNLESS corners %]
+
+<table class="button-table"><tr><td>
+    <div class="button-[% corners %]">
+        <div class="button-[% corners %]-right-top">
+            <div class="button-[% corners %]-left-bottom">
+                <div class="button-[% corners %]-right-bottom">
+                    <div class="button-content">
+                        <input class="submit" type="[% type  || 'submit' %]" name="[% name || 'Button' | html %]" value="[% value | html %]" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</td></tr></table>

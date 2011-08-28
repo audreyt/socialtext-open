@@ -1,0 +1,24 @@
+#!/usr/bin/env perl
+#@COPYRIGHT@
+
+use strict;
+use warnings;
+use Socialtext::Schema;
+use Socialtext::SQL qw/sql_execute/;
+
+my $storage_exists = table_exists('storage');
+my $event_exists = table_exists('event');
+
+my $schema = Socialtext::Schema->new;
+if ( $schema->current_version == 3 and $storage_exists and $event_exists ) {
+    exit 0;
+}
+exit 1;
+
+
+sub table_exists {
+    my $name = shift;
+    my $sth = sql_execute("select 1 FROM pg_tables WHERE tablename = ?", $name);
+    my $rows = $sth->fetchall_arrayref;
+    return @$rows;
+}

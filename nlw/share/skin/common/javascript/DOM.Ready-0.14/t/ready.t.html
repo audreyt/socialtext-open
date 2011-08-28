@@ -1,0 +1,67 @@
+<html>
+
+<head>
+ <script type="text/javascript" src="lib/JSAN.js"></script>
+ <script type="text/javascript">
+  JSAN.addRepository("lib", "../lib");
+  JSAN.errorLevel = "die";
+  JSAN.use("Test.More");
+  JSAN.use("DOM.Ready");
+ </script>
+ <script type="text/javascript">
+  var on_ready_called;
+  var found_dom_method;
+  var found_body;
+
+  DOM.Ready._resetClass();
+
+  DOM.Ready.onDOMDone( DOM.Ready._stopTimer );
+
+  DOM.Ready.onDOMReady( function () {
+      on_ready_called = 1;
+
+      if ( typeof document.getElementsByTagName != 'undefined' )
+      { found_dom_method = 1 }
+
+      if ( document.getElementsByTagName('body')[0] != null
+           || document.body != null )
+      { found_body = 1 }
+  } );
+
+  var found_id1;
+  DOM.Ready.onIdReady( "id1", function () { found_id1 = 1 } );
+ </script>
+</head>
+<body>
+
+ <div id="id1"></div>
+ <div id="id2"></div>
+
+ <pre style="white-space: pre" id="test"><script>
+  plan({ tests: 7 });
+
+  ok( DOM.Ready._checkDOMReady(), "DOM should be ready inside body" );
+
+  DOM.Ready.runCallbacks();
+
+  ok( on_ready_called,
+      "onDOMReady callback set in head was called" ); 
+
+  ok( found_dom_method,
+      "document.getElementsByTagName method was ready when onDOMReady callback was called" ); 
+
+  ok( found_body, "document body was ready when onDOMReady callback was called" ); 
+
+  ok( found_id1, "id1 was ready when onIdReady callback was called" ); 
+
+  DOM.Ready.onDOMReady( function () {
+      ok( 1, "onDOMReady from body works" );
+  } );
+
+  DOM.Ready.onIdReady( "id2", function () {
+      ok( 1, "onIdReady from body works" );
+  } );
+</script></pre>
+
+</body>
+</html>

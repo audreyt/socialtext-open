@@ -1,0 +1,81 @@
+
+
+
+
+
+
+
+
+ WORKSPACES
+
+
+
+
+
+
+
+
+
+ ACCOUNTS
+
+
+
+
+
+ PLUGINS
+
+
+
+
+
+
+
+
+ GOOGLE ANALYTICS
+set-google-analytics --account <name> --code <code>
+[--domains <single â multiple-subdomains â multiple-
+
+domains>]
+
+
+
+ clear-google-analytics --account <name>
+show-google-analytics --account <name>
+
+
+
+
+
+index-people
+index-groups
+index-signals
+
+
+
+ PROFILE (only available with Socialtext People)
+
+ add-profile-field --name [--account] [--title --field-class --source]
+[--hidden â --visible]
+set-profile-field --name [--account] [--title --field-class --source]
+[--hidden â --visible]
+
+
+
+ GROUPS
+
+ list-groups [--account or --workspace]
+show-group-config --group
+create-group (--ldap-dn or --name) [--account] [--email] [--
+
+permissions]
+
+
+
+
+
+ add-account-impersonator --group --account
+remove-account-impersonator --group --account
+add-group-admin --group [ --username or --email ]
+remove-group-admin --group [ --username or --email ]
+
+ delete-group --group

@@ -1,0 +1,190 @@
+| *Comment* | Test Case: Invite people. |  |
+| *Comment* | Test Case: Invite people. This test is part of Signals Only and should not use Dashboard |  |
+
+| *Comment* | Test Case: Invite people. Define a fresh account and a user in it |  |
+| set | acct | IPN %%start_time%% |
+| set | acct_user | `ipn-%%start_time%%@ken.socialtext.net` |
+| set | eacct_user | ipn-%%start_time%%\@ken.socialtext.net |
+
+| *Comment* | Test Case: Invite people. Restrict domain. |  |
+| set | rest_acct | restrictedacct%%start_time%% |
+| set | domain | xndev.com |
+| set | emailok | `matt%%start_time%%@%%domain%%` |
+| set | emailok2 | `ken%%start_time%%@%%domain%%` |
+| set | emailbad | `matt%%start_time%%@foofoo.com` |
+| set | eemailok2 | ken%%start_time%%\@%%domain%% |
+| set | eemailbad | matt%%start_time%%\@foofoo.com |
+
+| st-admin | create-account --name %%rest_acct%% |  |
+| st-admin | set-account-config --account %%rest_acct%% restrict_to_domain %%domain%% |  |
+| st-admin | create-user --email %%emailok%% --password %%password%% --account %%rest_acct%% |  |
+| st-config | set allow_network_invitation 1 |  |
+| st-admin | set-account-config --account %%rest_acct%% allow_invitation 1 | has been updated |
+| st-admin | enable-plugin --account %%rest_acct%% --plugin people |  |
+
+THIS TEST SHOULD NOT USE DASHBOARD
+
+ st-admin | enable-plugin --account %%rest_acct%% --plugin dashboard | |
+
+| st-logoutin | %%emailok%% | %%password%% |
+| open_ok | / |  |
+| wait_for_element_visible_ok | link=Invite! | 30000 |
+| click_ok | link=Invite! |  |
+| wait_for_element_present_ok | link=Cancel | 30000 |
+| wait_for_element_present_ok | link=Contact Support | 30000 |
+| text_like | You can only invite people who share the %%domain%% email domain with you. |  |
+| wait_for_element_present_ok | users_new_ids | 30000 |
+| type_ok | users_new_ids | %%emailok2%% |
+| click_ok | link=Invite |  |
+| wait_for_element_visible_ok | Link=Invite more people | 30000 |
+| text_like | qr/The following 1 user was successfully invited into this Group:\s+%%eemailok2%%/ |  |
+| click_ok | Link=Invite more people |  |
+| pause | 20000 |  |
+| wait_for_element_present_ok | link=Cancel | 30000 |
+| wait_for_element_present_ok | users_new_ids | 30000 |
+| type_ok | users_new_ids | %%emailbad%% |
+| click_ok | link=Invite |  |
+| wait_for_element_visible_ok | Link=Invite more people | 30000 |
+| text_like | qr/Sorry, the following 1 email address is not in the domain xndev.com\s+%%eemailbad%%/ |  |
+
+| st-logoutin | %%username%% | %%password%% |
+
+| *Comment* | Test Case: Invite people. Define a brand new user to invite. Make the email address of that user a wiki |  |
+| set | to_ws | ipn-ws-%%start_time%% |
+| set | to_ws_user | %%to_ws%%@%%wikiemail%% |
+| set | eto_ws_user | %%to_ws%%\@%%wikiemail%% |
+
+| *Comment* | Test Case: Invite people. Create new acct, user in it, and brand new (workspace == new user) |  |
+| *Comment* | Test Case: Invite people. Default allow_invitations is YES |  |
+| *Comment* | The user to be invited is %%to_ws_user%% and the wiki to be created is %%to_ws%%, so the user email addr and wiki email addr are identical, so we can read the email in the wiki! |  |
+
+| st-admin | create-account --name "%%acct%%" | created |
+| st-admin | create-user --e %%acct_user%% --p %%password%% --account "%%acct%%" | created |
+| st-admin | create-workspace --empty --name %%to_ws%% --title "IPN %%to_ws%%" --account "%%acct%%" --empty | created |
+
+| *Comment* | Test Case: Invite people. Define a user in an entirely different account |  |
+| set | social | `ipn-social-%%start_time%%@ken.socialtext.net` |
+| set | esocial | `ipn-social-%%start_time%%\@ken.socialtext.net` |
+| st-admin | create-user --e %%social%% --p %%password%% --acc Socialtext |  |
+
+| *Comment* | Test Case: Invite people. Add the test user to the new workspace so he can login and click the new user's verification link |  |
+| st-admin | add-workspace-admin --w %%to_ws%% --e %%email%% |  |
+
+| *Comment* | Test Case: Invite people. Login as account user |  |
+| open-ok | /nlw/submit/logout |  |
+| wait_for_element_visible_ok | username | 30000 |
+| wait_for_element_visible_ok | password | 30000 |
+| type_ok | username | %%acct_user%% |
+| type_ok | password | %%password%% |
+| click_and_wait | login_btn |  |
+
+| *Comment* | Test Case: Invite people. Disable People, verify cannot invite |  |
+| st-admin | disable-plugin --account "%%acct%%" --plugin people |  |
+| open_ok | / |  |
+| wait_for_element_visible_ok | link=Workspaces | 30000 |
+| wait_for_element_not_present_ok | st-wiki-subnav-link-invite | 30000 |
+
+TODO: verify cannot actually issue invitations via URL
+
+| *Comment* | Test Case: Invite people. Enable People, verify can invite |  |
+| st-admin | enable-plugin --account "%%acct%%" --plugin people | is now enabled |
+| open_ok | / |  |
+| wait_for_element_visible_ok | link=Workspaces | 30000 |
+| wait_for_element_visible_ok | st-wiki-subnav-link-invite | 30000 |
+
+| *Comment* | Test Case: Invite people. Invite UI |  |
+| click_and_wait | st-wiki-subnav-link-invite |  |
+| wait_for_element_visible_ok | object_id | 30000 |
+| select_ok | object_id | index=0 |
+| is_selected_ok | object_id | index=0 |
+
+| *Comment* | Test Case: Invite people. Invite four users to this Group |  |
+| *Comment* | existing member, brand new user, %%email%% in another Group, and a malformed email addr |  |
+| type_ok | users_new_ids | %%acct_user%%\n%%to_ws_user%%\n%%social%%\nfoo2bar.com |
+| check_ok | append_invitation |  |
+| type_ok | invitation_text | Here is an invitation from %%acct_user%% to join my %%acct%% Group. w00t! |
+| click_and_wait | link=Invite |  |
+
+| *Comment* | Test Case: Invite people. Verify the invitations |  |
+| text_like | Invite people to %%acct%% |  |
+| text_like | qr/The following 1 user was already a member of this Group:\s+%%eacct_user%%/ism |  |
+| text_like | qr/The following 2 users were successfully invited into this Group:.+%%esocial%%/ism |  |
+| text_like | qr/The following 2 users were successfully invited into this Group:.+%%eto_ws_user%%/ism |  |
+| text_like | qr/The following 1 email address was invalid:\s+foo2bar.com/ |  |
+| click_and_wait | link=Invite more people |  |
+| text_like | qr/Invite people to your group/ism |  |
+
+| *Comment* | Test Case: Invite people. Check /control to make sure esocial's account has not changed |  |
+| st-admin | give-accounts-admin --e %%acct_user%% | now has accounts admin |
+| open_ok | /nlw/control/user?username=%%social%% |  |
+| wait_for_element_visible_ok | link=Socialtext | 30000 |
+| text_like | qr/Socialtext.+Primary Account/ism |  |
+| open_ok | / |  |
+| st-logoutin |  |  |
+
+| *Comment* | Test Case: Invite people. Pause 90 seconds for invitation email delivery |  |
+| pause | 90000 |  |
+
+| *Comment* | Test Case: Invite people. login as %%email%% so you can see the confirmation email |  |
+
+| open_ok | /%%to_ws%%/?action=recent_changes |  |
+| wait_for_element_visible_ok | link=I'm inviting you into the %%acct%% group | 30000 |
+| click_and_wait | link=I'm inviting you into the %%acct%% group |  |
+
+| *Comment* | Test Case: Invite people. click the confirmation link |  |
+| *Comment* | e.g. `http://talc.socialtext.net:22004/nlw/submit/confirm_email?hash=9XMPtamvY4oV4xJKpZgq%2B3iRVVc` |  |
+| text_like | Here is an invitation from %%acct_user%% to join my %%acct%% Group. w00t! |  |
+| wait_for_element_visible_ok | //a[contains(@href,'confirm_email')] | 30000 |
+| click_ok | //a[contains(@href,'confirm_email')] |  |
+
+| *Comment* | Test Case: Invite people. Choose Password opens in new window |  |
+| pause | 15000 |  |
+| selectWindow | Choose Password |  |
+
+| *Comment* | Test Case: Invite people. Choose a pwd and log in |  |
+| text_like | Choose Password |  |
+| text_like | qr/Username:\s+%%eto_ws_user%%/ |  |
+| wait_for_element_visible_ok | password | 30000 |
+| wait_for_element_visible_ok | password2 | 30000 |
+| type_ok | password | %%password%% |
+| type_ok | password2 | %%password%% |
+| click_and_wait | link=Register |  |
+
+| *Comment* | Test Case: Invite people. Go Home. No workspaces |  |
+| *Comment* | Test Case: Invite people. Disable invitations |  |
+| wait_for_element_visible_ok | st-wiki-subnav-link-invite | 30000 |
+| st-admin | set-account-config --account "%%acct%%" allow_invitation 0 | The account config for %%acct%% has been updated |
+| click_and_wait | link=Workspaces |  |
+| wait_for_element_visible_ok | link=Workspaces | 30000 |
+| wait_for_element_not_present_ok | st-wiki-subnav-link-invite | 5000 |
+
+| *Comment* | Test Case: Invite people. Re-enable invitations |  |
+| st-admin | set-account-config --account "%%acct%%" allow_invitation 1 | The account config for %%acct%% has been updated |
+| click_and_wait | link=Workspaces |  |
+| wait_for_element_visible_ok | link=Workspaces | 30000 |
+| wait_for_element_visible_ok | st-wiki-subnav-link-invite | 30000 |
+
+| *Comment* | Test Case: Invite people. Invite UI for new user |  |
+| click_and_wait | st-wiki-subnav-link-invite |  |
+| wait_for_element_visible_ok | object_id | 30000 |
+| select_ok | object_id | index=0 |
+| is_selected_ok | object_id | index=0 |
+
+| *Comment* | Test Case: Invite people. Invite guest user |  |
+| type_ok | users_new_ids | guest@socialtext.net |
+| type_ok | invitation_text | Here is an attempt to invite a system-created user which should fail |
+| click_and_wait | link=Invite |  |
+| text_like | Cannot give a role to a system-created user |  |
+
+| *Comment* | Test Case: Invite people TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%emailok%% |  |
+| deactivate-user | %%emailok2%% |  |
+| deactivate-user | %%acct_user%% |  |
+| deactivate-user | %%social%% |  |
+| st-admin | delete-workspace --w %%to_ws%% --no-export | has been deleted |
+| st-admin | remove-accounts-admin --e %%acct_user%% | no longer has accounts admin |
+| delete-account | %%rest_acct%% |  |
+| delete-account | %%acct%% |  |
+
+| *Comment* | Test Case: Invite people COMPLETED |  |

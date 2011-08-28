@@ -1,0 +1,90 @@
+Test the STLogin challenger, to make sure it redirects to the proper login page.
+
+* Fixture: SocialRest
+
+| *Comment*      | Setup                  |
+| st-config      | set challenger STLogin |
+| http-user-pass |                        |
+
+# Make sure that "/challenge?..." handles things on its own; it shouldn't need
+# to add an extra redirect in it to "/challenge/?..."
+
+| *Comment*     | Challenge handles without directory redirect |             |
+| GET           | /challenge?/                                 |             |
+| code-is       | 302                                          |             |
+| header-unlike | Location                                     | /challenge/ |
+
+| *Comment*   | /m/ URLs go to Miki login page |                           |
+| GET | /challenge/?/m |
+| code-is     | 302                            |                           |
+| header-like | Location                       | /m/login?redirect_to=%2Fm |
+
+| GET         | /m                             |                           |
+| code-is     | 302                            |                           |
+| header-like | Location                       | /m/login?redirect_to=%2Fm |
+
+| GET         | /m/      |                           |
+| code-is     | 302      |                           |
+| header-like | Location | /m/login?redirect_to=%2Fm |
+
+| GET         | /m/signals |                                     |
+| code-is     | 302        |                                     |
+| header-like | Location   | /m/login?redirect_to=%2Fm%2Fsignals |
+
+| *Comment*   | /lite/ URLs go to Miki login page |                           |
+| GET         | /lite                             |                           |
+| code-is     | 302                               |                           |
+| header-like | Location                          | /m/login?redirect_to=%2Fm |
+
+| GET         | /lite/   |                           |
+| code-is     | 302      |                           |
+| header-like | Location | /m/login?redirect_to=%2Fm |
+
+| GET         | /lite/signals |                                     |
+| code-is     | 302           |                                     |
+| header-like | Location      | /m/login?redirect_to=%2Fm%2Fsignals |
+
+| *Comment*      | Mobile browsers go to Miki login page |
+| set-user-agent | BlackBerry                            |
+
+| GET         | /st/signals             |                                      |
+| code-is     | 302                     |                                      |
+| header-like | Location                | /challenge?/st/signals               |
+| GET         | /challenge/?/st/signals |                                      |
+| code-is     | 302                     |                                      |
+| header-like | Location                | /m/login?redirect_to=%2Fst%2Fsignals |
+
+| GET         | /st/dashboard             |                                        |
+| code-is     | 302                       |                                        |
+| header-like | Location                  | /challenge?/st/dashboard               |
+| GET         | /challenge/?/st/dashboard |                                        |
+| code-is     | 302                       |                                        |
+| header-like | Location                  | /m/login?redirect_to=%2Fst%2Fdashboard |
+
+| GET         | /admin/index.cgi |                                             |
+| code-is     | 302              |                                             |
+| header-like | Location         | /m/page/admin/                              |
+| GET         | /m/page/admin/   |                                             |
+| code-is     | 302              |                                             |
+| header-like | Location         | /m/login?redirect_to=%2Fm%2Fpage%2Fadmin%2F |
+
+| set-user-agent | Mozilla |
+
+| *Comment*   | Everything else goes to regular login page |                                             |
+| GET         | /st/signals                                |                                             |
+| code-is     | 302                                        |                                             |
+| header-like | Location                                   | /challenge?/st/signals                      |
+| GET         | /challenge/?/st/signals                    |                                             |
+| code-is     | 302                                        |                                             |
+| header-like | Location                                   | /nlw/login.html?redirect_to=%2Fst%2Fsignals |
+
+| GET         | /st/dashboard             |                                               |
+| code-is     | 302                       |                                               |
+| header-like | Location                  | /challenge?/st/dashboard                      |
+| GET         | /challenge/?/st/dashboard |                                               |
+| code-is     | 302                       |                                               |
+| header-like | Location                  | /nlw/login.html?redirect_to=%2Fst%2Fdashboard |
+
+| GET         | /admin/index.cgi |                                                  |
+| code-is     | 302              |                                                  |
+| header-like | Location         | /nlw/login.html?redirect_to=%2Fadmin%2Findex.cgi |

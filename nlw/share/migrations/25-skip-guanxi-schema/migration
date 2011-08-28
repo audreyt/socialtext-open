@@ -1,0 +1,13 @@
+#!/usr/bin/env perl
+#@COPYRIGHT@
+
+use strict;
+use warnings;
+use Socialtext::Schema;
+use FindBin;
+
+my $s = Socialtext::Schema->new;
+$s->run_sql_file("$FindBin::Bin/recreate-storage-table.sql");
+$s->set_schema_version(3);
+
+exit 0;

@@ -1,0 +1,49 @@
+Tests for [Story: Groups ReST API]
+
+* Fixture: SocialRest
+
+| standard-test-setup |         |                                  |
+| delete-all-groups | |
+| st-ldap             | start   |                                  |
+| set                 | ldap_dn | cn=Hawkwind,dc=socialtext,dc=com |
+
+# POST to /data/groups to add an LDAP group to the system
+# ... post takes ldap_dn and account id as parameters
+# ... ... json support only
+# ... Non-admin gets a 401
+
+| POST_json | /data/groups | {"ldap_dn":"%%ldap_dn%%","account_id":"%%account_id%%"} |
+| code-is   | 401          |                                                         |
+
+# ... admin gets a 201 (assuming success) 
+| set-business-admin | %%username%% | 1 |
+
+## Now post an existing ldap group
+| POST_json | /data/groups | {"ldap_dn":"%%ldap_dn%%","account_id":"%%account_id%%"} |
+| code-is   | 201          |                                                         |
+
+| GET         | /data/groups?all=1 |         |
+| code-is     | 200                |         |
+| header-like | Cache-Control      | private |
+| body-like   | Hawkwind           |         |
+
+## Post the group again (should fail; we've already loaded it)
+| POST_json | /data/groups         | {"ldap_dn":"%%ldap_dn%%","account_id":"%%account_id%%"} |
+| code-is   | 400                  |                                                         |
+| body-like | group already exists |                                                         |
+
+# ... admin gets a 404? 406? status code if the group is not in LDAP
+| POST_json | /data/groups              | {"ldap_dn":"cn=NoExisty,dc=socialtext,dc=com","account_id":"%%account_id%%"} |
+| code-is   | 400                       |                                                                              |
+| body-like | ldap group does not exist |                                                                              |
+
+## Create another group and try to add it to a workspace.
+| set              | motorhead      | cn=Motorhead,dc=socialtext,dc=com |       |
+| set              | motorspace     | motorspace-%%start_time%%         |       |
+| create-workspace | %%motorspace%% |                                   |       |
+| set              | motorspace_id  | %%workspace_id%%                  |       |
+| add-member       | %%username%%   | %%motorspace%%                    | admin |
+
+## Create the group with the workspace
+| POST-json | /data/groups | {"ldap_dn":"%%motorhead%%","workspaces":[{"workspace_id":"%%motorspace_id%%"}]} |
+| code-is   | 201          |                                                                                 |

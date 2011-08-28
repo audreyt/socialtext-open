@@ -1,0 +1,52 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+use Data::Dumper;
+
+my $base_dir = shift or die "Must specify a base directory\n";
+
+chdir( $base_dir ) or die;
+
+my @workspaces = glob( "*" );
+
+for my $workspace ( @workspaces ) {
+    my @pages = glob( "$workspace/*" );
+    for my $page ( @pages ) {
+        my $warnings = 0;
+        my $warner = sub {
+            my $msg = shift;
+            print "\nIn $page:\n" if $warnings == 0;
+            ++$warnings;
+            print "$msg\n";
+        };
+        my @revisions = sort glob( "$page/*" );
+        my $index = pop @revisions;
+
+        # Validate index
+        if ( $index !~ m{/index\.txt$} ) {
+            $warner->( "No index.txt" );
+            next;
+        }
+        if ( !-l $index ) {
+            $warner->( "index.txt is not a symlink" );
+            next;
+        }
+
+        my @goodrevs = grep /\/\d{14}\.txt$/, @revisions;
+        if ( @goodrevs != @revisions ) {
+            print Dumper( \@goodrevs, \@revisions );
+            $warner->( "Extra files found that weren't revisions or index.txt" );
+            next;
+        }
+        my $highest = pop @revisions;
+        my $realfile = readlink( $index );
+        if ( substr( $realfile, -(length $highest) ) ne $highest ) {
+            $warner->( "index.txt should point to $highest, not $realfile" );
+            next;
+        }
+    } # page
+} # workspace
+

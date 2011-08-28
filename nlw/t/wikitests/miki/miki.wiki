@@ -1,0 +1,171 @@
+* Fixture: SocialRest
+
+| standard-test-setup |
+
+| edit_page | %%workspace%% | otherpage | Legos ᴙ Us |
+| Comment   | Global nav should show on workspace all pages            |
+| GET       | /m/page/%%workspace%%/                                   |
+| code-is   | 200                                                      |
+| body-like | Replace this text with your own                          |
+| body-like | Workspaces                                               |
+| body-like | People                                                   |
+| body-like | Signals                                                  |
+| body-like | Activity                                                 |
+| body-like | Log out                                                  |
+| body-like | qr/href="\/m\/changes\/%%workspace%%\/">What's New<\/a>/ |
+| body-like | qr/href="\/m\/search\/%%workspace%%\/">Search<\/a>/      |
+| GET       | /m/page/%%workspace%%/otherpage/                         |
+| code-is   | 200                                                      |
+| body-like | qr/href="\/m\/page\/%%workspace%%\/">%%workspace%%<\/a>/ |
+
+
+| GET       | /m/workspace_list                 |
+| code-is   | 200                               |
+| body-like | Workspaces                        |
+| body-like | People                            |
+| body-like | Signals                           |
+| body-like | Log out                           |
+| body-like | Hello, <b>user %%start_time%%</b> |
+| body-like | My Workspaces                     |
+| body-like | Public workspaces                 |
+| body-like | %%workspace%%                     |
+
+| GET       | /m/changes/%%workspace%% |
+| code-is   | 200                      |
+| body-like | Workspaces               |
+| body-like | People                   |
+| body-like | Signals                  |
+| body-like | Log out                  |
+| body-like | Tags                     |
+| body-like | %%workspace%%            |
+
+
+| Comment     | /lite/* should redirect to /m/* |                        |
+| GET         | /lite/page/%%workspace%%/       |                        |
+| code-is     | 302                             |                        |
+| header-like | Location                        | /m/page/%%workspace%%/ |
+
+| Comment     | /lite should redirect to /m/signals |            |
+| GET         | /lite                               |            |
+| code-is     | 302                                 |            |
+| header-like | Location                            | /m         |
+| GET         | /lite/                              |            |
+| code-is     | 302                                 |            |
+| header-like | Location                            | /m         |
+| GET         | /m                                  |            |
+| code-is     | 302                                 |            |
+| header-like | Location                            | /m/signals |
+| GET         | /m/                                 |            |
+| code-is     | 302                                 |            |
+| header-like | Location                            | /m         |
+
+| Comment     | signals                    |                           |
+| GET         | /m/signals                 |                           |
+| code-is     | 200                        |                           |
+| body-like   | What are you working on?   |                           |
+| post-json   | /data/signals              | {"signal":"I can haz /m"} |
+| code-is     | 201                        |                           |
+| GET         | /m/signals                 |                           |
+| code-is     | 200                        |                           |
+| body-like   | What are you working on?   |                           |
+| body-like   | I can haz /m               |                           |
+| body-like   | Previous page</span>       |                           |
+| body-like   | First page</span>          |                           |
+| body-unlike | Next page&nbsp;&gt;</a>    |                           |
+| body-like   | Next page&nbsp;&gt;</span> |                           |
+
+| Comment     | Pagination               |                        |
+| post-json   | /data/signals            | {"signal":"signal '1'"}  |
+| post-json   | /data/signals            | {"signal":"signal '2'"}  |
+| post-json   | /data/signals            | {"signal":"signal '3'"}  |
+| post-json   | /data/signals            | {"signal":"signal '4'"}  |
+| post-json   | /data/signals            | {"signal":"signal '5'"}  |
+| post-json   | /data/signals            | {"signal":"signal '6'"}  |
+| post-json   | /data/signals            | {"signal":"signal '7'"}  |
+| post-json   | /data/signals            | {"signal":"signal '8'"}  |
+| post-json   | /data/signals            | {"signal":"signal '9'"}  |
+| post-json   | /data/signals            | {"signal":"signal '10'"} |
+| post-json   | /data/signals            | {"signal":"signal '11'"} |
+| post-json   | /data/signals            | {"signal":"signal '12'"} |
+| post-json   | /data/signals            | {"signal":"signal '13'"} |
+| post-json   | /data/signals            | {"signal":"signal '14'"} |
+| post-json   | /data/signals            | {"signal":"signal '15'"} |
+| post-json   | /data/signals            | {"signal":"signal '16'"} |
+| post-json   | /data/signals            | {"signal":"signal '17'"} |
+| post-json   | /data/signals            | {"signal":"signal '18'"} |
+| post-json   | /data/signals            | {"signal":"signal '19'"} |
+| post-json   | /data/signals            | {"signal":"signal '20'"} |
+| post-json   | /data/signals            | {"signal":"signal '21'"} |
+
+| GET         | /m/signals                                            |
+| code-is     | 200                                                   |
+| body-like   | What are you working on?                              |
+| body-like   | signal '21'                                           |
+| body-like   | signal '20'                                           |
+| body-like   | signal '19'                                           |
+| body-like   | signal '18'                                           |
+| body-like   | signal '17'                                           |
+| body-like   | signal '16'                                           |
+| body-like   | signal '15'                                           |
+| body-like   | signal '14'                                           |
+| body-like   | signal '13'                                           |
+| body-like   | signal '12'                                           |
+| body-unlike | signal '11'                                           |
+| body-unlike | signal '10'                                           |
+| body-like   | Previous page</span>                                  |
+| body-like   | First page</span>                                     |
+| body-like   | Next page<span class="nav-hint">&nbsp;&gt;</span></a> |
+| GET         | /m/signals/?page=1                                    |
+| code-is     | 200                                                   |
+| body-like   | What are you working on?                              |
+| body-like   | signal '11'                                           |
+| body-like   | signal '10'                                           |
+| body-like   | signal '9'                                            |
+| body-like   | signal '8'                                            |
+| body-like   | signal '7'                                            |
+| body-like   | signal '6'                                            |
+| body-like   | signal '5'                                            |
+| body-like   | signal '4'                                            |
+| body-like   | signal '3'                                            |
+| body-like   | signal '2'                                            |
+| body-unlike | signal '1'                                            |
+| body-like   | Previous page</a>                                     |
+| body-like   | First page</a>                                        |
+| body-like   | Next page<span class="nav-hint">&nbsp;&gt;</span></a> |
+
+| Comment     | Post a signal via miki |                |
+| POST_form   | /m/signals             | signal=o%20hai |
+| code-is     | 302                    |                |
+| Header-like | Location               | /m/signals     |
+| GET         | /m/signals             |                |
+| code-is     | 200                    |                |
+| body-like   | o hai                  |                |
+
+| Comment   | Test the signals tabs         |
+| GET       | /m/signals                    |
+| code-is   | 200                           |
+| body-like | >People I follow</a>          |
+| body-like | class="ui-btn-active">All</a> |
+| body-like | >Mine</a>                     |
+
+| GET       | /m/signals/?followed=1                    |
+| code-is   | 200                                       |
+| body-like | class="ui-btn-active">People I follow</a> |
+| body-like | >All</a>                                  |
+| body-like | >Mine</a>                                 |
+
+| GET       | /m/signals/?mine=1             |
+| code-is   | 200                            |
+| body-like | >People I follow</a>           |
+| body-like | >All</a>                       |
+| body-like | class="ui-btn-active">Mine</a> |
+
+| Comment   | activities       |
+| GET       | /m/activities    |
+| code-is   | 200              |
+| body-like | My Conversations |
+| body-like | People I follow  |
+| body-like | All              |
+
+
+^^ TODO: /m/a /m/s /m/w /m/p

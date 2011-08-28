@@ -1,0 +1,165 @@
+* Fixture: WebHook
+
+| standard-test-setup | foo                   | no-group |                |
+| standard-test-setup | bar                   | no-group |                |
+| edit-page           | %%bar_workspace%%     | Foo      | Sample Content |
+| edit-page           | %%bar_workspace%%     | Bar      | Sample Content |
+
+| new-webhook-testcase |  Tag a page, verify no webhooks fired |
+| PUT | /data/workspaces/%%bar_workspace%%/pages/Foo/tags/bar | | |
+| code-is | 201 |
+| job-count     | WebHook   | 0   |                |
+
+| new-webhook-testcase               | Add a webhook, Tag a page, verify webhook fires                                     |               |                                         |
+| add-webhook           | page.tag                                                                            | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%"} |
+| PUT                   | /data/workspaces/%%bar_workspace%%/pages/Foo/tags/baz                               |               |                                         |
+| code-is               | 201                                                                                 |               |                                         |
+| job-count             | WebHook                                                                             | 1             |                                         |
+| st-process-jobs       |                                                                                     |               |                                         |
+| job-count             | WebHook                                                                             | 0             |                                         |
+| webhook-payload-parse |                                                                                     |               |                                         |
+| json-like             | [{"class":"page.tag"}]                                                                |               |                                         |
+| json-like             | [{"actor":{"id":%%user_id%%,"best_full_name":"bar user %%start_time%%"}}]             |               |                                         |
+| json-like             | [{"object":{"editor":{"id":%%user_id%%,"best_full_name":"bar user %%start_time%%"}}}] |               |                                         |
+| json-like             | [{"object":{"workspace":{"title":"%%bar_workspace%%","name":"%%bar_workspace%%"}}}]   |               |                                         |
+| json-like             | [{"object":{"id":"foo"}}]                                                             |               |                                         |
+| json-like             | [{"object":{"name":"Foo"}}]                                                           |               |                                         |
+| json-like             | [{"object":{"uri":"%%browser_url%%/%%bar_workspace%%/foo"}}]                |               |                                         |
+| json-like             | [{"object":{"edit_summary":""}}]                                                      |               |                                         |
+| json-like             | [{"object":{"tags":["baz"]}}]                                                         |               |                                         |
+| json-like             | [{"object":{"tags_added":["baz"]}}]                                                   |               |                                         |
+| json-like             | [{"object":{"tags_deleted":[]}}]                                                      |               |                                         |
+| json-like             | [{"object":{"type":"wiki"}}]                                                          |               |                                         |
+
+| new-webhook-testcase               | Delete a tag, verify webhook fires                    |   |
+| add-webhook           | page.tag                                                                            | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%"} |
+| DELETE                | /data/workspaces/%%bar_workspace%%/pages/Foo/tags/baz |   |
+| code-is               | 204                                                   |   |
+| job-count             | WebHook                                               | 1 |
+| st-process-jobs       |                                                       |   |
+| job-count             | WebHook                                               | 0 |
+| webhook-payload-parse |                                                       |   |
+| json-like             | [{"class":"page.tag"}]                                  |   |
+| json-like             | [{"object":{"tags":[]}}]                                |   |
+| json-like             | [{"object":{"tags_added":[]}}]                          |   |
+| json-like             | [{"object":{"tags_deleted":["baz"]}}]                   |   |
+
+| new-webhook-testcase               | Create a page with tag, verify webhook fires |          |             |          |
+| add-webhook           | page.tag                                                                            | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%"} |
+| edit-page             | %%bar_workspace%%                            | Tarvunty | new content | tarvuism |
+| job-count             | WebHook                                      | 1        |             |          |
+| st-process-jobs       |                                              |          |             |          |
+| job-count             | WebHook                                      | 0        |             |          |
+| webhook-payload-parse |                                              |          |             |          |
+| json-like             | [{"class":"page.tag"}]                      |          |             |          |
+| json-like             | [{"object":{"tags":["tarvuism"]}}]                       |          |             |          |
+| json-like             | [{"object":{"tags_added":["tarvuism"]}}]       |          |             |          |
+| json-like             | [{"object":{"tags_deleted":[]}}]               |          |             |          |
+
+| new-webhook-testcase               | Update a page and add a tag, verify webhook fires |          |               |          |
+| add-webhook           | page.tag                                                                            | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%"} |
+| edit-page             | %%bar_workspace%%                                 | Tarvunty | other content | octopusology |
+| job-count             | WebHook                                           | 1        |               |          |
+| st-process-jobs       |                                                   |          |               |          |
+| job-count             | WebHook                                           | 0        |               |          |
+| webhook-payload-parse |                                                   |          |               |          |
+| json-like             | [{"class":"page.tag"}]                              |          |               |          |
+| json-like             | [{"object":{"tags":[]}}]                            |          |               |          |
+| json-like             | [{"object":{"tags":["tarvuism","octopusology"]}}]   |          |               |          |
+| json-like             | [{"object":{"tags_added":["octopusology"]}}]        |          |               |          |
+| json-like             | [{"object":{"tags_deleted":[]}}]                    |          |               |          |
+
+| new-webhook-testcase               | Restore a page and add a tag at the same time           |          |                  |       |
+| add-webhook           | page.tag                                                                            | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%"} |
+| delete-page           | %%bar_workspace%%                                       | Tarvunty |                  |       |
+| job-count             | WebHook                                                 | 0        |                  |       |
+| edit-page             | %%bar_workspace%%                                       | Tarvunty | restored content | hebbo |
+| job-count             | WebHook                                                 | 1        |                  |       |
+| st-process-jobs       |                                                         |          |                  |       |
+| job-count             | WebHook                                                 | 0        |                  |       |
+| webhook-payload-parse |                                                         |          |                  |       |
+| json-like             | [{"class":"page.tag"}]                                    |          |                  |       |
+| json-like             | [{"object":{"tags":[]}}]                                  |          |                  |       |
+| json-like             | [{"object":{"tags":["hebbo"]}}] |          |                  |       |
+| json-like             | [{"object":{"tags_added":["hebbo"]}}]                     |          |                  |       |
+| json-like             | [{"object":{"tags_deleted":[]}}]                          |          |                  |       |
+
+| comment          | Tag a page in a different workspace         |                    |                |
+| set              | ws2                                         | ws2-%%start_time%% |                |
+| create-workspace | %%ws2%%                                     |                    |                |
+| add-member       | %%bar_email_address%%                       | %%ws2%%            |                |
+| edit-page        | %%ws2%%                                     | Foo2               | Sample Content |
+| st-clear-jobs    |                                             |                    |                |
+| PUT              | /data/workspaces/%%ws2%%/pages/Foo2/tags/baz |                    |                |
+| code-is          | 201                                         |                    |                |
+| job-count        | WebHook                                     | 0                  |                |
+
+| new-webhook-testcase        | Use a page_tag filtered webhook                          |               |                                     |
+| set-business-admin  | %%bar_email_address%% | 1        |                |
+| add-webhook    | page.tag                                                 | http://tou.ch | {"details":{"tag":"fubar"}} |
+| PUT            | /data/workspaces/%%bar_workspace%%/pages/Foo/tags/foobar |               |                                     |
+| code-is        | 201                                                      |               |                                     |
+| job-count      | WebHook                                                  | 0             |                                     |
+| PUT            | /data/workspaces/%%bar_workspace%%/pages/Foo/tags/fubar  |               |                                     |
+| code-is        | 201                                                      |               |                                     |
+| job-count      | WebHook                                                  | 1             |                                     |
+
+| new-webhook-testcase        | Use a page_id filtered webhook                          |               |                                     |
+| set-business-admin  | %%bar_email_address%% | 1        |                |
+| POST_json          | /data/webhooks                      | {"class":"page.tag","url":"http://example.com","details":{"page_id":"foo"}} |
+| code-is            | 400                                 |                                                     |
+| body-like          | page_id requires a workspace_id filter |                                                  |
+| add-webhook    | page.tag                                                 | http://tou.ch | {"workspace_id":"%%bar_workspace_id%%","details":{"page_id":"foo"}} |
+| job-count      | WebHook                                                  | 0             |                                     |
+| PUT            | /data/workspaces/%%bar_workspace%%/pages/Bar/tags/blah |               |                                     |
+| code-is        | 201                                                      |               |                                     |
+| job-count      | WebHook                                                  | 0             |                                     |
+| PUT            | /data/workspaces/%%bar_workspace%%/pages/Foo/tags/blag  |               |                                     |
+| code-is        | 201                                                      |               |                                     |
+| job-count      | WebHook                                                  | 1             |                                     |
+
+| new-webhook-testcase | Create a workspace_id filtered webhook as a non-badmin        |                   |                                         |
+| set-business-admin   | %%bar_email_address%%                                         | 0                 |                                         |
+| http-user-pass       | %%bar_email_address%%                                         | %%bar_password%%  |                                         |
+| add-webhook          | page.tag                                                      | http://tou.ch     | {"workspace_id":"%%bar_workspace_id%%"} |
+| PUT                  | /data/workspaces/%%bar_workspace%%/pages/Foo/tags/bazafraz    |                   |                                         |
+| code-is              | 201                                                           |                   |                                         |
+| job-count            | WebHook                                                       | 1                 |                                         |
+| st-clear-jobs        |                                                               |                   |                                         |
+| comment              | Now remove the user from that workspace                       |                   |                                         |
+| remove-member        | %%bar_email_address%%                                         | %%bar_workspace%% |                                         |
+| add-member           | %%foo_email_address%%                                         | %%bar_workspace%% |                                         |
+| http-user-pass       | %%foo_email_address%%                                         | %%foo_password%%  |                                         |
+| PUT                  | /data/workspaces/%%bar_workspace%%/pages/Foo/tags/bizzlefrizz |                   |                                         |
+| code-is              | 201                                                           |                   |                                         |
+| job-count            | WebHook                                                       | 0                 |                                         |
+| add-member           | %%bar_email_address%%                                         | %%bar_workspace%% |                                         |
+| remove-member        | %%foo_email_address%%                                         | %%bar_workspace%% |                                         |
+| http-user-pass       | %%bar_email_address%%                                         | %%bar_password%%  |                                         |
+
+| new-webhook-testcase   | Creating an workspace_id filtered webhook as a user not in that workspace |                                                                                  |
+| POST_json | /data/webhooks                                                            | {"class":"page.tag","url":"http://tou.ch","workspace_id":"%%foo_workspace_id%%"} |
+| code-is   | 403                                                                       |                                                                                  |
+
+| new-webhook-testcase        | Use an account_id filtered webhook                       |               |                                     |
+| add-webhook    | page.tag                                                 | http://tou.ch | {"account_id":"%%bar_account_id%%"} |
+| PUT            | /data/workspaces/%%bar_workspace%%/pages/Foo/tags/bazzer |               |                                     |
+| code-is        | 201                                                      |               |                                     |
+| job-count      | WebHook                                                  | 1             |                                     |
+
+| new-webhook-testcase            | Creating an account_id filtered webhook as a non-badmin   |               |                                     |
+| set-business-admin | %%bar_email_address%%                                     | 0             |                                     |
+| add-webhook        | page.tag                                                  | http://tou.ch | {"account_id":"%%bar_account_id%%"} |
+| PUT                | /data/workspaces/%%bar_workspace%%/pages/Foo/tags/berzerk |               |                                     |
+| code-is            | 201                                                       |               |                                     |
+| job-count          | WebHook                                                   | 1             |                                     |
+
+| new-webhook-testcase   | Creating an account_id filtered webhook as a user not in that account |                                                                              |
+| POST_json | /data/webhooks                                                        | {"class":"page.tag","url":"http://tou.ch","account_id":"%%foo_account_id%%"} |
+| code-is   | 403                                                                   |                                                                              |
+
+| new-webhook-testcase            | Try adding an invalid webhook class |                                                     |
+| set-business-admin | %%bar_email_address%%               | 1                                                   |
+| POST_json          | /data/webhooks                      | {"class":"page.nothing","url":"http://example.com"} |
+| code-is            | 400                                 |                                                     |
+| body-like          | not a valid webhook                 |                                                     |

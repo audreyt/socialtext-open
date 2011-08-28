@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>       <rdf:RDF
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns="http://purl.org/rss/1.0/"
+ xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:syn="http://purl.org/rss/1.0/modules/syndication/"
+ xmlns:admin="http://webns.net/mvcb/"
+>
+
+<channel rdf:about="/index.cgi/Grep/log">
+  <title>Revision Log - </title>
+  <link>/index.cgi/Grep/log</link>
+  <description></description>
+  <dc:date>2007-09-03T16:06:28</dc:date>  <dc:creator>SVN::Web</dc:creator>
+  <syn:updatePeriod>daily</syn:updatePeriod>
+  <syn:updateFrequency>1</syn:updateFrequency>
+  <syn:updateBase>1901-01-01T00:00+00:00</syn:updateBase>
+  <items>
+    <rdf:Seq> <rdf:li rdf:resource="/index.cgi/Grep/revision?rev=179" /> <rdf:li rdf:resource="/index.cgi/Grep/revision?rev=178" /> <rdf:li rdf:resource="/index.cgi/Grep/revision?rev=177" /> <rdf:li rdf:resource="/index.cgi/Grep/revision?rev=176" /> <rdf:li rdf:resource="/index.cgi/Grep/revision?rev=175" /> <rdf:li rdf:resource="/index.cgi/Grep/revision?rev=174" /> <rdf:li rdf:resource="/index.cgi/Grep/revision?rev=173" /> <rdf:li rdf:resource="/index.cgi/Grep/revision?rev=172" /> <rdf:li rdf:resource="/index.cgi/Grep/revision?rev=171" /> <rdf:li rdf:resource="/index.cgi/Grep/revision?rev=170" /> <rdf:li rdf:resource="/index.cgi/Grep/revision?rev=169" /> <rdf:li rdf:resource="/index.cgi/Grep/revision?rev=168" /> <rdf:li rdf:resource="/index.cgi/Grep/revision?rev=167" /> <rdf:li rdf:resource="/index.cgi/Grep/revision?rev=166" /> <rdf:li rdf:resource="/index.cgi/Grep/revision?rev=165" /> <rdf:li rdf:resource="/index.cgi/Grep/revision?rev=164" /> <rdf:li rdf:resource="/index.cgi/Grep/revision?rev=163" /> <rdf:li rdf:resource="/index.cgi/Grep/revision?rev=162" /> <rdf:li rdf:resource="/index.cgi/Grep/revision?rev=161" /> <rdf:li rdf:resource="/index.cgi/Grep/revision?rev=160" /> </rdf:Seq>
+  </items>
+</channel>  <item rdf:about="/index.cgi/Grep/revision?rev=179">
+  <title>179 - - parse content only if really needed, so import is much faster
+- better chec...</title>
+  <link>/index.cgi/Grep/revision?rev=179</link>
+  <description><![CDATA[- parse content only if really needed, so import is much faster<br />
+- better check for existing pages]]></description>
+  <dc:creator>dpavlin</dc:creator>
+  <dc:date>2007-09-03T16:06:28</dc:date>
+</item>  <item rdf:about="/index.cgi/Grep/revision?rev=178">
+  <title>178 - added some indexes and distinct</title>
+  <link>/index.cgi/Grep/revision?rev=178</link>
+  <description><![CDATA[added some indexes and distinct]]></description>
+  <dc:creator>dpavlin</dc:creator>
+  <dc:date>2007-09-03T16:05:38</dc:date>
+</item>  <item rdf:about="/index.cgi/Grep/revision?rev=177">
+  <title>177 - die on unparsable date, correctly set created_on</title>
+  <link>/index.cgi/Grep/revision?rev=177</link>
+  <description><![CDATA[die on unparsable date, correctly set created_on]]></description>
+  <dc:creator>dpavlin</dc:creator>
+  <dc:date>2007-08-11T17:41:42</dc:date>
+</item>  <item rdf:about="/index.cgi/Grep/revision?rev=176">
+  <title>176 - Template::Declare view to implement /latest</title>
+  <link>/index.cgi/Grep/revision?rev=176</link>
+  <description><![CDATA[Template::Declare view to implement /latest]]></description>
+  <dc:creator>dpavlin</dc:creator>
+  <dc:date>2007-07-15T15:16:36</dc:date>
+</item>  <item rdf:about="/index.cgi/Grep/revision?rev=175">
+  <title>175 - make test pass</title>
+  <link>/index.cgi/Grep/revision?rev=175</link>
+  <description><![CDATA[make test pass]]></description>
+  <dc:creator>dpavlin</dc:creator>
+  <dc:date>2007-07-04T20:45:14</dc:date>
+</item>  <item rdf:about="/index.cgi/Grep/revision?rev=174">
+  <title>174 - test Fetch action</title>
+  <link>/index.cgi/Grep/revision?rev=174</link>
+  <description><![CDATA[test Fetch action]]></description>
+  <dc:creator>dpavlin</dc:creator>
+  <dc:date>2007-07-04T20:45:03</dc:date>
+</item>  <item rdf:about="/index.cgi/Grep/revision?rev=173">
+  <title>173 - single result redirect isn't fatal any more</title>
+  <link>/index.cgi/Grep/revision?rev=173</link>
+  <description><![CDATA[single result redirect isn't fatal any more]]></description>
+  <dc:creator>dpavlin</dc:creator>
+  <dc:date>2007-07-04T20:20:48</dc:date>
+</item>  <item rdf:about="/index.cgi/Grep/revision?rev=172">
+  <title>172 - remove html from result-&gt;error</title>
+  <link>/index.cgi/Grep/revision?rev=172</link>
+  <description><![CDATA[remove html from result-&gt;error]]></description>
+  <dc:creator>dpavlin</dc:creator>
+  <dc:date>2007-07-04T20:20:27</dc:date>
+</item>  <item rdf:about="/index.cgi/Grep/revision?rev=171">
+  <title>171 - added link_current to Grep::Model::Item which will check do we want to use
+lo...</title>
+  <link>/index.cgi/Grep/revision?rev=171</link>
+  <description><![CDATA[added link_current to Grep::Model::Item which will check do we want to use<br />
+local cached version (if newer than 24h) or fetch new one.<br />
+This *dramatically* decreases load on wikis we are scraping ;-)]]></description>
+  <dc:creator>dpavlin</dc:creator>
+  <dc:date>2007-07-04T14:10:43</dc:date>
+</item>  <item rdf:about="/index.cgi/Grep/revision?rev=170">
+  <title>170 - last_update is now by default set to on_create, test last_update update</title>
+  <link>/index.cgi/Grep/revision?rev=170</link>
+  <description><![CDATA[last_update is now by default set to on_create, test last_update update]]></description>
+  <dc:creator>dpavlin</dc:creator>
+  <dc:date>2007-07-04T12:52:50</dc:date>
+</item>  <item rdf:about="/index.cgi/Grep/revision?rev=169">
+  <title>169 - update rest of code to new created_on and last_update</title>
+  <link>/index.cgi/Grep/revision?rev=169</link>
+  <description><![CDATA[update rest of code to new created_on and last_update]]></description>
+  <dc:creator>dpavlin</dc:creator>
+  <dc:date>2007-07-04T09:58:06</dc:date>
+</item>  <item rdf:about="/index.cgi/Grep/revision?rev=168">
+  <title>168 - rename columns to created_on and last_update and make hooks to update them</title>
+  <link>/index.cgi/Grep/revision?rev=168</link>
+  <description><![CDATA[rename columns to created_on and last_update and make hooks to update them]]></description>
+  <dc:creator>dpavlin</dc:creator>
+  <dc:date>2007-07-04T09:38:51</dc:date>
+</item>  <item rdf:about="/index.cgi/Grep/revision?rev=167">
+  <title>167 - hush warning</title>
+  <link>/index.cgi/Grep/revision?rev=167</link>
+  <description><![CDATA[hush warning]]></description>
+  <dc:creator>dpavlin</dc:creator>
+  <dc:date>2007-07-04T09:37:18</dc:date>
+</item>  <item rdf:about="/index.cgi/Grep/revision?rev=166">
+  <title>166 - added $feed-&gt;home_page_uri which is constructed from feed URI and use it
+(les...</title>
+  <link>/index.cgi/Grep/revision?rev=166</link>
+  <description><![CDATA[added $feed-&gt;home_page_uri which is constructed from feed URI and use it<br />
+(less useful for feeds, more useful for scrapers actually :-)]]></description>
+  <dc:creator>dpavlin</dc:creator>
+  <dc:date>2007-07-04T08:58:51</dc:date>
+</item>  <item rdf:about="/index.cgi/Grep/revision?rev=165">
+  <title>165 - minor tweak when there are no results found (and page doesn't have result wra...</title>
+  <link>/index.cgi/Grep/revision?rev=165</link>
+  <description><![CDATA[minor tweak when there are no results found (and page doesn't have result wrapper div)]]></description>
+  <dc:creator>dpavlin</dc:creator>
+  <dc:date>2007-06-11T22:56:53</dc:date>
+</item>  <item rdf:about="/index.cgi/Grep/revision?rev=164">
+  <title>164 - added focus</title>
+  <link>/index.cgi/Grep/revision?rev=164</link>
+  <description><![CDATA[added focus]]></description>
+  <dc:creator>dpavlin</dc:creator>
+  <dc:date>2007-06-11T18:21:00</dc:date>
+</item>  <item rdf:about="/index.cgi/Grep/revision?rev=163">
+  <title>163 - auto-focus search box</title>
+  <link>/index.cgi/Grep/revision?rev=163</link>
+  <description><![CDATA[auto-focus search box]]></description>
+  <dc:creator>dpavlin</dc:creator>
+  <dc:date>2007-06-11T17:58:37</dc:date>
+</item>  <item rdf:about="/index.cgi/Grep/revision?rev=162">
+  <title>162 - cleanup config</title>
+  <link>/index.cgi/Grep/revision?rev=162</link>
+  <description><![CDATA[cleanup config]]></description>
+  <dc:creator>dpavlin</dc:creator>
+  <dc:date>2007-06-11T10:18:09</dc:date>
+</item>  <item rdf:about="/index.cgi/Grep/revision?rev=161">
+  <title>161 - experimental support for numeric key bindings which is broken in current Jift...</title>
+  <link>/index.cgi/Grep/revision?rev=161</link>
+  <description><![CDATA[experimental support for numeric key bindings which is broken in current Jifty trunk]]></description>
+  <dc:creator>dpavlin</dc:creator>
+  <dc:date>2007-06-11T10:17:57</dc:date>
+</item>  <item rdf:about="/index.cgi/Grep/revision?rev=160">
+  <title>160 - be more robust at html stripping</title>
+  <link>/index.cgi/Grep/revision?rev=160</link>
+  <description><![CDATA[be more robust at html stripping]]></description>
+  <dc:creator>dpavlin</dc:creator>
+  <dc:date>2007-06-10T22:23:34</dc:date>
+</item>  </rdf:RDF>

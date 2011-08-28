@@ -1,0 +1,47 @@
+* Fixture: SocialRest
+
+| standard-test-setup |
+
+## Have a private workspace, create a public workspace
+| set | default    | %%workspace%%    |
+| set | default_id | %%workspace_id%% |
+
+| set                | private       | private-%%start_time%% |       |
+| create-workspace   | %%private%%   | %%account%%            |       |
+| set                | private_id    | %%workspace_id%%       |       |
+| add-member         | %%username%%  | %%private%%            | admin |
+
+| set                | public       | public-%%start_time%% |       |
+| create-workspace   | %%public%%   | %%account%%           |       |
+| set                | public_id    | %%workspace_id%%      |       |
+| set-ws-permissions | %%public%%   | public                |       |
+| add-member         | %%username%% | %%public%%            | admin |
+
+| http-user-pass | %%username%% | password |
+
+## GET-json error when permission_set is invalid
+| GET-json | /data/accounts/%%account%%/workspaces?permission_set=ENOSUCHSET |
+| code-is  | 500                                                             |
+
+## GET-json returns proper results with permission_set param
+| http-user-pass  | %%username%%                                                     | password       |
+| GET-json        | /data/accounts/%%account%%/workspaces?permission_set=member-only |                |
+| code-is         | 200                                                              |                |
+| json-parse      |                                                                  |                |
+| json-array-size | 2                                                                |                |
+| json-path-is    | $[0].id                                                          | %%private_id%% |
+| json-path-is    | $[1].id                                                          | %%default_id%% |
+
+## Make suer is_all_users_workspace is in the json
+| set              | alluser     | AA-%%start_time%% |  |   |
+| create-workspace | %%alluser%% | %%account%%       |  | 1 |
+
+| GET-json        | /data/accounts/%%account%%/workspaces |   |
+| code-is         | 200                                   |   |
+| json-parse      |                                       |   |
+| json-array-size | 4                                     |   |
+| json-path-is    | $[0].is_all_users_workspace           | 1 |
+| json-path-is    | $[1].is_all_users_workspace           | 0 |
+| json-path-is    | $[2].is_all_users_workspace           | 0 |
+| json-path-is    | $[3].is_all_users_workspace           | 0 |
+

@@ -1,0 +1,18 @@
+Test case to make sure that certain pages give a good charset content-type.
+
+* Fixture: SocialRest
+
+| *Comment* | Set up the environment | .     |
+| set       | workspace              | admin |
+
+| Comment    | traditional user settings screen       | .                  |
+| get        | /admin/index.cgi?action=users_settings |                    |
+| code-is    | 200                                    |                    |
+| has-header | Content-Type                           | qr/charset=UTF-8$/i |
+
+We moved this to the ST::Pluggable::Adapter::handler and it broke:
+
+| Comment    | workspace-less user settings screen | .                  |
+| get        | /?action=users_settings             |                    |
+| code-is    | 200                                 |                    |
+| has-header | Content-Type                        | qr/charset=UTF-8$/i |

@@ -1,0 +1,1432 @@
+<?xml version="1.0" encoding="utf-8"?>
+<update xmlns="http://ns.adobe.com/air/framework/update/description/1.0">
+  <version>416</version>
+<url>http://topaz.socialtext.net/flair/flairSignals-416.air</url>
+<description><![CDATA[[Build 416 - Sat Aug  6 02:44:03 PDT 2011]
+* Remove debug statements now things seem to work...
+
+[Build 415 - Sat Aug  6 02:36:18 PDT 2011]
+* Yet another fix for not-yet-hovered-on indicators......
+
+[Build 414 - Sat Aug  6 02:23:10 PDT 2011]
+* Yet another fix for not-yet-hovered-on indicators...
+
+[Build 413 - Sat Aug  6 02:13:17 PDT 2011]
+* Yet another fix for not-yet-hovered-on indicators.
+
+[Build 412 - Sat Aug  6 01:52:12 PDT 2011]
+* An alternate fix for not-yet-hovered-on indicators so it doesn't go out of sequence when hovered on later.
+
+[Build 411 - Fri Aug  5 23:45:58 PDT 2011]
+* Signal Like/Unlike for not-yet-hovered-on indicators are now updated in real time.
+
+[Build 410 - Thu Aug  4 17:42:31 PDT 2011]
+* Signal Like/Unlike from other users are now updated in real time.
+
+[Build 409 - Wed Aug  3 05:50:11 PDT 2011]
+* "Delete Signal" now properly removes the signal from display.
+
+[Build 408 - Sun Jul 24 00:50:32 PDT 2011]
+* Hide Like indicator for ST servers <4.7.4, or with "like" plugin disabled.
+
+[Build 407 - Sat Jul 23 23:16:47 PDT 2011]
+* Fixed horizontal-overflowing visual glitches for like bubbles.
+* Clicking on users in the like bubble now navigates to their Profile tab.
+
+[Build 406 - Sat Jul 23 10:16:48 PDT 2011]
+* Initial support for Signal Likes (with some small visual glitches).
+
+[Build 405 - Tue Jul 12 23:36:47 PDT 2011]
+* Display Signal Like/Unlike events in Activity tab.
+
+[Build 404 - Tue Jul 12 16:55:33 PDT 2011]
+* Use Yellow Star and Gray Star for page Like/Unlike events respectively.
+
+[Build 403 - Tue Jul 12 04:31:07 PDT 2011]
+* Use Eye icon for "Follow this person" instead of Star icon.
+* Use Eye icon for "Followed" sub-tab in Signals tab.
+
+[Build 402 - Fri Jun 10 08:37:20 PDT 2011]
+* Fix "Flashback spins forever fetching before/after signals". {bz: 5255}
+* Clicking the Signals/Search sub-tab now puts focus into search field.
+
+[Build 401 - Sun May  8 02:05:09 PDT 2011]
+* Sync to the latest wiki.css stylesheet. {bz: 5264}
+
+[Build 400 - Wed Mar 23 22:59:54 PDT 2011]
+* Sync to the latest AW code. {bz: 5050}
+
+[Build 399 - Wed Mar 23 01:36:27 PDT 2011]
+* Speed up display of the just-posted signal using the POST response data. (Ken)
+
+[Build 398 - Tue Mar 22 05:14:48 PDT 2011]
+* Repair compatibility with Adobe AIR 2.6 runtime.
+
+[Build 397 - Tue Mar 22 03:38:25 PDT 2011]
+* Improve performance of "Click to expand" thread. (Ken)
+
+[Build 396 - Fri Mar 18 23:05:19 PDT 2011]
+* "Click to expand thread" now bypasses queuing and loads immediately. (Ken)
+
+[Build 395 - Mon Mar 14 17:10:03 PDT 2011]
+* SD now redirects correctly when connecting to ssl-only appliances. {bz: 5071}
+
+[Build 394 - Fri Mar 11 19:41:41 PST 2011]
+* Update to the latest AW code for get the reply de-duplication fix. {bz: 5044}
+
+[Build 393 - Fri Mar 11 08:00:35 PST 2011]
+* Activity: Resume requests after server upgrade. {bz: 4834}
+
+[Build 392 - Mon Mar  7 03:41:18 PST 2011]
+* Disable network toggling when the user clicks More in Signals/All. {bz: 4979}
+
+[Build 391 - Thu Feb 17 14:34:17 PST 2011]
+* Also delay toggling "Show Signals within" until all placeholder parent signals are fetched.
+
+[Build 390 - Thu Feb 17 13:33:22 PST 2011]
+* More attempt at fixing {bz: 4979}.
+
+[Build 389 - Thu Feb 17 13:14:10 PST 2011]
+* Delay the effect of toggling "Show Signals within" to avoid wedging SD. {bz: 4979}
+
+[Build 388 - Thu Feb 17 07:40:54 PST 2011]
+* Fix "Insert Video" button so it displays again in Signals reply. (Alan)
+
+[Build 387 - Wed Feb 16 17:04:57 PST 2011]
+* Fix freeze of PostTo dropdown menu when ShowFrom item changes with it. {bz: 4976}
+
+[Build 386 - Tue Feb 15 10:26:18 PST 2011]
+* Fix "DM with mention of same user is displayed as a mention" {bz: 4942}
+* Fix "Add a video to a signal, but delete the video Title.  Save.  See 'null'." {bz: 4942}
+* Fix "No video thumbnails in Signal listviews." {bz: 4942}
+
+[Build 385 - Tue Feb 15 05:02:08 PST 2011]
+* OpenSocial Widgets in pages now work in mini-browser and preview pane. {bz: 4933}
+  (Requires ST v4.6.0.3+)
+
+[Build 384 - Mon Feb 14 16:18:35 PST 2011]
+* Syntax-highlighted code blocks now work in mini-browser and preview pane. {bz: 4933}
+
+[Build 383 - Mon Feb 14 10:44:37 PST 2011]
+* Fix video display issue on Windows. {bz: 4957}
+
+[Build 382 - Sun Feb 13 06:29:34 PST 2011]
+* Fix the "CPU spike every 30 seconds" issue. (Graham)
+* Remove the Cmd-0 toggle between threadview and listview.
+* Various small performance improvements.
+
+[Build 381 - Thu Feb  3 23:08:25 PST 2011]
+* Update to the latest AW code again.
+
+[Build 380 - Mon Jan 24 17:29:45 PST 2011]
+* Signals: Errors in Insert Video is shown only after the domain part has been entered.
+* Signals: Support the new "video" annotation namespace.
+
+[Build 379 - Sun Jan 23 08:41:51 PST 2011]
+* Signals: Errors in Insert Video now displays in the Title field.
+
+[Build 378 - Thu Jan 20 19:00:41 PST 2011]
+* Signals: Reverse the placement of URL and Title in Insert Video lightbox.
+* Signals: Thumbnails are now displayed with rounded corners (like in AW).
+
+[Build 377 - Tue Jan 18 00:07:09 PST 2011]
+* Signals: Support for displaying embedded video for ST 4.5.4+.
+
+[Build 376 - Sat Jan 15 09:05:20 PST 2011]
+* Signals: Fix tab/shift-tab navigation for insert web/wiki link panels. {bz: 4299}
+
+[Build 375 - Thu Jan 13 13:22:13 PST 2011]
+* Signals: Add a "insert video" icon for ST 4.5.4+.
+* People: Display emails in people's Colleagues sub-tab.
+* People: Add rounded corners to avatar pictures.
+* People: Add a per-person Signals sub-tab to agree with Mobile UI.
+* People: Display friendly name in the Colleagues sub-tab after following a person.
+* Activities: Link "x times ago" in signals events to their permalinks.
+* Activities: Display a message if there are no events to display.
+
+[Build 374 - Wed Jan 12 18:06:56 PST 2011]
+* Added image smoothing for group icons in Signal/People tab's dropdowns.
+* Added image smoothing for avatars in People/Workspace tab.
+  (This is most visible with Ross's current "Yuck Fammer" avatar.)
+
+[Build 373 - Tue Jan 11 18:55:51 PST 2011]
+* Improve idle-time CPU usage, down from 5%~10% to 1~4%.
+
+[Build 372 - Mon Jan 10 17:31:11 PST 2011]
+* Upgraded to latest Activity Widget javascript codebase for performance improvements.
+
+[Build 371 - Fri Dec 17 20:13:29 PST 2010]
+* Refresh the initial Activity tab if it's switched to with C-2 instead of mouseclick.
+
+[Build 370 - Fri Dec 10 21:13:28 PST 2010]
+* Activity: "Refresh" button now works again. (Was broken in build 367)
+
+[Build 369 - Tue Dec  7 04:38:19 PST 2010]
+* Signals: Sub-tabs are now lazily populated.
+* Signals: The "Private Messages" subtab is now populated with backlogged entries.
+
+[Build 368 - Thu Dec  2 18:53:44 PST 2010]
+* Signals: Save the "Post to" network choice across restarts. (Matt)
+* Activity: Start fetching activities if the user started at that tab.
+
+[Build 367 - Thu Dec  2 04:59:26 PST 2010]
+* Activity: Sub-tabs are now lazily populated.
+* Signals: Sub-tabs (except for "Private") are now populated with backlogged entries.
+* Workspace: A new per-page "Tags" sub-tab for display, add and deletion of tags.
+
+[Build 366 - Thu Nov 11 17:56:11 PST 2010]
+* Update to the latest wiki.css for inline Wiki views. {bz: 4666}
+
+[Build 365 - Thu Nov 11 00:48:21 PST 2010]
+* Update our push-client.js to fix periodic out-of-sync issue. {bz: 4548}
+
+[Build 364 - Tue Nov  9 02:39:06 PST 2010]
+* Clicking "More" in per-group threadview no longer results in large time gaps. {bz: 4590}
+
+[Build 363 - Mon Nov  8 20:25:29 PST 2010]
+* Entries in Name and Tag lookaheads now shows up consistently. {bz: 4649}
+* On resync of threaded Signals view, check for !visible for threads in viewport only,
+  to avoid overlong URLs.  (Ken)
+
+[Build 362 - Sun Oct 31 01:30:43 PDT 2010]
+* Typing in thread-reply window is now faster. {bz: 4563}
+
+[Build 361 - Fri Oct 29 00:24:02 PDT 2010]
+* Correctly resume push client after server upgrade. {bz: 4556}
+
+[Build 360 - Tue Oct 26 11:52:35 PDT 2010]
+* The "X New" alert now goes away after sending a reply. {bz: 4530}
+
+[Build 359 - Fri Oct 22 03:47:13 PDT 2010]
+* Only refresh when push is actually desynchronized.
+
+[Build 358 - Thu Oct 21 08:54:04 PDT 2010]
+* Workspaces: "System User" no longer shows a broken avatar. {bz: 4473}
+* "Log me in automatically" now works more consistently.
+
+[Build 357 - Wed Oct 20 23:01:03 PDT 2010]
+* Hide the "More" button in Signal/Search as it doesn't work (yet).
+
+[Build 356 - Wed Oct 20 22:48:58 PDT 2010]
+* Search/Signals should not affect Search/All's spinner anymore.
+
+[Build 355 - Wed Oct 20 22:45:09 PDT 2010]
+* Repeated searches in Signal/Search tab now works again. (regression in build 347).
+
+[Build 354 - Wed Oct 20 16:40:35 PDT 2010]
+* When server returns 503, retry the request in 1sec.
+* When restarting push client, use backoff_timeout to avoid overwhelming the server.
+
+[Build 353 - Wed Oct 20 16:07:23 PDT 2010]
+* Use ?after whe re-syncing /data/signals as per [Story: push clients sync using ?after].
+
+[Build 352 - Wed Oct 20 05:24:37 PDT 2010]
+* Bubbling-up after posting a reply now works again for ST 4.5.0.8+. {bz: 4530}
+
+[Build 351 - Mon Oct 18 10:10:16 PDT 2010]
+* Update to jQuery 1.4.3 for memory and speed wins; no functional changes.
+
+[Build 350 - Tue Oct 12 09:27:03 PDT 2010]
+* Switching to "All My Groups" for the first time is now much faster. {bz: 4432}
+
+[Build 349 - Fri Oct  1 02:02:25 PDT 2010]
+* Workspaces: Restore page preview and loading functionality (regression in build 347).
+
+[Build 348 - Thu Sep 30 04:44:48 PDT 2010]
+* Renew the (time-limited) login cookie every 24 hours.
+
+[Build 347 - Thu Sep 30 04:40:20 PDT 2010]
+* Renew the login cookie every 24 seconds. (QA testing only)
+
+[Build 346 - Wed Sep 29 02:52:04 PDT 2010]
+* Perf: Fetch /data/people only once, not twice, during startup. {bz: 4461}
+
+[Build 345 - Sun Sep 19 08:06:49 PDT 2010]
+* Deleted signals are now properly removed from all views. {bz: 3174}
+
+[Build 344 - Tue Sep 14 04:32:09 PDT 2010]
+* Only put an account on a reply prior to REST API v20. {bz: 4385} (Stash)
+
+[Build 343 - Sat Sep  4 02:10:28 PDT 2010]
+* Fetch page name lookahead candidates asynchronously too in "insert wiki link" dialog.
+
+[Build 342 - Fri Sep  3 23:56:59 PDT 2010]
+* Fetch user and tag lookahead candidates asynchronously to improve performance. (Eugene)
+* Re-use push-client id on temporary server errors. {bz: 4161}
+
+[Build 341 - Fri Aug 27 15:49:26 PDT 2010]
+* Allow the reply box to close when it loses focus and it only contains whitespaces. {bz: 4208}
+
+[Build 340 - Thu Aug 26 10:35:01 PDT 2010]
+* Switching "Post to" is now much faster when "Show Signals within" is set to "All Groups". (Luke)
+
+[Build 339 - Wed Aug 18 09:15:49 PDT 2010]
+* When Encrypted Store fails access, show an error. (Graham)
+* Also, if Encrypted Store fail on Linux, navigate to the Adobe knowledge base with instructions for repair.
+
+[Build 338 - Sun Aug 15 02:39:22 PDT 2010]
+* Workspaces: AIR 2 uploads files with spaces in directory names, but not in filenames; still show an alert in the latter case. {bz: 4245}
+
+[Build 337 - Sat Aug 14 08:20:35 PDT 2010]
+* When push is enabled, sending a new signal still trigger an immediate refresh.
+
+[Build 336 - Sat Aug 14 07:34:23 PDT 2010]
+* Signals: Display tooltips on "Reply to conversation" icons. {bz: 4201}
+* Workspaces: File pathnames with spaces are now uploadable for Mac/AIR2. {bz: 4142}
+
+[Build 335 - Sat Aug 14 05:54:06 PDT 2010]
+* Password are now saved in the system encrypted store.
+
+[Build 334 - Wed Aug  4 21:50:07 PDT 2010]
+* Signals: Correctly unescape annotation images and support absolute URLs in flatview. (Luke)
+
+[Build 333 - Wed Aug  4 03:03:38 PDT 2010]
+* Signals: Rapidly pressing Enter for replies no longer cause duplicates. {bz: 4201}
+* Signals: Improve the de-duplication logic for expanded replies. {bz: 4201}
+
+[Build 332 - Sun Aug  1 05:52:39 PDT 2010]
+* Fix the "aggressive tagging" bug for tag lookaheads. (Gabe)
+* Use "#" prefix when inserting tags with all-alphanumerics.
+
+[Build 331 - Thu Jul 22 17:23:21 PDT 2010]
+* When push is enabled, there's no need to GET /data/signals after posting. (Stash)
+
+[Build 330 - Thu Jul 22 01:18:34 PDT 2010]
+* Display "Checking every X seconds" only when the server has push disabled. (Ken)
+
+[Build 329 - Mon Jul 19 15:47:30 PDT 2010]
+* People: Restore people dropdown for ST 4.3.0 and earlier. {bz: 4124}
+
+[Build 328 - Fri Jul 16 18:41:07 PDT 2010]
+* People: Restore filtering for ST 4.3.0 and earlier. {bz: 4124}
+
+[Build 327 - Fri Jul 16 18:22:21 PDT 2010]
+* Signals: "X new" alert is now always displayed in front. {bz: 4123}
+* Signals: "X new" alert now blinks with new numbers when new messages arrive. {bz: 4123}
+
+[Build 326 - Fri Jul 16 02:05:35 PDT 2010]
+* Signals: Show the "Post to" dropdown even if there's only one network to post to.
+* Signals: When new signals arrive when the reply box is still open, show a "X new" alert. {bz: 4111}
+
+[Build 325 - Thu Jul 15 19:18:42 PDT 2010]
+* Signals: "Private to" and "Mention user" are now Tag-style autocompleters.
+* Signals: Pressing @ now triggers the "mention" autocompleter.
+* Signals: Pressing # now triggers the "tag" autocompleter.
+* People: Paged people display and people search for ST 4.3.1+.
+* People: Show a restricted view when navigating to a restricted profile.
+* People: Watchlist now updates reliably on "Follow/Unfollow". {bz: 4098}
+
+[Build 324 - Fri Jul  9 16:04:33 PDT 2010]
+* Fix part of {bz: 4098}: Make Find work on Activity subtabs.
+* Also check in the first series of performance improvements; more to come.
+
+[Build 323 - Wed Jul  7 20:04:48 PDT 2010]
+* Support URL interpolation in interactor actions.
+
+[Build 322 - Sun Jul  4 14:45:28 PDT 2010]
+* Fix {bz: 4087}: Timestamp updating for Activity tabs.
+
+[Build 321 - Thu Jul  1 17:47:52 PDT 2010]
+* Another test build with Flex 4 SDK running on Topaz.
+
+[Build 320 - Thu Jul  1 16:46:58 PDT 2010]
+* Test build with Flex 4 SDK.
+
+[Build 319 - Wed Jun 30 15:37:05 PDT 2010]
+* Fix {bz: 4061}: Attach file jump scrolls to top of widget.
+
+[Build 318 - Tue Jun 29 11:33:15 PDT 2010]
+* Fix {bz: 4072}: In "Add Web Link", supply "http://" prefix and disallow invalid URLs.
+
+[Build 317 - Tue Jun 29 10:45:15 PDT 2010]
+* When restarting polling from server, force-refresh the latest signals first. (for real.)
+
+[Build 316 - Tue Jun 29 10:18:32 PDT 2010]
+* When restarting polling from server, force-refresh the latest signals first.
+
+[Build 315 - Tue Jun 29 04:35:29 PDT 2010]
+* Fix {bz: 4059}: Links decrement char count by full length instead of link text length.
+* Fix {bz: 4054}: Push client makes too many requests.
+
+[Build 314 - Mon Jun 28 15:55:25 PDT 2010]
+* Switching from a single group to "Show All Groups" should retain old signals.
+* Add back support for interactor annotations.
+
+[Build 313 - Mon Jun 28 10:10:42 PDT 2010]
+* Fix {bz: 3987}: Locks up when searching for the word blog in the Workspaces tab.
+* Fix {bz: 4049}: Add Web link - text should appear above destination.
+* Fix {bz: 4050}: Insert Icon Text is "wiki", should be "workspace".
+
+[Build 312 - Mon Jun 28 07:28:40 PDT 2010]
+* Implement [Story: Desktop uses Standard Push API client].
+* Fix {bz: 3931}: Push causing duplicate signals to display. (Kevin)
+* Fix {bz: 4055}: Signals input does not expand correctly after inserting link. (Ken)
+
+[Build 311 - Fri Jun 25 03:50:38 PDT 2010]
+* Restore the input box's height after posting out a multiline signal.
+* Adjust the reply box's height after inserting a link.
+
+[Build 310 - Thu Jun 24 13:21:11 PDT 2010]
+* Insert Wiki Page's lookahead field to work with multi-character lookaheads. (Swd)
+
+[Build 309 - Thu Jun 24 02:04:23 PDT 2010]
+* Insert Wiki Link: Workspaces is now an auto-complete field instead of a dropdown. (Alan)
+* Clicking "Attach File" in replies now works correctly. (Alan)
+* Convo: Panel height now auto-adjusts when input has more than 2 lines.
+
+[Build 308 - Wed Jun 23 01:12:53 PDT 2010]
+* Implement insert wiki/weblinks for threadview replies.
+* Correctly render attachment/thumbnails with <>& characters in their file names.
+
+[Build 307 - Tue Jun 22 11:07:48 PDT 2010]
+* First sketch of working "Add a wiki link" dialog.
+* Improve visual layout of "Add a web link" dialog.
+
+[Build 306 - Mon Jun 21 11:45:54 PDT 2010]
+* Fix {bz: 4035}: Display of attached image thumbnails incorrect.
+* First sketch of working "Add a web link" dialog.
+* Show an additional "loading" spinner when attachments are being uploaded.
+* Show alert boxes when uploading to server fails.
+* Alert about duplicated file names, zero-length files, and directory-as-attachments.
+
+[Build 305 - Thu Jun 17 09:52:34 PDT 2010]
+* QA snapshot for [Story: User adds tag to Signals] and [Story: User adds file attachment to Signals].
+
+[Build 304 - Thu Jun 10 00:10:08 PDT 2010]
+* Support for rendering "reshare" signals as its own lines, complete with profile photos. 
+* Correctly scroll to the interactor frame if it's opened from last signal in the convo dialog.
+* Auto-refresh signals after C-Enter for demo servers with no Push support.
+
+[Build 303 - Wed Jun  9 21:25:40 PDT 2010]
+* Take out C-Backspace; the Gong sound is now auto-played.
+* Correctly scroll to the topical signal when displaying the Conversation lightbox. (Alan)
+* Merge the fix to {bz: 4009} so thumbnails won't overlap into replies.
+
+[Build 302 - Wed Jun  9 13:33:02 PDT 2010]
+* misc demo updates
+
+[Build 301 - Wed Jun  9 01:07:00 PDT 2010]
+* Hack to work around {bz: 4005} by hiding reply thumbnails.
+* Interactors with prompts, such as "Place Order" in E2 demo, now works correclty.
+
+[Build 300 - Tue Jun  8 22:42:33 PDT 2010]
+* Decouple signal-posting from demoNextStep; now always requires explicit C-Enter.
+
+[Build 299 - Tue Jun  8 22:16:02 PDT 2010]
+* C-Backspace now plays a sound snippet from the EA Gong video.
+* C-Enter now triggers demo script as a proper webplugin (was hosted on topaz).
+
+[Build 298 - Tue Jun  8 06:14:45 PDT 2010]
+* Adjust margins a bit for thumbnail pictures.
+
+[Build 297 - Tue Jun  8 05:03:34 PDT 2010]
+* Initial support for interactor buttons with prompts.
+
+[Build 296 - Mon Jun  7 22:56:43 PDT 2010]
+* Initial support for displaying attachment and thumbnails.
+* Secret C-Enter hotkey to trigger scripted action for Enterprise 2.0 demo.
+
+[Build 295 - Thu Jun  3 03:40:18 PDT 2010]
+* Initial support for BugBot's "data" annotations. ("method" is not really supported yet.)
+
+[Build 294 - Thu Jun  3 00:21:41 PDT 2010]
+* Make annotations work for retrieved replies, too.
+
+[Build 293 - Thu Jun  3 00:09:34 PDT 2010]
+* Initial support for Interactor Annotations. (See Sally's "weather" for a demo.)
+
+[Build 292 - Tue Jun  1 22:42:34 PDT 2010]
+* The spinners should keep spinning, not spinning only once.
+
+[Build 291 - Tue Jun  1 22:19:14 PDT 2010]
+* Make the spinner not show behind the Workspace Search button.
+
+[Build 290 - Tue Jun  1 22:14:30 PDT 2010]
+* Workspaces: Clicking the "Loading" spinner stops the current search.
+
+[Build 289 - Sun May 30 23:50:05 PDT 2010]
+* Fix {bz: 3971}: Shorten Local Store file names to <256 characters.
+* Fix {bz: 3977}: ...More... button messes up threadview internals.
+* Signals: Restore proper account skin colouring for listviews.
+
+[Build 288 - Wed May 26 03:36:55 PDT 2010]
+* Fix {bz: 3942}: Desktop: All tab under People does not display users.
+
+[Build 287 - Tue May 18 12:52:00 PDT 2010]
+* Sync-up Activities shared code.
+* Fix {bz: 3914}: Unresponsive script while replying to conversation.
+
+[Build 286 - Wed May 12 16:25:22 PDT 2010]
+* Added support for pushd synchronization.
+
+[Build 285 - Wed May 12 15:12:38 PDT 2010]
+* Confirmed fixing {bz: 3904} for real.
+
+[Build 284 - Wed May 12 14:29:54 PDT 2010]
+* Tentative fix to the "adding replies to expanded thread while signals arrive" beachball. ({bz: 3904})
+
+[Build 283 - Tue May 11 16:24:47 PDT 2010]
+* Fix the "show replies twice" bug under Push mode.
+
+[Build 282 - Tue May 11 16:14:12 PDT 2010]
+* Improve rendering speed for new signal arrival to avoid beachballing.
+
+[Build 281 - Tue May 11 08:28:43 PDT 2010]
+* Add a + to the status if push mode is active
+
+[Build 280 - Mon May 10 17:56:20 PDT 2010]
+* Signal Input box now holds two lines of text again.
+
+[Build 279 - Mon May 10 17:19:52 PDT 2010]
+* Tentative fix for the beachball-during-reply bug.
+
+[Build 278 - Thu May  6 18:20:39 PDT 2010]
+* Bump version for the non-RC build.
+
+[Build 277 - Thu May  6 17:54:03 PDT 2010]
+* Threadview: Update timestamps on regular intervals.
+* Increase font size for input textareas to match Web UI. ({bz: 3868})
+
+[Build 276 - Thu May  6 02:03:44 PDT 2010]
+* Properly fetch not-in-memory old topics when receiving newer replies. ({bz: 3881})
+* If a topic is deleted on the server, delete it when receiving new replies. ({bz: 3811})
+
+[Build 275 - Wed May  5 23:41:09 PDT 2010]
+* Flatview: Take out the colon in meta-info line to match threadview's UI.
+* Repair People->Person->Activities display. (regression in build 274)
+
+[Build 274 - Wed May  5 19:53:13 PDT 2010]
+* Server-side deletion now propagates correctly back to threadview. ({bz: 3879})
+* Cmd-Backspace no longer breaks signal/event/profile views. ({bz: 3877})
+* Add an UserAgent annotation to signals sent from Flair.
+* Pull 100 signals upfront, not 50.
+
+[Build 273 - Tue May  4 18:58:32 PDT 2010]
+* No longer clears input box when typed replies exceeds size limit.  ({bz: 3835})
+* Reduce memory usage by putting flatview code in a separate file. (Stash)
+* Make Wikiwyg input area's right border fit the input box. (Alan)
+* When typed replies exceeds size limit, make the wordcount red.
+
+[Build 272 - Tue May  4 05:42:49 PDT 2010]
+* Login to old appliances now works after logging out from new servers. ({bz: 3836})
+* Threadview: Deleting a topic with replies warns about "entire Conversation". ({bz: 3869})
+* Deleting signals from threadview propagates to flatview, and vice versa.
+* Suppress auto-clicking "...More..." when showing "All Groups" upon login.
+
+[Build 271 - Mon May  3 17:42:38 PDT 2010]
+* Pop up notifications now show up after thread renders, not before.
+* Clicking Insert no longer closes wikiwyg input box. ({bz: 3843})
+* Insert mention lookahead now shows avatars correctly. ({bz: 3867})
+* Threadview: Make top/bottom gray bars right-align with replies. (Alan)
+* Make delete icon a bit more vertically spaced from reply icon. (Alan)
+
+[Build 270 - Mon May  3 16:18:38 PDT 2010]
+* Re-position private/mention hints; they were bleeding into the avatar.
+* Fix the "signals do not appear to post correctly" bug. ({bz: 3860})
+* Fix the Bluifying-metadata-link UI bug so they are now blue only upon hover. 
+
+[Build 269 - Mon May  3 06:56:52 PDT 2010]
+* Threadview: Remove the redundant right-floating "signal" asset icon.
+* When toggling into "All My Groups" for the first time, reload signals.
+
+[Build 268 - Mon May  3 06:08:06 PDT 2010]
+* Threadview: More'd signals now sort into chronological order. ({bz: 3851})
+* Threadview: Recipient of private signals are now clickable. ({bz: 3850})
+* Threadview: Avatar icons should now stay on screen. ({bz: 3820})
+* Improved performance when rendering thread views and toggling networks.
+
+[Build 267 - Sun May  2 18:28:24 PDT 2010]
+* Replies to private messages should still show up as privmsgs in flatview. ({bz: 3842})
+
+[Build 266 - Sun May  2 18:18:12 PDT 2010]
+* Mentions in threadview are now correctly striped. ({bz: 3845})
+* Filter-by-network now interacts smoothly with "...More...". ({bz: 3847})
+
+[Build 265 - Sun May  2 16:11:40 PDT 2010]
+* Attempt to fix {bz: 3845} by always pulling "More" from active network. (Ken)
+
+[Build 264 - Sun May  2 15:10:06 PDT 2010]
+* ...More... now respects "Show Signals From" filtering. (Ken)
+
+[Build 263 - Sun May  2 05:44:22 PDT 2010]
+* Implements filtering signals by network in threadview. ({bz: 3807})
+* Hovering over avatars in threadview now shows the correct username.
+* Display replies in flatview with a smaller font and teal background.
+* Remove the dotted border around topical signals in Convo lightbox.
+* Private signals no longer show up "as a topic" in flatview.
+
+[Build 262 - Fri Apr 30 17:01:40 PDT 2010]
+* New replies now cause the original thread to bubble up.
+
+[Build 261 - Fri Apr 30 16:00:07 PDT 2010]
+* DM recipients are now displayed properly. ({bz: 3814})
+* More assorted stylistic tweaks for threaded display.
+
+[Build 260 - Fri Apr 30 05:23:19 PDT 2010]
+* Restore correct vertical spacing for linear view. ({bz: 3824})
+* Fixed chronological ordering of older replies under the same thread. ({bz: 3825}
+* Repair the styling of "...More..." button for the activity tab.
+* Make linear view's text slightly bigger to match thread view's.
+
+[Build 259 - Thu Apr 29 19:00:00 PDT 2010]
+* Adjust styles to match web widget. ({bz: 3830})
+
+[Build 258 - Thu Apr 29 08:28:15 PDT 2010]
+* Full-refresh the thread view when the user is not composing a reply. ({bz: 3823})
+* Make Flair always auto-update from topaz.
+* Restore "Find" functionality for thread view.
+
+[Build 257 - Thu Apr 29 05:51:28 PDT 2010]
+* Edit area now remains on screen when new signals arrive.
+* Add back the "...More..." functionality.
+* Cache avatar and asset photos locally, so they no longer disappear.
+* Super-secret C-0 key binding now toggles between linear and thread view.
+* Repair "Go back to Group you're Signalling to". ({bz: 3817})
+
+[Build 256 - Wed Apr 28 10:31:29 PDT 2010]
+* Fix {bz: 3805}: Attribution links missing in entries.
+
+[Build 255 - Wed Apr 28 08:06:22 PDT 2010]
+* Fix a buglet that makes "/me ..."'s replies all italic and green.
+
+[Build 254 - Wed Apr 28 07:46:45 PDT 2010]
+* C-9 now works without triggering an additional C-F.
+* Fixed "mention" lookahead in replies.
+
+[Build 253 - Wed Apr 28 02:11:16 PDT 2010]
+* Signals/All: Support for threading for ST version v4.0.2+.
+* Signals: Launch threading lightboxes in Non-All subtabs via "as a topic" links.
+* Signals: New hot keys: C-8 (Prev subtab), C-9 (Next subtab), C-0 (toggle between all and search)
+
+[Build 252 - Wed Apr 21 10:16:08 PDT 2010]
+* Delay the "No signals has been posted" notice at startup in build 251.
+
+[Build 251 - Wed Apr 21 10:06:45 PDT 2010]
+* Repair Convo lightbox regression. (Ken)
+
+[Build 250 - Tue Apr 20 23:02:17 PDT 2010]
+* Mitigate network-transition timeouts via periodic force-pulling. (Eugene)
+
+[Build 249 - Mon Apr 19 21:40:56 PDT 2010]
+* Fix {bz: 3777}: pushd server and client deadlock. (Ken)
+* Switch to a new set of icon drawn by Ross. (Ross)
+
+[Build 248 - Fri Apr 16 21:21:17 PDT 2010]
+* Display newer signals before older ones, for better visual feedback.
+
+[Build 247 - Fri Apr 16 21:00:39 PDT 2010]
+* Make SD much more responsive by rendering one signal at a time. (Kathleen)
+* Also reduced UI delays for "Reply" and "Reply Privately".
+
+[Build 246 - Thu Apr 15 01:28:46 PDT 2010]
+* Fix suppressed "Followed" list display. (Alan)
+* Immediately fetch signals after the user posted a new signal.
+
+[Build 245 - Wed Apr 14 17:12:15 PDT 2010]
+* Reinstate forced-reconnect interval at 30 seconds after conferring with Stash.
+
+[Build 244 - Wed Apr 14 15:44:24 PDT 2010]
+* Fix the "disappearing tray icon" bug introduced in build 241. ({bz: 3767})
+
+[Build 243 - Wed Apr 14 15:25:29 PDT 2010]
+* Reinstate forced-reconnect interval at 180 seconds.
+* Don't hammer the server when pushd becomes temporarily unavailable.
+
+[Build 242 - Wed Apr 14 03:50:56 PDT 2010]
+* Decrease forced-reconnect interval back to 30 seconds as staging pushd seems unstable.
+
+[Build 241 - Wed Apr 14 02:39:37 PDT 2010]
+* Reconnect gracefully when the push daemon restarts. ({bz: 3763})
+* Increased forced-reconnect interval from 30 to 300 seconds. (Luke)
+
+[Build 240 - Tue Apr 13 03:39:57 PDT 2010]
+* Restored push support now that the deep-recursion bug has been nixed.
+
+[Build 239 - Mon Apr 12 15:54:05 PDT 2010]
+* Logout then login into another server; @-completion now reflects the new people list. (for {bz: 3742})
+
+[Build 238 - Mon Apr 12 00:55:17 PDT 2010]
+* Hide deactivated/deleted people from @-completion and People tab.
+
+[Build 237 - Sun Apr 11 15:58:43 PDT 2010]
+* Open Permalink in browser for ChocolateRain servers.
+* Suspend Push support for ChocolateRain servers; more ongoing work continues.
+
+[Build 236 - Sat Apr 10 16:34:04 PDT 2010]
+* Convo: "Click to Reply To This Signal" and focuses on the Convo input box.
+
+[Build 235 - Fri Apr  9 03:44:34 PDT 2010]
+* "Log me in automatically" now takes effect upon the first try.
+
+[Build 234 - Thu Mar 25 23:28:07 PDT 2010]
+* Correctly upgrade json2.js for real.
+
+[Build 233 - Thu Mar 25 22:51:00 PDT 2010]
+* Upgrade json2.js to the latest build to make certain signals parseable. (for {bz: 3721})
+
+[Build 232 - Thu Mar 25 08:03:32 PDT 2010]
+* Unbreak the Workspaces/Attachments sub-tab. (JonGrorud)
+
+[Build 231 - Tue Mar 23 22:00:01 PDT 2010]
+* Restore "trace" function to unbreak Workspaces tab's preview pane.
+* If GET on /data/signals failed, restart signals clock.
+
+[Build 230 - Tue Mar 23 19:43:31 PDT 2010]
+* Send proper SD user agent header for auto-updater (for {bz: 3692}).
+
+[Build 229 - Tue Mar 23 18:34:20 PDT 2010]
+* Pushd: Cope with "continue" messages somenow not parsed back correctly.
+
+[Build 228 - Mon Mar 22 22:39:42 PDT 2010]
+* Set Signal input limit immediately upon login.
+
+[Build 227 - Thu Mar 18 00:58:27 PDT 2010]
+* Implement [Story: Expand signals input limit]; default is 400 for ST<=4.0.0 servers.
+
+[Build 226 - Fri Mar 12 22:24:41 PST 2010]
+* On Login, reset SignalTo to Primary group if it was set to "All Groups".
+
+[Build 225 - Fri Mar 12 04:17:39 PST 2010]
+* Start Signal/Activity clocks right after network reconnection.
+
+[Build 224 - Fri Mar 12 03:57:29 PST 2010]
+* Fix {bz: 3621}: Signals stops refreshing after network disconnect.
+
+[Build 223 - Fri Mar 12 03:13:37 PST 2010]
+* Fix {bz: 3603}: Support System Proxy settings on Mac OS X.
+
+[Build 222 - Thu Mar 11 09:23:38 PST 2010]
+* Signals: Name auto-completion are now sorted by name.
+* Fix {bz: 3632}: Duplicated People entries and People-refresh problems.
+
+[Build 221 - Wed Mar 10 21:47:09 PST 2010]
+* Fix Account skin application accidentally removed in build 220.
+
+[Build 220 - Wed Mar 10 21:24:39 PST 2010]
+* Add a colon between Signal poster's name and time. (Alan)
+
+[Build 219 - Wed Mar 10 21:11:47 PST 2010]
+* Correctly use /data/config to detect push support. (Stash)
+* Abort all pending Ajax requests upon logout.
+
+[Build 218 - Tue Mar  9 19:36:02 PST 2010]
+* Finish first-round implementation of /data/push support.
+
+[Build 217 - Tue Mar  9 15:35:46 PST 2010]
+* People: Add rhyme and reason to the display order. (Eugene)
+
+[Build 216 - Mon Mar  8 21:04:06 PST 2010]
+* Initial support for /data/push.
+
+[Build 215 - Fri Mar  5 08:42:14 PST 2010]
+* Properly anchor nested convo entries under their parents.
+* Handle the case of server having zero events instead of raising an exception.
+
+[Build 214 - Fri Mar  5 07:57:38 PST 2010]
+* Convo: Nested thread view.
+* Convo: "Click to reply" for listed Signals.
+* Convo: Flashback and Search results can now open as conversations.
+
+[Build 213 - Thu Mar  4 16:44:16 PST 2010]
+* Clicking on replied username goes to Convos, not user profile. (Jon, Alan)
+
+[Build 212 - Thu Mar  4 07:36:50 PST 2010]
+* Restore link coloring of "show profile" links in Signals info bar.
+
+[Build 211 - Thu Mar  4 01:41:59 PST 2010]
+* Convo: Clicking the Lightbox title icon now re-focus to topmost signal.
+* Convo: Input prompt text now shows "Post a reply to <User Name>".
+* Signals: Add "show profile" and "show conversation" tooltips to the info bar.
+
+[Build 209 - Wed Mar  3 23:23:08 PST 2010]
+* Rename "Threads" to "Conversations" (Convo).
+* Convo: Use relative timestamps for follow-up signals.
+* Convo: Indent follow-up signals by one level.
+* Convo: "Post" now posts replies to the topical signal.
+
+[Build 208 - Wed Mar  3 20:13:29 PST 2010]
+* First sketch at Thread display support.
+
+[Build 207 - Mon Mar  1 17:38:03 PST 2010]
+* Temporary reversal of "Start timer when the previous update succeeds" to see if it's the root cause of {bz: 3621}.
+
+[Build 206 - Fri Feb 26 23:45:56 PST 2010]
+* Correctly remember username/password for web-invoked launch.
+* Respect server's desktop_update_url setting in /data/config.
+
+[Build 205 - Fri Feb 26 23:23:57 PST 2010]
+* Move settings lightbox behind the help button to avoid overlapping.
+
+[Build 204 - Fri Feb 26 21:27:16 PST 2010]
+* Support for auto-updater downloading from appliances.
+
+[Build 203 - Fri Feb 26 17:18:11 PST 2010]
+* Workspaces: Proper support for inter-workspace links in lightbox view. (Kathleen)
+
+[Build 202 - Thu Feb 25 21:06:33 PST 2010]
+* Support for [Story: Socialtext Desktop is downloaded from an appliance].
+
+[Build 201 - Wed Feb 24 23:49:16 PST 2010]
+* Restore auto-update, which was accidentally disabled when connecting to ST v3.7.6.
+
+[Build 200 - Wed Feb 24 23:10:33 PST 2010]
+* Signals: @-completion now displays only members in the "Signal to" network.
+* Fix {bz: 3601}: Text Filter in People Tab affects "Editor" in Workspace tab.
+
+[Build 199 - Wed Feb 24 17:39:26 PST 2010]
+* Fix {bz: 3607}: User lookahead flakey, cancelling chooser freezes desktop.
+* Filter text in the People tab no longer restricts auto-complete dropdown.
+
+[Build 198 - Mon Feb 22 21:09:53 PST 2010]
+* Add SD version to the user agent string for easier server log analysis; prompted by {bz: 3592}.
+
+[Build 197 - Fri Feb 19 20:15:09 PST 2010]
+* Implement [Story: Disable SD auto-updating from Console].
+* Signals: Say "Show Signals within" instead of "Show Signals from". (Ken)
+
+[Build 196 - Thu Feb 18 04:17:00 PST 2010]
+* Activity: "Follow" events are now included in events display. (Alan)
+
+[Build 195 - Thu Feb 18 02:04:27 PST 2010]
+* Signal/Activity: Start timer when the previous update succeeds. (Luke)
+* Ajax timeout now set to 60s globally.
+
+[Build 194 - Wed Feb 17 04:56:10 PST 2010]
+* Activity: Person events are now included in events display. (Alan)
+
+[Build 193 - Tue Feb 16 20:38:44 PST 2010]
+* Serialize all async GET polling, except for /data/people. (Luke)
+* Retrieve People profile for each account/group incrementally for "allyourbase" branch.
+
+[Build 192 - Fri Feb 12 02:39:20 PST 2010]
+* Fix a Firehose vestige that causes intermittent lock-ups for staging.
+* Massively improved performance for the "allyourbase" branch.
+
+[Build 191 - Sat Feb  6 14:52:51 PST 2010]
+* Support for ...More... in People->Person->Activity panel.
+
+[Build 190 - Sat Feb  6 14:22:51 PST 2010]
+* Suppress firehose support until we get the Server a lot more stable. :-)
+
+[Build 189 - Fri Feb  5 14:38:48 PST 2010]
+* Fix auto-updater problems.
+
+[Build 188 - Fri Feb  5 14:05:49 PST 2010]
+* Remove alert() diagnostics from Firehose now it seems to work correctly.
+* On non-expected firehose errors, fallback to one regular poll, then retry.
+* Indicate the Firehose status at status bar by a + prefix.
+
+[Build 187 - Fri Feb  5 02:07:44 PST 2010]
+* Make Firehose support less noisy, and fallback more gracefully.
+
+[Build 186 - Thu Feb  4 01:55:11 PST 2010]
+* In a Profile, offer an "Open" button to link to its Web UI. (Ross)
+* Support for long-poll /data/firehose/signals ReST API. (Luke)
+
+[Build 185 - Wed Feb  3 22:55:46 PST 2010]
+* Remember the Active Tab and Subtabs after restart. (Eugene)
+* Add a link to the signon screen to follow us on Twitter and Facebook. (Alan)
+
+[Build 184 - Wed Feb  3 19:16:50 PST 2010]
+* Make release notes visible in SD UI, preferably in the status bar. (Eugene)
+* The ...More... link now stays after a Activity refresh.
+* Show the logged-in user name in status bar. (Alan)
+
+[Build 183 - Wed Feb  3 17:52:31 PST 2010]
+* Apply the ...More... capability from Signals tab to Activity tab. (Ken)
+* Rename the Activity tab to Activities. (Alan)
+* Changed the "Log out" button to an icon because of limited horizontal space.
+
+[Build 182 - Wed Feb  3 09:48:42 PST 2010]
+* Activity: Switch from HTML feed to JSON with after= support, massively speeding up refresh.
+
+[Build 181 - Sat Jan 30 01:59:12 PST 2010]
+* Fix {bz: 3504}: Hidden profile fields should stay hidden in People's Profiles.
+
+[Build 180 - Fri Jan 29 22:48:44 PST 2010]
+* Fix {bz: 3528}: Workspace/Network lists are now remembered by ID, not by index.
+
+[Build 179 - Fri Jan 29 19:35:38 PST 2010]
+* Testing signature migration for "make prepare upload release"; no functional changes.
+
+[Build 178 - Fri Jan 29 19:05:42 PST 2010]
+* Testing signature migration for "make dist"; no functional changes.
+
+[Build 177 - Fri Jan 15 13:40:33 PST 2010]
+* Signals: Initialize dropdowns correctly in the single-account, multiple-groups case.
+
+[Build 176 - Wed Jan 13 21:07:03 PST 2010]
+* Make the "Go back" infobutton flash thrice when appearing so it's more noticeable.
+
+[Build 175 - Tue Jan 12 14:03:01 PST 2010]
+* New "Go back to the Group you're Signalling to" infobutton when "Show Signals from" does not match "Signals to".
+* When "Signals to" changes from "All My Groups" into something else, always change "Show Signals from".
+
+[Build 174 - Tue Jan 12 13:39:18 PST 2010]
+* When "Signals to" changes, change "Show Signals from" too unless it's currently "All My Groups".
+* Do not play "loading" videos when they are not visible for slight lower CPU usage.
+
+[Build 173 - Tue Jan 12 13:11:10 PST 2010]
+* s/Invite people to your \Knetwork!/group!/ at @Ken's request.
+
+[Build 172 - Mon Jan 11 15:51:35 PST 2010]
+* Disable "Signal to" dropdown only when replying, not mentioning, as spotted by Ross.
+
+[Build 171 - Mon Jan 11 15:18:04 PST 2010]
+* When "Show Signals from" changes to something other than "All My Groups", change "Signal to" to match.
+
+[Build 170 - Sun Jan 10 23:35:27 PST 2010]
+* In network dropdowns, list groups under each of its accounts, not just the primary account.
+* Fix an obscure bug: Login would display a harmless Error message if the server has no signals.
+
+[Build 169 - Sat Jan  9 19:38:32 PST 2010]
+* Sort Groups case-insensitively.
+* Renamed "all my groups" to "All My Groups".
+* Clicking "Refresh" in Signals and People tabs now refreshes Groups list.
+* Widened Groups dropdown in Signal-to and in People tabs.
+
+[Build 168 - Sat Jan  9 07:40:47 PST 2010]
+* Sort Groups next to the Account it belongs to instead of at the end.
+* Render Groups with icons in network dropdown, instead of using " ... ".
+
+[Build 167 - Tue Jan  5 08:17:52 PST 2010]
+* Trivial wording change: Renamed "networks" to "groups".
+
+[Build 166 - Tue Jan  5 06:16:29 PST 2010]
+* Workspaces: Renamed the tab from Workspace as suggested by Alan.
+* Settings: Re-worded to "Display all Personal messages" as suggested by Ken.
+* Correctly set default popup config to display all popups.
+
+[Build 165 - Sun Jan  3 02:44:30 PST 2010]
+* Support for Groups in Signals and People tab for v3.7.4+.
+* Make spreadsheet heading/column markers invisible in Workspace views.
+
+[Build 164 - Tue Dec 22 15:20:14 PST 2009]
+* Make check-marks for keyword and username become unchecked when popup is unchecked.
+
+[Build 163 - Wed Dec 16 16:12:38 PST 2009]
+* Speed up Popup fade in/fade out to avoid lagging, as reported by @stash++.
+
+[Build 162 - Tue Dec 15 08:34:04 PST 2009]
+* Port to Flex 4 SDK for improved performance and memory usage; no functional changes.
+
+[Build 161 - Fri Dec 11 01:58:35 PST 2009]
+* Fix {bz: 3377}: DMs aren't recognized as DMs. (Regression from build 159.)
+
+[Build 160 - Wed Dec  9 16:26:00 PST 2009]
+* Restore "popup for all" behaviour if neither "keyword" nor "personal" checkboxes are ticked. (Regression from build 157.)
+
+[Build 159 - Wed Dec  9 15:18:52 PST 2009]
+* Signals: Entries in Followed/Mine/Personal/Sent/Link sub-tabs are now Flashbackable.
+
+[Build 158 - Wed Dec  9 15:02:31 PST 2009]
+* Workspace: Only allow double-clicking on attachments of displayable extensions.
+* Signals: Allow longer network names in "Show Signals from" dropdown.  ({bz: 3370})
+
+[Build 157 - Sun Nov 29 21:08:59 PST 2009]
+* Settings: New "Show mention/reply/private messages" checkbox.
+
+[Build 156 - Mon Nov 23 07:00:41 PST 2009]
+* "Minimize" in Windows now minimizes to system tray. ({bz: 3254})
+
+[Build 155 - Sun Nov 22 06:29:53 PST 2009]
+* Fix {bz: 3325} so @-completion now consistently works.
+
+[Build 154 - Fri Nov 20 09:39:40 PST 2009]
+* Flashback: Past entries now say "X earlier" instead of "X ago".
+* Flashback: Shorten tooltips to "Double‑click for Flashback".
+* Flashback: Hide tooltips when saving Flashback to HTML.
+
+[Build 153 - Thu Nov 19 00:34:05 PST 2009]
+* Flashback: "...More..." now works bothways.
+* Flashback: Clicking on the Clock-play icon to scroll back to the topical entry.
+* Flashback: The topical entry is now consistently displayed at the top.
+  (@AlanLepofsky++ for reporting - it failed 50% of the time in build 152.)
+* People tab's filtering no longer interferes with Signal tab's @-completion.
+* Workspace: Correctly style Wiki text in preview and lightbox.
+  (e.g. horizontal borders in tables are now visible.)
+* Fixed various other loose ends from [Story: Signals AIR Client IV]
+  (@KenPier++ for very concise and detailed QA feedbackwriteups.)
+
+[Build 152 - Wed Nov 18 06:09:14 PST 2009]
+* Replaced "Show Signals from all networks" checkbox with per-network dropdown box.
+* Fixed {bz: 3204} so @-completion should work reliably the first time after login.
+* Disable "Signal to Account" dropdown when replying or direct-messaging.
+* Use the ST star icon for "Follow/Stop following this person" instead of a checkbox.
+* Login screen: Do not pre-fill Server URL, but offer a button to reset to default.
+* More efficient cross-workspace search for server version v3.7.1.2+.
+
+[Build 151 - Sun Nov 15 08:23:12 PST 2009]
+* Flashforward for Signal Search: Scroll historical context bothways.
+* Clicking on the "Flashback" title text would put the focus on topic again.
+* Double-clicking an entry in Flashback signals list would re-focus it as the topic.
+
+[Build 150 - Thu Oct  8 13:50:36 PDT 2009]
+* Flashback for Signal Search: Double-click a result signal to view its historical context.
+* Workspace: Double-click a downloaded attachment to view it in a lightbox.
+* Clicking on the Signal Search view now auto-focuses on search term input box.
+
+[Build 149 - Mon Sep 28 23:14:44 PDT 2009]
+* Adjust Signals sub-tabs and icons slightly so they don't overlap.
+
+[Build 148 - Fri Sep 25 01:37:46 PDT 2009]
+* Clicking ...More... on the Signals/All tab no longer scrolls back to top.
+
+[Build 147 - Thu Sep 24 23:29:13 PDT 2009]
+* Add ...More... functionality to Search tab.
+
+[Build 146 - Thu Sep 24 07:56:05 PDT 2009]
+* Properly save sort order for signal searching as a per-server preference.
+
+[Build 145 - Thu Sep 24 03:16:30 PDT 2009]
+* Implement search ordering for Signals.
+
+[Build 144 - Mon Sep 21 10:25:45 PDT 2009]
+* Fix the bug where a People tab filtering with no matches results in infinite looping.
+
+[Build 143 - Sun Sep 20 22:03:17 PDT 2009]
+* Initial sketch for [Story: Search Signals from Desktop].
+
+[Build 142 - Sat Sep  5 10:34:08 PDT 2009]
+* Fix {bz: 3038}: Incorrect Colleague display with flair-139 on Windows XP.
+
+[Build 141 - Sat Sep  5 07:23:10 PDT 2009]
+* Fix {bz: 3065}: Too general search freezes Workspace tab.
+
+[Build 140 - Sun Aug 30 20:54:56 PDT 2009]
+* Profile links in mini browser now opens in the Profile tab.
+* Add "Back" and "Forward" buttons to the mini browser.
+* Add "Set/Unset as Homepage" button to mini browser.
+* A page set as home page will now open immediately after Login.
+
+[Build 139 - Thu Aug 27 11:23:52 PDT 2009]
+* Links clicked in the in-Desktop browser now stays inside Desktop.
+
+[Build 138 - Thu Aug 27 03:46:43 PDT 2009]
+* Double-clicking on the Workspace tab now opens the Page inside SD as a lightbox.
+
+[Build 137 - Wed Aug 26 19:44:41 PDT 2009]
+* Fix {bz: 3027}: Activity tab appears messed up.
+
+[Build 136 - Thu Aug 20 16:39:37 PDT 2009]
+* Fix a performance issue by checking deletion for visible-in-viewport signals only.
+
+[Build 135 - Thu Aug 13 07:43:47 PDT 2009]
+* The Find bar in Signals tab now interacts correctly with signal deletion.
+
+[Build 134 - Sat Aug  8 18:48:36 PDT 2009]
+* Signals deleted from other clients are now removed from display upon refresh.
+
+[Build 133 - Sat Aug  8 15:22:45 PDT 2009]
+* Do not show "delete" icon for signals you can't actually delete. :-)
+
+[Build 132 - Tue Aug  4 06:42:12 PDT 2009]
+* Add support for deleting signals for Socialtext server v3.5.10+.
+
+[Build 131 - Thu Jul  2 19:41:23 PDT 2009]
+* Add support for Activity feed in Socialtext server v3.5.7+.
+* Activity feed should no longer be refreshed when already logged out.
+
+[Build 130 - Thu Jun 18 03:23:41 PDT 2009]
+* Hide "Private to" button if the server does not support private message.
+* Disable the "Replies and Mentions" tab if the server supports neither.
+
+[Build 129 - Wed Jun 17 21:27:56 PDT 2009]
+* Send @UserName, not {user:*}, if the server does not support user mentions.
+
+[Build 128 - Thu May 21 20:51:50 PDT 2009]
+* Names not prefixed with @ will no longer appear in the @ tab.
+* Fix the bug where Signals with smiley icons erroneously appearing in the @ tab.
+
+[Build 127 - Wed May 13 17:36:15 PDT 2009]
+* Fix {bz: 2527}: Drag and drop does not update char count.
+* Fix {bz: 2528}: Profile does not update after profile changes.
+
+[Build 126 - Mon May 11 17:15:19 PDT 2009]
+* Add Server URL to the default status bar.
+* Rename Signals and Activity's "My Colleagues" tab to "Followed".
+
+[Build 125 - Mon May 11 16:10:05 PDT 2009]
+* Fix {bz: 2513}: Click popup, open browser window.
+
+[Build 124 - Mon May 11 16:01:27 PDT 2009]
+* Fix {bz: 2511}: Followed People profiles are empty.
+
+[Build 123 - Mon May 11 14:47:38 PDT 2009]
+* Also clear out My Profile and People->Person views when logging out.
+
+[Build 122 - Sun May 10 18:08:21 PDT 2009]
+* Fix {bz: 2509}: SD does not clear itself out when switching servers.
+
+[Build 121 - Sun May 10 16:25:28 PDT 2009]
+* Private Signals that mentions you again should appear in @ tab as well.
+
+[Build 120 - Fri May  8 17:03:02 PDT 2009]
+* Fix {bz:2474}: We should always prepend a space before user mentions.
+
+[Build 118 - Fri May  8 05:58:28 PDT 2009]
+* Clicking on a Popup notification now clears the popup queue, as per @Ken.
+
+[Build 117 - Thu May  7 22:14:49 PDT 2009]
+* Disable the Private Messages Signals tab when server doesn't support it.
+* Clicking the "Private Message" button now inserts a space after "d @Foo".
+
+[Build 116 - Thu May  7 06:06:47 PDT 2009]
+* Drag-and-drop URLs from Browser into SD now inserts links.
+
+[Build 115 - Wed May  6 20:47:54 PDT 2009]
+* "Private to" and "Insert mention" now supports in-place auto-completion.
+
+[Build 114 - Wed May  6 05:18:12 PDT 2009]
+* Ctrl-R now refreshes in the People tab as well.
+
+[Build 113 - Wed May  6 04:57:42 PDT 2009]
+* New "Private to" and "Insert mention" buttons for Signals tab.
+
+[Build 112 - Mon May  4 04:30:02 PDT 2009]
+* Fix {bz: 2478} by sending networks correctly to v3.5.3+ servers.
+
+[Build 111 - Thu Apr 30 17:50:11 PDT 2009]
+* Allow clicking reply/private icons to replace typed-in 'd @foo' prefix.
+* Set the correct charset in saved HTML files as UTF-8.
+
+[Build 110 - Thu Apr 30 15:58:19 PDT 2009]
+* Support for typed-in "d @UserName" to work as private messages.
+
+[Build 109 - Thu Apr 30 03:46:57 PDT 2009]
+* Replies are now always sent to the original signal's network(s).
+* Only display private message affordances when server supports it.
+* Mention/reply/private type text should not be highlighted by search.
+
+[Build 108 - Wed Apr 29 16:43:08 PDT 2009]
+* Always display the "Forgot password" link even after login/logout.
+
+[Build 107 - Wed Apr 29 16:31:36 PDT 2009]
+* Placed "Forgot password" link correctly on login panel.
+
+[Build 106 - Wed Apr 29 06:27:59 PDT 2009]
+* Network names are displayed in bold, not italic, in signals.
+* Default "Show Signals From All Networks" to true.
+
+[Build 105 - Tue Apr 28 03:35:56 PDT 2009]
+* Fix {bz: 2285}: TOC links in Workspace Page pane now scrolls correctly.
+* Fix {bz: 2396}: Skin changes now take effect immediately for People tab.
+* Fix {bz: 2432}: Login/logout to non-desktop-skinned accounts is now faster.
+* The "private message" icon in @-pulldown is updated to agree with Dashboard.
+
+[Build 104 - Sun Apr 26 00:36:56 PDT 2009]
+* Remove hover icons and use italic text for signal type text.
+
+[Build 103 - Sat Apr 25 23:45:21 PDT 2009]
+* Switch to the mini-reply and mini-private icons to agree with Dashboard.
+
+[Build 102 - Sat Apr 25 19:13:58 PDT 2009]
+* Fix {bz: 2428}: Expand emoticons and @-bold names only in text, not in tags.
+* Fix {bz: 2429}: Workspace dropdown should sort by title, not by ID.
+* Reversed order of Save/Find icons in Activity tab to the same as Signals tab.
+
+[Build 101 - Mon Apr 20 08:11:09 PDT 2009]
+* "Save as..." and "Find" buttons now apply to Activity view as well.
+
+[Build 100 - Sun Apr 19 17:14:16 PDT 2009]
+* New "Save as..." button to save Signals as HTML file on disk.
+
+[Build 99 - Sun Apr 19 12:51:34 PDT 2009]
+* New "...more..." button at the bottom of Signals/All to fetch older Signals.
+* New "Find in Signals" button to toggle visibility of Find toolbar.
+
+[Build 98 - Sat Apr 18 00:02:57 PDT 2009]
+* Yet another attempt to fix signal duplication bug.
+
+[Build 97 - Fri Apr 17 11:06:04 PDT 2009]
+* New "Reset application window" dock menu icon, as requested by @LukeCloss.
+
+[Build 96 - Fri Apr 17 10:22:39 PDT 2009]
+* Fix signal duplication bug reported by various parties. :-)
+
+[Build 95 - Thu Apr 16 12:21:10 PDT 2009]
+* Send private messages from @-dropdown.
+* Dropdown entries has avatar pictures now.
+* Display user mentions always with "@" to keep up with input style, suggested by @RossMayfield.
+* De-duplicate signals by signal ID, instead of by date/sender.
+
+[Build 94 - Thu Apr 16 02:59:24 PDT 2009]
+* An additional "Reply" button next to each signal, to make it more discoverable.
+* Darken the background color for "Private" signals a bit for increased visibility.
+
+[Build 92 - Wed Apr 15 21:51:28 PDT 2009]
+* If the server hadn't skinned the logo, don't bother downloading the original one.
+* Trivial tooltip wording fix: "insert mention" should be "mention this user".
+
+[Build 91 - Wed Apr 15 15:41:13 PDT 2009]
+* Typed-in @Mentions are now converted to proper mentions too.
+* Hover icon opacity and location are tweaked a bit to be more visible.
+* Network names are now displayed in bold in the "to" row.
+
+[Build 90 - Wed Apr 15 15:09:06 PDT 2009]
+* Pretty Twhirl/Tweetdeck-style hover icons on avatar image, as suggested by @Eugene.
+* New Reply/Mention/Private signal actions accessible via avatar hover icons.
+* Correctly apply network limits to all sub-tabs, not just the current one.
+* Default "Show Signals From All Networks" to true.
+
+[Build 89 - Wed Apr 15 09:30:27 PDT 2009]
+* Single- and double-quotes were incorrectly HTML-entity-escaped in build 88; oops.
+* Renamed the "Direct" sub-tab to "Private".
+
+[Build 88 - Wed Apr 15 08:39:27 PDT 2009]
+* @UserNames in input text are now properly translated into {user:*} wafls upon "Post".
+* New "Direct" sub-tab for Signals to list direct messages.
+* Change "Replies"/"Direct"/"Links" sub-tabs into icons.
+* Mark distinct types of signals with small icons.
+* Properly display/colorize mentions, reply and private signals.
+* New "Help" button on the top bar, next to "Settings".
+* On Workspace selection change, re-initiate search unless one is in progress. (@Eugene)
+
+[Build 87 - Sat Apr 11 03:40:57 PDT 2009]
+* Fix loader spinner for Activity views.
+* If server version < 5, don't bother skinning.
+* When login successful, immediately run the previous query.
+* Added a "refresh" button to the Activity tab.
+
+[Build 86 - Wed Apr  8 14:00:54 PDT 2009]
+* Background/foreground/link skin settings now apply to HTML-rendered regions as well.
+
+[Build 85 - Mon Apr  6 12:57:42 PDT 2009]
+* Fix {bz: 2336}: Use plain mailto: link so Outlook could be happy.
+
+[Build 84 - Mon Apr  6 12:04:42 PDT 2009]
+* Logo skin image is now scaled on display.
+
+[Build 83 - Fri Apr  3 22:18:53 PDT 2009]
+* Logo skin image is now cached on client side.
+
+[Build 82 - Fri Apr  3 13:14:56 PDT 2009]
+* Reset skin when logging out.
+* Respect relative path URIs in logo skin.
+
+[Build 81 - Fri Apr  3 11:14:49 PDT 2009]
+* Initial support for runtime skining.  Don't panic -- It'll restore upon connection.
+
+[Build 80 - Tue Mar 31 10:44:15 PDT 2009]
+* Change "Hide signals from other networks" to "Show signals from other networks". (@Phyllis, @Adina)
+
+[Build 79 - Tue Mar 31 00:55:12 PDT 2009]
+* Add Refresh button to People tab.
+* If the server supports invitation, display an invite link.
+* Show "Welcome, New User!" link when the user had not set first/last name yet.
+* Show "Upload your photo!" link when the user had not uploaded their photo yet.
+
+[Build 78 - Thu Mar 19 00:18:29 PDT 2009]
+* SD shouldn't disable the "Search" button on 1st workspace selected. (@Alan)
+* Selecting a new page should switch to the Page tab. (@KenPier)
+* Fix {bz: 2247}: Use the first name in @Replies match even if it contains space. (@Stash)
+* Improve the error message of {bz: 2254} to: "Sorry, due to a bug in Adobe AIR, files or folder names containing spaces cannot be uploaded on Mac OS X." (@Alan)
+* Show Avatar icon in Profile screen. (@Eugene)
+* Add file upload instructions. (@Alan, @Ken)
+
+[Build 77 - Tue Mar 17 09:19:16 PDT 2009]
+* Signed the application with new Thawte certificate.
+
+[Build 76 - Mon Mar 16 21:21:30 PDT 2009]
+* Clicking on signal-tab avatars should also navigate to Profile view.
+* Correctly update timestamps in Signals/@Replies and Signals/Links (@LukeCloss).
+* Change the attachment download instruction wording to "Desktop" for @KenPier.
+
+[Build 75 - Mon Mar 16 11:43:19 PDT 2009]
+* Clicking avatar image on Activity view should display the name in People tab.
+* Long network names are truncated in signals view, not overlapping the checkbox.
+
+[Build 74 - Mon Mar 16 10:31:32 PDT 2009]
+* Clear search results when a new Workspace is selected.
+* Disable Workspace selection when a search is ongoing.
+
+[Build 73 - Mon Mar 16 09:51:09 PDT 2009]
+* In the Workspace Pages grid, "Rev." is now sorted numerically.
+* Display tooltips correctly for signals to 3+ networks.
+* Force-refresh People view display when clicking on Avatar.
+* Clicking on an avatar in non-People tabs now opens profile sub-view.
+
+[Build 72 - Sun Mar 15 09:37:33 PDT 2009]
+* Don't show "Post to" and "Hide other networks" if there's only 1 network.
+* Remember the value of "Post to" and "Hide other networks" on disk.
+* Custom fields in My Profile view are no longer duplicated twice.
+
+[Build 71 - Sun Mar 15 08:28:53 PDT 2009]
+* New "Hide signals from other networks" to filter signals to specific networks.
+* Add "Edit" button to "People/My Profile" view.
+* Refactor the "Signals/Mine" tab to use Signals instead of Activities display.
+* Fix the profile view so it won't display the same field's content twice.
+* Change toolbar button's style to be more normal and gray.
+
+[Build 70 - Thu Mar 12 18:47:51 PDT 2009]
+* Ctrl-C and Ctrl-V now works on Windows and Linux, reported by @EugeneLee.
+* New "My Profile" view in People tab, suggested by @RossMayfield.
+* The "Network" sub-view is renamed to "Colleagues".
+
+[Build 69 - Thu Mar 12 08:37:54 PDT 2009]
+* Workspace grid now shows last editor and last edit time as smart data.
+* Attachments now shows uploader and upload time as smart data.
+* Attachment size are now displayed with appropriate size units.
+
+[Build 68 - Wed Mar 11 18:34:00 PDT 2009]
+* In the workspace tab, "Search" is disabled when a previous search is ongoing.
+
+[Build 67 - Tue Mar 10 16:32:55 PDT 2009]
+* Make the default signal account the primary account, not All.
+* Add " (primary)" after the primary account's label.
+
+[Build 66 - Fri Mar  6 15:54:05 PST 2009]
+* Each signals shows which network(s) it was sent to.
+* Clicking on a person's mailto link now composes mail with full name.
+* Signaling to specific network now works.
+* When login fails, "Log me in automatically" is now turned off.
+* Cache People relationships to speed up initial loading time.
+
+[Build 65 - Fri Mar  6 15:54:05 PST 2009]
+* New "Launch this application on start up" checkbox (defaults to true).
+* Added "Signal to network" and "Show people from network" dropdowns.
+* Added "Invite people to your network" link (doesn't yet link to anything).
+* Renamed "flairSignals" to "Socialtext Desktop Flair" as per @Eugene.
+* Changed icon of Flair to be distinguishable from Socialtext Desktop.
+
+[Build 64 - Fri Mar  6 00:10:57 PST 2009]
+* People tab now works according to the story tests.
+* Click on people names in Signals/Activities now navigates to People tab.
+* Disable passthrough-login to diagnose login popup reported by @Eugene.
+
+[Build 63 - Thu Mar  5 12:26:25 PST 2009]
+* Watchlist/Watchers lists now show phone number and email as well.
+* Revamped the People/Person/Network display UI from @Tracy's design.
+* Emails in People profiles are now "Email to this address" links.
+
+[Build 62 - Thu Mar  5 11:18:47 PST 2009]
+* The passthrough-login form is now POST instead of GET. @JohnT++ for the catch.
+* Passthrough-login is now restricted to https servers. SUggested by @KenPier.
+* When login fails, display an "I don't know my password" link. @PhyllisBall++.
+
+[Build 61 - Thu Mar  5 06:44:27 PST 2009]
+* Updated Person tile display to include email and phone number.
+* The character count now goes to negative to allow re-editing long signals.
+* Logout-then-login should no longer clean the Signals/All view.
+
+[Build 60 - Thu Mar  5 00:38:39 PST 2009]
+* New "@Replies" and "Links" sub-views from @RossMayfield's WikiWed Hacks page.
+* Clicking a in-browser link now always logs you in as the same user as Desktop.
+* Changed "Refresh" and "Clear" to small icons, per discussion with @TracyRuggles.
+
+[Build 58 - Wed Mar  4 15:59:16 PST 2009]
+* Made Workspaces/Query input box 50%/50% width and added a draggable divider.
+
+[Build 57 - Wed Mar  4 15:45:40 PST 2009]
+* Adjusted Workspace dropdown width vs search text box width again for @Alan.
+* Added new icons of New Page and Edit Page.
+
+[Build 56 - Wed Mar  4 15:32:00 PST 2009]
+* Added New Page and Open Page buttons to Workspace tab.
+
+[Build 55 - Wed Mar  4 14:23:10 PST 2009]
+* Added filtering for the People/All view; "enter" navigates to the first match.
+* People/All is now the default sub-view for People tab.
+
+[Build 54 - Wed Mar  4 06:36:52 PST 2009]
+* Avatar caching shouldn't be needed for Server v3.4.x.x or later.
+
+[Build 53 - Tue Mar  3 18:17:39 PST 2009]
+* Fix File upload to use REST API so it works with the version in production/staging.
+
+[Build 52 - Tue Mar  3 02:32:03 PST 2009]
+* Adjust the wording on Settings panel from "Updates" to "Software Update".
+* Improved startup performance a little by not loading the "People"->"Myself" view.
+
+[Build 51 - Tue Mar  3 02:15:46 PST 2009]
+* Adjusted UI layout to match [Story: Signals AIR Client II]'s specs.
+* @Alan reported that "My followers" list is always blank; fixed.
+* @Alan also reported that the People view's "Myself" sub-tab is confusing; removed it.
+
+[Build 50 - Mon Mar  2 21:25:39 PST 2009]
+* Fix 140 countdown yet again; it should be updated after posting.
+
+[Build 49 - Mon Mar  2 21:22:14 PST 2009]
+* Use @CamelCase in @-completion.
+* @Eugene reported that 140 countdown was broken; fixed.
+
+[Build 48 - Tue Mar  3 13:10:07 CST 2009]
+* @Ross's giant animated gif avatar broke Activity feed. This fixes it.
+* Try out _ instead of - in username completion.
+* @Eugene reported a stray "Login" title bar; changed to "Socialtext Desktop".
+
+[Build 47 - Mon Mar  2 20:50:41 PST 2009]
+* First cut at @-completion!
+* @Eugene suggested that we remember workspace name and query string across sessions.
+
+[Build 46 - Mon Mar  2 16:24:21 PST 2009]
+* @Tracy reported that Activity avatars should click, not hover, to expand.
+* Also changed Workspace tab's Page browser to match S3's font style.
+
+[Build 45 - Mon Mar  2 14:11:30 PST 2009]
+* Workspace search now defaults searching across all your workspaces.
+
+[Build 44 - Mon Mar  2 13:02:38 PST 2009]
+* Attachment upload and download now works for real.
+
+[Build 43 - Mon Mar  2 09:51:47 PST 2009]
+* Initial sketch at downloading attachment files from the "Workspace" tab.
+
+[Build 42 - Sun Mar  1 08:38:42 CST 2009]
+* Changed the version numbering policy to be less confusing.
+* Fix {bz: 2153}: Clicking on popup should now open the main window.
+* Replaced the banner graphic with Tracy's latest SocialtextDesktop image.
+
+[v2.02 - Fri Feb 27 08:43:14 PST 2009]
+* Fix {bz: 2140} when connecting to a box with signals, then different box with no signals.
+* "Check Now" now displays appropriate status if no updates are available, or checking for update failed.
+* Fixed restore-window-after-restart so it aligns proportionally when resolution changed.
+* If the screen resolution is changed to be smaller than the app window, resize app to fit screen.
+* Fix {bz: 2140} by adding if-empty messages for Signals/All and Signals/Colleagues.
+* Add support for "+People -Signals" and "-People" server plugin configurations to SD.
+* Ctrl-R now refreshes the signal pane; also the "Refresh" link button grays out during refresh.
+* Make Activities age as needed.
+* Signals now refresh in the background even if you're in Activity pane.
+* Text field input color for Signals is now black, not deep cyan.
+
+[v2.01 - Mon Feb 23 10:43:59 PST 2009]
+* Fixed the update XML location so future updates can be fetched correctly.
+* Added shortcut keys (Ctrl-8, 9, 0) for Person sub-views.
+* Added "Remember my password" checkbox.
+
+[v2.0 - Mon Feb 23 07:28:43 PST 2009]
+* Merged codebase and UI with Socialtext Desktop.
+
+[v1.93 - Fri Feb 20 06:51:17 PST 2009]
+* Fix link display's double linkficiation bug reported by @ingy.
+* Add top-center/bottom-center/middle-left/middle-right place options.
+* Fix "x hours ago" display for signal activities.
+* Add icons for Signals/Activity tabs.
+
+[v1.92 - Fri Feb 20 00:05:55 PST 2009]
+* Wiki markups in Signals should now be displayed correctly: {bz: 2117}
+
+[v1.91 - Thu Feb 19 10:58:01 PST 2009]
+* Fixed the bug where Colleagues/Followers would keep increasing with duplicate entries.
+* Enhanced visibility of Tab Bar navigators for sub-view.
+
+[v1.90 - Wed Feb 18 14:23:52 PST 2009]
+* Feature complete w.r.t. [Story: Basic Signals AIR Client].
+* "Activities" Tab: Add new "All", "Mine" sub-views.
+* New "People" Tab: Add new "All" sub-views.
+
+[v1.85 - Fri Feb 13 07:43:22 PST 2009]
+* Supports "All", "Mine" and "My Colleagues" sub-views of signals.
+* Renamed from "flashSignals" to "flairSignals".
+* Settings now persist across upgrades and restarts.
+* Popup location is now configurable.
+
+[v1.84 - Fri Feb 13 07:43:22 PST 2009]
+* The main Signals list now scrolls smoothly: {bz: 2066}.
+* "x minutes ago" text now auto-updates itself.
+
+[v1.83 - Fri Feb 13 00:50:14 PST 2009]
+* Fixed blurry text problem: {bz: 2067}
+
+  ]]></description>
+</update>

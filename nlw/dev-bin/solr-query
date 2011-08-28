@@ -1,0 +1,31 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use LWP::Simple qw/get/;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::String;
+use Getopt::Long;
+
+my $fl = '*';
+my $core = $ENV{USER};
+GetOptions(
+    'fl:s' => \$fl,
+    'core:s' => \$core,
+);
+
+my $query = shift;
+die "USAGE: $0 <query_term>" unless $query;
+$query = Socialtext::String::uri_escape($query);
+$fl = Socialtext::String::uri_escape($fl);
+
+my $url = "http://localhost:8983/solr/$core/select?q=QUERY&rows=20&wt=json&indent=true&fl=$fl&hl=false";
+
+$url =~ s/QUERY/$query/;
+
+warn $url;
+my $results = get($url);
+
+print "$results\n";
+

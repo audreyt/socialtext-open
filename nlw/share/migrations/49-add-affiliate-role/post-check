@@ -1,0 +1,18 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Socialtext::SQL qw/sql_singlevalue/;
+
+my $has_affiliate = eval { 
+    sql_singlevalue(q{
+        SELECT COUNT(*)
+          FROM "Role"
+         WHERE name = 'affiliate'
+    });
+};
+
+exit 0 if defined($has_affiliate) && $has_affiliate == 1;
+
+print "Failed to find one and only one Affiliate Role";
+exit 1;

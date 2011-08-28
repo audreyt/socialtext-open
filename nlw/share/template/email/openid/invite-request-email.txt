@@ -1,0 +1,17 @@
+[% loc('email.hello') %]
+
+[% loc('email.request-invite=user,wiki:', inviting_user, workspace_title) %]
+
+[% FOREACH user = invited_users %]
+    [% user %] [% END %]
+
+[% IF extra_text %]
+    [% extra_text %]
+[% END %]
+[% loc('email.to-invite-users-visit-wiki-invite-page') %]
+[% loc('email.user-invite-page-at:') %]
+
+[% url %]
+
+[% PROCESS 'email/standard-footer.txt'
+   support_link = 0 %]

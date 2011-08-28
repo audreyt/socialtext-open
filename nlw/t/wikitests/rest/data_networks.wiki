@@ -1,0 +1,65 @@
+* Fixture: SocialRest
+
+| standard-test-setup |          |                |
+| set                 | acct1    | %%account%%    |
+| set                 | acct1_id | %%account_id%% |
+| delete-all-groups   |          |                |
+
+# Networks are just a single account
+
+| GET_json | /data/networks?startIndex=0 |
+| code-is | 200 |
+| json-parse |
+| json-like | {"totalResults":"1"} |
+| json-like | {"entry":[{"name":"%%account%%","id":"%%account_id%%","type":"account"}]} |
+
+# Networks are multiple accounts
+| set | acct2 | acct2-%%start_time%% |
+| create-account | %%acct2%% |
+| set | acct2_id | %%account_id%% |
+| add-user-to-account | %%username%% | %%acct2%% |
+| GET_json | /data/networks?startIndex=0 |
+| code-is | 200 |
+| json-parse |
+| json-like | {"totalResults":"2"} |
+| json-like | {"entry":[{"name":"%%acct1%%","id":"%%acct1_id%%","type":"account"},{"name":"%%acct2%%","id":"%%acct2_id%%","type":"account"}]} |
+| remove-user-from-account | %%username%% | %%acct2%% |
+
+# Account + a group
+| set | group1 | group1-%%start_time%% |
+| create-group | %%group1%% | %%acct1%% |
+| set | group1_id | %%group_id%% |
+| add-user-to-group | %%username%% | %%group1_id%% |
+| GET_json | /data/networks?startIndex=0 |
+| code-is | 200 |
+| json-parse |
+| json-like | {"totalResults":"2"} |
+| json-like | {"entry":[{"name":"%%acct1%%","id":"%%acct1_id%%","type":"account"},{"name":"%%group1%%","id":"%%group1_id%%","type":"group"}]} |
+
+# Account + a group + a self-join group (discoverable = 0)
+| set | group1 | group1-%%start_time%% |
+| create-group | %%group1%% | %%acct1%% | | desc | self-join |
+| set | group1_id | %%group_id%% |
+| GET_json | /data/networks?startIndex=0;discoverable=0 |
+| code-is | 200 |
+| json-parse |
+| json-like | {"totalResults":"2"} |
+| json-like | {"entry":[{"name":"%%acct1%%","id":"%%acct1_id%%","type":"account"},{"name":"%%group1%%","id":"%%group1_id%%","type":"group"}]} |
+
+# Account + a group + a self-join group (discoverable = 1)
+| set | group2 | group2-%%start_time%% |
+| create-group | %%group2%% | %%acct1%% | | desc | self-join |
+| set | group2_id | %%group_id%% |
+| GET_json | /data/networks?startIndex=0;discoverable=include |
+| code-is | 200 |
+| json-parse |
+| json-like | {"totalResults":"3"} |
+| json-like | {"entry":[{"name":"%%acct1%%","id":"%%acct1_id%%","type":"account"},{"name":"%%group1%%","id":"%%group1_id%%","type":"group"},{"type":"group","name":"%%group2%%","id":"%%group2_id%%"}]} |
+
+# Filters - groups/accounts
+| GET_json | /data/networks?startIndex=0;discoverable=include;filter=acc |
+| code-is | 200 |
+| json-parse |
+| json-like | {"totalResults":"1"} |
+| json-like | {"entry":[{"name":"%%acct1%%","id":"%%acct1_id%%","type":"account"}]} |
+

@@ -1,0 +1,35 @@
+dn: cn=Black Sabbath,dc=example,dc=com
+objectClass: groupOfNames
+cn: Black Sabbath
+member: cn=Ozzy Osbourne,dc=example,dc=com
+member: cn=Geezer Butler,dc=example,dc=com
+member: cn=Tony Iommi,dc=example,dc=com
+member: cn=Ward\, Bill,dc=example,dc=com
+
+dn: cn=Ozzy Osbourne,dc=example,dc=com
+objectClass: inetOrgPerson
+mail: ozzy.osbourne@example.com
+gn: Ozzy
+sn: Osbourne
+cn: Ozzy Osbourne
+
+dn: cn=Geezer Butler,dc=example,dc=com
+objectClass: inetOrgPerson
+mail: geezer.butler@example.com
+gn: Geezer
+sn: Butler
+cn: Geezer Butler
+
+dn: cn=Tony Iommi,dc=example,dc=com
+objectClass: inetOrgPerson
+mail: tony.iommi@example.com
+gn: Tony
+sn: Iommi
+cn: Tony Iommi
+
+dn: cn=Ward\, Bill,dc=example,dc=com
+objectClass: inetOrgPerson
+mail: bill.ward@example.com
+gn: Bill
+sn: Ward
+cn: Ward, Bill

@@ -1,0 +1,63 @@
+
+* Fixture: SocialRest
+
+| *Comment*      | Create Test Users and Acount                        |                       |
+| set            | testers                                             | testers%%start_time%% |
+| create-account | %%testers%%                                         |                       |
+| st-admin       | enable-plugin --account %%testers%% --plugin people |                       |
+
+| set            | tester1                  | tester1%%start_time%%@ken.socialtext.net   |             |
+| create-user    | %%tester1%%              | password                                   | %%testers%% |
+| set-user-id    | tester1_id               | %%tester1%%                                |             |
+| http-user-pass | %%tester1%%              | password                                   |             |
+| post-json      | /data/people/%%tester1%% | {"first_name":"Tester", "last_name":"One"} |             |
+
+| set            | tester2                  | tester2%%start_time%%@ken.socialtext.net   |             |
+| create-user    | %%tester2%%              | password                                   | %%testers%% |
+| set-user-id    | tester2_id               | %%tester2%%                                |             |
+| http-user-pass | %%tester2%%              | password                                   |             |
+| post-json      | /data/people/%%tester2%% | {"first_name":"Tester", "last_name":"Two"} |             |
+
+| http-user-pass | %%tester1%% | password |
+
+| set              | ws          | ws%%start_time%% |
+| create-workspace | %%ws%%      | %%testers%%      |
+| add-member       | %%tester1%% | %%ws%%           |
+| add-member       | %%tester2%% | %%ws%%           |
+
+| edit-page | %%ws%% | Page One   | Page One Content   |
+| edit-page | %%ws%% | Page Two   | Page Two Content   |
+| edit-page | %%ws%% | Page Three | Page Three Content |
+| edit-page | %%ws%% | Page Four  | Page Four Content  |
+
+| *Comment*       | Clear all events |                  |
+| http-user-pass  | %%tester1%%      | password         |
+| st-clear-events |                  |                  |
+| get             | /data/events     | application/json |
+| code-is         | 200              |                  |
+| has-header      | Cache-Control    | qr/private/      |
+| body-like       | []               |                  |
+
+| Comment | POST a few events |
+
+| post-json | /data/events | {"actor":{"id":%%tester2_id%%},"page":{"workspace_name":"%%ws%%","id":"page_four"},"event_class":"page","action":"view"} |
+| code-is   | 201          |                                                                                                                                                             |
+| post-json | /data/events | {"actor":{"id":%%tester2_id%%},"tag_name":"taggy","page":{"workspace_name":"%%ws%%","id":"page_three"},"event_class":"page","action":"tag_add"} |
+| code-is   | 201          |                                                                                                                                                             |
+| post-json | /data/events | {"actor":{"id":%%tester1_id%%},"tag_name":"saggy","page":{"workspace_name":"%%ws%%","id":"page_two"},"event_class":"page","action":"tag_add"}   |
+| code-is   | 201          |                                                                                                                                                             |
+| post-json | /data/events | {"actor":{"id":%%tester1_id%%},"tag_name":"taggy","page":{"workspace_name":"%%ws%%","id":"page_one"},"event_class":"page","action":"tag_add"}   |
+| code-is   | 201          |                                                                                                                                                             |
+
+| Comment | GET all events as JSON                        |                  |
+| get     | /data/events?event_class=page;contributions=1 | application/json |
+
+| code-is         | 200               |             |
+| json-parse      |                   |             |
+| json-array-size | 3                 |             |
+| has-header      | Cache-Control     | qr/private/ |
+| body-like       | "id":"page_one"   |             |
+| body-like       | "id":"page_two"   |             |
+| body-like       | "id":"page_three" |             |
+| body-unlike     | "id":"page_four"  |             |
+

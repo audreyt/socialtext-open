@@ -1,0 +1,60 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use warnings;
+use strict;
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Socialtext::JobCreator;
+use Getopt::Long;
+
+Getopt::Long::Configure('pass_through');
+
+my $timeout;
+my $uniqkey;
+my $quiet;
+my $priority;
+GetOptions(
+    'timeout=i'  => \$timeout,
+    'priority=i' => \$priority,
+    'uniqkey=s'  => \$uniqkey,
+    'quiet'      => \$quiet,
+);
+
+my $cmd = shift;
+my @args = @ARGV;
+
+my $job_h = Socialtext::JobCreator->insert(
+    'Socialtext::Job::Cmd' => {
+        cmd => $cmd,
+        args => \@args,
+        ($timeout ? (timeout => $timeout) : ()),
+        job => {
+            ($uniqkey ? (uniqkey => $uniqkey) : ()),
+            ($priority ? (priority => $priority) : ()),
+        }
+    }
+);
+if ($job_h) {
+    print "job id ".$job_h->jobid."\n" unless $quiet;
+    exit 0;
+}
+else {
+    warn "failed\n";
+    exit 1;
+}
+
+
+=head1 NAME
+
+ceq-exec - Queue a command to be run by the ceqlotron
+
+=head1 SYNOPSIS
+
+B<ceq-exec [--timeout=30] command arg1 arg2>
+
+=head1 SEE ALSO
+
+L<ceq-stat(1)>, L<ceq-rm(1)>, L<ceqlotron(1)>, L<ceq-read(1)>
+
+=cut

@@ -1,0 +1,54 @@
+* Fixtures: Socialtext
+
+| *Comment* | Test Case: Business Control Panel Group Add To Account |
+
+| set | group | group%%start_time%% |
+| set | account | account%%start_time%% |
+| set | addl_account | new_account%%start_time%% |
+
+| create-account | %%account%% | has been created |
+| create-account | %%addl_account%% | has been created |
+| create-group | %%group%% | %%account%% |
+| st_process_jobs |  |  |
+
+| *Comment* | Test Case: Business Control Panel Group Add To Account Add second account to the group |  |
+| st-admin | give-accounts-admin --e %%email%% | now has accounts admin access |
+| open-ok | /nlw/control/group/%%group_id%% |  |
+| wait_for_element_visible_ok | addToAccountLookahead | 30000 |
+| type-lookahead-ok | addToAccountLookahead | %%addl_account%% |
+| wait_for_element_visible_ok | link=%%addl_account%% | 10000 |
+| click_ok | link=%%addl_account%% |  |
+| wait_for_text_present_ok | Accounts (2) | 30000 |
+| wait_for_text_present_ok | %%account%% | 30000 |
+| text_like | //body | qr/%%account%%.+%%addl_account%%/ |
+
+| *Comment* | Test Case: Business Control Panel Group Add To Account Make sure the change 'took' by a refresh |  |
+| refresh |  |  |
+| wait_for_element_visible_ok | accountTable | 30000 |
+| wait_for_element_visible_ok | link=%%addl_account%% | 30000 |
+| wait_for_text_present_ok | Accounts (2) | 30000 |
+| wait_for_text_present_ok | %%account%% | 30000 |
+| text_like | //body | qr/%%account%%.+%%addl_account%%/ |
+
+| *Comment* | Test Case: Business Control Panel Group Add To Account Remove Account from group |  |
+| wait_for_element_visible_ok | //input[@type='checkbox' and @id='accountTable-select-1'] | 30000 |
+| setSpeed | 2000 | Don't Even Ask |
+| click_ok | //input[@type='checkbox' and @id='accountTable-select-1'] |  |
+| is_checked_ok | //input[@type='checkbox' and @id='accountTable-select-1'] |  |
+| wait_for_element_visible_ok | //input[@type='button' and @value="Remove from account"] | 30000 |
+| click_ok | //input[@type='button' and @value="Remove from account"] |  |
+| verifyConfirmation | Remove this Group from 1 selected Account |  |
+| wait_for_text_present_ok | Accounts (1) | 30000 |
+
+| setSpeed | 0 |  |
+| refresh |  |  |
+| wait_for_text_present_ok | Accounts (1) | 30000 |
+| wait_for_text_not_present_ok | %%addl_account%% | 30000 |
+
+| *Comment* | Test Case: Business Control Panel Group Add To Account TEARDOWN |  |
+| st-process-jobs |  |  |
+| delete-group | %%group_id%% | Recklessly deleted |
+| delete-account | %%account%% | has been deleted |
+| delete-account | %%addl_account%% | has been deleted |
+
+| *Comment* | Test Case: Business Control Panel Group Add To Account COMPLETED |

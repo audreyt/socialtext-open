@@ -1,0 +1,48 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+
+use strict;
+use warnings;
+
+use File::Find;
+use Getopt::Long;
+
+my $summary;
+GetOptions(
+    summary => \$summary,
+) or die "\n";
+
+my $start = shift || '/var/www/socialtext/plugin';
+my %types;
+
+opendir DIR, $start or die "Can't open $start";
+my @workspaces = grep !/^\.{1,2}$/, readdir DIR;
+closedir DIR;
+
+for my $ws ( sort @workspaces ) {
+    my $path = "$start/$ws/attachments";
+    find( \&keepers, $path );
+}
+
+if ( $summary ) {
+    for my $type ( sort keys %types ) {
+        printf( "%6d %s\n", $types{$type}, $type );
+    }
+}
+
+
+sub keepers {
+    if ( -f ) {
+        if ( $summary ) {
+            if ( $File::Find::name =~ /(\.[^.]+)$/ ) {
+                ++$types{$1};
+            }
+            else {
+                ++$types{none};
+            }
+        }
+        else {
+            print "$File::Find::name\n";
+        }
+    }
+}

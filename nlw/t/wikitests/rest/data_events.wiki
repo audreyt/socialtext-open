@@ -1,0 +1,412 @@
+Test case for `/data/events`(GET and POST).
+
+* Fixture: SocialRest
+
+| *Comment*      | Create Test Users and Acount                        |                       |
+| set            | testers                                             | testers%%start_time%% |
+| create-account | %%testers%%                                         |                       |
+| st-admin       | enable-plugin --account %%testers%% --plugin people |                       |
+
+| set            | tester1                  | tester1%%start_time%%@ken.socialtext.net   |             |
+| create-user    | %%tester1%%              | password                                   | %%testers%% |
+| set-user-id    | tester1_id               | %%tester1%%                                |             |
+| http-user-pass | %%tester1%%              | password                                   |             |
+| post-json      | /data/people/%%tester1%% | {"first_name":"Tester", "last_name":"One"} |             |
+
+| set            | tester2                  | tester2%%start_time%%@ken.socialtext.net   |             |
+| create-user    | %%tester2%%              | password                                   | %%testers%% |
+| set-user-id    | tester2_id               | %%tester2%%                                |             |
+| http-user-pass | %%tester2%%              | password                                   |             |
+| post-json      | /data/people/%%tester2%% | {"first_name":"Tester", "last_name":"Two"} |             |
+
+| http-user-pass | %%tester1%% | password |
+
+| set              | test_workspace                                                         | test_workspace%%start_time%% |                    |
+| create-workspace | %%test_workspace%%                                                     | %%testers%%                  |                    |
+| add-member       | %%tester1%%                                                            | %%test_workspace%%           |                    |
+| add-member       | %%tester2%%                                                            | %%test_workspace%%           |                    |
+| st-admin         | add-workspace-admin --email %%tester1%% --workspace %%test_workspace%% |                              |                    |
+| st-admin         | add-workspace-admin --email %%tester2%% --workspace %%test_workspace%% |                              |                    |
+| edit-page        | %%test_workspace%%                                                     | Page One                     | Page One Content   |
+| edit-page        | %%test_workspace%%                                                     | Page Two                     | Page Two Content   |
+| edit-page        | %%test_workspace%%                                                     | Page Three                   | Page Three Content |
+
+| *Comment*       | ensure that madlibs from signals are evaluated |          |
+| http-user-pass  | %%tester1%% | password |
+| st-clear-events |             |          |
+| post-json | /data/signals | {"signal":"signal1 at %%start_time%%"} |
+| code-is    | 201                         |                |
+| get        | /data/events                | text/html      |
+| has-header | Content-type                | qr/text\/html/ |
+| code-is    | 200                         |                |
+| body-like  | signal1 at %%start_time%%   |                |
+
+| Comment         | signal events as json |                  |
+| get             | /data/events          | application/json |
+| code-is         | 200                   |                  |
+| json-parse      |                       |                  |
+| json-array-size | 1                     |                  |
+
+| *Comment*       | post a view event to make sure it is not shown | |
+| post-json | /data/events | {"event_class":"person","action":"view","actor":{"id":"%%tester1_id%%"},"person":{"id":"%%tester2_id%%"}} |
+| code-is    | 201                         |                |
+
+| Comment | check event setup, view events should not be shown |
+| get             | /data/events      | application/json |
+| code-is         | 200               |                  |
+| json-parse      |                   |                  |
+| json-array-size | 1                 |                  |
+
+| Comment   | action=view should return 400 |
+| GET       | /data/events?action=view      |
+| code-is   | 400                           |
+| body-like | view is not a valid action    |
+
+| *Comment*      | ensure that signals are appearing in 'followed' api  |                                    |
+| http-user-pass | %%tester2%%                                          | password                           |
+| post-json      | /data/people/%%tester2_id%%/watchlist                | {"person":{"id":"%%tester1_id%%"}} |
+| code-is        | 204                                                  |                                    |
+| get            | /data/events/followed/%%tester2_id%%                 | application/json                   |
+| code-is | 200 |
+| body-like      | "body":"signal1 at %%start_time%%"                   |                                    |
+| json-parse      |                       |                  |
+| json-array-size | 1                     |                  |
+| delete         | /data/people/%%tester2_id%%/watchlist/%%tester1_id%% |                                    |
+
+| *Comment*       | Clear all events |                  |
+| http-user-pass  | %%tester1%%      | password         |
+| st-clear-events |                  |                  |
+| get             | /data/events     | application/json |
+| code-is         | 200              |                  |
+| has-header      | Cache-Control    | qr/private/      |
+| body-like       | []               |                  |
+
+| get        | /data/events |          |
+| has-header | Content-Type | qr/html/ |
+| body-like  | <html>       |          |
+
+| get        | /data/events | text/plain      |
+| has-header | Content-Type | qr/text\/plain/ |
+| body-like  | qr/^$/       |                 |
+
+| Comment | POST a few events |
+
+| post-json | /data/events | {"actor":{"id":%%tester2_id%%},"event_class":"person","action":"tag_add","person":{"id":%%tester1_id%%},"tag_name":"downer"}                                |
+| code-is   | 201          |                                                                                                                                                             |
+| post-json | /data/events | {"actor":{"id":%%tester2_id%%},"tag_name":"taggy","page":{"workspace_name":"%%test_workspace%%","id":"page_three"},"event_class":"page","action":"tag_add"} |
+| code-is   | 201          |                                                                                                                                                             |
+| post-json | /data/events | {"actor":{"id":%%tester1_id%%},"tag_name":"saggy","page":{"workspace_name":"%%test_workspace%%","id":"page_two"},"event_class":"page","action":"tag_add"}   |
+| code-is   | 201          |                                                                                                                                                             |
+| post-json | /data/events | {"actor":{"id":%%tester1_id%%},"tag_name":"taggy","page":{"workspace_name":"%%test_workspace%%","id":"page_one"},"event_class":"page","action":"tag_add"}   |
+| code-is   | 201          |                                                                                                                                                             |
+
+| Comment    | GET all events as JSON |                  |
+| get        | /data/events           | application/json |
+| code-is    | 200                    |                  |
+| has-header | Cache-Control          | qr/private/      |
+| body-like  | "id":"page_one"        |                  |
+| body-like  | "id":"page_three"      |                  |
+| body-like  | "id":"page_two"        |                  |
+| body-like  | "html":"<a href=\"/st/profile/%%tester1_id%%\"> |                  |
+
+
+| Comment    | GET all events as text/plain                                     |                 |
+| get        | /data/events                                                     | text/plain      |
+| has-header | Content-type                                                     | qr/text\/plain/ |
+| code-is    | 200                                                              |                 |
+| body-like  | qr/Tester One \(less than a minute ago\) tagged Page One in %%test_workspace%% as taggy/    |                 |
+| body-like  | qr/Tester One \(less than a minute ago\) tagged Page Two in %%test_workspace%% as saggy./   |                 |
+| body-like  | qr/Tester Two \(less than a minute ago\) tagged Page Three in %%test_workspace%% as taggy./ |                 |
+| body-like  | qr/Tester Two \(less than a minute ago\) tagged Tester One downer./                         |                 |
+
+| Comment    | GET all events as text/html                                                                                    |                |
+| get        | /data/events                                                                                                   | text/html      |
+| has-header | Content-type                                                                                                   | qr/text\/html/ |
+| code-is    | 200                                                                                                            |                |
+Tester One</a></span>            <span class="ago_raw" style="display:none">2009-08-20 18:15:54.981155Z</span>        <span class="ago"><span class="ago_text">less than a minute ago</span></span>        </div>
+#         <div class="eventText">tagged <b><a href="/test_workspace1250792145/index.cgi?page_two">Page Two</a></b> in <a href="/test_workspace1250792145/index.cgi?">test_workspace1250792145</a> as <a href="/test_workspace1250792145/index.cgi?action=category_display;category=">saggy</a>.        </div>
+
+| body-like  | qr/Tester One<\/a><\/span> .+>less than a minute ago<.+tagged <b><[^>]+>Page One<\/a><\/b> in <a [^>]+>%%test_workspace%%<\/a> as <a[^>]+>taggy/   |                |
+| body-like  | qr/Tester One<\/a><\/span> .+>less than a minute ago<.+tagged <b><[^>]+>Page Two<\/a><\/b> in <a [^>]+>%%test_workspace%%<\/a> as <a[^>]+>saggy/   |                |
+| body-like  | qr/Tester Two<\/a><\/span> .+>less than a minute ago<.+tagged <b><[^>]+>Page Three<\/a><\/b> in <a [^>]+>%%test_workspace%%<\/a> as <a[^>]+>taggy/ |                |
+| body-like  | qr/Tester Two<\/a><\/span> .+>less than a minute ago<.+tagged <[^>]+>\s*<[^>]+>Tester One<\/a><\/span> <a[^>]+>downer/                                               |                |
+
+
+| Comment     | GET one event (limit) |                  |
+| get         | /data/events?limit=1  | application/json |
+| code-is     | 200                   |                  |
+| has-header  | Cache-Control         | qr/private/      |
+| body-like   | "event_class":"page"  |                  |
+| body-like   | "action":"tag_add"    |                  |
+| body-like   | "tag_name":"taggy"    |                  |
+| body-like   | "id":"page_one"       |                  |
+| body-unlike | "id":"page_three"     |                  |
+| body-unlike | "id":"page_two"       |                  |
+
+| Comment     | GET one event as text/plain(limit)                             |             |
+| get         | /data/events?limit=1                                           | text/plain  |
+| code-is     | 200                                                            |             |
+| has-header  | Cache-Control                                                  | qr/private/ |
+| body-like   | qr/Tester One \(less than a minute ago\) tagged Page One in %%test_workspace%% as taggy/  |             |
+| body-unlike | qr/Tester One \(less than a minute ago\) tagged Page Two in %%test_workspace%% as saggy./ |             |
+
+| Comment     | GET one event as text/html(limit)                                       |             |
+| get         | /data/events?limit=1                                                    | text/html   |
+| code-is     | 200                                                                     |             |
+| has-header  | Cache-Control                                                           | qr/private/ |
+| body-like   | qr/Tester One.*tagged.*Page One.*in.*%%test_workspace%%.*as.*taggy.*\./ |             |
+| body-unlike | qr/Tester One.*tagged.*Page Two.*in.*%%test_workspace%%.*as.*saggy.*\./ |             |
+
+| Comment     | GET one event (count) |                  |
+| get         | /data/events?count=1  | application/json |
+| code-is     | 200                   |                  |
+| has-header  | Cache-Control         | qr/private/      |
+| body-like   | "event_class":"page"  |                  |
+| body-like   | "action":"tag_add"    |                  |
+| body-like   | "tag_name":"taggy"    |                  |
+| body-like   | "id":"page_one"       |                  |
+| body-unlike | "id":"page_three"     |                  |
+| body-unlike | "id":"page_two"       |                  |
+
+| Comment     | GET one event as text/plain(count)                             |             |
+| get         | /data/events?count=1                                           | text/plain  |
+| code-is     | 200                                                            |             |
+| has-header  | Cache-Control                                                  | qr/private/ |
+| body-like   | qr/Tester One \(less than a minute ago\) tagged Page One in %%test_workspace%% as taggy/  |             |
+| body-unlike | qr/Tester One \(less than a minute ago\) tagged Page Two in %%test_workspace%% as saggy./ |             |
+
+| Comment     | GET one event as text/html(count)                                       |             |
+| get         | /data/events?count=1                                                    | text/html   |
+| code-is     | 200                                                                     |             |
+| has-header  | Cache-Control                                                           | qr/private/ |
+| body-like   | qr/Tester One.*tagged.*Page One.*in.*%%test_workspace%%.*as.*taggy.*\./ |             |
+| body-unlike | qr/Tester One.*tagged.*Page Two.*in.*%%test_workspace%%.*as.*saggy.*\./ |             |
+
+| Comment     | GET one event (offset)        |                  |
+| get         | /data/events?count=1&offset=1 | application/json |
+| code-is     | 200                           |                  |
+| has-header  | Cache-Control                 | qr/private/      |
+| body-like   | "event_class":"page"          |                  |
+| body-like   | "action":"tag_add"            |                  |
+| body-like   | "tag_name":"saggy"            |                  |
+| body-unlike | "id":"page_one"               |                  |
+| body-unlike | "id":"page_three"             |                  |
+| body-like   | "id":"page_two"               |                  |
+
+| Comment     | GET one event as text/plain(offset)                              |             |
+| get         | /data/events?count=1&offset=1                                    | text/plain  |
+| code-is     | 200                                                              |             |
+| has-header  | Cache-Control                                                    | qr/private/ |
+| body-unlike | qr/Tester One \(less than a minute ago\) tagged Page One in %%test_workspace%% as taggy/    |             |
+| body-like   | qr/Tester One \(less than a minute ago\) tagged Page Two in %%test_workspace%% as saggy./   |             |
+| body-unlike | qr/Tester Two \(less than a minute ago\) tagged Page Three in %%test_workspace%% as taggy./ |             |
+
+| Comment     | GET one event as text/plain(offset)                                       |             |
+| get         | /data/events?count=1&offset=1                                             | text/html   |
+| code-is     | 200                                                                       |             |
+| has-header  | Cache-Control                                                             | qr/private/ |
+| body-unlike | qr/Tester One.*tagged.*Page One.*in.*%%test_workspace%%.*as.*taggy.*\./   |             |
+| body-like   | qr/Tester One.*tagged.*Page Two.*in.*%%test_workspace%%.*as.*saggy.*\./   |             |
+| body-unlike | qr/Tester Two.*tagged.*Page Three.*in.*%%test_workspace%%.*as.*taggy.*\./ |             |
+
+| Comment         | Filter by event_class         |                  |
+| get             | /data/events?event_class=page | application/json |
+| code-is         | 200                           |                  |
+| has-header      | Cache-Control                 | qr/private/      |
+| json-parse      |                               |                  |
+| json-array-size | 3                             |                  |
+| body-like       | "id":"page_one"               |                  |
+| body-like       | "id":"page_three"             |                  |
+| body-like       | "id":"page_two"               |                  |
+
+
+| get             | /data/events?event_class=monkey | application/json |
+| code-is         | 200                             |                  |
+| has-header      | Cache-Control                   | qr/private/      |
+| json-parse      |                                 |                  |
+| json-array-size | 0                               |                  |
+| body-unlike     | "id":"page_one"                 |                  |
+| body-unlike     | "id":"page_three"               |                  |
+| body-unlike     | "id":"page_two"                 |                  |
+
+
+| Comment   | Filter by follower_id                               |                                    |
+| get       | /data/events?event_class=person&followed=1          | application/json                   |
+| code-is   | 200                                                 |                                    |
+| body-like | []                                                  |                                    |
+| post-json | /data/people/%%tester1_id%%/watchlist               | {"person":{"id":"%%tester2_id%%"}} |
+| get       | /data/events?event_class=person&followed=1          | application/json                   |
+| code-is   | 200                                                 |                                    |
+| body-like | "tag_name":"downer"                                 |                                    |
+| delete    | /data/people/%%tester1_id%%/watchlist/%%tester2_id%% |                                    |
+
+| Comment     | Filter by action              |                  |
+| get         | /data/events?action=tag_add   | application/json |
+| code-is     | 200                           |                  |
+| has-header  | Cache-Control                 | qr/private/      |
+| body-like   | "id":"page_one"               |                  |
+| body-like   | "id":"page_three"             |                  |
+| body-like   | "id":"page_two"               |                  |
+| get         | /data/events?action=edit_save | application/json |
+| code-is     | 200                           |                  |
+| has-header  | Cache-Control                 | qr/private/      |
+| body-unlike | "id":"page_one"               |                  |
+| body-unlike | "id":"page_three"             |                  |
+| body-unlike | "id":"page_two"               |                  |
+
+| Comment     | Filter by actor.id                   |                  |
+| get         | /data/events?actor.id=%%tester2_id%% | application/json |
+| code-is     | 200                                  |                  |
+| has-header  | Cache-Control                        | qr/private/      |
+| body-like   | "tag_name":"downer"                  |                  |
+| body-like   | "id":"page_three"                    |                  |
+| get         | /data/events?actor.id=999999         | application/json |
+| code-is     | 200                                  |                  |
+| has-header  | Cache-Control                        | qr/private/      |
+| body-unlike | "tag_name":"downer"                  |                  |
+| body-unlike | "id":"page_one"                      |                  |
+| body-unlike | "id":"page_three"                    |                  |
+| body-unlike | "id":"page_two"                      |                  |
+
+| Comment     | Filter by person.id                   |                  |
+| get         | /data/events?person.id=%%tester1_id%% | application/json |
+| code-is     | 200                                   |                  |
+| has-header  | Cache-Control                         | qr/private/      |
+| body-like   | "tag_name":"downer"                   |                  |
+| get         | /data/events?person.id=999999         | application/json |
+| code-is     | 200                                   |                  |
+| has-header  | Cache-Control                         | qr/private/      |
+| body-unlike | "tag_name":"downer"                   |                  |
+
+| Comment          | Filter by workspace_id                          |                            |
+| get              | /data/workspaces/%%test_workspace%%             | application/json           |
+| set-from-content | workspace_id                                    | qr/"workspace_id":"(\d+)"/ |
+| get              | /data/events?page.workspace_id=%%workspace_id%% | application/json           |
+| code-is          | 200                                             |                            |
+| has-header       | Cache-Control                                   | qr/private/                |
+| body-like        | "id":"page_one"                                 |                            |
+| body-like        | "id":"page_three"                               |                            |
+| body-like        | "id":"page_two"                                 |                            |
+| get              | /data/events?page.workspace_id=999999           | application/json           |
+| code-is          | 200                                             |                            |
+| has-header       | Cache-Control                                   | qr/private/                |
+| body-unlike      | "id":"page_one"                                 |                            |
+| body-unlike      | "id":"page_three"                               |                            |
+| body-unlike      | "id":"page_two"                                 |                            |
+
+| Comment     | Filter by workspace_name                            |                  |
+| get         | /data/events?page.workspace_name=%%test_workspace%% | application/json |
+| code-is     | 200                                                 |                  |
+| has-header  | Cache-Control                                       | qr/private/      |
+| body-like   | "id":"page_one"                                     |                  |
+| body-like   | "id":"page_three"                                     |                  |
+| body-like   | "id":"page_two"                                   |                  |
+| get         | /data/events?page.workspace_name=bad-workspace-name | application/json |
+| code-is     | 404                                                 |                  |
+| body-like   | not found                                           |                  |
+| body-unlike | "id":"page_one"                                     |                  |
+| body-unlike | "id":"page_three"                                     |                  |
+| body-unlike | "id":"page_two"                                   |                  |
+
+| *Comment*        | Actor defaults to logged-in user      |                                                                                                |
+| st-clear-events  |                                       |                                                                                                |
+| post-json        | /data/events                          | {"event_class":"person","action":"tag_add","person":{"id":%%tester2_id%%},"tag_name":"downer"} |
+| code-is          | 201                                   |                                                                                                |
+| get              | /data/people/%%tester1_id%%           | application/json                                                                               |
+| code-is          | 200                                   |                                                                                                |
+| has-header       | Cache-Control                         | qr/private/                                                                                    |
+| set-from-content | actor_id                              | qr/"id":(\d+)/                                                                               |
+| get              | /data/events?limit=1                  | application/json                                                                               |
+| code-is          | 200                                   |                                                                                                |
+| has-header       | Cache-Control                         | qr/private/                                                                                    |
+| body-like        | qr/"actor":{[^}]*"id":"%%actor_id%%"/ |                                                                                                |
+
+| *Comment* | Posting with missing parameters                  |                                                                                                                              |
+| post-json | /data/events                                     | {"actor":{"id":1},"action":"tag_add","person":{"id":2},"tag_name":"downer"}                                                  |
+| code-is   | 400                                              |                                                                                                                              |
+| body-like | Missing required parameter 'event_class'         |                                                                                                                              |
+| post-json | /data/events                                     | {"actor":{"id":1},"event_class":"person","person":{"id":2},"tag_name":"downer"}                                              |
+| code-is   | 400                                              |                                                                                                                              |
+| body-like | Missing required parameter 'action'              |                                                                                                                              |
+| post-json | /data/events                                     | {"actor":{"id":1},"event_class":"person","action":"tag_add","tag_name":"downer"}                                             |
+| code-is   | 400                                              |                                                                                                                              |
+| body-like | Missing required parameter 'person.id'           |                                                                                                                              |
+| post-json | /data/events                                     | {"actor":{"id":1},"tag_name":"taggy","page":{"workspace_name":"%%test_workspace%%"},"event_class":"page","action":"tag_add"} |
+| code-is   | 400                                              |                                                                                                                              |
+| body-like | Missing required parameter 'page.id'             |                                                                                                                              |
+| post-json | /data/events                                     | {"actor":{"id":1},"tag_name":"taggy","page":{"id":"page_three"},"event_class":"page","action":"tag_add"}                       |
+| code-is   | 400                                              |                                                                                                                              |
+| body-like | Missing required parameter 'page.workspace_name' |                                                                                                                              |
+
+| Comment        | GET/POST event by un-auth user |                                                                                                    |
+| http-user-pass |                                |                                                                                                    |
+| get            | /data/events                   | application/json                                                                                   |
+| code-is        | 401                            |                                                                                                    |
+| post-json      | /data/events                   | {"actor":{"id":1},"event_class":"person","action":"tag_add","person":{"id":2},"tag_name":"downer"} |
+| code-is        | 401                            |                                                                                                    |
+
+| Comment          | Set-up LDAP user                                        | .       |
+| st-clear-events  |                                                         |         |
+| clear-ldap-users |                                                         |         |
+| st_ldap          | start                                                   |         |
+| st_admin         | add-workspace-admin --w %%test_workspace%% --u devnull3 |         |
+| http-user-pass   | devnull3                                                | ldapd3v |
+
+| Comment    | post an event as the ldap user                      | .                                                                                                                               |
+| post-json  | /data/events                                        | {"tag_name":"ldaptaggy","page":{"workspace_name":"%%test_workspace%%","id":"page_one"},"event_class":"page","action":"tag_add"} |
+| code-is    | 201                                                 |                                                                                                                                 |
+| get        | /data/events                                        | application/json                                                                                                                |
+| json-parse |                                                     |                                                                                                                                 |
+| body-like  | "id":"page_one"                                     |                                                                                                                                 |
+| body-like  | "tag_name":"ldaptaggy"                              |                                                                                                                                 |
+| body-like  | qr/"actor":{[^}]*"best_full_name":"Dev Null Three"/ |                                                                                                                                 |
+
+| *Comment* | Test events with topics to purged-ws disappear {bz: 4132} |
+| set | gone_workspace | gone_workspace%%start_time%% |
+| create-workspace | %%gone_workspace%% | %%testers%% |
+| add-member | %%tester1%% | %%gone_workspace%% |
+| set | gone_workspace_id | %%workspace_id%% |
+
+| http-user-pass | %%tester1%%              | password                                   |             |
+| edit-page | %%gone_workspace%% | foobar | This is some content |
+| st-clear-events |
+| post-signal | This is a refernce to {link: %%gone_workspace%% [foobar]} |
+| get        | /data/events           | application/json |
+| code-is    | 200                    |                  |
+| json-parse |
+| json-array-size | 1 |
+| json-path-is | $[0].action | signal |
+| purge-workspace | %%gone_workspace%% | 0 |
+| get        | /data/events           | application/json |
+| code-is    | 200                    |                  |
+| json-parse |
+| json-array-size | 0 |
+
+| *Comment*      | ensure /data/events?event_class=person respects plugin enabledness | .                |
+| http-user-pass | %%tester1%%                                                        | password         |
+| st-admin       | disable-plugin --plugin people --account %%testers%%               |                  |
+| get            | /data/events?event_class=person                                    | application/json |
+| code-is        | 403                                                                |                  |
+| st-admin       | enable-plugin --plugin people --account Socialtext                 |                  |
+
+| *Comment* | Test the ?activity=all-combined filtering |
+
+| st-clear-events |
+
+| post-json       | /data/events                       | {"page":{"workspace_name":"%%test_workspace%%","id":"page_one"},"event_class":"page","action":"edit_start"}   |
+| code-is         | 201                                |                                                                                                               |
+| post-json       | /data/events                       | {"page":{"workspace_name":"%%test_workspace%%","id":"page_one"},"event_class":"page","action":"edit_cancel"}  |
+| code-is         | 201                                |                                                                                                               |
+| post-json       | /data/events                       | {"page":{"workspace_name":"%%test_workspace%%","id":"page_one"},"event_class":"page","action":"watch_add"}    |
+| code-is         | 201                                |                                                                                                               |
+| post-json       | /data/events                       | {"page":{"workspace_name":"%%test_workspace%%","id":"page_one"},"event_class":"page","action":"watch_delete"} |
+| code-is         | 201                                |                                                                                                               |
+| post-json       | /data/events                       | {"event_class":"widget","action":"update"}                                                                    |
+| code-is         | 201                                |                                                                                                               |
+| get             | /data/events?activity=all-combined | application/json                                                                                              |
+| json-parse      |                                    |                                                                                                               |
+| json-array-size | 0                                  |                                                                                                               |
+
+The following additional tests should be created:
+
+^^ TODO: POST an event using form data

@@ -1,0 +1,40 @@
+| *Comment* | Test Case: Business Control Panel Mass Add Users |  |
+
+| *Comment* | Test Case: Business Control Panel Mass Add Users Create Account |  |
+| set | acct | acctmassadd-%%start_time%% |
+| st-admin | create-account --name %%acct%% | was created |
+
+| *Comment* | Test Case: Business Control Panel Mass Add Users Navigate to account in /nlw |  |
+| open_ok | /nlw/control/account |  |
+| wait_for_element_visible_ok | st-search-by-name | 30000 |
+| type_ok | st-search-by-name | %%acct%% |
+| wait_for_element_visible_ok | st-submit-search-by-name | 30000 |
+| click_and_wait | st-submit-search-by-name |  |
+| wait_for_element_visible_ok | link=%%acct%% | 30000 |
+| click_and_wait | link=%%acct%% |  |
+
+| *Comment* | Test Case: Business Control Panel Mass Add Users verify form page |  |
+| wait_for_element_visible_ok | link=Add Multiple Users | 30000 |
+| click_and_wait | link=Add Multiple Users |  |
+| wait_for_element_visible_ok | st-add-users-file | 30000 |
+| wait_for_element_visible_ok | st-add-users-submit | 30000 |
+| wait_for_element_visible_ok | restriction-email-confirmation | 30000 |
+| wait_for_element_visible_ok | restriction-password-change | 30000 |
+| wait_for_element_visible_ok | restriction-require-external-id | 30000 |
+| text_like | //body | Socialtext enables you to add multiple users to your account. To add multiple users, download the sample data file, and add your user data. Then upload the file here. Complete documentation about adding multiple users is available here |
+| text_like | //body | When adding/updating Users, you may also specify a series of optional restrictions to be placed on their User records. Until these restrictions have been satisfied and cleared, Users will be unable to log in to the system |
+
+| *Comment* | Test Case: Business Control Panel Mass Add Users Add Multiple Users |  |
+| wait_for_element_visible_ok | st-add-users-file | 10000 |
+| type_ok | st-add-users-file | %%wikitest_client_files%%wikitest.csv |
+| click_and_wait | st-add-users-submit |  |
+
+| *Comment* | Test case: Business Control Panel Mass Add Users verify Multiple Users |  |
+| text_like | Loaded users from wikitest.csv |  |
+| text_like | Updated user |  |
+
+| *Comment* | Test Case: Business Control Panel Mass Add Users TEARDOWN |  |
+| st-process-jobs |  |  |
+| delete-account | %%acct%% |  |
+
+| *Comment* | Test Case: Business Control Panel Mass Add Users COMPLETED |  |

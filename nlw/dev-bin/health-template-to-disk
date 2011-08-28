@@ -1,0 +1,30 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use lib "$ENV{ST_SRC_BASE}/socialtext/nlw/lib";
+use lib "$ENV{ST_SRC_BASE}/socialtext/appliance/libsocialtext-appliance-perl/lib";
+use Socialtext::HealthReport;
+use Socialtext::Workspace;
+use Socialtext::Account;
+use Socialtext::User;
+use Socialtext::File qw/set_contents/;
+use Socialtext;
+
+my $hr = Socialtext::HealthReport->new;
+my $ws = Socialtext::Workspace->new(name => 'st-health');
+my $user = Socialtext::User->SystemUser;
+
+my $socialtext = Socialtext->new;
+my $hub = $socialtext->new_hub(
+    current_workspace => $ws,
+    current_user => $user,
+);
+
+my $page_name = 'Health Report Template';
+my $page = $hub->pages->new_from_name($page_name);
+die "Could not load page '$page_name'\n" unless $page->exists;
+
+my $template_file = $hr->_template_file;
+set_contents($template_file, $page->content);
+warn "Saved sheet to $template_file\n";

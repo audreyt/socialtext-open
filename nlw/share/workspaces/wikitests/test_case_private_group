@@ -1,0 +1,84 @@
+| *Comment* | Test Case: Private Group |  |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Private Group SETUP |  |
+| set | acct | private-acct-%%start_time%% |
+| set | user1_short | privuser1%%start_time%% |
+| set | user2_short | privuser2%%start_time%% |
+
+| set | user1 | %%user1_short%%@matt.socialtext.net |
+| set | user2 | %%user2_short%%@matt.socialtext.net |
+| set | group_name | group%%start_time%% |
+| set | group_desc | group%%start_time%% |
+
+| st-admin | create-account --name %%acct%% | was created |
+| st-admin | create-user --e %%user1%% --p %%password%% | was created |
+| st-admin | create-user --e %%user2%% --p %%password%% | was created |
+
+| *Comment* | Test Case: Private Group Setup |  |
+| st-logoutin | %%user1%% | %%password%% |
+
+| st_create_group | %%group_name%% | %%group_desc%% | private-radio |
+
+| wait_for_element_visible_ok | create-group | 30000 |
+| click_and_wait | create-group |  |
+| get_id_from_url | group_id |  |
+
+| st-admin | add-member --e %%user2%% --g %%group_id%% | is now a member of the %%group_name%% |
+
+| *Comment* | Test Case: Private Group Login as group member %%user2%% - leave/cancel |  |
+| st-logoutin | %%user2%% | %%password%% |
+
+| st_open_noeval | /st/group/%%group_id%% |  |
+| wait_for_element_visible_ok | st-leave-group |  |
+| click_ok | st-leave-group |  |
+| wait_for_element_visible_ok | st-lightbox-cancel-leave-group | 30000 |
+| wait_for_element_visible_ok | st-lightbox-leave-group | 30000 |
+| text_like | //body | This action cannot be undone. Are you sure you'd like to leave this group? |
+
+| *Comment* | Test Case: Private Group - wait for the f#$%^king JS to finish loading |  |
+| pause | 8000 |  |
+
+| click_ok | st-lightbox-cancel-leave-group |  |
+| wait_for_element_not_present_ok | st-lightbox-leave-group | 10000 |
+
+| st-name-widget | 4 | members_widget |
+| st-select-widget-frame | members_widget |  |
+| text_like | //body | %%user1_short%% |
+| text_like | //body | %%user2_short%% |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Private Group Login as group member %%user2%% - leave the group |  |
+| open_ok | /nlw/submit/logout |  |
+| st-login | %%user2%% | %%password%% |
+
+| open_ok | /st/group/%%group_id%% |  |
+| wait_for_element_visible_ok | st-leave-group |  |
+| click_ok | st-leave-group |  |
+| wait_for_element_visible_ok | st-lightbox-cancel-leave-group | 30000 |
+| wait_for_element_visible_ok | st-lightbox-leave-group | 30000 |
+| text_like | //body | This action cannot be undone. Are you sure you'd like to leave this group? |
+
+| *Comment* | Test Case: Private Group Wait for the f$%&king JS to load. Wait a long time. |  |
+| pause | 8000 |
+
+| *Comment* | Test Case: Private Group. click_ok to leave. Don't even think about using click_and_wait |  |
+| click_ok | st-lightbox-leave-group |  |
+
+| *Comment* | Test Case: Private Group Wait for the f$%&king JS to execute. Wait a long time. |  |
+| pause | 15000 |
+
+| *Comment* | Test Case: User Deactivates Group should end up at the dashboard |  |
+| location_like | /st/dashboard |  |
+
+| *Comment* | Test Case: Private Group Login as group member %%user2%% - verify left group |  |
+| st_open_noeval | /st/group/%%group_id%% |  |
+| wait_for_text_present_ok | The group you are trying to view does not exist. Please check with the group administrator or contact Socialtext Support. | 30000 |
+| wait_for_element_not_present_ok | st-leave-group | 30000 |
+| wait_for_element_not_present_ok | st-join-group | 30000 |
+
+| *Comment* | Test Case: Private Group TEARDOWN |  |
+| delete-group | %%group_id%% |  |
+
+| *Comment* | Test Case: Private Group COMPLETED |  |

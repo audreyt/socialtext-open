@@ -1,0 +1,36 @@
+[%# @COPYRIGHT@ -%]
+[% USE html_encode %]
+[% USE Number.Format %]
+[%- USE decorate -%]
+
+[%- MACRO ago_text(minutes) BLOCK -%]
+    [%- IF minutes <= 1 -%][% loc('ago.1min') -%]
+    [%- ELSIF minutes < 50 -%][% loc('ago.mins=count', minutes) -%]
+    [%- ELSIF minutes < 90 -%][% loc('ago.1hour') -%]
+    [%- ELSIF minutes < 1080 -%]
+      [%- hours = minutes / 60 | round(0) -%]
+      [% loc('ago.hours=count', hours) -%]
+    [%- ELSIF minutes < 2880 -%][% loc('ago.1day') -%]
+    [%- ELSE -%]
+      [%- days = minutes / 1440 | round(0) -%]
+      [% loc('ago.days=count', days) -%]
+    [%- END -%]
+[%- END -%]
+[%- IF rows.size %]
+<ul data-role="listview">
+[%- FOREACH row = rows %]
+    [% row = load_row_times(row) %]
+    <li>
+        <a title="[% row.Subject || row.name | html %]"
+            href="/m/page/[% row.workspace_name || ws.name %]/[% row.page_id %]">[% row.Subject || row.name | html %]
+        </a>
+        [% SET last_edit_time = row.last_edit_time || (row.page && row.page.last_edit_time) %]
+        [% IF last_edit_time %]
+        <span class="ui-li-count">
+            [% ago_text(minutes_ago(last_edit_time)) %]
+        </span>
+        [% END %]
+    </li>
+[% END -%]
+</ul>
+[% END -%]

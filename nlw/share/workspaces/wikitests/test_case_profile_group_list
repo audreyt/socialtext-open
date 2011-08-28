@@ -1,0 +1,185 @@
+
+| *Comment* | Test Case: Profile Group List will test the Groups tab of the Colleagues widget in another user's Profile page, showing the groups that both the viewer and the profile user are connected to |  |
+
+* Fixture: SocialWidgets
+
+| *Comment* | Test Case: Profile Group List set some variables |  |  |
+| set | user_acct | account_a_%%start_time%% |  |
+| set | acct_b | account_b_%%start_time%% |  |
+| set | acct_c | account_c_%%start_time%% |  |
+| set | acct_d | account_d_%%start_time%% |  |
+| set | acct_e | account_e_%%start_time%% |  |
+| set | acct_f | account_f_%%start_time%% |  |
+| set | member_acct | account_m_%%start_time%% |  |
+| set | wiki_a | wiki_a_%%start_time%% |  |
+| set | wiki_b | wiki_b_%%start_time%% |  |
+| set | viewer | view_user_%%start_time%%@david.socialtext.net |  |
+| set | member | mem_user_%%start_time%%@david.socialtext.net |  |
+| set | member_name | mem user %%start_time%% |  |
+| set | user_group | user_group_%%start_time%% |  |
+| set | member_group | member_group_%%start_time%% |  |
+
+| *Comment* | Test Case: Profile Group List create a bunch of accounts, wikis, and groups, which will be needed later and explained in comments below |  |  |
+| create_account | %%user_acct%% |  |  |
+| create_account | %%member_acct%% |  |  |
+| create_account | %%acct_b%% |  |  |
+| create_account | %%acct_c%% |  |  |
+| create_account | %%acct_d%% |  |  |
+| create_account | %%acct_e%% |  |  |
+| create_account | %%acct_f%% |  |  |
+| create_workspace | %%wiki_a%% | %%acct_c%% |  |
+| create_workspace | %%wiki_b%% | %%acct_f%% |  |
+| create_user | %%viewer%% | %%password%% | %%user_acct%% |
+| create_user | %%member%% | %%password%% | %%member_acct%% |
+| set | member_id | %%user_id%% |  |
+| create-group | %%user_group%% | %%acct_d%% | %%viewer%% |
+| set | user_group_id | %%group_id%% |  |
+| create-group | %%member_group%% | %%member_acct%% | %%member%% |
+| set | member_group_id | %%group_id%% |  |
+| st-admin | add-member --workspace %%wiki_a%% --email %%viewer%% | now has the role |  |
+| st-admin | add-member --group %%user_group_id%% --workspace %%wiki_b%% | now has the role |  |
+
+| *Comment* | Test Case: Profile Group List group A is private, user is member |  |  |
+| set | group_a | group_a_%%start_time%% |  |
+| create-group | %%group_a%% |  | %%member%% |
+| set | group_a_id | %%group_id%% |  |
+| st-admin | add-member --email %%viewer%% --group %%group_a_id%% | now a member |  |
+
+| *Comment* | Test Case: Profile Group List group B is self-join, shares account with user |  |  |
+| set | group_b | group_b_%%start_time%% |  |
+| create-group | %%group_b%% | %%user_acct%% | %%member%% |
+| set | group_b_id | %%group_id%% |  |
+| st-admin | set-permissions --group %%group_b_id%% --permissions self-join | have been changed |  |
+
+| *Comment* | Test Case: Profile Group List group C is self-join, user is member |  |  |
+| set | group_c | group_c_%%start_time%% |  |
+| create-group | %%group_c%% |  | %%member%% |
+| set | group_c_id | %%group_id%% |  |
+| st-admin | set-permissions --group %%group_c_id%% --permissions self-join | have been changed |  |
+| st-admin | add-member --email %%viewer%% --group %%group_c_id%% | now a member |  |
+
+| *Comment* | Test Case: Profile Group List group D is self-join, user is added to group's account through CLI |  |  |
+| set | group_d | group_d_%%start_time%% |  |
+| create-group | %%group_d%% | %%acct_b%% | %%member%% |
+| set | group_d_id | %%group_id%% |  |
+| st-admin | set-permissions --group %%group_d_id%% --permissions self-join | have been changed |  |
+| st-admin | add-member --account %%acct_b%% --email %%viewer%% | now has the role |  |
+
+| *Comment* | Test Case: Profile Group List group E is self-join, user is member of workspace that shares group's account |  |  |
+| set | group_e | group_e_%%start_time%% |  |
+| create-group | %%group_e%% | %%acct_c%% | %%member%% |
+| set | group_e_id | %%group_id%% |  |
+| st-admin | set-permissions --group %%group_e_id%% --permissions self-join | have been changed |  |
+
+| *Comment* | Test Case: Profile Group List group F is self-join, user is member of group that shares group F's account |  |  |
+| set | group_f | group_f_%%start_time%% |  |
+| create-group | %%group_f%% | %%acct_d%% | %%member%% |
+| set | group_f_id | %%group_id%% |  |
+| st-admin | set-permissions --group %%group_f_id%% --permissions self-join | have been changed |  |
+
+| *Comment* | Test Case: Profile Group List group G is self-join, user is member of group that is added to group G's account through CLI |  |  |
+| set | group_g | group_g_%%start_time%% |  |
+| create-group | %%group_g%% | %%acct_e%% | %%member%% |
+| set | group_g_id | %%group_id%% |  |
+| st-admin | set-permissions --group %%group_g_id%% --permissions self-join | have been changed |  |
+| st-admin | add-member --group %%user_group_id%% --account %%acct_e%% | now has the role |  |
+
+| *Comment* | Test Case: Profile Group List group H is self-join, user is member of group that is member of workspace that shares group H's account |  |  |
+| set | group_h | group_h_%%start_time%% |  |
+| create-group | %%group_h%% | %%acct_f%% | %%member%% |
+| set | group_h_id | %%group_id%% |  |
+| st-admin | set-permissions --group %%group_h_id%% --permissions self-join | have been changed |  |
+
+| *Comment* | Test Case: Profile Group List viewer should see groups a-h, but not member_group in member's profile |  |
+| st-logoutin | %%viewer%% | %%password%% |
+| open_ok | /st/profile/%%member_id%% |  |
+| wait_for_text_present_ok | %%member_name%% | 30000 |
+| st-name-widget | 4 | groups |
+| st-widget-title-like | groups | Colleagues |
+| st-select-widget-frame | groups |  |
+| wait_for_element_visible_ok | //td[contains(text(),'Groups')] | 30000 |
+| click_ok | //td[contains(text(),'Groups')] |  |
+| wait_for_element_visible_ok | link=%%group_a%% | 30000 |
+| wait_for_element_visible_ok | link=%%group_b%% | 30000 |
+| wait_for_element_visible_ok | link=%%group_c%% | 30000 |
+| wait_for_element_visible_ok | link=%%group_d%% | 30000 |
+| wait_for_element_visible_ok | link=%%group_e%% | 30000 |
+| wait_for_element_visible_ok | link=%%group_f%% | 30000 |
+| wait_for_element_visible_ok | link=%%group_g%% | 30000 |
+| wait_for_element_visible_ok | link=%%group_h%% | 30000 |
+| wait_for_element_not_present_ok | link=%%member_group%% | 30000 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Profile Group List check widget in Signals page, see only groups that you are a member of |  |
+| open_ok | /st/signals |  |
+| wait_for_text_present_ok | Signals | 30000 |
+| st-name-widget | 2 | groups |
+| st-widget-title-like | groups | Colleagues |
+| st-select-widget-frame | groups |  |
+| wait_for_element_visible_ok | //td[contains(text(),'Groups')] | 30000 |
+| click_ok | //td[contains(text(),'Groups')] |  |
+| wait_for_element_visible_ok | link=%%group_a%% | 30000 |
+| wait_for_element_visible_ok | link=%%group_c%% | 30000 |
+| wait_for_element_visible_ok | link=%%user_group%% | 30000 |
+| wait_for_element_not_present_ok | link=%%group_b%% | 30000 |
+| wait_for_element_not_present_ok | link=%%group_d%% | 30000 |
+| wait_for_element_not_present_ok | link=%%group_e%% | 30000 |
+| wait_for_element_not_present_ok | link=%%group_f%% | 30000 |
+| wait_for_element_not_present_ok | link=%%group_g%% | 30000 |
+| wait_for_element_not_present_ok | link=%%group_h%% | 30000 |
+| wait_for_element_not_present_ok | link=%%member_group%% | 30000 |
+| select-frame | relative=parent |  |
+
+| *Comment* | Test Case: Profile Group List remove viewer from his links to groups A E F G H, then does not see groups A E F G H |  |
+| st-admin | remove-member --email %%viewer%% --group %%group_a_id%% | no longer a member |
+| st-admin | remove-member --email %%viewer%% --workspace %%wiki_a%% | no longer has the role |
+| st-admin | remove-member --email %%viewer%% --group %%user_group_id%% | no longer a member |
+| open_ok | /st/profile/%%member_id%% |  |
+| wait_for_text_present_ok | %%member_name%% | 30000 |
+| st-name-widget | 4 | groups |
+| st-widget-title-like | groups | Colleagues |
+| st-select-widget-frame | groups |  |
+| wait_for_element_visible_ok | //td[contains(text(),'Groups')] | 30000 |
+| click_ok | //td[contains(text(),'Groups')] |  |
+| wait_for_element_visible_ok | link=%%group_b%% | 30000 |
+| wait_for_element_visible_ok | link=%%group_c%% | 30000 |
+| wait_for_element_visible_ok | link=%%group_d%% | 30000 |
+| wait_for_element_not_present_ok | link=%%group_a%% | 30000 |
+| wait_for_element_not_present_ok | link=%%group_e%% | 30000 |
+| wait_for_element_not_present_ok | link=%%group_f%% | 30000 |
+| wait_for_element_not_present_ok | link=%%group_g%% | 30000 |
+| wait_for_element_not_present_ok | link=%%group_h%% | 30000 |
+
+| *Comment* | Test Case: Profile Group List go to group D group page, remove viewer from connection to D by CLI, join button should produce error |  |
+| open_ok | /st/group/%%group_d_id%% |  |
+| st-admin | remove-member --account %%acct_b%% --email %%viewer%% | no longer has the role |
+| st-process-jobs |  |  |
+| click_ok | st-join-group |  |
+| wait_for_text_present_ok | group not found | 30000 |
+
+| *Comment* | Test Case: Profile Group List TEARDOWN |  |
+| st-process-jobs |  |  |
+| delete-group | %%user_group_id%% | Recklessly deleting |
+| delete-group | %%member_group_id%% | Recklessly deleting |
+| delete-group | %%group_a_id%% | Recklessly deleting |
+| delete-group | %%group_b_id%% | Recklessly deleting |
+| delete-group | %%group_c_id%% | Recklessly deleting |
+| delete-group | %%group_d_id%% | Recklessly deleting |
+| delete-group | %%group_e_id%% | Recklessly deleting |
+| delete-group | %%group_f_id%% | Recklessly deleting |
+| delete-group | %%group_g_id%% | Recklessly deleting |
+| delete-group | %%group_h_id%% | Recklessly deleting |
+| delete-workspace | %%wiki_a%% | Recklessly deleting |
+| delete-workspace | %%wiki_b%% | Recklessly deleting |
+| st-admin | deactivate-user --email %%viewer%% |  |
+| st-admin | deactivate-user --email %%member%% |  |
+| delete_account | %%user_acct%% | Recklessly deleting |
+| delete_account | %%member_acct%% | Recklessly deleting |
+| delete_account | %%acct_b%% | Recklessly deleting |
+| delete_account | %%acct_c%% | Recklessly deleting |
+| delete_account | %%acct_d%% | Recklessly deleting |
+| delete_account | %%acct_e%% | Recklessly deleting |
+| delete_account | %%acct_f%% | Recklessly deleting |
+| st-process-jobs |  |  |
+
+| *Comment* | Test Case: Profile Group List COMPLETED |  |

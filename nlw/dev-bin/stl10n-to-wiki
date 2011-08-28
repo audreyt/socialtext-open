@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Create the stl10n workspace, and populate it with content from the branch
+
+PORT=`perl -e 'print $> + 20000'`
+SERVER=http://`hostname`:$PORT
+st-admin create-workspace --title 'Socialtext Localizations' --name stl10n
+st-admin add-member --email devnull1@socialtext.com --workspace stl10n
+echo $SERVER
+DIR=~/src/st/current/nlw/share/workspaces/stl10n
+stu-local-copy -s $SERVER -w stl10n -u devnull1@socialtext.com -p d3vnu11l --from $DIR
+
+echo
+echo "Localizations are now available at: $SERVER/stl10n"
