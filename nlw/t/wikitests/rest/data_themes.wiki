@@ -1,0 +1,63 @@
+* Fixture: SocialRest
+
+| set | theme_email | themes%%start_time%%@ken.socialtext.net |
+| create-user | %%theme_email%% | password |
+
+### user is not authorized
+| *Comment* | user is not authorized |
+| http-user-pass |
+| GET-json | /data/themes                        |
+| code-is  | 401                                 |
+| GET-json | /data/themes/Starfish               |
+| code-is  | 401                                 |
+| GET-json | /data/themes/Starfish/images/header |
+| code-is  | 401                                 |
+
+### user is authorized, /data/themes
+| *Comment* | user is authorized, /data/themes |
+| http-user-pass | %%theme_email%% | password |
+| GET-json         | /data/themes                    |
+| code-is          | 200                             |
+| json-parse       |                                 |
+| json-path-exists | $[0].name                       |
+| json-path-exists | $[0].theme_id                   |
+| json-path-exists | $[0].header_image_url           |
+| json-path-exists | $[0].header_image_filename      |
+| json-path-exists | $[0].header_image_mime_type     |
+| json-path-exists | $[0].background_image_url       |
+| json-path-exists | $[0].background_image_filename  |
+| json-path-exists | $[0].background_image_mime_type |
+
+### user is authorized, /data/themes/:theme with name
+| *Comment*      | user is authorized, /data/themes/:theme with name |          |
+| http-user-pass | %%theme_email%%       | password |
+| GET-json       | /data/themes/Starfish |          |
+| code-is        | 200                   |          |
+| json-parse     |                       |          |
+| json-path-is   | $.name                | Starfish |
+
+### user is authorized, /data/themes/:theme with theme_id
+| *Comment* | user is authorized, /data/themes/:theme with theme_id |
+| http-user-pass | %%theme_email%% | password |
+| GET-json       | /data/themes/1  |          |
+| code-is        | 200             |          |
+| json-parse     |                 |          |
+| json-path-is   | $.theme_id      | 1        |
+
+### no such theme
+| *Comment* | no such theme |
+| http-user-pass | %%theme_email%% | password |
+| GET-json | /data/themes/ENOSUCH |
+| code-is  | 404                  |
+
+### images
+| http-user-pass | %%theme_email%% | password |
+| GET       | /data/themes/1/images/header     |           |
+| code-is   | 200                              |           |
+| header-is | Content-type                     | image/png |
+| GET       | /data/themes/1/images/background |           |
+| code-is   | 200                              |           |
+| header-is | Content-type                     | image/png |
+| GET       | /data/themes/1/images/ENOSUCH    |           |
+| code-is   | 404                              |           |
+

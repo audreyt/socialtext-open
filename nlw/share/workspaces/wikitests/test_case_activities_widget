@@ -12,6 +12,10 @@
 | include | [Test Case: Activities Widget Permalinks] |  |
 | include | [Test Case: Activities Widget with REAL Popout] |  |
 
+| *Comment* | Test Case: Activities Widget TEARDOWN |  |
+| st-process-jobs |  |  |
+| delete-workspace | signalsacct%%start_time%%-central |  |
+
 | *Comment* | Test Case: Activities Widget COMPLETED |  |
 
 TODO: write a second TC that exercises all signals, signals from followers only, older, newer, newest

@@ -81,6 +81,9 @@
 | text_like | //body | %%signal2%% |
 
 | *Comment* | Test Case: People Dashboard Plugins teardown |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%user%% |  |
 | st-admin | delete-workspace --no-export --w %%ws%% |  |
+| delete-account | %%acct%% |  |
 
 | *Comment* | Test Case: People Dashboard Plugins COMPLETED |

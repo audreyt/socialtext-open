@@ -3,6 +3,7 @@ use Moose;
 use Socialtext::SQL qw(sql_singlevalue sql_execute);
 use Socialtext::Date::l10n;
 use Socialtext::AppConfig;
+use Socialtext::Theme;
 use List::Util qw(first);
 
 with 'Socialtext::Prefs';
@@ -18,6 +19,11 @@ sub _get_blob {
 sub _get_inherited_prefs {
     my $self = shift;
     my $locale = Socialtext::AppConfig->locale;
+    my $theme = Socialtext::Theme->Default->as_hash(set=>'minimal');
+
+    delete $theme->{name};
+    delete $theme->{is_default};
+    $theme->{base_theme_id} = delete $theme->{theme_id};
 
     return +{
         timezone => {
@@ -27,6 +33,7 @@ sub _get_inherited_prefs {
             time_display_12_24 => time_display_12_24($locale),
             time_display_seconds => time_display_seconds($locale),
         },
+        theme => $theme,
     };
 }
 

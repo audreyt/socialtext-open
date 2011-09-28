@@ -48,7 +48,7 @@
                 [% IF is_new && !is_incipient %]
                     <h2 id="st-editing-title" class="tableTitle">
                         [% loc('edit.editing:') %]
-                        <input type="text" size="65" id="st-newpage-pagename-edit" value="[% page.title | html_encode %]" onclick="Socialtext.clear_untitled(this)"/>
+                        <input type="text" size="65" id="st-newpage-pagename-edit" value="[% (page.new_title || page.title) | html_encode %]" onclick="Socialtext.clear_untitled(this)"/>
                     </h2>
                 [% ELSE %]
                     <h2 id="st-editing-title" class="tableTitle" title="[% loc('edit.editing=page', page.display_title) %]">

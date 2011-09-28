@@ -1,0 +1,95 @@
+Tests for page annotations via the REST API
+
+* Fixture: SocialRest
+
+| Comment          | Test Setup    |                                    |
+| set              | username      | u%%start_time%%@ken.socialtext.net |
+| set              | orphan      | o%%start_time%%@ken.socialtext.net |
+| create-user      | %%username%%  | %%password%%                       |
+| create-user      | %%orphan%%  | %%password%%                       |
+| http-user-pass   | %%username%%  | %%password%%                       |
+| set              | workspace     | w%%start_time%%                    |
+| create-workspace | %%workspace%% |                                    |
+| add-member       | %%username%%  | %%workspace%%                      |
+| set              | workspace_url | /data/workspaces/%%workspace%%     |
+
+| edit-page | %%workspace%% | Page1 | A stub of a page |
+| edit-page | %%workspace%% | Page2 | A stub of a page |
+
+# PUT sets the annotations for a page
+| Comment          | Set annotation   |                                    |
+| PUT-json | %%workspace_url%%/pages/page1/annotations | [{"namespace":{"key1":"value1"}}] |
+| code-is  | 200                                 |                                 |
+
+# And get it back
+| Comment         | Get JSON annotation                       |        |
+| GET-json        | %%workspace_url%%/pages/page1/annotations |        |
+| code-is         | 200                                       |        |
+| json-parse      |                                           |        |
+| json-array-size | 1                                         |        |
+| json-path-is    | $[0].namespace.key1                       | value1 |
+
+| Comment   | Get HTML annotation                       |
+| GET       | %%workspace_url%%/pages/page1/annotations |
+| code-is   | 200                                       |
+| body-like | <h2>namespace</h2>                        |
+| body-like | <td>key1</td><td>value1</td>              |
+
+| Comment   | Get text annotation                                   |
+| GET       | %%workspace_url%%/pages/page1/annotations?accept=text |
+| code-is   | 200                                                   |
+| body-like | - namespace:                                          |
+| body-like | key1: value1                                          |
+
+# POST updates annotations for a page
+| Comment          | POST updates annotations   |                                    |
+| PUT-json | %%workspace_url%%/pages/page2/annotations | [{"namespace":{"key1":"value1","key2":"value2"}}] |
+| code-is  | 200                                 |                                 |
+| POST-json | %%workspace_url%%/pages/page2/annotations | [{"namespace":{"key1":"value3","key2":"value2"}}] |
+| code-is  | 200                                 |                                 |
+| GET-json        | %%workspace_url%%/pages/page2/annotations |        |
+| code-is         | 200                                       |        |
+| json-parse      |                                           |        |
+| json-array-size | 1                                         |        |
+| json-path-is    | $[0].namespace.key1                       | value3 |
+| json-path-is    | $[0].namespace.key2                       | value2 |
+
+# POST a null removes the annotation
+| Comment          | POST a null to remove annotation  |                                    |
+| PUT-json | %%workspace_url%%/pages/page2/annotations | [{"n1":{"key1":"value1","key2":"value2"}},{"n2":{"key1":"value1"}}] |
+| code-is  | 200                                 |                                 |
+| POST-json | %%workspace_url%%/pages/page2/annotations | [{"n1":{"key1":null}}] |
+| code-is  | 200                                 |                                 |
+| GET-json        | %%workspace_url%%/pages/page2/annotations |        |
+| code-is         | 200                                       |        |
+| json-parse      |                                           |        |
+| json-array-size | 2                                         |        |
+| json-path-missing | $[0].n1.key1                       |  |
+| json-path-is    | $[0].n1.key2                       | value2 |
+| json-path-is    | $[1].n2.key1                       | value1 |
+
+# Delete all page annotations
+| Comment         | DELETE all annotations on a page          |                                                                     |
+| PUT-json        | %%workspace_url%%/pages/page3/annotations | [{"n1":{"key1":"value1","key2":"value2"}},{"n2":{"key1":"value1"}}] |
+| code-is         | 200                                       |                                                                     |
+| GET-json        | %%workspace_url%%/pages/page3/annotations |                                                                     |
+| code-is         | 200                                       |                                                                     |
+| json-parse      |                                           |                                                                     |
+| json-array-size | 2                                         |                                                                     |
+| DELETE          | %%workspace_url%%/pages/page3/annotations |                                                                     |
+| GET-json        | %%workspace_url%%/pages/page3/annotations |                                                                     |
+| code-is         | 200                                       |                                                                     |
+| json-parse      |                                           |                                                                     |
+| json-array-size | 0                                         |                                                                     |
+
+# No visibility so orhpan user should not be able to CRUD
+| Comment        | Page visbility permissions honoured       |                                                                     |
+| http-user-pass | %%orphan%%                                | %%password%%                                                        |
+| PUT-json       | %%workspace_url%%/pages/page3/annotations | [{"n1":{"key1":"value1","key2":"value2"}},{"n2":{"key1":"value1"}}] |
+| code-is        | 403                                       |                                                                     |
+| DELETE         | %%workspace_url%%/pages/page3/annotations |                                                                     |
+| code-is        | 403                                       |                                                                     |
+| GET-json       | %%workspace_url%%/pages/page3/annotations |                                                                     |
+| code-is        | 403                                       |                                                                     |
+| POST-json      | %%workspace_url%%/pages/page3/annotations | [{"namespace":{"key1":"value3","key2":"value2"}}]                   |
+| code-is        | 403                                       |                                                                     |

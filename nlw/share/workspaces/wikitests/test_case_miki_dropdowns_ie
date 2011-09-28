@@ -97,4 +97,8 @@ wait_for_text_present_ok | Siggy Siggy Siggy %%start_time%% 11 | 3000 |
 | click_and_pause | %%miki_signal_submit%% |  |
 | text_like | Signal to %%msacct%%-B |  |
 
-| *Comment* | Test Case: Miki Dropdowns IE COMPLETED |  |
+| *Comment* | Test Case: Miki Dropdowns IE. TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%common_user%% |  |
+| delete-account | %%msacct%%-A |  |
+| delete-account | %%msacct%%-B |  |  | *Comment* | Test Case: Miki Dropdowns IE COMPLETED |  |

@@ -211,7 +211,11 @@
 
 | *Comment* | Test Case: Miki TEARDOWN |  |
 | st-process-jobs |  |  |
+| deactivate-user | %%mikiuser%% |  |
+| deactivate-user | %%othermikiuser%% |  |
 | st-admin | delete_workspace --no-export --w %%ws%% | has been deleted |
 | st-admin | delete_workspace --no-export --w %%otherws%% | has been deleted |
+| delete-account | %%mikiacct%% |  |
+| delete-account | %%othermikiacct%% |  |
 
 | *Comment* | Test Case: Miki COMPLETED |  |

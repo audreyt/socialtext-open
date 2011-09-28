@@ -1,7 +1,7 @@
 * HighPermissions
 
 | *Comment* | Test Case: Delete Selected Attachments |  |
-| *Comment* | wikitest files should be in %%wikitest_client_files%% on the browser server |  |
+| *Comment* | files should be in %%wikitest_files%% on the browser server and in %%wikitest_client_files%% on NLW server |  |
 | *Comment* | *This test only works if selenium_browser has higher powers, i.e. *chrome for firefox* |  |
 
 | set | user | delete.user.%%start_time%%@david.socialtext.net |  |

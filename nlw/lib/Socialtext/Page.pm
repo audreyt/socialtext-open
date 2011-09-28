@@ -99,10 +99,11 @@ has 'rev' => (
         # as-is mappings:
         (map {$_=>$_} qw(
             name revision_num modified_time page_type deleted summary
-            edit_summary locked tags tag_set body_length body_ref
+            edit_summary locked tags tag_set body_length body_ref 
             body_modified mutable is_spreadsheet is_wiki is_untitled
             has_tag tags_sorted is_recently_modified age_in_minutes
             age_in_seconds age_in_english datetime_for_user datetime_utc
+            annotations annotation_triplets anno_blob
         )),
     },
 );
@@ -546,8 +547,9 @@ sub hash_representation {
         uri             => $self->uri,
         workspace_name  => $self->workspace_name,
         workspace_title => $self->workspace_title,
-        creator_id => $self->creator->user_id,
-        last_editor_id => $self->last_editor->user_id,
+        creator_id      => $self->creator->user_id,
+        last_editor_id  => $self->last_editor->user_id,
+        annotations     => $self->annotations,
 
         ($self->deleted ? (deleted => 1) : ()),
     };
@@ -598,6 +600,7 @@ sub to_result {
     my $editor = $self->last_editor;
     my $creator = $self->creator;
     my $result = {
+        annotations     => $self->annotations,
         Date            => $self->datetime_utc,
         Deleted         => $self->deleted ? 1 : 0,
         From            => $editor->email_address,

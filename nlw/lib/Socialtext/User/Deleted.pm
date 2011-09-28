@@ -13,10 +13,11 @@ sub new {
     # *might* have some of the data to display for the User, but might not; do
     # the best we can.
     my %proto_user = (@_ == 1) ? %{$_[0]} : @_;
+    $proto_user{username}      ||= $proto_user{driver_username};
     $proto_user{username}      ||= 'deleted-user';
     $proto_user{email_address} ||= 'deleted.user@socialtext.com';
     $proto_user{first_name}    ||= 'Deleted';
-    $proto_user{middle_name}     = '';
+    $proto_user{middle_name}   ||= '';
     $proto_user{last_name}     ||= 'User';
 
     # *FORCE* these fields on the Deleted User.  Regardless of what we were

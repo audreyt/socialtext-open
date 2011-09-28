@@ -3522,6 +3522,57 @@ msgstr "%1 工作区"
 msgid "control.wikis=count"
 msgstr "工作区（%1）"
 
+msgid "creator.choices:"
+msgstr "选项："
+
+msgid "creator.create-page"
+msgstr "创建"
+
+msgid "creator.field-type:"
+msgstr "输入类别："
+
+msgid "creator.field:"
+msgstr "字段："
+
+msgid "creator.info-default-value"
+msgstr "将此选项设为默认。"
+
+msgid "creator.new-field:"
+msgstr "新增字段："
+
+msgid "creator.page-title:"
+msgstr "页面标题："
+
+msgid "creator.really-delete-field?"
+msgstr "您确定要删除此字段吗？"
+
+msgid "creator.required"
+msgstr "必填"
+
+msgid "creator.tag-with:"
+msgstr "加上标签："
+
+msgid "creator.template:"
+msgstr "模板："
+
+msgid "creator.type-checkbox"
+msgstr "勾选"
+
+msgid "creator.type-number"
+msgstr "数值"
+
+msgid "creator.type-radio"
+msgstr "单选框"
+
+msgid "creator.type-select"
+msgstr "下拉列表"
+
+msgid "creator.type-text"
+msgstr "单列文字"
+
+msgid "creator.type-textarea"
+msgstr "多列文字"
+
 #: share/plugin/dashboard/template/dashboard_links:3
 msgid "dashboard.add-widget"
 msgstr "新增小工具"
@@ -3808,6 +3859,9 @@ msgstr "在小工具里显示一份网页。"
 
 msgid "description.oneimage"
 msgstr "在小工具里显示一张图片。"
+
+msgid "description.page_creator"
+msgstr "从自定的表单栏位来创建页面。"
 
 msgid "description.page_tracker"
 msgstr "以多栏方式呈现具有特定标签的页面。"
@@ -5161,6 +5215,9 @@ msgstr "无法建立标签列表。"
 msgid "error.cannot-change-account-logo-with-custom-skin=name"
 msgstr "由于当前使用的是自定义视觉主题，因此帐户标志不可更改。正在使用的视觉主题名为“%1”"
 
+msgid "error.cannot-create-page-in=wiki"
+msgstr "抱歉，您目前无法在 %1 工作区中创建新页面。"
+
 #: share/plugin/widgets/share/widgets/one_page/widget.js:52 share/plugin/widgets/share/widgets/one_page/widget.js:57
 msgid "error.cannot-embed-page-within-itself"
 msgstr "错误：无法将页面嵌入到自身里。"
@@ -5266,6 +5323,12 @@ msgstr "无法创建帐户 %1。"
 #: lib/Socialtext/Handler/ControlPanel.pm:2333
 msgid "error.create=wiki"
 msgstr "无法创建工作区 %1。"
+
+msgid "error.creator-missing-required=field"
+msgstr "此字段为必填：%1"
+
+msgid "error.creator-number-required=field"
+msgstr "请在此字段填入数字：%1"
 
 #: share/skin/s3/template/lite/html_begin.html:66
 msgid "error.css-disabled"
@@ -6097,6 +6160,12 @@ msgstr "没有和“%1”匹配的项目"
 #: lib/Socialtext/EditPlugin.pm:195
 msgid "error.no-page-body"
 msgstr "保存页面时，正文不能为空。"
+
+msgid "error.no-page-creator-for-ie6"
+msgstr "抱歉，创建页面小工具目前无法在您的浏览器上进行设定。"
+
+msgid "error.no-page-creator-for-mobile"
+msgstr "抱歉，创建页面小工具目前无法在行动装置上使用。"
 
 #: share/skin/s3/javascript/s3.js:832
 msgid "error.no-page-doc"
@@ -9372,6 +9441,9 @@ msgstr "项目背景色"
 msgid "kanban.item-notes"
 msgstr "项目标注"
 
+msgid "kanban.likable?"
+msgstr "为看板上的页面显示“赞”？"
+
 #: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:51
 msgid "kanban.notes"
 msgstr "标注"
@@ -12341,6 +12413,9 @@ msgstr "显示文字："
 msgid "signals.matching=query"
 msgstr "符合“%1”的讯息"
 
+msgid "signals.mentions-of-me"
+msgstr "提及我"
+
 #. (acc.count)
 #. (this.count)
 #. (acc.user_count)
@@ -12353,6 +12428,9 @@ msgstr "%1 名用户"
 #: lib/Socialtext/Pluggable/Plugin/Signals.pm:466
 msgid "signals.no-imported-parent=old-id,old-parent-id,new-id"
 msgstr "讯息 %1 是回复 %2，但被回复的讯息丢失。更新此讯息为 %3"
+
+msgid "signals.notifications"
+msgstr "通知"
 
 msgid "signals.number-of-signals-to-display"
 msgstr "显示讯息数量上限"
@@ -12399,6 +12477,9 @@ msgstr "您收到了 %1 的私人讯息："
 msgid "signals.private-message-sent"
 msgstr "已发送的私人讯息"
 
+msgid "signals.private-message-sent-to-you=sender:"
+msgstr "%1 传了一则私人讯息给您："
+
 #: share/plugin/signals/template/element/settings/signals_settings_section:8
 msgid "signals.private-message-to-email"
 msgstr "如果勾选上，每次别人给您发送私人讯息，您将会收到包含该消息的电子邮件。"
@@ -12432,6 +12513,9 @@ msgstr "回复"
 msgid "signals.reply-privately"
 msgstr "私密回复该讯息。"
 
+msgid "signals.reply-to-signal-message=url"
+msgstr "这封邮件由 Socialtext 讯息系统发送。您可以按<a href=\"%1\">这里</a>来回复讯息。"
+
 #: share/plugin/signals/template/search_box_signals:1
 msgid "signals.search:"
 msgstr "搜索讯息："
@@ -12443,6 +12527,12 @@ msgstr "选定的好友"
 #: share/plugin/signals/share/widgets/profile/widget.html:29
 msgid "signals.send-as-private-message"
 msgstr "发送为私人讯息"
+
+msgid "signals.send-mentions-of-me-as-email"
+msgstr "将提及我的讯息用电子邮件发送"
+
+msgid "signals.send-private-messages-as-email"
+msgstr "将给我的私人讯息用电子邮件发送"
 
 #: share/plugin/signals/template/bookmarklet/too_long.html:12
 msgid "signals.share-to-colleagues?"
@@ -12456,6 +12546,12 @@ msgstr "使用这个方便的书签来通过讯息分享所有网站上的页面
 #: share/plugin/signals/template/view/signallist:26
 msgid "signals.showing=from,to,total"
 msgstr "显示第 %1 - %2 项，共 %3 项。"
+
+msgid "signals.signal-mentions-to-email"
+msgstr "若勾选此选项，每当其他用户在讯息上提及您时，系统即会自动发送电子邮件通知您。"
+
+msgid "signals.signal-permalink"
+msgstr "讯息永久链结"
 
 #: share/plugin/signals/template/bookmarklet/index.html:57
 msgid "signals.signal-this!"
@@ -12535,6 +12631,9 @@ msgstr "已上传的文件："
 #: share/plugin/widgets/share/javascript/activities/widget.js:27
 msgid "signals.what-are-you-working-on?"
 msgstr "您在做什么呢？"
+
+msgid "signals.you-were-mentioned-by=sender:"
+msgstr "%1 在讯息里提及您："
 
 #: share/plugin/signals/template/email/direct-message.html:29
 msgid "signals.your-settings"
@@ -12936,6 +13035,9 @@ msgstr "网页"
 #: share/plugin/widgets/share/widgets/oneimage/prefs.xml:2 share/plugin/widgets/share/widgets/empty/prefs.xml:1
 msgid "title.oneimage"
 msgstr "图片"
+
+msgid "title.page_creator"
+msgstr "创建页面"
 
 msgid "title.page_tracker"
 msgstr "页面看板"

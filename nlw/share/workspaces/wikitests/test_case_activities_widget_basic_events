@@ -82,6 +82,9 @@
 | st_verify_text_in_activities_widget | profile_activity | qr/Super.+Edit.+Summary.+From.+Signal.+%%start_time%%/ |
 
 | *Comment* | Test Case: Activities Widget Basic Events TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%signalsuser%% |  |
 | st-admin | delete-workspace --w %%ws%% --no-export |  |
+| delete-account | %%acct%% |  |
 
 | *Comment* | Test Case: Activities Widget Basic Events COMPLETED |

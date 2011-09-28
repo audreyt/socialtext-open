@@ -11,20 +11,32 @@ use Socialtext::Prefs::System;
 
 fixtures('db');
 
+my $theme_keys = [ qw(background_color background_image_id
+    background_image_position background_image_tiling base_theme_id body_font
+    header_color header_font header_image_id header_image_position 
+    header_image_tiling primary_color secondary_color tertiary_color
+) ];
+
 instantiate: {
     my $system_prefs = Socialtext::Prefs::System->new();
     isa_ok $system_prefs, 'Socialtext::Prefs::System', 'got a prefs object';
 
     eq_or_diff $system_prefs->prefs, {}, 'non default prefs are empty';
-    eq_or_diff $system_prefs->all_prefs, {
-        timezone => {
-            timezone => '-0800',
-            dst => 'auto-us',
-            date_display_format => 'mmm_d_yyyy',
-            time_display_12_24 => '12',
-            time_display_seconds => '0',
-        },
-    }, 'correct default system prefs for en locale';
+    my $all_prefs = $system_prefs->all_prefs;
+
+    ok $all_prefs->{timezone}, 'have a timezone index';
+    eq_or_diff $all_prefs->{timezone}, {
+        timezone => '-0800',
+        dst => 'auto-us',
+        date_display_format => 'mmm_d_yyyy',
+        time_display_12_24 => '12',
+        time_display_seconds => '0',
+    }, 'correct default timezone prefs for en locale';
+
+    ok $all_prefs->{theme}, 'have a theme index';
+    eq_or_diff [ sort keys %{$all_prefs->{theme}} ], $theme_keys,
+        'correct default theme prefs for en locale';
+    
 }
 
 non_en_locale: {
@@ -32,17 +44,21 @@ non_en_locale: {
     set_locale('zh_TW');
     
     my $system_prefs = Socialtext::Prefs::System->new();
-
     eq_or_diff $system_prefs->prefs, {}, 'non default prefs are empty';
-    eq_or_diff $system_prefs->all_prefs, {
-        timezone => {
-            timezone => '-0800',
-            dst => 'never',
-            date_display_format => 'yyyy_mm_dd',
-            time_display_12_24 => '24',
-            time_display_seconds => '0',
-        },
-    }, 'correct default system prefs for zh_TW locale';
+    my $all_prefs = $system_prefs->all_prefs;
+
+    ok $all_prefs->{timezone}, 'have a timezone index';
+    eq_or_diff $all_prefs->{timezone}, {
+        timezone => '-0800',
+        dst => 'never',
+        date_display_format => 'yyyy_mm_dd',
+        time_display_12_24 => '24',
+        time_display_seconds => '0',
+    }, 'correct default timezone prefs for zh_TW locale';
+
+    ok $all_prefs->{theme}, 'have a theme index';
+    eq_or_diff [ sort keys %{$all_prefs->{theme}} ], $theme_keys,
+        'correct default theme prefs for zh_TW locale';
 }
 
 save: {
@@ -59,7 +75,15 @@ save: {
     ok $system_prefs->save($prefs), 'saved system prefs';
 
     my $freshened = Socialtext::Prefs::System->new();
-    eq_or_diff $freshened->all_prefs, $prefs, 'system all_prefs updated';
+    my $all_prefs = $freshened->all_prefs;
+
+    ok $all_prefs->{theme}, 'have a theme index in all_prefs';
+    eq_or_diff [ sort keys %{$all_prefs->{theme}} ], $theme_keys,
+        'correct theme prefs in all_prefs';
+
+    ok $all_prefs->{timezone}, 'have a timezone index in all_prefs';
+    eq_or_diff $all_prefs->{timezone}, $prefs->{timezone},
+        'system all_prefs updated';
     eq_or_diff $freshened->prefs, $prefs, 'system prefs updated';
 }
 
@@ -70,14 +94,19 @@ back_to_locale_defaults: {
     my $freshened = Socialtext::Prefs::System->new();
 
     eq_or_diff $freshened->prefs, {}, 'non default prefs are empty again';
-    eq_or_diff $system_prefs->all_prefs, {
-        timezone => {
-            timezone => '-0800',
-            dst => 'auto-us',
-            date_display_format => 'mmm_d_yyyy',
-            time_display_12_24 => '12',
-            time_display_seconds => '0',
-        },
+    my $all_prefs = $freshened->all_prefs;
+
+    ok $all_prefs->{theme}, 'have a theme index in all_prefs';
+    eq_or_diff [ sort keys %{$all_prefs->{theme}} ], $theme_keys,
+        'correct theme prefs in all_prefs';
+
+    ok $all_prefs->{timezone}, 'have a timezone index in all_prefs';
+    eq_or_diff $all_prefs->{timezone}, {
+        timezone => '-0800',
+        dst => 'auto-us',
+        date_display_format => 'mmm_d_yyyy',
+        time_display_12_24 => '12',
+        time_display_seconds => '0',
     }, 'locale defaults restored';
 }
 

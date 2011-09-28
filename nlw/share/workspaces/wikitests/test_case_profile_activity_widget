@@ -125,7 +125,11 @@
 | wait_for_element_not_present_ok | //div[@class='message mention'] | 5000 |
 
 | *Comment* | Test Case: Profile Activity Widget TEARDOWN |  |
+| st-process-jobs |  |  |
 | st-admin | remove-member --group %%group_id%% --e %%temail%% | no longer a member |
 | st-admin | remove-member --account "%%shared_acct%%" --e %%temail%% | no longer has the role of |
+| deactivate-user | %%luser%% |  |
+| delete-group | %%group_id%% |  |
+| delete-account | %%shared_acct%% |  |
 
 | *Comment* | Test Case: Profile Activity Widget COMPLETED |  |

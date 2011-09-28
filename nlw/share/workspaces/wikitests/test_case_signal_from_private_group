@@ -78,6 +78,10 @@
 | text_unlike | //body | %%public_1%% |
 
 | *Comment* | Test Case: Signal From Private Group TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%user1%% |  |
+| deactivate-user | %%user2%% |  |
 | delete-group | %%group_id%% |  |
+| delete-account | %%acct%% |  |
 
 | *Comment* | Test Case: Signal From Private Group COMPLETED |  |

@@ -387,9 +387,11 @@ sub export {
     my $hub = $opts{hub};
 
     my $export_file = $opts{file} || "$dir/account.yaml";
+    my %prefs = $self->_mangle_pref_blob_for_export($dir);
 
     my $logo_ref = $self->logo->logo;
     my $data     = {
+        %prefs,
         # versioning
         version => $EXPORT_VERSION,
         # data
@@ -400,7 +402,6 @@ sub export {
         users                      => $self->all_users_as_hash(want_private_fields => 1),
         logo                       => MIME::Base64::encode($$logo_ref),
         allow_invitation           => $self->allow_invitation,
-        pref_blob                  => $self->pref_blob,
         plugins                    => [ $self->plugins_enabled ],
         plugin_preferences         =>
             Socialtext::Pluggable::Adapter->new->account_preferences(
@@ -415,6 +416,25 @@ sub export {
 
     DumpFile($export_file, $data);
     return $export_file;
+}
+
+sub _mangle_pref_blob_for_export {
+    my $self = shift;
+    my $dir = shift;
+
+    my %data = ();
+    my $prefs = $self->prefs->prefs();
+
+    if (my $theme = delete $prefs->{theme}) {
+        require Socialtext::Theme;
+        my $to_export = Socialtext::Theme->MakeExportable($theme, $dir);
+        $data{theme} = $to_export;
+    }
+
+    require Socialtext::JSON;
+    $data{pref_blob} = Socialtext::JSON::encode_json($prefs);
+
+    return %data;
 }
 
 # Always use direct => 1 for account plugins.
@@ -557,6 +577,12 @@ sub import_file {
         warn "Could not import account logo: $@" if $@;
     }
     
+    if (my $theme = $hash->{theme}) {
+        require Socialtext::Theme;
+        my $prefs = Socialtext::Theme->MakeImportable($theme, $opts{dir});
+        $account->prefs->save({theme=>$prefs});
+    }
+
     print loc("user.importing"), "\n";
     my @profiles;
     for my $user_hash (@{ $hash->{users} }) {

@@ -1,6 +1,6 @@
 [%# @COPYRIGHT@ -%]
 [%# vim: set et sts=2 sw=2: %]
-<form id="st-register-form" name="register" method="post" action="/nlw/submit/register">
+<form id="st-register-form" name="register" method="post" action="/nlw/submit/register" accept-charset="utf-8">
   <input type="hidden" name="redirect_to" value="[% redirect_to | html %]" />
 [% IF target_workspace %]
   <input type="hidden" name="workspace_name" value="[% target_workspace.name%]" />

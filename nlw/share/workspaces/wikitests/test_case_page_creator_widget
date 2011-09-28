@@ -1,0 +1,209 @@
+| *Comment* | Test Case: Page Creator Widget |  |
+
+| set | pcw_user | pcw.user.%%start_time%%@david.socialtext.net |
+| set | pcw_acct | pcw_account_%%start_time%% |
+| set | pcw_wiki | pcw-wiki-%%start_time%% |
+| set | pcw_wiki_prefix | pcw |
+| set | pcw_wiki_suffix | wiki-%%start_time%% |
+| set | pcw_grp | pcw_group_%%start_time%% |
+| set | pcw_template_page | pcw-template-page-%%start_time%% |
+| set | pcw_template_page_prefix | pcw |
+| set | pcw_template_page_suffix | template-page-%%start_time%% |
+| set | pcw_form_page | pcw-form-page-%%start_time%% |
+| set | pcw_created_page | pcw-created-page-%%start_time%% |
+
+| create-account | %%pcw_acct%% |  |  |
+| create-workspace | %%pcw_wiki%% | %%pcw_acct%% |  |
+| create-user | %%pcw_user%% | %%password%% | %%pcw_acct%% |
+| add-member | %%pcw_user%% | %%pcw_wiki%% |  |
+| create-group | %%pcw_grp%% | %%pcw_acct%% | %%pcw_user%% |
+| st-logoutin | %%pcw_user%% | %%password%% |  |
+
+| *Comment* | Test Case: Page Creator Widget check all widget galleries for widget |  |
+| open_ok | /st/dashboard |  |
+| wait_for_element_visible_ok | link=Add Widget | 30000 |
+| click_and_wait | link=Add Widget |  |
+| wait_for_element_visible_ok | gallery-widget-Page Creator | 30000 |
+| wait_for_text_present_ok | Create pages from customized forms. | 30000 |
+| open_ok | /st/group/%%group_id%% |  |
+| wait_for_element_visible_ok | st-edit-layout | 30000 |
+| click_ok | st-edit-layout |  |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+| click_ok | st-add-widget |  |
+| wait_for_element_visible_ok | gallery-widget-Page Creator | 30000 |
+| wait_for_text_present_ok | Create pages from customized forms. | 30000 |
+| open_ok | /st/profile |  |
+| wait_for_element_visible_ok | st-edit-layout | 30000 |
+| click_ok | st-edit-layout |  |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+| click_ok | st-add-widget |  |
+| wait_for_element_visible_ok | gallery-widget-Page Creator | 30000 |
+| wait_for_text_present_ok | Create pages from customized forms. | 30000 |
+
+| *Comment* | Test Case: Page Creator Widget create a template page to feed into the widget |  |
+| open_ok | /%%pcw_wiki%%/?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| wait_for_element_visible_ok | st-newpage-pagename-edit |  |
+| type_ok | st-newpage-pagename-edit | %%pcw_template_page%% |
+| click_ok | wikiwyg_wikitext_textarea |  |
+| set | pp | `%%` |
+| type_ok | wikiwyg_wikitext_textarea | %%pp%%dev%%pp%% |
+| click_ok | st-edit-mode-tagbutton |  |
+| wait_for_element_visible_ok | st-tagqueue-field | 30000 |
+| type_ok | st-tagqueue-field | story |
+| click_ok | st-tagqueue-addbutton |  |
+| wait_for_text_present_ok | Tags to apply: story | 30000 |
+| type_ok | st-tagqueue-field | template |
+| click_ok | st-tagqueue-addbutton |  |
+| wait_for_text_present_ok | Tags to apply: story, template | 30000 |
+| click_ok | st-tagqueue-close |  |
+| wait_for_element_not_visible_ok | st-tagqueue-field | 10000 |
+| st-page-save |  |  |
+
+| *Comment* | Test Case: Page Creator Widget make a new page, insert the widget |  |
+| open_ok | /%%pcw_wiki%%/?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| wait_for_element_visible_ok | st-newpage-pagename-edit |  |
+| type_ok | st-newpage-pagename-edit | %%pcw_form_page%% |
+| type_ok | wikiwyg_wikitext_textarea |  |
+| click_ok | link=Widget... |  |
+| wait_for_element_visible_ok | gallery-widget-Page Creator | 30000 |
+| wait_for_text_present_ok | Create pages from customized forms. | 30000 |
+| pause_ok | 5000 | wait for gallery JS to load |
+| click_ok | gallery-widget-Page Creator |  |
+
+| *Comment* | Test Case: Page Creator Widget takes a looooong time for the JS to load ... |  |
+| pause_ok | 8000 | takes a looooong time for the fancy JS to load ... |
+| selectFrame | //iframe[@class='widgetWindow'] |  |
+
+| *Comment* | Test Case: Page Creator Widget verify and fill out the Basics section |  |
+| wait_for_element_visible_ok | //input[@id='field-new'] | 30000 |
+| wait_for_element_visible_ok | //input[@id='Workspace' and @type='text'] | 30000 |
+| text_like | qr/Basics.+Workspace.+Template.+Page Title.+Widget Title/ism |  |
+| type_lookahead_ok | //input[@id='Workspace' and @type='text'] | %%pcw_wiki_prefix%% |
+| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%pcw_wiki_suffix%%')] | 30000 |
+| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%pcw_wiki_suffix%%')] |  |
+| type_lookahead_ok | //input[@id='Template' and @type='text'] | %%pcw_template_page_prefix%% |
+| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%pcw_template_page_suffix%%')] | 30000 |
+| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%pcw_template_page_suffix%%')] |  |
+| type_ok | PageTitle | %%pp%%type%%pp%%: %%pp%%title%%pp%% |
+| verifyValue | Title | Page Creator |
+
+| *Comment* | Test Case: Page Creator Widget verify the default "title" field |  |
+| text_like | qr/Field.+New Field/ |  |
+| wait_for_element_visible_ok | //input[@value='title'] | 30000 |
+| verifyValue | //input[@value='title'] | title |
+| wait_for_element_visible_ok | //select[@class='field-type'] | 30000 |
+| is_selected_ok | //select[@class='field-type'] | label=Single line |
+| text_like | Required |  |
+| is_checked_ok | //input[@class='field-required'] |  |
+| text_like | Tag with: |  |
+| st_unchecked_ok | //input[@class='field-tagged'] |  |
+
+| *Comment* | Test Case: Page Creator Widget create and fill out a "type" field |  |
+| type_ok | field-new | type |
+| click_ok | field-row-new |  |
+| wait_for_element_visible_ok | xpath=(//input[@value='title'])[2] | 30000 |
+| verifyValue | xpath=(//input[@value='title'])[2] | type |
+| wait_for_element_visible_ok | xpath=(//select[@class='field-type'])[2] | 30000 |
+| is_selected_ok | xpath=(//select[@class='field-type'])[2] | label=Single line |
+| st_unchecked_ok | xpath=(//input[@class='field-required'])[2] |  |
+| st_unchecked_ok | xpath=(//input[@class='field-tagged'])[2] |  |
+| check_ok | xpath=(//input[@class='field-required'])[2] |  |
+| is_checked_ok | xpath=(//input[@class='field-required'])[2] |  |
+| select_ok | xpath=(//select[@class='field-type'])[2] | label=Dropdown |
+| is_selected_ok | xpath=(//select[@class='field-type'])[2] | label=Dropdown |
+| wait_for_text_present_ok | Choices: | 30000 |
+| wait_for_element_visible_ok | xpath=(//input[@class='field-choices ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c'])[2] | 30000 |
+| type_ok | xpath=(//input[@class='field-choices ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c'])[2] | Story |
+| click_ok | xpath=(//input[@value='Add'])[2] |  |
+| check_ok | xpath=(//input[@class='field-required'])[2] |  |
+| is_checked_ok | xpath=(//input[@class='field-required'])[2] |  |
+
+| *Comment* | Test Case: Page Creator Widget: Preview, then re-open to get fresh indexes for elements |  |
+| click_ok | link=Preview |  |
+| wait_for_element_visible_ok | link=Create | 10000 |
+| selectFrame | relative=parent |  |
+| wait_for_element_visible_ok | //a[@class='settings'] | 10000 |
+| *Comment* | Test Case: Page Creator Widget: Wait to click wrench icon - that makes it work ! |  |
+| pause_ok | 6000 | Wait to click wrench icon - that makes it work ! |
+| click_ok | //a[@class='settings'] |  |
+| wait_for_element_visible_ok | //iframe[@class='widgetWindow'] | 10000 |
+| selectFrame | //iframe[@class='widgetWindow'] |  |
+| wait_for_element_visible_ok | xpath=(//input[@class='field-choices ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c'])[3] | 30000 |
+| type_ok | xpath=(//input[@class='field-choices ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c'])[3] | Tech Story |
+| click_ok | xpath=(//input[@title='Make this choice pre-selected.'])[2] |  |
+
+
+| *Comment* | Test Case: Page Creator Widget create and fill out a "dev" field |  |
+| click_ok | field-row-new |  |
+| wait_for_element_visible_ok | xpath=(//input[@value='title'])[3] | 30000 |
+| type_ok | xpath=(//input[@value='title'])[3] | dev |
+| is_selected_ok | xpath=(//select[@class='field-type'])[3] | label=Single line |
+| select_ok | xpath=(//select[@class='field-type'])[3] | label=Multiple lines |
+| is_selected_ok | xpath=(//select[@class='field-type'])[3] | label=Multiple lines |
+| check_ok | xpath=(//input[@class='field-tagged'])[3] |  |
+| is_checked_ok | xpath=(//input[@class='field-tagged'])[3] |  |
+| wait_for_element_visible_ok | xpath=(//input[@id='tagPrefix-fixed'])[3] | 30000 |
+| type_ok | xpath=(//input[@id='tagPrefix-fixed'])[3] | dev: |
+
+| *Comment* | Test Case: Page Creator Widget save the widget and page |  |
+| wait_for_element_visible_ok | link-save | 30000 |
+| click_ok | link-save-bottom |  |
+| wait_for_text_present_ok | Workspace: %%pcw_wiki%% | 30000 |
+| select-frame | relative=parent |  |
+| select-frame | relative=parent |  |
+| wait_for_element_visible_ok | st-widget-opensocial-setup-save | 30000 |
+| click_ok | st-widget-opensocial-setup-save |  |
+| st-page-save |  |  |
+
+| *Comment* | Test Case: Page Creator Widget use the widget to create a page |  |
+| wait_for_text_present_ok | Page Creator | 30000 |
+| pause_ok | 5000 |  |
+| selectFrame | //iframe[@class='widgetWindow'] |  |
+| wait_for_element_visible_ok | link-create-page |  |
+| click_ok | link-create-page |  |
+| verifyAlert | Required field missing: title |  |
+
+| *Comment* | Test Case: Page Creator Widget fill in the form fields |  |
+| is_selected_ok | var-type | label=Story |
+| select_ok | var-type | label=Tech Story |
+| is_selected_ok | var-type | label=Tech Story |
+| type_ok | var-title | %%pcw_created_page%% |
+| keyPress | var-dev | D |
+| keyPress | var-dev | a |
+| keyPress | var-dev | v |
+| keyPress | var-dev | i |
+| keyPress | var-dev | d |
+| keyPress | var-dev | \013 |
+| keyPress | var-dev | K |
+| keyPress | var-dev | e |
+| keyPress | var-dev | n |
+| click_ok | link-create-page |  |
+
+| *Comment* | Test Case: Page Creator Widget verify the created page |  |
+| pause | 10000 |  |
+| selectWindow | Untitled Page / %%pcw_wiki%% |  |
+| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| wait_for_element_visible_ok | st-newpage-pagename-edit |  |
+| verifyValue | st-newpage-pagename-edit | Tech Story: %%pcw_created_page%% |
+| st-page-save |  |  |
+| text_like | st-page-titletext | Tech Story: %%pcw_created_page%% |
+| text_like | st-page-content | David |
+| text_like | st-page-content | Ken |
+| text_like | st-tags-listing | dev:David |
+| text_like | st-tags-listing | dev:Ken |
+| text_like | st-tags-listing | story |
+
+| *Comment* | Test Case: Page Creator Widget TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%pcw_user%% |  |
+| delete-group | %%group_id%% |  |
+| delete-workspace | %%pcw_wiki%% |  |
+| delete-account | %%pcw_acct%% |  |

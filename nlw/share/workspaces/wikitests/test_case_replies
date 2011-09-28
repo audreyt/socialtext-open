@@ -15,4 +15,10 @@
 
 | include | [Test Case: Mobile Replies IE] |  |
 
+| *Comment* | Test Case: Replies TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%my_user%% |  |
+| delete-workspace | replies-%%start_time%%-central |  |
+| delete-account | %%my_acct%% |  |
+
 | *Comment* | Test Case: Replies COMPLETED |  |

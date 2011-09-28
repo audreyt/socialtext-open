@@ -10,6 +10,7 @@
 | st-admin | add-group-admin --g %%group_id%% --e %%group_user%% | is now a admin of the |  |
 
 | *Comment* | Test Case: Group Home Has Widgets Promote to admin, *do* see edit group or edit layout buttons |  |
+| st-logoutin | %%group_user%% | %%password%% |
 | open_ok | /st/group/%%group_id%% |  |
 | wait_for_element_visible_ok | st-edit-group | 30000 |
 | wait_for_element_visible_ok | st-edit-layout | 30000 |
@@ -41,8 +42,7 @@
 | click_and_wait | st-cancel-layout |  |
 | text_unlike | contentContainer | You are in layout mode. Click Save to keep your changes, Cancel to discard them. |
 
-| *Comment* | Test Case: Group Home Has Widgets TEMPORARILY re-open until Cancel bug is fixed |  |
-| open_ok | /st/group/%%group_id%% |  |
+| *Comment* | Test Case: Group Home Has Widgets Cancelled |  |
 | text_unlike | contentContainer | Wikipedia |
 | wait_for_element_visible_ok | st-edit-layout | 10000 |
 | click_ok | st-edit-layout |  |

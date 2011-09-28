@@ -60,7 +60,8 @@ INSTALL_BASE = install-html       \
                install-post-install \
                install-desktop \
 	       install-workspaces \
-	       install-static-config
+	       install-static-config\
+	       install-themes
 
 INSTALL_FILE_TARGETS = $(INSTALL_BASE)
 

@@ -26,7 +26,6 @@ Note: Does not work in IE8. If done manually in IE8 it works fine, but when Sel 
 | select_and_wait | locale | label=zz - DEV_MODE ONLY |
 | wait_for_text_present_ok | Zzzzzzzz Zzzzzzzz | 30000 |
 | wait_for_text_present_ok | Zzzzzzz Zzzzz | 30000 |
-| wait_for_element_present_ok | link=Zzzzzzz Zzzzzzzz | 30000 |
 | is_selected_ok | locale | label=zz - DEV_MODE ONLY |
 
 | *Comment* | Test Case: Settings: Custom Language - Logout, login, still customized |  |
@@ -114,7 +113,6 @@ Note: Does not work in IE8. If done manually in IE8 it works fine, but when Sel 
 | select_and_wait | locale | label=zz - DEV_MODE ONLY |
 | wait_for_text_present_ok | Zzzzzzz Zzzzz | 30000 |
 | is_selected_ok | locale | label=zz - DEV_MODE ONLY |
-| wait_for_element_present_ok | link=Zzzzzzz Zzzzzzzz | 30000 |
 
 | *Comment* | Test Case: Settings: Custom Language - login as %%username%%, see ENGLISH |  |
 | st-logoutin | %%username%% | %%password%% |

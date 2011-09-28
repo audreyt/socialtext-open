@@ -192,6 +192,11 @@ wait_for_text_present_ok | Pagination %%start_time%% 3 | 30000 |
 | wait_for_element_not_present_ok | //a[@class='hoverLink hideLink'] | 5000 |
 
 | *Comment* | Test Case: Signals Search Pagination TEARDOWN |
+| st-process-jobs |  |  |
+| deactivate-user | %%a_username%% |  |
+| deactivate-user | %%x_username%% |  |
+| deactivate-user | %%z_username%% |  |
 | st-admin | remove-member --e %%username%% --account %%sspacct%% | no longer |
+| delete-account | %%sspacct%% |  |
 
 | *Comment* | Test Case: Signals Search Pagination COMPLETED |

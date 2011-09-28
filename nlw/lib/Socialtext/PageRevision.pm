@@ -6,6 +6,7 @@ use Carp qw/croak carp/;
 use Moose::Util::TypeConstraints;
 use Tie::IxHash;
 use Try::Tiny;
+use Socialtext::JSON qw/encode_json decode_json_utf8/;
 
 use Socialtext::Moose::UserAttribute;
 use Socialtext::MooseX::Types::Pg;
@@ -20,6 +21,8 @@ use Socialtext::Exceptions qw/data_validation_error/;
 use Socialtext::l10n;
 
 use namespace::clean -except => 'meta';
+
+with 'Socialtext::Annotations';
 
 enum 'PageType' => qw(wiki spreadsheet);
 
@@ -91,6 +94,7 @@ has 'mutable' => (
 use constant COLUMNS => qw(
     workspace_id page_id revision_id revision_num name editor_id edit_time
     page_type deleted summary edit_summary locked tags body_length
+    anno_blob
 );
 use constant COLUMNS_STR => join(', ',COLUMNS());
 use constant SELECT_COLUMNS_STR => COLUMNS_STR.
@@ -147,6 +151,34 @@ sub Blank {
     $p{__mutable} = ($p{page_id} eq "_") ? 0 : 1;
     
     return Socialtext::PageRevision->new(\%p);
+}
+
+sub _build_anno_blob {
+    my $self = shift;
+
+    my $rev_id = $self->revision_id;
+
+    my $blob;
+    if (!$rev_id && $self->has_prev) {
+        if ($self->prev->has_body_ref) {
+            $blob = $self->prev->anno_blob;
+        }
+        else {
+            $rev_id = $self->prev->revision_id;
+        }
+    }
+
+    if ($rev_id && !defined($blob)) {
+        $blob = sql_singlevalue(q{
+            SELECT anno_blob FROM page_revision
+             WHERE workspace_id = $1 AND page_id = $2 AND revision_id = $3
+        }, $self->workspace_id, $self->page_id, $rev_id);
+    }
+
+    $blob = '[]' unless defined $blob;
+    Encode::_utf8_on($blob); # it should always be in the db as utf8
+
+    return $blob;
 }
 
 sub _get_blob {
@@ -557,6 +589,7 @@ sub Export_to_file_from_row {
     $row->{summary} =~ s/\n//g;
     $row->{edit_summary} //= '';
     $row->{edit_summary} =~ s/\n//g;
+    $row->{anno_blob} //= '[]';
 
     print $fh <<EOH;
 Subject: $row->{name}
@@ -566,6 +599,7 @@ Revision: $row->{revision_num}
 Type: $row->{page_type}
 Summary: $row->{summary}
 RevisionSummary: $row->{edit_summary}
+anno_blob: $row->{anno_blob}
 Encoding: utf8
 EOH
     print $fh "Locked: 1\n" if $row->{locked};

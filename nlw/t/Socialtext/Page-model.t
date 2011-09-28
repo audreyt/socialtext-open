@@ -21,6 +21,7 @@ my ($ws_id, $ws_name, $ws_title) = map { $ws->$_ } qw(workspace_id name title);
 
 Create_from_row: {
     my $data = {
+        anno_blob => undef,
         workspace_id => $ws_id,
         workspace_name => $ws_name,
         workspace_title => $ws_title,
@@ -68,6 +69,7 @@ Create_from_row: {
     # to_result() is used to format pages into a row returned to a listview
     # many of these fields are named after the mime-like file format
     is_deeply $page->to_result, {
+        annotations => [],
         Date => '2008-01-01 23:12:01 GMT',
         DateLocal => 'Jan 1, 2008 3:12pm',
         Deleted => 1,
@@ -95,6 +97,7 @@ Create_from_row: {
         qr{/\Q$ws_name\E/(?:index\.cgi\?)?some_page_id$},
         "page_uri is the full_uri() function";
     is_deeply $hash, {
+        annotations     => [],
         create_time     => '2007-01-01 23:12:01 GMT',
         creator         => $creator->email_address,
         creator_id      => $creator->user_id,

@@ -47,7 +47,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "#-#-#-#-#  widgets.po (Socialtext i18n)  #-#-#-#-#\n"
 "Project-Id-Version: Socialtext i18n\n"
-"PO-Revision-Date: 2011-05-28 09:55-0700\n"
+"PO-Revision-Date: 2011-08-23 11:12+0800\n"
 "Last-Translator: Socialtext i18n team\n"
 "Language-Team: Socialtext i18n team\n"
 "MIME-Version: 1.0\n"
@@ -79,7 +79,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "#-#-#-#-#  signals.po (Socialtext i18n)  #-#-#-#-#\n"
 "Project-Id-Version: Socialtext i18n\n"
-"PO-Revision-Date: 2011-02-20 10:43+0800\n"
+"PO-Revision-Date: 2011-08-17 22:09-0700\n"
 "Last-Translator: Socialtext i18n team\n"
 "Language-Team: Socialtext i18n team\n"
 "MIME-Version: 1.0\n"
@@ -3857,6 +3857,59 @@ msgstr "«%1 workspace»"
 msgid "control.wikis=count"
 msgstr "«Workspaces (%1)»"
 
+msgid "creator.choices:"
+msgstr "«Choices:»"
+
+msgid "creator.create-page"
+msgstr "«Create»"
+
+msgid "creator.field-type:"
+msgstr "«Input Type:»"
+
+msgid "creator.field:"
+msgstr "«Field:»"
+
+msgid "creator.info-default-value"
+msgstr "«Make this choice pre-selected.»"
+
+msgid "creator.new-field:"
+msgstr "«New Field:»"
+
+#: share/plugin/widgets/share/widgets/page_tracker/widget.html:168
+msgid "creator.page-title:"
+msgstr "«Page Title:»"
+
+msgid "creator.really-delete-field?"
+msgstr "«Are you sure you want to delete this field?»"
+
+msgid "creator.required"
+msgstr "«Required»"
+
+msgid "creator.tag-with:"
+msgstr "«Tag with:»"
+
+#: share/plugin/widgets/share/widgets/page_tracker/widget.html:168
+msgid "creator.template:"
+msgstr "«Template:»"
+
+msgid "creator.type-checkbox"
+msgstr "«Checkboxes»"
+
+msgid "creator.type-number"
+msgstr "«Number»"
+
+msgid "creator.type-radio"
+msgstr "«Radio boxes»"
+
+msgid "creator.type-select"
+msgstr "«Dropdown»"
+
+msgid "creator.type-text"
+msgstr "«Single line»"
+
+msgid "creator.type-textarea"
+msgstr "«Multiple lines»"
+
 #: share/plugin/dashboard/template/dashboard_links:3
 msgid "dashboard.add-widget"
 msgstr "«Add Widget»"
@@ -4167,6 +4220,9 @@ msgstr "«Displays a single web page within a Socialtext Widget.»"
 
 msgid "description.oneimage"
 msgstr "«Displays a single spreadsheet within a Socialtext Widget.»"
+
+msgid "description.page_creator"
+msgstr "«Create pages from customized forms.»"
 
 msgid "description.page_tracker"
 msgstr "«Visualize tagged pages in a workspace with multiple columns.»"
@@ -5570,6 +5626,9 @@ msgstr "«Unable to build tag list.»"
 msgid "error.cannot-change-account-logo-with-custom-skin=name"
 msgstr "«Because a custom skin is in use, the account logo cannot be changed.  The skin in use is called '%1'»"
 
+msgid "error.cannot-create-page-in=wiki"
+msgstr "«Sorry, but you cannot create pages in the %1 workspace.»"
+
 #: share/plugin/widgets/share/widgets/one_page/widget.js:52 share/plugin/widgets/share/widgets/one_page/widget.js:57
 msgid "error.cannot-embed-page-within-itself"
 msgstr "«Error: Cannot embed a page within itself.»"
@@ -5675,6 +5734,15 @@ msgstr "«Could not create account %1.»"
 #: lib/Socialtext/Handler/ControlPanel.pm:2333
 msgid "error.create=wiki"
 msgstr "«Could not create workspace %1»"
+
+#: share/plugin/widgets/share/widgets/page_creator/widget.coffee:134 share/plugin/widgets/share/widgets/page_creator/widget.js:207
+msgid "error.creator-missing-required=field"
+msgstr "«Missing required field: %1»"
+
+#. (f.name)
+#: share/plugin/widgets/share/widgets/page_creator/widget.coffee:138 share/plugin/widgets/share/widgets/page_creator/widget.js:212
+msgid "error.creator-number-required=field"
+msgstr "«Number required in field: %1»"
 
 #: share/skin/s3/template/lite/html_begin.html:66
 msgid "error.css-disabled"
@@ -6531,6 +6599,12 @@ msgstr "«No matches for '%1'»"
 #: lib/Socialtext/EditPlugin.pm:195
 msgid "error.no-page-body"
 msgstr "«A page must have a body to be saved.»"
+
+msgid "error.no-page-creator-for-ie6"
+msgstr "«Sorry, this browser does not support setting up Page Creator widgets.»"
+
+msgid "error.no-page-creator-for-mobile"
+msgstr "«Sorry, Page Creator widget is currently unavailable on mobile devices.»"
 
 #: share/skin/s3/javascript/s3.js:832
 msgid "error.no-page-doc"
@@ -9924,6 +9998,10 @@ msgstr "«Item Background»"
 msgid "kanban.item-notes"
 msgstr "«Item Notes»"
 
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:200
+msgid "kanban.likable?"
+msgstr "«Show indicator for page likes?»"
+
 #: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:51
 msgid "kanban.notes"
 msgstr "«Notes»"
@@ -13034,6 +13112,10 @@ msgstr "«Link text:»"
 msgid "signals.matching=query"
 msgstr "«Signals matching '%1'»"
 
+#: share/plugin/signals/template/element/settings/signals_settings_section:5
+msgid "signals.mentions-of-me"
+msgstr "«Mentions of Me»"
+
 #. #-#-#-#-#  widgets.po (Socialtext i18n)  #-#-#-#-#
 #. (acc.count)
 #. (this.count)
@@ -13050,6 +13132,10 @@ msgstr "«%*(%1,user)»"
 #: lib/Socialtext/Pluggable/Plugin/Signals.pm:466
 msgid "signals.no-imported-parent=old-id,old-parent-id,new-id"
 msgstr "«Signal number %1 was originally in reply to signal %2, but that signal is not found.  This signal's new ID is %3»"
+
+#: share/plugin/signals/template/element/settings/private_menu:3
+msgid "signals.notifications"
+msgstr "«Notifications»"
 
 #: share/plugin/signals/share/widgets/profile/prefs.xml:1
 msgid "signals.number-of-signals-to-display"
@@ -13100,6 +13186,10 @@ msgstr "«You have received a private message from %1:»"
 msgid "signals.private-message-sent"
 msgstr "«Private message sent.»"
 
+#: lib/Socialtext/Job/SignalDMNotify.pm:55
+msgid "signals.private-message-sent-to-you=sender:"
+msgstr "«%1 sent you a private message:»"
+
 #: share/plugin/signals/template/element/settings/signals_settings_section:8
 msgid "signals.private-message-to-email"
 msgstr "«If checked, each time a user sends you a private message via Signals, we'll send you an email with the message.»"
@@ -13133,6 +13223,12 @@ msgstr "«reply»"
 msgid "signals.reply-privately"
 msgstr "«Reply privately to this signal.»"
 
+#. ("<a href=\"$webroot$signal.uri\">here</a>")
+#. (('<a href="' _ webroot _ signal.uri _ '">here</a>'))
+#: share/plugin/signals/template/email/mention.html:0 share/plugin/signals/template/email/mention.html:23
+msgid "signals.reply-to-signal-message=url"
+msgstr "«This message was sent by Socialtext Signals. You can reply to this message <a href=\"%1\">here</a>.»"
+
 #: share/plugin/signals/template/search_box_signals:1
 msgid "signals.search:"
 msgstr "«Search Signals:»"
@@ -13144,6 +13240,14 @@ msgstr "«Selected people»"
 #: share/plugin/signals/share/widgets/profile/widget.html:29
 msgid "signals.send-as-private-message"
 msgstr "«Send as private message»"
+
+#: share/plugin/signals/template/element/settings/signals_settings_section:11
+msgid "signals.send-mentions-of-me-as-email"
+msgstr "«Send mentions of me as email»"
+
+#: share/plugin/signals/template/element/settings/signals_settings_section:26
+msgid "signals.send-private-messages-as-email"
+msgstr "«Send private messages as email»"
 
 #: share/plugin/signals/template/bookmarklet/too_long.html:12
 msgid "signals.share-to-colleagues?"
@@ -13157,6 +13261,14 @@ msgstr "«Share any page on the web via Signals using this handy bookmarklet.»"
 #: share/plugin/signals/template/view/signallist:26
 msgid "signals.showing=from,to,total"
 msgstr "«Showing %1 - %2 of %3 total.»"
+
+#: share/plugin/signals/template/element/settings/signals_settings_section:15
+msgid "signals.signal-mentions-to-email"
+msgstr "«If checked, each time another user mentions you in a Signal, we'll send you an email with the message.»"
+
+#: share/plugin/signals/template/lite/permalink.html:6
+msgid "signals.signal-permalink"
+msgstr "«Signal Permalink»"
 
 #: share/plugin/signals/template/bookmarklet/index.html:57
 msgid "signals.signal-this!"
@@ -13248,6 +13360,12 @@ msgstr "«Uploaded files:»"
 #: share/plugin/widgets/share/javascript/activities/widget.js:27 share/plugin/signals/template/lite/signals.html:6
 msgid "signals.what-are-you-working-on?"
 msgstr "«What are you working on?»"
+
+#. ("<a href=\"$webroot/st/profile/$sender.user_id\">$sender.best_full_name</a>")
+#. (('<a href="' _ webroot _ '/st/profile/' _ sender.user_id _ '">' _ sender.best_full_name _ '</a>'))
+#: share/plugin/signals/template/email/mention.html:0 share/plugin/signals/template/email/mention.html:5
+msgid "signals.you-were-mentioned-by=sender:"
+msgstr "«You were mentioned by %1:»"
 
 #: share/plugin/signals/template/email/direct-message.html:29
 msgid "signals.your-settings"
@@ -13655,6 +13773,9 @@ msgstr "«Web Page»"
 #: share/plugin/widgets/share/widgets/oneimage/prefs.xml:2 share/plugin/widgets/share/widgets/empty/prefs.xml:1
 msgid "title.oneimage"
 msgstr "«Image»"
+
+msgid "title.page_creator"
+msgstr "«Page Creator»"
 
 msgid "title.page_tracker"
 msgstr "«Page Tracker»"

@@ -47,7 +47,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "#-#-#-#-#  widgets.po (Socialtext i18n)  #-#-#-#-#\n"
 "Project-Id-Version: Socialtext i18n\n"
-"PO-Revision-Date: 2011-05-28 09:55-0700\n"
+"PO-Revision-Date: 2011-08-23 11:12+0800\n"
 "Last-Translator: Socialtext i18n team\n"
 "Language-Team: Socialtext i18n team\n"
 "MIME-Version: 1.0\n"
@@ -79,7 +79,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "#-#-#-#-#  signals.po (Socialtext i18n)  #-#-#-#-#\n"
 "Project-Id-Version: Socialtext i18n\n"
-"PO-Revision-Date: 2011-02-20 10:43+0800\n"
+"PO-Revision-Date: 2011-08-17 22:09-0700\n"
 "Last-Translator: Socialtext i18n team\n"
 "Language-Team: Socialtext i18n team\n"
 "MIME-Version: 1.0\n"
@@ -3857,6 +3857,59 @@ msgstr "%1 zzzzzzzzz"
 msgid "control.wikis=count"
 msgstr "Zzzzzzzzzz (%1)"
 
+msgid "creator.choices:"
+msgstr "Zzzzzzz:"
+
+msgid "creator.create-page"
+msgstr "Zzzzzz"
+
+msgid "creator.field-type:"
+msgstr "Zzzzz Zzzz:"
+
+msgid "creator.field:"
+msgstr "Zzzzz:"
+
+msgid "creator.info-default-value"
+msgstr "Zzzz zzzz zzzzzz zzz-zzzzzzzz."
+
+msgid "creator.new-field:"
+msgstr "Zzz Zzzzz:"
+
+#: share/plugin/widgets/share/widgets/page_tracker/widget.html:168
+msgid "creator.page-title:"
+msgstr "Zzzz Zzzzz:"
+
+msgid "creator.really-delete-field?"
+msgstr "Zzz zzz zzzz zzz zzzz zz zzzzzz zzzz zzzzz?"
+
+msgid "creator.required"
+msgstr "Zzzzzzzz"
+
+msgid "creator.tag-with:"
+msgstr "Zzz zzzz:"
+
+#: share/plugin/widgets/share/widgets/page_tracker/widget.html:168
+msgid "creator.template:"
+msgstr "Zzzzzzzz:"
+
+msgid "creator.type-checkbox"
+msgstr "Zzzzzzzzzz"
+
+msgid "creator.type-number"
+msgstr "Zzzzzz"
+
+msgid "creator.type-radio"
+msgstr "Zzzzz zzzzz"
+
+msgid "creator.type-select"
+msgstr "Zzzzzzzz"
+
+msgid "creator.type-text"
+msgstr "Zzzzzz zzzz"
+
+msgid "creator.type-textarea"
+msgstr "Zzzzzzzz zzzzz"
+
 #: share/plugin/dashboard/template/dashboard_links:3
 msgid "dashboard.add-widget"
 msgstr "Zzz Zzzzzz"
@@ -4167,6 +4220,9 @@ msgstr "Zzzzzzzz z zzzzzz zzz zzzz zzzzzz z Zzzzzzzzzz Zzzzzz."
 
 msgid "description.oneimage"
 msgstr "Zzzzzzzz z zzzzzz zzzzzzzzzzz zzzzzz z Zzzzzzzzzz Zzzzzz."
+
+msgid "description.page_creator"
+msgstr "Zzzzzz zzzzz zzzz zzzzzzzzzz zzzzz."
 
 msgid "description.page_tracker"
 msgstr "Zzzzzzzzz zzzzzz zzzzz zz z zzzzzzzzz zzzz zzzzzzzz zzzzzzz."
@@ -5570,6 +5626,9 @@ msgstr "Zzzzzz zz zzzzz zzz zzzz."
 msgid "error.cannot-change-account-logo-with-custom-skin=name"
 msgstr "Zzzzzzz z zzzzzz zzzz zz zz zzz, zzz zzzzzzz zzzz zzzzzz zz zzzzzzz.  Zzz zzzz zz zzz zz zzzzzz '%1'"
 
+msgid "error.cannot-create-page-in=wiki"
+msgstr "Zzzzz, zzz zzz zzzzzz zzzzzz zzzzz zz zzz %1 zzzzzzzzz."
+
 #: share/plugin/widgets/share/widgets/one_page/widget.js:52 share/plugin/widgets/share/widgets/one_page/widget.js:57
 msgid "error.cannot-embed-page-within-itself"
 msgstr "Zzzzz: Zzzzzz zzzzz z zzzz zzzzzz zzzzzz."
@@ -5675,6 +5734,15 @@ msgstr "Zzzzz zzz zzzzzz zzzzzzz %1."
 #: lib/Socialtext/Handler/ControlPanel.pm:2333
 msgid "error.create=wiki"
 msgstr "Zzzzz zzz zzzzzz zzzzzzzzz %1"
+
+#: share/plugin/widgets/share/widgets/page_creator/widget.coffee:134 share/plugin/widgets/share/widgets/page_creator/widget.js:207
+msgid "error.creator-missing-required=field"
+msgstr "Zzzzzzz zzzzzzzz zzzzz: %1"
+
+#. (f.name)
+#: share/plugin/widgets/share/widgets/page_creator/widget.coffee:138 share/plugin/widgets/share/widgets/page_creator/widget.js:212
+msgid "error.creator-number-required=field"
+msgstr "Zzzzzz zzzzzzzz zz zzzzz: %1"
 
 #: share/skin/s3/template/lite/html_begin.html:66
 msgid "error.css-disabled"
@@ -6531,6 +6599,12 @@ msgstr "Zz zzzzzzz zzz '%1'"
 #: lib/Socialtext/EditPlugin.pm:195
 msgid "error.no-page-body"
 msgstr "Z zzzz zzzz zzzz z zzzz zz zz zzzzz."
+
+msgid "error.no-page-creator-for-ie6"
+msgstr "Zzzzz, zzzz zzzzzzz zzzz zzz zzzzzzz zzzzzzz zz Zzzz Zzzzzzz zzzzzzz."
+
+msgid "error.no-page-creator-for-mobile"
+msgstr "Zzzzz, Zzzz Zzzzzzz zzzzzz zz zzzzzzzzz zzzzzzzzzzz zz zzzzzz zzzzzzz."
 
 #: share/skin/s3/javascript/s3.js:832
 msgid "error.no-page-doc"
@@ -9924,6 +9998,10 @@ msgstr "Zzzz Zzzzzzzzzz"
 msgid "kanban.item-notes"
 msgstr "Zzzz Zzzzz"
 
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:200
+msgid "kanban.likable?"
+msgstr "Zzzz zzzzzzzzz zzz zzzz zzzzz?"
+
 #: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:51
 msgid "kanban.notes"
 msgstr "Zzzzz"
@@ -13034,6 +13112,10 @@ msgstr "Zzzz zzzz:"
 msgid "signals.matching=query"
 msgstr "Zzzzzzz zzzzzzzz '%1'"
 
+#: share/plugin/signals/template/element/settings/signals_settings_section:5
+msgid "signals.mentions-of-me"
+msgstr "Zzzzzzzz zz Zz"
+
 #. #-#-#-#-#  widgets.po (Socialtext i18n)  #-#-#-#-#
 #. (acc.count)
 #. (this.count)
@@ -13050,6 +13132,10 @@ msgstr "%*(%1,zzzz)"
 #: lib/Socialtext/Pluggable/Plugin/Signals.pm:466
 msgid "signals.no-imported-parent=old-id,old-parent-id,new-id"
 msgstr "Zzzzzz zzzzzz %1 zzz zzzzzzzzzz zz zzzzz zz zzzzzz %2, zzz zzzz zzzzzz zz zzz zzzzz.  Zzzz zzzzzz'z zzz ZZ zz %3"
+
+#: share/plugin/signals/template/element/settings/private_menu:3
+msgid "signals.notifications"
+msgstr "Zzzzzzzzzzzzz"
 
 #: share/plugin/signals/share/widgets/profile/prefs.xml:1
 msgid "signals.number-of-signals-to-display"
@@ -13100,6 +13186,10 @@ msgstr "Zzz zzzz zzzzzzzz z zzzzzzz zzzzzzz zzzz %1:"
 msgid "signals.private-message-sent"
 msgstr "Zzzzzzz zzzzzzz zzzz."
 
+#: lib/Socialtext/Job/SignalDMNotify.pm:55
+msgid "signals.private-message-sent-to-you=sender:"
+msgstr "%1 zzzz zzz z zzzzzzz zzzzzzz:"
+
 #: share/plugin/signals/template/element/settings/signals_settings_section:8
 msgid "signals.private-message-to-email"
 msgstr "Zz zzzzzzz, zzzz zzzz z zzzz zzzzz zzz z zzzzzzz zzzzzzz zzz Zzzzzzz, zz'zz zzzz zzz zz zzzzz zzzz zzz zzzzzzz."
@@ -13133,6 +13223,12 @@ msgstr "zzzzz"
 msgid "signals.reply-privately"
 msgstr "Zzzzz zzzzzzzzz zz zzzz zzzzzz."
 
+#. ("<a href=\"$webroot$signal.uri\">here</a>")
+#. (('<a href="' _ webroot _ signal.uri _ '">here</a>'))
+#: share/plugin/signals/template/email/mention.html:0 share/plugin/signals/template/email/mention.html:23
+msgid "signals.reply-to-signal-message=url"
+msgstr "Zzzz zzzzzzz zzz zzzz zz Zzzzzzzzzz Zzzzzzz. Zzz zzz zzzzz zz zzzz zzzzzzz <a href=\"%1\">zzzz</a>."
+
 #: share/plugin/signals/template/search_box_signals:1
 msgid "signals.search:"
 msgstr "Zzzzzz Zzzzzzz:"
@@ -13144,6 +13240,14 @@ msgstr "Zzzzzzzz zzzzzz"
 #: share/plugin/signals/share/widgets/profile/widget.html:29
 msgid "signals.send-as-private-message"
 msgstr "Zzzz zz zzzzzzz zzzzzzz"
+
+#: share/plugin/signals/template/element/settings/signals_settings_section:11
+msgid "signals.send-mentions-of-me-as-email"
+msgstr "Zzzz zzzzzzzz zz zz zz zzzzz"
+
+#: share/plugin/signals/template/element/settings/signals_settings_section:26
+msgid "signals.send-private-messages-as-email"
+msgstr "Zzzz zzzzzzz zzzzzzzz zz zzzzz"
 
 #: share/plugin/signals/template/bookmarklet/too_long.html:12
 msgid "signals.share-to-colleagues?"
@@ -13157,6 +13261,14 @@ msgstr "Zzzzz zzz zzzz zz zzz zzz zzz Zzzzzzz zzzzz zzzz zzzzz zzzzzzzzzzz."
 #: share/plugin/signals/template/view/signallist:26
 msgid "signals.showing=from,to,total"
 msgstr "Zzzzzzz %1 - %2 zz %3 zzzzz."
+
+#: share/plugin/signals/template/element/settings/signals_settings_section:15
+msgid "signals.signal-mentions-to-email"
+msgstr "Zz zzzzzzz, zzzz zzzz zzzzzzz zzzz zzzzzzzz zzz zz z Zzzzzz, zz'zz zzzz zzz zz zzzzz zzzz zzz zzzzzzz."
+
+#: share/plugin/signals/template/lite/permalink.html:6
+msgid "signals.signal-permalink"
+msgstr "Zzzzzz Zzzzzzzzz"
 
 #: share/plugin/signals/template/bookmarklet/index.html:57
 msgid "signals.signal-this!"
@@ -13248,6 +13360,12 @@ msgstr "Zzzzzzzz zzzzz:"
 #: share/plugin/widgets/share/javascript/activities/widget.js:27 share/plugin/signals/template/lite/signals.html:6
 msgid "signals.what-are-you-working-on?"
 msgstr "Zzzz zzz zzz zzzzzzz zz?"
+
+#. ("<a href=\"$webroot/st/profile/$sender.user_id\">$sender.best_full_name</a>")
+#. (('<a href="' _ webroot _ '/st/profile/' _ sender.user_id _ '">' _ sender.best_full_name _ '</a>'))
+#: share/plugin/signals/template/email/mention.html:0 share/plugin/signals/template/email/mention.html:5
+msgid "signals.you-were-mentioned-by=sender:"
+msgstr "Zzz zzzz zzzzzzzzz zz %1:"
 
 #: share/plugin/signals/template/email/direct-message.html:29
 msgid "signals.your-settings"
@@ -13655,6 +13773,9 @@ msgstr "Zzz Zzzz"
 #: share/plugin/widgets/share/widgets/oneimage/prefs.xml:2 share/plugin/widgets/share/widgets/empty/prefs.xml:1
 msgid "title.oneimage"
 msgstr "Zzzzz"
+
+msgid "title.page_creator"
+msgstr "Zzzz Zzzzzzz"
 
 msgid "title.page_tracker"
 msgstr "Zzzz Zzzzzzz"

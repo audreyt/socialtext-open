@@ -20,30 +20,31 @@
 | *Comment* | Test Case: User Groups in Global Nav Groups plugin is required for Groups |  |
 | st-admin | disable-plugin --plugin groups --all-accounts |  |
 | st-logoutin | %%not_group_member%% | %%password%% |
-| open_ok | /?dashboard |  |
 | wait_for_element_not_present_ok | link=Groups | 30000 |
 | st-admin | enable-plugin --plugin groups --all-accounts |  |
 
 | *Comment* | Test Case: User Groups in Global Nav People is required for Groups |  |
 | st-admin | disable-plugin --plugin people --all-accounts |  |
 | st-logoutin | %%not_group_member%% | %%password%% |
-| open_ok | /?dashboard |  |
 | wait_for_element_not_present_ok | link=Groups | 30000 |
 
 | *Comment* | Test Case: User Groups in Global Nav Add People INDIRECTLY |  |
 | st-admin | enable-plugin --plugin people --account %%grps_acct%% |  |
 | add_member | %%not_group_member%% | %%grps_ws%% |
-| open_ok | /?dashboard |  |
+| open_ok | /st/dashboard |  |
 | wait_for_element_visible_ok | link=Groups | 30000 |
 
 | *Comment* | Test Case: User Groups in Global Nav Add People DIRECTLY |  |
 | st-admin | enable-plugin --plugin people --all-accounts |  |
 | st-logoutin | %%group_member%% |  |
-| open_ok | /?dashboard |  |
 | wait_for_element_visible_ok | link=Groups | 30000 |
 
-| *Comment* | Test Case: User Groups in Global Nav Teardown |
+| *Comment* | Test Case: User Groups in Global Nav TEARDOWN |
+| st-process-jobs |  |
+| deactivate-user | %%group_member%% |
+| deactivate-user | %%not_group_member%% |
 | delete-group | %%group_id%% |
 | st-admin | delete-workspace --w %%grps_ws%% --no-export |
+| delete-account | %%grps_acct%% |
 
 | *Comment* | Test Case: Groups in Global Nav COMPLETE |

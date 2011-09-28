@@ -50,7 +50,8 @@ override_system_prefs: {
         notify => {key_one=>'value_one', key_two=>'value_two'},
     }, 'added new index';
     eq_or_diff $freshened->all_prefs, {
-        %$prefs, 
+        %$system_prefs, 
+        %$prefs,
         notify => {key_one=>'value_one', key_two=>'value_two'},
     }, 'overrode system prefs';
 }
@@ -67,6 +68,7 @@ remove_an_index: {
         timezone => {key_one=>'value_one', key_two=>'value_two'}
     }, 'index removed';
     eq_or_diff $freshened->all_prefs, {
+        %$system_prefs,
         timezone => {key_one=>'value_one', key_two=>'value_two'}
     }, 'still overriding system prefs';
 }

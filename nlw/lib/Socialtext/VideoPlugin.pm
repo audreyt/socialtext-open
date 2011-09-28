@@ -32,7 +32,7 @@ our %Services = (
             qr{://(?:www\.)?youtube\.com/embed/([-\w]{11,})}i,
         ],
         url => "http://www.youtube.com/watch?v=__ID__",
-        oembed => "http://www.youtube.com/oembed?format=json;url=__URL__",
+        oembed => "http://www.youtube.com/oembed?format=json&url=__URL__",
         ssl_thumbnail => 1,
         html => q{<iframe src='https://www.youtube.com/embed/__ID__?rel=0;autoplay=__AUTOPLAY__'
                           type='text/html'
@@ -48,7 +48,7 @@ our %Services = (
             qr{://player\.vimeo\.com/video/(\d+)}i,
         ],
         url => "http://www.vimeo.com/__ID__",
-        oembed => "http://oohembed.com/oohembed/?format=json;url=__URL__",
+        oembed => "http://oohembed.com/oohembed/?format=json&url=__URL__",
         html => '<object width="__WIDTH__" height="__HEIGHT__"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=__ID__&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=ffffff&amp;fullscreen=1&amp;autoplay=__AUTOPLAY__&amp;loop=0" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=__ID__&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=ffffff&amp;fullscreen=1&amp;autoplay=__AUTOPLAY__&amp;loop=0" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="__WIDTH__" height="__HEIGHT__"></embed></object>',
         ## {bz: 4926}: The new <iframe> code breaks under Adobe AIR (i.e. SD),
         ## so we fallback using old <object> embed code for now.
@@ -98,7 +98,7 @@ our %Services = (
             qr{^(\w+://(?:www\.)?slideshare\.net/.*)$}i,
         ],
         url => "__ID__",
-        oembed => "http://www.slideshare.net/api/oembed/1?format=json;url=__URL__",
+        oembed => "http://www.slideshare.net/api/oembed/1?format=json&url=__URL__",
         html_filter => sub {
             my $html = shift;
             $html =~ s/<strong\b[^>]*>.*?<\/strong>//i;

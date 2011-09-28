@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Socialtext i18n\n"
-"PO-Revision-Date: 2011-07-29 10:31+0800\n"
+"PO-Revision-Date: 2011-08-23 11:09+0800\n"
 "Last-Translator: Socialtext i18n team\n"
 "Language-Team: Socialtext i18n team\n"
 "MIME-Version: 1.0\n"
@@ -402,6 +402,57 @@ msgstr "分享此页!"
 msgid "bookmarklet.tip"
 msgstr "小秘诀：您可利用“"
 
+msgid "creator.choices:"
+msgstr "选项："
+
+msgid "creator.create-page"
+msgstr "创建"
+
+msgid "creator.field-type:"
+msgstr "输入类别："
+
+msgid "creator.field:"
+msgstr "字段："
+
+msgid "creator.info-default-value"
+msgstr "将此选项设为默认。"
+
+msgid "creator.new-field:"
+msgstr "新增字段："
+
+msgid "creator.page-title:"
+msgstr "页面标题："
+
+msgid "creator.really-delete-field?"
+msgstr "您确定要删除此字段吗？"
+
+msgid "creator.required"
+msgstr "必填"
+
+msgid "creator.tag-with:"
+msgstr "加上标签："
+
+msgid "creator.template:"
+msgstr "模板："
+
+msgid "creator.type-checkbox"
+msgstr "勾选"
+
+msgid "creator.type-number"
+msgstr "数值"
+
+msgid "creator.type-radio"
+msgstr "单选框"
+
+msgid "creator.type-select"
+msgstr "下拉列表"
+
+msgid "creator.type-text"
+msgstr "单列文字"
+
+msgid "creator.type-textarea"
+msgstr "多列文字"
+
 msgid "dashboard.revert"
 msgstr "恢复为默认"
 
@@ -500,6 +551,9 @@ msgstr "在小工具里显示一份网页。"
 
 msgid "description.oneimage"
 msgstr "在小工具里显示一张图片。"
+
+msgid "description.page_creator"
+msgstr "从自定的表单栏位来创建页面。"
 
 msgid "description.page_tracker"
 msgstr "以多栏方式呈现具有特定标签的页面。"
@@ -608,9 +662,18 @@ msgstr "是"
 msgid "error.at-least-one-column-required"
 msgstr "错误：请指定至少一个分栏。"
 
+msgid "error.cannot-create-page-in=wiki"
+msgstr "抱歉，您目前无法在 %1 工作区中创建新页面。"
+
 #: share/plugin/widgets/share/widgets/one_page/widget.js:52 share/plugin/widgets/share/widgets/one_page/widget.js:57
 msgid "error.cannot-embed-page-within-itself"
 msgstr "错误：无法将页面嵌入到自身里。"
+
+msgid "error.creator-missing-required=field"
+msgstr "此字段为必填：%1"
+
+msgid "error.creator-number-required=field"
+msgstr "请在此字段填入数字：%1"
 
 #. (this.title, error)
 #: share/plugin/widgets/share/javascript/lightbox/remove-content.js:78
@@ -675,6 +738,12 @@ msgstr "没有新的 %1，可能是因为您还没有关注任何人，也可能
 #: share/plugin/widgets/share/javascript/activities/explore.js:15
 msgid "error.no-items-for-explore"
 msgstr "没有可显示的项目。可能是没人发布链接或附件，也可能是您添加了太多过滤器。"
+
+msgid "error.no-page-creator-for-ie6"
+msgstr "抱歉，创建页面小工具目前无法在您的浏览器上进行设定。"
+
+msgid "error.no-page-creator-for-mobile"
+msgstr "抱歉，创建页面小工具目前无法在行动装置上使用。"
 
 #: share/plugin/widgets/share/javascript/activities/editor.js:659
 msgid "error.no-such-wikilink-wiki"
@@ -1020,6 +1089,9 @@ msgstr "项目背景色"
 msgid "kanban.item-notes"
 msgstr "项目标注"
 
+msgid "kanban.likable?"
+msgstr "为看板上的页面显示“赞”？"
+
 #: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:51
 msgid "kanban.notes"
 msgstr "标注"
@@ -1260,6 +1332,9 @@ msgstr "网页"
 #: share/plugin/widgets/share/widgets/oneimage/prefs.xml:2 share/plugin/widgets/share/widgets/empty/prefs.xml:1
 msgid "title.oneimage"
 msgstr "图片"
+
+msgid "title.page_creator"
+msgstr "创建页面"
 
 msgid "title.page_tracker"
 msgstr "页面看板"

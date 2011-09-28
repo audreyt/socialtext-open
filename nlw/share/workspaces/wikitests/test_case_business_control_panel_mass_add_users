@@ -26,12 +26,12 @@
 
 | *Comment* | Test Case: Business Control Panel Mass Add Users Add Multiple Users |  |
 | wait_for_element_visible_ok | st-add-users-file | 10000 |
-| type_ok | st-add-users-file | %%wikitest_client_files%%wikitest.csv |
+| type_ok | st-add-users-file | %%wikitest_files%%wikitest.csv |
 | click_and_wait | st-add-users-submit |  |
 
 | *Comment* | Test case: Business Control Panel Mass Add Users verify Multiple Users |  |
-| text_like | Loaded users from wikitest.csv |  |
-| text_like | Updated user |  |
+| wait_for_text_present_ok | Loaded users from wikitest.csv | 10000 |
+| wait_for_text_present_ok | Updated user | 10000 |
 
 | *Comment* | Test Case: Business Control Panel Mass Add Users TEARDOWN |  |
 | st-process-jobs |  |  |

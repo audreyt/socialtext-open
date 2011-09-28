@@ -19,7 +19,9 @@ sub _get_blob {
 
 sub _get_inherited_prefs {
     my $self = shift;
-    return $self->user->primary_account->prefs->all_prefs;
+    my $acct_prefs = $self->user->primary_account->prefs->all_prefs;
+    delete $acct_prefs->{theme}; # not inherited
+    return $acct_prefs;
 }
 
 sub _update_db {

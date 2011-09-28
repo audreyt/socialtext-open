@@ -1,6 +1,6 @@
 [%# @COPYRIGHT@ -%]
 [%# vim: set et sts=2 sw=2: %]
-<form id="st-login-form" name="login" method="post" action="/nlw/submit/login">
+<form id="st-login-form" name="login" method="post" action="/nlw/submit/login" accept-charset="utf-8">
 <div data-role="fieldcontain">
   <input type="hidden" name="redirect_to" value="[% redirect_to | html %]" />
   <input type="hidden" name="lite" value="[% lite | html %]" />

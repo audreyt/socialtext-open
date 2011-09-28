@@ -133,7 +133,7 @@ Note: Depends on the content of the test-data workspace, most notably the pages 
 | st-result | 2 total |  |
 | st-result | Kinosearch test page: strategy |  |
 | st-result | Kinosearch test page: politics |  |
-| st-search | title:"Kinosearch test page:" -="& falsity" | Pages matching 'title:"Kinosearch test page:" -title:"& falsity"' |
+| st-search | title:"Kinosearch test page:" - ="& falsity" | Pages matching 'title:"Kinosearch test page:" - title:"& falsity"' |
 | st-result | 2 total |  |
 | st-result | Kinosearch test page: strategy |  |
 | st-result | Kinosearch test page: politics |  |

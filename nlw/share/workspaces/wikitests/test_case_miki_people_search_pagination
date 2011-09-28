@@ -158,5 +158,9 @@
 | wait_for_element_not_present_ok | mobile-paging-first | 5000 |
 
 
-| *Comment* | Test case: Miki People Search Pagination - No teardown needed - no workspaces! |  |
+| *Comment* | Test case: Miki People Search Pagination - TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%mikiusersrch%% |  |
+| delete-account | %%mikiacctsrch%% |  |
+
 | *Comment* | Test case: Miki People Search Pagination - COMPLETED |  |

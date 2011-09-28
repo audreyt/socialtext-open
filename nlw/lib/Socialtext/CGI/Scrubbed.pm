@@ -9,7 +9,7 @@ use methods-invoker;
 
 field 'scrubber', -init => 'HTML::Scrubber->new';
 
-my %dont_scrub = map { $_ => 1 } qw(page_name page_body content comment users_new_ids POSTDATA PUTDATA tag_name widget widget_string up_page_title keywords add_tag signal status env_initial_text xml edit_summary );
+my %dont_scrub = map { $_ => 1 } qw(page_name page_body content comment users_new_ids POSTDATA PUTDATA tag_name widget widget_string up_page_title keywords add_tag signal status env_initial_text xml edit_summary new_title variables);
 
 method new ($env) {
     if ($Socialtext::PlackApp::CGI) {

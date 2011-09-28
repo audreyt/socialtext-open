@@ -13,6 +13,7 @@ fixtures('db');
 my $account = create_test_account_bypassing_factory();
 my $user = create_test_user(account=>$account);
 my $acct_prefs = $account->prefs->all_prefs;
+delete $acct_prefs->{theme};
 
 instantiate: {
     my $user_prefs = $user->prefs;

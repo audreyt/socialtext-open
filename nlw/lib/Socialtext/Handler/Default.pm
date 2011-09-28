@@ -62,7 +62,7 @@ sub handler {
         else {
             my $is_mobile  = Socialtext::BrowserDetect::is_mobile();
             $redirect_to = $is_mobile
-                ? '/lite/workspace_list'
+                ? '/m/workspace_list'
                 : 'action=workspace_list';
         }
         return $self->redirect( $redirect_to );

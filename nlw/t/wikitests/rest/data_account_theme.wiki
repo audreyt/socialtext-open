@@ -1,0 +1,126 @@
+* Fixture: SocialRest
+
+### Setup: Create Account, One User in Account, One Account Admin, and One user outside Account
+| set                 | the_acct       | account%%start_time%%                       |              |
+| create-account      | %%the_acct%%   |                                             |              |
+| set                 | the_acct_id    | %%account_id%%                              |              |
+| set                 | in_user        | in-user%%start_time%%@ken.socialtext.net    |              |
+| create-user         | %%in_user%%    | password                                    | %%the_acct%% |
+| set                 | in_user_id     | %%user_id%%                                 |              |
+| set                 | admin_user     | admin-user%%start_time%%@ken.socialtext.net |              |
+| create-user         | %%admin_user%% | password                                    | %%the_acct%% |
+| set                 | admin_user_id  | %%user_id%%                                 |              |
+| add-user-to-account | %%admin_user%% | %%the_acct%%                                | admin        |
+| set                 | out_user       | out-user%%start_time%%@ken.socialtext.net   |              |
+| create-user         | %%out_user%%   | password                                    |              |
+| set                 | out_user_id    | %%user_id%%                                 |              |
+
+### account doesn't exist
+| *Comment* | account doesn't exist |
+| http-user-pass |
+| GET-json | /data/accounts/ENOSUCH/theme               |                     |
+| code-is  | 404                                        |                     |
+| GET-json | /data/accounts/ENOSUCH/theme               | {"base_theme_id":1} |
+| code-is  | 404                                        |                     |
+| GET      | /data/accounts/ENOSUCH/theme/images/header |                     |
+| code-is  | 404                                        |                     |
+
+### guest user has no privs
+| *Comment* | guest user has no privs |
+| http-user-pass |
+| GET-json | /data/accounts/%%the_acct_id%%/theme               |                     |
+| code-is  | 401                                                |                     |
+| GET-json | /data/accounts/%%the_acct_id%%/theme/images/header |                     |
+| code-is  | 401                                                |                     |
+| PUT-json | /data/accounts/%%the_acct_id%%/theme               | {"base_theme_id":1} |
+| code-is  | 401                                                |                     |
+
+### user outside account has no privs
+| *Comment* | user outside account has no privs |
+| http-user-pass | %%out_user%% | password |
+| GET-json | /data/accounts/%%the_acct_id%%/theme               |                     |
+| code-is  | 403                                                |                     |
+| GET-json | /data/accounts/%%the_acct_id%%/theme/images/header |                     |
+| code-is  | 403                                                |                     |
+| PUT-json | /data/accounts/%%the_acct_id%%/theme               | {"base_theme_id":1} |
+| code-is  | 403                                                |                     |
+
+### account member has GET privs
+| *Comment* | account member has GET privs |
+| http-user-pass | %%in_user%% | password |
+| GET-json          | /data/accounts/%%the_acct_id%%/theme |                        |
+| code-is           | 200                                  |                        |
+| header-like       | Content-type                         | qr/^application\/json/ |
+| json-parse        |                                      |                        |
+| json-path-exists  | $.base_theme_id                      |                        |
+| json-path-exists  | $.header_color                       |                        |
+| json-path-exists  | $.tertiary_color                     |                        |
+| json-path-exists  | $.body_font                          |                        |
+| json-path-missing | $.theme_id                           |                        |
+| json-path-missing | $.name                               |                        |
+| json-path-missing | $.is_default                         |                        |
+
+### account member can GET images when they exist
+| http-user-pass | %%in_user%% | password |
+| GET       | /data/accounts/%%the_acct_id%%/theme/images/header     |           |
+| code-is   | 200                                                    |           |
+| header-is | Content-type                                           | image/png |
+| GET       | /data/accounts/%%the_acct_id%%/theme/images/background |           |
+| code-is   | 200                                                    |           |
+| header-is | Content-type                                           | image/png |
+| GET       | /data/accounts/%%the_acct_id%%/theme/images/ENOSUCH    |           |
+| code-is   | 404                                                    |           |
+
+### account member does not have PUT privs
+| *Comment* | account member does not have PUT privs |
+| http-user-pass | %%in_user%% | password |
+| PUT-json | /data/accounts/%%the_acct_id%%/theme | {"base_theme_id":1} |
+| code-is  | 403                                  |                     |
+
+### account admin has GET privs
+| *Comment* | account admin has GET privs |
+| http-user-pass | %%admin_user%% | password |
+| GET-json         | /data/accounts/%%the_acct_id%%/theme               |           |
+| code-is          | 200                                                |           |
+| json-parse       |                                                    |           |
+| json-path-exists | $.base_theme_id                                    |           |
+| GET              | /data/accounts/%%the_acct_id%%/theme/images/header |           |
+| code-is          | 200                                                |           |
+| header-is        | Content-type                                       | image/png |
+
+### account admin has PUT privs
+| *Comment* | account admin has PUT privs |
+| http-user-pass | %%admin_user%% | password |
+| PUT-json         | /data/accounts/%%the_acct_id%%/theme | {"header_image_id":50} |
+| code-is          | 204                                  |                        |
+| GET-json         | /data/accounts/%%the_acct_id%%/theme |                        |
+| code-is          | 200                                  |                        |
+| json-parse       |                                      |                        |
+| json-path-is     | $.header_image_id                    | 50                     |
+| json-path-exists | $.base_theme_id                      |                        |
+| json-path-exists | $.header_color                       |                        |
+| json-path-exists | $.tertiary_color                     |                        |
+| json-path-exists | $.body_font                          |                        |
+
+### invalid json
+| *Comment* | invalid json |
+| http-user-pass | %%admin_user%%                       | password              |
+| PUT-json       | /data/accounts/%%the_acct_id%%/theme | {"header_image_id":50 |
+| code-is        | 400                                  |                       |
+
+### bad data
+| *Comment* | bad data |
+| http-user-pass | %%admin_user%% | password |
+| PUT-json | /data/accounts/%%the_acct_id%%/theme | {"base_theme_id":"ENOSUCH"}                 |
+| code-is  | 400                                  |                                             |
+| PUT-json | /data/accounts/%%the_acct_id%%/theme | {"header_image_id":9999999999}              |
+| code-is  | 400                                  |                                             |
+| PUT-json | /data/accounts/%%the_acct_id%%/theme | {"header_color":"#abz123"}                  |
+| code-is  | 400                                  |                                             |
+| PUT-json | /data/accounts/%%the_acct_id%%/theme | {"header_image_tiling":"something"}         |
+| code-is  | 400                                  |                                             |
+| PUT-json | /data/accounts/%%the_acct_id%%/theme | {"header_image_position":"nowhere nothing"} |
+| code-is  | 400                                  |                                             |
+### Please don't use Comic Sans -- we are a Silicon Valley startup, not a Lemonade Stand.
+| PUT-json | /data/accounts/%%the_acct_id%%/theme | {"header_font":"Comic Sans"}                |
+| code-is  | 400                                  |                                             |

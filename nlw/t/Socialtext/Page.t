@@ -312,6 +312,7 @@ HASHES: {
 
     my $page_hash = $page->to_hash;
     cmp_deeply $page_hash, {
+        annotations     => [],
         create_time     => '2011-01-01 00:00:00 GMT',
         creator         => $creator->email_address,
         creator_id      => $creator->user_id,

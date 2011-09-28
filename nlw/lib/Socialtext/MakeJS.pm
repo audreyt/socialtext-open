@@ -14,6 +14,7 @@ use Compress::Zlib;
 use File::Slurp qw(slurp write_file);
 use File::Find qw(find);
 use File::Basename qw(basename dirname);
+use File::Which qw(which);
 use Clone qw(clone);
 use Carp qw(confess);
 use lib dirname(__FILE__)."/../../../plugins/widgets/lib";
@@ -74,8 +75,22 @@ sub CleanAll {
     }
 }
 
+my $coffee_compiler = which('coffee');
+sub BuildCoffee {
+    my $class = shift;
+    find({
+        wanted => sub {
+            my $coffee = $File::Find::name;
+            return unless -f $coffee and $coffee =~ /\.coffee$/;
+            (my $js = $coffee) =~ s/\.coffee$/.js/;
+            $class->_js_from_coffee($js);
+        },
+    }, @_);
+}
+
 sub BuildAll {
     my ($class) = @_;
+    $class->BuildCoffee("$CODE_BASE/skin", glob("$CODE_BASE/plugin/*"));
     for my $dir (keys %dirs) {
         warn "Building $dir...\n" if $VERBOSE;
         $class->BuildDir($dir);
@@ -130,6 +145,8 @@ sub Build {
     }
 
     my $parts = $info->{parts} || die "$target has no parts!";
+
+    $class->BuildCoffee($CWD);
 
     # Iterate over parts, building as we go
     my @last_modifieds;
@@ -201,6 +218,20 @@ sub _part_last_modified {
     return map { modified($_) } @files;
 }
 
+sub _js_from_coffee {
+    my ($class, $js) = @_;
+    my $coffee = $js;
+    $coffee =~ s/\.js$/.coffee/ or return;
+    -f $coffee or return;
+    return if -f $js and modified($js) > modified($coffee);
+    if ($coffee_compiler) {
+        warn "Building $js from $coffee...\n" if $VERBOSE;
+        system $coffee_compiler => -c => $coffee;
+        return;
+    }
+    warn "No coffee compiler found in PATH, skipping...\n" if $VERBOSE;
+}
+
 sub _part_to_text {
     my ($class, $part) = @_;
     local $CWD = "$CODE_BASE/$part->{dir}";
@@ -253,6 +284,7 @@ sub _file_to_text {
     my ($class, $part) = @_;
     my $text = '';
     for my $file (glob($part->{file})) {
+        $class->_js_from_coffee($file);
         $text .= "// BEGIN $part->{file}\n" unless $part->{nocomment};
         $text .= slurp($file);
     }
@@ -310,7 +342,7 @@ sub _jemplate_to_text {
                 # Keep the directory name in the template name when
                 # include_paths is set
                 (my $name = $jemplate);
-                $name =~ s{^$part->{jemplate}/}{} unless $part->{include_paths};
+                $name =~ s[^$part->{jemplate}/][] unless $part->{include_paths};
 
                 $text .= $part->{nocomment} ? '' : "// BEGIN $jemplate\n";
                 $text .= Jemplate->compile_template_content(

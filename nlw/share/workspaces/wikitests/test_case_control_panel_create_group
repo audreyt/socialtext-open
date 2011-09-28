@@ -1,3 +1,4 @@
+
 | *Comment* | Test Case: Control Panel Create Group |  |
 
 | set | email1 | group1%%start_time%%@ken.socialtext.net |
@@ -168,38 +169,32 @@
 | wait_for_element_visible_ok | //input[@type='button' and @value="Remove from group"] | 30000 |
 | click_ok | //input[@type='button' and @value="Remove from group"] |  |
 
+| verifyConfirmation | Remove the selected 2 users from this group? |  |
+
 | wait_for_text_present_ok | Group role changes were successful. | 30000 |
 | wait_for_element_visible_ok | link=%%short_email2%% <%%email2%%> | 30000 |
 | wait_for_element_not_present_ok | link=%%short_email1%% <%%email1%%> | 30000 |
 | wait_for_element_not_present_ok | link=%%short_email3%% <%%email3%%> | 30000 |
 
-| *Comment* | Test Case: Control Panel Create Group Teardown |
-| delete_created_groups |  |
+| *Comment* | Test Case: Control Panel Create Group - Add Multiple Users to %%groupname%% |  |
+| wait_for_element_visible_ok | link=Add Multiple Users | 30000 |
+| click_and_wait | link=Add Multiple Users | 30000 |
+| wait_for_text_present_ok | Add users to %%groupexists%% group | 30000 |
+| wait_for_element_visible_ok | link=Return to %%groupexists%% Group | 30000 |
+| wait_for_element_visible_ok | st-username-search-submit | 30000 |
+| wait_for_element_visible_ok | username | 30000 |
+| type_ok | username | %%start_time%% |
+| click_and_wait | st-username-search-submit |  |
+
+| *Comment* | Test Case: Control Panel Create Group - Add Multiple Users |  |
+| wait_for_element_visible_ok | link=Add Users | 30000 |
+| check_ok | toggle_all_users |  |
+| is_checked_ok | toggle_all_users |  |
+| click_and_wait | link=Add Users |  |
+| wait_for_text_present_ok | You successfully added | 30000 |
+
+| *Comment* | Test Case: Control Panel Create Group TEARDOWN |  |
+| st-process-jobs |  |  |
+| delete_created_groups |  |  |
 
 | *Comment* | Test case: Control Panel Create Group COMPLETED |  |
-
-Former Add Users functionality tests. Delete if Add Users is gone, otherwise, restore:
-
-wait_for_element_visible_ok | link=Add Users | 30000 |
-click_and_wait | link=Add Users | 30000 |
-
-*Comment* | Test Case: Control Panel Create Group - dumb hack 2 to avoid alert - select all, then clear all | |
-wait_for_element_visible_ok | toggle_all_users | |
-check_ok | toggle_all_users | |
-is_checked_ok | toggle_all_users | |
-wait_for_element_visible_ok | link=Clear Selection | |
-click_ok | link=Clear Selection | |
-wait_for_text_present_ok | 0 users selected | 30000 |
-
-*Comment* | Test Case: Control Panel Create Group - add members via add members link | |
-wait_for_text_present_ok | Add users to %%groupname%% group | 30000 |
-wait_for_element_visible_ok | link=Return to %%groupname%% Group | 30000 |
-wait_for_element_visible_ok | st-username-search-submit | 30000 |
-wait_for_element_visible_ok | username | 30000 |
-type_ok | username | %%start_time%% |
-click_and_wait | st-username-search-submit | |
-wait_for_element_visible_ok | %%user5%% | 30000 |
-click_ok | %%user5%% | |
-wait_for_element_visible_ok | link=Add users | 30000 |
-click_and_wait | link=Add users | |
-wait_for_text_present_ok | You successfully added 1 user to 1 group. | 30000 |

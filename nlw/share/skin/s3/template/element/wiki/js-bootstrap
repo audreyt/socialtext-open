@@ -114,6 +114,7 @@ v.page.page_type = [% page.page_type.json || '""' %];
 v.page.display_title = [% page.display_title.json || '""' %];
 v.page.revision_id = "[% page.revision_id %]";
 v.page.caller = [% page.caller.json || '""' %];
+v.page.new_title = [% page.new_title.json || '""' %];
 v.wiki = {};
 v.wiki.static_path = "[% wiki.static_path %]";
 v.wiki.is_public = "[% wiki_is_public %]";

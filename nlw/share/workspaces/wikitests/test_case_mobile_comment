@@ -48,6 +48,9 @@
 
 
 | *Comment* | Test Case: Mobile Comment TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%cmikiuser%% |  |
 | st-admin | delete-workspace --no-export --w %%cws%% | been deleted |
+| delete-account | %%cmikiacct%% |  |
 
 | *Comment* | Test Case: Mobile Comment COMPLETED |

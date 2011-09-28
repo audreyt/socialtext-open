@@ -1,7 +1,6 @@
 [%# @COPYRIGHT@ -%]
 [% USE decorate %]
 [% USE JSON %]
-[% PROCESS lite/header.html %]
 <script><!--
 var Socialtext = Socialtext || {};
 [% IF user %]
@@ -32,10 +31,12 @@ function nlw_make_plugin_path(rest) {
     [% FILTER decorate "head" %]
 <script type="text/javascript" charset="utf-8" src="/static/[% app_version %]/skin/s3/javascript/socialtext-s3.js.gz"></script>
     [% END %]
-    <link rel="stylesheet" href="/static/[% app_version %]/skin/common/css/jquery.mobile-1.0a3.min.css" />
+    <link rel="stylesheet" href="/static/[% app_version %]/skin/common/css/jquery.mobile-1.0b2.min.css" />
 [% ELSE %]
 --></script>
 [% END %]
+
+[% PROCESS lite/header.html %]
 
 [% MACRO user_link BLOCK %]
     [% name | decorate('user_link') %]

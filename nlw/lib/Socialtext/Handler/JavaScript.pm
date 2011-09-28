@@ -19,6 +19,8 @@ my %DIR = (
     'jquery-1.4.2.min.js' => 'skin/common',
     'jquery-1.4.4.js' => 'skin/common',
     'jquery-1.4.4.min.js' => 'skin/common',
+    'jquery-1.6.2.js' => 'skin/common',
+    'jquery-1.6.2.min.js' => 'skin/common',
     'push-client.js' => 'plugin/widgets',
 );
 

@@ -1,6 +1,7 @@
 
 | *Comment* | Test Case: Group Home Widget Permissions |
 
+
 * Fixture: SocialWidgets
 
 | *Comment* | Test Case: Group Home Widget Permissions Setup |  |  |
@@ -84,14 +85,10 @@
 | st-process-jobs |  |  |
 | st-logoutin | %%group_cp_admin%% | %%password%% |
 | open_ok | /st/group/%%group_id%% |  |
-| wait_for_element_visible_ok | st-edit-group | 30000 |
-| wait_for_element_visible_ok | st-edit-layout | 30000 |
-| click_ok | st-edit-layout |  |
-| wait_for_text_present_ok | You are in layout mode. Click Save to keep your changes, Cancel to discard them. | 30000 |
-| wait_for_element_visible_ok | st-revert-layout | 30000 |
+| *Comment* | Test Case: Group Home Widget Permissions: biz admins no longer can view Group |  |
+| wait_for_text_present_ok | The group you are trying to view does not exist |  |
 
 | *Comment* | Test Case: Group Home Widget Permissions Account admin has edit group and edit layout buttons |  |
-| Comment | THIS WILL FAIL UNTIL account admins DO have editing permissions |  |
 | set | group_biz_admin | group_biz%%start_time%%@matt.socialtext.net |
 | st-admin | create-user --e %%group_biz_admin%% --p %%password%% --account %%group_acct%% | was created |
 | st-admin | add-account-admin --e %%group_biz_admin%% --account %%group_acct%% | now has the role of 'admin' |

@@ -1,0 +1,83 @@
+* Fixture: SocialRest
+
+### Setup: need one technical/system admin and one other user
+| set                 | sys_admin     | sys-admin%%start_time%%@ken.socialtext.net |
+| create-user         | %%sys_admin%% | password                                   |
+| set                 | sys_admin_id  | %%user_id%%                                |
+| set-technical-admin | %%sys_admin%% | 1                                          |
+| set                 | non_admin     | non-admin%%start_time%%@ken.socialtext.net |
+| create-user         | %%non_admin%% | password                                   |
+| set                 | non_admin_id  | %%user_id%%                                |
+
+### non-admin is not authorized
+| *Comment* | non-admin is not authorized |
+| http-user-pass | %%non_admin%% | password |
+| GET-json | /data/settings/theme               |                     |
+| code-is  | 403                                |                     |
+| GET      | /data/settings/theme/images/header |                     |
+| code-is  | 403                                |                     |
+| PUT-json | /data/settings/theme               | {"base_theme_id":1} |
+| code-is  | 403                                |                     |
+
+### technical admin is authorized to GET
+| *Comment* | technical admin is authorized to GET |
+| http-user-pass | %%sys_admin%% | password |
+| GET-json          | /data/settings/theme |                        |
+| code-is           | 200                  |                        |
+| json-parse        |                      |                        |
+| header-like       | Content-Type         | qr/^application\/json/ |
+| json-path-exists  | $.base_theme_id      |                        |
+| json-path-exists  | $.header_color       |                        |
+| json-path-exists  | $.tertiary_color     |                        |
+| json-path-exists  | $.body_font          |                        |
+| json-path-missing | $.theme_id           |                        |
+| json-path-missing | $.name               |                        |
+| json-path-missing | $.is_default         |                        |
+
+### technical admin can GET images
+| *Comment* | technical admin can GET images |
+| http-user-pass | %%sys_admin%% | password |
+| GET       | /data/settings/theme/images/header     |           |
+| code-is   | 200                                    |           |
+| header-is | Content-type                           | image/png |
+| GET       | /data/settings/theme/images/background |           |
+| code-is   | 200                                    |           |
+| header-is | Content-type                           | image/png |
+| GET       | /data/settings/theme/images/ENOSUCH    |           |
+| code-is   | 404                                    |           |
+
+### technical admin has PUT privs
+| *Comment* | technical admin has PUT privs |
+| http-user-pass | %%sys_admin%% | password |
+| PUT-json         | /data/settings/theme | {"header_image_id":50} |
+| code-is          | 204                  |                        |
+| GET-json         | /data/settings/theme |                        |
+| code-is          | 200                  |                        |
+| json-parse       |                      |                        |
+| json-path-is     | $.header_image_id    | 50                     |
+| json-path-exists | $.base_theme_id      |                        |
+| json-path-exists | $.header_color       |                        |
+| json-path-exists | $.tertiary_color     |                        |
+| json-path-exists | $.body_font          |                        |
+
+### invalid json
+| *Comment* | invalid json |
+| http-user-pass | %%sys_admin%%                       | password              |
+| PUT-json | /data/settings/theme | {"header_image_id":50 |
+| code-is  | 400                  |                       |
+
+### bad data
+| *Comment* | bad data |
+| http-user-pass | %%sys_admin%%                       | password              |
+| PUT-json | /data/settings/theme | {"base_theme_id":"ENOSUCH"}                 |
+| code-is  | 400                  |                                             |
+| PUT-json | /data/settings/theme | {"header_image_id":9999999999}              |
+| code-is  | 400                  |                                             |
+| PUT-json | /data/settings/theme | {"header_color":"#abz123"}                  |
+| code-is  | 400                  |                                             |
+| PUT-json | /data/settings/theme | {"header_image_tiling":"something"}         |
+| code-is  | 400                  |                                             |
+| PUT-json | /data/settings/theme | {"header_image_position":"nowhere nothing"} |
+| code-is  | 400                  |                                             |
+| PUT-json | /data/settings/theme | {"header_font":"Comic Sans"}                |
+| code-is  | 400                  |                                             |

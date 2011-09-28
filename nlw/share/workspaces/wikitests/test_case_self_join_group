@@ -220,9 +220,15 @@
 | st-admin | show-acls --w %%wstwo%% | permission set name: member-only |
 
 | *Comment* | Test Case: Self Join Group TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%user%% |  |
+| deactivate-user | %%joiner%% |  |
+| deactivate-user | %%other_user%% |  |
 | st-admin | delete-workspace --w %%ws%% --no-export | has been deleted |
 | st-admin | delete-workspace --w %%wstwo%% --no-export | has been deleted |
 | delete-group | %%first_group%% |  |
 | delete-group | %%group_id%% |  |
+| delete-account | %%account%% |  |
+| delete-account | %%other_account%% |  |
 
 | *Comment* | Test Case: Self Join Group COMPLETED |  |

@@ -5,7 +5,7 @@ use warnings;
 
 use base 'Socialtext::Handler';
 
-use Apache::Constants qw( NOT_FOUND );
+use Apache::Constants qw( NOT_FOUND REDIRECT);
 use Socialtext;
 
 use Encode ();
@@ -324,7 +324,15 @@ sub logout {
         || Socialtext::AppConfig->logout_redirect_uri();
 
     Socialtext::Apache::User::unset_login_cookie();
-    $self->redirect($redirect);
+
+    my $uri = URI->new($redirect);
+    if ($uri->scheme) {
+        $self->r->header_out(Location => $redirect);
+        return REDIRECT;
+    }
+    else {
+       $self->redirect($redirect);
+    }
 }
 
 sub forgot_password {

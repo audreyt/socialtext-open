@@ -7,7 +7,8 @@ use Cwd;
 use File::Path qw(rmtree);
 use File::Spec;
 use File::Temp qw(tempdir);
-use Test::Socialtext tests => 40;
+use Test::More;
+use Test::Socialtext;
 use Socialtext::CLI;
 use Socialtext::SQL qw(:exec);
 use Test::Socialtext::CLIUtils qw(expect_success expect_failure);
@@ -102,6 +103,35 @@ set_account_config: {
         },
         qr/\QThe skin you specified, ENOSUCHSKIN, does not exist.\E/,
         '... set-account-config failure with invalid skin',
+    );
+}
+
+###############################################################################
+# TEST: Set Account Config with a prefs index.
+config_with_prefs_index: {
+    my $acct = create_test_account_bypassing_factory();
+    my $name = $acct->name;
+
+    expect_success(
+        sub {
+            Socialtext::CLI->new(
+                argv => [ '--account', $acct->name, '--index', 'theme',
+                          'primary_color', '#cc6600' ],
+            )->set_account_config();
+        },
+        qr/\QUpdated the theme prefs for the $name account\E/,
+        'set account config successful when using a valid index',
+    );
+
+    expect_failure(
+        sub {
+            Socialtext::CLI->new(
+                argv => [ '--account', $acct->name, '--index', 'theme',
+                          'primary_color', 'ENOSUCH' ],
+            )->set_account_config();
+        },
+        qr/One or more values for the theme index are invalid/,
+        'set account config failure when using bad values for theme index',
     );
 }
 
@@ -303,3 +333,5 @@ import_account_recreates_group_primary_account: {
     # CLEANUP
     rmtree [$export_dir], 0;
 }
+
+done_testing;

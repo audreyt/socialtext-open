@@ -131,5 +131,16 @@ wait_for_element_visible_ok | link=E | 30000 |
 click_and_wait | link=E | |
 wait_for_element_visible_ok | link=%%userE%% | 30000 |
 
+| *Comment* | Test Case: Canadien Francais (Users) TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%userAA%% |  |
+| deactivate-user | %%userA%% |  |
+| deactivate-user | %%userB%% |  |
+| deactivate-user | %%userL%% |  |
+| deactivate-user | %%userE%% |  |
+| deactivate-user | %%userP%% |  |
+| deactivate-user | %%userX%% |  |
+| delete-account | %%acct%% |  |
+
 
 | *Comment* | Test Case: Canadien Francais COMPLETED |  |

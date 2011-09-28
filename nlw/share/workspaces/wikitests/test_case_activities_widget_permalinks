@@ -41,4 +41,9 @@ json-path-set | signal_hash | $[0].hash |
 
 | *Comment* | TODO: write st-send-signal-via-reply-widget and st-verify-text-in-reply-widget |  |
 
+| *Comment* | Test Case: Activities Widget TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%user%% |  |
+| delete-account | %%acct%% |  |
+
 | *Comment* | Test Case: Activities Widget Permalinks COMPLETED |  |

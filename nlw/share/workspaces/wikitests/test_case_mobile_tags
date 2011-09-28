@@ -107,6 +107,9 @@
 
 
 | *Comment* | Test Case: Mobile Tags TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%tmikiuser%% |  |
 | st-admin | delete-workspace --no-export --w %%ws%% | been deleted |
+| delete-account | %%tmikiacct%% |  |
 
 | *Comment* | Test Case: Mobile Tags COMPLETED |

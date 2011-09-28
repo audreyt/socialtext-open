@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Socialtext i18n\n"
-"PO-Revision-Date: 2011-07-29 10:31+0800\n"
+"PO-Revision-Date: 2011-08-17 22:09-0700\n"
 "Last-Translator: Socialtext i18n team\n"
 "Language-Team: Socialtext i18n team\n"
 "MIME-Version: 1.0\n"
@@ -169,6 +169,9 @@ msgstr "Socialtext 探索"
 msgid "signals.about-bookmarklet!"
 msgstr "将其作为书签（或收藏夹）安装，当您有网页要讯息或分享，只需点击或选择书签就可以发送讯息了！"
 
+msgid "signals.signal-mentions-to-email"
+msgstr "若勾选此选项，每当其他用户在讯息上提及您时，系统即会自动发送电子邮件通知您。"
+
 #: share/plugin/signals/share/javascript/signals.js:820
 msgid "signals.all-groups"
 msgstr "所有群组"
@@ -238,11 +241,17 @@ msgstr "该设备的最大值是 %1"
 msgid "signals.liked=creator,uri,snippet"
 msgstr "说 %1 的这则<a href=\"%2\">讯息</a>很赞：“%3”。"
 
+msgid "signals.mentions-of-me"
+msgstr "提及我"
+
 #. (a.user_count)
 #. (g.user_count)
 #: share/plugin/signals/template/lite/signals.html:52 share/plugin/signals/template/lite/signals.html:63
 msgid "signals.network-count=users"
 msgstr "%1 名用户"
+
+msgid "signals.notifications"
+msgstr "通知"
 
 msgid "signals.number-of-signals-to-display"
 msgstr "显示讯息数量上限"
@@ -313,6 +322,9 @@ msgstr "回复"
 msgid "signals.reply-privately"
 msgstr "私密回复该讯息。"
 
+msgid "signals.reply-to-signal-message=url"
+msgstr "这封邮件由 Socialtext 讯息系统发送。您可以按<a href=\"%1\">这里</a>来回复讯息。"
+
 #: share/plugin/signals/template/search_box_signals:1
 msgid "signals.search:"
 msgstr "搜索讯息："
@@ -324,6 +336,12 @@ msgstr "选定的好友"
 #: share/plugin/signals/share/widgets/profile/widget.html:29
 msgid "signals.send-as-private-message"
 msgstr "发送为私人讯息"
+
+msgid "signals.send-mentions-of-me-as-email"
+msgstr "将提及我的讯息用电子邮件发送"
+
+msgid "signals.send-private-messages-as-email"
+msgstr "将给我的私人讯息用电子邮件发送"
 
 #: share/plugin/signals/template/bookmarklet/too_long.html:12
 msgid "signals.share-to-colleagues?"
@@ -337,6 +355,9 @@ msgstr "使用这个方便的书签来通过讯息分享所有网站上的页面
 #: share/plugin/signals/template/view/signallist:26
 msgid "signals.showing=from,to,total"
 msgstr "显示第 %1 - %2 项，共 %3 项。"
+
+msgid "signals.signal-permalink"
+msgstr "讯息永久链结"
 
 #: share/plugin/signals/template/bookmarklet/index.html:57
 msgid "signals.signal-this!"
@@ -401,6 +422,9 @@ msgstr "更新"
 #: share/plugin/signals/template/lite/signals.html:6
 msgid "signals.what-are-you-working-on?"
 msgstr "您在做什么呢？"
+
+msgid "signals.you-were-mentioned-by=sender:"
+msgstr "%1 在讯息里提及您："
 
 #: share/plugin/signals/template/email/direct-message.html:29
 msgid "signals.your-settings"

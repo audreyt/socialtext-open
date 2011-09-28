@@ -10,6 +10,7 @@ sub Classes {
                UserMetadata
                Workspace
                Pluggable::Adapter
+               Theme
              );
 }
 

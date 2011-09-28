@@ -14,7 +14,10 @@ use File::Slurp qw(slurp);
 my ($lang);
 GetOptions(
     'lang|l=s' => \$lang,
-) and @ARGV and $lang or die "Usage: $0 --lang lang patch.po\n";
+);
+
+$lang ||= $1 if @ARGV and $ARGV[0] =~ m{(\w+)\.po};
+@ARGV and $lang or die "Usage: $0 --lang lang patch.po\n";
 
 my $patchPo = shift;
 

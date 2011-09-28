@@ -76,4 +76,10 @@
 | wait_for_text_not_present_ok | Signal to %%msacct%%-A | 30000 |
 | wait_for_text_present_ok | Signal to %%msacct%%-B | 20000 |
 
+| *Comment* | Test Case: Miki Dropdowns WikiWyg. TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%common_user%% |  |
+| delete-account | %%msacct%%-A |  |
+| delete-account | %%msacct%%-B |  |
+
 | *Comment* | Test Case: Miki Dropdowns WikiWyg COMPLETED |

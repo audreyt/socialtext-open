@@ -2291,9 +2291,13 @@ sub _update_account_prefs {
         $prefs->{$key} = $value;
     }
 
-    eval {
-        $account->prefs->save({$index=>$prefs});
-    };
+    if ($index eq 'theme') {
+        require Socialtext::Theme;
+        $self->_error("One or more values for the theme index are invalid")
+            unless Socialtext::Theme->ValidSettings($prefs);
+    }
+
+    eval { $account->prefs->save({$index=>$prefs}) };
     if (my $e = $@) {
         $self->_error($@);
     }

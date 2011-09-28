@@ -1,3 +1,7 @@
-| *Comment* | Test Case: Signals Wiki Link Teardown |  |
+| *Comment* | Test Case: Signals Wiki Link TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%wl_signaler%% |  |
 | st-admin | delete-workspace --workspace %%wiki%% --no-export | deleted |
+| delete-account | %%acct%% |  |
+
 | *Comment* | Test Case: Signals Wiki Link Teardown COMPLETED |  |

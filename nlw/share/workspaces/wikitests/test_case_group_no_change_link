@@ -185,6 +185,11 @@
 
 | *Comment* | Test Case: Group No Change Link TEARDOWN |  |
 | st-process-jobs |  |  |
+
+| deactivate-user | %%user%% |  |
+| deactivate-user | %%joiner%% |  |
+| deactivate-user | %%other_user%% |  |
+
 | st-admin | delete-workspace --w %%ws%% --no-export | has been deleted |
 | st-admin | delete-workspace --w %%wstwo%% --no-export | has been deleted |
 
@@ -193,5 +198,8 @@
 | delete-group | %%group_id%% | Deleted group id %%group_id%% |
 | delete-group | %%other_group_id%% | Deleted group id %%other_group_id%% |
 | delete-group | %%other_priv_id%% | Deleted group id %%other_priv_id%% |
+
+| delete-account | %%account%% |  |
+| delete-account | %%other_account%% |  |
 
 | *Comment* | Test Case: Group No Change Link COMPLETED |  |

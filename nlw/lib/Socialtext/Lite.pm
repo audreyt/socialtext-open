@@ -105,7 +105,7 @@ Shows a mobile version of the login page.
 =cut
 sub login {
     my $self        = shift;
-    my $redirect_to = shift || '/lite/workspace_list';
+    my $redirect_to = shift || '/m/workspace_list';
     my $session     = Socialtext::Session->new();
     return $self->_process_template(
         $LOGIN_TEMPLATE,

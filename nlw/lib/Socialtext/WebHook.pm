@@ -186,7 +186,7 @@ sub Add_webhooks {
     eval {
         my $hooks = $class->Find( class => $p{class}, wildcard => $p{wildcard} );
         HOOK: for my $h (@$hooks) {
-            my $hcreator = $h->creator;
+            my $hcreator;
             for my $container (qw/account group/) {
                 if (my $h_cont_id = $h->{"${container}_id"}) {
                     my $hook_matches = 0;
@@ -213,24 +213,22 @@ sub Add_webhooks {
 
             # Page specific filters
             if ($p{class} =~ m/^page\./) {
+                # Filter by page_id
+                if (my $page_id = $h->details->{page_id}) {
+                    next HOOK unless $page_id eq $p{page_id};
+                }
+
+                $hcreator = $h->creator;
                 if (!$hcreator->is_business_admin) {
                     # Run-time check that the user can still see this workspace
                     my $ws = Socialtext::Workspace->new(
                         workspace_id => $p{workspace_id});
                     next HOOK unless $ws->has_user($hcreator);
                 }
-
-                # Filter by page_id
-                if (my $page_id = $h->details->{page_id}) {
-                    next HOOK unless $page_id eq $p{page_id};
-                }
             }
 
             # Signal specific filters
             if ($p{class} =~ m/^signal\./) {
-                next HOOK unless $hcreator->is_business_admin
-                              or $p{signal}->is_visible_to($hcreator);
-
                 if (my $hanno = $h->details->{annotation}) {
                     next HOOK unless ref($hanno) eq 'ARRAY';
                     my $annos = $p{signal}->annotations;
@@ -278,6 +276,10 @@ sub Add_webhooks {
                 if (my $user_id = $h->details->{sender_id}) {
                     next HOOK unless $p{signal}->user->user_id == $user_id;
                 }
+
+                $hcreator = $h->creator;
+                next HOOK unless $hcreator->is_business_admin
+                              or $p{signal}->is_visible_to($hcreator);
             }
 
             # Should only need to calculate the payload once

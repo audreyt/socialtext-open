@@ -154,6 +154,8 @@
 | text-like | Google Calendar |  |
 
 | *Comment* | Test Case: Add Remove Gallery Widgets TEARDOWN |  |
-| *Comment* | Test Case: Add Remove Gallery Widgets. No teardown, throw away the account and the user. |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%mwgmail%% |  |
+| delete-account | %%acct%% |  |
 
 | *Comment* | Test Case: Add Remove Gallery Widgets COMPLETED |

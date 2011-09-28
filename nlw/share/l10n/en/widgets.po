@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Socialtext i18n\n"
-"PO-Revision-Date: 2011-05-28 09:55-0700\n"
+"PO-Revision-Date: 2011-08-23 11:12+0800\n"
 "Last-Translator: Socialtext i18n team\n"
 "Language-Team: Socialtext i18n team\n"
 "MIME-Version: 1.0\n"
@@ -405,6 +405,59 @@ msgstr "Signal This!"
 msgid "bookmarklet.tip"
 msgstr "Tip: Use the"
 
+msgid "creator.choices:"
+msgstr "Choices:"
+
+msgid "creator.create-page"
+msgstr "Create"
+
+msgid "creator.field-type:"
+msgstr "Input Type:"
+
+msgid "creator.field:"
+msgstr "Field:"
+
+msgid "creator.info-default-value"
+msgstr "Make this choice pre-selected."
+
+msgid "creator.new-field:"
+msgstr "New Field:"
+
+#: share/plugin/widgets/share/widgets/page_tracker/widget.html:168
+msgid "creator.page-title:"
+msgstr "Page Title:"
+
+msgid "creator.really-delete-field?"
+msgstr "Are you sure you want to delete this field?"
+
+msgid "creator.required"
+msgstr "Required"
+
+msgid "creator.tag-with:"
+msgstr "Tag with:"
+
+#: share/plugin/widgets/share/widgets/page_tracker/widget.html:168
+msgid "creator.template:"
+msgstr "Template:"
+
+msgid "creator.type-checkbox"
+msgstr "Checkboxes"
+
+msgid "creator.type-number"
+msgstr "Number"
+
+msgid "creator.type-radio"
+msgstr "Radio boxes"
+
+msgid "creator.type-select"
+msgstr "Dropdown"
+
+msgid "creator.type-text"
+msgstr "Single line"
+
+msgid "creator.type-textarea"
+msgstr "Multiple lines"
+
 #: share/plugin/widgets/share/javascript/lightbox/confirm.tt2:2
 msgid "dashboard.revert"
 msgstr "Revert to default"
@@ -505,6 +558,9 @@ msgstr "Displays a single web page within a Socialtext Widget."
 
 msgid "description.oneimage"
 msgstr "Displays a single spreadsheet within a Socialtext Widget."
+
+msgid "description.page_creator"
+msgstr "Create pages from customized forms."
 
 msgid "description.page_tracker"
 msgstr "Visualize tagged pages in a workspace with multiple columns."
@@ -613,9 +669,21 @@ msgstr "Yes"
 msgid "error.at-least-one-column-required"
 msgstr "Error: Please define at least one column."
 
+msgid "error.cannot-create-page-in=wiki"
+msgstr "Sorry, but you cannot create pages in the %1 workspace."
+
 #: share/plugin/widgets/share/widgets/one_page/widget.js:52 share/plugin/widgets/share/widgets/one_page/widget.js:57
 msgid "error.cannot-embed-page-within-itself"
 msgstr "Error: Cannot embed a page within itself."
+
+#: share/plugin/widgets/share/widgets/page_creator/widget.coffee:134 share/plugin/widgets/share/widgets/page_creator/widget.js:207
+msgid "error.creator-missing-required=field"
+msgstr "Missing required field: %1"
+
+#. (f.name)
+#: share/plugin/widgets/share/widgets/page_creator/widget.coffee:138 share/plugin/widgets/share/widgets/page_creator/widget.js:212
+msgid "error.creator-number-required=field"
+msgstr "Number required in field: %1"
 
 #. (this.title, error)
 #: share/plugin/widgets/share/javascript/lightbox/remove-content.js:78
@@ -680,6 +748,12 @@ msgstr "There are no new %1, either because you aren't following anyone yet, or 
 #: share/plugin/widgets/share/javascript/activities/explore.js:15
 msgid "error.no-items-for-explore"
 msgstr "There are no items to show. Either no one has posted any links or attachments, or you have too many filters applied."
+
+msgid "error.no-page-creator-for-ie6"
+msgstr "Sorry, this browser does not support setting up Page Creator widgets."
+
+msgid "error.no-page-creator-for-mobile"
+msgstr "Sorry, Page Creator widget is currently unavailable on mobile devices."
 
 #: share/plugin/widgets/share/javascript/activities/editor.js:659
 msgid "error.no-such-wikilink-wiki"
@@ -1029,6 +1103,10 @@ msgstr "Item Background"
 msgid "kanban.item-notes"
 msgstr "Item Notes"
 
+#: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:200
+msgid "kanban.likable?"
+msgstr "Show indicator for page likes?"
+
 #: share/plugin/widgets/share/widgets/bz_page_tracker/widget.html:51
 msgid "kanban.notes"
 msgstr "Notes"
@@ -1288,6 +1366,9 @@ msgstr "Web Page"
 #: share/plugin/widgets/share/widgets/oneimage/prefs.xml:2 share/plugin/widgets/share/widgets/empty/prefs.xml:1
 msgid "title.oneimage"
 msgstr "Image"
+
+msgid "title.page_creator"
+msgstr "Page Creator"
 
 msgid "title.page_tracker"
 msgstr "Page Tracker"

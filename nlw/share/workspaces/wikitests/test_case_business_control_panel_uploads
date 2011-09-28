@@ -1,6 +1,5 @@
-
 | *Comment* | Test case: Business Control Panel Uploads |  |
-
+| *Comment* | files should be in %%wikitest_files%% on the browser server |  |
 | st-admin | give-accounts-admin --email %%email%% | %%username%% now has accounts admin access |
 
 | set | new_acct | bcp-%%start_time%% |
@@ -18,7 +17,7 @@
 
 | *Comment* | Test case: Business Control Panel Uploads upload wikitest.jpg to both web and desktop |  |
 | wait_for_element_visible_ok | new_logo_file | 10000 |
-| type_ok | new_logo_file | %%wikitest_client_files%%wikitest.jpg |
+| type_ok | new_logo_file | %%wikitest_files%%wikitest.jpg |
 | check_ok | xpath=(//input[@id='apply_to_desktop'][1]) |  |
 | click_and_wait | design_submit |  |
 
@@ -43,7 +42,7 @@
 
 | *Comment* | Test case: Business Control Panel Uploads upload wikitest.jpg to web only |  |
 | wait_for_element_visible_ok | new_logo_file | 10000 |
-| type_ok | new_logo_file | %%wikitest_client_files%%wikitest.jpg |
+| type_ok | new_logo_file | %%wikitest_files%%wikitest.jpg |
 | click_and_wait | design_submit |  |
 
 | *Comment* | Test case: Business Control Panel Uploads verify upload web only |  |

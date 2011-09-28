@@ -3550,6 +3550,10 @@ msgstr "Signal number %1 was originally in reply to signal %2, but that signal i
 msgid "signals.private-message-sent"
 msgstr "Private message sent."
 
+#: lib/Socialtext/Job/SignalDMNotify.pm:55
+msgid "signals.private-message-sent-to-you=sender:"
+msgstr "%1 sent you a private message:"
+
 #. ($1)
 #: lib/Socialtext/Pluggable/Plugin/Signals.pm:653
 msgid "signals.tagged=tag"

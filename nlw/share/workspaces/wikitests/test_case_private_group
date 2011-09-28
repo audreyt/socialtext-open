@@ -79,6 +79,10 @@
 | wait_for_element_not_present_ok | st-join-group | 30000 |
 
 | *Comment* | Test Case: Private Group TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%user1%% |  |
+| deactivate-user | %%user2%% |  |
 | delete-group | %%group_id%% |  |
+| delete-account | %%acct%% |  |
 
 | *Comment* | Test Case: Private Group COMPLETED |  |

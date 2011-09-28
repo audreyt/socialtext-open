@@ -41,6 +41,8 @@
 | text_like | qr/#%%tag%%.+#%%tag%%/ |  |
 
 | *Comment* | Test Case: Signals Tag TEARDOWN |  |
+| st-process-jobs |  |  |
 | st-admin | deactivate-user --email %%tag_user%% |  |
+| delete-account | %%tag_acct%% |  |
 
 | *Comment* | Test Case: Signals Tag COMPLETED |

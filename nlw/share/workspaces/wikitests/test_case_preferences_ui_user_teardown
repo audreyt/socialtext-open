@@ -1,4 +1,6 @@
 | *Comment* | Test Case: Preferences UI User Teardown |  |
 
+| st-process-jobs | %%new_account%% |  |
 | st-admin | deactivate-user --email %%new_user%% |  |
 | delete-workspace | %%new_ws%% | Recklessly deleting |
+| delete-account | %%new_account%% |  |

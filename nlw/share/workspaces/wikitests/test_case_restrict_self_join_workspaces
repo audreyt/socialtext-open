@@ -32,7 +32,7 @@
 | wait_for_element_not_present_ok | st-edit-button-link | 5000 |
 | click_and_wait | link=Join to edit |  |
 | wait_for_text_present_ok | Welcome to the %%ws_this_acct%% workspace | 30000 |
-|  wait_for_element_present_ok |  st-edit-button-link |  30000 |
+| wait_for_element_present_ok | st-edit-button-link | 30000 |
 
 | *Comment* | Test Case: Restrict Self-Join Workspaces User can not see self-join workspace in another account |  |
 | open_ok | /%%ws_other_acct%%/ |  |
@@ -73,9 +73,12 @@
 | text_unlike | //body | Welcome to the %%ws_other_acct%% workspace |
 
 | *Comment* | Test Case: Restrict Self-Join Workspaces TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%other_user%% |  |
 | st-admin | delete-workspace --w %%ws_this_acct%% --no-export | workspace has been deleted |
 | st-admin | delete-workspace --w %%ws_other_acct%% --no-export | workspace has been deleted |
 | st-admin | delete-workspace --w %%ws_other_acct_two%% --no-export | workspace has been deleted |
 | delete-group | %%group_id%% |  |
+| delete-account | %%other_acct%% |  |
 
 | *Comment* | Test Case: Restrict Self-Join Workspaces COMPLETED |

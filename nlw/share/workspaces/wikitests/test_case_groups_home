@@ -110,6 +110,10 @@
 | select_frame | relative=parent |  |
 
 | *Comment* | Test Case: Groups Home TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%nopermuser%% |  |
+| deactivate-user | %%permuser%% |  |
+| delete-group | %%group_id%% |  |
 | st-admin | delete-workspace --w %%wsname%% --no-export | has been deleted |
 | st-admin | delete-workspace --w %%wsname2%% --no-export | has been deleted |
 

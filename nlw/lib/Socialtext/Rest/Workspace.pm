@@ -81,7 +81,7 @@ sub get_resource {
     my $peon_view
         = sub { workspace_id => $workspace->workspace_id, name => $workspace->name, title => $workspace->title };
     my $extra_data
-        = sub { pages_uri => $self->full_url('/pages'), group_ids => $workspace->group_ids };
+        = sub { pages_uri => $self->full_url('/pages'), group_ids => $workspace->group_ids, current_user_can_edit => $self->user_can('edit') };
     my $extra_admin_data
         = sub { permission_set => $workspace->permissions->current_set_name };
 

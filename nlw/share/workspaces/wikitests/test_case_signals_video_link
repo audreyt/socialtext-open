@@ -144,7 +144,9 @@
 | wait_for_element_visible_ok | link=%%google_title%% | 30000 |
 
 | *Comment* | Test Case: Signals Video Link TEARDOWN |  |
+| st-process-jobs |  |  |
 | st-admin | deactivate-user --email %%video_user%% |  |
 | st-admin | deactivate-user --email %%all_video_user%% |  |
+| delete-account | %%video_acct%% |  |
 
 | *Comment* | Test Case: Signals Video Link COMPLETED |  |

@@ -22,7 +22,7 @@ use Socialtext::File::Stringify;
 use WebService::Solr;
 use Socialtext::WikiText::Parser::Messages;
 use Socialtext::WikiText::Emitter::Messages::Solr;
-use Socialtext::String qw(uri_escape);
+use Socialtext::String qw(uri_escape title_to_id);
 use Socialtext::l10n qw(getSortKey);
 use namespace::clean -except => 'meta';
 
@@ -169,6 +169,11 @@ sub _add_page_doc {
         (map { [ tag => $_ ] } @$tags),
         Socialtext::Search::Solr::BigField->new(body => \$body),
     );
+
+    for my $triplet (@{ $page->annotation_triplets }) {
+        push @fields, [annotation => lc join '|', @$triplet];
+    }
+
     if (my $mtime = _datetime_to_iso($page->last_edit_time)) {
         push @fields, [date => $mtime];
     }

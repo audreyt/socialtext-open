@@ -89,8 +89,8 @@ ldap_server_decommissioned: {
     isa_ok $refreshed->homunculus, 'Socialtext::User::Deleted', '... deleted homunculus';
 
     # Verify that we have the last cached data from LDAP
-    is $refreshed->username, 'deleted-user',
-        '... ... which has deleted username';
+    is $refreshed->username, 'jane smith',
+        '... ... which has proper username';
     is $refreshed->first_name, $user->first_name,
         '... ... which has "last cached" first_name';
     is $refreshed->last_name, $user->last_name,

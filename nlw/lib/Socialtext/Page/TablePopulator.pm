@@ -416,6 +416,7 @@ sub load_revision_metadata {
                 edit_summary => $pagemeta->{'Revision-Summary'},
                 locked => $pagemeta->{Locked}||0,
                 revision_num => $pagemeta->{Revision}||1,
+                anno_blob => $pagemeta->{anno_blob}|| '[]',
             );
 
             sql_txn {

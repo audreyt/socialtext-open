@@ -188,11 +188,10 @@
 
 | *Comment* | Test Case: Explore 1 Teardown |  |
 | st-process-jobs |  |  |
-| include | [Test Case: Signals Wiki Link Teardown] |  |
 | st-admin | deactivate-user --email %%user1%% |  |
 | st-admin | deactivate-user --email %%user2%% |  |
 | st-admin | deactivate-user --email %%user3%% |  |
 | st-admin | delete-group --group %%group_id%% | Deleted group |
-| delete-account | %%ex_acct%% |  |
+| include | [Test Case: Signals Wiki Link Teardown] |  |
 
 | *Comment* | Test Case: Explore 1 COMPLETED |

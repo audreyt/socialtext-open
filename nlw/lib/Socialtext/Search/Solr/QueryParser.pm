@@ -69,12 +69,16 @@ around 'parse' => sub {
     my $orig = shift;
 
     my $query = $orig->(@_);
-    if ($query =~ m/annotation:\[([^\]]+)\]/) {
+    while ($query =~ m/annotation:\[(.+?)(?<!\\)\]/) {
         my ($start, $end) = ($-[0], $+[0]);
         my @args = map { s/^"(.+)"$/$1/; $_ } split ',', $1;
-        my $new_query = "annotation:" . lc join('|', @args);
+        my $new_query = lc join('|', @args);
         $new_query .= "|*" if @args < 3;
-        substr($query, $start, $end) = $new_query;
+        $new_query =~ s/(?<!\\)"/\\"/g;
+        $new_query =~ s/(?<!\\)\\\]/\]/g;
+        $new_query = '"' . $new_query . '"' if ($new_query =~ / /);
+        $new_query = 'annotation:' . $new_query;
+        substr($query, $start, $end-$start) = $new_query;
     }
 
     return $query;

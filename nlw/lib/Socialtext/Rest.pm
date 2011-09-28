@@ -27,6 +27,7 @@ use Socialtext::Session;
 use Socialtext::JSON qw/decode_json/;
 use Socialtext::SQL 'sql_singlevalue';
 use Socialtext::l10n qw( system_locale loc loc_lang best_locale );
+use Encode ();
 
 our $AUTOLOAD;
 
@@ -565,7 +566,7 @@ sub serve_file {
         '-cache-control'      => undef,
         # XXX: this header should be mime-encoded (a la
         # http://www.ietf.org/rfc/rfc2184.txt) if it contains non-ascii
-        'Content-Disposition' => 'filename="'.$attachment->filename.'"',
+        'Content-Disposition' => 'filename="'.Encode::encode_utf8($attachment->filename).'"',
         '-X-Accel-Redirect'   => $file_path,
     );
     return '';

@@ -165,6 +165,10 @@ hide-profile
 | st-admin | show-profile --email foo%%start_time%%@bar.com | qr/The profile for "foo%%start_time%%@bar.com" is no longer hidden/ism |
 
 | *Comment* | Test Case: Command Line USERS Teardown |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%member_of_new_cli%% |  |
+| deactivate-user | %%cli_user%% |  |
 | st-admin | delete-workspace --w %%cmdline_workspace%% --no-export | has been deleted |
+| delete-account | %%new_cli_acct%% |  |
 
 | *Comment* | Test Case: Command Line: USERS COMPLETED |  |

@@ -128,7 +128,16 @@ sub _entity_hash {
     my $self   = shift;
     my $entity = shift;
 
-    return ref($entity) eq 'HASH' ? $entity : $entity->hash_representation();
+    return $entity if ref($entity) eq 'HASH';
+
+    my $hash = $entity->hash_representation();
+    if ($self->rest->query->param('with_likes')) {
+        $hash->{likes} = [ map { +{
+            user_id => $_->user_id,
+            best_full_name => $_->best_full_name,
+        } } @{ $entity->likes || []} ] if $entity->can('likes');
+    }
+    return $hash;
 }
 
 sub _entities_for_query {

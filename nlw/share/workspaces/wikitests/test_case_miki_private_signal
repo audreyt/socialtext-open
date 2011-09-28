@@ -69,5 +69,12 @@
 | text_unlike | //body | private |
 | text_unlike | //body | %%prv_signal%% |
 
-| *Comment* | Test case: Miki Private Signal - No teardown needed - no workspaces! |  |
+| *Comment* | Test case: Miki Private Signal - TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%miki_user_prv%% |  |
+| deactivate-user | %%other_miki_user_prv%% |  |
+| deactivate-user | %%third_user%% |  |
+| delete-account | %%miki_acct_prv%% |  |
+| delete-account | %%other_acct%% |  |
+
 | *Comment* | Test case: Miki Private Signal - COMPLETED |  |
