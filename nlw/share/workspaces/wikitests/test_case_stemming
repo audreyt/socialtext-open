@@ -4,7 +4,7 @@ Comment: The user action is search for the words with stemming enabled. Create a
 
 ----
 
- *user action* | *correct response* | *comment*
+*user action* | *correct response* | *comment*
 wikis | find wiki and wikis |
 fish, fishing, fisher, fishes | find all except fisher
 stem, stemmer, stemming, stemmed | find all except stemmer
@@ -50,7 +50,6 @@ QUESTION: is this the correct result for "fisher"? The word "fisher" is on test 
 
 | st-search | stemmer | Pages matching 'stemmer' |
 | st-result | 0 results |  |
-| st-result |  |  |
 
 | st-search | stemming | Pages matching 'stemming' |
 | st-result | 3 total |  |
@@ -97,15 +96,12 @@ QUESTION: missing test data for "wolf"?
 
 | st-search | wolf | Pages matching 'wolf' |
 | st-result | 0 results |  |
-| st-result |  |  |
 
 | st-search | wolve | Pages matching 'wolve' |
 | st-result | 0 results |  |
-| st-result |  |  |
 
 | st-search | wolves | Pages matching 'wolves' |
 | st-result | 0 results |  |
-| st-result |  |  |
 
 | st-search | whole | Pages matching 'whole' |
 | st-result | 1 total |  |
@@ -113,7 +109,6 @@ QUESTION: missing test data for "wolf"?
 
 | st-search | wholehearted | Pages matching 'wholehearted' |
 | st-result | 0 results |  |
-| st-result |  |  |
 
 | st-search | wholesale | Pages matching 'wholesale' |
 | st-result | 1 total |  |
@@ -121,6 +116,5 @@ QUESTION: missing test data for "wolf"?
 
 | st-search | wholesome | Pages matching 'wholesome' |
 | st-result | 0 results |  |
-| st-result |  |  |
 
-| *Comment* | Test Case: stemming COMPLETED |
+| *Comment* | Test Case: stemming COMPLETED |  |

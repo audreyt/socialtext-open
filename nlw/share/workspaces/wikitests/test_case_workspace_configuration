@@ -1,3 +1,5 @@
+THIS TEST REPLACED BY Consolidated Settings tests
+
 TODO: Figure out a way to test the other config functions
 
 | *Comment* | Test Case: Workspace Configuration |
@@ -17,7 +19,7 @@ TODO: Figure out a way to test the other config functions
 | click_and_wait | link=Save |  |
 
 | *Comment* | Check the blog link for a dot. Don't worry about the destination host |  |
-| text_like | //a[contains(@href,'mailto:%%workspace%%.Dot_Address_%%start_time%%_Blog')] | or post by email |
+| text_like | //a[contains(@href,'"mailto:%%workspace%%.Dot_Address_%%start_time%%_Blog"<mailto:%2525%2525workspace%2525%2525.Dot_Address_%2525%2525start_time%2525%2525_Blog>')] | or post by email |
 
 | *Comment* | Check the blog link for a plus. Don't worry about the destination host |  |
 | st-admin | set_workspace_config --workspace %%workspace%% email_weblog_dot_address 0 |  |
@@ -25,54 +27,35 @@ TODO: Figure out a way to test the other config functions
 | click_and_wait | link=Create New Blog |  |
 | type_ok | weblog_title | Plus Address %%start_time%% |
 | click_and_wait | link=Save |  |
-| text_like | //a[contains(@href,'mailto:%%workspace%%+Plus_Address_%%start_time%%_Blog')] | or post by email |
+| text_like | //a[contains(@href,'"mailto:%%workspace%%+Plus_Address_%%start_time%%_Blog"<mailto:%2525%2525workspace%2525%2525+Plus_Address_%2525%2525start_time%2525%2525_Blog>')] | or post by email |
 
-| *Comment* | Test Case: Workspace Configuration Weblog Sort Order |  |
-| st-admin | set_workspace_config --workspace %%workspace%% sort_weblogs_by_create 1 |  |
-| open_ok | /%%workspace%%/?action=users_settings |  |
-| click_and_wait | link=Create New Blog |  |
-| type_ok | weblog_title | Order %%start_time%% |
-| click_and_wait | link=Save |  |
-| wait_for_element_visible_ok | st-weblog-newpost-button | 30000 |
-| click_and_wait | st-weblog-newpost-button |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| type_ok | st-newpage-pagename-edit | Order post 1 %%start_time%% |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | Order post 1 content %%start_time%% |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-pause-click | 2000 | st-save-button-link |
-| wait_for_text_present_ok | Order post 1 content %%start_time%% | 30000 |
+| *Comment* | Test Case: Workspace Configuration Weblog Sort Order |  |  |
+| st-admin | set_workspace_config --workspace %%workspace%% sort_weblogs_by_create 1 |  |  |
+| open_ok | /%%workspace%%/?action=users_settings |  |  |
+| click_and_wait | link=Create New Blog |  |  |
+| type_ok | weblog_title | Order %%start_time%% |  |
+| click_and_wait | link=Save |  |  |
+| wait_for_element_visible_ok | st-weblog-newpost-button | 30000 |  |
+| click_and_wait | st-weblog-newpost-button |  |  |
 
-| open_ok | /%%workspace%%/index.cgi?action=display;page_name=first_post_in_order_%%start_time%%_blog;caller_action=blog_display;category=order_%%start_time%%_blog;js=show_edit_div#edit |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | Order post 1 revision |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-pause-click | 2000 | st-save-button-link |
+| call | st-edit-save-page | title=Order post 1 %%start_time%% | content=Order post 1 content %%start_time%% |
+
+| wait_for_text_present_ok | Order post 1 content %%start_time%% | 30000 |  |
+
+| open_ok | /%%workspace%%/index.cgi?action=display;page_name=first_post_in_order_%%start_time%%_blog;caller_action=blog_display;category=order_%%start_time%%_blog;js=show_edit_div#edit |  |  |
+
+| call | st-save-page | content=Order post 1 revision |  |
 
 | wait_for_text_present_ok | Order post 1 content %%start_time%% | 30000 |
-| text_like | contentContainer | qr/Order post 1 content %%start_time%%.+Order post 1 revision/ |
+| text_like | content | qr/Order post 1 content %%start_time%%.+Order post 1 revision/ |
 | st-admin | set_workspace_config --workspace %%workspace%% sort_weblogs_by_create 0 |  |
-
-| *Comment* | Test Case: Workspace Configuration Workspace Skin |  |
-| st-admin | set_workspace_config --workspace %%workspace%% allows_skin_upload 1 |  |
-| open_ok | /%%workspace%%/?action=users_settings |  |
-| wait_for_element_visible_ok | link=Workspace Skin | 30000 |
-| text_like | contentLeft | Workspace Skin |
-| st-admin | set_workspace_config --workspace %%workspace%% allows_skin_upload 0 |  |
-| open_ok | /%%workspace%%/?action=users_settings |  |
-| text_like | contentLeft | Workspace Appearance |
-| text_unlike | contentLeft | Workspace Skin |
 
 | *Comment* | Test Case: Workspace Configuration Invitation Settings |  |
 | st-admin | set_workspace_config --workspace %%workspace%% invitation_filter %%username%% |  |
 | st-admin | set_workspace_config --workspace %%workspace%% restrict_invitation_to_search 1 |  |
 | click_and_wait | link=Settings |  |
 | click_and_wait | link=Invite New Users |  |
-| text_like | contentRight | All candidate email addresses must match this pattern: %%username%% |
+| text_like | st-display-mode-widgets | All candidate email addresses must match this pattern: %%username%% |
 
 | *Comment* | Test Case: Workspace Configuration Invitation search and invite user {bz: 547} |  |
 | type_ok | user_search | %%username%% |
@@ -98,6 +81,5 @@ TODO: Figure out a way to test the other config functions
 | st-admin | set_workspace_config --workspace %%workspace%% restrict_invitation_to_search 0 |  |
 | st-admin | set_workspace_config --workspace %%workspace%% sort_weblogs_by_create 0 |  |
 | st-admin | set_workspace_config --workspace %%workspace%% unmasked_email_domain "" |  |
-| st-admin | set_workspace_config --workspace %%workspace%% allows_skin_upload 0 |
 
-| *Comment* | Test Case: Workspace Configuration COMPLETED |
+| *Comment* | Test Case: Workspace Configuration COMPLETED |  |

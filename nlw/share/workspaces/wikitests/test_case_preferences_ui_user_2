@@ -9,125 +9,126 @@
 | include | [Test Case: Preferences UI User Setup] |  |
 
 | *Comment* | Test Case: Preferences UI User 2. Time. Defaults: Pacific, auto, M-D-Y, 12, no |  |
-| open_ok | /?action=preferences_settings;preferences_class_id=timezone |  |
-| text_like | contentContainer | What time zone should times be displayed in |
-| text_like | contentContainer | How should Daylight Savings/Summer Time be handled |
-| text_like | contentContainer | How should displayed dates be formatted |
-| text_like | contentContainer | Should times be displayed in 12-hour or 24-hour format |
-| text_like | contentContainer | Should seconds be included on displayed times |
-| is_selected_ok | timezone__timezone | label=-0800 Pacific |
-| is_selected_ok | timezone__dst | label=automatic, United States |
-| is_selected_ok | timezone__date_display_format | value=mmm_d_yyyy |
-| is_selected_ok | timezone__time_display_12_24 | value=12 |
-| verifyValue | //input[@name='timezone__time_display_seconds'] | off |
+| open_ok | /st/settings |  |
+| text_like | content | Timezone |
+| text_like | content | Daylight Savings/Summer |
+| text_like | content | Date Format |
+| text_like | content | Time Format |
+| text_like | content | Include Seconds in Time Format |
+| is_selected_ok | prefs.timezone.timezone | label=-0800 Pacific |
+| is_selected_ok | prefs.timezone.dst | label=automatic, United States |
+| is_checked_ok | //input[@value='mmm_d_yyyy'] |  |
+| is_checked_ok | //input[@value='12'] |  |
+| st_unchecked_ok | prefs.timezone.time_display_seconds |  |
+| click_and_wait | link=Save |  |
+| wait_for_text_present_ok | Saved | 10000 |
 
 | *Comment* | Test Case: Preferences UI User 2. Time. Nome, on, mmm_d_yyyy, 24,on |  |
-| select_ok | timezone__timezone | label=-1100 Nome |
-| select_ok | timezone__dst | label=currently in DST |
-| select_ok | timezone__date_display_format | value=mmm_d_yyyy |
-| select_ok | timezone__time_display_12_24 | value=24 |
-| check_ok | //input[@name='timezone__time_display_seconds'] | on |
-| is_selected_ok | timezone__timezone | label=-1100 Nome |
-| is_selected_ok | timezone__dst | label=currently in DST |
-| is_selected_ok | timezone__date_display_format | value=mmm_d_yyyy |
-| is_selected_ok | timezone__time_display_12_24 | value=24 |
-| value_is | //input[@name='timezone__time_display_seconds'] | on |
+| open_ok | /st/settings |  |
+| select_ok | prefs.timezone.timezone | label=-1100 Nome |
+| select_ok | prefs.timezone.dst | label=currently in DST |
+| click_ok | //input[@value='24'] |  |
+| check_ok | prefs.timezone.time_display_seconds |  |
+| is_selected_ok | prefs.timezone.timezone | label=-1100 Nome |
+| is_selected_ok | prefs.timezone.dst | label=currently in DST |
+| is_checked_ok | //input[@value='mmm_d_yyyy'] |  |
+| is_checked_ok | //input[@value='24'] |  |
+| is_checked_ok | prefs.timezone.time_display_seconds |  |
 | click_and_wait | link=Save |  |
-| text_like | qr/Preferences Saved/i |  |
-| is_selected_ok | timezone__timezone | label=-1100 Nome |
-| is_selected_ok | timezone__dst | label=currently in DST |
-| is_selected_ok | timezone__date_display_format | value=mmm_d_yyyy |
-| is_selected_ok | timezone__time_display_12_24 | value=24 |
-| value_is | //input[@name='timezone__time_display_seconds'] | on |
+| wait_for_text_present_ok | Saved | 10000 |
+| is_selected_ok | prefs.timezone.timezone | label=-1100 Nome |
+| is_selected_ok | prefs.timezone.dst | label=currently in DST |
+| is_checked_ok | //input[@value='mmm_d_yyyy'] |  |
+| is_checked_ok | //input[@value='24'] |  |
+| is_checked_ok | prefs.timezone.time_display_seconds |  |
 
 | *Comment* | Test Case: Preferences UI User 2. Time. Save without changing values |  |
 | click_and_wait | link=Save |  |
-| text_like | qr/Preferences Saved/i |  |
-| is_selected_ok | timezone__timezone | label=-1100 Nome |
-| is_selected_ok | timezone__dst | label=currently in DST |
-| is_selected_ok | timezone__date_display_format | value=mmm_d_yyyy |
-| is_selected_ok | timezone__time_display_12_24 | value=24 |
-| value_is | //input[@name='timezone__time_display_seconds'] | on |
+| wait_for_text_present_ok | Saved | 30000 |
+| is_selected_ok | prefs.timezone.timezone | label=-1100 Nome |
+| is_selected_ok | prefs.timezone.dst | label=currently in DST |
+| is_checked_ok | //input[@value='mmm_d_yyyy'] |  |
+| is_checked_ok | //input[@value='24'] |  |
+| is_checked_ok | prefs.timezone.time_display_seconds |  |
 
 | *Comment* | Test Case: Preferences UI User 2. Time. Cancel chooses previous values |  |
-| select_ok | timezone__timezone | label=-0800 Pacific |
-| select_ok | timezone__dst | label=automatic, United States |
-| select_ok | timezone__date_display_format | value=yyyy_mm_dd |
-| select_ok | timezone__time_display_12_24 | value=12 |
-| uncheck_ok | //input[@name='timezone__time_display_seconds'] |  |
+| select_ok | prefs.timezone.timezone | label=-0800 Pacific |
+| select_ok | prefs.timezone.dst | label=automatic, United States |
+| click_ok | //input[@value='yyyy_mm_dd'] |  |
+| click_ok | //input[@value='12'] |  |
+| uncheck_ok | prefs.timezone.time_display_seconds |  |
 | click_ok | link=Cancel |  |
-| is_selected_ok | timezone__timezone | label=-1100 Nome |
-| is_selected_ok | timezone__dst | label=currently in DST |
-| is_selected_ok | timezone__date_display_format | value=mmm_d_yyyy |
-| is_selected_ok | timezone__time_display_12_24 | value=24 |
-| value_is | //input[@name='timezone__time_display_seconds'] | on |
+| is_selected_ok | prefs.timezone.timezone | label=-1100 Nome |
+| is_selected_ok | prefs.timezone.dst | label=currently in DST |
+| is_checked_ok | //input[@value='mmm_d_yyyy'] |  |
+| is_checked_ok | //input[@value='24'] |  |
+| is_checked_ok | prefs.timezone.time_display_seconds |  |
 
 | *Comment* | Test Case: Preferences UI User 2. Time. Navigate away, return, verify values |  |
-| open_ok | /?action=preferences_settings;preferences_class_id=timezone |  |
-| is_selected_ok | timezone__timezone | label=-1100 Nome |
-| is_selected_ok | timezone__dst | label=currently in DST |
-| is_selected_ok | timezone__date_display_format | value=mmm_d_yyyy |
-| is_selected_ok | timezone__time_display_12_24 | value=24 |
-| value_is | //input[@name='timezone__time_display_seconds'] | on |
+| open_ok | ?action=workspaces_listall |  |
+| open_ok | /st/settings |  |
+| is_selected_ok | prefs.timezone.timezone | label=-1100 Nome |
+| is_selected_ok | prefs.timezone.dst | label=currently in DST |
+| is_checked_ok | //input[@value='mmm_d_yyyy'] |  |
+| is_checked_ok | //input[@value='24'] |  |
+| is_checked_ok | prefs.timezone.time_display_seconds |  |
 
 | *Comment* | Test Case: Preferences UI User 2. Watchlist Notification. Defaults: Every day, chronologically, full info |  |
-| open_ok | /%%new_ws%% |  |
-| click_and_wait | link=Settings |  |
-| click_and_wait | link=Watchlist |  |
-| text_like | contentContainer | How frequently would you like to receive watchlist emails |
-| text_like | contentContainer | What information about changed pages do you want in email digests |
-| is_selected_ok | watchlist__watchlist_notify_frequency | label=Every Day |
-| verifyValue | //input[@value='expanded'] | on |
+| open_ok | /st/settings/%%ui_wiki_id%%/prefs/preferences |  |
+| text_like | content | Frequence of updates |
+| text_like | content | Watchlist digest information |
+| is_selected_ok | prefs.watchlist.watchlist_notify_frequency | label=Every Day |
+| is_checked_ok | //input[@value='expanded'] |  |
 
 | *Comment* | Test Case: Preferences UI User 2. Watchlist Notification. Set: Every 15 Minutes, expanded |  |
-| select_ok | watchlist__watchlist_notify_frequency | label=Every 15 Minutes |
-| check_ok | //input[@value='expanded'] |  |
-| is_selected_ok | watchlist__watchlist_notify_frequency | label=Every 15 Minutes |
-| verifyValue | //input[@value='expanded'] | on |
+| select_ok | prefs.watchlist.watchlist_notify_frequency | label=Every 15 Minutes |
+| click_ok | //input[@value='expanded'] |  |
+| is_selected_ok | prefs.watchlist.watchlist_notify_frequency | label=Every 15 Minutes |
+| is_checked_ok | //input[@value='expanded'] |  |
 | click_and_wait | link=Save |  |
-| text_like | qr/Preferences Saved/i |  |
-| is_selected_ok | watchlist__watchlist_notify_frequency | label=Every 15 Minutes |
-| verifyValue | //input[@value='expanded'] | on |
+| wait_for_text_present_ok | Saved | 30000 |
+| is_selected_ok | prefs.watchlist.watchlist_notify_frequency | label=Every 15 Minutes |
+| is_checked_ok | //input[@value='expanded'] |  |
 
 | *Comment* | Test Case: Preferences UI User 2. Watchlist Notification. Set: Every week, reverse chronologically, condensed |  |
-| select_ok | watchlist__watchlist_notify_frequency | label=Every Week |
-| check_ok | //input[@value='condensed'] |  |
-| is_selected_ok | watchlist__watchlist_notify_frequency | label=Every Week |
-| verifyValue | //input[@value='condensed'] | on |
+| select_ok | prefs.watchlist.watchlist_notify_frequency | label=Every Week |
+| click_ok | //input[@value='condensed'] |  |
+| is_selected_ok | prefs.watchlist.watchlist_notify_frequency | label=Every Week |
+| is_checked_ok | //input[@value='condensed'] |  |
 | click_and_wait | link=Save |  |
-| text_like | qr/Preferences Saved/i |  |
-| is_selected_ok | watchlist__watchlist_notify_frequency | label=Every Week |
-| verifyValue | //input[@value='condensed'] | on |
+| wait_for_text_present_ok | Saved | 30000 |
+| is_selected_ok | prefs.watchlist.watchlist_notify_frequency | label=Every Week |
+| is_checked_ok | //input[@value='condensed'] |  |
 
 | *Comment* | Test Case: Preferences UI User 2. Watchlist Notification. Save without changing values |  |
 | click_and_wait | link=Save |  |
-| text_like | qr/Preferences Saved/i |  |
-| is_selected_ok | watchlist__watchlist_notify_frequency | label=Every Week |
-| verifyValue | //input[@value='condensed'] | on |
+| wait_for_text_present_ok | Saved | 30000 |
+| is_selected_ok | prefs.watchlist.watchlist_notify_frequency | label=Every Week |
+| is_checked_ok | //input[@value='condensed'] |  |
 
 | *Comment* | Test Case: Preferences UI User 2. Watchlist Notification. Cancel chooses previous values |  |
-| select_ok | watchlist__watchlist_notify_frequency | label=Never |
-| check_ok | //input[@value='expanded'] |  |
-| is_selected_ok | watchlist__watchlist_notify_frequency | label=Never |
-| verifyValue | //input[@value='expanded'] | on |
+| select_ok | prefs.watchlist.watchlist_notify_frequency | label=Never |
+| click_ok | //input[@value='expanded'] |  |
+| is_selected_ok | prefs.watchlist.watchlist_notify_frequency | label=Never |
+| is_checked_ok | //input[@value='expanded'] |  |
 | click_ok | link=Cancel |  |
-| is_selected_ok | watchlist__watchlist_notify_frequency | label=Every Week |
-| verifyValue | //input[@value='condensed'] | on |
+| is_selected_ok | prefs.watchlist.watchlist_notify_frequency | label=Every Week |
+| is_checked_ok | //input[@value='condensed'] |  |
 
 | *Comment* | Test Case: Preferences UI User 2. Watchlist Notification. Navigate away, return, verify values |  |
-| click_and_wait | link=My Settings |  |
-| click_and_wait | link=Watchlist |  |
-| text_like | contentContainer | How frequently would you like to receive watchlist emails |
-| text_like | contentContainer | What information about changed pages do you want in email digests |
-| is_selected_ok | watchlist__watchlist_notify_frequency | label=Every Week |
-| verifyValue | //input[@value='condensed'] | on |
+| open_ok | ?action=workspaces_listall |  |
+| open_ok | /st/settings/%%ui_wiki_id%%/prefs/preferences |  |
+| text_like | content | Frequence of updates |
+| text_like | content | Watchlist digest information |
+| is_selected_ok | prefs.watchlist.watchlist_notify_frequency | label=Every Week |
+| is_checked_ok | //input[@value='condensed'] |  |
 
 | *Comment* | Test Case: Preferences UI User 2. Watchlist Notification. Special case: Never |  |
-| select_ok | watchlist__watchlist_notify_frequency | label=Never |
-| is_selected_ok | watchlist__watchlist_notify_frequency | label=Never |
+| select_ok | prefs.watchlist.watchlist_notify_frequency | label=Never |
+| is_selected_ok | prefs.watchlist.watchlist_notify_frequency | label=Never |
 | click_and_wait | link=Save |  |
-| text_like | qr/Preferences Saved/i |  |
-| is_selected_ok | watchlist__watchlist_notify_frequency | label=Never |
+| wait_for_text_present_ok | Saved | 30000 |
+| is_selected_ok | prefs.watchlist.watchlist_notify_frequency | label=Never |
 
 | include | [Test Case: Preferences UI User Teardown] |  |
 

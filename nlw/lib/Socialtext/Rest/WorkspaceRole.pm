@@ -11,14 +11,21 @@ sub modify_roles {
 
     eval { sql_txn {
         $call->();
-        conflict(
-            errors => ["Workspaces need to include at least one admin."]
-        ) unless $self->workspace->has_at_least_one_admin();
     }};
-
-    my $e = Exception::Class->caught('Socialtext::Exception::Conflict');
-    if ($e) {
+    my $e;
+    if ($e = Exception::Class->caught('Socialtext::Exception::Conflict')) {
         return $self->conflict($e->errors);
+    }
+    elsif ($e = Exception::Class->caught('Socialtext::Exception::User')) {
+        if ($e->error eq 'ADMIN_REQUIRED') {
+            return $self->conflict(
+                ["Workspaces need to include at least one admin."]
+            );
+        }
+        else {
+            $self->rest->header( -status => HTTP_400_Bad_Request );
+            return $e;
+        }
     }
     elsif ($@)  {
         $self->rest->header( -status => HTTP_400_Bad_Request );

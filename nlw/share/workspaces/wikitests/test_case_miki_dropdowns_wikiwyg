@@ -1,26 +1,30 @@
-
-| *Comment* | Test Case: Miki Dropdowns WikiWyg |
-
+| *Comment* | Test Case: Miki Dropdowns WikiWyg |  |
 
 * Fixture: SocialWidgets
 
-| *Comment* | Test Case: Miki Dropdowns WikiWyg: Check 'more' in Miki for FF3/webkit, also check mobile selection of accounts from a specific account. |
-
+| *Comment* | Test Case: Miki Dropdowns WikiWyg: Check 'more' in Miki for FF3/webkit, also check mobile selection of accounts from a specific account. |  |
 | *Comment* | Test Case: Miki Dropdowns WikiWyg: Check 'more' in Miki for FF3/webkit |  |
-| open_ok | /st/m/signals |
+| open_ok | /st/m/signals |  |
 
 | *Comment* | Test Case: Miki Dropdowns WikiWyg: Original signal is off screen |  |
-| wait_for_text_present_ok | Siggy Siggy Siggy %%start_time%% 2 | 30000 |
-| wait_for_text_not_present_ok | Siggy Siggy Siggy %%start_time%% Sig | 5000 |
-| wait_for_element_visible_ok | //div[@class='more'] | 30000 |
+| wait_for_text_present_ok | Siggy %%start_time%% 1219 | 15000 |
+| wait_for_text_not_present_ok | Siggy %%start_time%% First Sig | 15000 |
+| wait_for_element_visible_ok | //div[@class='more'] | 15000 |
 | click_ok | //div[@class='more'] |  |
-| wait_for_text_present_ok | Siggy Siggy Siggy %%start_time%% Sig | 30000 |
+| wait_for_text_present_ok | Siggy %%start_time%% First Sig | 10000 |
 
 | *Comment* | Test Case: Miki Dropdowns WikiWyg. Create two new accounts. |  |
-| set | msacct | mobile-signals-%%start_time%% |
+| set | msacct | mws-%%start_time%% |
+
 | set | common_user | ms%%start_time%%@ken.socialtext.net |
-| st-admin | create-account --name %%msacct%%-A | A new account named "%%msacct%%-A" was created |
-| st-admin | create-account --name %%msacct%%-B | A new account named "%%msacct%%-B" was created |
+| create-account | %%msacct%%-A |  |
+| set | a_id | %%account_id%% |
+| *Comment* | Test Case: Miki Dropdowns WikiWyg. a_id is %%a_id%% |  |
+
+| create-account | %%msacct%%-B |  |
+| set | b_id | %%account_id%% |
+| *Comment* | Test Case: Miki Dropdowns WikiWyg. b_id is %%b_id%% |  |
+
 | st-admin | enable-plugin --plugin signals --account %%msacct%%-A |  |
 | st-admin | enable-plugin --plugin signals --account %%msacct%%-B |  |
 
@@ -30,50 +34,51 @@
 
 | *Comment* | Test Case: Miki Dropdowns WikiWyg. Login as %%common_user%% to create a predictable "within" menu |  |
 | st-logoutin | %%common_user%% | %%password%% |
-| open_ok | /st/m/signals |
-| pause | 8000 |  |
+| open_ok | /st/m/signals |  |
+| wait_for_text_present_ok | %%miki_signal_text%% | 10000 |
+
+| *Comment* | Test Case: Miki Dropdowns WikiWyg. Enable seeing all signals in "all my groups" |  |
+| wait_for_element_visible_ok | //a[contains(@id,"expander")] | 15000 |
+| click_ok | //a[contains(@id,"expander")] |  |
+| wait_for_element_visible_ok | network-all | 15000 |
+| click_ok | network-all |  |
 
 | *Comment* | Test Case: Miki Dropdowns WikiWyg. Signal to one of the accounts %%msacct%%-A |  |
-| st_mobile_account_select_ok | %%msacct%%-A (primary, 1 user) |  |
+| *Comment* | use the hidden selector |  |
+| select_ok | mobile_signal_network | value=account-%%a_id%% |
 
-| st-type-signal | Signal to %%msacct%%-A | 1 |
-| wait_for_element_visible_ok | %%miki_signal_submit%% | 20000 |
+| st_type_signal | Signal to %%msacct%%-A |  |
+| wait_for_element_visible_ok | %%miki_signal_submit%% | 3000 |
 | click_ok | %%miki_signal_submit%% |  |
-| setSpeed | 0 |  |
-| Comment | st-type-signal clients must setSpeed 0 |  |
-
-| wait_for_text_present_ok | Signal to %%msacct%%-A | 30000 |
-| text_like | //div[@id='mobile_main'] | Signal to %%msacct%%-A |
-
-| *Comment* | Test Case: Miki Dropdowns WikiWyg. Signal to the other account: %%msacct%%-B |  |
-| st_mobile_account_select_ok | %%msacct%%-B (1 user) |  |
-
-| st-type-signal | Signal to %%msacct%%-B | 1 |
-| wait_for_element_visible_ok | %%miki_signal_submit%% | 20000 |
-| click_ok | %%miki_signal_submit%% |  |
-| setSpeed | 0 |  |
-| Comment | st-type-signal clients must setSpeed 0 |  |
-
-| wait_for_text_present_ok | Signal to %%msacct%%-B | 30000 |
-| text_like | //div[@id='mobile_main'] | Signal to %%msacct%%-B |
-
-| *Comment* | Test Case: Miki Dropdowns WikiWyg. See both signals under "all my groups" |  |
-| *Comment* | Test Case: Miki Dropdowns WikiWyg. use click_and_pause because B signal is already visible |  |
-| wait_for_element_present_ok | link=All my groups | 20000 |
-| click_and_pause | link=All my groups | 20000 |
-| wait_for_text_present_ok | Signal to %%msacct%%-B | 20000 |
 | wait_for_text_present_ok | Signal to %%msacct%%-A | 20000 |
 
+| *Comment* | Test Case: Miki Dropdowns WikiWyg. Signal to the other account: %%msacct%%-B |  |
+| open_ok | /st/m/signals |  |
+| select_ok | mobile_signal_network | value=account-%%b_id%% |
+
+| st_type_signal | Signal to %%msacct%%-B |  |
+| wait_for_element_visible_ok | %%miki_signal_submit%% | 20000 |
+| click_ok | %%miki_signal_submit%% |  |
+| wait_for_text_present_ok | Signal to %%msacct%%-B | 20000 |
+
 | *Comment* | Test Case: Miki Dropdowns WikiWyg. Select signals to %%msacct%%-A see only the one signal |  |
-| wait_for_element_present_ok | link=%%msacct%%-A (primary, 1 user) | 20000 |
-| click_ok | link=%%msacct%%-A (primary, 1 user) |  |
-| wait_for_text_not_present_ok | Signal to %%msacct%%-B | 30000 |
+| wait_for_element_present_ok | account-%%a_id%% | 15000 |
+| click_ok | account-%%a_id%% |  |
+| wait_for_text_not_present_ok | Signal to %%msacct%%-B | 20000 |
 | wait_for_text_present_ok | Signal to %%msacct%%-A | 20000 |
 
 | *Comment* | Test Case: Miki Dropdowns WikiWyg. Select signals to %%msacct%%-B see only the other signal |  |
-| wait_for_element_present_ok | link=%%msacct%%-B (1 user) | 20000 |
-| click_ok | link=%%msacct%%-B (1 user) |  |
-| wait_for_text_not_present_ok | Signal to %%msacct%%-A | 30000 |
+| wait_for_element_present_ok | account-%%b_id%% | 15000 |
+| click_ok | account-%%b_id%% |  |
+| wait_for_text_not_present_ok | Signal to %%msacct%%-A | 20000 |
+| wait_for_text_present_ok | Signal to %%msacct%%-B | 20000 |
+
+| *Comment* | Test Case: Miki Dropdowns WikiWyg. See both signals |  |
+| wait_for_element_visible_ok | //a[contains(@id,"expander")] | 15000 |
+| click_ok | //a[contains(@id,"expander")] |  |
+| wait_for_element_visible_ok | network-all | 15000 |
+| click_ok | network-all |  |
+| wait_for_text_present_ok | Signal to %%msacct%%-A | 20000 |
 | wait_for_text_present_ok | Signal to %%msacct%%-B | 20000 |
 
 | *Comment* | Test Case: Miki Dropdowns WikiWyg. TEARDOWN |  |
@@ -82,4 +87,4 @@
 | delete-account | %%msacct%%-A |  |
 | delete-account | %%msacct%%-B |  |
 
-| *Comment* | Test Case: Miki Dropdowns WikiWyg COMPLETED |
+| *Comment* | Test Case: Miki Dropdowns WikiWyg COMPLETED |  |

@@ -187,6 +187,15 @@ sub _extract_page {
     };
 
     if ($page->{workspace_name}) {
+        if ($row->{signal_id}) {
+            use Socialtext::Authz::SimpleChecker;
+            my $checker = Socialtext::Authz::SimpleChecker->new(
+                user      => $self->viewer,
+                container => Socialtext::Workspace->new(name => $page->{workspace_name}),
+            );
+            next EVENT unless $checker->check_permission('read');
+        }
+
         $page->{workspace_uri} = $link_dictionary->format_link(
             link => 'interwiki',
             workspace => $page->{workspace_name},

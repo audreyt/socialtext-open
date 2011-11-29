@@ -1,0 +1,122 @@
+| *Comment* | Test Case: Admin Themes |  |
+
+| set_default | scheme | http |
+| set_default | files_host | wikitest_files.topaz.socialtext.net |
+| set_default | jpg | wikitest.jpg |
+| set_default | jpg_file | %%scheme%%://%%files_host%%/%%jpg%% |
+
+| set | at_acct | at-account-%%start_time%% |
+| set | at_user | `at.user.%%start_time%%@david.socialtext.net` |
+
+| create-account | %%at_acct%% |  |  |
+| create-user | %%at_user%% | %%password%% | %%at_acct%% |
+| st-admin | add-account-admin --email %%at_user%% --account %%at_acct%% | now has the role |  |
+| st-process-jobs |  |  |  |
+
+| *Comment* | Test Case: Admin Themes business admins can access theme UI from account CP |  |
+| open_ok | /nlw/control/account/%%account_id%% |  |
+| wait_for_element_visible_ok | link=Theme | 30000 |
+| text_like | qr/Profile Fields.+Theme.+Reports/ |  |
+| click_and_wait | link=Theme |  |
+| wait_for_text_present_ok | Customize Theme Settings | 30000 |
+| wait_for_element_visible_ok | originLink | 30000 |
+| click_and_wait | originLink |  |
+| location_like | /nlw/control/account/%%account_id%% |  |
+
+| *Comment* | Test Case: Admin Themes account admins can access theme UI through Administer Dashboards |  |
+| st-logoutin | %%at_user%% | %%password%% |
+| open_ok | /st/dashboard |  |
+| wait_for_element_visible_ok | st-admin-dashboard |  |
+| click_and_wait | st-admin-dashboard |  |
+| wait_for_element_visible_ok | st-edit-layout | 30000 |
+| click_ok | st-edit-layout |  |
+| wait_for_element_visible_ok | st-account-theme | 30000 |
+| click_and_wait | st-account-theme |  |
+| location_like | /nlw/control/account/%%account_id%%/theme?origin=/st/account/%%account_id%%/dashboard |  |
+| wait_for_element_visible_ok | originLink | 30000 |
+| click_and_wait | originLink |  |
+| location_like | /st/account/%%account_id%%/dashboard |  |
+| open_ok | /nlw/control/account/%%account_id%%/theme?origin=/st/account/%%account_id%%/dashboard |  |
+
+| *Comment* | Test Case: Admin Themes check xpaths for correct mouseover text |  |
+| wait_for_element_visible_ok | //label[@title='Logo image (auto-scaled to 201x34 pixels max.)'] | 30000 |
+| wait_for_element_visible_ok | //label[@title='Background color of header area.'] | 5000 |
+| wait_for_element_visible_ok | //label[@title='Color of hyperlinks in header.'] | 5000 |
+| wait_for_element_visible_ok | //label[@title='Background image for header area.'] | 5000 |
+| wait_for_element_visible_ok | //label[@title='Specifies how header image should be repeated.'] | 5000 |
+| wait_for_element_visible_ok | //label[@title='Placement of header image relative to screen.'] | 5000 |
+| wait_for_element_visible_ok | //label[@title='Brightness of footer and navigation menu text.'] | 5000 |
+| wait_for_element_visible_ok | //label[@title='Color of hyperlinks and button background.'] | 5000 |
+| wait_for_element_visible_ok | //label[@title='Color of menu dividers.'] | 5000 |
+| wait_for_element_visible_ok | //label[@title='Color of button labels.'] | 5000 |
+| wait_for_element_visible_ok | //label[@title='Font of heading text.'] | 5000 |
+| wait_for_element_visible_ok | //label[@title='Font of body text.'] | 5000 |
+| wait_for_element_visible_ok | //label[@title='Background of main screen and pull-down menus.'] | 5000 |
+| wait_for_element_visible_ok | //label[@title='Color of hyperlinks in footer.'] | 5000 |
+| wait_for_element_visible_ok | //label[@title='Background image for the main screen.'] | 5000 |
+| wait_for_element_visible_ok | //label[@title='Specifies how background image should be repeated.'] | 5000 |
+| wait_for_element_visible_ok | //label[@title='Placement of background image relative to screen.'] | 5000 |
+| wait_for_element_visible_ok | //label[@title='Icon (in .ico format) for browser's URL bar and bookmarks.'] | 5000 |
+
+| *Comment* | Test Case: Admin Themes attach a new file for logo, header, background, favicon |  |
+| attach_file_ok | //input[@class='logo_image_file'] | %%jpg_file%% |
+| attach_file_ok | //input[@class='header_image_file'] | %%jpg_file%% |
+| attach_file_ok | //input[@class='background_image_file'] | %%jpg_file%% |
+| attach_file_ok | //input[@class='favicon_image_file'] | %%jpg_file%% |
+
+| *Comment* | Test Case: Admin Themes enter a malformed color code, see error |  |
+| type_ok | header_color | #colors |
+| click_ok | //input[@value='Save'] |  |
+| verifyAlert | Header Color is not a legal color: #colors |  |
+
+| *Comment* | Test Case: Admin Themes disable the logo image |  |
+| uncheck_ok | logo_image_enabled |  |
+| st_unchecked_ok | logo_image_enabled |  |
+
+| *Comment* | Test Case: Admin Themes enter new codes for all areas |  |
+| type_ok | header_color | #111111 |
+| type_ok | header_link_color | #222222 |
+| type_ok | primary_color | #333333 |
+| type_ok | secondary_color | #444444 |
+| type_ok | tertiary_color | #555555 |
+| type_ok | background_color | #666666 |
+| type_ok | background_link_color | #777777 |
+
+| *Comment* | Test Case: Admin Themes change all the dropdowns |  |
+| select_ok | header_image_tiling | label=no-repeat |
+| select_ok | header_image_position | label=center center |
+| select_ok | foreground_shade | label=dark |
+| select_ok | header_font | label=Times |
+| select_ok | body_font | label=Trebuchet |
+| select_ok | background_image_tiling | label=repeat-y |
+| select_ok | background_image_position | label=right top |
+
+| *Comment* | Test Case: Admin Themes save all the new values |  |
+| click_and_wait | //input[@value='Save'] |  |
+| wait_for_element_visible_ok | st-edit-layout | 30000 |
+| click_ok | st-edit-layout |  |
+| wait_for_element_visible_ok | st-account-theme | 30000 |
+| click_and_wait | st-account-theme |  |
+
+| *Comment* | Test Case: Admin Themes check all the set values |  |
+| wait_for_element_visible_ok | logo_image_enabled | 30000 |
+| st_unchecked_ok | logo_image_enabled |  |
+| verifyValue | header_color | #111111 |
+| verifyValue | header_link_color | #222222 |
+| verifyValue | primary_color | #333333 |
+| verifyValue | secondary_color | #444444 |
+| verifyValue | tertiary_color | #555555 |
+| verifyValue | background_color | #666666 |
+| verifyValue | background_link_color | #777777 |
+| is_selected_ok | header_image_tiling | label=no-repeat |
+| is_selected_ok | header_image_position | label=center center |
+| is_selected_ok | foreground_shade | label=dark |
+| is_selected_ok | header_font | label=Times |
+| is_selected_ok | body_font | label=Trebuchet |
+| is_selected_ok | background_image_tiling | label=repeat-y |
+| is_selected_ok | background_image_position | label=right top |
+
+| *Comment* | Test Case: Admin Themes TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%at_user%% |  |
+| delete-account | %%at_acct%% |  |

@@ -30,30 +30,35 @@
 | set_Speed | 3000 |  |
 | text_like | //body | select an image or file to upload |
 | attach_file_ok | //form[@name='attachForm']//input | %%jpg_file%% |
-| wait_for_text_present_ok | Uploaded files: %%jpg%% | 10000 |
+| wait_for_element_visible_ok | activities-add-attachment-cancel | 30000 |
+| click_ok | activities-add-attachment-cancel |  |
+| wait_for_text_present_ok | %%jpg%% [x]; | 10000 |
+| click_ok | //a[contains(@class,'insertFile')] |  |
+| wait_for_element_visible_ok | //form[@name='attachForm']//input | 10000 |
 | attach_file_ok | //form[@name='attachForm']//input | %%txt_file%% |
-| wait_for_text_present_ok | Uploaded files: %%jpg%%, %%txt%% | 10000 |
+| wait_for_element_visible_ok | activities-add-attachment-cancel | 30000 |
+| click_ok | activities-add-attachment-cancel |  |
+| wait_for_text_present_ok | %%jpg%% [x]; %%txt%% [x]; | 10000 |
+| click_ok | //a[contains(@class,'insertFile')] |  |
+| wait_for_element_visible_ok | //form[@name='attachForm']//input | 10000 |
 | attach_file_ok | //form[@name='attachForm']//input | %%zip_file%% |
-| wait_for_text_present_ok | Uploaded files: %%jpg%%, %%txt%%, %%zip%% | 10000 |
-| set_Speed | 0 |  |
-
-| *Comment* | Test Case: Signals Attachment. click Done |  |
-| wait_for_element_visible_ok | //a[@class='btn'] | 10000 |
-| click_ok | //a[@class='btn'] |  |
-| wait_for_element_not_visible_ok | //form[@name='attachForm'] | 30000 |
+| wait_for_element_visible_ok | activities-add-attachment-cancel | 30000 |
+| click_ok | activities-add-attachment-cancel |  |
+| wait_for_text_present_ok | %%jpg%% [x]; %%txt%% [x]; %%zip%% [x]; | 10000 |
 
 | *Comment* | Test Case: Signals Attachment. post %%signal%%. Only works in Firefox |  |
-| wait_for_element_visible_ok | signalFrame | 5000 |
+| wait_for_element_visible_ok | signalFrame | 15000 |
 | select_frame | signalFrame |  |
 | type_ok | //body | %%signal%% |
 | select_frame | relative=parent |  |
-| wait_for_element_visible_ok | link=Post | 5000 |
-| click_ok | link=Post |  |
+| wait_for_element_visible_ok | //a[contains(@id,"widget") and contains(@id,"post")] | 15000 |
+| click_ok | //a[contains(@id,"widget") and contains(@id,"post")] |  |
 
 | *Comment* | Test Case: Signals Attachment. see signal and uploaded files |  |
+| set_Speed | 0 |  |
 | wait_for_text_present_ok | %%signal%% | 30000 |
 | wait_for_element_visible_ok | link=%%jpg%% | 30000 |
 | wait_for_element_visible_ok | link=%%txt%% | 30000 |
 | wait_for_element_visible_ok | link=%%zip%% | 30000 |
 
-| *Comment* | Test Case: Signals Attachment COMPLETED |
+| *Comment* | Test Case: Signals Attachment COMPLETED |  |

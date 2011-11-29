@@ -1,15 +1,69 @@
+# @COPYRIGHT@
+#, fuzzy
+msgid ""
+msgstr ""
+"#-#-#-#-#  common.po (Socialtext i18n)  #-#-#-#-#\n"
+"Project-Id-Version: Socialtext i18n\n"
+"PO-Revision-Date: 2011-11-04 17:41+0800\n"
+"Last-Translator: Socialtext i18n team\n"
+"Language-Team: Socialtext i18n team\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"#-#-#-#-#  common.po (Socialtext i18n)  #-#-#-#-#\n"
+"Project-Id-Version: Socialtext i18n\n"
+"PO-Revision-Date: 2011-11-04 16:06+0800\n"
+"Last-Translator: Socialtext i18n team\n"
+"Language-Team: Socialtext i18n team\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 
-#: share/skin/common/javascript/Socialtext/lib/Socialtext/Workspace.js:217
-msgid "api.is-reserved-word=name"
-msgstr "%1 is a reserved word"
+#: share/javascript/template/activities/event.tt2:57
+msgid "activities.add-to-conversation"
+msgstr "Add to conversation"
+
+#: share/javascript/activities/event_list.js:805
+msgid "activities.attachment"
+msgstr "Attachment"
+
+msgid "activities.by-you"
+msgstr "By you"
+
+msgid "activities.by=user"
+msgstr "By %1"
+
+#: share/javascript/template/activities/message_notice.tt2:28
+msgid "activities.new=count"
+msgstr "%*(%1,new activity,new activities)"
+
+#: share/javascript/activities/appdata.js:488
+msgid "activities.showing=action,feed,group"
+msgstr "Showing %1 from %2 within %3"
+
+#: share/skin/common/javascript/Socialtext/lib/Socialtext/Workspace.js:224
+msgid "api.about-wiki-name"
+msgstr "Workspace names must consist of 3-30 lowercase letters, numbers, underscores or dashes."
+
+#: share/skin/common/javascript/Socialtext/lib/Socialtext/Workspace.js:210
+msgid "api.about-wiki-title"
+msgstr "Workspace titles must be between 2 and 64 characters"
 
 #: share/skin/common/javascript/Socialtext/lib/Socialtext/Account.js:13
 msgid "api.account-name-required"
 msgstr "Account name is required"
 
+#: share/skin/common/javascript/Socialtext/lib/Socialtext/UserAccountRole.js:15
+msgid "api.account_name-required"
+msgstr "account_name is required"
+
 #: share/skin/common/javascript/Socialtext/lib/Socialtext/Workspace.js:260
 msgid "api.error-checking-for-wiki-existence"
 msgstr "Error checking for workspace existence"
+
+#: share/skin/common/javascript/Socialtext/lib/Socialtext/Account.js:33 share/skin/common/javascript/Socialtext/lib/Socialtext/Account.js:46
+msgid "api.group_id-required"
+msgstr "group_id is required"
 
 #: share/skin/common/javascript/Socialtext/lib/Socialtext/User.js:24
 msgid "api.id-required"
@@ -18,6 +72,10 @@ msgstr "ID required"
 #: share/skin/common/javascript/Socialtext/lib/Socialtext/Workspace.js:74
 msgid "api.impersonators-can-only-be-managed-by-admins"
 msgstr "Impersonators can only be managed by system administrators"
+
+#: share/skin/common/javascript/Socialtext/lib/Socialtext/Workspace.js:217
+msgid "api.is-reserved-word=name"
+msgstr "%1 is a reserved word"
 
 #: share/skin/common/javascript/Socialtext/lib/Socialtext/Group.js:231 share/skin/common/javascript/Socialtext/lib/Socialtext/Group.js:42
 msgid "api.ldap-dn-or-group-name-required"
@@ -51,6 +109,14 @@ msgstr "Title is required"
 msgid "api.unimplemented"
 msgstr "Unimplemented"
 
+#: share/skin/common/javascript/Socialtext/lib/Socialtext/Account.js:20
+msgid "api.user_id-required"
+msgstr "user_id is required"
+
+#: share/skin/common/javascript/Socialtext/lib/Socialtext/UserAccountRole.js:13
+msgid "api.username-required"
+msgstr "username is required"
+
 #. (this.via_group.length,                $.map(this.via_group, function (g)
 #: share/skin/common/javascript/Socialtext/lib/Socialtext/UserAccountRole.js:55
 msgid "api.via-group-count=length,map"
@@ -65,30 +131,94 @@ msgstr "Via %quant(%1,Workspace): %2"
 msgid "api.wiki-name-cannot-begin-with-dash"
 msgstr "Workspace names cannot begin with a dash"
 
-#: share/skin/common/javascript/Socialtext/lib/Socialtext/Workspace.js:224
-msgid "api.about-wiki-name"
-msgstr "Workspace names must consist of 3-30 lowercase letters, numbers, underscores or dashes."
-
 #: share/skin/common/javascript/Socialtext/lib/Socialtext/Workspace.js:207
 msgid "api.wiki-title-cannot-begin-with-dash"
 msgstr "Workspace titles cannot begin with a dash"
 
-#: share/skin/common/javascript/Socialtext/lib/Socialtext/Workspace.js:210
-msgid "api.about-wiki-title"
-msgstr "Workspace titles must be between 2 and 64 characters"
+#: share/javascript/dialogs/activities-add-attachment.js:6
+msgid "do.add-attachment"
+msgstr "Add Attachment"
 
-#: share/skin/common/javascript/Socialtext/lib/Socialtext/UserAccountRole.js:15
-msgid "api.account_name-required"
-msgstr "account_name is required"
+#: share/javascript/dialogs/activities-add-video.js:6
+msgid "do.add-video"
+msgstr "Add Video"
 
-#: share/skin/common/javascript/Socialtext/lib/Socialtext/Account.js:33 share/skin/common/javascript/Socialtext/lib/Socialtext/Account.js:46
-msgid "api.group_id-required"
-msgstr "group_id is required"
+#: share/javascript/template/activities/elements/toolbar.tt2:10
+msgid "do.insert-link"
+msgstr "Insert Link"
 
-#: share/skin/common/javascript/Socialtext/lib/Socialtext/Account.js:20
-msgid "api.user_id-required"
-msgstr "user_id is required"
+#: share/javascript/dialogs/activities-add-attachment.js:48
+msgid "error.file-too-large-50mb-max"
+msgstr "File size is too large. 50MB maximum, please."
 
-#: share/skin/common/javascript/Socialtext/lib/Socialtext/UserAccountRole.js:13
-msgid "api.username-required"
-msgstr "username is required"
+#: share/javascript/activities/editor.js:1021
+msgid "error.invalid-web-link"
+msgstr "Invalid web link"
+
+#: share/javascript/dialogs/activities-add-attachment.js:49
+msgid "error.parsing-result"
+msgstr "Error parsing result"
+
+#: /Users/audreyt/src/st/socialtext/nlw/share/javascript/main.js:129
+msgid "error.two-revisions-required-for-compare"
+msgstr "You must select two revisions to compare."
+
+#: share/javascript/template/activities/elements/filters.tt2:9
+msgid "filter.activity-type"
+msgstr "Activity Type"
+
+#: share/javascript/template/activities/elements/filters.tt2:15
+msgid "filter.contributor"
+msgstr "Contributor"
+
+#: share/javascript/template/activities/elements/filters.tt2:21
+msgid "filter.group"
+msgstr "Group"
+
+#: share/javascript/dialogs/groups-leave.tt2:3
+msgid "groups.leave-this?"
+msgstr "Are you sure you'd like to leave this group?"
+
+#: share/javascript/dialogs/control-create-group.tt2:60
+msgid "groups.pick-driver"
+msgstr "Pick a Driver..."
+
+#: share/javascript/dialogs/groups-save.js:6
+msgid "groups.saving"
+msgstr "Saving"
+
+#: share/javascript/dialogs/groups-save.tt2:1
+msgid "groups.saving-group"
+msgstr "Saving Group..."
+
+#: share/javascript/template/activities/message_notice.tt2:10
+msgid "info.private-signal-to-self"
+msgstr "You are composing a private message to yourself"
+
+#: share/javascript/template/activities/message_notice.tt2:12
+msgid "info.signal-to-self"
+msgstr "You are composing a message to yourself"
+
+#: /Users/audreyt/src/st/socialtext/nlw/share/javascript/lookahead.js:126 /Users/audreyt/src/st/socialtext/nlw/share/javascript/lookahead.js:127
+msgid "lookahead.show-all-results"
+msgstr "Show All Results"
+
+#: share/javascript/template/activities/blocks.tt2:99 share/javascript/template/activities/elements/signals.tt2:25 share/javascript/template/activities/event.tt2:66
+msgid "nav.go"
+msgstr "Go"
+
+#: share/javascript/activities/network_dropdown.js:77
+msgid "nav.non-wiki-groups"
+msgstr "Non-Workspace Groups"
+
+#: share/javascript/Socialtext/Dialog.js:125
+msgid "nav.result"
+msgstr "Result"
+
+#: share/javascript/activities/network_dropdown.js:75
+msgid "nav.wiki-groups"
+msgstr "Workspace Groups"
+
+#: share/javascript/template/activities/elements/toolbar.tt2:3
+msgid "signals.private"
+msgstr "Private"

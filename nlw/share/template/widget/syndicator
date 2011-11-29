@@ -1,0 +1,26 @@
+<script>
+if (typeof gadgets != 'undefined' && gadgets && gadgets.config) {
+    gadgets.config.init({
+        "core.io" : {
+            "jsonProxyUrl" : "/nlw/[% app_version %]/json-proxy"
+        },
+        "rpc" : {
+            "parentRelayUrl" : "/nlw/plugin/widgets/rpc_relay.html",
+            "useLegacyProtocol" : false
+        },
+        "opensocial-0.8": {
+            // Path to fetch opensocial data from
+            // Must be on the same domain as the gadget rendering server
+            "path" : "/nlw",
+
+            // Path to issue invalidate calls
+            "invalidatePath" : "/what_is_this",
+            "domain" : "shindig",
+            "enableCaja" : false,
+            "supportedFields" : {
+               "person" : []
+            }
+        }
+    }, true);
+}
+</script>

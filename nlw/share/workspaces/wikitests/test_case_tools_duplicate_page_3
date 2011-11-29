@@ -1,0 +1,25 @@
+| *Comment* | Test Case: Tools: Duplicate Page |  |  |  |
+| set | dupe_ws | duplicate_workspace |  |  |
+| set | this_title | Duplicate This Page |  |  |
+| set | this_id | duplicate_this_page |  |  |
+| set | new_title | Page_Duplicated |  |  |
+| set | new_id | Page_Duplicated |  |  |
+| set | this_content | Duplicate This Page content |  |  |
+| set | new_content | Duplicate This Page NEW content |  |  |
+| set | this_tag | Duplicate This Tag |  |  |
+
+| *Comment* | Test Case: Tools: Duplicate Page. verify 2nd duplicate using space-containing URL |  |
+| open_ok | /%%dupe_ws%%/%%new_id%% |  |
+| location_like | `/%%dupe_ws%%/%%new_id%%` |  |
+
+| *Comment* | Test Case: Tools: Duplicate Page. verify duplicate of edited page |  |
+| open_ok | /%%dupe_ws%%/?action=revision_list;page_name=%%new_id%% |  |
+| click_and_wait | link=Compare Revisions |  |
+| text_like | content | %%this_content%% |
+| text_like | content | %%new_content%% |
+
+| *Comment* | Test Case: Tools: Duplicate Page TEARDOWN |  |
+| st-process-jobs |  |  |
+| delete-workspace | %%dupe_ws%% |  |
+
+| *Comment* | Test Case: Tools: Duplicate Page COMPLETED |  |

@@ -1,76 +1,83 @@
+*TUXTODO: On hold until switching languages stops not working intermittently*
 
 Note: Does not work in IE8. If done manually in IE8 it works fine, but when Sel is automating, the select_ok of locale does not trigger a page reload as it should.
 
 | *Comment* | Test Case: Settings: Custom Language |  |
 
 | *Comment* | Test Case: Settings: Custom Language - Create User |  |
-| set | custom_user | customuser%%start_time%%@matt.socialtext.net |
+| set | custom_user_at | user.%%start_time%%@ |
+| set | domain | david.socialtext.net |
+| set | custom_user | %%custom_user_at%%%%domain%% |
+
 | set | acct | customacct%%start_time%% |
 | set | ws | customerws%%start_time%% |
+| set | locale | //select[contains(@name,'locale')] |
 
 | st-admin | create-account --name %%acct%% | created |
 | st-admin | create-user --email %%custom_user%% --p %%password%% | created |
 | st-admin | create-workspace --name %%ws%% --title %%ws%% | created |
+
 | st-admin | add-member --e %%custom_user%% --w %%ws%% | now has the role |
 | st-admin | give-accounts-admin --e %%custom_user%% | now has accounts admin access |
 | st-admin | give-system-admin -e %%custom_user%% | now has system admin access |
 
-| *Comment* | Test Case: Settings: Custom Language - customize language from dashboard |  |
+| *Comment* | Test Case: Settings: Custom Language - customize language from Settings |  |
 | st-logoutin | %%custom_user%% | %%password%% |
-| wait-for-element-visible-ok | link=Settings | 30000 |
+| wait-for-element-visible-ok | link=Settings | 15000 |
 | click_and_wait | link=Settings |  |
-| wait_for_element_visible_ok | link=Language Settings | 30000 |
-| click_and_wait | link=Language Settings |  |
-| wait_for_element_visible_ok | locale | 30000 |
-| is_selected_ok | locale | label=English (Default) |
-| select_and_wait | locale | label=zz - DEV_MODE ONLY |
-| wait_for_text_present_ok | Zzzzzzzz Zzzzzzzz | 30000 |
-| wait_for_text_present_ok | Zzzzzzz Zzzzz | 30000 |
-| is_selected_ok | locale | label=zz - DEV_MODE ONLY |
+
+| wait_for_element_visible_ok | %%locale%% | 30000 |
+| is_selected_ok | %%locale%% | label=English |
+| select_ok | %%locale%% | label=zz - DEV_MODE ONLY |
+| is_selected_ok | %%locale%% | label=zz - DEV_MODE ONLY |
+| click_ok | link=Save |  |
+| wait_for_text_present_ok | Saved | 15000 |
+| click_and_wait | link=Settings |  |
+| wait_for_text_present_ok | Zzzzzzz Zzzzz | 15000 |
 
 | *Comment* | Test Case: Settings: Custom Language - Logout, login, still customized |  |
 | st-process-jobs |  |  |
 | st-logoutin | %%custom_user%% | %%password%% |
 | open_ok | /st/dashboard |  |
-| wait_for_text_present_ok | Zzzzzzz, Zzz Zzzz | 300000 |
+| wait_for_text_present_ok | Zzz Zzzzzz | 300000 |
 | open_ok | /%%ws%%/ |  |
-| wait_for_element_present_ok | link=Zzzzzz | 30000 |
+| wait_for_element_present_ok | link=Zzzzzzz | 30000 |
 
 | *Comment* | Test Case: Settings: Custom Language - Check Control Panel |  |
 | open_ok | /nlw/control |  |
-| wait_for_text_present_ok | Zzzz zzzz, Zzzzzzzzz Zzzzzzzz Zzzzzzzzzzzzzz zzz zzzzzz zzz zzzzzzz zzz zzz zz zzz Zzzzzzzzzz zzzzzzzzzzz, zzzzzzzzz Zzzzzzzz, Zzzzzz, Zzzzzzzzzz, Zzzzz, zzz Zzzzzzz. | 30000 |
-| wait_for_element_visible_ok | //a[@name='accounts'] | 30000 |
+| wait_for_text_present_ok | Zzzz zzzz, Zzzzzzzzz Zzzzzzzz Zzzzzzzzzzzzzz zzz zzzzzz zzz zzzzzzz zzz zzz zz zzz Zzzzzzzzzz zzzzzzzzzzz, zzzzzzzzz Zzzzzzzz, Zzzzzz, Zzzzzzzzzz, Zzzzz, zzz Zzzzzzz. | 15000 |
+| wait_for_element_visible_ok | //a[@name='accounts'] | 15000 |
 | text_like | //a[@name='accounts'] | Zzzzzzzz |
-| wait_for_element_visible_ok | //a[@name='workspaces'] | 30000 |
+| wait_for_element_visible_ok | //a[@name='workspaces'] | 15000 |
 | text_like | //a[@name='workspaces'] | Zzzzzzzzzz |
-| wait_for_element_visible_ok | //a[@name='users'] | 30000 |
+| wait_for_element_visible_ok | //a[@name='users'] | 15000 |
 | text_like | //a[@name='users'] | Zzzzz |
-| wait_for_element_visible_ok | //a[@name='groups'] | 30000 |
+| wait_for_element_visible_ok | //a[@name='groups'] | 15000 |
 | text_like | //a[@name='groups'] | Zzzzzz |
-| wait_for_element_visible_ok | //a[@name='settings'] | 30000 |
+| wait_for_element_visible_ok | //a[@name='settings'] | 15000 |
 | text_like | //a[@name='settings'] | Zzzzzzzz |
-| wait_for_element_visible_ok | //a[@name='console'] | 30000 |
+| wait_for_element_visible_ok | //a[@name='console'] | 15000 |
 | text_like | //a[@name='console'] | Zzzzzzz |
 | click_and_wait | //a[@name='accounts'] |  |
-| wait_for_text_present_ok | Zzzzzzzzzz Zzzzzzz Zzzzz - Zzzzzzzz | 30000 |
-| wait_for_element_visible_ok | //a[@name='workspaces'] | 30000 |
+| wait_for_text_present_ok | Zzzzzz Zzz Zzzzzzz | 15000 |
+| wait_for_element_visible_ok | //a[@name='workspaces'] | 15000 |
 | click_and_wait | //a[@name='workspaces'] |  |
 | text_like | //body | Zzzzzz zz zzzz: |
-| wait_for_element_visible_ok | //a[@name='users'] | 30000 |
+| wait_for_element_visible_ok | //a[@name='users'] | 15000 |
 | click_and_wait | //a[@name='users'] |  |
-| wait_for_text_present_ok | Zzzzzz zz zzzzzzzz: | 300000 |
-| wait_for_element_visible_ok | //a[@name='groups'] | 30000 |
+| wait_for_text_present_ok | Zzzzzz zz zzzzzzzz: | 15000 |
+| wait_for_element_visible_ok | //a[@name='groups'] | 15000 |
 | click_and_wait | //a[@name='groups'] |  |
-| wait_for_text_present_ok | zzzz zzzzzzzz: | 30000 |
-| wait_for_element_visible_ok | //a[@name='users'] | 30000 |
+| wait_for_text_present_ok | zzzz zzzzzzzz: | 15000 |
+| wait_for_element_visible_ok | //a[@name='users'] | 15000 |
 | click_and_wait | //a[@name='users'] |  |
-| wait_for_text_present_ok | Zzzzzz zz zzzzzzzz: | 30000 |
-| wait_for_element_visible_ok | //a[@name='settings'] | 30000 |
+| wait_for_text_present_ok | Zzzzzz zz zzzzzzzz: | 15000 |
+| wait_for_element_visible_ok | //a[@name='settings'] | 15000 |
 | click_and_wait | //a[@name='settings'] |  |
-| wait_for_text_present_ok | Zzzzzz-Zzzz Zzzzzzz Zzzzzzzzzzz | 30000 |
-| wait_for_element_visible_ok | //a[@name='console'] | 30000 |
+| wait_for_text_present_ok | Zzzzzz-Zzzz Zzzzzzz Zzzzzzzzzzz | 15000 |
+| wait_for_element_visible_ok | //a[@name='console'] | 15000 |
 | click_and_wait | //a[@name='console'] |  |
-| wait_for_text_present_ok | Zz zzzz zzz zzzzzz zzz Zzzzzzzzzz, Zzzzzzzz, Zzzzzz zzz Zzzzz zz zzz zzzzzz, zz zz zzz Zzzzzzz Zzzzz zzzz. | 30000 |
+| wait_for_text_present_ok | Zz zzzz zzz zzzzzz zzz Zzzzzzzzzz, Zzzzzzzz, Zzzzzz zzz Zzzzz zz zzz zzzzzz, zz zz zzz Zzzzzzz Zzzzz zzzz. | 15000 |
 
 | *Comment* | Test Case: Settings: Custom Language - Console and Mobile |  |
 | open_ok | /console/ |  |
@@ -81,63 +88,65 @@ Note: Does not work in IE8. If done manually in IE8 it works fine, but when Sel 
 | *Comment* | Test Case: Settings: Custom Language - but for %%username%% it's still english |  |
 | st-logoutin | %%username%% | %%password%% |
 | open_ok | /%%workspace%%/ |  |
-| wait_for_element_visible_ok | link=Edit | 30000 |
-| wait_for_element_visible_ok | link=Comment | 30000 |
+| wait_for_element_visible_ok | link=Edit | 15000 |
+| wait_for_element_visible_ok | link=Comment | 15000 |
 
 | *Comment* | Test Case: Settings: Custom Language - change back to english |  |
 | st-logoutin | %%custom_user%% | %%password%% |
-| open_ok | /?action=language_settings |  |
-| wait_for_element_visible_ok | locale | 30000 |
-| is_selected_ok | locale | label=zz - DEV_MODE ONLY |
-| select_and_wait | locale | label=Zzzzzzz (English) (Zzzzzzz) |
-| wait_for_text_present_ok | Changes Saved | 30000 |
-| is_selected_ok | locale | label=English (Default) |
+| open_ok | /st/settings |  |
+| wait_for_element_visible_ok | %%locale%% | 15000 |
+| is_selected_ok | %%locale%% | label=zz - DEV_MODE ONLY |
+| select_ok | %%locale%% | label=Zzzzzzz (English) |
+| is_selected_ok | %%locale%% | label=Zzzzzzz (English) |
+| click_and_wait | link=Zzzz |  |
+| wait_for_text_present_ok | Zzzzz | 15000 |
+| open_ok | /st/settings |  |
+| wait_for_element_visible_ok | %%locale%% | 30000 |
+| is_selected_ok | %%locale%% | label=English |
 | open_ok | /st/dashboard |  |
-| wait_for_text_present_ok | Welcome, New User | 30000 |
+| wait_for_text_present_ok | Welcome | 15000 |
 
 | *Comment* | Test Case: Settings: Custom Language in english, check control panel, console, mobile |  |
 | open_ok | /m |  |
-| wait_for_text_present_ok | People | 30000 |
+| wait_for_text_present_ok | People | 15000 |
 | open_ok | /nlw/control |  |
-| wait_for_text_present_ok | Welcome to the Socialtext Control Panel | 30000 |
-
+| wait_for_text_present_ok | Welcome to the Socialtext Control Panel | 15000 |
 
 | *Comment* | Test Case: Settings: Custom Language - customize language from %%ws%% |  |
 | open_ok | /%%ws%%/ |  |
-| wait_for_element_visible_ok | link=Settings | 30000 |
+| wait_for_element_visible_ok | link=Settings | 15000 |
 | click_and_wait | link=Settings |  |
-| wait_for_element_visible_ok | link=Language Settings | 30000 |
-| click_and_wait | link=Language Settings | 30000 |
-| wait_for_element_visible_ok | locale | 30000 |
-| is_selected_ok | locale | label=English (Default) |
-| select_and_wait | locale | label=zz - DEV_MODE ONLY |
-| wait_for_text_present_ok | Zzzzzzz Zzzzz | 30000 |
-| is_selected_ok | locale | label=zz - DEV_MODE ONLY |
+| wait_for_element_visible_ok | %%locale%% | 15000 |
+| is_selected_ok | %%locale%% | label=English |
+| select_ok | %%locale%% | label=zz - DEV_MODE ONLY |
+| click_ok | link=Save |  |
+| wait_for_text_present_ok | Saved | 15000 |
+| open_ok | /st/settings |  |
+| wait_for_text_present_ok | Zzzzzzz Zzzzz | 15000 |
+| is_selected_ok | %%locale%% | label=zz - DEV_MODE ONLY |
 
 | *Comment* | Test Case: Settings: Custom Language - login as %%username%%, see ENGLISH |  |
 | st-logoutin | %%username%% | %%password%% |
-| wait-for-element-visible-ok | link=Settings | 30000 |
+| wait-for-element-visible-ok | link=Settings | 15000 |
 | click_and_wait | link=Settings |  |
-| wait_for_element_visible_ok | link=Language Settings | 30000 |
-| click_and_wait | link=Language Settings |  |
-| wait_for_element_visible_ok | locale | 30000 |
-| is_selected_ok | locale | label=English (Default) |
+| wait_for_element_visible_ok | %%locale%% | 15000 |
+| is_selected_ok | %%locale%% | label=English |
 
 | *Comment* | Test Case: Settings: Custom Language - Test ServerWide Settings |  |
 | st-logout |  |  |
 | st-config | set locale zz |  |
 | open_ok | / |  |
-| wait_for_text_present_ok | Zzz zz zz Zzzzzzzzzz | 30000 |
-| text_unlike | //body | Log in to Socialtext |
+| wait_for_text_present_ok | Zzz Zz | 15000 |
+| text_unlike | //body | Log in |
 | st-config | set locale en |  |
 | open_ok | / |  |
-| wait_for_text_present_ok | Log in to Socialtext | 30000 |
-| text_unlike | //body | Zzz zz zz Zzzzzzzzzz |
+| wait_for_text_present_ok | Log in | 15000 |
+| text_unlike | //body | Zzz Zz |
 
 | *Comment* | Test Case: Settings: Custom Language TEARDOWN |  |
 | st-process-jobs |  |  |
-| delete-account | %%acct%% | Recklessly deleting |
 | st-admin | deactivate-user --email %%custom_user%% | been removed |
 | delete-workspace | %%ws%% | Recklessly deleting |
+| delete-account | %%acct%% | Recklessly deleting |
 
 | *Comment* | Test Case: Settings: Custom Language COMPLETED |  |

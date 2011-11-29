@@ -1,0 +1,8 @@
+[% SWITCH event.action %]
+    [%- CASE 'signal' -%]
+        [% UNLESS event.context.in_reply_to %]
+            <img class="asset-icon" src="[% this.static_path %]/images/icons/conversation-black-25.png"/>
+        [% END %]
+    [%- CASE "like" -%]<img class="asset-icon" src="[% this.static_path %]/images/icons/thumbsup-black-25.png"/>
+    [%- CASE "unlike" -%]<img class="asset-icon" src="[% this.static_path %]/images/icons/thumbsdown-black-25.png"/>
+[% END %]

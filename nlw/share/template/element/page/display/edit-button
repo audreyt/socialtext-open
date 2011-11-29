@@ -1,0 +1,17 @@
+[%# vim: set et sts=2 sw=2: %]
+[% IF page_locked_for_user %]
+  <span style="cursor: default !important;" class="ui-button ui-widget ui-state-inactive ui-corner-all ui-button-text-icon-primary locked-page" title="[% loc('page.locked') %]" id="locked-indicator"><span class="ui-button-text">[% loc('page.locked') %]</span></span>
+[% ELSE %]
+  [% UNLESS page.is_spreadsheet && !current_workspace.enable_spreadsheet %]
+    [% UNLESS page.is_xhtml && !current_workspace.enable_xhtml %]
+      [% IF checker.check_permission('edit') %]
+        <a title="[% loc('info.edit') %]" id="st-edit-button-link" href="#">[% loc('page.edit') %]</a>
+        </li>
+      [% ELSIF checker.check_permission('edit_controls') AND !page_locked_for_user %]
+        <a title="[% loc('info.edit') %]" id="st-login-to-edit-button-link" href="[% login_and_edit_path %]">[% loc('page.edit') %]</a>
+      [% ELSIF self_registration and checker.check_permission('self_join') and ! checker.check_permission('edit') %]
+        <a title="[% loc('page.join-to-edit!') %]" id="st-wikinav-register" href="/nlw/join.html?workspace_name=[% current_workspace.name%];redirect_to=[% current_workspace.uri %]">[% loc('page.join-to-edit') %]</a>
+      [% END %]
+    [% END %]
+  [% END %]
+[% END %]

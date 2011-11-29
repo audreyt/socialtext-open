@@ -1,0 +1,6 @@
+<span class="attachment">
+    <input type="hidden" class="id" value="[% temp_id %]"/>
+    <img class="icon" src="[% this.share %]/images/little-doc.gif"/>
+    <span class="filename">[% filename %]</span>
+    [<a class="remove" href="#">x</a>];
+</span>

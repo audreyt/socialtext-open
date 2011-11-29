@@ -1,0 +1,10 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[% USE decorate %]
+[% USE JSON %]
+<script charset="utf-8" type="text/javascript">
+var st = new Socialtext([% js_bootstrap.json %]);
+[% IF js_bootstrap %]st.setupLegacy();[% END %]
+[% FILTER decorate('js-bootstrap') %]
+[% END %]
+</script>

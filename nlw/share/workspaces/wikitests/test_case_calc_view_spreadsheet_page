@@ -1,7 +1,7 @@
 | *Comment* | STARTING Test Case Calc: View Spreadsheet Page |  |
 | open_ok | /%%workspace%%/index.cgi?car_loan |  |
 | wait_for_element_present_ok | st-edit-button-link |  |
-| pause | 5000 | I hate pause; needed for entire page load |
+| pause | 15000 | I hate pause; needed for entire page load |
 | verify_text | cell_A27 | This loan is offered through the Biggie Motors Automation Corporation |
 | verify_text | cell_B17 | 3890.40 |
 | verify_text | cell_B3 | Loan Amount |

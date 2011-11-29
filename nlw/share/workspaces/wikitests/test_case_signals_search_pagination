@@ -1,4 +1,4 @@
-| *Comment* | Test Case: Signals Search Pagination |
+| *Comment* | Test Case: Signals Search Pagination |  |
 
 * Fixture: SocialWidgets
 
@@ -113,22 +113,22 @@
 | wait_for_element_visible_ok | sort-picker | 30000 |
 | select_and_wait | sort-picker | label=Sender |
 
- wait_for_text_present_ok | Pagination %%start_time%% 22 | 30000 |
+wait_for_text_present_ok | Pagination %%start_time%% 22 | 30000 |
 wait_for_text_present_ok | Pagination %%start_time%% 3 | 30000 |
 
- text-like | qr/%%a_name%%.+%%start_time%% 22.+%%a_name%%.+%%start_time%% 3/ism | |
+text-like | qr/%%a_name%%.+%%start_time%% 22.+%%a_name%%.+%%start_time%% 3/ism | |
 
 | select_and_wait | sort-picker | label=Newest |
 | wait_for_text_present_ok | Pagination %%start_time%% 62 | 30000 |
 | wait_for_text_present_ok | Pagination %%start_time%% 43 | 30000 |
 
- text-like | qr/%%z_name%%.+%%start_time%% 62.+%%z_name%%.+%%start_time%% 43/ism | |
+text-like | qr/%%z_name%%.+%%start_time%% 62.+%%z_name%%.+%%start_time%% 43/ism | |
 
 | select_and_wait | sort-picker | label=Oldest |
 | wait_for_text_present_ok | Pagination %%start_time%% 1 | 30000 |
 | wait_for_text_present_ok | Pagination %%start_time%% 20 | 30000 |
 
- text-like | qr/%%a_name%%.+%%start_time%% 1.+%%a_name%%.+%%start_time%% 20/ism | |
+text-like | qr/%%a_name%%.+%%start_time%% 1.+%%a_name%%.+%%start_time%% 20/ism | |
 
 | *Comment* | Test Case: Signals Search Pagination. Relevance. %%username%% Sends a more relevant signal AND a newer signal |  |  |
 | http-user-pass | %%username%% | %%password%% |  |
@@ -164,12 +164,12 @@ wait_for_text_present_ok | Pagination %%start_time%% 3 | 30000 |
 | open_ok | /st/signals |  |
 | wait_for_text_present_ok | Showing | 30000 |
 | wait_for_text_present_ok | LessRelevant %%start_time%% 64 | 30000 |
-| wait_for_element_present_ok | //a[@class='hoverLink hideLink'] | 5000 |
-| click_ok | //a[@class='hoverLink hideLink'] |  |
+| wait_for_element_present_ok | //a[@class='hideLink'] | 15000 |
+| click_ok | //a[@class='hideLink'] |  |
 | verifyConfirmation | Are you sure you want to delete this Signal?\nYou cannot undelete it. |  |
 | wait_for_text_not_present_ok | LessRelevant %%start_time%% 64 | 20000 |
 
-| st-process-jobs | SignalIndex |
+| st-process-jobs | SignalIndex |  |
 
 | *Comment* | Test Case: Signals Search Pagination. open Signals to verify hidden deleted signal |  |
 | open_ok | /?signals |  |
@@ -189,9 +189,9 @@ wait_for_text_present_ok | Pagination %%start_time%% 3 | 30000 |
 | *Comment* | Test Case: Signals Search Pagination. Verify no delete for non-sender %%z_username%% |  |
 | st-logoutin | %%x_username%% | %%password%% |
 | open_ok | /?signals |  |
-| wait_for_element_not_present_ok | //a[@class='hoverLink hideLink'] | 5000 |
+| wait_for_element_not_present_ok | //a[@class='hoverLink hideLink'] | 15000 |
 
-| *Comment* | Test Case: Signals Search Pagination TEARDOWN |
+| *Comment* | Test Case: Signals Search Pagination TEARDOWN |  |
 | st-process-jobs |  |  |
 | deactivate-user | %%a_username%% |  |
 | deactivate-user | %%x_username%% |  |
@@ -199,4 +199,4 @@ wait_for_text_present_ok | Pagination %%start_time%% 3 | 30000 |
 | st-admin | remove-member --e %%username%% --account %%sspacct%% | no longer |
 | delete-account | %%sspacct%% |  |
 
-| *Comment* | Test Case: Signals Search Pagination COMPLETED |
+| *Comment* | Test Case: Signals Search Pagination COMPLETED |  |

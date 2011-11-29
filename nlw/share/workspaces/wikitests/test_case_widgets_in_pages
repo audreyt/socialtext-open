@@ -1,72 +1,80 @@
-
 | *Comment* | Test Case: Widgets In Pages |  |
 
+| set | wip_ws | widgets_wiki_%%start_time%% |  |
+| set | wip_page | widgets_page_%%start_time%% |  |
+| set | wip_user | `wip_user_%%start_time%%@david.socialtext.net` |  |
+| create_workspace | %%wip_ws%% |  |  |
+| create_user | %%wip_user%% | %%password%% |  |
+| st-admin | add-member --workspace %%wip_ws%% --email %%username%% | now has the role |  |
+| st-admin | add-member --workspace %%wip_ws%% --email %%wip_user%% | now has the role |  |
 
-| set | wip_ws | widgets_wiki_%%start_time%% |
-| set | wip_page | widgets_page_%%start_time%% |
-| set | wip_user | `wip_user_%%start_time%%@david.socialtext.net` |
-| create_workspace | %%wip_ws%% |  |
-| create_user | %%wip_user%% | %%password%% |
-| st-admin | add-member --workspace %%wip_ws%% --email %%username%% | now has the role |
-| st-admin | add-member --workspace %%wip_ws%% --email %%wip_user%% | now has the role |
+| *Comment* | Test Case: Widgets In Pages make a new WYSIWYG page |  |  |
 
-| *Comment* | Test Case: Widgets In Pages make a page |  |
-| open_ok | /%%wip_ws%%/?action=new_page |  |
-| wait_for_element_visible_ok | st-mode-wikitext-button | 30000 |
-| click_ok | st-mode-wikitext-button |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| type_ok | st-newpage-pagename-edit | %%wip_page%% |
+| call | [st-new-page-wysiwyg] | ws=%%workspace%% | title=%%wip_page%% |
 
-| *Comment* | Test Case: Widgets in Pages test widget buttons, lightbox |  |
-| wait_for_element_visible_ok | wikiwyg_button_widget | 30000 |
-| click_ok | wikiwyg_button_widget |  |
-| wait_for_element_visible_ok | st-widget-opensocial-gallery-cancel | 30000 |
-| wait_for_element_visible_ok | st-widget-opensocial-gallery-widgets | 30000 |
-| wait_for_text-present_ok | Socialtext widgets | 30000 |
-| wait_for_text-present_ok | Third Party widgets | 30000 |
+| *Comment* | Test Case: Widgets in Pages test widget icon, lightbox |  |
+| wait_for_element_present_ok | //a[contains(@class,"cke_button_st_widget")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_st_widget")] | 15000 |
+| wait_for_element_visible_ok | st-widget-opensocial-gallery-widgets | 15000 |
+| wait_for_text-present_ok | Socialtext widgets | 15000 |
+| wait_for_text-present_ok | Third Party widgets | 15000 |
 | text_like | qr/Socialtext widgets.+Third Party widgets/ |  |
-| click_ok | st-widget-opensocial-gallery-cancel |  |
+| click_ok | //span[@class='ui-icon ui-icon-closethick'] |  |
 | wait_for_element_not_present_ok | st-widget-opensocial-gallery-widgets | 15000 |
-| wait_for_element_present_ok | link=Widget... | 30000 |
-| click_ok | link=Widget... |  |
-| wait_for_element_visible_ok | st-widget-opensocial-gallery-widgets | 30000 |
-| wait_for_text-present_ok | Socialtext widgets | 30000 |
-| wait_for_text-present_ok | Third Party widgets | 30000 |
 
-| *Comment* | Test Case: Widgets in Pages add All People Tags *Add Active Content Widget* |  |
+| *Comment* | Test Case: Widgets in Pages test widget link in Insert menu, lightbox |  |
+| select_frame_ok | //iframe |  |
+| click_ok | //body |  |
+| select_frame_ok | relative=parent |  |
+
+| wait_for_element_present_ok | link=Widget... | 15000 |
+| click_ok | link=Widget... |  |
+| wait_for_element_visible_ok | st-widget-opensocial-gallery-widgets | 15000 |
+| wait_for_text-present_ok | Socialtext widgets | 15000 |
+| wait_for_text-present_ok | Third Party widgets | 15000 |
+
+| *Comment* | Test Case: Widgets in Pages add Active Content Widget |  |
 | text_like | qr/Socialtext widgets.+Third Party widgets/ |  |
 | text_like | qr/Active Content/ |  |
-| pause | 10000 | wait for JS to load |
-| wait_for_element_visible_ok | //a[@id='gallery-widget-Active Content'] | 30000 |
+| pause | 15000 | wait for JS to load |
+| wait_for_element_visible_ok | //a[@id='gallery-widget-Active Content'] | 15000 |
 | click_ok | //a[@id='gallery-widget-Active Content'] |  |
-| wait_for_text_present_ok | Edit Widget | 30000 |
-| wait_for_element_visible_ok | st-widget-opensocial-setup-width-options | 30000 |
-| wait_for_element_visible_ok | //input[@value='Preview'] | 30000 |
+| wait_for_text_present_ok | Edit Widget | 15000 |
+| wait_for_element_visible_ok | st-widget-opensocial-setup-width-options | 15000 |
+| wait_for_element_visible_ok | //input[@value='Preview'] | 15000 |
 | click_ok | //input[@value='Preview'] |  |
-| wait_for_element_visible_ok | st-widget-opensocial-setup-cancel | 30000 |
-| wait_for_element_visible_ok | st-widget-opensocial-setup-save | 30000 |
+| wait_for_element_visible_ok | st-widget-opensocial-setup-cancel | 15000 |
+| wait_for_element_visible_ok | st-widget-opensocial-setup-save | 15000 |
 | click_ok | st-widget-opensocial-setup-save |  |
-| wait_for_element_not_present_ok | st-widget-opensocial-gallery-widgets | 15000 |
-| verifyValue | wikiwyg_wikitext_textarea | `{widget: top_content __title__=Active%20Content __width__=600` |
+| wait_for_element_not_present_ok | st-widget-opensocial-gallery-widgets | 30000 |
+| wait_for_element_present_ok | //a[contains(@class,"cke_button_wikitext")] | 15000 |
+| click_and_pause | //a[contains(@class,"cke_button_wikitext")] | 15000 |
+| verifyValue | //textarea[@class="cke_source cke_enable_context_menu"] | `{widget: top_content __title__=Active%20Content __width__=600` |
 
 | *Comment* | Test Case: Widgets in Pages add 2nd widget, see sequential number |  |
+| click_and_pause | //a[contains(@class,"cke_button_wysiwyg")] | 15000 |
+| select_frame_ok | //iframe |  |
+| click_ok | //body |  |
+| select_frame_ok | relative=parent |  |
+
 | click_ok | link=Widget... |  |
-| wait_for_element_visible_ok | st-widget-opensocial-gallery-widgets | 30000 |
-| wait_for_text-present_ok | Socialtext widgets | 30000 |
-| wait_for_text-present_ok | Third Party widgets | 30000 |
-| pause | 10000 | wait for JS to load |
-| wait_for_element_visible_ok | //a[@id='gallery-widget-Active Content'] | 30000 |
+| wait_for_element_visible_ok | st-widget-opensocial-gallery-widgets | 15000 |
+| wait_for_text-present_ok | Socialtext widgets | 15000 |
+| wait_for_text-present_ok | Third Party widgets | 15000 |
+| pause | 15000 | wait for JS to load |
+| wait_for_element_visible_ok | //a[@id='gallery-widget-Active Content'] | 15000 |
 | click_ok | //a[@id='gallery-widget-Active Content'] |  |
-| wait_for_text_present_ok | Edit Widget | 30000 |
-| wait_for_element_visible_ok | st-widget-opensocial-setup-width-options | 30000 |
-| wait_for_element_visible_ok | //input[@value='Preview'] | 30000 |
+| wait_for_text_present_ok | Edit Widget | 15000 |
+| wait_for_element_visible_ok | st-widget-opensocial-setup-width-options | 15000 |
+| wait_for_element_visible_ok | //input[@value='Preview'] | 15000 |
 | click_ok | //input[@value='Preview'] |  |
-| wait_for_element_visible_ok | st-widget-opensocial-setup-cancel | 30000 |
-| wait_for_element_visible_ok | st-widget-opensocial-setup-save | 30000 |
+| wait_for_element_visible_ok | st-widget-opensocial-setup-cancel | 15000 |
+| wait_for_element_visible_ok | st-widget-opensocial-setup-save | 15000 |
 | click_ok | st-widget-opensocial-setup-save |  |
-| wait_for_element_not_present_ok | st-widget-opensocial-gallery-widgets | 15000 |
-| verifyValue | wikiwyg_wikitext_textarea | `{widget: top_content#2 __title__=Active%20Content __width__=600` |
+| wait_for_element_not_present_ok | st-widget-opensocial-gallery-widgets | 30000 |
+| wait_for_element_present_ok | //a[contains(@class,"cke_button_wikitext")] | 15000 |
+| click_and_pause | //a[contains(@class,"cke_button_wikitext")] | 15000 |
+| verifyValue | //textarea[@class="cke_source cke_enable_context_menu"] | `{widget: top_content#2 __title__=Active%20Content __width__=600` |
 
 | *Comment* | Test Case: Widgets in Pages save page, check widgets |  |
 | click_and_wait | st-save-button-link |  |
@@ -74,7 +82,7 @@
 
 | *Comment* | Test Case: Widgets in Pages TEARDOWN |  |
 | st-process-jobs |  |  |
-| st-admin | delete-workspace --workspace %%wip_ws%% --no-export | has been deleted |
+| delete-workspace | %%wip_ws%% |  |
 | st-admin | deactivate-user --email %%wip_user%% | has been |
 
 | *Comment* | Test Case: Widgets in Pages COMPLETED |  |

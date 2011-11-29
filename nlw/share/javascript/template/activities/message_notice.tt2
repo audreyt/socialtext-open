@@ -1,0 +1,29 @@
+[% MACRO person BLOCK %]
+    <a target="_blank" class="person" href="/?profile/[% user_id %]">[% best_full_name %]</a>
+[% END %]
+[% IF className == 'private' %]
+    <span>[% loc('activities.composing-private-message-to=person', person) %]</span>
+[% ELSIF className == 'mention' %]
+    <span>
+        [% IF user_id == viewer_id %]
+            [% IF isPrivate %]
+                [% loc('info.private-signal-to-self') %]
+            [% ELSE %]
+                [% loc('info.signal-to-self') %]
+            [% END %]
+        [% ELSE %]
+            [% IF isPrivate %]
+                [% loc('activities.composing-private-message-to=person', person) %]
+            [% ELSE %]
+                [% loc('activities.composing-message-to=user', person) %]
+            [% END %]
+        [% END %]
+        (<label>[% loc('activities.make-signal-private') %] <input class="toggle-private" [% IF isPrivate %]checked="checked"[% END %] type="checkbox"/></label>)
+    </span>
+[% ELSIF className == 'reply' %]
+    <span>[% loc('activities.composing-reply-to=person', person) %]</span>
+[% ELSIF className == 'restrictiveFilters' %]
+    <span>[% loc('activities.signal-sent-click-to-adjust-filters') %]</span>
+[% ELSIF className == 'newMessages' %]
+    <span><a href="#" class="update">[% loc('activities.new=count', new_count) %]</a></span>
+[% END %]

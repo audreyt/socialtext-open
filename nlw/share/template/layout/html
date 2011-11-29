@@ -1,0 +1,176 @@
+[%# vim: set et sts=2 sw=2: -%]
+[%# This file will create a template that will later be rendered for a user %]
+[%- USE html_encode -%]
+[%- USE decorate -%]
+[%- USE label_ellipsis -%]
+
+[%- MACRO desktop_link BLOCK -%]
+<a id="[% id %]" href="[% desktop_url %]" target="_blank"
+   onclick="st.editor.showLightbox({'title': loc('nav.desktop'), 'extraHeight': 0, 'html': '<div width=100% style=text-align:center><iframe src=[% desktop_url %] width=480 height=300 scrolling=no border=0 style=margin:15px;background:url(/static/images/ajax-loader.gif);background-repeat:no-repeat;background-position:center></iframe></div>'}); return false">[% loc('nav.desktop') %]</a>
+[%- END -%]
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><!-- UserFrame -->
+  <head>
+    <title>[% title || display_title |html %][% IF workspace_present AND wiki.title %] / [% wiki.title |html %][% END %]</title>
+
+    [% IF theme.account_favicon %]
+      <link rel="shortcut icon" type="image/x-icon" href="[% theme.account_favicon %]" />
+    [% END %]
+    <link rel="stylesheet" type="text/css" href="/data/accounts/[% user.primary_account_id %]/theme/style.css?[% app_version %]" />
+
+    [% IF feeds %]
+      [% IF feeds.rss %]
+        [% FOREACH feed IN feeds.rss %]
+    <link rel="alternate" type="application/rss+xml" title="[% feed.value.title | html_encode %]" href="[% feed.value.url %]" />
+        [% END %]
+      [% END %]
+
+      [% IF feeds.atom %]
+        [% FOREACH feed IN feeds.atom %]
+    <link rel="alternate" type="application/atom+xml" title="[% feed.value.title | html_encode %]" href="[% feed.value.url %]" />
+        [% END %]
+      [% END %]
+
+      [% IF feeds.json %]
+        [% FOREACH feed IN feeds.json %]
+    <link rel="alternate" type="application/json" title="[% feed.value.title | html_encode %]" href="[% feed.value.url %]" />
+        [% END %]
+      [% END %]
+    [% END %]
+
+    <link rel="apple-touch-icon" href="/static/skin/common/images/apple-touch-icon.png"/>
+
+    <script>
+      var ADAPT_CONFIG = {
+        path: '/st/grids/24/',
+        dynamic: true,
+        range: [
+          '0px    to 1100px = 960',
+          '1100px to 1280px = 1080',
+          '1280px to 1600px = 1200',
+          '1600px to 1920px = 1560',
+          '1940px to 2540px = 1920',
+          '2540px           = 2520'
+        ]
+      };
+    </script>
+
+    [% javascript = javascript || [] %] 
+    [% javascript.unshift("l10n-${loc_lang}.jgz") %]
+    [% javascript.unshift("socialtext-starfish.jgz") %]
+    [% FOR js IN javascript %]
+      <script type="text/javascript" charset="utf-8" src="/js/[% app_version %]/[% js %]"></script>
+    [% END %]
+
+    <script>
+        var containerID = "[% container.id %]";
+        loc.all_widgets();
+    </script>
+
+    [% INCLUDE 'element/wiki/js-bootstrap' %]
+    [% INCLUDE 'widget/syndicator' %]
+
+    [% IF head_template %]
+      [% INCLUDE $head_template %]
+    [% END %]
+
+    <meta name="keywords" content="[% loc('about.keywords') %]"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+  </head>
+  <body class="starfish" onload="if (typeof Socialtext != 'undefined') Socialtext.body_loaded = true">
+    <style><!--
+        body { visibility: hidden; }
+    --></style>
+    <header>
+      <div class="container_24">
+        <div class="grid_12 title">
+          [% IF theme.account_logo %]
+          <a href="/"><img src="[% theme.account_logo %]" /></a>
+          [% END %]
+        </div>
+        <div class="grid_12">
+          <div class="topLinks right">
+            [% UNLESS user.is_guest %]
+              <span id="st-wikinav-profile">[% loc('nav.welcome=id,name', user.userid, user.username) %]</span>
+              <span class="pad5"></span>
+              <span id="st-wikinav-setting"><a href="/st/settings">[% loc('nav.settings') %]</a></span> |
+            [% END %]
+            [% IF user.is_business_admin %]
+                <span><a href="/nlw/control">[% loc('nav.control-panel') %]</a></span> |
+            [% END %]
+            <span id="st-wikinav-help"><a href="/help/" target="_blank">[% loc('nav.help') %]</a></span>
+            <span class="pad5"></span>
+            [% SET wiki_uri = wiki.uri | html %]
+            [% IF user.is_guest %]
+              [% IF self_registration AND NOT checker.check_permission('self_join') %]
+                [% INCLUDE element/button
+                  id='st-wikinav-login'
+                  href="/challenge?$wiki_uri"
+                  text=loc('nav.login')
+                %]
+                [% INCLUDE element/button
+                  href="/nlw/register.html?redirect_to=$hub.current_workspace.uri"
+                  text=loc('nav.register')
+                %]
+              [% ELSE %]
+                [% INCLUDE element/button
+                  id="st-wikinav-login"
+                  href="/challenge?$wiki_uri"
+                  text=loc('nav.login')
+                %]
+              [% END %]
+            [% ELSE %]
+              [% SET redir = wiki.is_public ? "?redirect_to=$wiki_uri" : "" %]
+              [% INCLUDE element/button
+                id="logout_btn"
+                href="/nlw/submit/logout" _ redir
+                text=loc('nav.logout')
+              %]
+            [% END %]
+          </div>
+
+          <div class="searchForm">
+            [% INCLUDE element/search_form
+                IF !user.is_guest || workspace_present %]
+          </div>
+        </div>
+        <div class="clear"></div>
+      </div>
+    </header>
+
+    <div class="container_24">
+      <div id="globalNav">
+        [% INCLUDE element/main_nav | decorate('nav') %]
+      </div>
+      [% IF system_status %]
+        <div id="st-system-status">
+        <div class="grid_24">[% system_status %]</div>
+        <div class="clear"></div>
+        </div>
+      [% END %]
+      <div id="content">[% content %]</div>
+
+      <footer>
+        <div class="grid_3 socialtext">
+          <img alt="[% loc('nav.socialtext-logo') %]" src="[% static_path %]/images/icons/[% theme.st_logo_shade %]/socialtext-logo.png"/>
+        </div>
+        <div class="grid_17 tagline">
+          [% loc('nav.enterprise-social-software') %] v[% app_version %]
+          <span class="divider"></span>
+          <a href="http://www.socialtext.net/exchange" target="_blank">[% loc('nav.community') %]</a>
+        </div>
+        <div class="grid_4 links">
+          <a id="st-footer-link-mobile" href="[% miki_url |html %]">[% loc('nav.mobile') %]</a>
+          [% IF desktop_url %]
+            <span class="divider"></span>
+            [%- desktop_link(id="st-footer-link-desktop") -%]
+          [% END %]
+        </div>
+      </footer>
+      <div class="clear"></div>
+    </div>
+    [% FILTER decorate('body_end') %]
+    [% END %]
+  </body>
+</html>

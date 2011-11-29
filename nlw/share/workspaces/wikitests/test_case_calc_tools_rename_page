@@ -3,7 +3,7 @@
 | *Comment* | Test Case: Calc Tools: Rename Page Create test page |  |
 | open_ok | /%%workspace%%/index.cgi?action=display;page_type=spreadsheet;page_name=Rename%20Spreadsheet%20%%start_time%%#edit |  |
 | wait_for_element_visible_ok | st-save-button-link |  |
-| pause | 5000 | I hate pause; needed for entire page load |
+| pause | 15000 | I hate pause; needed for entire page load |
 | st-page-save |  |  |
 
 | wait_for_element_visible_ok | link=Add Tag | 30000 |
@@ -24,16 +24,15 @@
 
 | *Comment* | Test Case: Calc Tools: Rename Page Test Rename popup, verify rename |  |
 
-| location_like | `/%%workspace%%/renamed_spreadsheet_%%start_time%%` |  |
-| wait_for_element_visible_ok | contentRight | 30000 |
-| text_like | contentRight | SC Rename Tag %%start_time%% |
+| location_like | `/%%workspace%%/Renamed_Spreadsheet_%%start_time%%` |  |
+| text_like | SC Rename Tag %%start_time%% |  |
 | st_check_files_if_highperms | wikitest.jpg |  |
 | text_like | st-page-titletext | Renamed_Spreadsheet_%%start_time%% |
 | click_and_wait | link=Rename Spreadsheet %%start_time%% |  |
 | text_like | st-page-titletext | Rename Spreadsheet %%start_time%% |
-| text_like | contentContainer | Page renamed to Renamed_Spreadsheet_%%start_time%% |
-| click_and_wait | controls-right-revisions |  |
-| text_like | contentContainer | qr/Revision 2/ |
+| text_like | content | Page renamed to Renamed_Spreadsheet_%%start_time%% |
+| click_and_wait | link=3 Revisions |  |
+| text_like | content | qr/Revision 2/ |
 
 | open_ok | /%%workspace%%/?Renamed_Spreadsheet_%%start_time%% |  |
 | wait_for_element_visible_ok | link=SC Rename Tag %%start_time%% | 30000 |
@@ -56,12 +55,12 @@
 | wait_for_element_visible_ok | st-rename-error | 30000 |
 | text_like | st-rename-error | The new page name you selected, "Rename Spreadsheet %%start_time%%", is already in use. Please choose a different name. |
 | click_and_wait | st-rename-savelink |  |
-| click_and_wait | controls-right-revisions |  |
-| text_like | contentContainer | Revision 2 |
+| click_and_wait | link=4 Revisions |  |
+| text_like | content | Revision 2 |
 
 | *Comment* | Test Case: Calc Tools: Rename Page TEARDOWN |  |
 | st-process-jobs |  |  |
 | st-admin | purge-page --w %%workspace%% --page rename_spreadsheet_%%start_time%% | was purged |
 | st-admin | purge-page --w %%workspace%% --page renamed_spreadsheet_%%start_time%% | was purged |
 
-| *Comment* | Test Case: Calc Tools: Rename Page COMPLETED |
+| *Comment* | Test Case: Calc Tools: Rename Page COMPLETED |  |

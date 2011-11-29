@@ -5,6 +5,7 @@ use strict;
 use Socialtext::WebHook;
 use base 'Socialtext::Pluggable::Plugin';
 use List::MoreUtils qw/all/;
+use Socialtext::SQL qw(sql_timestamptz_now);
 
 use constant scope => 'account';
 use constant hidden => 1; # hidden to admins
@@ -14,11 +15,119 @@ use constant is_hook_enabled => 1;
 sub register {
     my $self = shift;
 
-    $self->add_hook("nlw.user.deactivate"   => \&deactivate_user);
-    $self->add_hook("nlw.signal.new"        => \&signal_new);
-    $self->add_hook("nlw.page.update"       => \&page_update);
-    $self->add_hook("nlw.page.watch"        => \&page_watch);
-    $self->add_hook("nlw.page.unwatch"      => \&page_unwatch);
+    $self->add_hook("nlw.user.deactivate"       => \&deactivate_user);
+    $self->add_hook("nlw.user.activate"         => \&activate_user);
+    $self->add_hook("nlw.signal.new"            => \&signal_new);
+    $self->add_hook("nlw.page.update"           => \&page_update);
+    $self->add_hook("nlw.page.watch"            => \&page_watch);
+    $self->add_hook("nlw.page.unwatch"          => \&page_unwatch);
+    $self->add_hook("nlw.add_user_account_role" => \&user_account_join);
+    $self->add_hook("nlw.remove_user_account_role" => \&user_account_leave);
+    $self->add_hook("nlw.user.create"       => \&create_user);
+}
+
+sub create_user {
+    my $self = shift;
+    my $user = shift;
+
+    my $user_hash = $user->to_hash();
+    delete $user_hash->{password};
+    Socialtext::WebHook->Add_webhooks(
+        class => 'user.create',
+        user => $user,
+        payload_thunk => sub { 
+            return {
+                class => 'user.create',
+                actor => {
+                    id             => $self->user->user_id,
+                    best_full_name => $self->user->best_full_name,
+                },
+                at     => sql_timestamptz_now(),
+                object => $user_hash,
+            };
+        },
+    );
+}
+
+sub user_account_leave {
+    my $self = shift;
+    my $account = shift;
+    my $user = shift;
+    my $role = shift;
+
+    my $user_hash = $user->to_hash();
+    delete $user_hash->{password};
+    Socialtext::WebHook->Add_webhooks(
+        class => 'user.leaveaccount',
+        user => $user,
+        payload_thunk => sub { 
+            return {
+                class => 'user.leaveaccount',
+                actor => {
+                    id             => $self->user->user_id,
+                    best_full_name => $self->user->best_full_name,
+                },
+                at     => sql_timestamptz_now(),
+                object => {
+                    user => $user_hash,
+                    account => $account->to_hash,
+                    role => defined($role) ? $role->name : '',
+                },
+            };
+        },
+    );
+}
+
+sub user_account_join {
+    my $self = shift;
+    my $account = shift;
+    my $user = shift;
+    my $role = shift;
+
+    my $user_hash = $user->to_hash();
+    delete $user_hash->{password};
+    Socialtext::WebHook->Add_webhooks(
+        class => 'user.joinaccount',
+        user => $user,
+        payload_thunk => sub { 
+            return {
+                class => 'user.joinaccount',
+                actor => {
+                    id             => $self->user->user_id,
+                    best_full_name => $self->user->best_full_name,
+                },
+                at     => sql_timestamptz_now(),
+                object => {
+                    user => $user_hash,
+                    account => $account->to_hash,
+                    role => defined($role) ? $role->name : '',
+                },
+            };
+        },
+    );
+}
+
+sub activate_user {
+    my $self = shift;
+    my $user = shift;
+
+    my $user_hash = $user->to_hash();
+    delete $user_hash->{password};
+    Socialtext::WebHook->Add_webhooks(
+        class => 'user.activate',
+        user => $user,
+        payload_thunk => sub { 
+            return {
+                class => 'user.activate',
+                actor => {
+                    id             => $self->user->user_id,
+                    best_full_name => $self->user->best_full_name,
+                },
+                at     => sql_timestamptz_now(),
+                object => $user_hash,
+            };
+        },
+    );
 }
 
 sub deactivate_user {
@@ -27,6 +136,24 @@ sub deactivate_user {
 
     # Delete all webhooks created by this user
     $_->delete for @{ Socialtext::WebHook->Find(creator_id => $user->user_id) };
+
+    my $user_hash = $user->to_hash();
+    delete $user_hash->{password};
+    Socialtext::WebHook->Add_webhooks(
+        class => 'user.deactivate',
+        user => $user,
+        payload_thunk => sub { 
+            return {
+                class => 'user.deactivate',
+                actor => {
+                    id             => $self->user->user_id,
+                    best_full_name => $self->user->best_full_name,
+                },
+                at     => sql_timestamptz_now(),
+                object => $user_hash,
+            };
+        },
+    );
 }
 
 sub signal_new {

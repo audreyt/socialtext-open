@@ -41,6 +41,7 @@ TEST_JOBS = 4
 SERIAL_UNIT_TESTS = $(shell grep -l 'fixtures(.*serial.*)' -r t | grep '\.t$$' | grep -v '^t/live/' | dev-bin/fixture-sort)
 PARALLEL_UNIT_TESTS = $(shell grep -L 'fixtures(.*serial.*)' -r t | grep '\.t$$' | grep -v '^t/live/' | dev-bin/fixture-sort)
 JS_TESTS  = $(shell find -L t/ -name '*.t.js')
+COFFEE_TESTS  = $(shell find -L t/ -name '*.t.coffee')
 WIKID_TESTS = $(shell find -L t/wikitests/ -name '*.wiki')
 
 # Program locations
@@ -54,9 +55,13 @@ CREATE_DB_USER = $(PERL) dev-bin/create-db-user
 # File sets that can be installed (use install-files to get all files)
 INSTALL_BASE = install-html       \
 	       install-template	  \
-               install-fonts      \
-               install-migrations \
                install-l10n \
+	       install-javascript \
+	       install-images \
+	       install-sass \
+               install-fonts      \
+               install-node_modules \
+               install-migrations \
                install-post-install \
                install-desktop \
 	       install-workspaces \
@@ -246,6 +251,7 @@ install-nlw-psgi: install-ok
 
 DIR=$(subst install-,,$@)
 $(INSTALL_FILE_TARGETS): install-ok 
+	@[ "$(DIR)" = "l10n" ] && ./dev-bin/l10n-make-po-js || true
 	$(INSTALL_ST) -d $(ST_INSTALL_DIR)/$(DIR)
 	$(CP_DIR) share/$(DIR) $(ST_INSTALL_DIR)
 	$(CHOWN_DIR_ST) $(ST_INSTALL_DIR)/$(DIR)
@@ -345,7 +351,7 @@ MANIFEST:
 tardist: MANIFEST $(PERL_MAKEFILE)
 	$(PERL_MAKE) tardist
 
-test: testreports testconsole testunit testwikid testjs
+test: testreports testconsole testunit testwikid testcoffee testjs
 
 testunit: testunit-parallel testunit-serial
 
@@ -360,6 +366,9 @@ testwikid:
 
 testjs:
 	@$(PROVE) --jobs $(TEST_JOBS) $(JS_TESTS)
+
+testcoffee:
+	@$(PROVE) --jobs $(TEST_JOBS) $(COFFEE_TESTS)
 
 testreports:
 	@cd ../socialtext-reports/ && $(PROVE) --jobs 1 t/

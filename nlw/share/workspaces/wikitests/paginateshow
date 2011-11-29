@@ -6,7 +6,7 @@ This test case is an aid to visually observing each screen type in the applicati
 | *Comment* | automation for visual inspection of control and console UI screens |  |
 
 | set | pws | pageme-workspace-%%start_time%% |  |
-| set_default | pt | 5000 | defaults to five seconds |
+| set_default | pt | 15000 | defaults to five seconds |
 | st-admin | create-workspace --name %%pws%% --title %%pws%% |  |  |
 | st-admin | add-member --username %%username%% --workspace %%pws%% |  |  |
 | st-create-pages | %%pws%% | 200 |  |

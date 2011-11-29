@@ -1,82 +1,20 @@
 * Fixture: SocialWidgets
 
-| *Comment* | Test Case: External Gadgets |  |
+| *Comment* | Test Case: External Gadgets uses [st-add-widget] |  |
 
-| set_timeout | 90000 | Widgets slow down open / a lot |
-
-| *Comment* | Test Case: External Gadgets. In order to pass in IE 6, clear the Dashboard every time or it times out |  |
-
-| *Comment* | Test Case: External Gadgets. Microsoft Outlook |  |
-| st_empty_container |  |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | //a[@id='gallery-widget-Microsoft Outlook'] | 30000 |
-| click_and_wait | //a[@id='gallery-widget-Microsoft Outlook'] |  |
-| text_like | contentContainer | Microsoft Outlook |
-
-| *Comment* | Test Case: External Gadgets. Youtube Video Player |  |
-| st_empty_container |  |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | //a[@id='gallery-widget-Youtube Video Player'] | 30000 |
-| click_and_wait | //a[@id='gallery-widget-Youtube Video Player'] |  |
-| text_like | contentContainer | Youtube Video Player |
-
-| *Comment* | Test Case: External Gadgets. SlideShare Feeds |  |
-| st_empty_container |  |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | //a[@id='gallery-widget-SlideShare Feeds'] | 30000 |
-| click_and_wait | //a[@id='gallery-widget-SlideShare Feeds'] |  |
-| text_like | contentContainer | SlideShare Feeds |
-
-| *Comment* | Test Case: External Gadgets. Wikipedia |  |
-| st_empty_container |  |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | //a[@id='gallery-widget-Wikipedia'] | 30000 |
-| click_and_wait | //a[@id='gallery-widget-Wikipedia'] |  |
-| text_like | contentContainer | Wikipedia |
-
-| *Comment* | Test Case: External Gadgets. Flickr Photos - English |  |
-| st_empty_container |  |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | //a[@id='gallery-widget-Flickr Photos - English'] | 30000 |
-| click_and_wait | //a[@id='gallery-widget-Flickr Photos - English'] |  |
-| text_like | contentContainer | Flickr Photos - English |
-
-| *Comment* | Test Case: External Gadgets. LabPixies Calculator |  |
-| st_empty_container |  |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | //a[@id='gallery-widget-LabPixies Calculator'] | 30000 |
-| click_and_wait | //a[@id='gallery-widget-LabPixies Calculator'] |  |
-| text_like | contentContainer | LabPixies Calculator |
-
-| *Comment* | Test Case: External Gadgets. Clock & Date |  |
-| st_empty_container |  |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | //a[contains(@id,'Date')] | 30000 |
-| click_and_wait | //a[contains(@id,'Date')] |  |
-| text_like | contentContainer | Clock & Date |
-
-| *Comment* | Test Case: External Gadgets. ToDo |  |
-| st_empty_container |  |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | //a[@id='gallery-widget-ToDo'] | 30000 |
-| click_and_wait | //a[@id='gallery-widget-ToDo'] |  |
-| text_like | contentContainer | ToDo |
-
-| *Comment* | Test Case: External Gadgets. Google Calendar. IGNORE ERRORS IN IE. |  |
-| st_empty_container |  |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | //a[@id='gallery-widget-Google Calendar'] | 30000 |
-| click_and_wait | //a[@id='gallery-widget-Google Calendar'] |  |
-| text_like | contentContainer | Google Calendar |
 | st_empty_container |  |  |
 
-| *Comment* | Test Case: External Gadgets COMPLETED |  |
+| call | st-add-widget | widget=Microsoft Outlook | widget_Title=Microsoft Outlook |
+| call | st-add-widget | widget=Youtube Video Player | widget_Title=Youtube Video Player |
+| call | st-add-widget | widget=SlideShare Feeds | widget_Title=SlideShare Feeds |
+| call | st-add-widget | widget=Wikipedia | widget_Title=Wikipedia |
+| call | st-add-widget | widget=Flickr Photos - English | widget_Title=Flickr Photos - English |
+| call | st-add-widget | widget=LabPixies Calculator | widget_Title=LabPixies Calculator |
+| call | st-add-widget | widget=Clock & Date | widget_Title=Clock & Date |
+| call | st-add-widget | widget=ToDo | widget_Title=ToDo |
+| call | st-add-widget | widget=Google Calendar | widget_Title=Google Calendar |
+| call | st-add-widget | widget=theXblogs™ | widget_Title=theXblogs™ |
+
+| st_empty_container |  |  |  |
+
+| *Comment* | Test Case: External Gadgets COMPLETED |  |  |

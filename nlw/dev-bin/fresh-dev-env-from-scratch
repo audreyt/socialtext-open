@@ -13,7 +13,7 @@ HELPEN=0
 FIXTURE='ALL'
 PAUSE=0
 UPDATE_WIDGETS=1
-MINIFY_JS=1
+MINIFY=1
 CONTEXTUAL=0
 STAGING=0
 DATABASE_LOCALE=en_US.UTF-8
@@ -21,7 +21,7 @@ while getopts "jhmbpwscC" OPT; do
   case $OPT in
     h) HELPEN=1;;
     m) FIXTURE=admin_no_pages;;
-    j) MINIFY_JS=0;;
+    j) MINIFY=0;;
     s) STAGING=1;;
     p) PAUSE=1;;
     w) UPDATE_WIDGETS=0;;
@@ -48,8 +48,6 @@ function rm_dir {
 }
 
 cd $(dirname $0)/..
-
-./dev-bin/create-skinlinks
 
 set -x
 PORT=$(($START_PORT+$UID)) ./configure --dev=1 \
@@ -88,6 +86,10 @@ dev-bin/st-make-all @all
 rm -f etc/socialtext/db/cache.*.sql
 dev-bin/make-test-fixture --home_dir $HOME --fixture clean
 dev-bin/make-test-fixture --home_dir $HOME --fixture base_config
+
+# Needs wikid to import legacy wiki pages
+NLWCTL_QUIET=1 dev-bin/nlwctl start -w
+
 dev-bin/make-test-fixture --home_dir $HOME --fixture $FIXTURE
 [ $DATABASE_LOCALE != 'C' ] && bin/st-db reset_db_locale $DATABASE_LOCALE
 [ $HELPEN == 1 ] && dev-bin/make-test-fixture --home_dir $HOME --fixture help
@@ -99,10 +101,13 @@ perl -le 'print "User-agent: *\nDisallow: /"' > ~/.nlw/root/docroot/robots.txt
 # Finish linking in external repos
 dev-bin/link-externals --all
 
+# Re-generate .po and .js files
+dev-bin/jsmake loc
+
 # Start the supervisor
 dev-bin/setup-supervisors start
 
-[ $MINIFY_JS == 0 ] && bin/st-config set minify_javascript 0
+[ $MINIFY == 0 ] && bin/st-config set minify_javascript 0 && bin/st-config set minify_css 0
 
 if [ $PAUSE == 0 ]; then
     echo "Starting nginx and apache-perl"
@@ -115,6 +120,10 @@ fi
 
 bin/st-admin enable-plugin --all-accounts --plugin dashboard \
     --plugin signals --plugin groups --plugin push --plugin analytics
+
+bin/st-admin enable-plugin --all-workspaces \
+    --plugin ckeditor \
+    --plugin socialcalc \
 
 bin/st-config set analytics_id UA-20106506-1 analytics_domains multiple-domains
 

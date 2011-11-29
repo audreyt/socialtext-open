@@ -1,0 +1,12 @@
+[% PROCESS activities/blocks.tt2 %]
+
+<div class="filter_bar hidden">
+    [% INCLUDE activities/elements/filters.tt2 %]
+</div>
+
+<div id="[% id('messages') %]" class='messages'></div>
+<div class="loading-spinner" id="[% id('loading') %]">
+    <img id="[% id('spinner') %]" src="[% this.static_path %]/images/ajax-loader.gif"/>
+</div>
+<div id="[% id('event_list') %]" class='event_list'>
+</div>

@@ -1,0 +1,7 @@
+| *Comment* | st-spaces-accordion: index=%%index%% section=%%section%% |  |
+
+| open_ok | /st/settings |  |
+| wait_for_element_visible_ok | `xpath=(//span[@class="ui-icon ui-icon-triangle-1-e"])[%%index%%]` | 10000 |
+| click_ok | `xpath=(//span[@class="ui-icon ui-icon-triangle-1-e"])[%%index%%]` |  |
+| wait_for_element_visible_ok | link=%%section%% | 15000 |
+| click_and_wait | link=%%section%% |  |

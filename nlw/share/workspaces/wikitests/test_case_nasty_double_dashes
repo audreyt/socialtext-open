@@ -1,30 +1,25 @@
-| *Comment* | Test Case: Nasty Double Dashes | KNOWN NASTY |
+| *Comment* | Test Case: Nasty Double Dashes | KNOWN NASTY |  |  |
 
 Link text for a widget that contains a double dash used to blow up the editor.
-e.g. `{Hello -- World}{link: help [Socialtext Documentation]}`
+e.g. `{Hello -- World} {link: help [Socialtext Documentation]}`
 Set test_string to such a string, then make a widget with that as the link text, then try to blow it up.
 
-| set | test_string | `Hello -- World %%start_time%%` |
+| set | test_string | `Hello -- World %%start_time%%` |  |  |
 
-| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | st-newpage-pagename-edit | Nasty Double Dashes %%start_time%% |
+| *Comment* | put the nasty string in as widget link text |  |  |  |
 
-| *Comment* | put the nasty string in as widget link text |  |
-| type_ok | wikiwyg_wikitext_textarea | `"%%test_string%%"{link: help [Socialtext Documentation]}` |
-| click_ok | link=Rich Text |  |
-| pause | 5000 | no choice but to pause until Simple interface appears |
+| call | [st-edit-fill-page] | ws=%%workspace%% | title=Nasty Double Dashes %%start_time%% | `content="%%test_string%%"{link: help [Socialtext Documentation]}` |
+
+| click_ok | //a[contains(@class,"cke_button_wysiwyg")] |  |
+| pause | 15000 | no choice but to pause until Simple interface appears |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
 | st-page-save |  |  |
 
 The only way to tell things went wrong was to know that the final result should be on a line by itself, matching `/^\s*%%test_string_escaped%%$/m`
 
 | *Comment* | The last line of the page should contain only %%test_string%% |  |
-| text_like | contentContainer | %%test_string%% |
-| text_unlike | contentContainer | `<!-- wiki:` |
+| text_like | content | %%test_string%% |
+| text_unlike | content | `<!-- wiki:` |
 
 | *Comment* | Test Case: Nasty Double Dashes TEARDOWN |  |
 | st-admin | purge-page --w %%workspace%% --page nasty_double_dashes_%%start_time%% | was purged |
@@ -32,7 +27,6 @@ The only way to tell things went wrong was to know that the final result should 
 | *Comment* | Test Case: Nasty Double Dashes COMPLETED |  |
 
 ^ DONE_TESTING
-
 This is what is printed out by the tester when you force the test to fail so you can see the string it is matching against
 
 .pre

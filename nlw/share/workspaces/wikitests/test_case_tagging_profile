@@ -32,8 +32,6 @@
 | wait_for_element_visible_ok | link=fog creek %%start_time%% | 30000 |
 | text_like | link=fog creek %%start_time%% | fog creek %%start_time%% |
 
-
-
 | *Comment* | Test Case: Tagging Profile. foo bar tag added |  |
 | wait_for_element_visible_ok | new_tag | 30000 |
 | type_ok | new_tag | foo bar %%start_time%% |
@@ -98,8 +96,12 @@ text_like | 所以 | |
 | set | fname | Tigger |
 | set | mname | Tiger |
 | set | lname | The Tagger |
+| set | tagged_user | `tagged.%%start_time%%@david.socialtext.net` |
+| set | tagged_user_prefix | tagged |
+| set | tagged_user_short | tagged.%%start_time%% |
 
 | st-admin | create-user --e %%tag_user%% --p %%password%% --f "%%fname%%" --l "%%lname%%" --m "%%mname%%" | A new user with the username "%%tag_user%%" was created |
+| create-user | %%tagged_user%% | %%password%% |
 | st-admin | add-member --w tp-%%start_time%% --e %%tag_user%% | now has the role of 'member' in the |
 
 | *Comment* | Test Case: Tagging Profile login as %%tag_user%%, tag "tagger %%start_time%%" |  |
@@ -110,10 +112,8 @@ text_like | 所以 | |
 | click_ok | //input[@value='Add Tag'] |  |
 | wait_for_element_visible_ok | link=tagger %%start_time%% | 30000 |
 
-| *Comment* | Test Case: Tagging Profile login as %%tag_user%%, tag "fog %%start_time%%" |  |
-| type-lookahead-ok | new_tag | fog |
-| wait_for_element_visible_ok | link=fog %%start_time%% |  |
-| click_and_pause | link=fog %%start_time%% |  |
+| *Comment* | Test Case: Tagging Profile login as %%tag_user%%, tag "fog %%start_time%%" |  |  |
+| select-autocompleted-option-ok | new_tag | fog | fog %%start_time%% |
 
 | *Comment* | Test Case: Tagging Profile. re-open profile, check tag "fog %%start_time%%" |  |
 | open_ok | /st/profile |  |
@@ -128,21 +128,20 @@ text_like | 所以 | |
 | wait_for_element_visible_ok | link=%%fname%% %%mname%% %%lname%% | 30000 |
 | wait_for_element_visible_ok | link=Tools | 30000 |
 | click_and_wait | link=Add this tag to me |  |
+| wait_for_text_present_ok | %%username%% | 30000 |
 
-| *Comment* | Test Case: Tagging Profile. Add tag to someone |  |
-| wait_for_element_visible_ok | link=Tools | 30000 |
-| click_ok | link=Add this tag to someone |  |
-| wait_for_element_visible_ok | add_tag_person | 30000 |
-| type_ok | add_tag_person | %%fname%% %%mname%% %%lname%% |
-
-TODO: typing into textbox does not cause tag to be added ????
-
- wait_for_page_to_load | 30000 | |
-text_like | link=%%fname%% %%mname%% %%lname%% | %%fname%% %%mname%% %%lname%% |
+| *Comment* | Test Case: Tagging Profile. Add tag to someone |  |  |
+| wait_for_element_visible_ok | link=Tools | 30000 |  |
+| click_ok | link=Add this tag to someone |  |  |
+| wait_for_element_visible_ok | person_to_tag | 30000 |  |
+| select-autocompleted-option-ok | person_to_tag | %%tagged_user_prefix%% | %%tagged_user_short%% |
+| click_and_wait | st-addtag-oklink |  |  |
+| wait_for_text_present_ok | %%tagged_user%% | 30000 |  |
 
 | *Comment* | Test Case: Tagging Profile TEARDOWN |  |
 | st-process-jobs |  |  |
 | st-admin | deactivate-user --e %%tag_user%% | removed |
+| deactivate-user | %%tagged_user%% |  |
 | delete-workspace | tp-%%start_time%% | Recklessly deleting |
 
 | *Comment* | Test Case: Tagging Profile COMPLETED |  |

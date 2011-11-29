@@ -1,7 +1,5 @@
-
 | *Comment* | Test Case: Command-Line User Restrictions |  |
 | *Comment* | Test Case: Command-Line User Restrictions NOTE: Other restrictions also in test_case_business_control_panel_confirm_user and test_case_user_restrictions |  |
-
 
 | *Comment* | Test Case: Command-Line User Restrictions |  |
 | set | acct | restrictmd-%%start_time%% |
@@ -19,7 +17,7 @@
 | text_unlike | //body | You should have received an email with a confirmation link. |
 | wait_for_element_not_present_ok | //input[@value="Resend confirmation"] | 30000 |
 | open_ok | /st/dashboard |  |
-| wait_for_text_present_ok | Welcome, New User | 30000 |
+| wait_for_text_present_ok | I'm new | 30000 |
 
 | *Comment* | Test Case: Command-Line User Restrictions - Restrict for Password Change |  |
 | st-logout |  |  |
@@ -31,8 +29,8 @@
 | wait_for_text_present_ok | You need to set a new password for your account. | 30000 |
 | wait_for_element_visible_ok | //input[@value="Resend Change of Password"] | 30000 |
 | open_ok | /st/dashboard |  |
-| text_unlike | //body | Welcome, New User |
-| text_like | //body | Log in to Socialtext |
+| text_unlike | //body | I'm new |
+| text_like | //body | Log in |
 
 | *Comment* | Test Case: Command-Line User Restrictions - Remove Restrictions, can now log in |  |
 | st-admin | remove-restriction --e %%euser%% --restriction password_change | 'password_change' restriction has been lifted on |
@@ -41,7 +39,7 @@
 | text_unlike | //body | You should have received an email with a confirmation link. |
 | wait_for_element_not_present_ok | //input[@value="Resend confirmation"] | 30000 |
 | open_ok | /st/dashboard |  |
-| wait_for_text_present_ok | Welcome, New User | 30000 |
+| wait_for_text_present_ok | I'm new | 30000 |
 
 | *Comment* | Test Case: Command-Line User Restrictions - Bad Restriction, user can still log in |  |
 | st-admin | remove-restriction --e %%euser%% --restriction foo | unknown restriction type, 'foo' |
@@ -50,7 +48,7 @@
 | text_unlike | //body | You should have received an email with a confirmation link. |
 | wait_for_element_not_present_ok | //input[@value="Resend confirmation"] | 30000 |
 | open_ok | /st/dashboard |  |
-| wait_for_text_present_ok | Welcome, New User | 30000 |
+| wait_for_text_present_ok | I'm new | 30000 |
 
 | *Comment* | Test Case: Command-Line User Restrictions - Multiple Restrictions |  |
 | st-admin | add-restriction --e %%euser%% --restriction require_external_id --restriction email_confirmation --restriction password_change | %%euser%% has been given the 'require_external_id' restriction |
@@ -81,7 +79,7 @@
 | wait_for_element_visible_ok | //input[@value="Resend confirmation"] | 30000 |
 | open_ok | /st/dashboard |  |
 | text_unlike | //body | Welcome, New User |
-| text_like | //body | Log in to Socialtext |
+| text_like | //body | Log in |
 
 | *Comment* | Test Case: Command-Line User Restrictions - Subtract 1 more restriction still can't log in |  |
 | st-admin | remove-restriction --e %%euser%% --restriction email_confirmation | 'email_confirmation' restriction has been lifted on '%%euser%%' |
@@ -92,8 +90,8 @@
 | wait_for_text_present_ok | For more information, please contact your system administrator. | 30000 |
 | text_like | You need to have an External ID set in order to activate this account. |  |
 | open_ok | /st/dashboard |  |
-| text_unlike | //body | Welcome, New User |
-| text_like | //body | Log in to Socialtext |
+| text_unlike | //body | I'm new |
+| text_like | //body | Log in |
 
 | *Comment* | Test Case: Command-Line User Restrictions - Remove last restriction, can log in |  |
 | st-admin | remove-restriction --e %%euser%% --restriction require_external_id | 'require_external_id' restriction has been lifted on '%%euser%%' |
@@ -103,7 +101,7 @@
 | text_unlike | //body | You should have received an email with a confirmation link. |
 | wait_for_element_not_present_ok | //input[@value="Resend confirmation"] | 30000 |
 | open_ok | /st/dashboard |  |
-| wait_for_text_present_ok | Welcome, New User | 30000 |
+| wait_for_text_present_ok | I'm new | 30000 |
 
 | *Comment* | Test Case: Command-Line User Restrictions TEARDOWN |  |
 | st-process-jobs |  |  |

@@ -1,63 +1,59 @@
+
 | *Comment* | Test Case: New Page |  |
 | st-admin | update-page --email %%email%% --workspace %%workspace%% --page "np %%start_time%%" < %%wikitest_client_files%%wikitest.txt | The "np %%start_time%%" page has been created. |
 
 | *Comment* | Test Case: New Page. Use the actual New Page button |  |
 | wait_for_element_visible_ok | st-create-content-link | 30000 |
 | click_ok | st-create-content-link |  |
-| wait_for_element_visible_ok | st-create-content-savelink | 30000 |
+| wait_for_element_visible_ok | st-create-content-savelink | 15000 |
 | click_and_wait | st-create-content-savelink |  |
 
-| *Comment* | Test Case: New Page. Create a new page in Wiki Text mode |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
+| *Comment* | Test Case: New Page. Create a new page in Wiki Text mode |  |  |
 
-| *Comment* | Test Case: New Page. try to save with existing page title | np %%start_time%% |
-| type_ok | st-newpage-pagename-edit | np %%start_time%% |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| call | [st-fill-editor] | title=np %%start_time%% | content=test content |
 
+| *Comment* | Test Case: New Page. try to save with existing page title np %%start_time%% |  |
+| wait_for_element_visible_ok | st-save-button-link | 15000 |
+| *Comment* | Test Case: New Page. can't fold because click Save will fail |  |
 | click_ok | st-save-button-link |  |
 
 | *Comment* | Test Case: New Page. Page Already Exists |  |
 | *Comment* | Test Case: New Page. Use duplicate option different |  |
-| wait_for_element_visible_ok | st-newpage-duplicate-option-different | 30000 |
-| check_ok | st-newpage-duplicate-option-different |  |
-| wait_for_element_visible_ok | st-newpage-duplicate-pagename | 30000 |
-| type_ok | st-newpage-duplicate-pagename | np %%start_time%% 2 |
-| wait_for_element_visible_ok | st-newpage-duplicate-okbutton | 30000 |
-| click_and_wait | st-newpage-duplicate-okbutton |  |
+| wait_for_element_visible_ok | st-newxhtml-duplicate-option-different | 30000 |
+| wait_for_element_visible_ok | st-newxhtml-duplicate-pagename | 15000 |
+| click_ok | st-newxhtml-duplicate-pagename |  |
+| type_ok | st-newxhtml-duplicate-pagename | np %%start_time%% 2 |
+| wait_for_element_visible_ok | st-newxhtml-duplicate-okbutton | 15000 |
+| click_and_wait | st-newxhtml-duplicate-okbutton |  |
 | wait_for_element_visible_ok | st-page-titletext | 30000 |
 | text_like | st-page-titletext | np %%start_time%% 2 |
 
-| *Comment* | Test Case: New Page. Create another new page in Wiki Text mode |  |
-| *Comment* | Test Case: New Page. Click on Save options, then cancel |  |
-| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| type_ok | st-newpage-pagename-edit | np %%start_time%% |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| *Comment* | Test Case: New Page. Create another new page in Wiki Text mode |  |  |  |
+| *Comment* | Test Case: New Page. Click on Save options, then cancel |  |  |  |
+
+| call | [st-edit-fill-page] | ws=%%workspace%% | title=np %%start_time%% | content=test content |
+
+| wait_for_element_visible_ok | st-save-button-link | 15000 |
 | click_ok | st-save-button-link |  |
-| wait_for_element_visible_ok | st-newpage-duplicate-title | 30000 |
-| text_like | st-newpage-duplicate-title | Page Already Exists |
-| click_ok | st-newpage-duplicate-option-suggest |  |
-| click_ok | st-newpage-duplicate-option-different |  |
-| click_ok | st-newpage-duplicate-option-append |  |
-| click_ok | st-newpage-duplicate-option-different |  |
-| click_ok | st-newpage-duplicate-cancelbutton |  |
-| wait_for_element_not_visible_ok | st-newpage-duplicate-title | 30000 |
+| wait_for_element_visible_ok | st-newxhtml-duplicate-interface | 30000 |
+| text_like | st-newxhtml-duplicate-interface | is already taken |
+| click_ok | st-newxhtml-duplicate-option-suggest |  |
+| click_ok | st-newxhtml-duplicate-option-different |  |
+| click_ok | st-newxhtml-duplicate-cancelbutton |  |
 | click_and_wait | st-cancel-button-link |  |
 
 | *Comment* | Test Case: New Page. cancel ends up at home eventually |  |
-| wait_for_text_present_ok | This is the home page for %%title%% | 30000 |
+| verifyConfirmation | Are you sure you want to navigate away from this page?\n\nYou have unsaved changes.\n\nPress OK to continue, or Cancel to stay on the current page. |  |
+| wait_for_text_present_ok | This is the home page for %%title%% | 15000 |
 
 | *Comment* | Test Case: New Page. New Page from incipient title in URL |  |
-| open_ok | /%%workspace%%/index.cgi?np %%start_time%% 3 |  |
-| wait_for_element_visible_ok | st-create-content-savelink | 30000 |
-| click_and_wait | st-create-content-savelink |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| text_like | st-editing-title | np %%start_time%% 3 |
-| text_unlike | //body | Export to CSV |  | *Comment* | Test Case: New Page. Teardown |  |
+| open_ok | /%%workspace%%/np %%start_time%% 3 |  |
+| wait_for_text_present_ok | Replace this text with your own. | 10000 |
 
+
+
+| *Comment* | Test Case: New Page. TEARDOWN |  |
+| st-process-jobs |  |  |
 | st-admin | purge-page --workspace %%workspace%% --page np_%%start_time%%_2 | was purged |
 | st-admin | purge-page --workspace %%workspace%% --page np_%%start_time%% | was purged |
 

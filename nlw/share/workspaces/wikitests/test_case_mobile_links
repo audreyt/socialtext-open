@@ -13,55 +13,33 @@ Word but not Link: Signal, What are you working on, People I follow, Previous pa
 | text_like | mobile-people | People |
 | wait_for_element_visible_ok | mobile-workspace_list | 3000 |
 | text_like | mobile-workspace_list | Workspaces |
-| wait_for_element_visible_ok | link=People I follow | 3000 |
-| wait_for_element_visible_ok | link=Mine | 3000 |
+| wait_for_element_visible_ok | mobile_expander | 3000 |
+| click_ok | mobile_expander |  |
+| wait_for_element_visible_ok | feed-followed | 10000 |
+| wait_for_element_visible_ok | feed-user | 10000 |
 | click_and_wait | mobile-workspace_list | 3000 |
 | wait_for_element_visible_ok | mobile-signals | 3000 |
 | text_like | mobile-signals | Signals |
 
 | *Comment* | Test Case: Mobile Links. Lower links: Activity People Workspaces Log out |  |
-| click_and_wait | link=Signals | 3000 |
 | wait_for_element_visible_ok | bottom-mobile-activities | 3000 |
 | text_like | bottom-mobile-activities | Activity |
 | wait_for_element_visible_ok | bottom-mobile-people | 3000 |
 | text_like | bottom-mobile-people | People |
 | wait_for_element_visible_ok | bottom-mobile-workspace_list | 3000 |
 | text_like | bottom-mobile-workspace_list | Workspaces |
-| click_and_wait | bottom-mobile-workspace_list | 3000 |
 | wait_for_element_visible_ok | bottom-mobile-signals | 3000 |
 | text_like | bottom-mobile-signals | Signals |
 | click_and_wait | bottom-mobile-signals |  |
 
-| wait_for_element_visible_ok | link=Log out | 3000 |
+| wait_for_element_visible_ok | mobile-logout | 3000 |
 
 | *Comment* | Test Case: Mobile Links. Word but not Link |  |
-| wait_for_text_present_ok | What are you working on | 3000 |
-| wait_for_text_present_ok | Signal | 3000 |
-| wait_for_text_present_ok | People I follow | 3000 |
+| wait_for_text_present_ok | Post | 3000 |
+| wait_for_text_present_ok | people I follow | 3000 |
 
 Clicks: Activity People Workspaces Signals All refresh Mine
 Verify each one unlinks and the others link
-
-| *Comment* | Test Case: Mobile Links. Verify each one unlinks and the others link |  |
-| *Comment* | Test Case: Mobile Links. (TODO; commented out because in the new implementation the A's are still present & active the just don't _do_ anything |  |
-
- click_and_pause | link=Activity | |
-wait_for_element_not_present_ok | link=Activity | 30000 |
-wait_for_text_present_ok | Activity | 3000 |
-click_and_wait | link=People | |
-wait_for_element_not_present_ok | link=People | 3000 |
-wait_for_text_present_ok | People | 3000 |
-click_and_wait | link=Workspaces | |
-wait_for_element_not_present_ok | link=Workspaces | 3000 |
-wait_for_text_present_ok | Workspaces | 3000 |
-click_and_wait | link=Signals | |
-wait_for_element_not_present_ok | link=Signals | 3000 |
-wait_for_text_present_ok | Signals | 3000 |
-wait_for_text_present_ok | All | 3000 |
-wait_for_element_not_present_ok | link=All | 3000 |
-click_and_wait | link=Mine | |
-wait_for_element_not_present_ok | link=Mine | 3000 |
-wait_for_text_present_ok | Mine | 3000 |
 
 NOTE: A should be a link whenever you hit People
 

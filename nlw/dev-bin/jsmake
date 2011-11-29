@@ -5,10 +5,12 @@ use warnings;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
 use Cwd qw(cwd);
-use Socialtext::MakeJS;
+use Socialtext::JavaScript::Builder;
 use Time::HiRes qw(time);
 
-$Socialtext::MakeJS::VERBOSE = 1;
+my $builder = Socialtext::JavaScript::Builder->new(
+    verbose => 1,
+);
 
 (my $base = $FindBin::Bin) =~ s{nlw/dev-bin$}{};
 (my $dir = cwd) =~ s{^$base/nlw/share/}{};
@@ -17,20 +19,17 @@ $dir =~ s{^$base/plugins}{plugin};
 my @targets = @ARGV ? @ARGV : ('all');
 my $before = time;
 for my $target (@targets) {
-    if ($target eq 'all') {
-        Socialtext::MakeJS->BuildAll;
-    }
-    elsif ($target eq 'cleanall') {
-        Socialtext::MakeJS->CleanAll;;
-    }
-    elsif ($target eq 'clean') {
-        Socialtext::MakeJS->CleanDir($dir);
+    if ($target =~ /^clean(:?all)?$/) {
+        $builder->clean();
     }
     elsif ($target eq 'loc') {
         system("$base/nlw/dev-bin/l10n-make-po-js");
     }
+    elsif ($target eq 'all') {
+        $builder->build();
+    }
     else {
-        Socialtext::MakeJS->Build($dir, $target);
+        $builder->build($target);
     }
 }
 my $lapsed = (time - $before);

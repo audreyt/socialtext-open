@@ -192,8 +192,6 @@ remove_non_member_group_from_workspace: {
     ok !$workspace->has_group($group),
         'Group does not yet have Role in Workspace';
 
-    # Removing a non-member Group from the Workspace shouldn't choke.  No
-    # errors, no warnings, no fatal exceptions... its basically a no-op.
-    ok !exception { $workspace->remove_group(group => $group) },
-        "... removing non-member Group from Workspace doesn't choke";
+    ok exception { $workspace->remove_group(group => $group) },
+        "... removing non-member Group from Workspace chokes";
 }

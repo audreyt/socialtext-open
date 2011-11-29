@@ -1,0 +1,26 @@
+<div class="wikilinkPopup" style="display:none;">
+ <p>[% loc("activities.info-using-wikilink-popup") %]</p>
+ <p class="input">
+   <span>[% loc('activities.link-text:') %]</span>
+   <input name="label" class="label" type="text" />
+ </p>
+ <p class="input">
+   <span>[% loc('activities.wiki:') %]*</span>
+   <input name="workspace" class="workspace" type="text" />
+ </p>
+ <p class="input">
+   <span>[% loc('activities.page:') %]*</span>
+   <input name="page" class="page" type="text" />
+ </p>
+ <p class="input">
+   <span>[% loc('activities.section:') %]</span>
+   <input name="section" class="section" type="text" />
+ </p>
+
+ <div class="error" style="display:none;"></div>
+ <div class="buttons">
+  <a class="btn done" href="#">[% loc('do.ok') %]</a>
+  <a class="btn cancel" href="#">[% loc('do.cancel') %]</a>
+ </div>
+ <div style="clear:both;">&nbsp;</div>
+</div>

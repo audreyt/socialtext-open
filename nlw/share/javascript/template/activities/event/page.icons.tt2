@@ -1,0 +1,10 @@
+[%- SWITCH event.action -%]
+    [%- CASE "comment" -%]<img class="asset-icon" src="[% this.static_path %]/images/icons/conversation-black-25.png"/>
+    [%- CASE "tag_add" -%]<img class="asset-icon" src="[% this.static_path %]/images/icons/tag-black-25.png"/>
+    [%- CASE "tag_delete" -%]<img class="asset-icon" src="[% this.static_path %]/images/icons/tag-black-25.png"/>
+    [%- CASE "watch_add" -%]<img class="asset-icon" src="[% this.static_path %]/images/icons/watch-black-25.png"/>
+    [%- CASE "watch_delete" -%]<img class="asset-icon" src="[% this.static_path %]/images/icons/watch-black-25.png"/>
+    [%- CASE "like" -%]<img class="asset-icon" src="[% this.static_path %]/images/icons/thumbsup-black-25.png"/>
+    [%- CASE "unlike" -%]<img class="asset-icon" src="[% this.static_path %]/images/icons/thumbsup-black-25.png"/>
+    [%- CASE -%]<img class="asset-icon" src="[% this.static_path %]/images/icons/edit-black-25.png"/>
+[%- END -%]

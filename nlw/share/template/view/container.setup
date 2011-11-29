@@ -1,0 +1,150 @@
+[%- USE html_encode -%]
+[%- USE decorate -%]
+[%- USE label_ellipsis -%]
+[%- USE JSON -%]
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="/data/accounts/[% current_account.account_id || user.primary_account_id %]/theme/style.css?[% app_version %]" media="screen" />
+      [% INCLUDE 'element/js-adapt-fullscreen' %]
+      <script type="text/javascript" charset="utf-8" src="/js/[% app_version %]/socialtext-starfish.jgz"></script>
+    
+      <script type="text/javascript" charset="utf-8" src="/js/[% app_version %]/l10n-[% loc_lang || 'en' %].jgz"></script>
+    
+      <script type="text/javascript" charset="utf-8" src="/js/[% app_version %]/shindig-container-pubsub.jgz"></script>
+[% INCLUDE "element/wiki/js-bootstrap" %]
+<style>
+
+html {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+body {
+    background-image: none; !important;
+    background-color: #f0f0f0; !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+li.fixed {
+    list-style-type: none;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+div.widget {
+    width: 600px !important;
+}
+
+div.widgetHeaderTitle {
+    padding: 3px 3px 0 10px !important;
+}
+
+span.widgetHeaderTitleText {
+    color: black !important;
+    font-size: 11px !important;
+    font-weight: bold !important;
+}
+
+.widgetHeader .buttons {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.widgetHeaderButtons .close,
+.widgetHeaderButtons .minimize,
+.widgetHeaderButtons .fix {
+    display: none !important;
+}
+
+iframe {
+    width: 95% !important;
+}
+
+.widgetHeaderButtons .settings {
+    top: 6px !important;
+    margin-right: 6px !important;
+}
+
+.widgetPush {
+    display: none;
+}
+</style>
+  </head>
+  <body id="dashBoard">
+<input id="widgetList" type="hidden" value="[% gadget.instance_id %]"/>
+<input id="containerID" type="hidden" value="[% container.id %]"/>
+<script>
+    var Socialtext = window.Socialtext || {};
+    Socialtext.workspaces = [[% current_workspace.json %]];
+    Socialtext.accounts = [[% current_account.json %]];
+    var containerID = "[% container.id %]";
+    loc.all_widgets();
+</script>
+    <div id="mainWrap" style="width: 450px">
+      <div id="st-display-mode-container" class="st-content">
+        <ul id="wafl-widget"></ul>
+    [% INCLUDE widget/syndicator %]
+<script>
+    var gadgets = gadgets || {};
+    gadgets.container.setup({
+        env: {
+            "owner": st.viewer.username,
+            "owner_id": st.viewer.user_id,
+            "owner_name": st.viewer.guess_real_name,
+            "viewer": st.viewer.username,
+            "viewer_id": st.viewer.user_id,
+            "viewer_name": st.viewer.guess_real_name,
+            "primary_account_id": st.viewer.primary_account_id
+        },
+        view: "page",
+        onSetPreferences: function(prefHash) {
+            if (!$('#st-savebutton-[% gadget.instance_id %]').data('clicked')) {
+                return;
+            }
+            $('#st-savebutton-[% gadget.instance_id %]').data('clicked', false);
+            if (parent.$ && parent.$('#st-widget-opensocial-setup-buttons').length) {
+                parent.$('#st-widget-opensocial-setup-save').data('prefHash', prefHash);
+                parent.$('#st-widget-opensocial-setup-save').data('title', [% gadget.title.json %]);
+                parent.$('#st-widget-opensocial-setup-buttons').show();
+            }
+            $('#st-widget-settings[% gadget.instance_id %]').css('visibility', 'visible');
+        }
+    });
+    gadgets.container.renderGadget(
+        $.extend(
+            [% gadget.json.replace('</script>', '</scr" + "ipt>') %],
+            { fixed: true }
+        ), { editing: true }, $('#wafl-widget').get(0)
+    );
+
+[% IF gadget.has_prefs %]
+    // Set 'clicked' on the savebutton so that the onSetPreferences handler
+    // can ignore programmatic saves and only show/hide the save/cancel
+    // buttons when the user actually clicks
+    $('#st-savebutton-[% gadget.instance_id %]').live('click', function(){
+        $('#st-savebutton-[% gadget.instance_id %]').data('clicked', true);
+        $('#gadget-[% gadget.instance_id %]-settings').show();
+        return true;
+    });
+
+    $(function(){
+        $('#st-savebutton-[% gadget.instance_id %]').val("[% loc('widget.preview') %]").button();
+    });
+    $('#gadget-[% gadget.instance_id %]-content').hide();
+    $('#gadget-[% gadget.instance_id %]-preferences').show();
+    $('#st-widget-settings[% gadget.instance_id %]').css('visibility', 'hidden');
+[% ELSE %]
+    if (parent.$ && parent.$('#st-widget-opensocial-setup-buttons').length) {
+        parent.$('#st-widget-opensocial-setup-save').data('prefHash', {});
+        parent.$('#st-widget-opensocial-setup-save').data('title', [% gadget.title.json %]);
+        parent.$('#st-widget-opensocial-setup-buttons').show();
+    }
+[% END %]
+</script>
+      </div><!-- contentWrap END -->
+    </div><!-- mainWrap END -->
+  </body>
+</html>

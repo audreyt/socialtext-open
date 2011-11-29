@@ -1,0 +1,19 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+BEGIN { push @INC, "$ENV{ST_CURRENT}/nlw/lib" if $ENV{ST_CURRENT} }
+use Socialtext::Daemontools;
+Socialtext::Daemontools->RunSupervised(
+    log_file => 'st-wikid.log',
+    port_name => 'wikid_port',
+    cb => sub {
+        my $port = shift;
+        my $exe = '/usr/bin/st-wikid';
+        if (!Socialtext::AppConfig->is_appliance()) {
+            $exe = "$ENV{ST_CURRENT}/nlw/bin/st-wikid";
+        }
+        exec $exe,'--port',$port
+            or die "can't exec ${exe}: $!";
+    }
+);

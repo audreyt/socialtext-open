@@ -34,6 +34,12 @@ sub delete_recklessly {
          )
     }, $account->user_set_id);
 
+    # clear out theme data
+    Socialtext::SQL::sql_execute(q{
+        DELETE FROM account_theme_attachment
+        WHERE account_id = ?
+    }, $account->account_id);
+
     $account->delete;
 
     # Clear all caches (the Account, and anything that may have cached a copy

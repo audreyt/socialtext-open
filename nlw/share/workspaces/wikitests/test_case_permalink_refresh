@@ -1,7 +1,7 @@
+| *Comment* | Test Case: Permalink Refresh |  |
+
 * Fixture: SocialWidgets
 * Fixture: SocialRest
-
-| *Comment* | Test Case: Permalink Refresh |  |
 
 | *Comment* | Test Case: Permalink Refresh. Do it for a group |  |
 
@@ -38,7 +38,7 @@
 | wait_for_text_present_ok | %%pr3%% | 20000 |
 
 | *Comment* | Test Case: Permalink Refresh. Click group Reply to Conversation and reply |  |  |
-| st-send-reply | %%pr4%% |
+| st-send-reply | %%pr4%% | 1 |  |
 
 | *Comment* | Test Case: Permalink Refresh. Wait for the new group reply |  |
 | wait_for_text_present_ok | %%pr4%% | 20000 |
@@ -73,7 +73,7 @@
 | wait_for_text_present_ok | %%r3%% | 30000 |
 
 | *Comment* | Test Case: Permalink Refresh. Click Reply to Conversation and reply |  |
-| st-send-reply | %%r4%% |  |
+| st-send-reply | %%r4%% | 1 |
 
 | *Comment* | Test Case: Permalink Refresh. Wait for the new reply |  |
 | wait_for_text_present_ok | %%r4%% | 30000 |

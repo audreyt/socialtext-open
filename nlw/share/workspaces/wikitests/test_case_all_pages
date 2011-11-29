@@ -12,18 +12,18 @@
 | *Comment* | Test Case: All Pages name sorting |  |
 | open_ok | /%%new_ws%%/index.cgi?action=changes&changes=all |  |
 
-| text_like | contentContainer | All Pages |
-| text_like | contentContainer | Showing 1 - 4 of 4 |
+| text_like | content | All Pages |
+| text_like | content | Showing 1 - 4 of 4 |
 | click_and_wait | link=allpages 0001%%start_time%% |  |
 | text_like | st-page-titletext | allpages 0001%%start_time%% |
 
 | open_ok | /%%new_ws%%/index.cgi?action=changes&changes=all |  |
 | wait_for_element_visible_ok | sort-picker | 30000 |
 | select_and_wait | sort-picker | label=Title |
-| text_like | contentContainer | qr/allpages 0001%%start_time%%.+allpages 0004%%start_time%%/ |
+| text_like | content | qr/allpages 0001%%start_time%%.+allpages 0004%%start_time%%/ |
 | wait_for_element_visible_ok | sort-picker | 30000 |
 | select_and_wait | sort-picker | label=Title (↓) |
-| text_like | contentContainer | qr/allpages 0004%%start_time%%.+allpages 0001%%start_time%%/ |
+| text_like | content | qr/allpages 0004%%start_time%%.+allpages 0001%%start_time%%/ |
 
 | *Comment* | Test Case: All Pages add a new page |  |
 | st-admin | update-page --email %%email%% --workspace %%new_ws%% --page "allpages 0005%%start_time%%" < %%wikitest_client_files%%wikitest.txt | The "allpages 0005%%start_time%%" page has been created. |
@@ -34,10 +34,10 @@
 | *Comment* | Test Case: All Pages reopen. Date sort. |  |
 | wait_for_element_visible_ok | sort-picker | 30000 |
 | select_and_wait | sort-picker | label=Date Last Edited |
-| text_like | contentContainer | qr/allpages 0005%%start_time%%.+allpages 0004%%start_time%%/ |
+| text_like | content | qr/allpages 0005%%start_time%%.+allpages 0004%%start_time%%/ |
 | wait_for_element_visible_ok | sort-picker | 30000 |
 | select_and_wait | sort-picker | label=Date Last Edited (↑) |
-| text_like | contentContainer | qr/allpages 0004%%start_time%%.+allpages 0005%%start_time%%/ |
+| text_like | content | qr/allpages 0004%%start_time%%.+allpages 0005%%start_time%%/ |
 
 | *Comment* | Test Case: All Pages revision sort |  |
 | open_ok | /%%new_ws%%/index.cgi?action=changes&changes=all |  |
@@ -46,17 +46,17 @@
 | wait_for_element_visible_ok | st-edit-button-link |  |
 | click_ok | st-edit-button-link |  |
 | wait_for_element_visible_ok | st-save-button-link |  |
-| pause | 5000 | I hate pause; needed for entire page load |
+| pause | 15000 | I hate pause; needed for entire page load |
 | st-page-save |  |  |
 | wait_for_element_visible_ok | st-edit-button-link |  |
 
 | open_ok | /%%new_ws%%/index.cgi?action=changes&changes=all |  |
 | wait_for_element_visible_ok | sort-picker | 30000 |
 | select_and_wait | sort-picker | label=Revisions |
-| text_like | contentContainer | qr/allpages 0004%%start_time%%.+allpages 0003%%start_time%%/ |
+| text_like | content | qr/allpages 0004%%start_time%%.+allpages 0003%%start_time%%/ |
 | wait_for_element_visible_ok | sort-picker | 30000 |
 | select_and_wait | sort-picker | label=Revisions (↑) |
-| text_like | contentContainer | qr/allpages 0003%%start_time%%.+allpages 0004%%start_time%%/ |
+| text_like | content | qr/allpages 0003%%start_time%%.+allpages 0004%%start_time%%/ |
 
 | *Comment* | Test Case: All Pages sort by Last Edited By |  |
 
@@ -79,7 +79,7 @@ For some reason, IE 6 blows up when open_ok is used in some places. We avoid it.
 | wait_for_element_visible_ok | st-edit-button-link |  |
 | click_ok | st-edit-button-link |  |
 | wait_for_element_visible_ok | st-save-button-link |  |
-| pause | 5000 | I hate pause; needed for entire page load |
+| pause | 15000 | I hate pause; needed for entire page load |
 | st-page-save |  |  |
 | wait_for_element_visible_ok | st-edit-button-link |  |
 
@@ -88,10 +88,10 @@ For some reason, IE 6 blows up when open_ok is used in some places. We avoid it.
 | open_ok | /%%new_ws%%/index.cgi?action=changes&changes=all |  |
 | wait_for_element_visible_ok | sort-picker | 30000 |
 | select_and_wait | sort-picker | label=Last Edited By |
-| text_like | contentContainer | qr/allpages 0003%%start_time%%.+allpages 0001%%start_time%%/ |
+| text_like | content | qr/allpages 0003%%start_time%%.+allpages 0001%%start_time%%/ |
 | wait_for_element_visible_ok | sort-picker | 30000 |
 | select_and_wait | sort-picker | label=Last Edited By (↓) |
-| text_like | contentContainer | qr/allpages 0001%%start_time%%.+allpages 0003%%start_time%%/ |
+| text_like | content | qr/allpages 0001%%start_time%%.+allpages 0003%%start_time%%/ |
 
 | *Comment* | Test Case: All Pages Teardown. No need to login again. |  |
 

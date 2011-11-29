@@ -1,0 +1,61 @@
+[% USE decorate %]
+[%-
+# Allow grep/ack to find this file:
+#
+# st-search-form st-search-term st-search-action st-search-this-ws
+# st-search-all-ws st-search-submit
+#
+DEFAULT
+    sid = 'search'
+-%]
+<form style="position:relative; visibility: hidden" id="st-[%sid%]-form" action="[% IF current_workspace; "/$current_workspace.name"; ELSE; "/"; END %]" method="get" name="SearchForm">
+
+  <select id="st-[%sid%]-action" name="action" class="searchSelect">
+    [% IF workspace_present %]
+    <option value="search_workspace" id="st-[%sid%]-this-ws" [% IF search == "workspace" %]selected="selected" [% END %]>[% loc("wiki.search:") %]</option>
+    [% END %]
+    [% UNLESS user.is_guest %]
+      <option value="search_workspaces" id="st-[%sid%]-all-ws" [% IF search == "workspaces"  %]selected="selected" [% END %]>[% loc("wiki.search-all:") %]</option>
+      [% FILTER decorate('search_box') %][% END %]
+    [% END %]
+  </select>
+
+  <input id="st-[%sid%]-term" name="search_term" class="[% UNLESS html_escaped_search_term %]initial [% END %]searchText" type="text" value="[% html_escaped_search_term %]" />
+
+  <input class="hidden" type="submit" />
+  <a href="#" class="submit" id="st-[%sid%]-submit"></a>
+
+  [% IF action == 'search' AND scope == '_'; search = 'workspace';
+    ELSIF action == 'search' AND scope == '*'; search = 'workspaces';
+    ELSE; search = action.match('search_(.*)').0;
+    END
+  %]
+  [% IF search; search_scope = search;
+     ELSIF container.search; search_scope = container.search;
+     ELSIF action == 'people'; search_scope = 'people';
+     ELSIF action == 'display'; search_scope = 'workspace';
+     ELSIF action == 'workspaces_listall'; search_scope = 'workspaces';
+     END
+   %]
+</form>
+<script>$(function(){
+    Socialtext.stickySearch({
+      scope: "[% search_scope %]",
+
+      // Search pages should not be sticky
+      sticky: [% search_scope && !search ? 'true' : 'false' %]
+    });
+    $('#st-[%sid%]-submit')
+        .button({
+            text: false,
+            icons: {
+                primary: "ui-icon-search"
+            }
+        })
+        .click(function() {
+            $(this).parents('form').submit();
+        });
+
+    $('#st-[% sid %]-action').dropdown();
+    $('#st-[%sid%]-form').css('visibility', 'visible');
+});</script>

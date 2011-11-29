@@ -1,0 +1,5 @@
+#!/bin/sh
+DIRNAME=$(dirname $0)
+export NODE_PATH="$DIRNAME/../share/node_modules:/usr/share/nlw/node_modules:/usr/lib/node_modules"
+export PATH="/usr/lib/node_modules/coffee-script/bin:$PATH"
+exec coffee ${1+"$@"}

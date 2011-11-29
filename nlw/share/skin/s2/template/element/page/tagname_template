@@ -1,3 +1,0 @@
-{for t in tags}
-&lt;li class="st-tags-tagline"&gt;&lt;span class="${t.level}"&gt;${t.name} &lt;/span&gt;&lt;span class="st-tags-tagdelete"&gt;&lt;a href="javascript:deleteTag('${t.name|escapespecial}')" title="Remove ${t.name} tag from page" class="st-tags-tagdelete"&gt;[x]&lt;/a&gt;&lt;/span&gt;&lt;/li&gt;
-{/for}

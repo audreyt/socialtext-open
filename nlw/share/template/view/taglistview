@@ -1,0 +1,56 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[% USE decorate %]
+[% WRAPPER $frame_name id="listPage" %]
+  [% INCLUDE element/page/navigation %]
+  <div id="controls">
+    <div class="grid_18" id="st-editing-tools-edit">
+      &nbsp;
+    </div>
+    <div class="grid_6">
+      &nbsp;
+    </div>
+    <div class="clear"></div>
+  </div>
+  <div id="contentContainer">
+  <div class="grid_24">
+    <h2 class="tableTitle" title="[% display_title | html %]">[% display_title | html %]</h2>
+  </div>
+  <div class="clear"></div>
+    <script language="javascript"><!--
+      // Make the table sortable: [0,0] means the default is first column ascending.
+      jQuery(function(){jQuery("table.dataTable").tablesorter({ sortList: [[0, 0]] });});
+    --></script>
+  
+  <div class="grid_24">
+    <table class="dataTable tablist">
+      <thead>
+      <tr>
+        <th>[% loc('wiki.tag') %]</th>
+        <th class="numeric">[% loc('tag.pages') %]</th>
+      </tr>
+      </thead>
+      <tbody>
+      [% FOREACH row = rows %]
+        [% IF loop.count % 2 %]<tr class="oddRow">[% ELSE %]<tr>[% END %]
+          <td>
+            <a href="[% row.script_name %]?action=category_display;category=[% row.escaped %]">[% row.display | html %]</a>
+          </td>
+          <td class="numeric">
+            [% row.page_count %]
+          </td>
+        </tr>
+      [% END %]
+      </tbody>
+    </table><!-- dataTable END -->
+  </div>
+  <div class="clear"></div>
+  </div><!-- contentContainer -->
+[% END %]
+
+[% BLOCK sort_by_option %]
+      <option [% IF sortby == field %]selected="selected"[% END %] value="sortby=[% field %];direction=[% sortdir.$field %]">[% name %]</option>
+      [% IF sortby == field %]
+      <option value="sortby=[% field %];direction=[% direction == 'asc' ? 'desc' : 'asc' %]">[% name %] [% direction == 'asc' ? '(&darr;)' : '(&uarr;)' %]</option>
+      [% END %]
+[% END %]

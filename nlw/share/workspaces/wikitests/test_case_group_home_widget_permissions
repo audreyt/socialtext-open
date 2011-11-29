@@ -18,15 +18,15 @@
 | *Comment* | Test Case: Group Home Widget Permissions Login as %%group_user%%, do not see edit group or edit layout buttons |  |
 | st-logoutin | %%group_user%% | %%password%% |
 | open_ok | /st/group/%%group_id%% |  |
-| wait_for_element_not_present_ok | st-edit-group | 10000 |
-| wait_for_element_not_present_ok | st-edit-layout | 10000 |
+| wait_for_element_not_present_ok | st-edit-group | 15000 |
+| wait_for_element_not_present_ok | st-edit-layout | 15000 |
 
 | *Comment* | Test Case: Group Home Widget Permissions Promote to admin, *do* see edit group or edit layout buttons |  |
 | st-admin | add-group-admin --g %%group_id%% --e %%group_user%% | is now a admin of the |
 | open_ok | /st/group/%%group_id%% |  |
 | wait_for_text_present_ok | There are no people tags for people in this group yet | 30000 |
-| wait_for_element_visible_ok | st-edit-group | 30000 |
-| wait_for_element_visible_ok | st-edit-layout | 30000 |
+| wait_for_element_visible_ok | st-edit-group | 15000 |
+| wait_for_element_visible_ok | st-edit-layout | 15000 |
 | click_ok | st-edit-layout |  |
 
 | *Comment* | Test Case: Group Home Widget Permissions Active Content Widget disappears if you remove the workspace associated |  |  |
@@ -36,17 +36,16 @@
 | wait_for_element_visible_ok | new_workspace | 30000 |  |
 | click_ok | new_workspace |  |  |
 | select-frame | relative=parent |  |  |
-| wait_for_element_visible_ok | new-workspace-next | 30000 |  |
-| wait_for_element_visible_ok | new_workspace_title | 30000 |  |
+| wait_for_element_visible_ok | new-workspace-next | 15000 |  |
+| wait_for_element_visible_ok | new_workspace_title | 15000 |  |
 | type_ok | new_workspace_title | %%created_workspace%% |  |
 | click_ok | new-workspace-next |  |  |
-| wait_for_element_visible_ok | new-workspace-create | 30000 |  |
-| wait_for_element_visible_ok | new-workspace-cancel | 30000 |  |
-| wait_for_element_visible_ok | new_workspace_name | 30000 |  |
+| wait_for_element_visible_ok | new-workspace-create | 15000 |  |
+| wait_for_element_visible_ok | new-workspace-cancel | 15000 |  |
+| wait_for_element_visible_ok | new_workspace_name | 15000 |  |
 | type_ok | new_workspace_name | %%created_workspace%% |  |
 | click_ok | new-workspace-create |  |  |
 | *Comment* | Test Case: Group Home Widget Permissions. See newly created %%created_workspace%% |  |  |
-| pause | 5000 |  |  |
 | wait_for_element_visible_ok | %%created_workspace%% | 30000 |  |
 | click_and_wait | create-group |  |  |
 | get_id_from_url | created_group_id |  |  |
@@ -55,7 +54,7 @@
 | *Comment* | Test Case: Group Home Widget Permissions. remove %%created_workspace%% from %%created_group_id%% |  |
 | st-admin | remove_member --g %%created_group_id%% --w %%created_workspace%% | is no longer a member of |
 | open_ok | /st/group/%%created_group_id%% |  |
-| wait_for_text_not_present_ok | Active Content | 10000 |
+| wait_for_text_not_present_ok | Active Content | 15000 |
 
 | *Comment* | Test Case: Group Home Widget Permissions Tags in "People Tags" Widget are localized to the group |  |  |
 | *Comment* | Test Case: Group Home Widget Permissions Tag %%group_user%% |  |  |
@@ -74,9 +73,9 @@
 | st-process-jobs |  |  |
 | open_ok | /st/group/%%group_id%% |  |
 | wait_for_element_visible_ok | link=%%tag_visible_one%% | 30000 |
-| wait_for_element_visible_ok | link=%%tag_visible_two%% | 30000 |
-| wait_for_element_not_present_ok | link=%%tag_invisible%% | 30000 |
-| wait_for_text_not_present_ok | There are no people tags for people in this group yet | 30000 |
+| wait_for_element_visible_ok | link=%%tag_visible_two%% | 15000 |
+| wait_for_element_not_present_ok | link=%%tag_invisible%% | 15000 |
+| wait_for_text_not_present_ok | There are no people tags for people in this group yet | 15000 |
 
 | *Comment* | Test Case: Group Home Widget Permissions - Control Panel ('accounts') Admin has edit group and edit layout buttons |  |
 | set | group_cp_admin | group_cp_admin%%start_time%%@matt.socialtext.net |
@@ -96,10 +95,10 @@
 | st-logoutin | %%group_biz_admin%% | %%password%% |
 | open_ok | /st/group/%%group_id%% |  |
 | wait_for_element_visible_ok | st-edit-group | 30000 |
-| wait_for_element_visible_ok | st-edit-layout | 30000 |
+| wait_for_element_visible_ok | st-edit-layout | 15000 |
 | click_ok | st-edit-layout |  |
-| wait_for_text_present_ok | You are in layout mode. Click Save to keep your changes, Cancel to discard them. | 30000 |
-| wait_for_element_visible_ok | st-revert-layout | 30000 |
+| wait_for_text_present_ok | You are in layout mode. Click Save to keep your changes, Cancel to discard them. | 15000 |
+| wait_for_element_visible_ok | st-revert-layout | 15000 |
 
 | *Comment* | Test Case: Group Home Widget Permissions TEARDOWN |  |
 | st-process-jobs |  |  |

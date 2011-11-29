@@ -3,7 +3,7 @@
 | st-config | set self_registration 1 |  |
 | st-config | set allow_network_invitation 1 |  |
 | st-admin | set-account-config --account "%%defaultaccount%%" allow_invitation 1 | has been updated |
-| set | auth_w | test-case-intranet-%%start_time%% |
+| set | auth_w | intranet-%%start_time%% |
 
 | *Comment* | Test Case: Intranet. Create an Intranet workspace |  |
 | st-admin | create-workspace --n %%auth_w%% --t "Test Case Intranet %%start_time%%" |  |
@@ -15,49 +15,33 @@
 | open_ok | /%%auth_w%% |  |
 
 | *Comment* | Test Case: Intranet. Verify buttons and links page top |  |
-| wait_for_element_visible_ok | link=Edit | 30000 |
-| wait_for_element_visible_ok | link=Comment | 30000 |
-| text_like | st-edit-button-link | Edit |
-| text_like | st-comment-button-link | Comment |
-| text_like | contentRight | Tag |
-| text_like | contentRight | Upload Files |
-| wait_for_element_visible_ok | link=Log in | 30000 |
-| text_like | globalNav | Log in |
-| wait_for_element_visible_ok | link=Register | 30000 |
-| text_like | globalNav | Register |
+| wait_for_element_visible_ok | link=Edit | 15000 |
+| wait_for_element_visible_ok | link=Comment | 15000 |
+| text_like | content | Add Tag |
+| text_like | content | Upload Files |
+| wait_for_element_visible_ok | link=Log in | 15000 |
+| wait_for_element_visible_ok | //a[@href='/nlw/register.html?redirect_to='] | 15000 |
 
-| *Comment* | Test Case: Intranet. Verify buttons and links page bottom |  |
-| text_like | footerGlobal | Log in |
-| text_like | footerGlobal | Register |
-| text_like | bottomButtons | Edit |
-| text_like | bottomButtons | Comment |
+| *Comment* | Test Case: Intranet. |  |  |  |
+| st-admin | update-page --w %%auth_w%% --e %%email%% --p "TC Intranet %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |  |  |
 
-| *Comment* | Test Case: Intranet. |  |
-| st-admin | update-page --w %%auth_w%% --e %%email%% --p "TC Intranet %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |
+| call | [st-edit-this-page] | ws=%%auth_w%% | thispage=TC Intranet %%start_time%% | content=test content |
 
-| open_ok | /%%auth_w%%/?TC Intranet %%start_time%% |  |
-| wait_for_element_visible_ok | st-edit-button-link | 30000 |
-| click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+| st-process-jobs |  |  |  |  |
 
 | *Comment* | Test Case: Intranet. Verify Created and Updated By |  |
 | wait_for_element_visible_ok | create-attribution | 30000 |
-| wait_for_element_visible_ok | update-attribution | 30000 |
+| wait_for_element_visible_ok | update-attribution | 15000 |
 | text_like | create-attribution | Created by |
 | text_like | update-attribution | qr/Updated by\s+Guest user/i |
 
 | *Comment* | Test Case: Intranet. Verify central page is home page |  |
 | open_ok | /%%auth_w%%/ |  |
-| text_like | contentContainer | Test Case Intranet |
-| text_like | contentContainer | qr/Socialtext Workspaces contain pages/i |
-| click_and_wait | link=Settings |  |
-| text_like | errors-and-messages | To set your preferences for a workspace, you must be logged in. |
+| text_like | content | Test Case Intranet |
+| text_like | content | qr/Socialtext Workspaces contain pages/i |
 
-| *Comment* | Test Case: Intranet Teardown |  |
+| *Comment* | Test Case: Intranet TEARDOWN |  |
 | st-process-jobs |  |  |
 | st-admin | delete-workspace --workspace %%auth_w%% --no-export | has been deleted |
 
-| *Comment* | Test Case: Intranet COMPLETED |
+| *Comment* | Test Case: Intranet COMPLETED |  |

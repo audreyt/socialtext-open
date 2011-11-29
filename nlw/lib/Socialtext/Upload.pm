@@ -32,6 +32,7 @@ use constant TABLE_REFS => qw(
     page_attachment
     signal_attachment
     signal_asset
+    theme_attachment
 );
 
 # NOTE: if this gets changed to anything other than /tmp, make sure tmpreaper is
@@ -266,10 +267,15 @@ sub protected_uri {
     return join('/', '/nlw/attachments', $class_or_self->relative_filename(@_));
 }
 
+sub uncached_protected_uri {
+    my $class_or_self = shift;
+    return join('/', '/nlw/attachments-uncached', $class_or_self->relative_filename(@_));
+}
+
 sub created_at_str { sql_format_timestamptz($_[0]->created_at) }
 
-*as_hash = *to_hash;
-sub to_hash {
+*to_hash = *as_hash;
+sub as_hash {
     my ($self, $viewer) = shift;
     my %hash = map { $_ => $self->$_ } qw(
         attachment_id attachment_uuid filename

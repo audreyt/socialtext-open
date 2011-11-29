@@ -111,7 +111,7 @@ via_workspace: {
     check_group_account_role $group, $acct, 'member',
         "group is a member through the workspace";
 
-    $ws->remove_group(group => $group);
+    $ws->remove_group(group => $group, reckless => 1);
 
     account_role_count_is $acct => 1, 
         "removing group workspace role removes the member role";

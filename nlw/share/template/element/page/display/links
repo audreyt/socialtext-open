@@ -1,0 +1,16 @@
+[%# vim: set ft=tt2 et sts=2 sw=2: %]
+<div class="widget">
+  <h1>[% loc('page.incoming-links') %]</h1>
+  <div class="content">
+    [% IF page.incoming.size %]
+      <ul class="incominglinks">
+        [% FOR in = page.incoming %]
+          <li><a href="[% in.page_id %]">[% in.page_title |html %]</a></li>
+        [% END %]
+      </ul>
+    [% ELSE %]
+      <div>[% loc('page.no-backlinks') %]</div>
+    [% END %]
+    <div class="clear"></div>
+  </div>
+</div>

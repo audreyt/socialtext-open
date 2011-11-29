@@ -1,0 +1,46 @@
+<html>
+    <head>
+        [% USE decorate %]
+        [% FILTER decorate "head" %]
+        <title>[% container.title %]</title>
+        [% INCLUDE element/container_css share="/nlw/plugin/widgets" %]
+        <script type="text/javascript" charset="utf-8"
+          src="[% wiki.skin_uri('s3') %]/javascript/socialtext-s3.js.gz">
+        </script>
+        <script type="text/javascript" charset="utf-8"
+          src="[% wiki.skin_uri('s3') %]/javascript/l10n-[% loc_lang %].js.gz">
+        </script>
+        <script src="/nlw/plugin/widgets/javascript/socialtext-container.js.gz"></script>
+        [% INCLUDE widget/syndicator %]
+
+        [% INCLUDE "element/wiki/js-bootstrap" %]
+        <style>
+            iframe {
+                width: 100%;
+            }
+            body {
+                background: white;
+                padding: 5px !important;
+            }
+            .widget {
+                margin: 0 !important;
+            }
+        </style>
+        [% END %]
+    </head>
+    <body>
+        [% SET gadget = container.gadgets.0 %]
+        <ul style="width: [% gadget.width || '100%' %]" class="waflWidget" id="fs-gadget-[% gadget.instance_id %]"></ul>
+        <script>
+            gadgets.container.setup();
+            gadgets.container.renderGadget(
+                $.extend(
+                    [% gadget.json.replace('</script>', '</scr" + "ipt>') %],
+                    { 'class': 'borderless' }
+                ), {},
+                $('#fs-gadget-[% gadget.instance_id %]').get(0)
+            );
+            $('#gadget-[% gadget.instance_id %]-preferences').hide();
+        </script>
+    </body>
+</html>

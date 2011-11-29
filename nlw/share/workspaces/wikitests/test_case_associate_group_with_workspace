@@ -3,7 +3,7 @@
 * Fixture: SocialWidgets
 
 | set | agw_acct | agw_account_%%start_time%% |  |
-| set | agw_user | agw_user_%%start_time%%@david.socialtext.net |  |
+| set | agw_user | `agw_user_%%start_time%%@david.socialtext.net` |  |
 | set | agw_group | agw_group_%%start_time%% |  |
 | create_account | %%agw_acct%% |  |  |
 | create_user | %%agw_user%% | %%password%% | %%agw_acct%% |
@@ -22,6 +22,7 @@
 | set | ws9 | agw9-wiki-%%start_time%% |
 | set | ws10 | agw10-wiki-%%start_time%% |
 | set | ws11 | agw11-wiki-%%start_time%% |
+
 | create_workspace | %%ws1%% | %%agw_acct%% |
 | create_workspace | %%ws2%% | %%agw_acct%% |
 | create_workspace | %%ws3%% | %%agw_acct%% |
@@ -67,89 +68,84 @@
 | set | ws10_suffix | 10-wiki-%%start_time%% |
 | set | ws11_suffix | 11-wiki-%%start_time%% |
 
-| *Comment* | Test Case: Associate Group With Workspace user cannot add workspace if he is not workspace admin |  |
-| st-logoutin | %%agw_user%% | %%password%% |
-| open_ok | /st/edit_group/%%agw_group_id%% |  |
-| wait_for_text_present_ok | Edit Group: %%agw_group%% | 30000 |
-| st-name-widget | 2 | wiki |
-| st-widget-title-like | wiki | Workspaces |
-| st-select-widget-frame | wiki |  |
-| wait_for_text_present_ok | Currently, there are no workspaces associated with this group. | 30000 |
-| text_like | qr/Use the input above to select workspaces to associate with this.+group./ |  |
-| wait_for_element_visible_ok | lookahead | 30000 |
-| type_lookahead_ok | lookahead | %%ws_noadmin_prefix%% |
-| select-frame | relative=parent |  |
-| wait_for_text_present_ok | No matches for '%%ws_noadmin_prefix%%' | 30000 |
-| wait_for_element_not_present_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%ws_noadmin_suffix%%')] | 30000 |
+| *Comment* | Test Case: Associate Group With Workspace user cannot add workspace if he is not workspace admin |  |  |
+| st-logoutin | %%agw_user%% | %%password%% |  |
+| open_ok | /st/edit_group/%%agw_group_id%% |  |  |
+| wait_for_element_visible_ok | create-group | 30000 |  |
+| wait_for_text_present_ok | Members | 15000 |  |
+| st-name-widget | 2 | wiki |  |
+| st-widget-title | wiki | Workspaces |  |
+| st-select-widget-frame | wiki |  |  |
+| wait_for_text_present_ok | Currently, there are no workspaces associated with this group. | 15000 |  |
+| text_like | qr/Use the input above to select workspaces to associate with this.+group./ |  |  |
 
-| *Comment* | Test Case: Associate Group With Workspace test lookahead functionality |  |
-| st-select-widget-frame | wiki |  |
-| wait_for_element_visible_ok | lookahead | 30000 |
-| type_lookahead_ok | lookahead | %%ws_prefix%% |
-| select-frame | relative=parent |  |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%ws1_suffix%%')] | 30000 |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%ws2_suffix%%')] | 30000 |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%ws3_suffix%%')] | 30000 |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%ws4_suffix%%')] | 30000 |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%ws5_suffix%%')] | 30000 |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%ws6_suffix%%')] | 30000 |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%ws7_suffix%%')] | 30000 |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%ws8_suffix%%')] | 30000 |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%ws10_suffix%%')] | 30000 |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%ws11_suffix%%')] | 30000 |
-| wait_for_element_not_present_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%ws9_suffix%%')] | 30000 |
+TUXTODO: Does the lookahead show 0 matches yet?
 
-| *Comment* | Test Case: Associate Group With Workspace add one wiki, check that final wiki shows up in lookahead |  |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%ws11_suffix%%')] |  |
-| st-select-widget-frame | wiki |  |
-| wait_for_element_visible_ok | link=%%ws11%% | 30000 |
-| type_lookahead_ok | lookahead | %%ws_prefix%% |
-| select-frame | relative=parent |  |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%ws9_suffix%%')] | 30000 |
+has-no-autocompleted-options-ok | lookahead | %%ws_noadmin_prefix%% | %%ws_noadmin%% |
 
-| *Comment* | Test Case: Associate Group With Workspace add more wikis, check for resorting of list to add |  |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%ws2_suffix%%')] |  |
-| st-select-widget-frame | wiki |  |
-| wait_for_element_visible_ok | link=%%ws2%% | 30000 |
-| text_like | qr/%%ws11%%.+%%ws2%%/ |  |
-| type_lookahead_ok | lookahead | %%ws_prefix%% |
-| select-frame | relative=parent |  |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%ws10_suffix%%')] | 30000 |
-| pause | 2000 |  |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%ws10_suffix%%')] |  |
-| st-select-widget-frame | wiki |  |
-| wait_for_element_visible_ok | link=%%ws10%% | 30000 |
-| text_like | qr/%%ws10%%.+%%ws11%%.+%%ws2%%/ |  |
+| *Comment* | Test Case: Associate Group With Workspace test lookahead functionality |  |  |
+| wait_for_element_visible_ok | lookahead | 15000 |  |
+| autocompleted-option-exists | lookahead | %%ws_prefix%% | %%ws1%% (%%ws1%%) |
+| autocompleted-option-exists | lookahead | %%ws_prefix%% | %%ws2%% (%%ws2%%) |
+| autocompleted-option-exists | lookahead | %%ws_prefix%% | %%ws3%% (%%ws3%%) |
+| autocompleted-option-exists | lookahead | %%ws_prefix%% | %%ws4%% (%%ws4%%) |
+| autocompleted-option-exists | lookahead | %%ws_prefix%% | %%ws5%% (%%ws5%%) |
+| autocompleted-option-exists | lookahead | %%ws_prefix%% | %%ws6%% (%%ws6%%) |
+| autocompleted-option-exists | lookahead | %%ws_prefix%% | %%ws7%% (%%ws7%%) |
+| autocompleted-option-exists | lookahead | %%ws_prefix%% | %%ws8%% (%%ws8%%) |
+| autocompleted-option-exists | lookahead | %%ws_prefix%% | %%ws10%% (%%ws10%%) |
+| autocompleted-option-exists | lookahead | %%ws_prefix%% | %%ws11%% (%%ws11%%) |
+
+TUXTODO: Does the lookahaed have a cutoff again?
+
+autocompleted-option-not-exists | lookahead | %%ws_prefix%% | %%ws9%% (%%ws9%%) |
+
+| *Comment* | Test Case: Associate Group With Workspace add one wiki, check that final wiki shows up in lookahead |  |  |
+| select-autocompleted-option-ok | lookahead | %%ws_prefix%% | %%ws11%% (%%ws11%%) |
+| wait_for_element_visible_ok | link=%%ws11%% | 15000 |  |
+| autocompleted-option-exists | lookahead | %%ws_prefix%% | %%ws9%% (%%ws9%%) |
+
+| *Comment* | Test Case: Associate Group With Workspace add more wikis, check for resorting of list to add |  |  |
+| select-autocompleted-option-ok | lookahead | %%ws_prefix%% | %%ws2%% (%%ws2%%) |
+| wait_for_element_visible_ok | link=%%ws2%% | 15000 |  |
+| text_like | qr/%%ws11%%.+%%ws2%%/ |  |  |
+| select-autocompleted-option-ok | lookahead | %%ws_prefix%% | %%ws10%% (%%ws10%%) |
+| wait_for_element_visible_ok | link=%%ws10%% | 15000 |  |
+| text_like | qr/%%ws10%%.+%%ws11%%.+%%ws2%%/ |  |  |
 
 | *Comment* | Test Case: Associate Group With Workspace delete one wiki from list to add, save changes |  |
-| wait_for_element_visible_ok | //a[@class='remove icon'][1] | 30000 |
+| wait_for_element_visible_ok | //a[@class='remove icon'][1] | 15000 |
 | click_ok | //a[@class='remove icon'][1] |  |
-| wait_for_element_not_present_ok | link=%%ws10%% | 30000 |
+| wait_for_element_not_present_ok | link=%%ws10%% | 15000 |
 | select-frame | relative=parent |  |
 | wait_for_element_visible_ok | create-group | 30000 |
 | click_and_wait | create-group |  |
 
 | *Comment* | Test Case: Associate Group With Workspace check behavior of list of already added wikis in group edit page |  |
 | open_ok | /st/edit_group/%%agw_group_id%% |  |
-| wait_for_text_present_ok | Edit Group: %%agw_group%% | 30000 |
+| wait_for_element_visible_ok | create-group | 30000 |
+| wait_for_text_present_ok | Members | 15000 |
 | st-name-widget | 2 | wiki |
-| st-widget-title-like | wiki | Workspaces |
+| st-widget-title | wiki | Workspaces |
 | st-select-widget-frame | wiki |  |
-| wait_for_element_visible_ok | link=%%ws11%% | 30000 |
-| wait_for_element_visible_ok | link=%%ws2%% | 30000 |
-| wait_for_element_not_present_ok | link=%%ws10%% | 30000 |
-| wait_for_element_visible_ok | //a[@class='remove icon'][1] | 30000 |
+| wait_for_element_visible_ok | link=%%ws11%% | 15000 |
+| wait_for_element_visible_ok | link=%%ws2%% | 15000 |
+| wait_for_element_not_present_ok | link=%%ws10%% | 15000 |
+| wait_for_element_visible_ok | //a[@class='remove icon'][1] | 15000 |
 | click_ok | //a[@class='remove icon'][1] |  |
 | select-frame | relative=parent |  |
 | wait_for_element_visible_ok | create-group | 30000 |
 | click_and_wait | create-group |  |
+
+| *Comment* | Test Case: Associate Group With Workspace check behavior of list after removing ws |  |
 | open_ok | /st/edit_group/%%agw_group_id%% |  |
-| wait_for_text_present_ok | Edit Group: %%agw_group%% | 30000 |
+| wait_for_element_visible_ok | create-group | 30000 |
+| wait_for_text_present_ok | Members | 15000 |
 | st-name-widget | 2 | wiki |
-| st-widget-title-like | wiki | Workspaces |
+| st-widget-title | wiki | Workspaces |
 | st-select-widget-frame | wiki |  |
-| wait_for_element_visible_ok | link=%%ws2%% | 30000 |
-| wait_for_element_not_present_ok | link=%%ws10%% | 30000 |
+| wait_for_element_visible_ok | link=%%ws2%% | 15000 |
+| wait_for_element_not_present_ok | link=%%ws10%% | 15000 |
 | select-frame | relative=parent |  |
 
 | *Comment* | Test Case: Associate Group With Workspace add all wikis to group to test list pagination of already added wikis in edit page |  |
@@ -166,29 +162,30 @@
 
 | *Comment* | Test Case: Associate Group With Workspace test pagination of already added list in group edit page workspaces widget |  |
 | open_ok | /st/edit_group/%%agw_group_id%% |  |
-| wait_for_text_present_ok | Edit Group: %%agw_group%% | 30000 |
+| wait_for_element_visible_ok | create-group | 30000 |
+| wait_for_text_present_ok | Members | 15000 |
 | st-name-widget | 2 | wiki |
-| st-widget-title-like | wiki | Workspaces |
+| st-widget-title | wiki | Workspaces |
 | st-select-widget-frame | wiki |  |
-| wait_for_element_visible_ok | link=%%ws1%% | 30000 |
-| wait_for_element_visible_ok | link=%%ws2%% | 30000 |
-| wait_for_element_visible_ok | link=%%ws3%% | 30000 |
-| wait_for_element_visible_ok | link=%%ws4%% | 30000 |
-| wait_for_element_visible_ok | link=%%ws5%% | 30000 |
-| wait_for_element_visible_ok | link=%%ws6%% | 30000 |
-| wait_for_element_visible_ok | link=%%ws7%% | 30000 |
-| wait_for_element_visible_ok | link=%%ws8%% | 30000 |
-| wait_for_element_visible_ok | link=%%ws10%% | 30000 |
-| wait_for_element_visible_ok | link=%%ws11%% | 30000 |
-| wait_for_element_not_present_ok | link=%%ws9%% | 30000 |
-| wait_for_element_visible_ok | //a[@class='next'] | 30000 |
+| wait_for_element_visible_ok | link=%%ws1%% | 15000 |
+| wait_for_element_visible_ok | link=%%ws2%% | 15000 |
+| wait_for_element_visible_ok | link=%%ws3%% | 15000 |
+| wait_for_element_visible_ok | link=%%ws4%% | 15000 |
+| wait_for_element_visible_ok | link=%%ws5%% | 15000 |
+| wait_for_element_visible_ok | link=%%ws6%% | 15000 |
+| wait_for_element_visible_ok | link=%%ws7%% | 15000 |
+| wait_for_element_visible_ok | link=%%ws8%% | 15000 |
+| wait_for_element_visible_ok | link=%%ws10%% | 15000 |
+| wait_for_element_visible_ok | link=%%ws11%% | 15000 |
+| wait_for_element_not_present_ok | link=%%ws9%% | 15000 |
+| wait_for_element_visible_ok | //a[@class='next'] | 15000 |
 | click_ok | //a[@class='next'] |  |
-| wait_for_element_visible_ok | link=%%ws9%% | 30000 |
-| wait_for_element_not_present_ok | link=%%ws8%% | 30000 |
-| wait_for_element_visible_ok | //a[@class='previous'] | 30000 |
+| wait_for_element_visible_ok | link=%%ws9%% | 15000 |
+| wait_for_element_not_present_ok | link=%%ws8%% | 15000 |
+| wait_for_element_visible_ok | //a[@class='previous'] | 15000 |
 | click_ok | //a[@class='previous'] |  |
-| wait_for_element_visible_ok | link=%%ws8%% | 30000 |
-| wait_for_element_not_present_ok | link=%%ws9%% | 30000 |
+| wait_for_element_visible_ok | link=%%ws8%% | 15000 |
+| wait_for_element_not_present_ok | link=%%ws9%% | 15000 |
 
 | *Comment* | Test Case: Associate Group With Workspace TEARDOWN |  |
 | st-process-jobs |  |  |

@@ -2,12 +2,12 @@
 
 | *Comment* | Ryker |  |
 
-| set | sacc | Ryker |
+| set | sacc | AnyCorp |
 
-The Ryker account ID is 9 on demo.st.net
+The Ryker account ID is 6 in a dev env
 Change this if needed for a different account ID
 
-| set | rykerID | 9 |
+| set | rykerID | 6 |
 
 | set | sd1 | `socialtextdemo1@gmail.com` |
 | set | sd2 | `socialtextdemo2@gmail.com` |
@@ -149,7 +149,7 @@ We need to provide a place for two-way communication with our customers regardin
 | http-user-pass | %%sd2%% | %%spwd%% |
 
 | open_ok | /%%commentws%%/?%%commentPage%% |  |
-| click_ok | st-comment-button-link |  |
+| click_ok | //li[@id="st-comment-button"]/a |  |
 | wait_for_element_visible_ok | comment | 30000 |
 | type_ok | comment | %%commentContent%% |
 | click_ok | link=Save |  |

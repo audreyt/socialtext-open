@@ -68,18 +68,9 @@ get-user-account [--username or --email]
 
 | st-admin | set-account-config | qr/The command you called \(set-account-config\) requires an account to be specified/ |
 
-| *Comment* | Test Case: Command Line Tests ACCOUNTS see {bz: 1649} |  |
-| st-admin | set-account-config --account account%%start_time%% skin_name s3 | The account config for account%%start_time%% has been updated |
-| st-admin | show-account-config --account account%%start_time%% | qr/skin_name.+s3/ |
-| st-admin | set-account-config --account account%%start_time%% skin_name s3 | The account config for account%%start_time%% has been updated |
-| st-admin | show-account-config --account account%%start_time%% | qr/skin_name.+s3/ |
+| *Comment* | Test Case: Command Line Tests ACCOUNTS |  |
 
-| st-admin | reset-account-skin | qr/he command you called \(reset-account-skin\) requires an account to be specified/ |
-| st-admin | reset-account-skin --account account%%start_time%% | reset-account-skin requires --skin parameter |
-| st-admin | reset-account-skin --account account%%start_time%% --skin s3 | The skin for account account%%start_time%% and its workspaces has been updated |
-| st-admin | show-account-config --account account%%start_time%% | qr/skin_name.+s3/ |
-| st-admin | reset-account-skin --account account%%start_time%% --skin s3 | The skin for account account%%start_time%% and its workspaces has been updated |
-| st-admin | show-account-config --account account%%start_time%% | qr/skin_name.+s3/ |
+TODO: substitute theme commands for skin commands
 
 | *Comment* | Test Case: Command Line Tests ACCOUNTS need to deal with the file for mass-add of users |  |
 | st-admin | mass-add-users --csv foo.csv | The file you provided could not be read. No users were added. |

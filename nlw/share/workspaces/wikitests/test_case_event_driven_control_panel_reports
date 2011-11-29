@@ -19,27 +19,40 @@
 | *Comment* | Test Case: Even-Driven Conrol Panel Reports - Unique Members will be 2 |  |  |
 | *Comment* | Test Case: Even-Driven Control Panel Reports - Unique Visitors will be 1 |  |  |
 | *Comment* | Test Case: Even-Driven Control Panel Reports - Become a Unique Contributor |  |  |
-| st-process-jobs |  |  |
+| st-process-jobs |  |  |  |
 | st-logoutin | %%reports_user%% | %%password%% |  |
 | open_ok | /%%ed_ws%%/ |  |  |
 
 | *Comment* | Test Case: Even-Driven Control Panel Reports - Create page hello_page |  |  |
-| st_create_wikipage | %%ed_ws%% | hello_page |  |
+| st_create_page | %%ed_ws%% | hello_page | Hello Page %%start_time%% Content |
+
+| pause | 10000 |  |  |
 
 | *Comment* | Test Case: Even-Driven Control Panel Reports - Comment on page hello_page |  |  |
-| st_comment_on_page | %%ed_ws%%/hello_page | hello says Matt. This is a comment. |
+| st_comment_on_page | %%ed_ws%%/hello_page | hello says Matt. This is a comment. |  |
+
+| pause | 10000 |  |  |
 
 | *Comment* | Test Case: Even-Driven Control Panel Reports - Create page hello_page_two |  |  |
-| st_create_wikipage | %%ed_ws%% | hello_page_two |  |
+| st_create_page | %%ed_ws%% | hello_page_two | Hello Page Two %%start_time%% Content |
+
+| pause | 10000 |  |  |
 
 | *Comment* | Test Case: Even-Driven Control Panel Reports - Comment on page hello_page_two |  |  |
-| st_comment_on_page | %%ed_ws%%/hello_page | hello says Matt. This is a comment. |
+| st_comment_on_page | %%ed_ws%%/hello_page | hello says Matt. This is a comment. |  |
+
+| pause | 10000 |  |  |
 
 | *Comment* | Test Case: Even-Driven Control Panel Reports - Create page hello_page_three |  |  |
-| st_create_wikipage | %%ed_ws%% | hello_page_three |  |
+| st_create_page | %%ed_ws%% | hello_page_three | Hello Page Three %%start_time%% Content |
+
+| pause | 10000 |  |  |
 
 | *Comment* | Test Case: Even-Driven Control Panel Reports - Comment on page hello_page_three |  |  |
-| st_comment_on_page | %%ed_ws%%/hello_page_three | hello says Matt. This is a comment. |
+| st_comment_on_page | %%ed_ws%%/hello_page_three | hello says Matt. This is a comment. |  |
+
+| pause | 10000 |  |  |
+
 | open_ok | /st/dashboard/ |  |  |
 
 | *Comment* | Test Case: Even-Driven Control Panel Reports - Personalize my dashboard |  |
@@ -48,8 +61,9 @@
 | *Comment* | Test Case: Even-Driven Control Panel Reports - Personalized my profile |  |
 | set | new_fname | mateo |
 | set | new_lname | heussero |
-| wait_for_element_visible_ok | link=(edit) | 30000 |
-| click_and_wait | link=(edit) |  |
+
+| open_ok | /st/edit_profile |  |
+| st-widget-title | Profile |  |
 
 | *Comment* | Test Case: Event Driven Control Panel Reports. Verify profile present. |  |
 | st-name-widget | 1 | profile_details |
@@ -97,8 +111,8 @@
 | set | new_fname | marko |
 | set | new_lname | gaertnero |
 
-| wait_for_element_visible_ok | link=(edit) | 30000 |
-| click_and_wait | link=(edit) |  |
+| open_ok | /st/edit_profile |  |
+| st-widget-title | Profile |  |
 
 | *Comment* | Test Case: Event Driven Control Panel Reports Second User profile present |  |
 | st-name-widget | 1 | profile_details |
@@ -128,7 +142,7 @@
 
 | *Comment* | Test Case: Even-Driven Control Panel Reports - And I've got a workspace |
 | *Comment* | Test Case: Even-Driven Control Panel Reports - And the pages are 3 |
-| *Comment* | Test Case: Even-Driven Control Panel Reports - And the Page Views are 17 (thanks to create) |
+| *Comment* | Test Case: Even-Driven Control Panel Reports - And the Page Views are 15 |
 
 | *Comment* | Test case: Event-Driven Control Panel Reports DELIBERATELY WAIT EIGHT MINUTES |  |
 | pause | 480000 |  |
@@ -138,8 +152,11 @@
 | wait_for_element_visible_ok | link=Growth Reports | 30000 |
 | click_and_wait | link=Growth Reports |  |
 | selectFrame | report-iframe |  |
-| text_like | //body | qr/3\s*1\s*1\s*1\s*1\s*4\s*6\s*5\s*2\s*\d+\s*17\s*6/ |
+
+| *Comment* | These values for ST5: 3 1 1 0 1 4 6 5 2 16 6 3 |  |
+| text_like | //body | qr/3\s*1\s*1\s*0\s*1\s*4\s*6\s*5\s*2\s*\d+\s*6\s*3/ |
 | select-frame | relative=parent |  |
+
 
 | *Comment* | Test case: Event-Driven Control Panel Reports - TEARDOWN |  |
 | st-process-jobs |  |  |
@@ -148,4 +165,4 @@
 | st-admin | delete-workspace --w %%ed_ws%% --no-export | has been deleted |
 | delete_account | %%ed_account%% |  |
 
-| *Comment* | Test case: Event-Driven Control Panel Reports COMPLETED |
+| *Comment* | Test case: Event-Driven Control Panel Reports COMPLETED |  |

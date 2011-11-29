@@ -77,6 +77,7 @@ sub workspace_account_skin {
 sub parent {
     my $self = shift;
     my $parent_skin = $self->skin_info->{parent};
+    return if ($self->skin_info->{skin_name} eq $parent_skin);
     return Socialtext::Skin->new(name => $parent_skin) if $parent_skin;
 }
 

@@ -1,0 +1,53 @@
+[% IF ws %]
+    <div class="[% class %]">
+    <div class="subnav" data-role="navbar">
+    <ul>
+        <li>
+        [% IF section == 'workspace' %]
+        <a id="mobile-workspace-home" class="current ui-btn-active">[% ws.title |html %]</a>
+        [% ELSE %]
+        <a id="mobile-workspace-home" href="/m/page/[% ws.name %]/">[% ws.title |html %]</a>
+        [% END %]
+        <span class="menu-padding">&nbsp;</span>
+        </li><li>
+        [% IF section == 'recent_changes' %]
+        <a id="mobile-workspace-changes" class="current ui-btn-active">[% loc("nav.news") %]</a>
+        [% ELSE %]
+        <a id="mobile-workspace-changes" href="/m/changes/[% ws.name %]/">[% loc("nav.news") %]</a>
+        [% END %]
+        <span class="menu-padding">&nbsp;</span>
+        </li><li>
+        [% IF section == 'tags' %]
+        <a id="mobile-workspace-tags" class="current ui-btn-active">[% loc('wiki.tags') %]</a>
+        [% ELSE %]
+        <a id="mobile-workspace-tags" href="/m/tag/[% ws.name %]/">[% loc('wiki.tags') %]</a>
+        [% END %]
+        <span class="menu-padding">&nbsp;</span>
+        </li><li>
+        [% IF section == 'search' %]
+        <a id="mobile-workspace-search" class="current ui-btn-active">[% loc('nav.search') %]</a>
+        [% ELSE %]
+        <a id="mobile-workspace-search" href="/m/search/[% ws.name %]/">[% loc('nav.search') %]</a>
+        [% END %]
+        </li>
+    </div>
+        </ul>
+    [% IF page %]
+        <span class="menu-padding"><hr></span>
+        <div data-role="header" data-position="inline" data-theme="d">
+            <h4>[% page.title |html %]</h4>
+        [% IF page.page_type == 'wiki' %]
+            [% IF cancel_edit %]
+                <a data-role="button" class="ui-btn-right" data-icon="back" href="/m/page/[% ws.name %]/[% cancel_edit %]">[% loc('do.cancel') %]</a>
+            [% ELSIF user_can_edit_page %]
+                <a data-role="button" class="ui-btn-right" data-icon="arrow-d" href="/m/page/[% ws.name %]/[% page.uri %]?action=edit">[% loc('page.edit') %]</a>
+            [% ELSIF user_can_join_to_edit_page %]
+                <a data-role="button" class="ui-btn-right" data-icon="plus" href="/m/page/[% ws.name %]/[% page.uri %]?action=join_to_edit">[% loc('page.join-to-edit') %]</a>
+            [% END %]
+        [%# ELSIF page.page_type == 'xhtml' %]
+            [%# Do something sensible here... Maybe a reduced CKEditor for iPhones? %]
+        [% END %]
+        </div>
+    [% END %]
+    </div>
+[% END %]

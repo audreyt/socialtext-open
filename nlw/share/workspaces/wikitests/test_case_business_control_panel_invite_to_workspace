@@ -48,9 +48,7 @@
 | type_ok | workspace-name | %%new_ws_title%% |
 
 | wait_for_element_visible_ok | accountLookahead | 30000 |
-| type_lookahead_ok | accountLookahead | Social |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'text')][1] | 30000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'text')][1] |  |
+| select-autocompleted-option-ok | accountLookahead | Social |
 
 | wait_for_element_visible_ok | members | 30000 |
 | select_ok | members | %%email1%% |

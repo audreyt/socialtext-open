@@ -1,0 +1,76 @@
+[% MACRO creator BLOCK %]<a href="[% event.context.creator.uri %]">[% event.context.creator.best_full_name %]</a>[% END %]
+
+[% SWITCH event.action %]
+[% CASE 'signal' %]
+    [% INCLUDE signal_body %]
+    [% INCLUDE activities/event/metadata.tt2 %]
+    [% INCLUDE signal_actions %]
+[% CASE 'like' %]
+    [% INCLUDE activities/event/metadata.tt2 %]
+    [% INCLUDE like_body %]
+[% CASE 'unlike' %]
+    [% INCLUDE activities/event/metadata.tt2 %]
+    [% INCLUDE unlike_body %]
+[% END %]
+
+[% BLOCK signal_actions %]
+    [% UNLESS event.context.in_reply_to OR event.num_replies %]
+    <a href="#" class="replyLink">[% loc('signals.reply') %]</a>
+    [% END %]
+    <div class="[% IF event.context.in_reply_to %]like-reply[% ELSE %]like-signal[% END %]"></div>
+
+    [% IF this.canDeleteSignal(event) %]
+        [% IF event.hidden %]
+            [% IF this.user_data.is_business_admin %]
+                <a href="#" class="expungeLink">[% loc('activities.expunge') %]</a>
+            [% END %]
+        [% ELSE %]
+            <a href="#" class="hideLink">[% loc('signals.delete') %]</a>
+        [% END %]
+    [% END %]
+[% END %]
+
+[% BLOCK like_body %]
+    [% IF this.viewer_id == event.context.creator.user_id %]
+        [% loc('signals.liked-yours=uri,snippet', event.context.uri, this.signalSnippet(event)) %]
+    [% ELSE %]
+        [% IF event.context.creator.user_id == event.actor.id %]
+            [% loc('signals.liked-theirs=uri,snippet', event.context.uri, this.signalSnippet(event)) %]
+        [% ELSE %]
+            [% loc('signals.liked=creator,uri,snippet', creator, event.context.uri, this.signalSnippet(event)) %]
+        [% END %]
+    [% END %]
+[% END %]
+
+[% BLOCK unlike_body %]
+    [% IF this.viewer_id == event.context.creator.user_id %]
+        [% loc('signals.unliked-yours=uri,snippet', event.context.uri, this.signalSnippet(event)) %]
+    [% ELSE %]
+        [% IF user.user_id == event.actor.id %]
+            [% loc('signals.unliked-theirs=uri,snippet', event.context.uri, this.signalSnippet(event)) %]
+        [% ELSE %]
+            [% loc('signals.unliked=creator,uri,snippet', creator, event.context.uri, this.signalSnippet(event)) %]
+        [% END %]
+    [% END %]
+[% END %]
+
+[% BLOCK signal_body %]
+    <div class="signal_event">
+    [% IF event.thumbnails.size > 0 %]
+    <div class ="signal_thumbnails">
+    [% FOR thumbnail IN event.thumbnails %]
+    [% LAST IF loop.index() > 2 %]
+    <a target="_blank" href="[% thumbnail.url.replace('^/', this.base_uri + '/') %]"><img data-width="[% thumbnail.width || '' %]" data-height="[% thumbnail.height || '' %]" class="[% thumbnail.type %]" src="[% thumbnail.image.replace('^/', this.base_uri + '/') %]"[% IF thumbnail.title %] alt="[% thumbnail.title | html_encode %]" title="[% thumbnail.title | html_encode %]"[% END %]></a>
+    [% END %]
+    </div>
+    [% END %]
+    <div class="signal_body">[%- event.context.body -%]</div>
+    </div>
+    [%IF event.context.attachments.size > 0 %]
+    <div class="signal_attachments">
+    [% FOREACH attachment IN event.context.attachments %]
+    <span class="attachment"><img src="[% this.share %]/images/little-doc.gif"><a target="_blank" class="attachment_link" href="[% attachment.uri %]">[% attachment.filename | html_encode %]</a> ([% attachment.pretty_content_length %])</span>
+    [% END %]
+    </div>
+    [% END %]
+[% END %]

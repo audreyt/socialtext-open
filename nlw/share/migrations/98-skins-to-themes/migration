@@ -1,0 +1,57 @@
+#!/usr/bin/env perl
+# @COPYRIGHT@
+use strict;
+use warnings;
+use Try::Tiny;
+use Socialtext::Account;
+use Socialtext::Migration::Utils qw(ensure_socialtext_schema);
+use Socialtext::SQL qw(sql_execute);
+use Socialtext::Theme;
+use YAML qw(LoadFile);
+
+ensure_socialtext_schema(154);
+
+do_for_custom_accounts(sub {
+    my ($theme,$name) = @_;
+
+    my $base = Socialtext::Theme->ThemeDir();
+    my $theme_dir = join('/', $base, 'migrations', $theme);
+    die "No theme $theme" unless -d $theme_dir;
+
+    my $acct = Socialtext::Account->new(name=>$name);
+    die "No account $acct" unless $acct;
+
+    my $prefs = Socialtext::Theme->MakeImportable(
+        LoadFile("$theme_dir/theme.yaml"),
+        $theme_dir
+    );
+
+    $acct->prefs->save({theme=>$prefs});
+    print "  Migrated $name to $theme\n";
+});
+
+exit;
+################################################################################
+
+sub do_for_custom_accounts {
+    my $callback = shift;
+
+    my $sth = sql_execute(qq{
+        SELECT skin_name, name
+          FROM "Account"
+         WHERE skin_name NOT IN ('', 's2', 's3')
+    });
+    my $rows = $sth->rows;
+    return unless $rows;
+
+    my $done = 0;
+    print "Applying custom theme to  $rows Accounts...\n";
+    while (my $row = $sth->fetchrow_hashref) {
+        my $theme = $row->{skin_name};
+        my $name = $row->{name};
+
+        try { $callback->($theme, $name); $done++ }
+        catch { warn "  Couldn't apply $theme to $name: $_\n" };
+    }
+    print "... Done. $done Accounts have been themed\n";
+}

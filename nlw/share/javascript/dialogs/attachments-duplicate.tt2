@@ -1,0 +1,17 @@
+[% FOR file = files %]
+    <div class="warning" style="margin: 5px 0">
+        <input type="hidden" name="filename" value="[% file.name %]"/>
+        [% INCLUDE duplicate_attachment_warning
+            tip=loc('file.add-or-replace=name?', file.name)
+         %]
+    </div>
+[% END %]
+
+[% BLOCK duplicate_attachment_warning %]
+    <p class="tip">[% tip %]</p>
+    <div class="chooser right">
+        <a class="add" href="#">[% loc("do.add") %]</a>
+        <a class="replace" href="#">[% loc("do.replace") %]</a>
+        <a class="cancel" href="#">[% loc("do.cancel") %]</a>
+    </div>
+[% END %]

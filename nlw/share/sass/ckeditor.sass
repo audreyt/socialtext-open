@@ -1,0 +1,331 @@
+@import colors.sass
+@import ckeditor/styling.sass
+@import ckeditor/lightbox.sass
+@import ckeditor/wiki.sass
+
+.colorpicker
+  z-index: 9999
+
+/* overload some S3 stuff
+
+#st-xhtml-edit td
+  vertical-align: top
+
+/* done overloading s3 stuff
+
+#st-page-editing-pagebody-decoy
+  display: none
+
+#st-xhtml-edit
+  background: transparent !important
+
+#st-xhtml-toolbar-container
+  background-color: $tertiary_color
+  width: 100%
+  .audit, .preview, .revisions
+    display: none
+
+#st-xhtml-revisions-toolbar
+  background: $lighter
+  padding: 5px
+  .label
+    font-weight: bold
+  input
+    text-align: center
+  .next, .previous
+    font-weight: bolder
+    text-decoration: none
+    font-size: 1.2em
+
+#st-xhtml-cell-number-format
+  width: 100px
+
+#st-xhtml-tabs
+  padding-left: 5px
+  height: 22px
+
+#st-xhtml-toolbar
+  padding-left: 5px
+  height: 22px
+  padding-top: 3px
+  margin-top: -3px
+  height: 22px
+
+#st-xhtml-formula-bar
+  padding-left: 25px
+  padding-top: 5px
+  background-color: $lightest
+
+#st-xhtml-audit
+  padding-bottom: 10px
+
+#st-xhtml-preview
+  padding-left: 5px
+  padding-right: 5px
+  padding-bottom: 30px
+  display: none
+
+#st-xhtml-preview-toolbar
+  background-color: $lightest
+
+#st-xhtml-toolbar-drawer
+  background: $tertiary_color
+  width: 99%
+  padding: 10px
+  display: none
+  position: absolute
+  z-index: 10000
+  -moz-opacity: 0.95
+  textarea
+    height: 10em
+    margin: 0 auto 10px auto
+    width: 95%
+
+#st-xhtml-name-tools table
+  margin: 0 auto 10px 0px
+
+#st-xhtml-cell-settings-tools, #st-xhtml-sheet-settings-tools
+  /*
+   *height: 300px;
+   *overflow: auto;
+
+.st-xhtml-drawer-label
+  font-size: 75%
+  font-weight: bold
+
+#st-xhtml-range-names
+  width: 100px
+
+#st-xhtml-range-name
+  width: 80px
+
+#st-xhtml-range-description
+  width: 235px
+
+#st-xhtml-range-value
+  width: 60px
+
+#st-xhtml-toolbar:after
+  content: "."
+  clear: both
+  visibility: hidden
+
+#st-xhtml-toolbar-bgcolorpicker, #st-xhtml-toolbar-colorpicker
+  border: 5px solid #ccf
+  background: #ffc
+  width: 112px
+  display: none
+  position: absolute
+
+#st-xhtml-toolbar-bgcolorpicker
+  position: absolute
+  a
+    text-decoration: none
+    width: 16px
+    height: 16px
+    display: block
+    float: left
+
+#st-xhtml-toolbar-colorpicker a
+  text-decoration: none
+  width: 16px
+  height: 16px
+  display: block
+  float: left
+
+#st-xhtml-buttons
+  background-color: $lightest
+  height: 28px
+  padding-top: 4px
+  font-size: 0.9em
+  a.button
+    background-color: $lighter
+    color: $darkest
+    display: block
+    margin: 0 2px 2px 2px
+    float: left
+    padding: 5px 10px 2px 10px
+    text-decoration: none
+    -moz-border-radius-topleft: 10px
+    -moz-border-radius-topright: 10px
+    -moz-border-radius-bottomleft: 10px
+    -moz-border-radius-bottomright: 10px
+
+#st-xhtml-tabs
+  background-color: $lightest
+  height: 25px
+  float: left
+  padding-right: 30px
+  a.button
+    background-color: $tertiary_color
+    display: block
+    margin: 0 2px 0 0
+    float: left
+    padding: 5px 10px 10px 10px
+    -moz-border-radius-topleft: 10px
+    -moz-border-radius-topright: 10px
+    -moz-border-radius-bottomleft: 0px
+    -moz-border-radius-bottomright: 0px
+    text-decoration: none
+    color: $grey
+    &.active, &:hover
+      color: $darkest
+  #st-edit-mode-button-link
+    color: $darkest
+  &:after
+    content: "."
+    clear: both
+    visibility: hidden
+
+#st-xhtml-title
+  font-weight: bold
+  display: block
+  margin: 0 2px 2px 30px
+  float: left
+  padding: 5px 10px 2px 10px
+
+table
+  &.st-ss .wiki, &#te_layouttable .wiki
+    padding: 0
+  &.st-ss .wiki p:last-child
+    margin: 0 !important
+  &#te_layouttable .wiki
+    p:last-child
+      margin: 0 !important
+    font-size: 100% !important
+  &.st-ss
+    margin-left: 1px
+
+/* XXX: does not work in IE6, OK'd by tracy:
+
+/* Fix an annoying bug where the left border is always invisible
+
+div#contentColumns div#contentLeft table.st-ss p
+  font-size: inherit
+  color: inherit
+  line-height: inherit
+  margin-top: inherit
+
+#tabs
+  cursor: pointer
+
+.dialog .buttons
+  float: right
+  .widgetButton
+    padding: 10px
+    float: left
+
+#te_inputecho .wiki
+  padding-top: 0px !important
+  p:last-child
+    margin-bottom: 0px !important
+
+#st-editing-insert-menu
+  list-style: none
+  line-height: 1em
+  margin-top: 0px
+  padding: 4px 0 0 0
+  ul
+    background-color: $lighter
+    border: solid $grey
+    border-width: 1px
+    list-style: none
+    line-height: 1
+    font-weight: bold
+    padding: 0
+  a
+    display: block
+    width: 11.7em
+    color: $darkest
+    text-decoration: none
+    padding: 0.25em
+    line-height: 1em
+    &:active, &:link
+      display: block
+      width: 11.7em
+      color: $darkest
+      text-decoration: none
+      padding: 0.25em
+      line-height: 1em
+    &.daddy
+      background: url("/nlw/plugin/ckeditor/images/ckeditor/rightarrow.gif") center right no-repeat
+
+#st-widgets-moreoptionspanel
+  display: none
+  table
+    margin-bottom: 0px
+
+#st-page-editing-widget-menu
+  margin: 0
+  font-size: 9pt
+  font-weight: bold
+  font-family: $body_font
+  width: 60px
+  padding-left: 5px
+  float: left
+
+#st-editing-insert-menu li
+  a
+    background: transparent url('/nlw/plugin/ckeditor/images/ckeditor/arrow-down.gif') 40px 3px no-repeat
+  li a
+    background-image: none
+  float: left
+  padding: 0
+  width: 8em
+  text-decoration: none
+  ul
+    float: left
+    position: absolute
+    z-index: 1500
+    left: -999em
+    height: auto
+    width: 12.5em
+    font-weight: normal
+    border-width: 1
+    margin: 0
+  li
+    padding-right: 0
+    width: 12.5em
+  ul
+    a
+      width: 11.7em
+    ul
+      margin: -1.75em 0 0 12.5em
+  &:hover ul ul, &.sfhover ul ul
+    left: -999em
+    ul
+      left: -999em
+  &:hover ul
+    left: auto
+  li
+    &:hover ul, li:hover ul
+      left: auto
+  &.sfhover ul
+    left: auto
+  li
+    &.sfhover ul, li.sfhover ul
+      left: auto
+  &:hover, &.sfhover
+    background-color: $light
+
+#st-editing-insert-menu>li
+  width: 60px
+
+#st-edit-mode-container.expanded
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  background-color: $lightest
+  padding-top: 10px
+  z-index: 200
+  .grid_24
+    width: 98%
+    margin: 0 1%
+
+#spellads
+  display: none !important
+  position: fixed !important
+  top: -1000px !important
+  left: -1000px !important

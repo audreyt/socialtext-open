@@ -103,7 +103,9 @@ RENAME: {
         $return = $page1->rename('My Renamed Page');
     }, undef, "no exception";
     is $return, 1, 'Rename to another page should return ok';
-    is $page1->content, "Page renamed to [My Renamed Page]\n",
+
+    my $exp = qq{<p>Page renamed to <a href="My%20Renamed%20Page">My Renamed Page</a></p>\n};
+    is $page1->content, $exp,
         'Original page content should point to new page';
 }
 
@@ -123,7 +125,9 @@ RENAME_CLOBBER: {
         $return = $page1->rename('My Second Page', 1, 1, 'My Second Page');
     }, undef, "no exception";
     is $return, 1, 'Return should be ok as existing page should be clobbered';
-    is $page1->content, "Page renamed to [My Second Page]\n",
+
+    my $exp = qq{<p>Page renamed to <a href="My%20Second%20Page">My Second Page</a></p>\n};
+    is $page1->content, $exp,
         'Original page content should point to new page';
 
     $page2 = $hub->pages->new_from_name('My Second Page');

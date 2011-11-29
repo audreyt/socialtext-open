@@ -1,25 +1,23 @@
+[%# vim: set et sts=2 sw=2: %]
 [% WRAPPER layout/html id=id title=title %]
-<div id="st-display-mode-container" class="authentication">
-  <div id="controls">
-    <div id="st-editing-tools-edit">
-        <h2 id="st-page-titletext" class="tableTitle">[% heading || title %]</h2>
-    </div>
-    <div id="controlsRight">&nbsp;</div>
+<div class="authentication">
+  <div class="grid_24">
+    <h2 id="st-page-titletext" class="tableTitle">[% heading || title %]</h2>
   </div>
+  <div class="clear"></div>
 
-  <div id="contentContainer">
+  <div class="grid_24">
     [% INCLUDE errors_and_messages %]
-
-    <div id="contentColumns">
-      <div id="contentLeft">
-        [% content %]
-      </div>
-      <div id="contentRight" class="wiki">
-        [% INCLUDE $right_template IF right_template %]  
-        &nbsp;
-      </div>
-    </div>
-    <div class="clear"></div>
   </div>
+  <div class="clear"></div>
+
+  <div class="grid_16" id="contentLeft">
+    [% content %]
+  </div>
+  <div class="grid_8" id="contentRight" class="wiki">
+    [% INCLUDE $right_template IF right_template %]  
+    &nbsp;
+  </div>
+  <div class="clear"></div>
 </div>
 [% END %]

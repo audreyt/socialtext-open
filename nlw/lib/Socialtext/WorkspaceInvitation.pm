@@ -6,12 +6,14 @@ use warnings;
 
 our $VERSION = '0.01';
 
+use Email::Valid;
 use Socialtext::AppConfig;
 use Socialtext::TT2::Renderer;
 use Socialtext::URI;
 use Socialtext::User;
 use Socialtext::l10n qw(system_locale loc);
 use Socialtext::EmailSender::Factory;
+use Socialtext::Exceptions qw(email_address_exception user_exception);
 
 =pod
 
@@ -48,18 +50,44 @@ sub send {
 
 sub _invite_one_user {
     my $self = shift;
-    my $wksp = $self->{workspace};
 
-    my $user = Socialtext::User->new(
-        email_address => $self->{invitee}
-    );
+    my $wksp = $self->{workspace};
+    my $email = $self->{invitee};
+
+    email_address_exception(
+        message => 'INVALID EMAIL ADDRESS',
+        email_address => $email,
+    ) unless Email::Valid->address($email);
+
+    email_address_exception(
+        message => 'WORKSPACE INVITATION FILTER',
+        email_address => $email,
+    ) unless $wksp->email_passes_invitation_filter($email);
+
+    email_address_exception(
+        message => 'ACCOUNT DOMAIN FILTER',
+        email_address => $email,
+    ) unless $wksp->account->email_passes_domain_filter($email);
+
+    my $user = Socialtext::User->new(email_address => $email);
+
+    user_exception(
+        message => 'USER DELETED',
+        user => $user,
+    ) if $user && ref($user) eq 'Socialtext::User::Deleted';
+
+    email_address_exception(
+        message => 'WORKSPACE RESTRICT TO REGISTERED',
+        email_address => $email,
+    ) if !$user && $wksp->restrict_invitation_to_search();
+
     if ($user and $user->is_deactivated) {
         $user->reactivate(account_id => $wksp->account_id);
     }
 
     $user ||= Socialtext::User->create(
-        username => $self->{invitee},
-        email_address => $self->{invitee},
+        username => $email,
+        email_address => $email,
         first_name => $self->{invitee_first_name},
         last_name => $self->{invitee_last_name},
         created_by_user_id => $self->{from_user}->user_id,
@@ -69,12 +97,12 @@ sub _invite_one_user {
     $user->create_email_confirmation()
         unless $user->has_valid_password();
 
-    if (!$wksp->has_user($user, direct => 1)) {
-        $wksp->add_user(
-            user => $user,
-            role => Socialtext::Role->Member(),
-        );
-    }
+    return if $wksp->has_user($user, direct => 1);
+
+    $wksp->add_user(
+        user => $user,
+        role => Socialtext::Role->Member(),
+    );
 
     $self->_log_action( "INVITE_USER", $user->email_address );
     $self->invite_notify( $user );

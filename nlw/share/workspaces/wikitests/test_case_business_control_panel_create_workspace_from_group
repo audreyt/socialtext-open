@@ -1,3 +1,6 @@
+
+*On hold until cancel button has its ID restored*
+
 .pre
   Create a group named $group_name, populate %%group_id%% with the group id in account %%group_acct%%
   Create a variable %%group_user%% also %%group_short%%
@@ -71,7 +74,7 @@
 | *Comment* | Test Case: Business Control Panel Create Workspace from Group - workspace buttons should be enabled. |  |
 | wait_for_element_visible_ok | add-workspace | 30000 |
 | wait_for_element_visible_ok | create-workspace | 30000 |
-| pause | 5000 | editable commands seem to need more time |
+| pause | 15000 | editable commands seem to need more time |
 | is-editable-ok | create-workspace |  |
 | is-editable-ok | add-workspace |  |
 

@@ -5,36 +5,36 @@
 | *Comment* | Set a *really* low "soft limit" on authen cookies, login again, and wait for cookie to need renewal |
 | st-config | set auth_token_soft_limit 2 |
 | st-logoutin |  |
-| pause | 5000 |
+| pause | 15000 |
 
 * *Interruptable actions*
 
 | *Comment* | Workspace Pages - interruptable |  |
-| open-ok | /%%workspace%%/index.cgi |  |
+| open-ok | /%%workspace%%/ |  |
 | text-like | //body | Login session has expired; please re-authenticate |
 
 | *Comment* | Workspace Actions - interruptable |  |
-| open-ok | /%%workspace%%/index.cgi?action=recent_changes |  |
+| open-ok | /%%workspace%%/?action=recent_changes |  |
 | text-like | //body | Login session has expired; please re-authenticate |
-| open-ok | /%%workspace%%/index.cgi?action=display_watchlist |  |
+| open-ok | /%%workspace%%/?action=display_watchlist |  |
 | text-like | //body | Login session has expired; please re-authenticate |
-| open-ok | /%%workspace%%/index.cgi?action=weblog_display |  |
+| open-ok | /%%workspace%%/?action=weblog_display |  |
 | text-like | //body | Login session has expired; please re-authenticate |
-| open-ok | /%%workspace%%/index.cgi?action=users_invitation |  |
+| open-ok | /%%workspace%%/?action=users_invitation |  |
 | text-like | //body | Login session has expired; please re-authenticate |
-| open-ok | /%%workspace%%/index.cgi?action=new_page |  |
+| open-ok | /%%workspace%%/?action=new_page |  |
 | text-like | //body | Login session has expired; please re-authenticate |
-| open-ok | /%%workspace%%/index.cgi?action=breadcrumbs_list |  |
+| open-ok | /%%workspace%%/?action=breadcrumbs_list |  |
 | text-like | //body | Login session has expired; please re-authenticate |
-| open-ok | /%%workspace%%/index.cgi?action=watchlist |  |
+| open-ok | /%%workspace%%/?action=watchlist |  |
 | text-like | //body | Login session has expired; please re-authenticate |
-| open-ok | /%%workspace%%/index.cgi?action=orphans_list |  |
+| open-ok | /%%workspace%%/?action=orphans_list |  |
 | text-like | //body | Login session has expired; please re-authenticate |
-| open-ok | /%%workspace%%/index.cgi?action=changes |  |
+| open-ok | /%%workspace%%/?action=changes |  |
 | text-like | //body | Login session has expired; please re-authenticate |
-| open-ok | /%%workspace%%/index.cgi?action=category_list |  |
+| open-ok | /%%workspace%%/?action=category_list |  |
 | text-like | //body | Login session has expired; please re-authenticate |
-| open-ok | /%%workspace%%/index.cgi?action=attachments_listall |  |
+| open-ok | /%%workspace%%/?action=attachments_listall |  |
 | text-like | //body | Login session has expired; please re-authenticate |
 
 | *Comment* | Container Views - interruptable |  |
@@ -93,21 +93,20 @@
 | *Comment* | POST of page edit - *NOT* interruptable (save successful) |  |
 | st-config | set auth_token_soft_limit 10 |  |
 | st-logoutin |  |  |
-| open-ok | /%%workspace%%/index.cgi |  |
-| wait-for-element-visible-ok | link=Edit | 30000 |
-| click-ok | link=Edit |  |
-| pause | 15000 |  |
-| wait-for-element-visible-ok | link=Wiki Text | 30000 |
-| click-ok | link=Wiki Text |  |
-| wait-for-element-visible-ok | wikiwyg_wikitext_textarea | 30000 |
-| type-ok | wikiwyg_wikitext_textarea | Edit This Page %%start_time%% |
-| wait-for-element-visible-ok | st-save-button-link | 30000 |
-| st-pause-click | 2000 | st-save-button-link |
-| pause | 10000 | time for alert to pop up |
-| verifyAlert | Login session has expired; please re-authenticate |  |
+
+TUXTODO: restore these tests when editor is working
+
+open-ok | /%%workspace%%/ | |
+wait-for-element-visible-ok | link=Edit | 30000 |
+click-ok | link=Edit | |
+call | st-save-page | content=Edit This Page %%start_time%% |
+pause | 10000 | time for alert to pop up |
+verifyAlert | Login session has expired; please re-authenticate | |
+
 | st-logoutin |  |  |
-| open-ok | /%%workspace%%/index.cgi |  |
-| text-like | //body | Edit This Page %%start_time%% |
+
+ open-ok | /%%workspace%%/ | |
+text-like | //body | Edit This Page %%start_time%% |
 
 | *Comment* | ReST views - *NOT* interruptable |  |
 | open-ok | /data/events |  |

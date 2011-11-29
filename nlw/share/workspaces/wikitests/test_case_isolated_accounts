@@ -33,7 +33,8 @@
 | wait_for_element_visible_ok | password |  |
 | st-login | %%user_two%% | %%password%% |
 | open_ok | /st/dashboard/ |  |
-| wait_for_text_present_ok | There are no events to display because no events have been created. | 30000 |
+| wait_for_text_present_ok | System User | 30000 |
+| text_like | //div[@class='activitiesWidget'] | qr/System User.+System User.+System User.+System User.+System User.+System User.+System User.+System User.+System User.+bookmarklet/ |
 
 | *Comment* | Test Case: Isolated Accounts Add %%user_two%% from %%group_id%%, %%group_ws%%, %%group_acct%% |  |
 | st-admin | add-member --e %%user_two%% --g %%group_id%% |  |
@@ -51,7 +52,8 @@
 
 | *Comment* | Test case: Isolated Accounts Login as %%user_two%%, verify clean after removal |  |
 | open_ok | /st/dashboard |  |
-| wait_for_text_present_ok | There are no events to display because no events have been created. | 30000 |
+| wait_for_text_present_ok | System User | 30000 |
+| text_like | //div[@class='activitiesWidget'] | qr/System User.+System User.+System User.+System User.+System User.+System User.+System User.+System User.+System User.+bookmarklet/ |
 | wait_for_element_not_present_ok | link=%%ws_one%% | 30000 |
 | wait_for_element_not_present_ok | link=%%grp_one%% | 30000 |
 
@@ -70,4 +72,4 @@
 | delete-group | %%group_id%% |  |
 | delete-account | %%group_acct%% |  |
 
-| *Comment* | Test Case: Isolated Accounts COMPLETED |
+| *Comment* | Test Case: Isolated Accounts COMPLETED |  |

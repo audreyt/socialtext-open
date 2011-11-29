@@ -9,7 +9,7 @@
 | text_like | 3890.40 |  |
 | text_like | Loan Amount |  |
 | text_like | Payment |  |
-| wait_for_element_not_present_ok | link=Edit | 5000 |
+| wait_for_element_not_present_ok | link=Edit | 15000 |
 
 | *Comment* | Test Case: Calc Miki Open a spreadsheet directly in Miki |  |
 | open_ok | /m/page/%%workspace%%/car_loan |  |
@@ -17,6 +17,6 @@
 | text_like | 3890.40 |  |
 | text_like | Loan Amount |  |
 | text_like | Payment |  |
-| wait_for_element_not_present_ok | link=Edit | 5000 |
+| wait_for_element_not_present_ok | link=Edit | 15000 |
 
 | *Comment* | Test Case: Calc Miki COMPLETED |  |

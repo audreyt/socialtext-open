@@ -1,0 +1,40 @@
+*On hold until clicking Copy Page doesn't crash Sel*
+
+| *Comment* | Test Case: Tools: Copy Page to Workspace |
+
+| set | newspace | cptw_newspace |
+| set | this_id | copy_this_page |
+| set | this_content | Copy This Page content |
+| set | new_content | Copy This Page NEW content |
+| set | this_tag | Copy This Tag |
+| set | copy_title | Page Copied |
+| set | copy_id | page_copied |
+| set | oldspace | cptw_oldspace |
+
+| delete-workspace | %%oldspace%% |  |
+| delete-workspace | %%newspace%% |  |
+
+| *Comment* | Test Case: Tools: Copy Page to Workspace. Create a target workspace |  |
+| create-workspace | %%newspace%% |  |
+| create-workspace | %%oldspace%% |  |
+| st-admin | add-member --email %%email%% --workspace %%newspace%% | qr/%%username%%.+now has the role of 'member' in the %%newspace%% workspace/ism |
+| st-admin | add-member --email %%email%% --workspace %%oldspace%% | qr/%%username%%.+now has the role of 'member' in the %%newspace%% workspace/ism |
+| st-process-jobs |  |  |
+
+| *Comment* | Test Case: Tools: Copy Page to Workspace Create test page |  |
+
+| call | [st-edit-new-page] | ws=%%oldspace%% | title=%%this_id%% | content=%%this_content%% |
+| call | [st-tag-page] | tag_to_apply=%%this_tag%% |  |  |
+
+| st_upload_if_highperms | wikitest.jpg |  |  |  |
+
+| *Comment* | Test Case: Tools: Copy Page to Workspace. Copy the page |  |
+| click_ok | link=Copy Page to Workspace |  |
+| wait_for_element_visible_ok | st-copy-workspace | 15000 |
+| wait_for_element_visible_ok | st-copy-newname | 15000 |
+| wait_for_element_visible_ok | st-copy-savelink | 15000 |
+
+| select_ok | st-copy-workspace | label=%%newspace%% |
+| type_ok | st-copy-newname | %%copy_title%% |
+| click_ok | st-copy-savelink |  |
+| pause_ok | 3000 |  |

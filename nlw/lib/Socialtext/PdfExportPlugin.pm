@@ -214,6 +214,7 @@ sub _create_html_file {
 
     my $html = $self->_get_html($page_name);
     my $temp_file = File::Temp->new(UNLINK => 0, DIR => '/tmp', SUFFIX => '.html');
+    binmode $temp_file, ':utf8';
     print $temp_file $html;
     return $temp_file->filename;
 }

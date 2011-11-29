@@ -39,6 +39,7 @@ Options:
   -n/-2             operate only on nginx service
   -u                operate only on the pushd service
   -s                operate only on the userd service
+  -w                operate only on the wikid service
 
   -t, --test        operate on live-test server rather than devel. server
   -v, --verbose     extra verbosity
@@ -49,7 +50,7 @@ END_OF_HELP
 }
 
 my (%nginx_command, %nlw_psgi_command, %ceqlotron_command, %appliance_command, %pushd_command,
-    %userd_command, %jsonproxy_command, $nginx, $apache_perl);
+    %userd_command, %jsonproxy_command, %wikid_command, $nginx, $apache_perl);
 
 # Options
 my $use_test_server  = 0;
@@ -60,6 +61,7 @@ my $jsonproxy_please = 0;
 my $appliance_please = 0;
 my $pushd_please = 0;
 my $userd_please = 0;
+my $wikid_please = 0;
 
 my %OPTSPEC = (
     'test|t'    => \$use_test_server,
@@ -73,6 +75,7 @@ my %OPTSPEC = (
     n           => \$nginx_please,
     u           => \$pushd_please,
     s           => \$userd_please,
+    w           => \$wikid_please,
 );
 
 Getopt::Long::Configure('bundling');
@@ -85,13 +88,14 @@ my @verbs = @ARGV ? @ARGV : ('start');
 
 # If you don't specify any of -c, -1, or -2, you get them all.
 $appliance_please = $ceqlotron_please = $nginx_please = $nlw_psgi_please
-    = $jsonproxy_please = $pushd_please = $userd_please = 1
+    = $jsonproxy_please = $pushd_please = $userd_please = $wikid_please = 1
     unless ( $ceqlotron_please
           || $appliance_please
           || $nginx_please
           || $nlw_psgi_please
           || $pushd_please
           || $userd_please
+          || $wikid_please
           || $jsonproxy_please );
 
 # These servers don't run in test mode
@@ -123,6 +127,7 @@ sub dispatch {
             $appliance_command{$verb}->() if $appliance_please;
             $pushd_command{$verb}->() if $pushd_please;
             $userd_command{$verb}->() if $userd_please;
+            $wikid_command{$verb}->() if $wikid_please;
             $jsonproxy_command{$verb}->() if $jsonproxy_please;
             $nlw_psgi_command{$verb}->() if $nlw_psgi_please;
         }
@@ -246,6 +251,22 @@ sub init_commands {
         },
         hup     => sub { },
         restart => sub { $userd_command{$_}->(@_) for qw( stop start ) },
+        ports   => sub { },
+    );
+
+    my $wikid_svc_dir
+        = "$ENV{ST_CURRENT}/nlw/service/st-wikid";
+    %wikid_command = (
+        start => sub {
+            print "Starting wikid service.\n";
+            shell_run("svc -u $wikid_svc_dir");
+        },
+        stop => sub {
+            print "Stopping wikid service.\n";
+            shell_run("svc -d $wikid_svc_dir");
+        },
+        hup     => sub { },
+        restart => sub { $wikid_command{$_}->(@_) for qw( stop start ) },
         ports   => sub { },
     );
 

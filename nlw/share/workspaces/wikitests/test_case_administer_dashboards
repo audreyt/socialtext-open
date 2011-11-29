@@ -2,6 +2,9 @@
 
 * Fixture: SocialWidgets
 
+| set | rss_header_text | Enterprise Social Software Blog |
+| set | cancel_button | `//div[@id='save-lightbox']/div[2]/a[2]` |
+
 | *Comment* | Test Case: Administer Dashboards create a fresh account |  |
 | set | acct | ADB %%start_time%% |
 | set | mwgmail | adb-%%start_time%%@ken.socialtext.net |
@@ -11,176 +14,117 @@
 
 | *Comment* | Test Case: Administer Dashboards non-admin cannot manage |  |
 | st-logoutin | %%mwgmail%% | %%password%% |
-| open_ok | /?dashboard | 60000 |
+| open_ok | /st/dashboard |  |
 
 | *Comment* | Test Case: Administer Dashboards - bring up DB, no administer button |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| wait_for_element_not_present_ok | link=Administer Dashboards | 5000 |
-| text_unlike | controlsRight | Administer Dashboards |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+| wait_for_element_not_present_ok | st-admin-dashboard | 15000 |
 
 | *Comment* | Test Case: Administer Dashboards - add accounts admin |  |
 | st-admin | give-accounts-admin --e %%mwgmail%% --account "%%acct%%" | now has accounts admin access |
-| open_ok | /?dashboard | 60000 |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| wait_for_element_visible_ok | link=Administer Dashboards | 5000 |
-| click_and_wait | link=Administer Dashboards |  |
-| wait_for_element_visible_ok | link=Add Widget |  |
-| wait_for_element_visible_ok | link=Save... |  |
-| wait_for_element_visible_ok | link=Cancel |  |
-| wait_for_element_visible_ok | //a[contains(text(),'Revert to Default')] |  |
+| open_ok | /st/dashboard |  |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+| wait_for_element_visible_ok | st-admin-dashboard | 15000 |
+| click_and_wait | st-admin-dashboard |  |
+| wait_for_element_visible_ok | st-edit-layout | 15000 |
+| click_ok | st-edit-layout |  |
+| wait_for_element_visible_ok | st-add-widget |  |
+| wait_for_element_visible_ok | st-save-layout |  |
+| wait_for_element_visible_ok | st-cancel-layout |  |
+| wait_for_element_visible_ok | st-revert-layout |  |
 
 | *Comment* | Test Case: Administer Dashboards - Cancel |  |
-| click_and_wait | link=Cancel |  |
-| location_like | / |  |
-| wait_for_element_visible_ok | link=Administer Dashboards | 5000 |
-| click_and_wait | link=Administer Dashboards |  |
+| click_ok | st-cancel-layout |  |
+| wait_for_element_visible_ok | st-edit-layout | 15000 |
+| click_ok | st-edit-layout |  |
 
 | *Comment* | Test Case: Administer Dashboards - Add RSS Viewer |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+| click_ok | st-add-widget |  |
 | wait_for_element_visible_ok | //a[@id='gallery-widget-RSS Viewer'] | 30000 |
-| click_and_wait | //a[@id='gallery-widget-RSS Viewer'] |  |
+| click_ok | //a[@id='gallery-widget-RSS Viewer'] |  |
+| wait_for_element_visible_ok | st-save-layout | 30000 |
+| click_ok | st-save-layout |  |
+| wait_for_element_visible_ok | save-layout-save | 15000 |
+| click_ok | save-layout-save |  |
+| wait_for_element_visible_ok | st-edit-layout | 15000 |
 
-| *Comment* | Test Case: Administer Dashboards - Test for RSS Viewer, then remove it |  |
-| wait_for_text_present_ok | Enterprise Social Software Blog | 30000 |
-| st-name-widget | 5 | rssv |
-| st-widget-title-like | rssv | Enterprise Social Software Blog |
-| text_like | Push to all dashboards |  |
-| wait_for_element_visible_ok | xpath=(//a[contains(@class,'close')])[5] | 30000 |
-| click_ok | xpath=(//a[contains(@class,'close')])[5] |  |
+| *Comment* | Test Case: Administer Dashboards - Test for RSS Viewer |  |
+| wait_for_text_present_ok | %%rss_header_text%% | 30000 |
+| st-widget-title | rssv | %%rss_header_text%% |
 
 | *Comment* | Test Case: Administer Dashboards - Add Wikipedia |  |
-| open_ok | /?dashboard | 60000 |
-| wait_for_element_visible_ok | link=Administer Dashboards | 5000 |
-| click_and_wait | link=Administer Dashboards |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
+| open_ok | /st/dashboard |  |
+| wait_for_element_visible_ok | st-admin-dashboard | 15000 |
+| click_and_wait | st-admin-dashboard |  |
+| wait_for_element_visible_ok | st-edit-layout | 15000 |
+| click_ok | st-edit-layout |  |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+| click_ok | st-add-widget |  |
 | wait_for_element_visible_ok | //a[@id='gallery-widget-Wikipedia'] | 30000 |
-| click_and_wait | //a[@id='gallery-widget-Wikipedia'] |  |
+| click_and_pause | //a[@id='gallery-widget-Wikipedia'] | 4000 |
 
 | *Comment* | Test Case: Administer Dashboards - Test for Wikipedia |  |
-| wait_for_text_present_ok | Wikipedia | 30000 |
-| st-name-widget | 5 | wikipedia |
-| st-widget-title-like | wikipedia | Wikipedia |
-| text_like | Push to all dashboards |  |
+| st-widget-title | wikipedia | Wikipedia |
 
 | *Comment* | Test Case: Administer Dashboards - Save... and force update |  |
-| click_ok | //a[contains(text(),'Save')] |  |
+| click_ok | st-save-layout |  |
 | wait_for_text_present_ok | Save Confirmation | 30000 |
-| wait_for_element_visible_ok | st-save-widget-template | 30000 |
+| wait_for_element_visible_ok | save-layout-save | 30000 |
 | wait_for_element_visible_ok | force-update | 30000 |
 | check_ok | force-update |  |
-| click_ok | st-save-widget-template |  |
-
-| *Comment* | Test Case: Administer Dashboards - Selenium does not see the confirmation lightbox |  |
-
-wait_for_text_present_ok | Successfully reset all dashboards in the selected account | 30000 |
-wait_for_element_visible_ok | //a[contains(@class,'cancel genericOrangeButton')] | 30000 |
-click_ok | //a[contains(@class,'cancel genericOrangeButton')] | |
+| is_checked_ok | force-update |  |
+| click_and_pause | save-layout-save | 2000 |
 
 | *Comment* | Test Case: Administer Dashboards - verify force update |  |
-| open_ok | /?dashboard | 60000 |
-| wait_for_text_present_ok | Wikipedia | 30000 |
-| st-name-widget | 5 | wikipedia |
-| st-widget-title-like | wikipedia | Wikipedia |
-| st-select-widget-frame | wikipedia |  |
-| text_unlike | //body | Push to all dashboards |  |
+| open_ok | /st/dashboard |  |
+| st-widget-title | wikipedia | Wikipedia |
+| select_frame_ok | `//iframe[1]` |  |
 | text_like | Wiki Search |  |
 | select-frame | relative=parent |  |
 
 | *Comment* | Test Case: Administer Dashboards - add RSS Viewer and keep it |  |
-| open_ok | /?dashboard | 60000 |
-| wait_for_element_visible_ok | link=Administer Dashboards | 30000 |
-| click_and_wait | link=Administer Dashboards |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
+| open_ok | /st/dashboard |  |
+| wait_for_element_visible_ok | st-admin-dashboard | 30000 |
+| click_and_wait | st-admin-dashboard |  |
+| wait_for_element_visible_ok | st-edit-layout | 15000 |
+| click_ok | st-edit-layout |  |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+| click_ok | st-add-widget |  |
 | wait_for_element_visible_ok | //a[@id='gallery-widget-RSS Viewer'] | 30000 |
-| click_and_wait | //a[@id='gallery-widget-RSS Viewer'] |  |
+| click_and_pause | //a[@id='gallery-widget-RSS Viewer'] | 4000 |
 
 | *Comment* | Test Case: Administer Dashboards - Save... but no force update |  |
-| wait_for_element_visible_ok | //a[contains(text(),'Save')] | 30000 |
-| click_ok | //a[contains(text(),'Save')] |  |
+| wait_for_element_visible_ok | st-save-layout | 15000 |
+| click_ok | st-save-layout |  |
 | wait_for_text_present_ok | Save Confirmation | 30000 |
-| wait_for_element_visible_ok | st-save-widget-template | 30000 |
-| wait_for_element_visible_ok | force-update | 30000 |
-| click_ok | st-save-widget-template |  |
-
-| *Comment* | Test Case: Administer Dashboards - Selenium does not see the confirmation lightbox |  |
-
-wait_for_text_present_ok | Successfully reset all dashboards in the selected account | 30000 |
-wait_for_element_visible_ok | //a[contains(@class,'cancel genericOrangeButton')] | 30000 |
-click_ok | //a[contains(@class,'cancel genericOrangeButton')] | |
+| wait_for_element_visible_ok | save-layout-save | 15000 |
+| wait_for_element_visible_ok | force-update | 15000 |
+| click_and_pause | save-layout-save | 2000 |
 
 | *Comment* | Test Case: Administer Dashboards - Saved... verify present |  |
-| open_ok | /?dashboard | 60000 |
-| wait_for_element_visible_ok | link=Administer Dashboards | 30000 |
-| click_and_wait | link=Administer Dashboards |  |
-| wait_for_text_present_ok | Enterprise Social Software Blog | 30000 |
-| st-name-widget | 5 | rssv |
-| st-widget-title-like | rssv | Enterprise Social Software Blog |
+| open_ok | /st/dashboard |  |
+| wait_for_element_visible_ok | st-admin-dashboard | 30000 |
+| click_and_wait | st-admin-dashboard |  |
+| wait_for_text_present_ok | %%rss_header_text%% | 30000 |
+| st-widget-title | rssv | %%rss_header_text%% |
 
 | *Comment* | Test Case: Administer Dashboards - verify no force update occurred |  |
-| open_ok | /?dashboard | 60000 |
 | wait_for_text_present_ok | Wikipedia | 30000 |
-| st-name-widget | 5 | topdog |
-| st-widget-title-like | topdog | Wikipedia |
-| st-select-widget-frame | topdog |  |
-| text_unlike | //body | Push to all dashboards |
-| text_unlike | //body | Enterprise Social Software Blog |
-| select-frame | relative=parent |  |
+| st-widget-title | topdog | Wikipedia |
 
 | *Comment* | Test Case: Administer Dashboards - new user dashboard has Wikipedia and RSS Viewer |  |
 | st-admin | create-user --e %%mwgmail%%-2 --p %%password%% --account "%%acct%%" | created |
 
 | *Comment* | Test Case: Administer Dashboards login as brand new user |  |
 | st-logoutin | %%mwgmail%%-2 | %%password%% |
-| open_ok | /?dashboard | 60000 |
+| open_ok | /st/dashboard |  |
 | wait_for_text_present_ok | Wikipedia | 30000 |
-| wait_for_text_present_ok | Enterprise Social Software Blog | 30000 |
-
-| *Comment* | Test Case: Administer Dashboards Revert to Default... and Cancel |  |
-| st-admin | give-accounts-admin --e %%mwgmail%%-2 --account "%%acct%%" | now has accounts admin access |
-| open_ok | /?dashboard | 60000 |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| wait_for_element_visible_ok | link=Administer Dashboards | 5000 |
-| click_and_wait | link=Administer Dashboards |  |
-| wait_for_element_visible_ok | //a[contains(text(),'Revert to Default')] |  |
-| click_ok | //a[contains(text(),'Revert to Default')] |  |
-| wait_for_text_present_ok | Are you sure you want to revert to the Socialtext defaults? | 30000 |
-| wait_for_element_visible_ok | link=No | 30000 |
-| click_ok | link=No |  |
-
-| *Comment* | Test Case: Administer Dashboards Revert to Default... |  |
-| open_ok | /?dashboard | 60000 |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| wait_for_element_visible_ok | link=Administer Dashboards | 5000 |
-| click_and_wait | link=Administer Dashboards |  |
-| wait_for_element_visible_ok | //a[contains(text(),'Revert to Default')] |  |
-| click_ok | //a[contains(text(),'Revert to Default')] |  |
-| wait_for_text_present_ok | Are you sure you want to revert to the Socialtext defaults? | 30000 |
-| wait_for_element_visible_ok | link=Yes | 30000 |
-| click_ok | link=Yes |  |
-
-| *Comment* | Test Case: Administer Dashboards Revert to Default... does not work in Selenium.
-Even though the wait_for and the click_ok succeeds, the Yes button does not click.
-I worked a lot on this to no avail, so I'm removing the test for now.
-TODO: make it work. |  |
-
-*Comment* | Test Case: Administer Dashboards Wikipedia and RSS are gone | |
-open_ok | /?dashboard | 60000 |
-wait_for_element_visible_ok | link=Add Widget | 30000 |
-wait_for_element_visible_ok | link=Administer Dashboards | 5000 |
-click_and_wait | link=Administer Dashboards | |
-
-wait_for_element_visible_ok | link=Revert to Default... | |
-wait_for_text_not_present_ok | Wikipedia | 30000 |
-wait_for_text_not_present_ok | Enterprise Social Software Blog | 30000 |
-st-name-widget | 1 | topcat |
-st-widget-title-like | topcat | Welcome |
+| wait_for_text_present_ok | %%rss_header_text%% | 15000 |
 
 | *Comment* | Test Case: Administer Dashboards TEARDOWN |  |
 | st-process-jobs |  |  |
 | delete-account | %%acct%% | Recklessly deleting |
 | st-admin | deactivate-user --email %%mwgmail%% | been deactivated |
 
-| *Comment* | Test Case: Administer Dashboards COMPLETED |
+| *Comment* | Test Case: Administer Dashboards COMPLETED |  |

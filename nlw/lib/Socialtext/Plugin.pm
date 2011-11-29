@@ -35,11 +35,42 @@ sub class_id {
 
 sub preferences { $_[0]->hub->preferences_object }
 
+sub pref_names {
+    die "must be overwritten in subclasses";
+}
+
+sub _register_prefs {
+    my $self = shift;
+    my $registry = shift;
+    $registry->add(preference => $self->$_) for $self->pref_names;
+}
+
+sub pref_data {
+    my $self = shift;
+
+    my $data = +{};
+    for my $pref ($self->pref_names) {
+        my $call = $pref ."_data";
+        $data->{$pref} = $self->$call;
+    }
+
+    return $data;
+}
+
 sub class_title {
     my $self = shift;
     my $title = ref $self;
     $title =~ s/.*:://;
     return $title;
+}
+
+sub _choices {
+    my $self = shift;
+    my $data = shift;
+
+    my @choices = map { $_->{setting} => $_->{display} } @{$data->{options}};
+
+    return \@choices;
 }
 
 sub new {

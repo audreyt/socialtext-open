@@ -1,0 +1,12 @@
+<h3>[% loc('do.unsubscribe') %]</h3>
+
+<div class="alpha grid_5 input-label">
+  [% loc('wiki.unsubscribe-this') %]:
+</div>
+<div class="omega grid_15">
+  <input type="checkbox" name="workspace.do.unsubscribe"
+    value="1" /> [% loc('do.yes') %]
+</div>
+<div class="clear"></div>
+
+<hr />

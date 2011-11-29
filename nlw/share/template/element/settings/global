@@ -1,0 +1,82 @@
+[% USE decorate %]
+
+[% IF can_update_store %]
+  <h3>[% loc('nav.my-settings') %]</h3>
+
+  <div class="alpha grid_5 input-label">[% loc('field.first_name') %]:</div>
+  <div class="omega grid_15">
+    <input type="text" name="user.first_name"
+      value="[% user.first_name %]" />
+  </div>
+  <div class="clear"></div>
+
+  <div class="alpha grid_5 input-label">[% loc('field.middle_name') %]:</div>
+  <div class="omega grid_15">
+    <input type="text" name="user.middle_name"
+      value="[% user.middle_name %]" />
+  </div>
+  <div class="clear"></div>
+
+  <div class="alpha grid_5 input-label">[% loc('field.last_name') %]:</div>
+  <div class="omega grid_15">
+    <input type="text" name="user.last_name"
+      value="[% user.last_name %]" />
+  </div>
+  <div class="clear"></div>
+  
+  <div class="prefix_5 alpha grid_15">[% loc('info.reset-password-and-relogin') %]</div>
+  <div class="clear"></div>
+
+  <div class="alpha grid_5 input-label">[% loc('password.current') %]:</div>
+  <div class="omega grid_15">
+    <input type="password" name="user.old_password" value="" />
+  </div>
+  <div class="clear"></div>
+
+  <div class="alpha grid_5 input-label">[% loc('password.new') %]:</div>
+  <div class="omega grid_15">
+    <input type="password" name="user.new_password" value="" />
+  </div>
+  <div class="clear"></div>
+
+  <div class="alpha grid_5 input-label">[% loc('password.retype') %]:</div>
+  <div class="omega grid_15">
+    <input type="password" name="user.new_password_retype" value="" />
+  </div>
+  <div class="clear"></div>
+
+  <hr />
+[% END %]
+
+<h3>[% loc('class.timezone') %]</h3>
+
+[% INCLUDE element/settings/setting_select
+  pref='prefs.timezone.timezone'
+  option=prefs.timezone.timezone
+%]
+
+[% INCLUDE element/settings/setting_select
+  pref='prefs.timezone.dst'
+  option=prefs.timezone.dst
+%]
+
+[% INCLUDE element/settings/setting_select
+  pref='prefs.timezone.date_display_format'
+  option=prefs.timezone.date_display_format
+%]
+
+[% INCLUDE element/settings/setting_select
+  pref='prefs.timezone.time_display_12_24'
+  option=prefs.timezone.time_display_12_24
+%]
+
+[% INCLUDE element/settings/setting_select
+  pref='prefs.timezone.time_display_seconds'
+  option=prefs.timezone.time_display_seconds
+%]
+
+<hr />
+
+<div id="plugins-settings">
+[% FILTER decorate('st_settings') %][% END %]
+</div>

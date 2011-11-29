@@ -1,5 +1,4 @@
 * HighPermissions
-
 *NOTE: This test only works if selenium_browser has higher powers, i.e. *chrome for firefox*
 
 | *Comment* | wikitest files should be in %%wikitest_files%% on the browser server |  |
@@ -21,22 +20,27 @@
 | wait_for_element_visible_ok | st-attachments-attach-filename | 30000 |
 | type_ok | st-attachments-attach-filename | %%wikitest_files%%wikitest.pdf |
 | wait_for_text_present_ok | Uploaded files: wikitest.pdf | 30000 |
-
-| *Comment* | Test Case: Manage Files wikitest.pdf upload waits for the Done button |  |
 | wait_for_element_visible_ok | st-attachments-attach-closebutton | 30000 |
+| click_ok | st-attachments-attach-closebutton |  |
+
+| *Comment* | Test Case: Manage Files wikitest.pdf upload cycle the lightbox |  |
+| wait_for_element_visible_ok | st-attachments-uploadbutton |  |
+| click_ok | st-attachments-uploadbutton |  |
 | wait_for_element_visible_ok | st-attachments-attach-filename | 30000 |
 | type_ok | st-attachments-attach-filename | %%wikitest_files%%wikitest.doc |
-| wait_for_text_present_ok | Uploaded files: wikitest.pdf, wikitest.doc | 30000 |
-
-| *Comment* | Test Case: Manage Files wikitest.doc upload waits for the Done button |  |
+| wait_for_text_present_ok | Uploaded files: wikitest.doc | 30000 |
 | wait_for_element_visible_ok | st-attachments-attach-closebutton | 30000 |
+| click_ok | st-attachments-attach-closebutton |  |
+
+| *Comment* | Test Case: Manage Files wikitest.doc upload cycle the lightbox |  |
+| wait_for_element_visible_ok | st-attachments-uploadbutton |  |
+| click_ok | st-attachments-uploadbutton |  |
 | wait_for_element_visible_ok | st-attachments-attach-filename | 30000 |
 | type_ok | st-attachments-attach-filename | %%wikitest_files%%wikitest.txt |
-| wait_for_text_present_ok | Uploaded files: wikitest.pdf, wikitest.doc, wikitest.txt | 30000 |
-
-| *Comment* | Test Case: Manage Files wikitest.txt upload waits for the Done button |  |
+| wait_for_text_present_ok | Uploaded files: wikitest.txt | 30000 |
 | wait_for_element_visible_ok | st-attachments-attach-closebutton | 30000 |
-| click_and_wait | st-attachments-attach-closebutton |  |
+| click_ok | st-attachments-attach-closebutton |  |
+| wait_for_element_not_present_ok | st-attachments-attach-closebutton | 30000 |
 
 | text_like | //a[contains(@href,'original/wikitest.pdf')] | wikitest.pdf |
 | text_like | //a[contains(@href,'original/wikitest.doc')] | wikitest.doc |
@@ -56,52 +60,51 @@
 
 | *Comment* | Test Case: Manage Files wikitestzip.zip upload waits for the Done button |  |
 | wait_for_element_visible_ok | st-attachments-attach-closebutton | 30000 |
-| click_and_wait | st-attachments-attach-closebutton |  |
+| click_ok | st-attachments-attach-closebutton |  |
+| wait_for_element_not_present_ok | st-attachments-attach-closebutton | 30000 |
 | text_like | //a[contains(@href,'original/wikitestzip.zip')] | wikitestzip.zip |
 
 | *Comment* | Test Case: Manage Files verify pdf, doc, zip, and txt |  |
-| text_like | contentRight | wikitest.pdf |
-| text_like | contentRight | wikitest.doc |
-| text_like | contentRight | wikitest.txt |
-| text_like | contentRight | wikitestzip.zip |
+| text_like | st-display-mode-widgets | wikitest.pdf |
+| text_like | st-display-mode-widgets | wikitest.doc |
+| text_like | st-display-mode-widgets | wikitest.txt |
+| text_like | st-display-mode-widgets | wikitestzip.zip |
 
 | *Comment* | NOTE: for reasons Ken does not understand, the following code works if you don't reopen the page but fails to find the Delete links if you do. ??? |  |
 
 | *Comment* | Test Case: Manage Files Deleting doc |  |
-| click_ok | //a[contains(@class,'delete_attachment')] |  |
-| wait_for_element_visible_ok | st-attachment-delete-confirm | 30000 |
+| click_ok | //a[@class='delete_icon'] |  |
 | wait_for_element_visible_ok | st-attachment-delete | 30000 |
+| wait_for_element_visible_ok | st-attachments-delete-cancel | 30000 |
 | click_ok | st-attachment-delete |  |
-| wait_for_element_not_visible_ok | st-attachment-delete-confirm | 30000 |
+| wait_for_element_not_present_ok | st-attachment-delete | 30000 |
 | pause | 8000 | I hate pause |
-| text_unlike | contentRight | wikitest.doc |
+| text_unlike | st-display-mode-widgets | wikitest.doc |
 
 | *Comment* | Test Case: Manage Files Deleting pdf |  |
-| click_ok | //a[contains(@class,'delete_attachment')] |  |
-| wait_for_element_visible_ok | st-attachment-delete-confirm | 30000 |
+| click_ok | //a[@class='delete_icon'] |  |
 | wait_for_element_visible_ok | st-attachment-delete | 30000 |
 | click_ok | st-attachment-delete |  |
-| wait_for_element_not_visible_ok | st-attachment-delete-confirm | 30000 |
+| wait_for_element_not_present_ok | st-attachment-delete | 30000 |
 | pause | 8000 | I hate pause |
-| text_unlike | contentRight | wikitest.pdf |
+| text_unlike | st-display-mode-widgets | wikitest.pdf |
 
 | *Comment* | Test Case: Manage Files Deleting txt |  |
-| click_ok | //a[contains(@class,'delete_attachment')] |  |
-| wait_for_element_visible_ok | st-attachment-delete-confirm | 30000 |
+| click_ok | //a[@class='delete_icon'] |  |
 | wait_for_element_visible_ok | st-attachment-delete | 30000 |
 | click_ok | st-attachment-delete |  |
-| wait_for_element_not_visible_ok | st-attachment-delete-confirm | 30000 |
+| wait_for_element_not_present_ok | st-attachment-delete | 30000 |
 | pause | 8000 | I hate pause |
-| text_unlike | contentRight | wikitest.txt |
+| text_unlike | st-display-mode-widgets | wikitest.txt |
 
 | *Comment* | Test Case: Manage Files Extracting zip |  |
 | click_ok | //a[contains(@class,'extract_attachment')] |  |
-| pause | 15000 |
-| text_like | contentRight | wikitestzip.zip |
-| text_like | contentRight | O Star.txt |
-| text_like | contentRight | Poem By Robert Frost.pdf |
-| text_like | contentRight | st-logo-symbol.jpg |
-| text_like | contentRight | publictests-2-2.xls |
+| pause | 15000 |  |
+| text_like | st-display-mode-widgets | wikitestzip.zip |
+| text_like | st-display-mode-widgets | O Star.txt |
+| text_like | st-display-mode-widgets | Poem By Robert Frost.pdf |
+| text_like | st-display-mode-widgets | st-logo-symbol.jpg |
+| text_like | st-display-mode-widgets | publictests-2-2.xls |
 
 | *Comment* | Test Case: Manage Files test extracted txt file (Temporarily disabled) |  |
 
@@ -112,4 +115,4 @@ FireFOX 3.6 can not open this in-line /w selenium | text_like | Not stooping fro
 | st-admin | purge-page --workspace %%workspace%% --page manage_files_%%start_time%% | was purged |
 | st-admin | remove-member --email %%manage_files_user_2%% --workspace %%workspace%% | no longer has the role of 'member' |
 
-| *Comment* | Test Case: Manage Files COMPLETED |
+| *Comment* | Test Case: Manage Files COMPLETED |  |

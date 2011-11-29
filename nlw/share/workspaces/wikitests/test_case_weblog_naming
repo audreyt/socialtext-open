@@ -4,61 +4,69 @@ This test provoked by {rt: 27013} - creating a blog name ending in "Blog" gives 
 
 | *Comment* | Test Case: Weblog naming |  |
 
-| *Comment* | Test Case: Weblog naming: Add 'Weblog' to name if needed |  |
-| open_ok | /%%workspace%%/?action=users_settings |  |
+| set | emailat | wb.user.%%start_time%%@ |
+| set | domain | david.socialtext.net |
+| set | wb_user | %%emailat%%%%domain%% |
+| set | wb_wiki | wb_wiki_%%start_time%% |
+| set | wb_acct | wb-acct-%%start_time%% |
 
-| click_and_wait | link=Create New Blog |  |
-| type_ok | weblog_title | add1 %%start_time%% |
+| create-account | %%wb_acct%% |  |  |
+| create-workspace | %%wb_wiki%% | %%wb_acct%% |  |
+| create-user | %%wb_user%% | %%password%% | %%wb_acct%% |
+
+| st-admin | add-member --email %%wb_user%% --workspace %%wb_wiki%% | now has the role |
+| st-logoutin | %%wb_user%% | %%password%% |
+
+| *Comment* | Test Case: Weblog naming: Add 'Weblog' to name if needed |  |
+| open_ok | /st/settings/%%workspace_id%%/prefs/blog |  |
+| wait_for_element_visible_ok | workspace.do.create_blog | 30000 |
+| type_ok | workspace.do.create_blog | add1 %%start_time%% |
 | click_and_wait | link=Save |  |
-| text_like | st-editing-tools-edit | add1 %%start_time%% Blog |
-| click_and_wait | link=Settings |  |
-| click_and_wait | link=Create New Blog |  |
-| type_ok | weblog_title | add2 %%start_time%% log |
+| text_like | content | add1 %%start_time%% Blog |
+| open_ok | /st/settings/%%workspace_id%%/prefs/blog |  |
+| wait_for_element_visible_ok | workspace.do.create_blog | 30000 |
+| type_ok | workspace.do.create_blog | add2 %%start_time%% log |
 | click_and_wait | link=Save |  |
-| text_like | st-editing-tools-edit | add2 %%start_time%% log Blog |
-| click_and_wait | link=Settings |  |
-| click_and_wait | link=Create New Blog |  |
-| type_ok | weblog_title | add3 blog %%start_time%% |
+| text_like | content | add2 %%start_time%% log Blog |
+| open_ok | /st/settings/%%workspace_id%%/prefs/blog |  |
+| wait_for_element_visible_ok | workspace.do.create_blog | 30000 |
+| type_ok | workspace.do.create_blog | add3 blog %%start_time%% |
 | click_and_wait | link=Save |  |
-| text_like | st-editing-tools-edit | add3 blog %%start_time%% Blog |
+| text_like | content | add3 blog %%start_time%% Blog |
 
 | *Comment* | Test Case: Weblog naming: 'Blog' not added to name if not needed |  |
-| click_and_wait | link=Settings |  |
-| click_and_wait | link=Create New Blog |  |
-| type_ok | weblog_title | noadd1 %%start_time%% blog |
+| open_ok | /st/settings/%%workspace_id%%/prefs/blog |  |
+| wait_for_element_visible_ok | workspace.do.create_blog | 30000 |
+| type_ok | workspace.do.create_blog | noadd1 %%start_time%% blog |
 | click_and_wait | link=Save |  |
-| text_like | st-editing-tools-edit | noadd1 %%start_time%% blog |
-| text_unlike | st-editing-tools-edit | qr/blog Blog/i |
+| text_like | content | noadd1 %%start_time%% blog |
+| text_unlike | content | qr/blog Blog/i |
 
-| click_and_wait | link=Settings |  |
-| click_and_wait | link=Create New Blog |  |
-| type_ok | weblog_title | noadd2 %%start_time%% weblog |
+| open_ok | /st/settings/%%workspace_id%%/prefs/blog |  |
+| wait_for_element_visible_ok | workspace.do.create_blog | 30000 |
+| type_ok | workspace.do.create_blog | noadd2 %%start_time%% weblog |
 | click_and_wait | link=Save |  |
-| text_like | st-editing-tools-edit | noadd2 %%start_time%% weblog |
-| text_unlike | st-editing-tools-edit | qr/weblog Blog/i |
+| text_like | content | noadd2 %%start_time%% weblog |
+| text_unlike | content | qr/weblog Blog/i |
 
-| click_and_wait | link=Settings |  |
-| click_and_wait | link=Create New Blog |  |
-| type_ok | weblog_title | noadd3 %%start_time%% Blog |
+| open_ok | /st/settings/%%workspace_id%%/prefs/blog |  |
+| wait_for_element_visible_ok | workspace.do.create_blog | 30000 |
+| type_ok | workspace.do.create_blog | noadd3 %%start_time%% Blog |
 | click_and_wait | link=Save |  |
-| text_like | st-editing-tools-edit | noadd3 %%start_time%% Blog |
-| text_unlike | st-editing-tools-edit | qr/blog Blog/i |
+| text_like | content | noadd3 %%start_time%% Blog |
+| text_unlike | content | qr/blog Blog/i |
 
-| click_and_wait | link=Settings |  |
-| click_and_wait | link=Create New Blog |  |
-| type_ok | weblog_title | noadd4 %%start_time%% Weblog |
+| open_ok | /st/settings/%%workspace_id%%/prefs/blog |  |
+| wait_for_element_visible_ok | workspace.do.create_blog | 30000 |
+| type_ok | workspace.do.create_blog | noadd4 %%start_time%% Weblog |
 | click_and_wait | link=Save |  |
-| text_like | st-editing-tools-edit | noadd4 %%start_time%% Weblog |
-| text_unlike | st-editing-tools-edit | qr/Weblog blog/i |
+| text_like | content | noadd4 %%start_time%% Weblog |
+| text_unlike | content | qr/Weblog blog/i |
 
 | *Comment* | Test Case: Weblog naming TEARDOWN |  |
-| st-process-jobs | PageIndex | %%workspace%% |
-| st-admin | purge-page --w %%workspace%% --page first_post_in_add1_%%start_time%%_blog | was purged |
-| st-admin | purge-page --w %%workspace%% --page first_post_in_add2_%%start_time%%_log_blog | was purged |
-| st-admin | purge-page --w %%workspace%% --page first_post_in_add3_blog_%%start_time%%_blog | was purged |
-| st-admin | purge-page --w %%workspace%% --page first_post_in_noadd1_%%start_time%%_blog | was purged |
-| st-admin | purge-page --w %%workspace%% --page first_post_in_noadd2_%%start_time%%_weblog | was purged |
-| st-admin | purge-page --w %%workspace%% --page first_post_in_noadd3_%%start_time%%_blog | was purged |
-| st-admin | purge-page --w %%workspace%% --page first_post_in_noadd4_%%start_time%%_weblog | was purged |
+| st-process-jobs |  |  |
+| deactivate-user | %%wb_user%% |  |
+| delete-workspace | %%wb_wiki%% |  |
+| delete-account | %%wb_acct%% |  |
 
 | *Comment* | Test Case: Weblog naming COMPLETED |  |

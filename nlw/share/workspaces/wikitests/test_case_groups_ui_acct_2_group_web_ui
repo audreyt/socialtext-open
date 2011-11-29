@@ -35,47 +35,45 @@
 | *Comment* | Test Case: Groups UI Acct 2 Group Web UI at Groups page. Click ID to get latest groups |  |
 | wait_for_element_visible_ok | link=ID | 10000 |
 | click_ok | link=ID |  |
-| wait_for_element_visible_ok | link=%%group_acct%% | 30000 |
-| wait_for_element_visible_ok | link=%%group_acct%% | 30000 |
+| wait_for_element_visible_ok | link=%%group_acct%% | 10000 |
+| wait_for_element_visible_ok | link=%%group_acct%% | 10000 |
 | open_ok | nlw/control/account/%%to_acct_id%% |  |
-| wait_for_element_visible_ok | link=%%short_user_two%% <%%user_two%%> | 30000 |
-| wait_for_element_visible_ok | link=%%short_user_three%% <%%user_three%%> | 30000 |
-| wait_for_element_visible_ok | link=%%group_user_short%% <%%group_user%%> | 30000 |
-| wait_for_text_present_ok | Users (3) | 30000 |
-| wait_for_text_present_ok | Groups (2) | 30000 |
-| wait_for_element_visible_ok | link=%%group_acct%% | 30000 |
-| wait_for_element_visible_ok | link=%%group_acct_two%% | 30000 |
-| wait_for_text_present_ok | Workspaces (1) | 30000 |
-| wait_for_element_visible_ok | link=%%group_ws%% | 30000 |
+| wait_for_element_visible_ok | link=%%short_user_two%% <%%user_two%%> | 10000 |
+| wait_for_element_visible_ok | link=%%short_user_three%% <%%user_three%%> | 10000 |
+| wait_for_element_visible_ok | link=%%group_user_short%% <%%group_user%%> | 10000 |
+| wait_for_text_present_ok | Users (3) | 10000 |
+| wait_for_text_present_ok | Groups (2) | 10000 |
+| wait_for_element_visible_ok | link=%%group_acct%% | 10000 |
+| wait_for_element_visible_ok | link=%%group_acct_two%% | 10000 |
+| wait_for_text_present_ok | Workspaces (1) | 10000 |
+| wait_for_element_visible_ok | link=%%group_ws%% | 10000 |
 | click_and_wait | link=%%group_acct%% |  |
-| wait_for_element_visible_ok | link=%%group_user_short%% <%%group_user%%> | 30000 |
+| wait_for_element_visible_ok | link=%%group_user_short%% <%%group_user%%> | 10000 |
 | wait_for_text_present_ok | Users (1) | 10000 |
 
 | *Comment* | Test Case: Groups UI Acct 2 Group Web UI - Overlapping acct from/to, see error |  |
 | open_ok | /nlw/control/accounts/transform |  |
-| wait_for_element_visible_ok | primary_name | 30000 |
-| wait_for_element_visible_ok | st-submit-transform | 30000 |
+| wait_for_element_visible_ok | primary_name | 10000 |
+| wait_for_element_visible_ok | st-submit-transform | 10000 |
 | click_ok | %%to_acct%% |  |
 | select_ok | primary_name | %%to_acct%% |
 | click_and_wait | st-submit-transform |  |
-| wait_for_text_present_ok | Transform Account %%to_acct%% to group failed: Account %%to_acct%% cannot be the same as into account | 30000 |
+| wait_for_text_present_ok | Transform Account %%to_acct%% to group failed: Account %%to_acct%% cannot be the same as into account | 10000 |
 
 | *Comment* | Test Case: Groups UI Acct 2 Group Web UI - without accts admin, see error |  |
-| open_ok | / |  |
 | st-logoutin | %%group_user%% | %%password%% |
 | open_ok | /nlw/control/accounts/transform |  |
 | text_like | //body | You must have admin privileges to access this URI. |
-| open_ok | / |  |
 | st-logout |  |  |
 | open_ok | /nlw/control/accounts/transform |  |
-| text_like | //body | Log in to Socialtext |
+| text_like | //body | Log in |
 
-| *Comment* | Test Case: Groups UI Acct 2 Group Web UI Teardown |
+| *Comment* | Test Case: Groups UI Acct 2 Group Web UI Teardown |  |
 | st-process-jobs |  |  |
 | deactivate-user | %%user_two%% |  |
 | deactivate-user | %%user_three%% |  |
-| delete-group | %%group_id%% |
-| st-admin | delete-workspace --w %%group_ws%% --no-export |
+| delete-group | %%group_id%% |  |
+| delete-workspace | %%group_ws%% |  |
 | delete-account | %%to_acct%% |  |
 
-| *Comment* | Test Case: Groups UI Send Signal to Group COMPLETED |
+| *Comment* | Test Case: Groups UI Acct 2 Group Web UI COMPLETED |  |

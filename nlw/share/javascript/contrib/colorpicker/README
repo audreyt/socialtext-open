@@ -1,0 +1,48 @@
+The Problem and the Solution
+	This Library Merges the jQuery ColorPicker Library (http://www.eyecon.ro/colorpicker/) with the iepngfix.htc 
+	from TwinHelix (http://www.twinhelix.com/css/iepngfix/).
+
+	The end result is a ColorPicker Library that works accross all browsers, including IE6.
+
+	The ultimate solution to this problem was not that difficult, it was achieved with 2 steps;
+			1.) Download the IEPNGFIX package from TwinHelix, and drop the iepngfix.htc and blank.gif files into 
+			    the root of the ColorPicker Library (or the root of your public folder if you are installing this in 
+			    your own application).
+			2.) Put the following lines of code in the bottom of the colorpicker.css file;
+		
+			/************************
+			JS File Requires These
+			************************/
+			.colorpicker_color div, .colorpicker_color div div { behavior: url("iepngfix.htc") }
+			/************************
+			SlideDown Demo Requires These
+			************************/
+			#colorSelector2, #colorSelector2 div, #colorSelector2 div div { behavior: url("iepngfix.htc") }
+			/************************
+			Pop-Up Live Preview Demo Requires These
+			************************/
+			#colorSelector, #colorSelector div  { behavior: url("iepngfix.htc") } 
+		
+		
+Better Efficiency?
+	If you want your application to be a bit more efficient, I would recommend following the steps below;
+		1.) Add a conditional statement in the head your layout, that defines a separate CSS file for IE6. For those 
+		    of you not familiar with this, the statement looks like this;
+		<!--[if IE 6]>
+			<link rel="stylesheet" href="/ie6.css" type="text/css" media="screen, projection">
+		<![endif]-->
+		
+		2.) Create ie6.css and place it where ever your stylesheets are.
+		3.) Remove the lines of code that I added to colorpicker.css and put them in ie6.css
+		
+This will only call the iepngfix.htc file when the browser is recognized as IE6.
+
+Improvements to Come?
+	Yeah, there's a small issue of cleaning up the borders around the colorSelector divs so that they are not transparent. 
+	I'll get there. But at least for the the time being you can few the colors in those DIVs, which you couldn't do before.
+
+
+Disclaimer: My wife is a lawyer, so I'm always aware of the legal stuff. This library is provided "As Is", and I assume no 
+responsibility for issues it may cause you. I have tested it on many browsers, but not all operating systems, and cannot 
+guarantee that it will behave properly across all platforms. In other words, use at your own risk.....but i think the risk 
+is pretty low :-)

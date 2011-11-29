@@ -1,0 +1,93 @@
+<form onsubmit="gadgets.container.save([% gadget.instance_id %], [% gadget.gadget_id %], this);return false">
+    [% FOR pref = gadget.preferences %]
+        [% IF pref.datatype == 'hidden' %]
+            <input name="[% pref.name %]" type="hidden" value="[% pref.value | html %]"/>
+        [% END %]
+    [% END %]
+
+    <table class="widgetUserPrefs">
+        [% FOR pref = gadget.preferences %]
+            [% IF pref.datatype == 'hidden' %]
+                [% NEXT %]
+            [% END %]
+
+            <tr class="widgetUserPref_[% pref.name %]">
+                <th>[% pref.display_name.replace(':$', '').replace('\uFF1A$', '') %]:</th>
+                <td>
+                [% IF pref.datatype == 'enum' %]
+                    <select name="[% pref.name %]">
+                        [% FOR item = pref.options %]
+                            [% selected = '' %]
+                            [% IF pref.value == item.value %]
+                                [% selected = 'selected="1"' %]
+                            [% END %]
+                            <option value="[% item.value |html %]" [% selected %]>
+                                [% item.display |html %]
+                            </option>
+                        [% END %]
+                    </select>
+                [% ELSIF pref.datatype == 'workspace' %]
+                    [% SET workspace_setting_style = '' %]
+                    [% IF workspaces.size == 1 AND pref.required %]
+                        [% IF pref.value == '' %]
+                            [% SET pref.value = workspaces.0.name %]
+                        [% END %]
+                        <div class="fixedSetting">[% workspaces.0.label |html %]</div>
+                        [% SET workspace_setting_style = 'display: none' %]
+                    [% END %]
+                    <select class="workspace_setting" name="[% pref.name %]" style="[% workspace_setting_style %]">
+                        [% SET ws_is_selected = 0 %]
+                        [% IF pref.required == 0 && view != 'group' %]
+                            <option value="" [% IF pref.value == '' %][% SET ws_is_selected = 1 %]selected="selected"[% END %]>All</option>
+                        [% END %]
+                        [% FOR ws = workspaces %]
+                            <option account="[% ws.account %]" value="[% ws.name %]" [% IF ws.name == pref.value %]selected="selected"[% SET ws_is_selected = 1 %][% END %]>
+                                [% ws.label | html %]
+                            </option>
+                        [% END %]
+                        [% UNLESS ws_is_selected %]
+                            <option value="[% pref.value %]" selected="selected">[% pref.value %]</option>
+                        [% END %]
+                    </select>
+                [% ELSIF pref.datatype == 'account' %]
+                    [% IF accounts.size == 1 %]
+                        [% IF pref.value == '' %]
+                            [% SET pref.value = accounts.0.name %]
+                        [% END %]
+                    <input value="[% accounts.0.name %]" name="[% pref.name %]" type="hidden"/>
+                    <div class="fixedSetting">[% accounts.0.name %]</div>
+                    [% ELSE %]
+                    <select class="account_setting" name="[% pref.name %]">
+                    [% SET account_is_selected = 0 %]
+                    [% IF pref.required == 0 %]
+                        <option value="" [% IF pref.value == '' %][% SET account_is_selected = 1 %]selected="selected"[% END %]>All</option>
+                    [% END %]
+                    [% FOR account = accounts %]
+                        <option value="[% account.name %]" [% IF account.name == pref.value %][% SET account_is_selected = 1 %]selected="selected"[% END %]>
+                            [% account.name %]
+                        </option>
+                    [% END %]
+                        [% UNLESS account_is_selected %]
+                            <option value="[% pref.value %]" selected="selected">[% pref.value %]</option>
+                        [% END %]
+                    </select>
+                    [% END %]
+                [% ELSIF pref.datatype == 'page' %]
+                    <input value="[% pref.value |html %]" name="[% pref.name %]" class="page_setting"/>
+                [% ELSIF pref.datatype == 'spreadsheet' %]
+                    <input value="[% pref.value |html %]" name="[% pref.name %]" class="spreadsheet_setting"/>
+                [% ELSIF pref.datatype == 'bool' %]
+                    <input name="[% pref.name %]" type="checkbox" value="true" [% IF pref.value == 'true' %]checked="checked"[% END %]/>
+                [% ELSE %]
+                    <input name="[% pref.name %]" type="text" value="[% pref.value |html %]"/>
+                [% END %]
+                </td>
+        </tr>
+        [% END %]
+        <tr>
+            <td colspan="2" class="widgetUserPrefsButtons">
+                <input id="st-savebutton-[% gadget.instance_id %]" type='submit' value='[% loc('do.save') %]' class="searchButton st-savebutton"/>
+            </td>
+        </tr>
+    </table>
+</form>

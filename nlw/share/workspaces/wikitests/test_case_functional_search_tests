@@ -25,20 +25,20 @@ Note: Heavily dependent on the default content of current test-data workspace
 | st-result | Project Plans |  |
 | st-result | Credit Card Payment |  |
 | st-result | Sample Excel 2007 file.xlsx |  |
-| st-search | jabber |  |
-| st-result | 5 total |
+| st-search | jabber | Pages matching 'jabber' |
+| st-result | 5 total |  |
 
 | *Comment* | Test case: Functional Search Word, Two tests because sometimes beamish and stemming swap relevance |  |
-| text_like | //body | qr/jabber.+The Vorpal Sword.+Stemming test page 2.+Jabberwocky/ |
-| text_like | //body | qr/jabber.+The Vorpal Sword.+beamish boy.+Jabberwocky/ |
+| text_like | qr/jabber.+The Vorpal Sword.+Stemming test page 2.+Jabberwocky/ |  |
+| text_like | qr/jabber.+The Vorpal Sword.+beamish boy.+Jabberwocky/ |  |
 
 | *Comment* | Test case: Functional Search Word, Excel, PPT 2007 format |  |
-| st-search | lorem AND ipsum |  |
+| st-search | lorem AND ipsum | Pages matching 'lorem AND ipsum' |
 | st-result | 3 total |  |
 | st-result | Boilerplate PPT File.pptx |  |
 | st-result | Sample Excel 2007 file.xlsx |  |
 | st-result | In the Beginning was a word document.docx |  |
-| st-search | boilerplate |  |
+| st-search | boilerplate | Pages matching 'boilerplate' |
 | st-result | Boilerplate PPT File.pptx |  |
 | st-result | 1 total |  |
 
@@ -52,7 +52,7 @@ Note: Heavily dependent on the default content of current test-data workspace
 | st-result | jabber |  |
 | st-result | The Vorpal Sword |  |
 | st-result | Stemming test page 2 |  |
-| text_like | qr/Jabberwocky.+beamish boy.+jabber.+The Vorpal Sword.+Stemming test page 2/ |
+| text_like | qr/Jabberwocky.+beamish boy.+jabber.+The Vorpal Sword.+Stemming test page 2/ |  |
 | st-search | vorp | Pages matching 'vorp' |
 | st-result | 0 results |  |
 | st-search | vorp* | Pages matching 'vorp*' |
@@ -154,11 +154,11 @@ Title searches
 | st-search | =jabberwocky OR brillig | Pages matching 'title:jabberwocky OR brillig' |
 | st-result | 2 total |  |
 | st-result | jabber |  |
-| st-result | Jabberwocky |
+| st-result | Jabberwocky |  |
 | st-search | slithy OR title:jabber | Pages matching 'slithy OR title:jabber' |
 | st-result | 4 total |  |
 | st-result | jabber |  |
-| st-result | Jabberwocky |
+| st-result | Jabberwocky |  |
 | st-result | Slithy |  |
 | st-result | Wock |  |
 | st-search | ="beamish boy" OR tag:"carroll's poem" | Pages matching 'title:"beamish boy" OR tag:"carroll's poem"' |
@@ -170,8 +170,8 @@ Title searches
 | st-search | slithy OR tag:carroll | Pages matching 'slithy OR tag:carroll' |
 | st-result | 6 total |  |
 | st-result | jabber |  |
-| st-result | Jabberwocky |
-| st-result | The Vorpal Sword |
+| st-result | Jabberwocky |  |
+| st-result | The Vorpal Sword |  |
 | st-result | Slithy |  |
 | st-result | Wock |  |
 | st-result | beamish boy |  |
@@ -224,7 +224,6 @@ Title searches
 | text_like | //body | qr/jabber.+Wock/ |
 | text_like | //body | qr/jabber.+Credit Card Payment/ |
 | text_like | //body | qr/jabber.+Sample Excel 2007 file.xlsx/ |
-
 
 | st-search | =jabber OR 1.2 | Pages matching 'title:jabber OR 1.2' |
 | st-result | 3 total |  |

@@ -1,39 +1,32 @@
 | *Comment* | Test Case: Link Interface Web link |  |
 
-
 | *Comment* | Test Case: Link Interface Web Link must be included from TC: Link Interface |  |
 
 | *Comment* | Test Case: Link Interface Web Link create a web link |  |
-| wait_for_element_visible_ok | wikiwyg_button_link | 30000 |
-| click_ok | wikiwyg_button_link |  |
-| wait_for_element_visible_ok | add-web-link | 30000 |
-| check_ok | add-web-link |  |
-| is_checked_ok | add-web-link |  |
-| type_ok | wiki-link-text |  |
-| type_ok | st-widget-workspace_id |  |
-| type_ok | st-widget-page_title |  |
-| type_ok | wiki-link-section |  |
-| wait_for_element_visible_ok | web-link-text | 30000 |
-| type_ok | web-link-text | Socialtext |
-| wait_for_element_visible_ok | web-link-destination | 30000 |
-| type_ok | web-link-destination | `http://www.socialtext.com` |
+| wait_for_element_visible_ok | //a[@title='Link'] | 30000 |
+| click_ok | //a[@title='Link'] |  |
+| wait_for_element_visible_ok | cke_78_select | 30000 |
+| is_selected_ok | cke_78_select | label=URL |
+| wait_for_element_visible_ok | cke_84_textInput | 30000 |
+| type_ok | cke_84_textInput | `http://www.socialtext.com` |
 
 | *Comment* | This is where the problem is in IE, but I can't quite figure out why it doesn't save properly |  |
-| click_ok | st-widget-link-savebutton |  |
+| click_ok | cke_235_label |  |
 
 | *Comment* | Test Case: Link Interface Web link pause for the link lozenge to render |  |
 | pause | 10000 | pause for rendering |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 30000 |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
 | st-page-save |  |  |
 
 | *Comment* | Test Case: Link Interface Web Link save and reopen web link |  |
 | wait_for_element_visible_ok | st-edit-button-link | 30000 |
 | click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| wait_for_text_present_ok | Editing: | 10000 |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 30000 |
+| wait_for_text_present_ok | Signal this edit | 10000 |
 
 | *Comment* | Test Case: Link Interface Web Link verify web link rendered |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/"Socialtext"<http\:\/\/www\.socialtext\.com\/?>/` |
+| verifyValue | //textarea[contains(@class,"cke_source")] | `http://www.socialtext.com` |

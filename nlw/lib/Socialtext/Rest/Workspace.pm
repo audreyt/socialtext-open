@@ -148,20 +148,29 @@ sub POST_to_trash {
             for my $thing (@$data) {
                 my $condemned;
             
-                $condemned = Socialtext::User->new(user_id => $thing->{user_id}) if $thing->{user_id};
-                $condemned ||= Socialtext::User->new(username => $thing->{username}) if $thing->{username};
-                if (!$condemned) {
-                    $condemned = eval {
-                        Socialtext::Group->GetGroup(group_id => $thing->{group_id})
-                    };
-                }
-                next unless $condemned
-                    && $ws->user_set->direct_object_role($condemned);
+                $condemned = Socialtext::User->new(user_id => $thing->{user_id})
+                    if $thing->{user_id};
 
-                $ws->remove_role(
-                    actor  => $self->rest->user,
-                    object => $condemned,
-                );
+                $condemned ||= Socialtext::User->new(
+                    username => $thing->{username})
+                if $thing->{username};
+
+                if ($condemned 
+                    && $ws->user_set->direct_object_role($condemned)) {
+
+                    $ws->remove_user(user => $condemned);
+                    next;
+                }
+
+                $condemned = eval {
+                    Socialtext::Group->GetGroup(group_id => $thing->{group_id})
+                };
+                if ($condemned 
+                    && $ws->user_set->direct_object_role($condemned)) {
+
+                    $ws->remove_group(group => $condemned);
+                    next;
+                }
             }
             return '';
         });

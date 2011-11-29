@@ -1,11 +1,8 @@
 | *Comment* | STARTING Test Case: Insert Blocks |  |
 
 | *Comment* | Test Case: Insert Blocks make a test page |  |
-| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | block |
+
+| call | [st-edit-fill-page] | ws=%%workspace%% | title=test title | content=block |
 
 | *Comment* | Test Case: Insert Blocks cancel Code Block |  |
 | wait_for_element_visible_ok | link=Code... | 30000 |
@@ -17,7 +14,7 @@
 | type_ok | st-widget-block-content | print "very semantic text output here $user\n"; |
 | select_ok | st-widget-block-syntax | label=Perl |
 | click_ok | st-widget-block-cancel |  |
-| pause | 5000 |  |
+| pause | 15000 |  |
 | verifyValue | wikiwyg_wikitext_textarea | block |
 | text_unlike | wikiwyg_wikitext_textarea | very semantic text output here |
 
@@ -29,15 +26,12 @@
 | type_ok | st-widget-block-content | print "very specific text output here $user"; |
 | select_ok | st-widget-block-syntax | label=Perl |
 | click_ok | st-widget-block-save |  |
-| pause | 5000 |  |
+| pause | 15000 |  |
 | verifyValue | wikiwyg_wikitext_textarea | `qr/.code-perl.+very specific text output here/s` |
 
 | *Comment* | Test Case: Insert Blocks another new page |  |
-| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | block |
+
+| call | [st-edit-fill-page] | ws=%%workspace%% | title=test title | content=block |
 
 | *Comment* | Test Case: Insert Blocks insert HR |  |
 | click_ok | link=Horizontal Line |  |
@@ -55,11 +49,8 @@
 | include | [Test Case: Insert Menu HTML] |  |
 
 | *Comment* | Test Case: Insert Blocks yet another new page |  |
-| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | `block ----` |
+
+| call | [st-edit-fill-page] | ws=%%workspace%% | title=test title | content=`block ----` |
 
 | *Comment* | Test Case: Insert Blocks "Preformatted Text..." |  |
 | click_ok | link=Preformatted Text... |  |
@@ -76,8 +67,5 @@
 | click_ok | st-widget-block-save |  |
 | wait_for_element_not_visible_ok | st-widget-block-save | 30000 |
 | verifyValue | wikiwyg_wikitext_textarea | `qr/block.+pre.+some preformatted text.+pre/s` |
-
-| *Comment* | Test Case: Insert Blocks clear Untitled Page from new page to avoid confusion |  |
-| click_ok | st-newpage-pagename-edit |  |
 
 | *Comment* | Test Case: Insert Blocks COMPLETED |  |

@@ -1,0 +1,30 @@
+[% page_url = BLOCK %][% predicate_with_params %];summaries=[% IF summaries; 1; ELSE; 0; END %][% END %]
+<div class="pagination-container">
+    <span class="paging-back">
+        [% IF pager.current_page == pager.first_page %]
+            <span class="paging-button">&laquo; [% loc('nav.first') %]</span>
+            <span class="paging-button">&lsaquo; [% loc('nav.previous') %]</span>
+        [% ELSE %]
+            <span class="paging-button">&laquo; <a title="[% loc('nav.first-page') %]" href="[% page_url %];offset=0;limit=[% limit %]">[% loc('nav.first') %]</a></span>
+            <span class="paging-button">&lsaquo; <a title="[% loc('nav.previous-page') %]" href="[% page_url %];offset=[% previous_page_offset %];limit=[% limit %]">[% loc('nav.previous') %]</a></span>
+        [% END %]
+    </span>
+    <span class="paging-numbers">
+        [% FOREACH page IN pager.pages_in_set %]
+            [% IF page == pager.current_page %]
+                <span class="paging-button"><b>[% page %]</b></span>
+            [% ELSE %]
+                <span class="paging-button"><a href="[% page_url %];offset=[% (page - 1) * limit %];limit=[% limit %]" title="[% loc('nav.page') %] [% page %]">[% page %]</a></span>
+            [% END %]
+        [% END %]
+    </span>
+    <span class="paging-forward">
+        [% IF pager.current_page == pager.last_page %]
+            <span class="paging-button">[% loc('nav.next') %] &rsaquo;</span>
+            <span class="paging-button">[% loc('nav.last') %] &raquo;</span>
+        [% ELSE %]
+            <span class="paging-button"><a title="[% loc('nav.next-page') %]" href="[% page_url %];offset=[% next_page_offset %];limit=[% limit %]">[% loc('nav.next') %]</a> &rsaquo;</span>
+            <span class="paging-button"><a title="[% loc('nav.last-page') %]" href="[% page_url %];offset=[% last_page_offset %];limit=[% limit %]">[% loc('nav.last') %]</a> &raquo;</span>
+        [% END %]
+    </span>
+</div>

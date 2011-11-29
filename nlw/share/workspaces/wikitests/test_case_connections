@@ -1,66 +1,42 @@
+TUXTODO: On hold until [st-edit-new-page] can process \n correctly, then remove skip.all
 
-| *Comment* | Test Case: Connections |
+| *Comment* | Test Case: Connections |  |  |  |
 
+| call | [st-edit-new-page] | ws=%%workspace%% | title=Connections TestPage %%start_time%% | content=`FetchRSS Test\n{fetchrss: <http://feeds.feedburner.com/ross>}\n*AIM.* aim:example *Yahoo!* *alternatively:* ymsgr:example yahoo:example *Skype.* *alternatively:* callto:example skype:example Googlesearch\n{googlesearch: example}\n` |
 
-| open_ok | /%%workspace%%/?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | st-newpage-pagename-edit | Connections TestPage %%start_time%% |
-
-| type_ok | wikiwyg_wikitext_textarea | `FetchRSS Test\n{fetchrss: http://feeds.feedburner.com/ross}\n*AIM.* aim:example *Yahoo!* *alternatively:* ymsgr:example yahoo:example *Skype.* *alternatively:* callto:example skype:example Googlesearch\n{googlesearch: example}\n` |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
 | text_like | st-page-content | Ross Mayfield's Weblog |
 | text_like | st-page-content | AIM. |
 | text_like | st-page-content | Yahoo! alternatively: |
 | text_like | st-page-content | Skype. alternatively: |
 | text_like | st-page-content | Search for "example" |
 
-| *Comment* | Test Case: Connections. Four RSS/ATOM feeds, one at a time ELSE timeout |
+| *Comment* | Test Case: Connections. Four RSS/ATOM feeds, one at a time ELSE timeout |  |  |  |
 
-| *Comment* | Test Case: Connections. ATOM 1.0 |  |
-| click_ok | link=Edit |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | `^ Atom\n{fetchrss: http://www.atomenabled.org/atom.xml}\n{fetchrss: http://www.atomenabled.org/atom.xml abstract}\n{fetchrss: http://www.atomenabled.org/atom.xml summary}\n{fetchrss: http://www.atomenabled.org/atom.xml full}` |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
-| wait_for_text_present_ok | Atom | 120000 |
-| text_like | qr/AtomEnabled\.org.+AtomEnabled\.org.+AtomEnabled\.org.+AtomEnabled\.org/ims |  |
+| *Comment* | Test Case: Connections. ATOM 1.0 |  |  |  |
 
-| *Comment* | Test Case: Connections. RSS 2.0 |  |
-| click_ok | link=Edit |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text | RSS |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | `^ RSS 2.0\n{fetchrss: http://www.topix.net/rss/com/socialtext.xml}\n{fetchrss: http://www.topix.net/rss/com/socialtext.xml abstract}\n{fetchrss: http://www.topix.net/rss/com/socialtext.xml summary}\n{fetchrss: http://www.topix.net/rss/com/socialtext.xml full}` |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
-| wait_for_text_present_ok | RSS 2.0 | 120000 |
-| text_like | qr/Socialtext News.+Socialtext News.+Socialtext News.+Socialtext News/ims |  |
+| call | [st-edit-this-page] | ws=%%workspace%% | thispage=Connections TestPage %%start_time%% | content=`^ Atom\n{fetchrss: <http://www.atomenabled.org/atom.xml>}\n{fetchrss: http://www.atomenabled.org/atom.xml abstract}\n{fetchrss: http://www.atomenabled.org/atom.xml summary}\n{fetchrss: http://www.atomenabled.org/atom.xml full}` |
 
-| *Comment* | Test Case: Connections. RSS 1.0 |  |
-| click_ok | link=Edit |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | `^ RSS 1.0\n{fetchrss: http://www.xtreemos.eu/blog/feed.rdf}\n{fetchrss: http://www.xtreemos.eu/blog/feed.rdf abstract}\n{fetchrss: http://www.xtreemos.eu/blog/feed.rdf summary}\n{fetchrss: http://www.xtreemos.eu/blog/feed.rdf full}` |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
-| wait_for_text_present_ok | RSS 1.0 | 120000 |
-| text_like | qr/Blog XtreemOS.+Blog XtreemOS.+Blog XtreemOS.+Blog XtreemOS/ims |  |
+| wait_for_text_present_ok | Atom | 120000 |  |  |
+| text_like | qr/AtomEnabled\.org.+AtomEnabled\.org.+AtomEnabled\.org.+AtomEnabled\.org/ims |  |  |  |
 
-| *Comment* | Test Case: Connections. RSS .91 |  |
-| click_ok | link=Edit |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | `^ RSS .91\n{fetchrss: http://www.brettonwoodsproject.org/feed/rss/highlights.rss}\n{fetchrss: http://www.brettonwoodsproject.org/feed/rss/highlights.rss abstract}\n{fetchrss: http://www.brettonwoodsproject.org/feed/rss/highlights.rss summary}\n{fetchrss: http://www.brettonwoodsproject.org/feed/rss/highlights.rss full}` |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+| *Comment* | Test Case: Connections. RSS 2.0 |  |  |  |
+
+| call | [st-edit-this-page] | ws=%%workspace%% | thispage=Connections TestPage %%start_time%% | content=`^ RSS 2.0\n{fetchrss: <http://www.topix.net/rss/com/socialtext.xml>}\n{fetchrss: http://www.topix.net/rss/com/socialtext.xml abstract}\n{fetchrss: http://www.topix.net/rss/com/socialtext.xml summary}\n{fetchrss: http://www.topix.net/rss/com/socialtext.xml full}` |
+
+| wait_for_text_present_ok | RSS 2.0 | 120000 |  |  |
+| text_like | qr/Socialtext News.+Socialtext News.+Socialtext News.+Socialtext News/ims |  |  |  |
+
+| *Comment* | Test Case: Connections. RSS 1.0 |  |  |  |
+
+| call | [st-edit-this-page] | ws=%%workspace%% | thispage=Connections TestPage %%start_time%% | content=`^ RSS 1.0\n{fetchrss: <http://www.xtreemos.eu/blog/feed.rdf>}\n{fetchrss: http://www.xtreemos.eu/blog/feed.rdf abstract}\n{fetchrss: http://www.xtreemos.eu/blog/feed.rdf summary}\n{fetchrss: http://www.xtreemos.eu/blog/feed.rdf full}` |
+
+| wait_for_text_present_ok | RSS 1.0 | 120000 |  |  |
+| text_like | qr/Blog XtreemOS.+Blog XtreemOS.+Blog XtreemOS.+Blog XtreemOS/ims |  |  |  |
+
+| *Comment* | Test Case: Connections. RSS .91 |  |  |  |
+
+| call | [st-edit-this-page] | ws=%%workspace%% | thispage=Connections TestPage %%start_time%% | content=`^ RSS .91\n{fetchrss: <http://www.brettonwoodsproject.org/feed/rss/highlights.rss>}\n{fetchrss: http://www.brettonwoodsproject.org/feed/rss/highlights.rss abstract}\n{fetchrss: http://www.brettonwoodsproject.org/feed/rss/highlights.rss summary}\n{fetchrss: http://www.brettonwoodsproject.org/feed/rss/highlights.rss full}` |
+
 | wait_for_text_present_ok | RSS .91 | 120000 |
 | text_like | qr/Bretton Woods Project.+Bretton Woods Project.+Bretton Woods Project.+Bretton Woods Project/ims |  |
 
@@ -68,4 +44,4 @@
 | st-process-jobs | PageIndex | %%workspace%% |
 | st-admin | purge-page --w %%workspace%% --p connections_testpage_%%start_time%% | was purged |
 
-| *Comment* | Test Case: Connections COMPLETED |
+| *Comment* | Test Case: Connections COMPLETED |  |

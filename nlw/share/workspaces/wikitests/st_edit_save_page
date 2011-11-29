@@ -1,0 +1,19 @@
+| *Comment* | st-edit-save-page: title=%%title%% content=%%content%% |  |
+
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 10000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 10000 |
+| pause_ok | 4000 |  |
+| type_ok | //textarea[contains(@class,"cke_source")] | %%content%% |
+| pause_ok | 1000 |  |
+| type_ok | //textarea[contains(@class,"cke_source")] | %%content%% |
+| pause_ok | 1000 |  |
+| type_ok | //textarea[contains(@class,"cke_source")] | %%content%% |
+| pause_ok | 1000 |  |
+| type_ok | //textarea[contains(@class,"cke_source")] | %%content%% |
+| pause_ok | 1000 |  |
+| type_ok | //textarea[contains(@class,"cke_source")] | %%content%% |
+| pause_ok | 4000 |  |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | 10000 |
+| type_ok | st-newpage-pagename-edit | %%title%% |
+| call | [st-save-and-check] | content=%%content%% |

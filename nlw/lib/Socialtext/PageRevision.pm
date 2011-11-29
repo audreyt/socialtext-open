@@ -24,7 +24,7 @@ use namespace::clean -except => 'meta';
 
 with 'Socialtext::Annotations';
 
-enum 'PageType' => qw(wiki spreadsheet);
+enum 'PageType' => qw(wiki spreadsheet xhtml);
 
 has 'hub' => (is => 'rw', isa => 'Socialtext::Hub', weak_ref => 1);
 
@@ -362,7 +362,7 @@ sub delete_tags {
     my @deleted;
     for my $tag (@$del) {
         my $lc_tag = lc(ensure_is_utf8($tag));
-        my $was = $set->Delete($lc_tag);
+        my $was = $set->DELETE($lc_tag);
         push @deleted, $was if defined $was;
     }
     @$tags = $set->Values();
@@ -413,6 +413,7 @@ sub age_in_english {
     return $english;
 }
 
+sub is_xhtml { $_[0]->page_type eq 'xhtml' }
 sub is_spreadsheet { $_[0]->page_type eq 'spreadsheet' }
 sub is_wiki { $_[0]->page_type eq 'wiki' }
 

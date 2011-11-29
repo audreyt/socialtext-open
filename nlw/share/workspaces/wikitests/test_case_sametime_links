@@ -23,14 +23,9 @@
 | click_and_wait | update_profile |  |
 
 | *Comment* | Test Case: SameTime Links edit a page to produce an hcard |  |
-| open_ok | /%%workspace%% |  |
-| wait_for_element_visible_ok | st-edit-button-link | 30000 |
-| click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+
+| call | [st-edit-new-page] | ws=%%workspace%% | title=st_%%start_time%% | content=test content |
+
 | wait_for_text_present_ok | Updated by %%sametime_user_short%% | 30000 |
 
 | *Comment* | Test Case: SameTime Links check profile while running ST client |  |
@@ -38,7 +33,7 @@
 | open_ok | /st/profile/%%sametime_userid%% |  |
 | wait_for_text_present_ok | Profile | 30000 |
 | st-name-widget | 1 | profile_widget |
-| st-widget-title-like | profile_widget | Profile |
+| st-widget-title | profile_widget | Profile |
 | st-select-widget-frame | profile_widget |  |
 | text_like | Sametime |  |
 | text_like | %%sametime_sn%% |  |
@@ -52,7 +47,7 @@
 | wait_for_element_not_present_ok | link=%%sametime_sn%% | 30000 |
 
 | *Comment* | Test Case: SameTime Links check hcard |  |
-| open_ok | /%%workspace%% |  |
+| open_ok | /%%workspace%%/st_%%start_time%% |  |
 | wait_for_element_visible_ok | //span[@id='update-attribution']//a | 30000 |
 | MouseOver | //span[@id='update-attribution']//a |  |
 | wait_for_element_visible_ok | //div[@class='vcard'] | 30000 |

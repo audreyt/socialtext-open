@@ -14,55 +14,52 @@
 | open_ok | /st/profile |  |
 | wait_for_element_visible_ok | st-edit-layout | 30000 |
 | click_ok | st-edit-layout |  |
-| wait_for_element_visible_ok | st-add-widget | 30000 |
+| wait_for_element_visible_ok | st-add-widget | 15000 |
 | click_ok | st-add-widget |  |
-| wait_for_element_visible_ok | gallery-widget-My Twitter Feed | 30000 |
+| wait_for_element_visible_ok | gallery-widget-My Twitter Feed | 15000 |
 | click_ok | gallery-widget-My Twitter Feed |  |
-| wait_for_element_not_present_ok | gallery-widget-My Twitter Feed | 30000 |
 
 | *Comment* | Test Case: Twitter Widget verify content of widget when user has no twitter name in profile |  |
-| wait_for_text_present_ok | My Twitter Feed | 30000 |
+| wait_for_text_present_ok | My Twitter Feed | 15000 |
 | click_ok | st-save-layout |  |
-| wait_for_text_not_present_ok | You are in layout mode. Click Save to keep your changes, Cancel to discard them. | 30000 |
-| wait_for_element_visible_ok | `xpath=(//iframe[@class='widgetWindow'])[1]` | 30000 |
+| wait_for_element_visible_ok | `xpath=(//iframe[@class='widgetWindow'])[1]` | 15000 |
 | selectFrame | `xpath=(//iframe[@class='widgetWindow'])[1]` |  |
-| wait_for_text_present_ok | Your twitter username hasn't been added to your profile. Please click "Edit Profile" and enter your twitter username. | 30000 |
+| wait_for_text_present_ok | Your twitter username hasn't been added to your profile. | 15000 |
 | select-frame | relative=parent |  |
 
 | *Comment* | Test Case: Twitter Widget add a twitter name using edit profile |  |
 | open_ok | /st/edit_profile |  |
-| wait_for_element_visible_ok | field_twitter_sn | 30000 |
+| wait_for_element_visible_ok | field_twitter_sn | 15000 |
 | type_ok | field_twitter_sn | %%twitter%% |
-| wait_for_element_visible_ok | update_profile | 30000 |
+| wait_for_element_visible_ok | update_profile | 15000 |
 | click_and_wait | update_profile |  |
 
 | *Comment* | Test Case: Twitter Widget verify that the widget is displaying feed |  |
 | wait_for_text_present_ok | My Twitter Feed | 30000 |
-| wait_for_element_visible_ok | `xpath=(//iframe[@class='widgetWindow'])[1]` | 30000 |
+| wait_for_element_visible_ok | `xpath=(//iframe[@class='widgetWindow'])[1]` | 15000 |
 | selectFrame | `xpath=(//iframe[@class='widgetWindow'])[1]` |  |
-| wait_for_text_present_ok | Serena Awesome | 30000 |
-| wait_for_text_present_ok | #SeConf is awesome | 30000 |
-| wait_for_text_present_ok | @seconf awesome | 30000 |
-| wait_for_text_present_ok | test tweet | 30000 |
+| wait_for_text_present_ok | Serena Awesome | 15000 |
+| wait_for_text_present_ok | #SeConf is awesome | 15000 |
+| wait_for_text_present_ok | @seconf awesome | 15000 |
+| wait_for_text_present_ok | test tweet | 15000 |
 | text_like | qr/SeConf is awesome.+seconf awesome.+test tweet/ |  |
 | select-frame | relative=parent |  |
 
 | *Comment* | Test Case: Twitter Widget remove the twitter name within the widget preferences |  |
 | click_ok | st-edit-layout |  |
-| wait_for_element_visible_ok | `xpath=(//a[@class='settings'])[4]` | 30000 |
-| click_ok | `xpath=(//a[@class='settings'])[4]` |  |
-| wait_for_element_visible_ok | twitter_sn | 30000 |
+| wait_for_element_visible_ok | `xpath=(//a[@class='settings'])[2]` | 30000 |
+| click_ok | `xpath=(//a[@class='settings'])[2]` |  |
+| wait_for_element_visible_ok | twitter_sn | 15000 |
 | type_ok | twitter_sn |  |
 | click_ok | `xpath=(//input[@class='searchButton st-savebutton'])[4]` |  |
-| wait_for_element_not_visible_ok | `xpath=(//input[@class='searchButton st-savebutton'])[4]` | 30000 |
+| wait_for_element_not_visible_ok | `xpath=(//input[@class='searchButton st-savebutton'])[4]` | 15000 |
 | click_ok | st-save-layout |  |
-| wait_for_text_not_present_ok | You are in layout mode. Click Save to keep your changes, Cancel to discard them. | 30000 |
 
 | *Comment* | Test Case: Twitter Widget verify content of widget when twitter name is removed |  |
-| wait_for_text_present_ok | My Twitter Feed | 30000 |
-| wait_for_element_visible_ok | `xpath=(//iframe[@class='widgetWindow'])[1]` | 30000 |
+| wait_for_text_present_ok | My Twitter Feed | 15000 |
+| wait_for_element_visible_ok | `xpath=(//iframe[@class='widgetWindow'])[1]` | 15000 |
 | selectFrame | `xpath=(//iframe[@class='widgetWindow'])[1]` |  |
-| wait_for_text_present_ok | Your twitter username hasn't been added to your profile. Please click "Edit Profile" and enter your twitter username. | 30000 |
+| wait_for_text_present_ok | Your twitter username hasn't been added to your profile. Please click "Edit Profile" and enter your twitter username. | 15000 |
 
 | *Comment* | Test Case: Twitter Widget TEARDOWN |  |
 | st-process-jobs |  |  |

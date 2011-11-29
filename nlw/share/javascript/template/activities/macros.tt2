@@ -1,0 +1,40 @@
+[%- MACRO try_include(template, otherwise)
+    IF this.hasTemplate(template);
+        INCLUDE $template;
+    ELSIF otherwise AND this.hasTemplate(otherwise);
+        INCLUDE $otherwise;
+    ELSIF otherwise;
+        otherwise;
+    END
+-%]
+
+[%# Group links %]
+
+[%- MACRO group BLOCK -%]
+    <a target="_blank" href="[% event.group.uri %]">[% event.group.name |html %]</a>
+[%- END -%]
+
+[%# Page Links %]
+
+[%- MACRO workspace BLOCK -%]
+    <a target="_blank" href="[% event.page.workspace_uri %]">[% event.page.workspace_title |html %]</a>
+[%- END -%]
+
+[%- MACRO page BLOCK -%]
+    <a target="_blank" href="[% event.page.uri %]">[% event.page.name |html %]</a>
+[%- END -%]
+
+[%- MACRO page_tag BLOCK -%]
+    <a target="_blank" href="[% event.tag_uri %]">[% event.tag_name |html %]</a>
+[%- END -%]
+
+[%# Person Links %]
+
+[%- MACRO person_tag BLOCK -%]
+    <a target="_blank" href="[% event.tag_uri %]">[% event.tag_name |html %]</a>
+[%- END -%]
+
+[%- MACRO person BLOCK -%]
+    <a target="_blank" href="[% event.person.uri %]">[% event.person.best_full_name |html %]</a>
+[%- END -%]
+

@@ -1,0 +1,39 @@
+<div id="add-update-content-dialog">
+    <iframe src="/static/html/blank.html" style="display:none" name="add-widget-iframe" id="add-widget-iframe"></iframe>
+    [% url = gadget_id ? "/data/gadgets/$gadget_id" : "/data/gadgets" %]
+    <form id="add-widget" method="POST" action="[% url %]" enctype="multipart/form-data" target="add-widget-iframe">
+        [% IF !update || !src %]
+            <div class="grid_1 alpha">
+                <input [% UNLESS src %]checked="true"[% END %] value="file" type="radio" name="method" id="method-upload"/>
+            </div>
+            <div class="grid_3 omega">
+                <label for="method-upload">[% loc('widgets.upload-xml:') %]</label><br/>
+                <input style="width: 300px" name="file" type="file" id="widget-file"/>
+            </div>
+            <div class="clear vpad5"></div>
+        [% END %]
+
+        [% IF !update || src %]
+            <div class="grid_1 alpha">
+                <input [% IF src %]checked="true"[% END %] value="url" type="radio" name="method" id="method-url"/>
+            </div>
+            <div class="grid_3 omega">
+                <label for="method-url">[% gadget_id ? loc('widgets.update-from-url:') : loc('widgets.add-url:') %]</label><br/>
+                <input style="width: 300px" name="url" type="text" id="widget-url" value="[% src %]"/>
+            </div>
+            <div class="clear vpad5"></div>
+        [% END %]
+            
+        [% IF !update || !src && hasXML %]
+            <div class="grid_1 alpha">
+                <input value="editor" type="radio" name="method" id="method-editor"/>
+            </div>
+            <div class="grid_3 omega">
+                <label for="method-editor">[% loc('widgets.use-editor') %]</label><br/>
+            </div>
+            <div class="clear vpad5"></div>
+        [% END %]
+
+        <span class="error"></span>
+    </form>
+</div>

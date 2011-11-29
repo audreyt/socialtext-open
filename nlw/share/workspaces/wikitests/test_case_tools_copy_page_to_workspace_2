@@ -1,0 +1,50 @@
+| set | newspace | cptw_newspace |
+| set | this_id | copy_this_page |
+| set | this_content | Copy This Page content |
+| set | new_content | Copy This Page NEW content |
+| set | this_tag | Copy This Tag |
+| set | copy_title | Page Copied |
+| set | copy_id | page_copied |
+| set | oldspace | cptw_oldspace |
+
+| *Comment* | Test Case: Tools: Copy Page to Workspace. Let it transit to new workspace |  |  |  |
+| open_ok | /%%newspace%%/%%copy_id%% |  |  |  |
+| location_like | /%%newspace%%/%%copy_id%% |  |  |  |
+| wait_for_element_visible_ok | st-display-mode-widgets | 15000 |  |  |
+| text_like | st-display-mode-widgets | %%this_tag%% |  |  |
+| text_like | st-page-titletext | %%copy_title%% |  |  |
+| text_like | content | %%this_content%% |  |  |
+
+| *Comment* | Test Case: Tools: Copy Page to Workspace. Edit the original the page |  |  |  |
+
+| call | [st-edit-this-page] | ws=%%oldspace%% | thispage=%%this_id%% | content=%%new_content%% |
+
+| *Comment* | Test Case: Tools: Copy Page to Workspace. Copy the edited page and Cancel |  |
+| click_ok | link=Copy Page to Workspace |  |
+| wait_for_element_visible_ok | st-copy-workspace | 15000 |
+| wait_for_element_visible_ok | st-copy-newname | 15000 |
+| wait_for_element_visible_ok | st-copy-savelink | 15000 |
+
+| type_ok | st-copy-newname | Untitled Page |
+| click_ok | st-copy-savelink |  |
+| wait_for_element_visible_ok | st-copy-error | 15000 |
+| text_like | st-copy-error | The page name you selected, "Untitled Page", is not allowed. Please enter or change the page name. |
+| click_ok | st-copy-cancellink |  |
+| location_like | /%%oldspace%%/%%this_id%% |  |
+
+| *Comment* | Test Case: Tools: Copy Page to Workspace. Copy the edited page. navigate away and back |  |
+| click_and_wait | link=Workspaces |  |
+| open_ok | /%%oldspace%%/%%this_id%% |  |
+| click_ok | link=Copy Page to Workspace |  |
+| wait_for_element_visible_ok | st-copy-workspace | 15000 |
+| wait_for_element_visible_ok | st-copy-savelink | 15000 |
+| wait_for_element_visible_ok | st-copy-newname | 15000 |
+
+| select_ok | st-copy-workspace | label=%%newspace%% |
+| type_ok | st-copy-newname | %%copy_title%% |
+| click_ok | st-copy-savelink |  |
+| wait_for_element_visible_ok | st-copy-error | 15000 |
+| text_like | st-copy-error | The new page name you selected, "Page Copied", is already in use |
+| *Comment* | Test Case: Tools: Copy Page to Workspace. Force copy |  |
+| click_ok | st-copy-savelink |  |
+| pause_ok | 3000 |  |

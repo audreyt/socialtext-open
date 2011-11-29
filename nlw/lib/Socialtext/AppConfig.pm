@@ -1277,6 +1277,22 @@ Default: 1
 
 =for code type => SCALAR_TYPE
 
+=head2 minify_css
+
+Set this to false disables the css minifier.
+
+Default: 1
+
+=for code type => SCALAR_TYPE
+
+=head2 debug_selenium
+
+Pretend that the UA is selenium
+
+Default: 0
+
+=for code type => SCALAR_TYPE
+
 =head2 analytics_id
 
 Server-wide Google Analytics
@@ -1476,6 +1492,14 @@ content to Solr may simply waste memory/speed without having more content indexe
 Default: 262144
 
 =for code type => POSITIVE_INT_TYPE
+
+=head2 appliance_type
+
+The type of appliance. Appliance types are: primary, secondary
+
+Default: primary
+
+=for code type => SCALAR_TYPE
 
 =head1 OTHER METHODS
 

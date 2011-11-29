@@ -1,0 +1,35 @@
+<script>
+$.extend($.mobile, {
+    hashListeningEnabled: false,
+    ajaxLinksEnabled: false,
+    ajaxEnabled: false
+});
+
+if (window.parent && window.parent.$) {
+    var instanceId = Number("__ENV_pref_instance_id__") || "__MODULE_ID__";
+    var $save = window.parent.$('#st-savebutton-' + instanceId);
+    if ($save.length && $save.is(':visible')) {
+        $save.click();
+        $.reload = true;
+    }
+}
+</script>
+<style><!--
+@import url('/static/[% app_version %]/javascript/contrib/colorpicker/css/colorpicker.css');
+@import url('/data/accounts/__ENV_primary_account_id__/theme/bubble.css?[% app_version %]');
+#setup {
+    visibility: hidden;
+}
+#setup.ui-page-active {
+    visibility: visible;
+}
+--></style>
+<script type="text/javascript" src="/js/[% app_version %]/socialtext-jqm.js"></script>
+<link rel="stylesheet" href="/static/[% app_version %]/javascript/contrib/colorpicker/css/colorpicker.css" type="text/css" />
+<link rel="stylesheet" href="/data/accounts/__ENV_primary_account_id__/theme/bubble.css?[% app_version %]" type="text/css" />
+
+[% content %]
+
+<div id="loading" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background: white; display: none; z-index: 9999; padding-top: 12px; text-align: center; *width: 100%; *height: 100%">
+    <img src="/static/images/ajax-loader.gif" width="16" height="16" />
+</div>

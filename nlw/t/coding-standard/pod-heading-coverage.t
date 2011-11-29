@@ -63,7 +63,6 @@ my %ToDoModules = map { $_ => 1 } qw(
     Socialtext::Events::Recorder
     Socialtext::Events::Reporter
     Socialtext::Exceptions
-    Socialtext::FavoritesPlugin
     Socialtext::FetchRSSPlugin
     Socialtext::File
     Socialtext::File::Stringify
@@ -132,6 +131,7 @@ my %ToDoModules = map { $_ => 1 } qw(
     Socialtext::Pluggable::Plugin::Groups
     Socialtext::Pluggable::Plugin::Test
     Socialtext::Pluggable::Plugin::Widgets
+    Socialtext::Pluggable::Plugin::Homepage
     Socialtext::Pluggable::WaflPhrase
     Socialtext::Pluggable::WaflPhraseDiv
     Socialtext::Plugin

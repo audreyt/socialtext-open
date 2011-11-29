@@ -36,6 +36,22 @@ sub _build_all_prefs {
     return +{%$inherited_prefs, %$my_prefs};
 }
 
+sub delete {
+    my $self = shift;
+    my $current = $self->prefs;
+    my %prefs = %$current;
+    delete $prefs{$_} for @_;
+
+    try {
+        my $blob = eval { encode_json(\%prefs) };
+        $self->_update_db($blob);
+        $self->_update_objects($blob);
+    }
+    catch { die "deleting account prefs (@_): $_\n" };
+
+    return 1;
+}
+
 sub save {
     my $self = shift;
     my $updates = shift;

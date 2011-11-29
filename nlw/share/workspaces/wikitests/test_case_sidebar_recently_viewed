@@ -1,48 +1,42 @@
 | *Comment* | START Test Case: Sidebar: Recently Viewed |  |
 
- be sure a number of recent viewings have occurred | | view some pages as needed
+be sure a number of recent viewings have occurred | | view some pages as needed
 
 | *Comment* | Test Case: Sidebar: Recently Viewed. Set up test data |  |
 
-| st-admin | update-page --w %%workspace%% --e %%email%% --p "TC Sidebar RV 1 %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |
-| st-admin | update-page --w %%workspace%% --e %%email%% --p "TC Sidebar RV 2 %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |
-| st-admin | update-page --w %%workspace%% --e %%email%% --p "TC Sidebar RV 3 %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |
+| st-admin | update-page --w %%workspace%% --e %%email%% --p "TC Sidebar RV 1 %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |  |
+| st-admin | update-page --w %%workspace%% --e %%email%% --p "TC Sidebar RV 2 %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |  |
+| st-admin | update-page --w %%workspace%% --e %%email%% --p "TC Sidebar RV 3 %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |  |
 
- "Settings -> Screen Layout"<http://> | screen layout UI appears
- check "Include Recently Viewed items as a side box when viewing pages?" checkbox. Save. | settings take effect.
+"Settings -> Screen Layout"<http://> | screen layout UI appears
+check "Include Recently Viewed items as a side box when viewing pages?" checkbox. Save. | settings take effect.
 
-| *Comment* | Test Case: Sidebar: Recently Viewed Change screen layout to show breadcrumbs |  |
+| *Comment* | Test Case: Sidebar: Recently Viewed Change screen layout to show breadcrumbs |  |  |
 
-| open_ok | /%%workspace%%/?action=users_settings |  |
-| clickAndWait | link=Screen Layout |  |
-| check_ok | display__include_breadcrumbs |  |
-| clickAndWait | link=Save |  |
+| call | [st-spaces-accordion] | index=1 | section=Preferences |
 
-| open_ok | /%%workspace%%/?TC Sidebar RV 3 %%start_time%% |  |
-| open_ok | /%%workspace%%/?TC Sidebar RV 2 %%start_time%% |  |
-| open_ok | /%%workspace%%/?TC Sidebar RV 1 %%start_time%% |  |
+| check_ok | `//input[@name="prefs.display.include_breadcrumbs"]` |  |
+| click_ok | link=Save |  |
+| wait_for_text_present_ok | Saved | 10000 |
 
- Visit any page. Open the sidebar | Sidebar contains recently viewed section
- Observe values in sidebar | Sidebar contains list of most recently viewed pages in most recently viewed order
+| open_ok | /%%workspace%%/TC Sidebar RV 3 %%start_time%% |  |
+| open_ok | /%%workspace%%/TC Sidebar RV 2 %%start_time%% |  |
+| open_ok | /%%workspace%%/TC Sidebar RV 1 %%start_time%% |  |
+
+Visit any page. Open the sidebar | Sidebar contains recently viewed section
+Observe values in sidebar | Sidebar contains list of most recently viewed pages in most recently viewed order
 
 | *Comment* | Test Case: Sidebar: Recently Viewed. Sidebar |  |
+| wait_for_element_visible_ok | link=TC Sidebar RV 2 %%start_time%% | 30000 |
+| wait_for_element_visible_ok | link=TC Sidebar RV 3 %%start_time%% | 30000 |
 | text_like | link=TC Sidebar RV 2 %%start_time%% | TC Sidebar RV 2 %%start_time%% |
 | text_like | link=TC Sidebar RV 3 %%start_time%% | TC Sidebar RV 3 %%start_time%% |
 
 | *Comment* | Test Case: Sidebar: Recently Viewed validate sorting |  |
 | text_like | qr/TC Sidebar RV 2 %%start_time%%.+TC Sidebar RV 3 %%start_time%%/ |  |
 
- "What's New,"<http://> then Recently Viewed tab | same list appears in same order
-
-| *Comment* | Test Case: Sidebar: Recently Viewed. list view |  |
-| open_ok | /%%workspace%%/index.cgi?action=recent_changes |  |
-| clickAndWait | link=Recently Viewed |  |
-| text_like | link=TC Sidebar RV 1 %%start_time%% | TC Sidebar RV 1 %%start_time%% |
-| text_like | link=TC Sidebar RV 2 %%start_time%% | TC Sidebar RV 2 %%start_time%% |
-| text_like | qr/TC Sidebar RV 1 %%start_time%%.+TC Sidebar RV 2 %%start_time%%/ |  |
-
- visit several pages | Recently Viewed list changes in sidebar to track viewed pages
- "What's New,"<http://www2.socialtext.net/s3wt/%3Chttp:%3E/http></http/> then Recently Viewed tab | same list appears in same order
+visit several pages | Recently Viewed list changes in sidebar to track viewed pages
+"What's New,"<http://www2.socialtext.net/s3wt/%25252525253Chttp:%25252525253E/http></http/> then Recently Viewed tab | same list appears in same order
 
 | *Comment* | Test Case: Sidebar: Recently Viewed. Visit several pages |  |
 | open_ok | /%%workspace%%/?Announcements and Links |  |
@@ -52,23 +46,25 @@
 | open_ok | /%%workspace%%/?Announcements and Links |  |
 | text_like | qr/TC Sidebar RV 3 %%start_time%%.+Announcements.+TC Sidebar RV 1 %%start_time%%.+TC Sidebar RV 2 %%start_time%%/ |  |
 
- "Settings -> Screen Layout"<http:///> | screen layout UI appears
- uncheck "Include Recently Viewed items as a side box when viewing pages?" checkbox. Save. | settings take effect.
- Visit any page. Open the sidebar | Sidebar *DOES NOT* contain recently viewed section
+"Settings -> Screen Layout"<http:///> | screen layout UI appears
+uncheck "Include Recently Viewed items as a side box when viewing pages?" checkbox. Save. | settings take effect.
+Visit any page. Open the sidebar | Sidebar *DOES NOT* contain recently viewed section
 
-| *Comment* | Test Case: Sidebar: Recently Viewed. uncheck sidebar |  |
-| open_ok | /%%workspace%%/index.cgi?action=users_settings |  |
-| clickAndWait | link=Screen Layout |  |
-| uncheck_ok | display__include_breadcrumbs |  |
-| clickAndWait | link=Save |  |
+| *Comment* | Test Case: Sidebar: Recently Viewed. uncheck sidebar |  |  |
+| call | [st-spaces-accordion] | index=1 | section=Preferences |
+
+| uncheck_ok | `//input[@name="prefs.display.include_breadcrumbs"]` |  |
+| click_ok | link=Save |  |
+| wait_for_text_present_ok | Saved | 10000 |
+
 | open_ok | /%%workspace%%/?TC Sidebar RV 3 %%start_time%% |  |
-| text_unlike | contentRight | Announcements and Links |
-| text_unlike | contentRight | TC Sidebar RV 2 %%start_time%% |
-| text_unlike | contentRight | TC Sidebar RV 1 %%start_time%% |
-| text_like | contentRight | Incoming Links |
+| wait_for_text_present_ok | Incoming Links | 30000 |
+| text_unlike | content | Announcements and Links |
+| text_unlike | content | TC Sidebar RV 2 %%start_time%% |
+| text_unlike | content | TC Sidebar RV 1 %%start_time%% |
 
-| *Comment* | Test Case: Sidebar: Recently Viewed. Teardown |  |
-
+| *Comment* | Test Case: Sidebar: Recently Viewed. TEARDOWN |  |
+| st-process-jobs |  |  |
 | st-admin | purge-page --w %%workspace%% --p tc_sidebar_rv_1_%%start_time%% | was purged |
 | st-admin | purge-page --w %%workspace%% --p tc_sidebar_rv_2_%%start_time%% | was purged |
 | st-admin | purge-page --w %%workspace%% --p tc_sidebar_rv_3_%%start_time%% | was purged |

@@ -228,13 +228,13 @@ sub st_widget_settings {
 sub st_cycle_network_select {
     my ($self, $numelements) = @_;
     $self->handle_command('wait_for_element_visible_ok','network-select','30000'); 
-    $self->handle_command('pause',3000);
+    $self->handle_command('pause_ok',3000);
     for (my $idx=0; $idx<$numelements;$idx++) {
-        $self->handle_command('pause',3000);
+        $self->handle_command('pause_ok',3000);
         $self->handle_command('select_ok','network-select',"index=$idx");    
     }
     $self->handle_command('select_ok','network-select','index=0');
-    $self->handle_command('pause',3000);     
+    $self->handle_command('pause_ok',3000);     
 }
 
 =head2 st_widget_title_like ( logical_name, regex )
@@ -246,12 +246,13 @@ This assumes that the currently selected frame is the "parent" container frame.
 
 =cut
 
-sub st_widget_title_like {
-    my ($self, $logical, $opt1) = @_;
+sub st_widget_title {
+    my ($self, $logical, $title) = @_;
+    my $cmdx = "//div[\@class='widgetTitle']/h1[contains(text(),'" . $title . "')]";
     eval {
-        $self->{selenium}->text_like_ok("//span[\@class='widgetHeaderTitleText' and \@id='gadget-".$self->{_widgets}{$logical}."-title-text']", $opt1);
+        $self->handle_command('wait_for_element_present_ok',$cmdx,'5000');
     };
-    ok( !$@, "st-widget-title-like" );
+    ok( !$@, "st-widget-title" );
 
 }
 
@@ -365,11 +366,17 @@ sub st_single_widget_in_dashboard {
     my ($self, $linkid) = @_;
     eval {
         $self->handle_command('st-empty-container');
-        $self->handle_command('wait_for_element_visible_ok','link=Add Widget','30000');
-        $self->handle_command('click_and_wait','link=Add Widget');
+        $self->handle_command('wait_for_element_visible_ok','st-add-widget','30000');
+        $self->handle_command('click_ok','st-add-widget');
         my $str = '//a[@id=' . "'" . $linkid . "'" . ']';
-        $self->handle_command('wait_for_element_visible_ok', $str, 30000);
-        $self->handle_command('click_and_wait' ,$str); 
+        $self->handle_command('wait_for_element_present_ok', $str, 30000);
+        $self->handle_command('click_ok' ,$str); 
+        $self->handle_command('pause_ok',8000);
+        # The following refresh, though expensive, is needed to force an update
+        # to the widgetList for subsequent use by callers
+        $self->handle_command('refresh_ok');
+        # aaand ....... you have to wait ........
+        $self->{selenium}->wait_for_page_to_load(30000);
     };
     ok(!$@, 'st_single_widget_in_dashboard' );
 }
@@ -398,9 +405,9 @@ sub st_send_page_signal {
    my ($self, $signaltosend) = @_;
 
    $self->st_type_signal($signaltosend);
-   $self->handle_command('wait_for_element_visible_ok','//a[@class="btn post"]', 5000);
-   $self->handle_command('click_ok', '//a[@class="btn post"]');
-   $self->handle_command('pause',3000);
+   $self->handle_command('wait_for_element_visible_ok','st-signalthispost', 5000);
+   $self->handle_command('click_ok', 'st-signalthispost');
+   $self->handle_command('pause_ok',3000);
    $self->handle_command('set_Speed',0);
 
 }
@@ -412,14 +419,20 @@ Parameters: You pass in the signal text, followed by 1 if this is a mobile signa
 =cut
 
 sub st_send_reply {
-    my ($self, $signaltosend, $is_mobile) = @_;
-    $self->handle_command('wait_for_element_visible_ok', '//a[@class="hoverLink replyLink"]', 15000);
-    $self->handle_command('click_ok', '//a[@class="hoverLink replyLink"]');
+    my ($self, $signaltosend, $add_to_conversation, $is_mobile) = @_;
+    #TODO: click on something else in IE
+    my $firstReplyLink = '//a[@class="replyLink"]';
+    my $addToConversationLink = '//div[@class="wikiwyg"]';
+    $self->handle_command('wait_for_element_visible_ok','//div[@class="activitiesWidget"]', 15000);
+    my $replyLink = ($add_to_conversation == 1) ? $addToConversationLink : $firstReplyLink; 
+    $self->handle_command('wait_for_element_visible_ok', $replyLink, 15000);
+    $self->handle_command('click_ok', $replyLink);
 
-    $self->handle_command('set_Speed',4000);
+    $self->handle_command('set_Speed',2000);
     if ($self->_is_wikiwyg() ) { #wikiwyg
-        $self->handle_command('wait_for_element_visible_ok', '//div[@class="replies"]//iframe[@name="signalFrame"]', 15000);
-        $self->handle_command('selectFrame', '//div[@class="replies"]//iframe[@name="signalFrame"]');
+        my $frame = '//div[@class="wikiwyg focused"]//iframe[@name="signalFrame"]';
+        $self->handle_command('wait_for_element_visible_ok',$frame , 10000);
+        $self->handle_command('selectFrame', $frame);
         $self->handle_command('click_ok' ,'//body', $signaltosend);
         $self->handle_command('type_ok' ,'//body', $signaltosend);
         $self->handle_command('select-frame' ,'relative=parent');
@@ -436,8 +449,9 @@ sub st_send_reply {
          $self->handle_command('type_ok',$textbox_name,$signaltosend);
     }
     
-    $self->handle_command('wait_for_element_visible_ok','//a[@class="btn post postReply"]', 5000);
-    $self->handle_command('click_ok', '//a[@class="btn post postReply"]');
+    my $goLink = '//div[@class="post hidden"]//a[@role="button" and contains(@id,"post")]';
+    $self->handle_command('wait_for_element_visible_ok',$goLink, 5000);
+    $self->handle_command('click_ok', $goLink);
     $self->handle_command('set_Speed',0);
 }
 
@@ -449,10 +463,10 @@ Parameters: You pass in the signal text, followed by 1 if this is a mobile signa
 
 sub st_type_signal {
     my ($self, $signaltosend, $is_mobile) = @_;
-    $self->handle_command('set_Speed',4000);
+    $self->handle_command('set_Speed',2000);
    
     if ($self->_is_wikiwyg() ) { #wikiwyg
-        $self->handle_command('wait_for_element_visible_ok', 'signalFrame', 15000);
+        $self->handle_command('wait_for_element_visible_ok', 'signalFrame', 5000);
         $self->handle_command('selectFrame', 'signalFrame');
         $self->handle_command('type_ok' ,'//body', $signaltosend);
         $self->handle_command('select-frame' ,'relative=parent');
@@ -463,7 +477,7 @@ sub st_type_signal {
          } else {
              $textbox_name = 'wikiwyg_wikitext_textarea';
          }
-         $self->handle_command('wait_for_element_visible_ok',$textbox_name, 15000);
+         $self->handle_command('wait_for_element_visible_ok',$textbox_name, 5000);
          $self->handle_command('type_ok',$textbox_name,$signaltosend);
     }
 }
@@ -480,8 +494,8 @@ sub st_prepare_signal_within_activities_widget {
     my ($self, $signaltosend, $private) = @_;
     # The next two commands are REQUIRED to expose either the signalFrame or
     # the wikiwyg_wikitext_textarea before sending the signal
-    $self->handle_command('wait_for_element_present_ok', '//div[@class=' . "'mainWikiwyg setupWikiwyg wikiwyg']", 15000);
-    $self->handle_command('click_ok', '//div[@class=' . "'mainWikiwyg setupWikiwyg wikiwyg']");
+    $self->handle_command('wait_for_element_present_ok', '//div[@class=' . "'setupWikiwyg wikiwyg']", 5000);
+    $self->handle_command('click_ok', '//div[@class=' . "'setupWikiwyg wikiwyg']");
 
     $self->st_type_signal($signaltosend);
 
@@ -495,73 +509,35 @@ sub st_prepare_signal_within_activities_widget {
 
 =head2 st_send_signal_in_activities_widget
 
-Parameters: You pass in the signal text and optional private flag
-
-=cut
-
-sub st_send_signal_in_activities_widget {
-    my ($self, $signaltosend, $private) = @_;
-    $self->st_prepare_signal_within_activities_widget($signaltosend, $private);
-    $self->handle_command('wait_for_element_visible_ok','//a[@class="btn post"]', 5000);
-    $self->handle_command('click_ok', '//a[@class="btn post"]');
-    $self->handle_command('pause',3000); 
-}
-
-=head2 st_send_signal_via_activities_widget 
-
 Precondition: Open to page with a named activities widget.
 Precondition: Frame focus should be the page.
 Parameters: You pass in the activities widget name, signal text, private flag
 PostCondition: Signal is sent, Frame focus is back to entire dashboard
 
-Private flag only makes sense if the widget being used has a toggle-private element.
-
 =cut
 
-sub st_send_signal_via_activities_widget {
-    my ($self, $widgetname, $signaltosend, $private) = @_;
-    eval {
-        $self->st_send_signal_in_activities_widget($signaltosend, $private);
-    };
-    ok(!$@, 'st_send_signal_via_activities_widget');
+sub st_send_signal_in_activities_widget {
+    my ($self, $signaltosend, $private) = @_;
+    my $post = '//a[contains(@id,"widget") and contains(@id,"post")]';
+    $self->st_prepare_signal_within_activities_widget($signaltosend, $private);
+    $self->handle_command('wait_for_element_visible_ok',$post, 5000);
+    $self->handle_command('click_ok', $post);
+    $self->handle_command('pause_ok',3000); 
 }
 
+=head2 st_verify_text_in_activities_widget ($self, $texttofind)
 
-=head2 st_verify_text_within_activities_widget ($self, $texttofind)
-
-Precondition: Activities widget is selected frame
-PostCondition: Text is verfied (or not), frame focus remains on activities widget
-
-=cut
-
-sub st_verify_text_within_activities_widget {
-    my ($self, $texttofind) = @_;
-    $self->handle_command('pause', 3000);
-    #If is regexp,
-    if ($texttofind=~/^qr\//) {
-        $self->handle_command('text_like','//body', $texttofind);
-    } else {
-        $self->handle_command('wait_for_text_present_ok', $texttofind);
-    }
-}   
-
-
-=head2 st_verify_text_in_activities_widget ($self, $widgetname, $texttofind)
-
-Precondition: Open to container with a named activities widget.
-Precondition: Frame focus should be the entire page
-Parameters: You pass in the activties widget name, text to look for
-PostCondition: Text is verified (or not), Frame focus is back to entire page
+Parameters: You pass in the text to look for
+PostCondition: Text is verfied (or not)
 
 =cut
 
 sub st_verify_text_in_activities_widget {
-    my ($self, $widgetname, $texttofind) = @_;
-    eval {
-        $self->st_verify_text_within_activities_widget($texttofind);
-    };
+    my ($self, $texttofind) = @_;
+    $self->handle_command('pause_ok', 3000);
+    $self->handle_command('text_like','//div[@class="activitiesWidget"]', $texttofind);
     ok(!$@, 'st_verify_text_in_activities_widget');
-}
+}   
 
 =head2 st_text_unlike_in_activities_widget ($self, $widgetname, $betternotfindit)
 
@@ -594,7 +570,7 @@ sub st_element_not_present_in_activities_widget {
     my ($self, $widgetname, $linktofind) = @_;
     eval {
         $self->handle_command('st-select-widget-frame', $widgetname);
-        $self->handle_command('pause', 3000);
+        $self->handle_command('pause_ok', 3000);
         $self->handle_command('wait_for_element_not_present_ok', $linktofind);
         $self->handle_command('select-frame', 'relative=parent');
     };
@@ -615,7 +591,7 @@ sub st_verify_link_in_activities_widget {
     my ($self, $widgetname, $linktofind) = @_;
     eval {
         $self->handle_command('st-select-widget-frame', $widgetname);
-        $self->handle_command('pause', 3000);
+        $self->handle_command('pause_ok', 3000);
         $self->handle_command('wait_for_element_visible_ok', $linktofind);
         $self->handle_command('select-frame', 'relative=parent');
     };
@@ -632,16 +608,14 @@ Radiotype should be self-join-radio or private-radio
 sub st_create_group {
     my ($self, $groupname, $groupdesc, $radiotype) = @_;
     $self->handle_command('comment',"st_create_group called with params '$groupname','$groupdesc','$radiotype'");
-    $self->handle_command('set_Speed',4000);
+    $self->handle_command('set_Speed',2000);
     $self->handle_command('wait_for_element_present_ok','link=Create Group...',30000);
     $self->handle_command('click_ok','link=Create Group...');
     $self->handle_command('wait_for_element_visible_ok','st-create-group-next', 30000);
     $self->handle_command('wait_for_element_visible_ok', $radiotype);
     $self->handle_command('check_ok', $radiotype);
     $self->handle_command('click_ok','st-create-group-next');
-    $self->handle_command('wait_for_element_not_present_ok','st-create-group-next', 30000);
-    $self->handle_command('pause','8000');
-    $self->handle_command('text_like','//body','Create a Group');
+    $self->handle_command('pause_ok','4000');
     $self->handle_command('st-name-widget', 1,'create_group');
     $self->handle_command('st-select-widget-frame','create_group');
     $self->handle_command('wait_for_element_visible_ok','name', 30000);
@@ -663,16 +637,15 @@ search for it and click on that user.
 sub st_find_user {
     my ($self, $user_id, $label) = @_;
     eval {
-        $self->handle_command('open_ok','/?action=people;tag=;sortby=best_full_name;limit=20;account_id=all');
-        $self->handle_command('pause','10000');
-        $self->handle_command('wait_for_element_visible_ok','st-search-action', 30000);
-        $self->handle_command('wait_for_element_visible_ok', 'st-search-term', 30000);
-        $self->handle_command('wait_for_element_visible_ok', 'st-search-submit', 30000);
-        $self->handle_command('select_ok', 'st-search-action', 'Search People:');
+        $self->handle_command('open_ok','/st/people');
+        $self->handle_command('wait_for_element_visible_ok', 'st-search-term', 5000);
+        $self->handle_command('wait_for_element_visible_ok', 'st-search-submit', 5000);
         $self->handle_command('type_ok', 'st-search-term', $user_id);
-        $self->handle_command('pause', '1000');
+        $self->handle_command('pause_ok', '500');
         $self->handle_command('click_and_wait', 'st-search-submit');
-
+        if ($self->{selenium}->is_element_present("//select[\@class='account-select']")) {
+          $self->handle_command('select_ok', "//select[\@class='account-select']", "label=All Groups");
+        }
         $self->handle_command('wait-for-element-visible-ok', "link=$user_id", 30000);
         $self->handle_command('click_and_wait',"link=$user_id");
         $self->handle_command('wait-for-element-visible-ok','new_tag',30000);

@@ -709,6 +709,10 @@ remove_group_as_admin_from_workspace: {
     my $workspace = create_test_workspace(account => $account);
     my $group     = create_test_group();
 
+    my $another   = create_test_group();
+    my $admin = Socialtext::Role->Admin();
+    $workspace->add_group(group => $another, role => $admin);
+
     # Add Group as Admin to WS
     my $output = combined_from( sub {
         eval {
@@ -857,10 +861,12 @@ group_member_remains_admin_in_workspace: {
     my $account   = create_test_account_bypassing_factory();
     my $workspace = create_test_workspace(account => $account);
     my $group     = create_test_group();
+    my $another   = create_test_group();
     my $user      = create_test_user();
     my $email     = $user->email_address;
     my $admin     = Socialtext::Role->Admin();
 
+    $workspace->add_group( group => $another, role => $admin );
     $group->add_user( user => $user );
     $workspace->add_group( group => $group, role => $admin );
     {

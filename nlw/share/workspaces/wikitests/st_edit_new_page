@@ -1,0 +1,4 @@
+| *Comment* | st-edit-new-page: ws=%%ws%% title=%%title%% content=%%content%% |  |
+
+| st-create-page | %%ws%% | %%title%% | %%content%% |  |
+| call | [st-edit-no-change] | ws=%%ws%% | title=%%title%% |  |

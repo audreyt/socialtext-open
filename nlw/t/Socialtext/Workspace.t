@@ -74,11 +74,11 @@ ALL_WORKSPACE_IDS_AND_NAMES: {
     Workspace_skin_should_override_account_skin: {
         $ws->update(skin_name => 'reds3');
         $ws = Socialtext::Workspace->new(name => $ws->name);
-        is( $ws->skin_name, 'reds3', 'workspace skin is settable' );
+        is( $ws->skin_name, '', 'workspace skin is not settable' );
 
         $ws->account->update(skin_name => 's3');
         $ws = Socialtext::Workspace->new(name => $ws->name);
-        is $ws->skin_name, 'reds3', 'workspace skin is not reset when account is updated';
+        is $ws->skin_name, '', 'workspace skin is not reset when account is updated';
     }
 }
 

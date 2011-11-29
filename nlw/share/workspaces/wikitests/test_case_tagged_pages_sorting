@@ -13,22 +13,22 @@
 | set | user_5 | user5_%%start_time%%@david.socialtext.net |
 
 | *Comment* | Test Case: Tagged Page Sorting Create new ws %%sorting_workspace%% |  |
-| st-admin | create-workspace --empty --name %%sorting_workspace%% --title %%sorting_workspace%% --empty | A new workspace named "%%sorting_workspace%%" was created. |
+| st-admin | create-workspace --empty --name %%sorting_workspace%% --title %%sorting_workspace%% | A new workspace named "%%sorting_workspace%%" was created. |
 | *Comment* | Test Case: Tagged Page Sorting. Adding %%email%% so you can login to this workspace |  |
 | st-admin | add-workspace-admin --e %%email%% --w %%sorting_workspace%% |  |
 | *Comment* | Test Case: Tagged Page Sorting. Adding devnull1 so you can login to this workspace |  |
 | st-admin | add-workspace-admin --e devnull1@socialtext.com --w %%sorting_workspace%% |  |
 
 | *Comment* | Test Case: Tagged Page Sorting setup user1 ... user4 |  |
-| st-admin | create-user --email %%user_1%% --password 123456 |  |
+| st-admin | create-user --email %%user_1%% --password %%password%% |  |
 | st-admin | add-member --email %%user_1%% --workspace %%sorting_workspace%% |  |
-| st-admin | create-user --email %%user_2%% --password 123456 |  |
+| st-admin | create-user --email %%user_2%% --password %%password%% |  |
 | st-admin | add-member --email %%user_2%% --workspace %%sorting_workspace%% |  |
-| st-admin | create-user --email %%user_3%% --password 123456 |  |
+| st-admin | create-user --email %%user_3%% --password %%password%% |  |
 | st-admin | add-member --email %%user_3%% --workspace %%sorting_workspace%% |  |
-| st-admin | create-user --email %%user_4%% --password 123456 |  |
+| st-admin | create-user --email %%user_4%% --password %%password%% |  |
 | st-admin | add-member --email %%user_4%% --workspace %%sorting_workspace%% |  |
-| st-admin | create-user --email %%user_5%% --password 123456 |  |
+| st-admin | create-user --email %%user_5%% --password %%password%% |  |
 | st-admin | add-member --email %%user_5%% --workspace %%sorting_workspace%% |  |
 
 Create unique sort order for each sort:
@@ -43,191 +43,121 @@ Create unique sort order for each sort:
 | st-admin | update-page --page "Search Sort 2" --email %%user_3%% --workspace %%sorting_workspace%% < %%wikitest_client_files%%wikitest.txt | The "Search Sort 2" page has been updated. |
 | st-admin | update-page --page "Search Sort 2" --email %%user_3%% --workspace %%sorting_workspace%% < %%wikitest_client_files%%wikitest.txt | The "Search Sort 2" page has been updated. |
 
-| st-logout |  |  |
-| open_ok | /%%sorting_workspace%%/?Search Sort 2 |  |
-| type_ok | username | %%user_3%% |
-| type_ok | password | 123456 |
-| clickAndWait | login_btn |  |
+| st-logoutin | %%user_3%% | %%password%% |
+| open_ok | /%%sorting_workspace%%/Search Sort 2 |  |
 
 | *Comment* | Test Case: Tagged Page Sorting . Add Tagged Page %%start_time%% to 4 pages |  |
-| wait_for_element_visible_ok | link=Add Tag | 30000 |
-| click_ok | link=Add Tag |  |
-| wait_for_element_visible_ok | st-tags-field | 30000 |
-| type_ok | st-tags-field | Tagged Page %%start_time%% |
-| wait_for_element_visible_ok | st-tags-plusbutton-link | 30000 |
-| click_ok | st-tags-plusbutton-link |  |
-
-| *Comment* | Test Case: Tagged Page Sorting . Add Tagged Page %%start_time%% to 4 pages |  |
-| wait_for_element_visible_ok | st-tags-listing | 30000 |
-| wait_for_text_present_ok | Tagged Page %%start_time%% | 30000 |
-| text_like | link=Tagged Page %%start_time%% | Tagged Page %%start_time%% |
+| call | [st-tag-page] | tag_to_apply=Tagged Page %%start_time%% |
 
 | *Comment* | 2nd date, page 3, user 4, 2 revisions |  |
 | st-admin | update-page --page "Search Sort 3" --email %%user_4%% --workspace %%sorting_workspace%% < %%wikitest_client_files%%wikitest.txt | The "Search Sort 3" page has been created. |
 
-| st-logout |  |  |
-| open_ok | /%%sorting_workspace%%/?Search Sort 3 |  |
-| type_ok | username | %%user_4%% |
-| type_ok | password | 123456 |
-| clickAndWait | login_btn |  |
-| wait_for_element_visible_ok | link=Add Tag | 30000 |
-| click_ok | link=Add Tag |  |
-| wait_for_element_visible_ok | st-tags-field | 30000 |
-| type_ok | st-tags-field | Tagged Page %%start_time%% |
-| wait_for_element_visible_ok | st-tags-plusbutton-link | 30000 |
-| click_ok | st-tags-plusbutton-link |  |
+| st-logoutin | %%user_4%% | %%password%% |
+| open_ok | /%%sorting_workspace%%/Search Sort 3 |  |
 
-| *Comment* | Test Case: Tagged Page Sorting . Add Tagged Page %%start_time%% to 4 pages |  |
-| wait_for_element_visible_ok | st-tags-listing | 30000 |
-| wait_for_text_present_ok | Tagged Page %%start_time%% | 30000 |
-| text_like | link=Tagged Page %%start_time%% | Tagged Page %%start_time%% |
+| call | [st-tag-page] | tag_to_apply=Tagged Page %%start_time%% |
 
 | *Comment* | 3rd date, page 4, user 1, 3 revisions |  |
 | st-admin | update-page --page "Search Sort 4" --email %%user_1%% --workspace %%sorting_workspace%% < %%wikitest_client_files%%wikitest.txt | The "Search Sort 4" page has been created. |
 | st-admin | update-page --page "Search Sort 4" --email %%user_1%% --workspace %%sorting_workspace%% < %%wikitest_client_files%%wikitest.txt | The "Search Sort 4" page has been updated. |
 
-| st-logout |  |  |
-| open_ok | /%%sorting_workspace%%/?Search Sort 4 |  |
-| type_ok | username | %%user_1%% |
-| type_ok | password | 123456 |
-| clickAndWait | login_btn |  |
-| wait_for_element_visible_ok | link=Add Tag | 30000 |
-| click_ok | link=Add Tag |  |
-| wait_for_element_visible_ok | st-tags-field | 30000 |
-| type_ok | st-tags-field | Tagged Page %%start_time%% |
-| wait_for_element_visible_ok | st-tags-plusbutton-link | 30000 |
-| click_ok | st-tags-plusbutton-link |  |
+| st-logoutin | %%user_1%% | %%password%% |
+| open_ok | /%%sorting_workspace%%/Search Sort 4 |  |
 
-| *Comment* | Test Case: Tagged Page Sorting . Add Tagged Page %%start_time%% to 4 pages |  |
-| wait_for_element_visible_ok | st-tags-listing | 30000 |
-| wait_for_text_present_ok | Tagged Page %%start_time%% | 30000 |
-| text_like | link=Tagged Page %%start_time%% | Tagged Page %%start_time%% |
+| call | [st-tag-page] | tag_to_apply=Tagged Page %%start_time%% |
 
 | *Comment* | 4th date, page 1, user 2, 4 revisions |  |
 | st-admin | update-page --page "Search Sort 1" --email %%user_2%% --workspace %%sorting_workspace%% < %%wikitest_client_files%%wikitest.txt | The "Search Sort 1" page has been created. |
 | st-admin | update-page --page "Search Sort 1" --email %%user_2%% --workspace %%sorting_workspace%% < %%wikitest_client_files%%wikitest.txt | The "Search Sort 1" page has been updated. |
 | st-admin | update-page --page "Search Sort 1" --email %%user_2%% --workspace %%sorting_workspace%% < %%wikitest_client_files%%wikitest.txt | The "Search Sort 1" page has been updated. |
 
-| st-logout |  |  |
-| open_ok | /%%sorting_workspace%%/?Search Sort 1 |  |
-| type_ok | username | %%user_2%% |
-| type_ok | password | 123456 |
-| clickAndWait | login_btn |  |
-| wait_for_element_visible_ok | link=Add Tag | 30000 |
-| click_ok | link=Add Tag |  |
-| wait_for_element_visible_ok | st-tags-field | 30000 |
-| type_ok | st-tags-field | Tagged Page %%start_time%% |
-| wait_for_element_visible_ok | st-tags-plusbutton-link | 30000 |
-| click_ok | st-tags-plusbutton-link |  |
+| st-logoutin | %%user_2%% | %%password%% |
+| open_ok | /%%sorting_workspace%%/Search Sort 1 |  |
 
-| *Comment* | Test Case: Tagged Page Sorting . Add Tagged Page %%start_time%% to 4 pages |  |
-| wait_for_element_visible_ok | st-tags-listing | 30000 |
-| wait_for_text_present_ok | Tagged Page %%start_time%% | 30000 |
-| text_like | link=Tagged Page %%start_time%% | Tagged Page %%start_time%% |
+| call | [st-tag-page] | tag_to_apply=Tagged Page %%start_time%% |
 
-| *Comment* | Test Case: Tagged Page Sorting. Login as %%user_5%% |  |
-| st-logout |  |  |
-| open_ok | /%%sorting_workspace%%/?Search Sort 1 |  |
-| type_ok | username | %%user_5%% |
-| type_ok | password | 123456 |
-| clickAndWait | login_btn |  |
+| *Comment* | Test Case: Tagged Page Sorting. Login as %%user_5%% |  |  | *Comment* | Test Case: Tagged Page Sorting. Login as %%user_5%% |  |
+| st-logoutin | %%user_5%% | %%password%% |  |  |  |  |
 
 | *Comment* | Test Case: Tagged Page Sorting needs to sort using time in seconds |  |
-| open_ok | /?action=preferences_settings;preferences_class_id=timezone |  |
-| wait_for_element_visible_ok | timezone__time_display_seconds | 30000 |
-| check_ok | timezone__time_display_seconds |  |
-| click_and_wait | link=Save |  |
+| include | [st-timezone-seconds] |  |
 
 | *Comment* | Test Case: Tagged Page Sorting. Sorting tagged page list view |  |
-| open_ok | /%%sorting_workspace%%/index.cgi?action=category_display;category=Tagged%20Page%20%%start_time%% |  |
+| open_ok | /%%sorting_workspace%%/?action=category_display;category=Tagged%20Page%20%%start_time%% |  |
 | text_like | qr/Tag:\s+Tagged Page %%start_time%%/i |  |
 
 | *Comment* | Test Case: Tagged Page Sorting. Sorting Date default desc, then asc. then desc |  |
-| text_like | contentContainer | qr/Search Sort 1.+Search Sort 4.+Search Sort 3.+Search Sort 2/ |
+| text_like | content | qr/Search Sort 1.+Search Sort 4.+Search Sort 3.+Search Sort 2/ |
 | select_and_wait | sort-picker | label=Date Last Edited (↑) |
-| text_like | contentContainer | qr/Search Sort 2.+Search Sort 3.+Search Sort 4.+Search Sort 1/ |
+| text_like | content | qr/Search Sort 2.+Search Sort 3.+Search Sort 4.+Search Sort 1/ |
 | select_and_wait | sort-picker | label=Date Last Edited (↓) |
-| text_like | contentContainer | qr/Search Sort 1.+Search Sort 4.+Search Sort 3.+Search Sort 2/ |
+| text_like | content | qr/Search Sort 1.+Search Sort 4.+Search Sort 3.+Search Sort 2/ |
 
 | *Comment* | Test Case: Tagged Page Sorting: Create Time |  |
 | select_and_wait | sort-picker | label=Date Created |
-| text_like | contentContainer | qr/Search Sort 1.+Search Sort 4.+Search Sort 3.+Search Sort 2/ |
+| text_like | content | qr/Search Sort 1.+Search Sort 4.+Search Sort 3.+Search Sort 2/ |
 | select_and_wait | sort-picker | label=Date Created (↑) |
-| text_like | contentContainer | qr/Search Sort 2.+Search Sort 3.+Search Sort 4.+Search Sort 1/ |
+| text_like | content | qr/Search Sort 2.+Search Sort 3.+Search Sort 4.+Search Sort 1/ |
 
 | *Comment* | Test Case: Tagged Page Sorting. sorted Title |  |
 | select_and_wait | sort-picker | label=Title |
-| text_like | contentContainer | qr/Search Sort 1.+Search Sort 2.+Search Sort 3.+Search Sort 4/ |
+| text_like | content | qr/Search Sort 1.+Search Sort 2.+Search Sort 3.+Search Sort 4/ |
 | select_and_wait | sort-picker | label=Title (↓) |
-| text_like | contentContainer | qr/Search Sort 4.+Search Sort 3.+Search Sort 2.+Search Sort 1/ |
+| text_like | content | qr/Search Sort 4.+Search Sort 3.+Search Sort 2.+Search Sort 1/ |
 
-| *Comment* | Test Case: Tagged Page Sorting. Sorting Revisions asc, then desc |  |
-| select_and_wait | sort-picker | label=Revisions |
-| text_like | contentContainer | qr/5 Revisions.+4 Revisions.+3 Revisions.+2 Revisions/ |
-| select_and_wait | sort-picker | label=Revisions (↑) |
-| text_like | contentContainer | qr/2 Revisions.+3 Revisions.+4 Revisions.+5 Revisions/ |
-
-| *Comment* | Test Case: Tagged Page Sorting. Help Safari by loading the editor now. Why? Because the test hangs later if you don't. Go Figure. |  |
-| open_ok | /%%sorting_workspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| wait_for_element_visible_ok | link=Cancel | 30000 |
-| click_and_wait | link=Cancel |  |
+| *Comment* | Test Case: Tagged Page Sorting. Sorting Revisions asc, then desc |  |  |  |
+| select_and_wait | sort-picker | label=Revisions |  |  |
+| text_like | content | qr/5 Revisions.+4 Revisions.+3 Revisions.+2 Revisions/ |  |  |
+| select_and_wait | sort-picker | label=Revisions (↑) |  |  |
+| text_like | content | qr/2 Revisions.+3 Revisions.+4 Revisions.+5 Revisions/ |  |  |
 
 SEARCHSEARCHSEARCHSEARCHSEARCHSEARCHSEARCHSEARCHSEARCHSEARCHSEARCHSEARCHSEARCHSEARCH
 
-| st-admin | index-page --w %%sorting_workspace%% --p search_sort_1 | The Search Sort 1 page in the %%sorting_workspace%% workspace has been indexed. |
-| st-admin | index-page --w %%sorting_workspace%% --p search_sort_2 | The Search Sort 2 page in the %%sorting_workspace%% workspace has been indexed. |
-| st-admin | index-page --w %%sorting_workspace%% --p search_sort_3 | The Search Sort 3 page in the %%sorting_workspace%% workspace has been indexed. |
-| st-admin | index-page --w %%sorting_workspace%% --p search_sort_4 | The Search Sort 4 page in the %%sorting_workspace%% workspace has been indexed. |
+| st-process-jobs |  |  |  |  |
 
 | *Comment* | Test Case: Tagged Page Sorting. Sorting search results. SEARCH. |  |
-| open_ok | /%%sorting_workspace%%/index.cgi |  |
+| open_ok | /%%sorting_workspace%%/ |  |
 | st-search | simple | Pages matching 'simple' |
 | st-result | 4 total |  |
-| click_and_wait | link=Titles |  |
 
 | *Comment* | Test Case: Tagged Page Sorting. Sorting Revisions desc, then asc |  |
 | select_and_wait | sort-picker | label=Revisions |
-| text_like | contentContainer | qr/Search Sort 2.+Search Sort 1.+Search Sort 4.+Search Sort 3/ |
+| text_like | content | qr/Search Sort 2.+Search Sort 1.+Search Sort 4.+Search Sort 3/ |
 | select_and_wait | sort-picker | label=Revisions (↑) |
-| text_like | contentContainer | qr/Search Sort 3.+Search Sort 4.+Search Sort 1.+Search Sort 2/ |
+| text_like | content | qr/Search Sort 3.+Search Sort 4.+Search Sort 1.+Search Sort 2/ |
 
 | *Comment* | Test Case: Tagged Page Sorting. Sorting Title asc, then desc |  |
 | select_and_wait | sort-picker | label=Title |
-| text_like | contentContainer | qr/Search Sort 1.+Search Sort 2.+Search Sort 3.+Search Sort 4/ |
+| text_like | content | qr/Search Sort 1.+Search Sort 2.+Search Sort 3.+Search Sort 4/ |
 | select_and_wait | sort-picker | label=Title (↓) |
-| text_like | contentContainer | qr/Search Sort 4.+Search Sort 3.+Search Sort 2.+Search Sort 1/ |
+| text_like | content | qr/Search Sort 4.+Search Sort 3.+Search Sort 2.+Search Sort 1/ |
 
-| *Comment* | Test Case: Tagged Page Sorting. Sorting Date desc, then asc |  |
-| select_and_wait | sort-picker | label=Date Last Edited |
-| text_like | contentContainer | qr/Search Sort 1.+Search Sort 4.+Search Sort 3.+Search Sort 2/ |
-| select_and_wait | sort-picker | label=Date Last Edited (↑) |
-| text_like | contentContainer | qr/Search Sort 2.+Search Sort 3.+Search Sort 4.+Search Sort 1/ |
+| *Comment* | Test Case: Tagged Page Sorting. Sorting Date desc, then asc |  |  |  |
+| select_and_wait | sort-picker | label=Date Last Edited |  |  |
+| text_like | content | qr/Search Sort 1.+Search Sort 4.+Search Sort 3.+Search Sort 2/ |  |  |
+| select_and_wait | sort-picker | label=Date Last Edited (↑) |  |  |
+| text_like | content | qr/Search Sort 2.+Search Sort 3.+Search Sort 4.+Search Sort 1/ |  |  |
 
-| *Comment* | Test Case: Tagged Page Sorting. Make a more relevant page |  |
-| open_ok | /%%sorting_workspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| type_ok | st-newpage-pagename-edit | Search Sort 5 |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | simple simple more simple most simple |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
-| st-admin | index-page --w %%sorting_workspace%% --p search_sort_5 | The Search Sort 5 page in the %%sorting_workspace%% workspace has been indexed. |
+| *Comment* | Test Case: Tagged Page Sorting. Make a more relevant page |  |  |  |
+
+| st-create-page | %%sorting_workspace%% | Search Sort 5 | simple simple more simple most simple |  |
+
+| pause_ok | 8000 |  |  |  |
+| st-process-jobs |  |  |  |  |
 
 | *Comment* | Test Case: Tagged Page Sorting. Sorting search results. Do the SEARCH again. |  |
 | st-search | simple | Pages matching 'simple' |
 | st-result | 5 total |  |
-| open_ok | /%%sorting_workspace%%/index.cgi?action=search;scope=_;orig_search_term=simple;sortby=Relevance;direction=desc;summaries=1;limit=20;offset=0 |
+| open_ok | /%%sorting_workspace%%/?action=search;scope=_;orig_search_term=simple;sortby=Relevance;direction=desc;summaries=1;limit=20;offset=0 |  |
 | st-result | 5 total |  |
-| *Comment* | Test Case: Tagged Page Sorting. Sorting search results. Verify Relevance sort |
-| text_like | contentContainer | qr/simple simple more simple most simple.+This is a simple text file/ |
+| *Comment* | Test Case: Tagged Page Sorting. Sorting search results. Verify Relevance sort |  |
+| text_like | content | qr/simple simple more simple most simple.+This is a simple text file/ |
 | click_and_wait | link=Titles |  |
-| text_like | contentContainer | qr/Search Sort 5.+Search Sort 2.+Search Sort 1.+Search Sort 4.+Search Sort 3/ |
+| text_like | content | qr/Search Sort 5.+Search Sort 2.+Search Sort 1.+Search Sort 4.+Search Sort 3/ |
 
-| *Comment* | Test Case: Tagged Page Sorting. Teardown |  |
+| *Comment* | Test Case: Tagged Page Sorting. TEARDOWN |  |
 
-| st-admin | delete-workspace --workspace %%sorting_workspace%% --no-export | has been deleted |
+| st-process-jobs |  |  |
+| delete-workspace | %%sorting_workspace%% |  |
 
-| *Comment* | Test Case: Tagged Page Sorting COMPLETED |
+| *Comment* | Test Case: Tagged Page Sorting COMPLETED |  |

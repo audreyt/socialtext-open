@@ -28,10 +28,10 @@ __DATA__
 .code-html
 --- match
 <div class="wiki">
-<div class="wafl_block"><script type="text/javascript" src="/static/skin/common/javascript/SyntaxHighlighter/shCore.js"></script>
-<script type="text/javascript" src="/static/skin/common/javascript/SyntaxHighlighter/shBrushXml.js"></script>
-<link href="/static/skin/common/css/SyntaxHighlighter/shCore.css" rel="stylesheet" type="text/css" />
-<link href="/static/skin/common/css/SyntaxHighlighter/shThemeDefault.css" rel="stylesheet" type="text/css" />
+<div class="wafl_block"><script type="text/javascript" src="/static/javascript/contrib/SyntaxHighlighter/shCore.js"></script>
+<script type="text/javascript" src="/static/javascript/contrib/SyntaxHighlighter/shBrushXml.js"></script>
+<link href="/static/javascript/contrib/SyntaxHighlighter/css/shCore.css" rel="stylesheet" type="text/css" />
+<link href="/static/javascript/contrib/SyntaxHighlighter/css/shThemeDefault.css" rel="stylesheet" type="text/css" />
 <pre class="brush: html">
 &lt;b&gt;some html&lt;/b&gt;
 
@@ -51,10 +51,10 @@ p { font-style: italic }
 .code-css
 --- match
 <div class="wiki">
-<div class="wafl_block"><script type="text/javascript" src="/static/skin/common/javascript/SyntaxHighlighter/shCore.js"></script>
-<script type="text/javascript" src="/static/skin/common/javascript/SyntaxHighlighter/shBrushCss.js"></script>
-<link href="/static/skin/common/css/SyntaxHighlighter/shCore.css" rel="stylesheet" type="text/css" />
-<link href="/static/skin/common/css/SyntaxHighlighter/shThemeDefault.css" rel="stylesheet" type="text/css" />
+<div class="wafl_block"><script type="text/javascript" src="/static/javascript/contrib/SyntaxHighlighter/shCore.js"></script>
+<script type="text/javascript" src="/static/javascript/contrib/SyntaxHighlighter/shBrushCss.js"></script>
+<link href="/static/javascript/contrib/SyntaxHighlighter/css/shCore.css" rel="stylesheet" type="text/css" />
+<link href="/static/javascript/contrib/SyntaxHighlighter/css/shThemeDefault.css" rel="stylesheet" type="text/css" />
 <pre class="brush: css">
 p { font-style: italic }
 
@@ -74,10 +74,10 @@ This is some plain text
 .code
 --- match
 <div class="wiki">
-<div class="wafl_block"><script type="text/javascript" src="/static/skin/common/javascript/SyntaxHighlighter/shCore.js"></script>
-<script type="text/javascript" src="/static/skin/common/javascript/SyntaxHighlighter/shBrushPlain.js"></script>
-<link href="/static/skin/common/css/SyntaxHighlighter/shCore.css" rel="stylesheet" type="text/css" />
-<link href="/static/skin/common/css/SyntaxHighlighter/shThemeDefault.css" rel="stylesheet" type="text/css" />
+<div class="wafl_block"><script type="text/javascript" src="/static/javascript/contrib/SyntaxHighlighter/shCore.js"></script>
+<script type="text/javascript" src="/static/javascript/contrib/SyntaxHighlighter/shBrushPlain.js"></script>
+<link href="/static/javascript/contrib/SyntaxHighlighter/css/shCore.css" rel="stylesheet" type="text/css" />
+<link href="/static/javascript/contrib/SyntaxHighlighter/css/shThemeDefault.css" rel="stylesheet" type="text/css" />
 <pre class="brush: plain">
 This is some plain text
 

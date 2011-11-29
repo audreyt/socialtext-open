@@ -1,0 +1,131 @@
+---
+'socialtext-container.js':
+    compress: 1
+    parts:
+        - { jemplate: 'template' }
+        - shindig-container-default.js
+        - jquery-ui-1.8.5.js
+        - jquery.ui.ipad.altfix.js
+        - Socialtext-Container/drag-and-drop.js
+        - Socialtext-Container/gadgets.js
+        - Socialtext-Container/madlibs.js
+        - socialtext-activities.js
+        - shindig-inline.js
+        - Socialtext-Container/inline.js
+'socialtext-activities.js':
+    parts:
+        - jquery.timers.js
+        - Socialtext-Activities/jquery.dropdown.js
+        - {dir: skin/s3/javascript, file: socialtext-editor-light.js}
+        - {dir: skin/s3/javascript, file: cookie.js}
+        - Socialtext-Activities/push-client.js
+        - Socialtext-Activities/base.js
+        - Socialtext-Activities/appdata.js
+        - Socialtext-Activities/editor.js
+        - Socialtext-Activities/event_list.js
+        - Socialtext-Activities/widget.js
+        - Socialtext-Activities/explore_filters.js
+        - Socialtext-Activities/explore.js
+        - Socialtext-Activities/last_signal.js
+'socialtext-popout.js':
+    compress: 1
+    parts:
+        - jquery-1.4.4.min.js
+        - {dir: skin/s3/javascript, file: jquery-patch.js}
+        - {dir: skin/s3/javascript, file: jquery-popup.js}
+        - {dir: skin/s3/javascript, file: lookahead.js}
+        - {dir: skin/s3/javascript, file: lightbox.js}
+        - {dir: skin/common/javascript, file: jquery-json-1.3.js}
+        - {jemplate_runtime: jquery}
+        - {dir: skin/s3/javascript, file: 'JemplatePlugin/*.js'}
+        - jquery.timers.js
+        - Socialtext-Container/madlibs.js
+        - jquery-ui-1.8.5.js
+        - { jemplate: 'template/dropdown.tt2' }
+        - { dir: skin/s3/javascript, file: bubble.js }
+        - { dir: skin/s3/javascript, jemplate: 'template/like-indicator.tt2' }
+        - { dir: skin/s3/javascript, file: like-indicator.js }
+        - shindig-container-default.js
+        - socialtext-activities.js
+        - shindig-inline.js
+        - Socialtext-Container/inline.js
+'socialtext-gadget.js':
+    compress: 1
+    parts:
+        - jquery-1.4.4.min.js
+        - {dir: skin/s3/javascript, file: jquery-patch.js}
+        - {dir: skin/s3/javascript, file: jquery.selectOverlap.js}
+        - {dir: skin/s3/javascript, file: lookahead.js}
+        - {dir: skin/s3/javascript, file: fades.js}
+        - {dir: skin/s3/javascript, file: loc.js}
+        - jquery-json-1.3.js
+        - {jemplate_runtime: jquery}
+        - {dir: skin/s3/javascript, file: 'JemplatePlugin/*.js'}
+        - Socialtext-Container/madlibs.js
+        - jquery.timers.js
+        - { jemplate: 'template/dropdown.tt2' }
+        - Socialtext-Activities/jquery.dropdown.js
+        - {dir: 'skin/common/javascript', file: 'Socialtext/socialtext-api.js'}
+'socialtext-network-dropdown.js':
+    compress: 1
+    parts:
+        - Socialtext-Activities/jquery.dropdown.js
+        - Socialtext-Activities/base.js
+        - Socialtext-Activities/appdata.js
+        - Socialtext-Activities/network_dropdown.js
+'Socialtext/socialtext-api.js':
+    parts:
+        - Socialtext/lib/Socialtext/Base.js
+        - Socialtext/lib/Socialtext/Account.js
+        - Socialtext/lib/Socialtext/Group.js
+        - Socialtext/lib/Socialtext/UserAccountRole.js
+        - Socialtext/lib/Socialtext/User.js
+        - Socialtext/lib/Socialtext/Workspace.js
+'shindig-inline.js':
+    parts:
+        - Shindig/core/util.js
+        - Shindig/core.io/io.js
+        - Shindig/opensocial-reference/opensocial.js
+        - Shindig/opensocial-reference/container.js
+        - Shindig/opensocial-reference/datarequest.js
+        - Shindig/opensocial-reference/dataresponse.js
+        - Shindig/opensocial-reference/environment.js
+        - Shindig/opensocial-reference/idspec.js
+        - Shindig/opensocial-reference/responseitem.js
+        - Shindig/opensocial-current/restfulcontainer.js
+'shindig-container-%.js':
+    compress: 1
+    parts:
+        - { shindig_feature: "%", feature_dir: "Shindig", type: 'container' }
+    expand: 
+        - default
+        - core
+        - ifpc
+        - pubsub
+        - rpc
+'shindig-gadget-%.js':
+    compress: 1
+    parts:
+        - { shindig_feature: "%", feature_dir: "Shindig", type: 'gadget' }
+    expand: 
+        - default
+        - analytics
+        - com.google.gadgets.analytics
+        - core.io
+        - core
+        - flash
+        - ifpc
+        - minimessage
+        - opensocial-0.6
+        - opensocial-0.7
+        - opensocial-current
+        - opensocial-reference
+        - opensocial-templates
+        - pubsub
+        - rpc
+        - setprefs
+        - settitle
+        - skins
+        - tabs
+        - test
+        - views

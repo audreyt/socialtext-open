@@ -1,0 +1,57 @@
+| *Comment* | Test Case: Consolidate Settings |  |
+
+| set | cs_user | cs.user.%%start_time%%@david.socialtext.net |
+| set | cs_wiki_1 | cs_workspace_1_%%start_time%% |
+| set | cs_wiki_2 | cs_workspace_2_%%start_time%% |
+| set | cs_acct | cs-account-%%start_time%% |
+
+| create-account | %%cs_acct%% |  |  |
+| create-workspace | %%cs_wiki_1%% | %%cs_acct%% |  |
+| create-workspace | %%cs_wiki_2%% | %%cs_acct%% |  |
+| create-user | %%cs_user%% | %%password%% | %%cs_acct%% |
+
+| st-admin | add-workspace-admin --workspace %%cs_wiki_1%% --email %%cs_user%% | now has the role |
+| st-admin | add-member --workspace %%cs_wiki_2%% --email %%cs_user%% | now has the role |
+| st-process-jobs |  |  |
+
+| *Comment* | Test Case: Consolidate Settings verify global settings screen text |  |
+| st-logoutin | %%cs_user%% |  |
+| open_ok | /st/dashboard |  |
+| wait_for_element_visible_ok | link=Settings | 30000 |
+| click_and_wait | link=Settings |  |
+| wait_for_text_present_ok | My Settings | 30000 |
+| text_like | settings-main | qr/First Name.+Middle Name.+Last Name.+6 characters.+Current.+New.+Retype New/ |
+| wait_for_text_present_ok | Time | 30000 |
+| text_like | settings-main | qr/Timezone.+Daylight Savings.+Summer.+Date Format.+Time Format/ |
+| wait_for_text_present_ok | Language | 30000 |
+| text_like | settings-main | Display Language |
+| wait_for_text_present_ok | Signals | 30000 |
+| text_like | settings-main | Send Private Signals as Email |
+
+| *Comment* | Test Case: Consolidate Settings different wikis should have different menu options |  |
+| click_ok | //div[@tabindex='-1'] |  |
+| wait_for_element_visible_ok | link=Features | 30000 |
+| wait_for_element_visible_ok | link=Preferences | 30000 |
+| wait_for_element_visible_ok | link=Create Blog | 30000 |
+| wait_for_element_visible_ok | link=Unsubscribe | 30000 |
+| wait_for_element_visible_ok | link=Manage Users | 30000 |
+| click_ok | //div[@tabindex='-1'] |  |
+| wait_for_element_visible_ok | link=Preferences | 30000 |
+| wait_for_element_visible_ok | link=Unsubscribe | 30000 |
+| wait_for_element_visible_ok | link=Create Blog | 30000 |
+| wait_for_element_not_visible_ok | link=Features | 30000 |
+| wait_for_element_not_visible_ok | link=Manage Users | 30000 |
+| click_ok | //div[@tabindex='0'] |  |
+| wait_for_element_visible_ok | link=Preferences | 30000 |
+| wait_for_element_visible_ok | link=Create Blog | 30000 |
+| wait_for_element_not_visible_ok | link=Unsubscribe | 30000 |
+| wait_for_element_not_visible_ok | link=Features | 30000 |
+| wait_for_element_not_visible_ok | link=Manage Users | 30000 |
+
+| *Comment* | Test Case: Consolidate Settings TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%cs_user%% |  |
+| delete-workspace | %%cs_wiki_1%% |  |
+| delete-workspace | %%cs_wiki_2%% |  |
+| delete-workspace | %%cs_acct%%-central |  |
+| delete-account | %%cs_acct%% |  |

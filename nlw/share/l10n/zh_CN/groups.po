@@ -227,6 +227,9 @@ msgstr "删除这个群组"
 msgid "groups.delete=name"
 msgstr "删除 %1"
 
+msgid "groups.description"
+msgstr "描述"
+
 #: share/plugin/groups/share/widgets/edit_information/widget.js:163
 msgid "groups.description-1000-characters-max"
 msgstr "描述字数限 1000 字符以内"
@@ -327,6 +330,12 @@ msgstr "下一个"
 msgid "groups.next-step"
 msgstr "下一步"
 
+msgid "groups.no-groups"
+msgstr "未创建群组。您可以通过点击“创建群组”按钮创建一个群组。"
+
+msgid "groups.no-my-groups"
+msgstr "您不属于任何群组。"
+
 #: share/plugin/groups/share/widgets/membership/jemplate/members.tt2:11
 msgid "groups.no-other-members-use-form-below-to-invite"
 msgstr "当前，您是本群组的唯一成员。<br/>请在下方邀请您的同事。"
@@ -382,6 +391,9 @@ msgstr "成员"
 #: share/plugin/groups/template/edit_group_footer:14 share/plugin/groups/template/group_footer:17
 msgid "groups.save"
 msgstr "保存"
+
+msgid "groups.search"
+msgstr "群组"
 
 #: share/plugin/groups/share/javascript/lightbox/create-group.tt2:28
 msgid "groups.search-before-creating"

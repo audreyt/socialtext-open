@@ -1,0 +1,51 @@
+<div class="lightbox" id="st-attachments-attachinterface">
+  <iframe style="display:none" id="st-attachments-attach-formtarget" class="st-action-formtarget" name="st-attachments-attach-formtarget" src="/static/html/blank.html"></iframe>
+  <form id="st-attachments-attach-form" name="attachForm" method="post" action="" enctype="multipart/form-data" target="st-attachments-attach-formtarget">
+    <input type="hidden" name="page_name" value="[% page_id %]"/>
+    <input type="hidden" name="action" value="attachments_upload"/>
+
+    <p id="st-attachments-attach-message">
+    [% loc('info.browse') %]
+    <br />
+    [% loc('info.done') %]
+    </p>
+    <p class="hint" id="st-attachments-attach-limit">[% loc('file.max-size') %]</p>
+    <p class="fileprompt" id="st-attachments-attach-fileprompt">
+      <input id="st-attachments-attach-filename" size="45" type="file" name="file"/>
+    </p>
+    <input type="hidden" id="st-attachments-attach-editmode" name="editmode" value="[% IF editmode %]1[% ELSE %]0[% END %]"/>
+    <input type="hidden" id="st-attachments-attach-embed" name="embed-in-editor" value="1"/>
+    <input type="hidden" id="st-attachments-attach-replace" name="replace" value="0" />
+    <div class="warning" id="st-attachments-duplicate-menu" style="display:none">
+        [% INCLUDE duplicate_attachment_warning %]
+    </div>
+    <div id="st-attachments-attach-uploadmessage" class="message ui-state-highlight ui-corner-all hidden"></div>
+    <div class="clear"></div>
+  </form>
+</div>
+
+[% BLOCK duplicate_attachment_warning %]
+    <p class="tip">[% tip %]</p>
+    <div class="more" style="display:none">
+     <img src="/static/images/icons/warning.png" />
+     <p></p>
+    </div>
+
+    <div class="chooser right">
+        <a class="add" href="#">[% loc("do.add") %]</a>
+        <a class="replace" href="#">[% loc("do.replace") %]</a>
+        <a class="cancel" href="#">[% loc("do.cancel") %]</a>
+    </div>
+[% END %]
+
+[% BLOCK duplicate_files %]
+    <div class="title" id="st-attachments-duplicates-title">[% loc('file.duplicate-files') %]</div>
+    [% FOR file = files %]
+        <div class="warning" style="margin: 5px 0">
+            <input type="hidden" name="filename" value="[% file.name %]"/>
+            [% INCLUDE duplicate_attachment_warning
+                tip=loc('file.add-or-replace=name?', file.name)
+             %]
+        </div>
+    [% END %]
+[% END %]

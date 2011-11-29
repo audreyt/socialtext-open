@@ -23,63 +23,60 @@
 | st-admin | `create-user -e %%super%% --p %%password%%` |  |
 | st-admin | `create-user -e %%assistant%% --p %%password%%` |  |
 
-| *Comment* | Test Case: Edit Profile. Access profile. |  |
-| open_ok | /nlw/submit/logout |  |
-| wait_for_element_visible_ok | username | 60000 |
-| wait_for_element_visible_ok | password | 60000 |
-| type_ok | username | %%e_user%% |
-| type_ok | password | %%password%% |
-| click_and_wait | login_btn |  |
+| *Comment* | Test Case: Edit Profile. login %%e_user%% Access profile. |  |
+| st-logoutin | %%e_user%% | %%password%% |
 
 | *Comment* | Verify original first and last names: %%fname%% %%lname%% |  |
-| text_like | %%fname%% %%lname%% |  |
 | open_ok | /st/profile |  |
-| text_like | st-page-titletext | %%fname%% %%lname%% |
+| text_like | Profile |  |
+| wait_for_element_visible_ok | st-edit-profile | 15000 |
 
 | *Comment* | Test Case: Edit Profile. Open for editing |  |
-| st-name-widget | 1 | profile |
-| st-select-widget-frame | profile |  |
-| wait_for_element_visible_ok | link=Edit Profile | 60000 |
-| click_and_wait | link=Edit Profile |  |
+| click_and_wait | st-edit-profile |  |
+| wait_for_text_present_ok | Edit Profile | 10000 |
+| wait_for_element_visible_ok | `xpath=(//iframe)[1]` | 10000 |
+| select_frame | `xpath=(//iframe)[1]` |  |
 
-| *Comment* | Test Case: Edit Profile. Verify profile present. |  |
-| st-name-widget | 1 | profile_details |
-| st-widget-title-like | profile_details | Edit Profile |
-| st-select-widget-frame | profile_details |  |
-| wait_for_element_visible_ok | photo-upload-button | 60000 |
-| wait_for_element_visible_ok | update_profile | 60000 |
-| text_like | //body | Name |
-| text_like | //body | Organization |
-| text_like | //body | Contact |
-| text_like | //body | IM |
-| text_like | //body | Web |
-| text_like | //body | First Name |
-| text_like | //body | Middle Name |
-| text_like | //body | Last Name |
-| text_like | //body | Preferred |
-| verifyValue | first_name | %%fname%% |
-| verifyValue | last_name | %%lname%% |
-| select-frame | relative=parent |  |
+| *Comment* | Test Case: Edit Profile. Verify profile fields present. |  |
+| wait_for_element_visible_ok | photo-upload-button | 15000 |
+| wait_for_element_visible_ok | update_profile | 15000 |
 
-| *Comment* | Test Case: Edit Profile. Verify by clicking link=(edit) from Global Nav |  |
+| text_like | profile-edit-form | Name |
+| text_like | profile-edit-form | Organization |
+| text_like | profile-edit-form | Contact |
+| text_like | profile-edit-form | IM |
+| text_like | profile-edit-form | Web |
 
-| open_ok | /st/dashboard/ |  |
-| wait_for_element_visible_ok | link=(edit) | 30000 |
-| click_and_wait | link=(edit) |  |
-| st-name-widget | 1 | profile_widget |
-| st-widget-title-like | profile_widget | Edit Profile |
-| st-select-widget-frame | profile_widget |  |
-| wait_for_element_visible_ok | photo-upload-button | 60000 |
-| wait_for_element_visible_ok | update_profile | 60000 |
-| text_like | //body | Name |
-| text_like | //body | Organization |
-| text_like | //body | Contact |
-| text_like | //body | IM |
-| text_like | //body | Web |
-| text_like | //body | First Name |
-| text_like | //body | Middle Name |
-| text_like | //body | Last Name |
-| text_like | //body | Preferred |
+| text_like | profile-edit-form | First Name |
+| text_like | profile-edit-form | Middle Name |
+| text_like | profile-edit-form | Last Name |
+| text_like | profile-edit-form | Preferred |
+
+| text_like | profile-edit-form | Position |
+| text_like | profile-edit-form | Company |
+| text_like | profile-edit-form | Location |
+| text_like | profile-edit-form | Manager |
+| text_like | profile-edit-form | Assistant |
+
+| text_like | profile-edit-form | E-Mail |
+| text_like | profile-edit-form | Work |
+| text_like | profile-edit-form | Home |
+| text_like | profile-edit-form | Mobile |
+
+| text_like | profile-edit-form | AIM |
+| text_like | profile-edit-form | Office Communicator |
+| text_like | profile-edit-form | Yahoo |
+| text_like | profile-edit-form | GTalk |
+| text_like | profile-edit-form | Skype |
+| text_like | profile-edit-form | Sametime |
+| text_like | profile-edit-form | Twitter |
+
+| text_like | profile-edit-form | Blog |
+| text_like | profile-edit-form | Personal |
+| text_like | profile-edit-form | Linkedin |
+| text_like | profile-edit-form | Facebook |
+
+| *Comment* | Test Case: Edit Profile. Verify original names. |  |
 | verifyValue | first_name | %%fname%% |
 | verifyValue | last_name | %%lname%% |
 
@@ -87,6 +84,7 @@
 | type_ok | first_name | %%new_fname%% |
 | type_ok | middle_name | %%new_mname%% |
 | type_ok | last_name | %%new_lname%% |
+| type_ok | preferred_name | %%new_fname%% %%new_mname%% %%new_lname%% |
 | type_ok | position | Position %%short_e_user%% |
 | type_ok | company | Company %%short_e_user%% |
 | type_ok | location | Location %%short_e_user%% |
@@ -106,21 +104,20 @@
 | type_ok | communicator_sn | MSOCS %%short_e_user%% |
 
 | *Comment* | Test Case: Edit Profile. Need to select users in a common account |  |
-| wait_for_element_visible_ok | field_supervisor | 30000 |
-| type-lookahead-ok | xpath=//div[@id='field_supervisor']/input[@class='relationship'] | %%short_super%% |
-| wait-for-element-present-ok | link=%%short_super%% |  |
-| click-ok | link=%%short_super%% |  |
-| wait_for_element_visible_ok | field_assistant | 30000 |
-| type-lookahead-ok | xpath=//div[@id='field_assistant']/input[@class='relationship'] | %%short_assistant%% |
-| wait-for-element-present-ok | link=%%short_assistant%% |  |
-| click-ok | link=%%short_assistant%% |  |
+
+| wait_for_element_visible_ok | field_supervisor | 15000 |
+| select-autocompleted-option-ok | xpath=//div[@id='field_supervisor']/input[contains(@class,'relationship')] | %%short_super%% |
+
+| wait_for_element_visible_ok | field_assistant | 15000 |
+| select-autocompleted-option-ok | xpath=//div[@id='field_assistant']/input[contains(@class,'relationship')] | %%short_assistant%% |
 
 | *Comment* | Test Case: Edit Profile. Be conservative around clicking update |  |
-| wait_for_element_visible_ok | update_profile | 30000 |
-| pause | 5000 | settling time |
+| wait_for_element_visible_ok | update_profile | 15000 |
+| pause | 15000 | settling time |
 
 | *Comment* | Test Case: Edit Profile. IE gets a permissions error if you do anything more than click_ok and exit |  |
 | click_ok | update_profile |  |
-| pause | 8000 |  |
+| wait_for_element_visible_ok | st-edit-profile | 30000 |
+| wait_for_element_visible_ok | st-edit-layout | 30000 |
 
 | *Comment* | Test Case: Edit Profile COMPLETED |  |

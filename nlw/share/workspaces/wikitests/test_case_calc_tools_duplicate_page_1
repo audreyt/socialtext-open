@@ -1,0 +1,30 @@
+| *Comment* | Test Case: Calc Tools: Duplicate Spreadsheet |  |
+
+| set | cdp_wiki | cdp_wiki |
+
+| delete-workspace | %%cdp_wiki%% |  |
+| st-process-jobs |  |  |
+| create-workspace | %%cdp_wiki%% |  |
+| st-admin | add-member --email %%email%% --workspace %%cdp_wiki%% | now has the role |
+
+| *Comment* | Test Case: Calc Tools: Duplicate Spreadsheet Create test page |  |
+| open_ok | /%%cdp_wiki%%/index.cgi?action=display;page_type=spreadsheet;page_name=Dupe%20Spreadsheet#edit |  |
+| wait_for_element_visible_ok | st-save-button-link |  |
+| pause | 15000 | I hate pause; needed for entire page load |
+| st-page-save |  |  |
+
+| *Comment* | Test Case: Calc Tools: Duplicate Spreadsheet Create test page |  |
+| wait_for_element_visible_ok | link=Add Tag | 30000 |
+| click_ok | link=Add Tag |  |
+| wait_for_element_visible_ok | st-tags-field | 30000 |
+| type_ok | st-tags-field | Duplicate Spreadsheet Tag |
+| wait_for_element_visible_ok | st-tags-plusbutton-link | 20000 |
+| click_ok | st-tags-plusbutton-link |  |
+| wait_for_element_visible_ok | link=Duplicate Spreadsheet Tag | 30000 |
+| st_upload_if_highperms | wikitest.jpg |  |
+
+| *Comment* | Test Case: Calc Tools: Duplicate Page Test Duplicate popup, duplicate the page |  |
+| click_ok | link=Duplicate Page |  |
+| wait_for_element_visible_ok | st-duplicate-savelink | 30000 |
+| click_ok | st-duplicate-savelink |  |
+| pause_ok | 3000 |  |

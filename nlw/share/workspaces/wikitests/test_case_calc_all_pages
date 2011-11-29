@@ -8,41 +8,41 @@
 | *Comment* | Test Case: Calc All Pages Set up |  |
 | open_ok | /%%new_ws%%/index.cgi?action=display;page_type=spreadsheet;page_name=allpages%20spreadsheet0001%%start_time%%#edit |  |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
-| pause | 5000 | I hate pause; needed for entire page load |
+| pause | 15000 | I hate pause; needed for entire page load |
 | st-page-save |  |  |
 | open_ok | /%%new_ws%%/index.cgi?action=display;page_type=spreadsheet;page_name=allpages%20spreadsheet0002%%start_time%%#edit |  |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
-| pause | 5000 | I hate pause; needed for entire page load |
+| pause | 15000 | I hate pause; needed for entire page load |
 | st-page-save |  |  |
 | open_ok | /%%new_ws%%/index.cgi?action=display;page_type=spreadsheet;page_name=allpages%20spreadsheet0003%%start_time%%#edit |  |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
-| pause | 5000 | I hate pause; needed for entire page load |
+| pause | 15000 | I hate pause; needed for entire page load |
 | st-page-save |  |  |
 | open_ok | /%%new_ws%%/index.cgi?action=display;page_type=spreadsheet;page_name=allpages%20spreadsheet0004%%start_time%%#edit |  |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
-| pause | 5000 | I hate pause; needed for entire page load |
+| pause | 15000 | I hate pause; needed for entire page load |
 | st-page-save |  |  |
 
 | *Comment* | Test Case: Calc All Pages name sorting |  |
 | open_ok | /%%new_ws%%/index.cgi?action=changes&changes=all |  |
 
-| text_like | contentContainer | All Pages |
-| text_like | contentContainer | Showing 1 - 4 of 4 |
+| text_like | content | All Pages |
+| text_like | content | Showing 1 - 4 of 4 |
 | click_and_wait | link=allpages spreadsheet0001%%start_time%% |  |
 | text_like | st-page-titletext | allpages spreadsheet0001%%start_time%% |
 
 | open_ok | /%%new_ws%%/index.cgi?action=changes&changes=all |  |
 | wait_for_element_visible_ok | sort-picker | 30000 |
 | select_and_wait | sort-picker | label=Title |
-| text_like | contentContainer | qr/allpages spreadsheet0001%%start_time%%.+allpages spreadsheet0004%%start_time%%/ |
+| text_like | content | qr/allpages spreadsheet0001%%start_time%%.+allpages spreadsheet0004%%start_time%%/ |
 | wait_for_element_visible_ok | sort-picker | 30000 |
 | select_and_wait | sort-picker | label=Title (↓) |
-| text_like | contentContainer | qr/allpages spreadsheet0004%%start_time%%.+allpages spreadsheet0001%%start_time%%/ |
+| text_like | content | qr/allpages spreadsheet0004%%start_time%%.+allpages spreadsheet0001%%start_time%%/ |
 
 | *Comment* | Test Case: Calc All Pages. Open and Save for a later edit time |  |
 | open_ok | /%%new_ws%%/index.cgi?action=display;page_type=spreadsheet;page_name=allpages%20spreadsheet0005%%start_time%%#edit |  |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
-| pause | 5000 | I hate pause; needed for entire page load |
+| pause | 15000 | I hate pause; needed for entire page load |
 | st-page-save |  |  |
 
 | open_ok | /%%new_ws%%/index.cgi?action=changes&changes=all |  |
@@ -52,10 +52,10 @@
 | *Comment* | Test Case: Calc All Pages reopen. Date sort. |  |
 | wait_for_element_visible_ok | sort-picker | 30000 |
 | select_and_wait | sort-picker | label=Date Last Edited |
-| text_like | contentContainer | qr/allpages spreadsheet0005%%start_time%%.+allpages spreadsheet0004%%start_time%%/ |
+| text_like | content | qr/allpages spreadsheet0005%%start_time%%.+allpages spreadsheet0004%%start_time%%/ |
 | wait_for_element_visible_ok | sort-picker | 30000 |
 | select_and_wait | sort-picker | label=Date Last Edited (↑) |
-| text_like | contentContainer | qr/allpages spreadsheet0004%%start_time%%.+allpages spreadsheet0005%%start_time%%/ |
+| text_like | content | qr/allpages spreadsheet0004%%start_time%%.+allpages spreadsheet0005%%start_time%%/ |
 
 | *Comment* | Test Case: Calc All Pages revision sort |  |
 | open_ok | /%%new_ws%%/index.cgi?action=changes&changes=all |
@@ -64,17 +64,17 @@
 | wait_for_element_visible_ok | st-edit-button-link |  |
 | click_ok | st-edit-button-link |  |
 | wait_for_element_visible_ok | st-save-button-link |  |
-| pause | 5000 | I hate pause; needed for entire page load |
+| pause | 15000 | I hate pause; needed for entire page load |
 | st-page-save |  |  |
 | wait_for_element_visible_ok | st-edit-button-link |  |
 
 | open_ok | /%%new_ws%%/index.cgi?action=changes&changes=all |
 | wait_for_element_visible_ok | sort-picker | 30000 |
 | select_and_wait | sort-picker | label=Revisions |
-| text_like | contentContainer | qr/allpages spreadsheet0004%%start_time%%.+allpages spreadsheet0003%%start_time%%/ |
+| text_like | content | qr/allpages spreadsheet0004%%start_time%%.+allpages spreadsheet0003%%start_time%%/ |
 | wait_for_element_visible_ok | sort-picker | 30000 |
 | select_and_wait | sort-picker | label=Revisions (↑) |
-| text_like | contentContainer | qr/allpages spreadsheet0003%%start_time%%.+allpages spreadsheet0004%%start_time%%/ |
+| text_like | content | qr/allpages spreadsheet0003%%start_time%%.+allpages spreadsheet0004%%start_time%%/ |
 
 | *Comment* | Test Case: Calc All Pages sort by Last Edited By |  |
 
@@ -97,7 +97,7 @@ For some reason, IE 6 blows up when open_ok is used in some places. We avoid it.
 | wait_for_element_visible_ok | st-edit-button-link |  |
 | click_ok | st-edit-button-link |  |
 | wait_for_element_visible_ok | st-save-button-link |  |
-| pause | 5000 | I hate pause; needed for entire page load |
+| pause | 15000 | I hate pause; needed for entire page load |
 | st-page-save |  |  |
 | wait_for_element_visible_ok | st-edit-button-link |  |
 
@@ -106,10 +106,10 @@ For some reason, IE 6 blows up when open_ok is used in some places. We avoid it.
 | open_ok | /%%new_ws%%/index.cgi?action=changes&changes=all |  |
 | wait_for_element_visible_ok | sort-picker | 30000 |
 | select_and_wait | sort-picker | label=Last Edited By |
-| text_like | contentContainer | qr/allpages spreadsheet0003%%start_time%%.+allpages spreadsheet0001%%start_time%%/ |
+| text_like | content | qr/allpages spreadsheet0003%%start_time%%.+allpages spreadsheet0001%%start_time%%/ |
 | wait_for_element_visible_ok | sort-picker | 30000 |
 | select_and_wait | sort-picker | label=Last Edited By (↓) |
-| text_like | contentContainer | qr/allpages spreadsheet0001%%start_time%%.+allpages spreadsheet0003%%start_time%%/ |
+| text_like | content | qr/allpages spreadsheet0001%%start_time%%.+allpages spreadsheet0003%%start_time%%/ |
 
 | *Comment* | Test Case: Calc All Pages TEARDOWN. No need to login again. |  |
 

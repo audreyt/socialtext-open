@@ -33,9 +33,9 @@ json-path-set | signal_hash | $[0].hash |
 
 | *Comment* | Test Case: Activities Widget: Go to the pop-up page |  |
 | open_ok | /st/signals/%%signal_hash%% |  |
-| wait_for_text_present_ok | Signals - Permalink | 30000 |
+| wait_for_text_present_ok | Signals - Permanent Link | 30000 |
 | st-name-widget | 1 | outer_widget |
-| st_verify_text_in_activities_widget | outer_widget | Picture yourself on a boat on a river %%start_time%% |
+| st-verify-text-in-activities-widget | Picture yourself on a boat on a river %%start_time%% |
 
 | *Comment* | Test Case: Activities Widget: Send a reply |  |
 

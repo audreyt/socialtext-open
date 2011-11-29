@@ -2,7 +2,6 @@
 
 | *Comment* | Test Case: Signals Web Link SETUP |  |
 
-
 | set_default | www_signaler | www_signaler_%%start_time%%@david.socialtext.net |
 | set_default | www_signaler_pw | %%password%% |
 | set | text | Signals Web Link Text %%start_time%% |
@@ -13,47 +12,38 @@
 | open_ok | /st/signals |  |
 
 | *Comment* | Test Case: Signals Web Link buttons are present |  |
-| wait_for_element_visible_ok | //a[contains(@class,'insertWeblink')] | 30000 |
+| wait_for_element_visible_ok | //a[contains(@class,'insertLink')] | 30000 |
 
 | *Comment* | Test Case: Signals Wiki Link. Click Insert Wiki Link |  |
-| click_ok | //a[contains(@class,'insertWeblink')] |  |
+| click_ok | //a[contains(@class,'insertLink')] |  |
 
 | *Comment* | Test Case: Signals Web Link. Verify visible elements |  |
-| wait_for_element_visible_ok | //div[@class='weblinkPopup'] | 30000 |
-| wait_for_element_visible_ok | //input[@name='label'] | 5000 |
-| wait_for_element_visible_ok | //input[@name='destination'] | 5000 |
-| wait_for_element_visible_ok | //a[@class='btn done'] | 5000 |
-| wait_for_element_visible_ok | //a[@class='btn cancel'] | 5000 |
-| text_like | //body | qr/Paste\s*or\s*type\s*your\s*/ |
-
-| *Comment* | Test Case: Signals Web Link. Click Cancel. Verify invisible elements |  |
-| click_ok | //a[@class='btn cancel'] |  |
-| pause | 5000 |  |
-| wait_for_element_visible_ok | //a[contains(@class,'insertWeblink')] | 30000 |
-| click_ok | //a[contains(@class,'insertWeblink')] |  |
-| wait_for_element_visible_ok | //div[@class='weblinkPopup'] | 30000 |
-| wait_for_element_visible_ok | //input[@name='label'] | 5000 |
-| wait_for_element_visible_ok | //input[@name='destination'] | 5000 |
-| wait_for_element_visible_ok | //a[@class='btn done'] | 5000 |
+| wait_for_element_visible_ok | add-a-link-form | 30000 |
+| wait_for_element_visible_ok | web-option | 15000 |
+| click_ok | web-option |  |
+| wait_for_element_visible_ok | web-link-label | 15000 |
+| wait_for_element_visible_ok | web-link-destination | 15000 |
+| wait_for_element_visible_ok | activities-add-link-ok | 15000 |
+| text_like | //body | Required fields are indicated by an * |
 
 | *Comment* | Test Case: Signals Web Link setSpeed 3000 to allow for type-in |  |
 | set_Speed | 3000 |  |
-| type_ok | //input[@name='label'] | %%text%% |
-| type_ok | //input[@name='destination'] | %%url%% |
+| type_ok | web-link-label | %%text%% |
+| type_ok | web-link-destination | %%url%% |
 
 | *Comment* | Test Case: Signals Web Link setSpeed zero, click OK |  |
 | set_Speed | 0 |  |
-| click_ok | //a[@class='btn done'] | 5000 |
-| wait_for_element_not_visible_ok | //div[@class='weblinkPopup'] | 5000 |
+| click_ok | activities-add-link-ok | 15000 |
+| pause_ok | 15000 |  |
 
 | *Comment* | Test Case: Signals Web Link post signal the hard way |  |
-| wait_for_element_visible_ok | link=Post | 5000 |
+| wait_for_element_visible_ok | //a[contains(@id,"widget") and contains(@id,"post")] | 15000 |
 | pause | 3000 |  |
-| click_ok | link=Post |  |
+| click_ok | //a[contains(@id,"widget") and contains(@id,"post")] |  |
 | wait_for_text_present_ok | By you | 30000 |
 | wait_for_element_visible_ok | link=%%text%% | 30000 |
 | wait_for_element_visible_ok | //a[contains(@href,'%%url%%')] | 30000 |
 
 | *Comment* | Test Case: Signals Web Link can't click the link since it has target="_new" |  |
 
-| *Comment* | Test Case: Signals Web Link COMPLETED |
+| *Comment* | Test Case: Signals Web Link COMPLETED |  |

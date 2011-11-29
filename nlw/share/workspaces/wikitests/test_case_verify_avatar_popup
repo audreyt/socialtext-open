@@ -3,7 +3,6 @@
 | *Comment* | Test Case: Verify Avatar Popup |  |
 | *Comment* | [Test Case: Verify Profile] should have run before Avatar Popup |  |
 
-
 | *Comment* | These values must match the one in [Test Case: Edit Profile] |  |
 | set | e_user | profile.editor@ken.socialtext.net |
 | set | es_user | profile.editor\@ken.socialtext.net |
@@ -13,7 +12,7 @@
 | set | lname | Edisaurus |
 | st-admin | set-user-names --e %%e_user%% --f "%%fname%%" --m "%%mname%%" --l "%%lname%%" | updated |
 
-| set | avatar_page | Avatar Popup %%start_time%% |
+| set | avatar_page | avatar_popup_%%start_time%% |
 
 | *Comment* | Test Case: Verify Avatar Popup. Make %%e_user%% an authorized member of %%workspace%% |  |
 | st-admin | add-member --w %%workspace%% --e %%e_user%% |  |
@@ -21,41 +20,41 @@
 | *Comment* | Test Case: Verify Avatar. Edit a page as %%e_user%% to become Last Edited By. |  |
 | st-admin | update-page --email %%e_user%% --workspace %%workspace%% --page "%%avatar_page%%" < %%wikitest_client_files%%wikitest.txt | page has been created. |
 
-| open_ok | /%%workspace%%/?%%avatar_page%% |  |
+| open_ok | /%%workspace%%/%%avatar_page%% |  |
 
 | *Comment* | Test Case: Verify Avatar Popup . Home page last edited by %%fname%% %%mname%% %%lname%% |  |
 | wait_for_element_visible_ok | //span[@id='update-attribution']//a | 30000 |
 | MouseOver | //span[@id='update-attribution']//a |  |
 
 | *Comment* | Test Case: Verify Avatar Popup. %%short_e_user%% Popup should pop up from update attribution |  |
-| wait_for_text_present_ok | 555-work-%%short_e_user%% | 30000 |
+| wait_for_text_present_ok | 555-work-%%short_e_user%% | 10000 |
 | text_like | qr/%%fname%%.+%%lname%%.+%%es_user%%.+Work.+555-work-%%short_e_user%%.+AIM.+%%short_e_user%%.+Sametime/ism |  |
 
 | *Comment* | Test Case: Verify Avatar Popup. %%short_e_user%% Popup should pop up from listview |  |
-| click_and_wait | link=What's New |  |
-| wait_for_element_visible_ok | link=%%fname%% %%mname%% %%lname%% | 30000 |
+| select_and_wait | st-jump-to | label=What's New |
+| wait_for_element_visible_ok | link=%%fname%% %%mname%% %%lname%% | 10000 |
 | MouseOver | link=%%fname%% %%mname%% %%lname%% |  |
-| wait_for_text_present_ok | 555-work-%%short_e_user%% | 30000 |
+| wait_for_text_present_ok | 555-work-%%short_e_user%% | 15000 |
 | text_like | qr/%%fname%%.+%%lname%%.+%%es_user%%.+Work.+555-work-%%short_e_user%%.+AIM.+%%short_e_user%%.+Sametime/ism |  |
 
 | *Comment* | Test Case: Verify Avatar Popup. Follow from pop up |  |
-| wait_for_element_visible_ok | link=Follow this person | 30000 |
+| wait_for_element_visible_ok | link=Follow this person | 10000 |
 | click_ok | link=Follow this person |  |
 | click_and_wait | link=%%fname%% %%mname%% %%lname%% | 30000 |
-| wait_for_element_visible_ok | link=Stop following this person | 30000 |
+| wait_for_element_visible_ok | `//button[@id='st-watchperson-indicator' and @title='Stop following this person']` | 10000 |
 
 | *Comment* | Test Case: Verify Avatar Popup. Stop following from pop up |  |
-| open_ok | /%%workspace%%/?%%avatar_page%% |  |
+| open_ok | /%%workspace%%/%%avatar_page%% |  |
 | wait_for_element_visible_ok | //span[@id='update-attribution']//a | 30000 |
 | MouseOver | //span[@id='update-attribution']//a |  |
-| wait_for_element_visible_ok | link=Stop following this person | 30000 |
+| wait_for_element_visible_ok | link=Stop following this person | 10000 |
 | click_ok | link=Stop following this person |  |
 | click_and_wait | link=%%fname%% %%mname%% %%lname%% | 30000 |
-| wait_for_element_visible_ok | link=Follow this person | 30000 |
+| wait_for_element_visible_ok | `//button[@id='st-watchperson-indicator' and @title='Follow this person']` | 10000 |
 
 | *Comment* | Test Case: Avatar Popup TEARDOWN |  |
 | st-process-jobs |  |  |
-| st-admin | purge-page --w %%workspace%% --p %%avatar_page%% |  |
+| st-admin | purge-page --w %%workspace%% --p %%avatar_page%% | was purged |
 | st-admin | remove-member --w %%workspace%% --e %%e_user%% | no longer has the role of 'member' |
 
 | *Comment* | Test Case: Avatar Popup COMPLETED |  |

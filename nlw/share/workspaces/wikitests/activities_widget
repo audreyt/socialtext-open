@@ -1,0 +1,19 @@
+| *Comment* | Open an existing Activities widget to activity=%%activity%%, contributor=%%contributor%% |  |
+| *Comment* | N.B.: calling testcase must have `* Fixture: SocialWidgets` |  |
+
+Note: I tried to find a way to set names for all of the radio buttons but could not figure out how to get the `%%` expansion to work
+That is why the following commands contain the literal input elements with a single level of `%%` expansion for the element name.
+
+| wait_for_element_visible_ok | //a[contains(@id,"expander")] | 15000 |
+| click_ok | //a[contains(@id,"expander")] |  |
+| wait_for_element_visible_ok | //input[@class="action" and @type="radio" and @id="action-%%activity%%"] | 15000 |
+| click_ok | //input[@class="action" and @type="radio" and @id="action-%%activity%%"] |  |
+| wait_for_element_visible_ok | //input[@class="feed" and @type="radio" and @id="feed-%%contributor%%"] | 15000 |
+| click_ok | //input[@class="feed" and @type="radio" and @id="feed-%%contributor%%"] |  |
+| pause_ok | 500 | wait half a second |
+
+| verifyValue | //input[@class="action" and @type="radio" and @id="action-%%activity%%"] | on |
+| verifyValue | //input[@class="feed" and @type="radio" and @id="feed-%%contributor%%"] | on |
+
+| wait_for_element_visible_ok | //a[contains(@id,"expander")] | 15000 |
+| click_ok | //a[contains(@id,"expander")] |  |

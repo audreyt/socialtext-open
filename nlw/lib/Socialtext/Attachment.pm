@@ -15,6 +15,7 @@ use Socialtext::SQL qw/:exec :txn/;
 use Socialtext::SQL::Builder qw/sql_insert/;
 use Socialtext::String qw/:uri :html/;
 use Socialtext::Timer qw/time_scope/;
+use Socialtext::Client::Wiki qw( wiki2html );
 
 use namespace::clean -except => 'meta';
 
@@ -292,7 +293,9 @@ sub inline {
     $page->edit_rev();
 
     my $body_ref = $page->body_ref;
-    my $body_new = $self->image_or_file_wafl() . $$body_ref;
+    my $body_new = $self->image_or_file_wafl();
+    $body_new = wiki2html($body_new) if $page->page_type eq 'xhtml';
+    $body_new .= $$body_ref;
     $body_ref = \$body_new;
     $page->body_ref(\$body_new);
 

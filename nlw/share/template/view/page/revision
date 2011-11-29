@@ -1,0 +1,74 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[% USE decorate %]
+[% USE label_ellipsis %]
+
+[% WRAPPER $frame_name id="revisions" title="${display_title}: ${display_title_decorator}" %]
+<form id="restore-form" action="[% script_name %]" method="post">
+  <input type="hidden" name="action" value="revision_restore" />
+  <input type="hidden" name="page_name" value="[% page_uri %]" />
+  <input type="hidden" name="revision_id" value="[% revision_id %]" />
+</form>
+
+<div class="grid_24">
+  <ul id="revision-tools">
+    <li>
+      <a href="[% "${script_name}?${page_uri}" %]">
+        [% loc('revision.current') %]
+      </a>
+    </li>
+    <li>&#166;</li>
+    <li>
+      <a href="[% script_name %]?action=revision_list;page_id=[% page_uri %]">
+        [% loc('revision.all') %]
+      </a>
+    </li>
+    <li>&#166;</li>
+    <li>
+      <a href="[% script_name %]?action=revision_view;page_name=[% page_uri %];revision_id=[% next_revision %];mode=[% mode %]">
+        [% loc('revision.previous') %]
+      </a>
+    </li>
+    <li>&#166;</li>
+    <li>
+      <a href="[% script_name %]?action=revision_view;page_name=[% page_uri %];revision_id=[% previous_revision %];mode=[% mode %]">
+        [% loc('revision.next') %]
+      </a>
+    </li>
+    <li>&#166;</li>
+    <li>
+      <a href="[% script_name %]?action=revision_view;page_name=[% page_uri %];revision_id=[% revision_id %];mode=[% IF mode != 'html' %]html[% END %]">
+        [% IF mode == 'html' %]
+          [% loc('revision.normal-view') %]
+        [% ELSE %]
+          [% loc('diff.html-view') %]
+        [% END %]
+      </a>
+    </li>
+    [% IF checker.check_permission('edit') AND ! page_locked_for_user %]
+    <li>&#166;</li>
+    <li>
+        <a href="#" id="st-revision-restorebutton" onclick="jQuery('#restore-form').submit(); return false">
+          [% loc("page.restore=revision", human_readable_revision) %]
+        </a>
+    </li>
+    [% END %]
+  </ul>
+</div>
+<div class="clear"></div>
+
+<div class="grid_24">
+  <div class="widget">
+    <h1 title="[% display_title %]">[% display_title %]
+      [% IF display_title_decorator %]: <span class="st-page-title-decorator">[% display_title_decorator %]</span>[% END %]
+    </h1>
+    [%- IF tags.size %]<div class="st-revision-tags">
+      [% loc('revision.tags:') %]&nbsp;<span id="st-revision-tags-text" class="text">[% tags.join(', ') %]</span></div>[% END -%]
+
+    [%- IF edit_summary %][% edit_summary = edit_summary | label_ellipsis(edit_summary_maxlength) | html %]<div class="st-edit-summary">[% from | decorate('user_avatar') %] <div id="st-edit-summary-text" class="text">[% loc('revision.quote=summary', edit_summary) %]</div></div>[% END -%]
+
+    <div class="content">[% print %]</div>
+  </div>
+</div>
+<div class="clear"></div>
+[% END %]

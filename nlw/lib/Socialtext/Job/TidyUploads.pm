@@ -3,6 +3,7 @@ package Socialtext::Job::TidyUploads;
 use Moose;
 use Socialtext::SQL qw/sql_execute sql_txn/;
 use Socialtext::Upload;
+use Socialtext::Theme;
 
 extends 'Socialtext::Job';
 with 'Socialtext::CoalescingJob';
@@ -12,11 +13,15 @@ use constant AT_A_TIME => 100; # just to limit the run-time of the select
 sub do_work {
     my $self = shift;
 
-    my $referenced = join "\nOR\n", map {
-#         "EXISTS (SELECT 1 FROM $_ 
-#                  WHERE $_.attachment_id = attachment.attachment_id)";
+    my @references = map {
           "attachment_id IN (SELECT attachment_id FROM $_)"
     } Socialtext::Upload::TABLE_REFS;
+
+
+    push @references, map { "attachment_id IN (SELECT ". $_ ."_id FROM theme)" }
+        @Socialtext::Theme::UPLOADS; 
+
+    my $referenced = join "\nOR\n", @references;
 
     my $sth = sql_execute(qq{
         SELECT attachment_id FROM attachment a

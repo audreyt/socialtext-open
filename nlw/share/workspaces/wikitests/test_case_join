@@ -1,3 +1,5 @@
+*This test has an intermittent failure where in some cases the "An email has been sent..." message does not appear*
+
 | *Comment* | Test Case: Join. |  |
 
 | *Comment* | Test Case: Join. Define a fresh account and a ws in it |  |
@@ -31,23 +33,23 @@
 | *Comment* | Test Case: Join. Logged-in user joins immediately. |  |
 | open_ok | /%%acct_ws%% |  |
 | wait_for_element_visible_ok | link=Join to edit | 30000 |
-| wait_for_element_not_present_ok | link=Edit | 5000 |
+| wait_for_element_not_present_ok | link=Edit | 15000 |
 | click_and_wait | link=Join to edit |  |
 | wait_for_text_present_ok | %%acct%% |  |
-| wait_for_element_visible_ok | link=Edit | 5000 |
-| wait_for_element_visible_ok | link=Comment | 5000 |
+| wait_for_element_visible_ok | link=Edit | 15000 |
+| wait_for_element_visible_ok | link=Comment | 15000 |
 
 | *Comment* | Test Case: Join. Disable self register and verify |  |
 | st-logout |  |  |
 | st-config | set self_registration 0 | Wrote updated config file |
 | open_ok | /%%acct_ws%% |  |
-| wait_for_element_not_present_ok | link=Join to edit | 5000 |
+| wait_for_element_not_present_ok | link=Join to edit | 15000 |
 | st-config | set self_registration 1 | Wrote updated config file |
 
 | *Comment* | Test Case: Join. New user joins and registers |  |
 | open_ok | /%%acct_ws%% |  |
 | wait_for_element_visible_ok | link=Join to edit | 30000 |
-| wait_for_element_not_present_ok | link=Edit | 5000 |
+| wait_for_element_not_present_ok | link=Edit | 15000 |
 | click_and_wait | link=Join to edit |  |
 | wait_for_element_visible_ok | email_address | 30000 |
 | wait_for_element_visible_ok | register_password | 30000 |
@@ -61,7 +63,7 @@
 | type_ok | last_name | Duck |
 | wait_for_element_visible_ok | register_btn | 30000 |
 | click_and_wait | register_btn |  |
-| text_like | An email confirming your registration has been sent to %%to_ws_user%% |  |
+| wait_for_text_present_ok | An email confirming your registration has been sent to %%to_ws_user%%. | 10000 |
 
 | *Comment* | Test Case: Join. login to %%to_ws%% as %%username%% and open the confirmation email |  |
 | st-logoutin | %%username%% | %%password%% |
@@ -71,7 +73,6 @@
 
 | *Comment* | Test Case: Join. Navigate to the confirmation email |  |
 | open_ok | /%%to_ws%%/?action=recent_changes |  |
-| text_like | workspaceName | %%to_ws%% |
 | wait_for_element_visible_ok | link=Welcome to the %%acct%% workspace - please confirm your email to join | 30000 |
 | click_and_wait | link=Welcome to the %%acct%% workspace - please confirm your email to join |  |
 
@@ -91,8 +92,8 @@
 | type_ok | password | %%password%% |
 | click_and_wait | login_btn |  |
 | location_like | /%%acct_ws%% |  |
-| wait_for_element_visible_ok | st-edit-button-link | 5000 |
-| wait_for_element_visible_ok | st-comment-button-link | 5000 |
+| wait_for_element_visible_ok | st-edit-button-link | 15000 |
+| wait_for_element_visible_ok | //li[@id="st-comment-button"]/a | 15000 |
 | st-admin | get-user-account --u %%to_ws_user%% | Primary account for "%%to_ws_user%%" is %%acct%%. |
 
 | *Comment* | Test Case: Join TEARDOWN |  |

@@ -1,3 +1,6 @@
+THIS TEST IS NO LONGER EXECUTED DUE TO UNRELIABILITY AND REQUIRING MANUAL SETUP
+
+
 | *Comment* | STARTING Test case: Control Panel Reports |  |
 
 | *Comment* | Test case: Control Panel Reports pre-reqs: |
@@ -12,8 +15,8 @@
 
 | *Comment* | Test case: Control Panel Reports - Open Control Panel and Navigate |  |
 | open_ok | /nlw/control |  |
-| wait_for_element_visible_ok | link=Workspaces | 20000 |
-| click_and_wait | link=Workspaces |  |
+| wait_for_element_visible_ok | workspaces | 20000 |
+| click_and_wait | workspaces |  |
 | type_ok | name | %%testingwrkspace%% |
 | st-submit |  |  |
 | click_and_wait | link=%%testingwrkspace%% |  |

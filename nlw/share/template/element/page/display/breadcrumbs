@@ -1,0 +1,12 @@
+[%# vim: set ft=tt2 et sts=2 sw=2: %]
+<div class="widget">
+  <h1>[% loc('nav.recently-viewed') %]</h1>
+  <div class="content">
+    <ul>
+      [% FOREACH bc IN breadcrumbs %]
+        <li><a href="[% bc.link %]">[% bc.title %]</a></li>
+      [% END %]
+    </ul>
+    <div class="clear"></div>
+  </div>
+</div>

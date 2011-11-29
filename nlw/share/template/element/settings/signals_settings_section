@@ -1,0 +1,14 @@
+[%# vim: set et sts=2 sw=2: %]
+<h3>[% loc('nav.signals') %]</h3>
+
+[% INCLUDE element/settings/setting_select
+  pref="plugin.signals.mention_sends_email"
+  option=plugin.signals.mention_sends_email
+%]
+
+[% INCLUDE element/settings/setting_select
+  pref="plugin.signals.dm_sends_email"
+  option=plugin.signals.dm_sends_email
+%]
+
+<hr />

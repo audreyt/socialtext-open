@@ -23,12 +23,15 @@ It should be included by the top-level replies testcase
 | open_ok | /st/signals |  |
 
 | set | i | 0-0 |
+| set | addToConversation | 0 |
 | include | [Test Case: Replies Include] |  |
 
 | set | i | 0-1 |
+| set | addToConversation | 1 |
 | include | [Test Case: Replies Include] |  |
 
 | set | i | 0-2 |
+| set | addToConversation | 1 |
 | include | [Test Case: Replies Include] |  |
 
 | *Comment* | Test Case: Replies Seeder COMPLETED |  |

@@ -9,6 +9,9 @@ use Class::Field qw( const );
 use Socialtext::String;
 use Socialtext::Encode;
 use Socialtext::l10n qw( loc );
+use Socialtext::Revision::RenderedSideBySideDiff;
+use Socialtext::Revision::WikitextSideBySideDiff;
+use Socialtext::Revision::HtmlSideBySideDiff;
 use Try::Tiny;
 
 sub EDIT_SUMMARY_MAXLENGTH { 250 }
@@ -52,6 +55,17 @@ sub revision_list {
         push @$rows, $row;
     }
 
+    $self->hub->helpers->add_js_bootstrap({
+        page => {
+            id       => $page->page_id,
+            title    => $page->title,
+            type     => $page->type,
+            full_uri => $page->full_uri,
+
+            new_revision_id => $self->cgi->new_revision_id,
+        },
+    });
+
     $self->screen_template('view/page_revision_list');
     $self->render_screen(
         revision_count => $page->revision_count,
@@ -93,7 +107,7 @@ sub revision_view {
       }
     }
 
-    my $output = $self->cgi->mode eq 'source'
+    my $output = $self->cgi->mode eq 'html'
       ? do { local $_ = $self->html_escape( $page->content ); s/$/<br \/>/gm; $_ }
       : $page->to_html;
 
@@ -158,9 +172,19 @@ sub revision_compare {
     $before_page->switch_rev($self->cgi->old_revision_id);
     $new_page->switch_rev($self->cgi->new_revision_id);
 
-    my $class = (defined $self->cgi->mode and $self->cgi->mode ne 'source')
-        ? 'Socialtext::RenderedSideBySideDiff'
-        : 'Socialtext::WikitextSideBySideDiff';
+    my $old_revision = $before_page->revision_num;
+    my $new_revision = $new_page->revision_num;
+    my ($next_id,$prev_id) = $self->next_compare();
+
+    my $class = 'Socialtext::Revision::HtmlSideBySideDiff';
+    my $mode = $self->cgi->mode || 'html'; 
+    if ($self->cgi->mode eq 'wikitext') {
+        $class = 'Socialtext::Revision::WikitextSideBySideDiff';
+       $mode = $self->cgi->mode; 
+    }
+    elsif ($self->cgi->mode eq 'view') {
+        $class = 'Socialtext::Revision::RenderedSideBySideDiff';
+    }
 
     my $differ = $class->new(
         before_page => $before_page,
@@ -168,14 +192,10 @@ sub revision_compare {
         hub => $self->hub,
     );
 
-    my $old_revision = $before_page->revision_num;
-    my $new_revision = $new_page->revision_num;
-
-    my ($next_id,$prev_id) = $self->next_compare();
-
     $self->screen_template('view/page/revision_compare');
     $self->render_screen(
         $page->all,
+        mode          => $mode,
         next_id       => $next_id,
         prev_id       => $prev_id,
         diff_rows     => $differ->diff_rows,
@@ -203,209 +223,6 @@ sub revision_restore {
         );
     }
     $self->redirect($page->uri);
-}
-
-package Socialtext::SideBySideDiff;
-
-use base 'Socialtext::Base';
-
-use Class::Field qw( field );
-use Socialtext::Helpers;
-use Socialtext::l10n qw( loc );
-use Socialtext::TT2::Renderer;
-
-field 'before_page';
-field 'after_page';
-field 'hub';
-
-sub _tag_diff {
-    my $self = shift;
-    my %p = (
-        old_tags => [],
-        new_tags => [],
-        highlight_class => '',
-        @_
-    );
-
-    my %in_old;
-    foreach (@{$p{old_tags}}) { $in_old{$_} = 1; }
-
-    my $text = join ', ',
-        map {exists $in_old{$_} ? $_ : "<span class='$p{highlight_class}'>$_</span>" } @{$p{new_tags}};
-
-    return $text;
-}
-
-sub header {
-    my $self = shift;
-    my @header;
-
-    my %tags = ();
-    my @before = map { Socialtext::String::html_escape($_) }
-        grep !/^Recent Changes$/, $self->before_page->tags_sorted;
-    my @after = map { Socialtext::String::html_escape($_) }
-        grep !/^Recent Changes$/, $self->after_page->tags_sorted;
-
-    for my $page ($self->before_page, $self->after_page) {
-        my %col;
-        my $pretty_revision = $page->revision_num;
-        my $rev_text = loc('page.revision=revision', $pretty_revision);
-        $col{link} = Socialtext::Helpers->script_link(
-            "<strong>$rev_text</strong></a>",
-            action      => 'revision_view',
-            page_id     => $page->id,
-            revision_id => $page->revision_id,
-        );
-        $col{tags} = ($page == $self->before_page) ? 
-            $self->_tag_diff(
-                new_tags => \@before,
-                old_tags => \@after,
-                highlight_class => 'st-revision-compare-old',
-            ) :
-            $self->_tag_diff(
-                new_tags => \@after,
-                old_tags => \@before,
-                highlight_class => 'st-revision-compare-new',
-            );
-        $col{editor} = $page->last_edited_by->username;
-        $col{summary} = $page->edit_summary;
-        $col{date} = $page->datetime_for_user;
-        push @header, \%col;
-    }
-    return \@header;
-}
-
-# XXX this doesn't actually do any comparison. =(
-package Socialtext::RenderedSideBySideDiff;
-
-use base 'Socialtext::SideBySideDiff';
-
-sub diff_rows {
-    my $self = shift;
-    return [{
-        before => $self->before_page->to_html,
-        after => $self->after_page->to_html,
-    }];
-}
-
-package Socialtext::WikitextSideBySideDiff;
-
-use base 'Socialtext::SideBySideDiff';
-use Algorithm::Diff::XS;
-
-sub diff_rows {
-    my $self = shift;
-    return $self->compare(
-        $self->before_page->content,
-        $self->after_page->content
-    );
-}
-
-sub compare {
-    my $self = shift;
-    my $before = shift;
-    my $after = shift;
-
-    my @chunks = $self->split_into_diffable_divs($before, $after);
-
-    my @sections;
-    for my $chunk (@chunks) {
-        push @sections, {
-            before => $self->compare_chunk($chunk->[0], $chunk->[1], 'before'),
-            after => $self->compare_chunk($chunk->[0], $chunk->[1], 'after'),
-        };
-    };
-    return \@sections;
-}
-
-sub split_into_diffable_divs {
-    my $self = shift;
-    my @sdiffs = Algorithm::Diff::XS::sdiff(
-        [ $self->split_into_escaped_lines(shift) ],
-        [ $self->split_into_escaped_lines(shift) ],
-    );
-    my @divs;
-    my @accumulation = ('','');
-    for (0..$#sdiffs) {
-        my $row = $sdiffs[$_];
-        my $flag = $row->[0];
-        my ($left, $right) = @{$row}[1,2];
-        $accumulation[0] .= $left;
-        $accumulation[1] .= $right;
-        if ('u' eq $flag or $_ == $#sdiffs) {
-            push @divs, [ @accumulation ];
-            @accumulation = ('','');
-        }
-    }
-    return @divs
-}
-
-sub split_into_escaped_lines {
-    my $self = shift;
-    return split /$/m, Socialtext::String::html_escape($_[0]);
-}
-
-sub compare_chunk {
-    my $self = shift;
-    my $before = shift;
-    my $after = shift;
-    my $desired_output = shift;
-
-    my @before = $self->split_into_words($before);
-    my @after = $self->split_into_words($after);
-
-    # Turn off SvUTF8 flag as Algorithm::Diff::XS doesn't do Unicode.
-    Encode::_utf8_off($_) for @before;
-    Encode::_utf8_off($_) for @after;
-
-    my @cdiffs = Algorithm::Diff::XS::compact_diff(\@before, \@after);
-    my $html   = '';
-
-    # some roughness to deal with the terse structure returned by compact_diff:
-    for ( my $ii = 0; $ii + 3 <= $#cdiffs; $ii += 2 ) {
-        if ($ii % 4) {
-            if ('before' eq $desired_output) {
-                my @slice = $cdiffs[$ii] .. $cdiffs[ $ii + 2 ] - 1;
-                $html .= enspan_old( @before[ @slice ] );
-            }
-            elsif ('after' eq $desired_output) {
-                my @slice = $cdiffs[ $ii + 1 ] .. $cdiffs[ $ii + 3 ] - 1;
-                $html .= enspan_new( @after[ @slice ] );
-            }
-            else {
-                warn "Uhh.... something's super wrong.";
-            }
-        }
-        else {
-            $html .= join '', @before[ $cdiffs[$ii] .. $cdiffs[ $ii + 2 ] - 1 ];
-        }
-    }
-
-    # Now put the SvUTF8 flag back on.
-    $html = Socialtext::Encode::ensure_is_utf8($html);
-
-    # XXX need to refactor this (and add a unit test - not necessarily in that
-    # order)
-    if ($html =~ /^\s+$/m) {
-        $html =~ s/\n/<br\/>\n/gsm;
-    } else {
-        $html =~ s/(.)\n/$1<br\/>\n/gsm;
-    }
-    return Socialtext::String::double_space_harden($html);
-}
-
-sub split_into_words { split /\b/, $_[1] }
-
-sub enspan_old {
-    return @_
-      ? join '', "<span class='st-revision-compare-old'>", @_, "</span>"
-      : '';
-}
-
-sub enspan_new {
-    return @_
-      ? join '', "<span class='st-revision-compare-new'>", @_, "</span>"
-      : '';
 }
 
 

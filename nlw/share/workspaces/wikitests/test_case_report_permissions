@@ -1,13 +1,17 @@
+*THIS TEST IS AN ORPHAN AND NO LONGER RUNS DUE TO INSTABILITY*
+
 | *Comment* | Test Case: Report Permissions |  |
 
 | *Comment* | Test Case: Report Permissions - setup and create users |  |
-| set_default | temp_password | 123456 |
+| set_default | temp_password | %%password%% |
 | set_default | report_workspace | growth_report_test |
 | set_default | workspace_two | report_permissions_%%start_time%% |
-| st-admin | create-workspace --empty --name %%workspace_two%% --title %%workspace_two%% | A new workspace named "%%workspace_two%%" was created. |
-| st-admin | remove-accounts-admin --email %%email%% | %%username%% no longer has accounts admin access |
-| st-admin | give-accounts-admin --email %%email%% | %%username%% now has accounts admin access |
-| st-admin | create-user --email newuser_perm_%%start_time%%@matt.socialtext.net --password %%temp_password%% |  |
+
+| create-workspace | %%workspace_two%% |  |  |
+| set | w2id | %%workspace_id%% |  |
+| st-admin | remove-accounts-admin --email %%email%% | %%username%% no longer has accounts admin access |  |
+| st-admin | give-accounts-admin --email %%email%% | %%username%% now has accounts admin access |  |
+| st-admin | create-user --email newuser_perm_%%start_time%%@matt.socialtext.net --password %%temp_password%% |  |  |
 
 | st-admin | create-user --email newuser_perm_2_%%start_time%%@matt.socialtext.net --password %%temp_password%% |  |
 | st-admin | add-member --email newuser_perm_2_%%start_time%%@matt.socialtext.net --workspace %%workspace%% |  |
@@ -19,7 +23,7 @@
 | st-admin | add-member --email newuser_perm_3_%%start_time%%@matt.socialtext.net --workspace %%workspace_two%% |  |
 
 | *Comment* | Test Case: Report Permissions - Permissions Exist for devnull1 for growth and usage |  |
-| open_ok | /webplugin/cgi/reports/report.cgi/workspace_growth.html?workspace=%%report_workspace%% |  |
+| open_ok | /control/report/usage_by_workspace/%%report_workspace%% |  |
 | text_like | qr/\w\w\w\s*\d\d\d\d\s*\d+\s*\d+\s*\d+\s*\d+\s*\d+/ |  |
 | text_like | qr/Date\s*Unique Members\s*Unique Visitors\s*Unique Contributors\s*Pages\s*Page Views\s*Contributions/i |  |
 | text_like | Workspace Growth - |  |

@@ -26,71 +26,66 @@
 
 | st-logoutin | %%permuser%% | %%password%% |
 
-| *Comment* | Test Case: Groups Home. Make A New Page. On galena, this often raises a basic auth popup as if the login had not worked. Try to open the ws and see if you are there. |  |
-| open_ok | /%%wsname%%/?action=new_page |  |
-| wait_for_element_present_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| type_ok | st-newpage-pagename-edit | New Page %%start_time%% |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+| *Comment* | Test Case: Groups Home. Make A New Page. |  |  |
+| st-create-page | %%wsname%% | New Page %%start_time%% | New Page %%start_time%% Content |
+| open_ok | /%%wsname%%/New Page %%start_time%% |  |  |
+
+| *Comment* | Test Case: Groups Home. Make an edit to create an event |  |  |
+| click_ok | st-edit-button-link |  |  |
+| st-page-save |  |  |  |
 
 | *Comment* | Test Case: Groups Home. Tag A Page |  |
 | wait_for_element_visible_ok | link=Add Tag | 30000 |
 | click_ok | link=Add Tag |  |
-| wait_for_element_visible_ok | st-tags-field | 30000 |
+| wait_for_element_visible_ok | st-tags-field | 15000 |
 | type_ok | st-tags-field | tag-%%start_time%% |
-| wait_for_element_visible_ok | st-tags-plusbutton-link | 30000 |
-| click_ok | st-tags-plusbutton-link | 30000 |
-| wait_for_element_visible_ok | link=tag-%%start_time%% | 30000 |
+| wait_for_element_visible_ok | st-tags-plusbutton-link | 15000 |
+| click_ok | st-tags-plusbutton-link | 15000 |
+| wait_for_element_visible_ok | link=tag-%%start_time%% | 15000 |
 
 | *Comment* | Test Case: Groups Home. Comment on a Page |  |
-| wait_for_element_visible_ok | st-comment-button-link | 30000 |
-| click_ok | st-comment-button-link |  |
-| wait_for_element_visible_ok | comment | 30000 |
+| wait_for_element_visible_ok | //li[@id="st-comment-button"]/a | 15000 |
+| click_ok | //li[@id="st-comment-button"]/a |  |
+| wait_for_element_visible_ok | comment | 15000 |
 | type_ok | comment | comment-%%start_time%% |
-| wait_for_element_visible_ok | link=Save | 30000 |
 | click_ok | link=Save |  |
 | wait_for_text_present_ok | comment-%%start_time%% | 30000 |
-| wait_for_text_present_ok | contributed by | 30000 |
+| wait_for_text_present_ok | contributed by | 15000 |
 | text_like | qr/contributed by.+ %%short_permuser%%/ism |  |
 
 | *Comment* | Test Case: Groups Home. Send A Signal to the Group |  |
 | open_ok | /?group/%%group_id%% |  |
 | wait_for_text_present_ok | Activities | 30000 |
-| st-send-signal-via-activities-widget | signals_widget | signal-%%start_time%% |
-| wait_for_text_present_ok | to %%groupname%% | 30000 |
+| st-send-signal-in-activities-widget | signal-%%start_time%% |  |
+| wait_for_text_present_ok | to %%groupname%% | 15000 |
 
 | *Comment* | Test Case: Groups Home. Check Lack of Permissions |  |
 | st-logoutin | %%nopermuser%% | %%password%% |
 | st_open_noeval | /?group/%%group_id%% |  |
-| wait_for_text_present_ok | Error | 30000 |
 | wait_for_text_present_ok | The group you are trying to view does not exist | 30000 |
-| wait_for_element_visible_ok | link=Socialtext Support | 30000 |
+| wait_for_element_visible_ok | link=Socialtext Support | 15000 |
 
 | *Comment* | Test Case: Groups Home. Add member, Check again |  |
 | st-admin | add-member --e %%nopermuser%% --group %%group_id%% | is now a member of the |
 | open_ok | /?group/%%group_id%% |  |
 
-
 | *Comment* | Test Case: Groups Home. Check Information Widget |  |
+| wait_for_text_present_ok | %%groupname%% |  |
 | st-name-widget | 1 | info |
 | st-select-widget-frame | info |  |
-| wait_for_text_present_ok | %%groupname%% | 30000 |
-| select_frame | relative=parent |  |
-
+| wait_for_text_present_ok | %%groupname%% | 15000 |
+| select_frame_ok | relative=parent |  |
 
 | *Comment* | Test Case: Groups Home Check Workspaces Widget |  |
 | st-name-widget | 2 | workspaces |
 | st-select-widget-frame | workspaces |  |
-| wait_for_element_visible_ok | link=%%wsname%% | 30000 |
-| wait_for_element_visible_ok | link=%%wsname2%% | 30000 |
-| select_frame | relative=parent |  |
+| wait_for_element_visible_ok | link=%%wsname%% | 15000 |
+| wait_for_element_visible_ok | link=%%wsname2%% | 15000 |
+| select_frame_ok | relative=parent |  |
 
 | *Comment* | Test Case: Groups Home. Check Activity Widget |  |
-| wait_for_text_present_ok | minute | 30000 |
-| wait_for_text_present_ok | signal-%%start_time%% | 30000 |
+| wait_for_text_present_ok | minute | 15000 |
+| wait_for_text_present_ok | signal-%%start_time%% | 15000 |
 | text_like | //body | qr/within\s*%%groupname%%/ |
 
 | text_like | //body | qr/edited New Page\s+%%start_time%%\s+in\s+%%wsname%%/ism |
@@ -105,16 +100,16 @@
 | *Comment* | Test Case: Groups Home. Check People Widget |  |
 | st-name-widget | 3 | membership |
 | st-select-widget-frame | membership |  |
-| wait_for_text_present_ok | %%short_permuser%% | 30000 |
-| wait_for_text_present_ok | %%short_nopermuser%% | 30000 |
+| wait_for_text_present_ok | %%short_permuser%% | 15000 |
+| wait_for_text_present_ok | %%short_nopermuser%% | 15000 |
 | select_frame | relative=parent |  |
 
 | *Comment* | Test Case: Groups Home TEARDOWN |  |
 | st-process-jobs |  |  |
 | deactivate-user | %%nopermuser%% |  |
 | deactivate-user | %%permuser%% |  |
-| delete-group | %%group_id%% |  |
-| st-admin | delete-workspace --w %%wsname%% --no-export | has been deleted |
-| st-admin | delete-workspace --w %%wsname2%% --no-export | has been deleted |
+| delete-group | %%group_id%% | Recklessly deleting |
+| delete-workspace | %%wsname%% | Recklessly deleting |
+| delete-workspace | %%wsname2%% | Recklessly deleting |
 
 | *Comment* | Test Case: Groups Home COMPLETED |  |

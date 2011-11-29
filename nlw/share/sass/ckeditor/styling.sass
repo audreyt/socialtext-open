@@ -1,0 +1,341 @@
+@import "compass/css3"
+
+/*
+ *  HEADER
+ *  ------
+
+#ckeditor-header
+  margin: 0
+  padding: 0
+  border-bottom: 1px #999 solid
+  height: 32px
+  padding-top: 4px
+  h2, #tabs, div
+    float: left
+    margin: 0
+    padding: 4px 0 0 0
+  h2
+    font-size: 15px
+    padding: 4px 8px
+  #buttons
+    padding: 4px 8px
+    ul
+      float: left
+      li
+        margin-left: 10px
+    input
+      background: #cccccc url(/nlw/plugin/ckeditor/images/ckeditor/acc-closed.png) repeat-x scroll top left
+      border-top: 1px #ccc solid
+      border-bottom: 1px #666 solid
+      border-right: 1px #666 solid
+      border-left: 1px #ccc solid
+      font-weight: bold
+      height: 21px
+      width: 70px
+      &.disabled
+        background: #cccccc url(/nlw/plugin/ckeditor/images/ckeditor/acc-closed.png) repeat-x scroll top left
+        border-top: 1px #ccc solid
+        border-bottom: 1px #999 solid
+        border-right: 1px #999 solid
+        border-left: 1px #ccc solid
+        color: #999
+  #tabs
+    float: right
+    margin: 0 12px 0 0
+    padding: 10px 0 0 0
+    list-style-type: none
+    li
+      display: inline
+      border-top: 1px #999 solid
+      border-left: 1px #999 solid
+      border-right: 1px #666 solid
+      border-bottom: 1px #666 solid
+      padding-top: 2px
+      background: #999
+      padding-bottom: 4px
+      &.selected
+        background: #fff
+        border-bottom: 1px #fff solid
+      a
+        text-decoration: none
+        color: #333
+        margin: 4px
+        padding: 2px 8px
+        font-size: 12px
+        line-height: 18px
+        font-weight: bold
+
+/*
+ *  TOOLBAR
+ *  -------
+
+#ckeditor-controls
+  #edit-toolbar
+    line-height: 20px
+    height: 25px
+    padding: 3px
+    background-image: url(/nlw/plugin/ckeditor/images/ckeditor/toolbar-bg.png)
+    background-position: bottom left
+    background-repeat: repeat-x
+    font-family: arial,sans-serif
+    font-size: 10px
+    line-height: 19px
+    clear: both
+  .separator
+    float: left
+    color: #333
+    margin-right: 3px
+    border-left: 1px #000 dotted
+  .accordion
+    float: left
+    margin-right: 3px
+    white-space: nowrap
+    padding: 2px 1px 2px 5px
+    background-image: url(/nlw/plugin/ckeditor/images/ckeditor/open-bg.png)
+    &.closed
+      padding-top: 3px
+      border: none
+      background: none
+      padding: 2px 0 4px 0
+  .toggler
+    float: left
+    margin-right: 3px
+    padding: 1px 5px
+    font-weight: bold
+  .open
+    .toggler
+      background: #666666 url(/nlw/plugin/ckeditor/images/ckeditor/acc-open.png) repeat-x scroll top left
+      color: #fff
+      border-top: 1px #999 solid
+      border-bottom: 1px #ccc solid
+      border-right: 1px #ccc solid
+      border-left: 1px #999 solid
+      padding: 0 8px 1px 4px
+      cursor: pointer
+    &:hover .toggler
+      background-image: url(/nlw/plugin/ckeditor/images/ckeditor/acc-open-hover.png)
+  .closed
+    .toggler
+      background: white url(/nlw/plugin/ckeditor/images/ckeditor/acc-closed.png) repeat-x scroll top left
+      color: #444
+      border-top: 1px #fff solid
+      border-bottom: 1px #999 solid
+      border-right: 1px #999 solid
+      border-left: 1px #fff solid
+      padding: 0 4px 1px 8px
+      cursor: pointer
+    &:hover .toggler
+      background-image: url(/nlw/plugin/ckeditor/images/ckeditor/acc-closed-hover.png)
+  .icon-toggle
+    margin: 0 4px 0 0
+    padding: 0
+    float: left
+    -moz-border-radius: 2px
+
+.icon-set, .form-set, .icon-action
+  margin: 0 4px 0 0
+  padding: 0
+  float: left
+  -moz-border-radius: 2px
+
+#ckeditor-controls .icon-toggle, .icon-set, .icon-action
+  border-top: 1px #666 solid
+  border-bottom: 1px #ddd solid
+  border-right: 1px #ddd solid
+  border-left: 1px #666 solid
+
+/*
+ *  TOGGLES
+ *  -------
+
+#ckeditor-controls
+  .wrapper
+    float: left
+  .open .wrapper
+    background: inherit
+  .closed .wrapper
+    position: absolute
+    left: -10000px
+  #formula
+    padding: 4px 8px
+    border-bottom: 1px #ccc solid
+    height: 22px
+    background: #999
+    border-bottom: 1px #666 solid
+    &.multiline
+      height: 70px
+      #st-xhtml-formular-input
+        height: 64px
+  #st-xhtml-formular-wrapper
+    float: left
+    width: 80%
+    margin-right: -1px
+  #st-xhtml-formular-input
+    width: 99%
+    border: 1px #999 solid
+    font-size: 13px
+    height: 16px
+    padding: 3px 5px 1px 5px
+    line-height: 16px
+    background: #ffc
+    font-family: Consolas, "Droid Sans Mono", "Courier New", Courier, monospace
+    font-weight: bold
+
+/*
+ *  FORMULA BAR
+ *  -----------
+
+#formularFrame
+  width: 99%
+  border: 1px #999 solid
+  font-size: 13px
+  height: 16px
+  padding: 3px 5px 1px 5px
+  line-height: 16px
+  background: #ffc
+  font-family: Consolas, "Droid Sans Mono", "Courier New", Courier, monospace
+  font-weight: bold
+
+#ckeditor-controls
+  .hidden
+    display: none
+  background: white
+
+#st-edit-pagetools-expand
+  display: block
+  background-image: url(/nlw/plugin/ckeditor/images/ckeditor/expand.png)
+  width: 16px !important
+  height: 16px
+  overflow: hidden
+  margin: 7px 12px 0px 5px
+  text-indent: -999px
+  &.contract
+    background-image: url(/nlw/plugin/ckeditor/images/ckeditor/contract.png)
+
+.ckeditor-container
+  div#contentContainer, h2.tableTitle
+    padding-left: 10px
+
+#ckeditor-controls select option.default
+  background-color: #222
+  color: white
+  font-style: italic
+
+#st-xhtml-audit .wiki
+  display: inline
+  font-size: inherit !important
+  line-height: inherit !important
+
+#st-edit-mode-container.ckeditor-container .cke_button
+  .cke_button_source .cke_label
+    display: none
+  .cke_button_st_upload
+    .cke_label
+      display: inline
+      vertical-align: bottom
+      line-height: 20px
+  a.cke_button_st_upload
+    .cke_label
+      *display: block
+      *float: left
+      *line-height: 16px
+    .cke_icon
+      *display: block
+      *float: left
+  .cke_button_st_insert
+    .cke_label
+      display: inline
+      padding-right: 23px
+    .cke_icon
+      display: none !important
+  .cke_icon
+    cursor: pointer !important
+
+@mixin icon($button, $image)
+  .ckeditor-container
+    a.cke_button_#{$button} span.cke_icon
+      background-image: url(/nlw/plugin/ckeditor/images/ckeditor/#{$image}.png)
+      background-position: 0 0
+      margin-top: -1px
+      height: 20px
+      width: 20px !important
+
+@include icon(wysiwyg, rich-text)
+@include icon(wikitext, wiki-text)
+@include icon(source, html-text)
+@include icon(st_upload, attach)
+@include icon(st_add_tags, add)
+@include icon(removeFormat, erase)
+@include icon(link, link)
+@include icon(textcolor, font-color)
+@include icon(bgcolor, bg-color)
+@include icon(image, image)
+@include icon(st_widget, insert-widget)
+@include icon(st_video, insert-video)
+@include icon(smiley, emoticon)
+@include icon(st_wikilink, wikilink)
+@include icon(table, table)
+@include icon(horizontalrule, horizontalrule)
+
+#st-editing-insert-anchor
+  margin-bottom: 0px !important
+  padding-bottom: 0px !important
+  width: 60px !important
+  padding-right: 0px !important
+
+.ckeditor-container
+  .cke_skin_kama .cke_button .cke_icon
+    width: 18px
+  #st-page-editing-widget-menu
+    height: 22px
+  #st-editing-insert-menu
+    padding-top: 0px
+    ul
+      @include border-radius(3px)
+    li:hover, li.sfhover
+      background: #dff1ff
+    li ul ul
+      padding: 5px 0
+      margin: -30px 0 0 12.5em
+      a, a:active, a:link
+        width: 12.7em !important
+    li li
+      height: 18px
+      ul, ul > li
+        width: 13.5em
+      a
+        @include opacity(1)
+        cursor: pointer
+        &.daddy
+          cursor: default
+    & > li > a
+      &, &:active, &:link
+        @include opacity(0.9)
+        width: auto
+        padding-right: 16px
+  .cke_skin_kama textarea.cke_source
+    font-size: 14px
+    font-family: 'Ubuntu Monospace', Menlo, Monaco, Consolas, 'Droid Sans Mono', 'Andale Mono', 'Lucida Console',  monospace
+  .ui-dialog #lightbox
+    height: auto !important
+    position: static !important
+    @include box-shadow(none !important)
+    @include border-radius(none !important)
+
+@-moz-document url-prefix()
+  #st-edit-mode-container.ckeditor-container
+    #st-editing-insert-menu > li > ul
+      margin-top: 20px
+    #st-editing-insert-menu li ul li ul
+      margin-top: -6px
+    .cke_button .cke_button_st_upload
+      span.cke_label
+        line-height: 18px
+
+.ckeditor-save a.ui-dialog-titlebar-close
+  display: none
+
+//@include icon(copy, copy)
+//@include icon(cut, cut)
+//@include icon(redo, redo)
+//@include icon(undo, undo)

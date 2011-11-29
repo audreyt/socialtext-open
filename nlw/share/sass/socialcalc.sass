@@ -1,0 +1,362 @@
+@import socialcalc/styling.sass
+@import socialcalc/legacy-lightbox.sass
+
+
+table.st-ss th span
+  display: none !important
+
+.colorpicker
+  z-index: 9999
+
+/* overload some S3 stuff
+
+#st-spreadsheet-edit td
+  vertical-align: top
+
+/* done overloading s3 stuff
+
+#st-page-editing-pagebody-decoy
+  display: none
+
+#st-spreadsheet-edit
+  background: transparent !important
+
+#SocialCalc-auditview
+  width: 99.5% !important
+
+.socialcalc-spreadsheet-editor
+  background: #fff
+
+.socialcalc-toolbar-background
+  padding: 12px 10px 10px 4px
+  height: 40px
+  background: #404040
+  background: #80a9f3
+  -moz-border-radius-topleft: 7px
+  -moz-border-radius-topright: 7px
+
+.socialcalc-spreadsheet-tab-background
+  padding-bottom: 4px
+  margin: 0px 0px 8px 0px
+  background-color: #ccc
+  background: transparent
+
+.socialcalc-spreadsheet-tabselected
+  font-size: small
+  padding: 6px 30px 6px 8px
+  color: #FFF
+  background-color: #404040
+  cursor: default
+  border-right: 1px solid #CCC
+  background: #80a9f3
+  border: none
+  border-left: 1px solid #555
+  -moz-border-radius-bottomleft: 15px
+  -moz-border-radius-bottomright: 15px
+
+.socialcalc-spreadsheet-tabplain
+  font-size: small
+  padding: 6px 30px 6px 8px
+  color: #FFF
+  background-color: #808080
+  cursor: default
+  border-right: 1px solid #CCC
+  border: none
+  border-left: 1px solid #555
+  -moz-border-radius-bottomleft: 15px
+  -moz-border-radius-bottomright: 15px
+
+#st-spreadsheet-toolbar-container
+  background: #c3d9ff
+  width: 100%
+  .audit, .preview, .revisions
+    display: none
+
+#st-spreadsheet-revisions-toolbar
+  background: #eee
+  padding: 5px
+  .label
+    font-weight: bold
+  input
+    text-align: center
+  .next, .previous
+    font-weight: bolder
+    text-decoration: none
+    font-size: 1.2em
+
+#st-spreadsheet-cell-number-format
+  width: 100px
+
+#st-spreadsheet-tabs
+  padding-left: 5px
+  height: 22px
+
+#st-spreadsheet-toolbar
+  padding-left: 5px
+  height: 22px
+  padding-top: 3px
+  margin-top: -3px
+  height: 22px
+
+#st-spreadsheet-formula-bar
+  padding-left: 25px
+  padding-top: 5px
+  background: white
+
+#st-spreadsheet-audit
+  padding-bottom: 10px
+
+#st-spreadsheet-preview
+  padding-left: 5px
+  padding-right: 5px
+  padding-bottom: 30px
+
+#st-spreadsheet-preview-toolbar
+  background: white
+
+#st-spreadsheet-toolbar-drawer
+  background: #ddf
+  width: 99%
+  padding: 10px
+  display: none
+  position: absolute
+  z-index: 10000
+  -moz-opacity: 0.95
+  textarea
+    height: 10em
+    margin: 0 auto 10px auto
+    width: 95%
+
+#st-spreadsheet-name-tools table
+  margin: 0 auto 10px 0px
+
+#st-spreadsheet-cell-settings-tools, #st-spreadsheet-sheet-settings-tools
+  /*
+   *height: 300px;
+   *overflow: auto;
+
+.st-spreadsheet-drawer-label
+  font-size: 75%
+  font-weight: bold
+
+#st-spreadsheet-range-names
+  width: 100px
+
+#st-spreadsheet-range-name
+  width: 80px
+
+#st-spreadsheet-range-description
+  width: 235px
+
+#st-spreadsheet-range-value
+  width: 60px
+
+#st-spreadsheet-toolbar:after
+  content: "."
+  clear: both
+  visibility: hidden
+
+#st-spreadsheet-toolbar-bgcolorpicker, #st-spreadsheet-toolbar-colorpicker
+  border: 5px solid #ccf
+  background: #ffc
+  width: 112px
+  display: none
+  position: absolute
+
+#st-spreadsheet-toolbar-bgcolorpicker
+  position: absolute
+  a
+    text-decoration: none
+    width: 16px
+    height: 16px
+    display: block
+    float: left
+
+#st-spreadsheet-toolbar-colorpicker a
+  text-decoration: none
+  width: 16px
+  height: 16px
+  display: block
+  float: left
+
+#st-spreadsheet-toolbar
+  a.button
+    display: block
+    float: left
+    display: block
+    float: left
+    width: 24px
+    height: 24px
+    margin-right: 0px
+    text-indent: -999em
+    overflow: hidden
+    background: url("/nlw/plugin/socialcalc/images/socialcalc/emoticon.gif") bottom left no-repeat
+    border: 1px solid #c3d9ff
+  #st-undo-button-link
+    background: url("/nlw/plugin/socialcalc/images/socialcalc/undo.png") bottom left no-repeat
+  #st-redo-button-link
+    background: url("/nlw/plugin/socialcalc/images/socialcalc/redo.png") bottom left no-repeat
+  #st-cut-button-link
+    background: transparent url(/nlw/plugin/socialcalc/images/socialcalc/cut.png) bottom left no-repeat
+  #st-copy-button-link
+    background: transparent url(/nlw/plugin/socialcalc/images/socialcalc/copy.png) bottom left no-repeat
+  #st-paste-button-link
+    background: transparent url(/nlw/plugin/socialcalc/images/socialcalc/paste.png) bottom left no-repeat
+  #st-erase-button-link
+    background: transparent url(/nlw/plugin/socialcalc/images/socialcalc/erase.png) bottom left no-repeat
+  #st-color-button-link
+    background: url("/nlw/plugin/socialcalc/images/socialcalc/color.png") bottom left no-repeat
+  #st-bgcolor-button-link
+    background: url("/nlw/plugin/socialcalc/images/socialcalc/bgcolor.png") bottom left no-repeat
+  #st-bold-button-link
+    background: url("/nlw/plugin/socialcalc/images/socialcalc/bold.png") bottom left no-repeat
+  #st-italic-button-link
+    background: url("/nlw/plugin/socialcalc/images/socialcalc/italic.png") bottom left no-repeat
+  #st-wiki-text-button-link
+    background: url("/nlw/plugin/socialcalc/images/socialcalc/wiki-text.png") bottom left no-repeat
+  #st-left-button-link
+    background: url("/nlw/plugin/socialcalc/images/socialcalc/left.png") bottom left no-repeat
+  #st-center-button-link
+    background: url("/nlw/plugin/socialcalc/images/socialcalc/center.png") bottom left no-repeat
+  #st-right-button-link
+    background: url("/nlw/plugin/socialcalc/images/socialcalc/right.png") bottom left no-repeat
+  #st-insert-row-button-link
+    background: url("/nlw/plugin/socialcalc/images/socialcalc/insert-row.png") bottom left no-repeat
+  #st-delete-row-button-link
+    background: url("/nlw/plugin/socialcalc/images/socialcalc/delete-row.png") bottom left no-repeat
+  #st-insert-col-button-link
+    background: url("/nlw/plugin/socialcalc/images/socialcalc/insert-col.png") bottom left no-repeat
+  #st-delete-col-button-link
+    background: url("/nlw/plugin/socialcalc/images/socialcalc/delete-col.png") bottom left no-repeat
+  #st-sum-range-button-link
+    background: url("/nlw/plugin/socialcalc/images/socialcalc/sum.png") bottom left no-repeat
+  #st-sort-button-link
+    background: url("/nlw/plugin/socialcalc/images/socialcalc/sort.png") bottom left no-repeat
+  #st-name-button-link
+    background: url("/nlw/plugin/socialcalc/images/socialcalc/name.png") bottom left no-repeat
+  #st-comment-button-link
+    background: url("/nlw/plugin/socialcalc/images/socialcalc/comment.png") bottom left no-repeat
+  #st-clipboard-button-link
+    background: url("/nlw/plugin/socialcalc/images/socialcalc/clipboard.png") bottom left no-repeat
+  #st-cell-settings-button-link
+    background: url("/nlw/plugin/socialcalc/images/socialcalc/cell-settings.png") bottom left no-repeat
+  #st-sheet-settings-button-link
+    background: url("/nlw/plugin/socialcalc/images/socialcalc/sheet-settings.png") bottom left no-repeat
+  #st-filldown-button-link
+    background: transparent url("/nlw/plugin/socialcalc/images/socialcalc/fill-down.png") bottom left no-repeat
+  #st-fillright-button-link
+    background: transparent url("/nlw/plugin/socialcalc/images/socialcalc/fill-right.png") bottom left no-repeat
+  #st-cell-borders-button-link
+    background: transparent url("/nlw/plugin/socialcalc/images/socialcalc/cell-borders.png") bottom left no-repeat
+  #st-merge-button-link
+    background: transparent url("/nlw/plugin/socialcalc/images/socialcalc/merge.png") bottom left no-repeat
+  a.button
+    &:hover
+      border-top: 1px solid #fff
+      border-left: 1px solid #fff
+      border-bottom: 1px solid #000
+      border-right: 1px solid #000
+    &.active
+      border-top: 1px solid #000
+      border-left: 1px solid #000
+      border-bottom: 1px solid #fff
+      border-right: 1px solid #fff
+
+#st-spreadsheet-buttons
+  background: #fff
+  height: 28px
+  padding-top: 4px
+  font-size: 0.9em
+  a.button
+    background: #ccc
+    color: black
+    display: block
+    margin: 0 2px 2px 2px
+    float: left
+    padding: 5px 10px 2px 10px
+    text-decoration: none
+    -moz-border-radius-topleft: 10px
+    -moz-border-radius-topright: 10px
+    -moz-border-radius-bottomleft: 10px
+    -moz-border-radius-bottomright: 10px
+
+#st-spreadsheet-tabs
+  background: #fff
+  height: 25px
+  float: left
+  padding-right: 30px
+  a.button
+    background: #c3d9ff
+    display: block
+    margin: 0 2px 0 0
+    float: left
+    padding: 5px 10px 10px 10px
+    -moz-border-radius-topleft: 10px
+    -moz-border-radius-topright: 10px
+    -moz-border-radius-bottomleft: 0px
+    -moz-border-radius-bottomright: 0px
+    text-decoration: none
+    color: #999
+    &.active, &:hover
+      color: #000
+  #st-edit-mode-button-link
+    color: black
+  &:after
+    content: "."
+    clear: both
+    visibility: hidden
+
+#st-spreadsheet-title
+  font-weight: bold
+  display: block
+  margin: 0 2px 2px 30px
+  float: left
+  padding: 5px 10px 2px 10px
+
+#SocialCalc-statusline
+  font-size: 0.9em
+  background-color: white
+  padding-left: 5px
+
+table
+  &.st-ss .wiki, &#te_layouttable .wiki
+    padding: 0
+  &.st-ss .wiki p:last-child
+    margin: 0 !important
+  &#te_layouttable .wiki
+    p:last-child
+      margin: 0 !important
+    font-size: 100% !important
+  &.st-ss
+    margin-left: 1px
+
+/* XXX: does not work in IE6, OK'd by tracy:
+
+/* Fix an annoying bug where the left border is always invisible
+
+div#contentColumns div#contentLeft table.st-ss p
+  font-size: inherit
+  color: inherit
+  line-height: inherit
+  margin-top: inherit
+
+#socialcalc-controls img
+  /* XXX TODO: Refactor this into a common place under nlw!
+  -behavior: url("/static/template/control/colorpicker/iepngfix.htc")
+
+#tabs
+  cursor: pointer
+
+.dialog .buttons
+  float: right
+  .widgetButton
+    padding: 10px
+    float: left
+
+#socialcalc-controls #st-newpage-pagename-edit
+  width: 255px
+
+#te_inputecho .wiki
+  padding-top: 0px !important
+  p:last-child
+    margin-bottom: 0px !important

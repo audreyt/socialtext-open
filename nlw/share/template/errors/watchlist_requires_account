@@ -1,7 +1,7 @@
 <!-- @COPYRIGHT@ -->
 [% SET escaped_str = redirect_to | html %]
 <span class="error">
-  [% loc('error.login-to-use-watchlist-in-wiki') 
+  [% loc('error.login-to-use-watchlist-in-wiki') %]
   <br/>
   [% loc('error.register-here=uri', escaped_str) %]
 </span>

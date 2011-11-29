@@ -74,7 +74,7 @@ no_teardown_of_member_role_in_account: {
     is $account->role_for_user($user)->name, $Member->name,
         '... ... Role in its Account is unchanged';
 
-    $ws->remove_user(user => $user);
+    $ws->remove_user(user => $user, reckless => 1);
     is $account->role_for_user($user)->name, $Member->name,
         '... User removed from WS; Role in Account unchanged';
 }

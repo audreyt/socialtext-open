@@ -2,12 +2,32 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Socialtext i18n\n"
-"PO-Revision-Date: 2011-05-13 06:44-0700\n"
+"PO-Revision-Date: 2011-11-03 11:22+0800\n"
 "Language-Team: Socialtext i18n team\n"
 "Last-Translator: Socialtext i18n team\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: share/plugin/dashboard/template/cp_dashboard:112
+msgid "dashboard.edit"
+msgstr "edit"
+
+#: share/plugin/dashboard/template/cp_dashboard:5
+msgid "dashboard.view-default-dashboard-layout"
+msgstr "View Default Dashboard Layout"
+
+#: share/plugin/dashboard/template/cp_dashboard:28
+msgid "dashboard.visibility"
+msgstr "Visibility"
+
+#: share/plugin/dashboard/template/cp_dashboard:38
+msgid "dashboard.visible"
+msgstr "Visible"
+
+#: share/plugin/dashboard/template/cp_dashboard:75
+msgid "dashboard.wiki-pages"
+msgstr "Wiki Pages"
 
 #: share/plugin/dashboard/template/dashboard_links:3
 msgid "dashboard.add-widget"
@@ -21,6 +41,26 @@ msgstr "Administer Dashboards"
 msgid "dashboard.confirm-revert?"
 msgstr "Are you sure you want to revert to the Socialtext defaults?"
 
+#: share/plugin/dashboard/template/cp_dashboard:62
+msgid "dashboard.container-types"
+msgstr "Container types"
+
+#: share/plugin/dashboard/template/cp_dashboard:1
+msgid "dashboard.dashboard-gallery"
+msgstr "Dashboard Gallery"
+
+#: share/plugin/dashboard/template/cp_dashboard:74
+msgid "dashboard.dashboards"
+msgstr "Dashboards"
+
+#: share/plugin/dashboard/template/cp_dashboard:83
+msgid "dashboard.dashboards-and-wiki-pages"
+msgstr "Dashboards and Wiki Pages"
+
+#: share/plugin/dashboard/template/cp_dashboard:133
+msgid "dashboard.delete-widget"
+msgstr "Delete Widget"
+
 #. (account.name)
 #: share/plugin/dashboard/template/dashboard_hello:5
 msgid "dashboard.for=account"
@@ -30,9 +70,49 @@ msgstr "Dashboard for %1"
 msgid "dashboard.force-update"
 msgstr "Force update this dashboard on existing users, too"
 
+#: share/plugin/dashboard/template/cp_dashboard:79
+msgid "dashboard.groups-and-dashboards"
+msgstr "Groups and Dashboards"
+
+#: share/plugin/dashboard/template/cp_dashboard:78
+msgid "dashboard.groups-and-profiles"
+msgstr "Groups and Profiles"
+
+#: share/plugin/dashboard/template/cp_dashboard:80
+msgid "dashboard.groups-and-wiki-pages"
+msgstr "Groups and Wiki Pages"
+
+#: share/plugin/dashboard/template/cp_dashboard:91
+msgid "dashboard.groups-dashboards-and-wiki-pages"
+msgstr "Groups, Dashboards and Wiki Pages"
+
+#: share/plugin/dashboard/template/cp_dashboard:87
+msgid "dashboard.groups-profiles-and-dashboards"
+msgstr "Groups, Profiles and Dashboards"
+
+#: share/plugin/dashboard/template/cp_dashboard:89
+msgid "dashboard.groups-profiles-and-wiki-pages"
+msgstr "Groups, Profiles and Wiki Pages"
+
 #: share/plugin/dashboard/template/widget_editor_links:3
 msgid "dashboard.preview"
 msgstr "Preview"
+
+#: share/plugin/dashboard/template/cp_dashboard:73
+msgid "dashboard.profiles"
+msgstr "Profiles"
+
+#: share/plugin/dashboard/template/cp_dashboard:81
+msgid "dashboard.profiles-and-dashboards"
+msgstr "Profiles and Dashboards"
+
+#: share/plugin/dashboard/template/cp_dashboard:82
+msgid "dashboard.profiles-and-wiki-pages"
+msgstr "Profiles and Wiki Pages"
+
+#: share/plugin/dashboard/template/cp_dashboard:93
+msgid "dashboard.profiles-dashboards-and-wiki-pages"
+msgstr "Profiles, Dashboards and Wiki Pages"
 
 #: share/plugin/dashboard/template/widget_editor_links:8
 msgid "dashboard.publish"
@@ -48,7 +128,7 @@ msgstr "Revert to default"
 
 #: share/plugin/dashboard/template/dashboard_links:11
 msgid "dashboard.save"
-msgstr "Save..."
+msgstr "Save"
 
 #: share/plugin/dashboard/share/javascript/lightbox/save-layout.tt2:2
 msgid "dashboard.save-confirmation"
@@ -71,6 +151,22 @@ msgstr "This is the default dashboard shared among all users for the \"%1\" acco
 msgid "dashboard.welcome"
 msgstr "Welcome"
 
+#: share/plugin/dashboard/share/widgets/widget_editor/widget.js:164
+msgid "dashboard.widget-added"
+msgstr "Successfully added your widget. Close this dialog to return to the account administration interface."
+
+#: share/plugin/dashboard/template/cp_dashboard:57
+msgid "dashboard.widget-description"
+msgstr "Description"
+
+#: share/plugin/dashboard/template/cp_dashboard:37
+msgid "dashboard.widget-hidden"
+msgstr "Hidden"
+
+#: share/plugin/dashboard/share/widgets/widget_editor/widget.js:148
+msgid "dashboard.widget-updated"
+msgstr "Successfully updated your widget. Close this dialog to return to the account administration interface."
+
 #: share/plugin/dashboard/share/javascript/lightbox/save-layout.tt2:12
 msgid "dashboard.widgets-to-push:"
 msgstr "The following widgets will be pushed:"
@@ -89,7 +185,7 @@ msgstr "No"
 
 #: share/plugin/dashboard/template/dashboard_links:25 share/plugin/dashboard/share/javascript/lightbox/revert-layout.tt2:2
 msgid "do.revert-to-default"
-msgstr "Revert to Default…"
+msgstr "Revert to Default..."
 
 #: share/plugin/dashboard/share/javascript/lightbox/save-layout.tt2:25
 msgid "do.save"

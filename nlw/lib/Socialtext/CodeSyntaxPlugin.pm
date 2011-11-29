@@ -78,8 +78,8 @@ sub __html__ {
     (my $type = $method) =~ s/^code(?:[-_](.+?))?$/$1 || 'plain'/e;
 
     my $string = $self->block_text;
-    my $js_base  = "/static/skin/common/javascript/SyntaxHighlighter";
-    my $css_base = "/static/skin/common/css/SyntaxHighlighter";
+    my $js_base  = "/static/javascript/contrib/SyntaxHighlighter";
+    my $css_base = "$js_base/css";
     my $brush = $Socialtext::CodeSyntaxPlugin::Brushes{$type};
     if (my $t = $Brush_aliases{$type}) {
         $type = $t;

@@ -96,9 +96,9 @@ Signal: @JosephHines A few customers have mentioned them, but I think they are p
 | st-logoutin | %%sd3%% | %%spwd%% |
 | open_ok | /?action=people |  |
 | st-search | %%sd1%% | People matching '%%sd1%%' |
-| wait_for_element_visible_ok | link=%%short_sd1%% | 5000 |
+| wait_for_element_visible_ok | link=%%short_sd1%% | 15000 |
 | click_and_wait | link=%%short_sd1%% |  |
-| wait_for_text_present_ok | Signal to %%short_sd1%% | 5000 |
+| wait_for_text_present_ok | Signal to %%short_sd1%% | 15000 |
 
 | set | signal | A few customers have mentioned them, but I think they are pretty regional. |
 | st-name-widget | 3 | siggy |
@@ -116,13 +116,13 @@ Signal: d @JosephHines Let's talk about SunPowered in private, I have some insid
 | st-logoutin | %%sd2%% | %%spwd%% |
 | open_ok | /?action=people |  |
 | st-search | %%short_sd1%% | People matching '%%short_sd1%%' |
-| wait_for_element_visible_ok | link=%%short_sd1%% | 5000 |
+| wait_for_element_visible_ok | link=%%short_sd1%% | 15000 |
 | click_and_wait | link=%%short_sd1%% |  |
-| wait_for_text_present_ok | Signal to %%short_sd1%% | 5000 |
+| wait_for_text_present_ok | Signal to %%short_sd1%% | 15000 |
 
 | set | signal | Let's talk about SunPowered in private, I have some inside news about them. |
 | st-name-widget | 3 | siggy |
-| st-send-signal-via-activities-widget | siggy | %%signal%% | private |
+| st-send-signal-in-activities-widget | %%signal%% | private |
 
 Log on as socialtextdemo3@gmail.com / PW = socialtext
 Signal: @DawnFoster, The {link: HR [Event Calendar]} page in the HR Workspace has the information you need, and a link to all the forms to complete.
@@ -130,9 +130,9 @@ Signal: @DawnFoster, The {link: HR [Event Calendar]} page in the HR Workspace ha
 | st-logoutin | %%sd3%% | %%spwd%% |
 | open_ok | /?action=people |  |
 | st-search | %%short_sd2%% | People matching '%%short_sd2%%' |
-| wait_for_element_visible_ok | link=%%short_sd2%% | 5000 |
+| wait_for_element_visible_ok | link=%%short_sd2%% | 15000 |
 | click_and_wait | link=%%short_sd2%% |  |
-| wait_for_text_present_ok | Signal to %%short_sd2%% | 5000 |
+| wait_for_text_present_ok | Signal to %%short_sd2%% | 15000 |
 
 | set | signal | `The {link HR [Event Calendar]} page in the HR Workspace has the information you need, and a link to all the forms to complete.` |
 | st-name-widget | 3 | siggy |
@@ -163,7 +163,7 @@ tag profile http://demo.socialtext.net/st/profile/131 with "Launch Team"
 | *Comment* | Demo. Tag %%short_sd1%% with Launch Team %%start_time%% |  |
 | open_ok | /?action=people |  |
 | st-search | %%short_sd1%% | People matching '%%short_sd1%%' |
-| wait_for_element_visible_ok | link=%%short_sd1%% | 5000 |
+| wait_for_element_visible_ok | link=%%short_sd1%% | 15000 |
 | click_and_wait | link=%%short_sd1%% |  |
 | wait_for_element_visible_ok | new_tag | 30000 |
 | type_ok | new_tag | Launch Team %%start_time%% |
@@ -193,13 +193,13 @@ Signal d @‍DawnFoster Ok, I'm free to talk after 11am. Thanks for your help
 | st-logoutin | %%sd1%% | %%spwd%% |
 | open_ok | /?action=people |  |
 | st-search | %%short_sd2%% | People matching '%%short_sd2%%' |
-| wait_for_element_visible_ok | link=%%short_sd2%% | 5000 |
+| wait_for_element_visible_ok | link=%%short_sd2%% | 15000 |
 | click_and_wait | link=%%short_sd2%% |  |
-| wait_for_text_present_ok | Signal to %%short_sd2%% | 5000 |
+| wait_for_text_present_ok | Signal to %%short_sd2%% | 15000 |
 
 | set | signal | `Ok, I'm free to talk after 11am. Thanks for your help` |
 | st-name-widget | 3 | siggy |
-| st-send-signal-via-activities-widget | siggy | %%signal%% | private |
+| st-send-signal-in-activities-widget| %%signal%% | private |
 
 Log on as socialtextdemo2@gmail.com / PW = socialtext
 Comment on page: http://demo.socialtext.net/marketingdemo/index.cgi?brainstorming_for_web_site_redesign saying
@@ -212,7 +212,7 @@ We need to provide a place for two-way communication with our customers regardin
 | http-user-pass | %%sd2%% | %%spwd%% |
 | st-admin | update-page --e %%sd4%% --w %%wsName%% --p "%%commentPage%%" < %%wikitest_client_files%%wikitest.txt |  |
 | open_ok | /%%wsName%%/?%%commentPage%% |  |
-| click_ok | st-comment-button-link |  |
+| click_ok | //li[@id="st-comment-button"]/a |  |
 | wait_for_element_visible_ok | comment | 30000 |
 | type_ok | comment | %%commentContent%% |
 | click_ok | link=Save |  |

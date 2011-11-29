@@ -1,0 +1,108 @@
+[% WRAPPER layout/html title=loc('settings.user-settings') %]
+
+<script>
+
+jQuery(document).ready(function() {
+    jQuery('#spaces-accordion').accordion({
+        header: 'div.header',
+        active: [% IF active_ix.defined; active_ix; ELSE; 'false'; END %],
+        autoHeight: false
+    });
+
+    jQuery('#settings-main .save').button().click(function() {
+        jQuery('#settings-main form').submit();
+        return false;
+    });
+    
+    jQuery('#settings-main .cancel').button().click(function() {
+        jQuery('#settings-main form')[0].reset();
+        return false;
+    });
+});
+
+</script>
+
+<div class="grid_4">
+  <div id="settings-sidebar">
+    <div class="pad">
+      <h4>[% loc('nav.settings') %]</h4>
+        <div class="top">
+          [% IF section == 'global' %]
+            <strong>[% loc('settings.global-settings') %]</strong>
+          [% ELSE %]
+            <a href="/st/settings">[% loc('settings.global-settings') %]</a>
+          [% END %]
+        </div>
+      <h4>[% loc('nav.wikis') %]</h4>
+      <div id="spaces-accordion">
+      [% FOREACH space IN spaces %]
+        <div class="top header">
+          [% IF space.active %]
+            <strong>[% space.title %]</strong>
+          [% ELSE %]
+            [% space.title %]
+          [% END %]
+        </div>
+        [% INCLUDE linkset %] 
+        [% IF space.active %] [% links = PROCESS linkset %] [% END %]
+      [% END %]
+      </div>
+    </div>
+  </div>
+</div>
+<div class="grid_20">
+  <div id="settings-main">
+    <form accept-charset="UTF-8" method="POST" action="">
+        <ul class="horizontal-menu">
+          <li><a class="save" href="#">[% loc('do.save') %]</a></li>
+          <li><a class="cancel" href="#">[% loc('do.cancel') %]</a></li>
+          [% FOREACH space IN spaces %]
+            [% IF space.active %]
+              [% FOREACH pref IN space.prefs %]
+                <li>
+                  [% IF pref.active %]
+                    <strong>[% pref.title %]</strong>
+                  [% ELSE %]
+                    <a href="/st/settings/[% space.id %]/prefs/[% pref.name %]">
+                      [% pref.title %]</a>
+                  [% END %]
+                </li>
+                [% IF ! loop.last %]<li>&#166;</li>[% END %]
+              [% END %]
+            [% END %]
+          [% END %]
+        </ul>
+      [% IF warning %]
+        <p class="setting_warning">[% warning %]</p>
+      [% END %]
+
+      [% IF message %]
+        <p class="setting_message">[% message %]</p>
+      [% END %]
+
+      [% main_content %]
+
+      <ul class="horizontal-menu">
+        <li><a class="save" href="#">[% loc('do.save') %]</a></li>
+        <li><a class="cancel" href="#">[% loc('do.cancel') %]</a></li>
+      </ul>
+    </form>
+  </div>
+</div>
+<div class="clear"></div>
+[% END %]
+
+[% BLOCK linkset %]
+<ul>
+  [% FOREACH pref IN space.prefs %]
+    <li>
+      [% IF pref.active %]
+        <strong>[% pref.title %]</strong>
+      [% ELSE %]
+        <a href="/st/settings/[% space.id %]/prefs/[% pref.name %]">
+          [% pref.title %]</a>
+      [% END %]
+    </li>
+  [% END %]
+</ul>
+[% END %]

@@ -67,46 +67,6 @@ show_account_config: {
 }
 
 ###############################################################################
-# TEST: Set Account config
-set_account_config: {
-    my $account   = create_test_account_bypassing_factory();
-    my $acct_name = $account->name();
-    $account->update(skin_name => 's2');
-
-    my $workspace = create_test_workspace(account => $account);
-    my $ws_name   = $workspace->name();
-    $workspace->update(skin_name => 's2');
-
-    # Change the skin name for the Account
-    expect_success(
-        sub {
-            Socialtext::CLI->new(
-                argv => [ '--account', $acct_name, 'skin_name', 's3' ],
-            )->set_account_config();
-        },
-        qr/\QThe account config for $acct_name has been updated.\E/,
-        'set-account-config success',
-    );
-
-    my $requery_acct = Socialtext::Account->new(name => $acct_name);
-    my $requery_ws   = Socialtext::Workspace->new(name => $ws_name);
-    is $requery_acct->skin_name, 's3', '... Account skin_name updated';
-    is $requery_ws->skin_name, 's2',
-        '... set-account-config does not change Workspace skins';
-
-    # Change skin to invalid skin should fail
-    expect_failure(
-        sub {
-            Socialtext::CLI->new(
-                argv => [ '--account', $acct_name, 'skin_name', 'ENOSUCHSKIN' ],
-            )->set_account_config();
-        },
-        qr/\QThe skin you specified, ENOSUCHSKIN, does not exist.\E/,
-        '... set-account-config failure with invalid skin',
-    );
-}
-
-###############################################################################
 # TEST: Set Account Config with a prefs index.
 config_with_prefs_index: {
     my $acct = create_test_account_bypassing_factory();
@@ -123,6 +83,17 @@ config_with_prefs_index: {
         'set account config successful when using a valid index',
     );
 
+    expect_success(
+        sub {
+            Socialtext::CLI->new(
+                argv => [ '--account', $acct->name, '--index', 'theme',
+                          'background_image_id', '-null-' ],
+            )->set_account_config();
+        },
+        qr/\QUpdated the theme prefs for the $name account\E/,
+        'set account config successful when using -null- for image id',
+    );
+
     expect_failure(
         sub {
             Socialtext::CLI->new(
@@ -132,55 +103,6 @@ config_with_prefs_index: {
         },
         qr/One or more values for the theme index are invalid/,
         'set account config failure when using bad values for theme index',
-    );
-}
-
-###############################################################################
-# TEST: Reset Account skin
-reset_account_skin: {
-    my $account   = create_test_account_bypassing_factory();
-    my $acct_name = $account->name();
-    $account->update(skin_name => 's2');
-
-    my $workspace = create_test_workspace(account => $account);
-    my $ws_name   = $workspace->name();
-    $workspace->update(skin_name => 'reds3');
-
-    # Reset the skin for the Account
-    expect_success(
-        sub {
-            Socialtext::CLI->new(
-                argv => [ '--account', $acct_name, '--skin', 's3' ],
-            )->reset_account_skin();
-        },
-        qr/\QThe skin for account $acct_name and its workspaces has been updated.\E/,
-        'reset-account-skin success',
-    );
-    my $requery_acct = Socialtext::Account->new(name => $acct_name);
-    my $requery_ws   = Socialtext::Workspace->new(name => $ws_name);
-    is $requery_acct->skin_name, 's3', '... Account skin_name updated';
-    is $requery_ws->skin_name,   '',   '... Workspace skin_name cleared';
-
-    # Reset skin requires a "--skin" parameter
-    expect_failure(
-        sub {
-            Socialtext::CLI->new(
-                argv => [ '--account', $acct_name, '--skin' ],
-            )->reset_account_skin();
-        },
-        qr/\Q--skin requires a skin name to be specified\E/,
-        '... reset-account-skin failure with missing argument skin',
-    );
-
-    # Reset skin to invalid skin should fail
-    expect_failure(
-        sub {
-            Socialtext::CLI->new(
-                argv => [ '--account', $acct_name, '--skin', 'ENOSUCHSKIN' ],
-            )->reset_account_skin();
-        },
-        qr/\QThe skin you specified, ENOSUCHSKIN, does not exist.\E/,
-        '... reset-account-skin failure with invalid skin',
     );
 }
 

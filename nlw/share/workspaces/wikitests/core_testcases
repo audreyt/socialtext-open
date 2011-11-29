@@ -14,13 +14,12 @@ test env properly and are not testing the test-workspace
 * [Test Case: Workspace Navigation]
 * [Test Case: Weblog Archive and Navigation]
 * [Test Case: Global Navigation]
-* [Test case: Invite Anonymous User]
+* [Test case: Invite Authenticated User]
 * [Test case: Self Register]
 * [Test case: Watchlist]
 * [Test Case: Recently Viewed]
 * [Test Case: Recent Changes]
 * [Test Case: Edit This Page]
-* [Test Case: Search Selector]
 * [Test case: functional search tests]
 * [Test Case: Phrase search]
 * [Test Case: stemming]
@@ -105,12 +104,10 @@ test env properly and are not testing the test-workspace
 * [Test Case: User Likes a Page]
 * [Test Case: Global Time]
 * [Test Case: User Likes a Signal]
-
 Keep these Miki test cases at the end since they create a large number of users
 
 * [Test Case: Miki]
 * [Test Case: Miki Authentication]
-
 Put tests that don't use the browser here
 
 * [Test Case: Command Line: USERS]
@@ -126,11 +123,9 @@ Put tests that don't use the browser here
 * [Test Case: Command Line: NEW]
 * [Test Case: Command Line: User Restrictions]
 * [Test Case: Workspace Config Preservation]
-
 Return to last login fails when People and Dashboard are installed. Keep the test because
 we may test in a mode where People and Dashboard are not installed.
 
 * [Test Case: Return to last login]
-
 Moved to [Stubborn Testcases]
 Edit Contention Testcases

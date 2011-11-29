@@ -1,7 +1,7 @@
 | *Comment* | MikiShow. Watch the Mobile UI |  |
 | *Comment* | MikiShow expects to start at the Mobile home page |  |
 
-| set_default | pt | 5000 | defaults to five seconds |
+| set_default | pt | 15000 | defaults to five seconds |
 
 
 | open_ok | /st/dashboard/ |  |
@@ -11,73 +11,73 @@
 | *Comment* | SEE MIKI Home |  |
 | wait_for_element_visible_ok | link=Workspaces | 30000 |
 | pause | %%pt%% |  |
-| clickAndWait | link=Workspaces |  |
+| click_and_wait | link=Workspaces |  |
 
 | *Comment* | SEE MIKI Workspace List |
 | pause | %%pt%% |
 
-| clickAndWait | link=Canonical Test Data Set |
+| click_and_wait | link=Canonical Test Data Set |
 | *Comment* | SEE MIKI Details on Canonical Test Data Workspace |
 | pause | %%pt%% |
 
-| clickAndWait | link=What's New |
+| click_and_wait | link=What's New |
 | *Comment* | SEE MIKI Recent Changes |
 | pause | %%pt%% |
 
-| clickAndWait | link=Tags |
+| click_and_wait | link=Tags |
 | *Comment* | SEE MIKI Tag List |
 | pause | %%pt%% |
 
 
-| clickAndWait | mobile-paging-next |  |
-| clickAndWait | link=Welcome |
+| click_and_wait | mobile-paging-next |  |
+| click_and_wait | link=Welcome |
 | *Comment* | SEE MIKI Pages in welcome category |
 | pause | %%pt%% |
 
-| clickAndWait | link=Search |
+| click_and_wait | link=Search |
 | *Comment* | SEE MIKI Search Box |
 | pause | %%pt%% |
 
 | type_ok | search_term | wiki |
-| clickAndWait | search |  |
+| click_and_wait | search |  |
 | *Comment* | SEE MIKI search results for "wiki" |  |
 | pause | %%pt%% |  |
 
-| clickAndWait | link=Announcements and Links |
+| click_and_wait | link=Announcements and Links |
 | *Comment* | SEE MIKI Announcements and Links |
 | pause | %%pt%% |
 
-| clickAndWait | link=Edit |
+| click_and_wait | link=Edit |
 | *Comment* | SEE MIKI Edit |
 | pause | %%pt%% |
 
-| clickAndWait | link=Cancel |
+| click_and_wait | st-cancel-layout |
 | *Comment* | SEE MIKI Edit Cancelled |
 | pause | %%pt%% |
 
-| clickAndWait | link=Edit |
+| click_and_wait | link=Edit |
 | *Comment* | SEE MIKI Edit again |
 | pause | %%pt%% |
 
-| clickAndWait | st-miki-edit-sumbit |
+| click_and_wait | st-miki-edit-sumbit |
 | *Comment* | SEE MIKI Save |
 | pause | %%pt%% |
 
-| clickAndWait | link=Log out |
+| click_and_wait | link=Log out |
 | *Comment* | SEE MIKI Login page |
 | pause | %%pt%% |
 
-| clickAndWait | link=I don't know my password. |
+| click_and_wait | link=I don't know my password. |
 | *Comment* | SEE MIKI password reset page |
 | pause | %%pt%% |
 
-| clickAndWait | link=Log in to Socialtext |
+| click_and_wait | link=Log in to Socialtext |
 | *Comment* | SEE MIKI login |
 | pause | %%pt%% |
 
 | type_ok | username | %%username%% |
 | type_ok | password | %%password%% |
-| clickAndWait | //input[@value='Log in'] |  |
+| click_and_wait | //input[@value='Log in'] |  |
 
 | *Comment* | SEE MIKI logged in |
 | pause | %%pt%% |

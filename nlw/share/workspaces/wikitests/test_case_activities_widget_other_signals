@@ -20,13 +20,9 @@
 
 | *Comment* | Test Case: Activities Widget Other Signals. Create one edit summary from signal |  |
 | st-logoutin | %%otheruser%% | %%password%% |
-| open_ok | /%%ws%%/index.cgi?Edit Summary Signal %%start_time%% |  |
-| wait_for_element_visible_ok | st-edit-button-link | 30000 |
-| click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
+
+| call | [st-edit-fill-page] | ws=%%ws%% | title=Edit Summary Signal %%start_time%% | content=test content |
+
 | wait_for_element_present_ok | st-edit-summary-text-area | 30000 |
 | click_ok | st-edit-summary-text-area |  |
 | type_ok | st-edit-summary-text-area | Other User Summary signal %%start_time%% |
@@ -49,11 +45,11 @@
 
 | *Comment* | Test Case: Activities Widget Others Signals. Back at Dashboard with widget |  |
 | wait_for_text_present_ok | Welcome | 30000 |
-| text_like | st-editing-tools-edit | Welcome |
+| text_like | st-wikinav-profile | Welcome |
 | wait_for_text_present_ok | Activities | 30000 |
 
 | st-name-widget | 1 | activities_widget |
-| st-widget-title-like | activities_widget | Activities |
+| st-widget-title | activities_widget | Activities |
 | st-widget-settings | activities_widget |  |
 | wait_for_element_visible_ok | limit | 30000 |
 | select_ok | limit | 25 |
@@ -61,9 +57,8 @@
 | wait_for_element_not_visible_ok | limit | 30000 |
 
 | *Comment* | Test Case: Activities Widget Others Signals. Signals in Dashboard Activities widget. |  |
-| wait_for_element_present_ok | link=signals | 10000 |
-| click_ok | link=signals |  |
-| open_ok | /st/dashboard |  |
+| wait_for_element_present_ok | link=Signals | 10000 |
+| click_ok | link=Signals |  |
 
 | *Comment* | Test Case: Activities Widget Other Signals. Verify those signals. |  |
 | wait_for_text_present_ok | woke up %%start_time%% | 30000 |

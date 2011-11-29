@@ -4,6 +4,12 @@
 
 | *Comment* | Test Case: Inter Workspace Search Clone test-data twice so we don't have to deal with ceq issues |  |
 
+| set | iws_user | iws.user.%%start_time%%@david.socialtext.net |
+| set | req_admin | req.admin.%%start_time%%@david.socialtext.net |
+| create-user | %%iws_user%% | %%password%% |
+| create-user | %%req_admin%% | %%password%% |
+| st-admin | add-member --e %%iws_user%% --workspace %%workspace%% | now has the role |
+
 | st-process-jobs |  |  |
 | st-admin | delete-workspace --workspace test-data2 --no-export |  |
 | st-admin | clone-workspace --workspace test-data --target test-data2 | The test-data workspace has been cloned to test-data2 |
@@ -13,11 +19,14 @@
 | st-admin | clone-workspace --workspace test-data --target test-data3 | The test-data workspace has been cloned to test-data3 |
 | st-admin | set-workspace-config --workspace test-data3 title test-data3 | The workspace config for test-data3 has been updated. |
 
+| st-admin | add-workspace-admin --e %%req_admin%% --workspace test-data3 | now has the role |
+
 | *Comment* | Test Case: Inter Workspace Search process jobs for cloned workspaces |  |
 | pause | 10000 | give ceq some time |
 | st-process-jobs |  |  |
 
 | *Comment* | Test Case: Inter Workspace Search. Select My Workspaces in Dashboard-context |  |
+| st-logoutin | %%iws_user%% | %%password%% |
 | open_ok | /st/dashboard |  |
 | select_ok | st-search-action | label=Search My Workspaces: |
 | st-search | wiki | Pages matching 'wiki' |
@@ -44,9 +53,7 @@
 | st-result | qr/jabber.+%%title%%/ |  |
 
 | *Comment* | Test Case: Inter Workspace Search Remove %%username%% from test-data2 and search again |  |
-| st-admin | remove-workspace-admin --workspace test-data2 --email %%email%% |  |
-| st-admin | remove-member --workspace test-data2 --email %%email%% |  |
-
+| st-admin | remove-member --workspace test-data2 --email %%iws_user%% |  |
 | st-process-jobs |  |  |
 
 | select_ok | st-search-action | label=Search My Workspaces: |
@@ -80,7 +87,7 @@
 | st-result | qr/jabber.+test-data3/ |  |
 
 | *Comment* | Test Case: Inter Workspace Search Login to %%workspace%% ws and search again |  |
-| st-login |  |  |
+| st-login | %%iws_user%% | %%password%% |
 | wait_for_element_visible_ok | st-search-action | 30000 |
 | select_ok | st-search-action | label=Search My Workspaces: |
 | st-search | jabber | Pages matching 'jabber' |
@@ -94,7 +101,7 @@
 | *Comment* | Test Case: Inter Workspace Search DELETE WORKSPACE |  |
 | *Comment* | add user back to test-data2, delete test-data2 |  |
 
-| st-admin | add-member --workspace test-data2 --email %%email%% | now has the role of 'member' in the test-data2 Workspace |
+| st-admin | add-member --workspace test-data2 --email %%iws_user%% | now has the role of 'member' in the test-data2 Workspace |
 | select_ok | st-search-action | label=Search My Workspaces: |
 | st-search | jabber | Pages matching 'jabber' |
 | st-result | 15 total |  |
@@ -134,22 +141,19 @@
 | st-result | 0 results |  |
 
 | *Comment* | Test Case: Inter Workspace Search UNSUBSCRIBE |  |
-| *Comment* | Add back test-data2, unsub from test-data3 via UI |  |
+| *Comment* | Add back test-data2, remove %%iws_user%% from test-data3 |  |
 | st-admin | clone-workspace --workspace test-data --target test-data2 --overwrite | The test-data workspace has been cloned to test-data2 |
 | st-admin | set-workspace-config --workspace test-data2 title test-data2 | The workspace config for test-data2 has been updated. |
 
-| st-login |  |  |
-| open_ok | /test-data3 |  |
-| click_and_wait | link=Settings |  |
-| click_and_wait | link=Unsubscribe |  |
-| click_and_wait | Button |  |
+| st-login | %%iws_user%% | %%password%% |
+| st-admin | remove-member --w test-data3 --u %%iws_user%% |  |
 
-| open_ok | /%%workspace%% |  |
-| select_ok | st-search-action | label=Search My Workspaces: |
-| st-search | jabber | Pages matching 'jabber' |
-| st-result | 10 total |  |
-| select_and_wait | sort-picker | label=Title |
-| select_and_wait | sort-picker | label=Workspace |
+| open_ok | /%%workspace%% |  |  |  |  |
+| select_ok | st-search-action | label=Search My Workspaces: |  |  |  |
+| st-search | jabber | Pages matching 'jabber' |  |  |  |
+| st-result | 10 total |  |  |  |  |
+| select_and_wait | sort-picker | label=Title |  |  |  |
+| select_and_wait | sort-picker | label=Workspace |  |  |  |
 
 | st-result | qr/jabber.+test-data2/ |  |
 | st-result | qr/jabber.+%%title%%/ |  |
@@ -158,21 +162,13 @@
 | *Comment* | Test Case: Inter Workspace Search Create new ws empty because ceq takes too long to index |  |
 | *Comment* | delete the ws first in case it already exists |  |
 
-| st-process-jobs |  |  |
-| st-admin | delete-workspace --workspace from-scratch --no-export |  |
-| st-admin | create-workspace --empty --name from-scratch --title From-Scratch --empty | A new workspace named "from-scratch" was created. |
-| st-admin | add-member --workspace from-scratch --email %%email%% | now has the role of 'member' in the from-scratch Workspace |
-| st-process-jobs |  |  |
+| st-process-jobs |  |  |  |  |
+| st-admin | delete-workspace --workspace from-scratch --no-export |  |  |  |
+| st-admin | create-workspace --empty --name from-scratch --title From-Scratch --empty | A new workspace named "from-scratch" was created. |  |  |
+| st-admin | add-member --workspace from-scratch --email %%iws_user%% | now has the role of 'member' in the from-scratch Workspace |  |  |
+| st-process-jobs |  |  |  |  |
 
-| open_ok | /from-scratch/?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | st-newpage-pagename-edit | jabber |
-| type_ok | wikiwyg_wikitext_textarea | jabber |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| clickAndWait | st-save-button-link |  |
+| call | [st-edit-new-page] | ws=from-scratch | title=jabber | content=jabber |
 
 | *Comment* | Test Case: Inter Workspace Search index new page explicitly just in case ceq is tetchy |  |
 | st-process-jobs | PageIndex | from-scratch |
@@ -187,10 +183,12 @@
 | st-result | qr/jabber.+%%title%%/ |  |
 | st-result | qr/jabber.+From-Scratch/ |  |
 
-| *Comment* | Test Case: Inter Workspace Search TEARDOWN |
+| *Comment* | Test Case: Inter Workspace Search TEARDOWN |  |
 | st-process-jobs |  |  |
+| deactivate-user | %%iws_user%% |  |
+| deactivate-user | %%req_admin%% |  |
 | delete-workspace | test-data2 | Recklessly deleting |
 | delete-workspace | test-data3 | Recklessly deleting |
 | delete-workspace | from-scratch | Recklessly deleting |
 
-| *Comment* | Test Case: Inter Workspace Search COMPLETED |
+| *Comment* | Test Case: Inter Workspace Search COMPLETED |  |

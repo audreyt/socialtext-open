@@ -1,0 +1,56 @@
+[%# vim: set et sts=2 sw=2: %]
+<div class="lightbox" id="st-create-content-lightbox">
+  <form id="st-create-content-form">
+    <div class="title">[% loc('page.create') %]</div>
+    <br />
+    <div class="error"></div>
+
+    [% IF content_types.size() > 1 %]
+    <div>
+      [% FOR ct = content_types.keys %][% UNLESS ct == "wiki" %]
+      <div class="choice">
+        <input id="[% ct %]-radio" value="[% ct %]" name="content_type" type="radio" [% IF ct == "xhtml" %]checked="checked" [% END %]/>
+        <label for="[% ct %]-radio">[% content_types.$ct %]</label>
+      </div>
+      [% END %][% END %]
+    <br/>
+    <div style="border-style: solid; border-width: 0px 0px 1px 0px"></div>
+    [% END %]
+
+    <div>
+      <div id="create-content-from-blank">
+        <input id="blank-radio" type="radio" name="create_content" checked="checked" />
+        <label for="blank-radio">[% loc('page.blank') %]</label>
+      </div>
+
+      <div id="create-content-from-template">
+        <input id="use-template-radio" type="radio" name="create_content" />
+        <label for="use-template-radio">
+          [% loc('page.use-template:') %]
+        </label>
+        <select></select>
+      </div>
+
+      <div id="create-content-from-page">
+        <input id="copy-page-radio" type="radio" name="create_content" />
+        <label for="copy-page-radio">
+          [% loc('info.copy') %]
+        </label>
+          <input type="text" />
+      </div>
+    </div>
+
+    <div class="buttons">
+        <ul class="widgetButton" style="float:left; padding:10px">
+          <li class="flexButton">
+              <a id="st-create-content-savelink" class="submit genericOrangeButton" href="#">[% loc('do.create') %]</a>
+          </li>
+        </ul>
+        <ul class="widgetButton" style="float:left; padding:10px">
+          <li class="flexButton">
+              <a class="close genericOrangeButton" id="st-create-content-cancellink" href="#">[% loc('do.cancel') %]</a>
+          </li>
+        </ul>
+    </div>
+  </form>
+</div>

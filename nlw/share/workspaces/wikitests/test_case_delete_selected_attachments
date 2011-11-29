@@ -10,9 +10,7 @@
 | st-logoutin | %%user%% | %%password%% |  |
 
 | *Comment* | Test Case: Delete Selected Attachments needs to sort using time in seconds |  |
-| open_ok | /?action=preferences_settings;preferences_class_id=timezone |  |
-| check_ok | timezone__time_display_seconds |  |
-| click_and_wait | link=Save |  |
+| include | [st-timezone-seconds] |  |
 
 | *Comment* | Test Case: Delete Selected Attachments uploads wikitest.doc and wikitest.jpg |  |
 | st-admin | update-page --email %%email%% --workspace %%workspace%% --page "Delete Attachments %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |
@@ -23,31 +21,32 @@
 | wait_for_element_visible_ok | st-attachments-attach-filename | 30000 |
 | type_ok | st-attachments-attach-filename | %%wikitest_files%%wikitest.jpg |
 | wait_for_text_present_ok | Uploaded files: wikitest.jpg | 30000 |
-
-| *Comment* | Test Case: Delete Selected Attachments wikitest.jpg upload waits for the Done button |  |
 | wait_for_element_visible_ok | st-attachments-attach-closebutton | 30000 |
+| click_ok | st-attachments-attach-closebutton |  |
+
+| *Comment* | Test Case: Delete Selected Attachments upload .doc |  |
+| wait_for_element_visible_ok | st-attachments-uploadbutton | 60000 |
+| click_ok | st-attachments-uploadbutton |  |
 | wait_for_element_visible_ok | st-attachments-attach-filename | 30000 |
 | type_ok | st-attachments-attach-filename | %%wikitest_files%%wikitest.doc |
-| wait_for_text_present_ok | Uploaded files: wikitest.jpg, wikitest.doc | 30000 |
-
-| *Comment* | Test Case: Delete Selected Attachments wikitest.doc upload waits for the Done button |  |
+| wait_for_text_present_ok | Uploaded files: wikitest.doc | 30000 |
 | wait_for_element_visible_ok | st-attachments-attach-closebutton | 30000 |
 | click_ok | st-attachments-attach-closebutton |  |
 
 | *Comment* | Process Indexing Jobs |  |
-| pause | 5000 | pause to register index job |
+| pause | 15000 | pause to register index job |
 | st_process_jobs | AttachmentIndex |  |
 
 | *Comment* | Test Case: Delete Selected Attachments Search the attachment and verify that it is present |  |
 | wait_for_element_visible_ok | st-search-term | 30000 |
 | type_ok | st-search-term | Mudville |
 | click_and_wait | st-search-submit |  |
-| text_like | contentContainer | Delete Attachments %%start_time%% |
-| text_like | contentContainer | qr/Delete Attachments %%start_time%%.+in %%title%%/ |
+| text_like | content | Delete Attachments %%start_time%% |
+| text_like | content | qr/Delete Attachments %%start_time%%.+in %%title%%/ |
 
 | *Comment* | Open All Files |  |
 | open_ok | /%%workspace%%/index.cgi?action=attachments_listall |  |
-| wait_for_element_visible_ok | //input[@value='Delete Selected Attachments'] | 60000 |
+| wait_for_element_visible_ok | st-attachments-delete | 10000 |
 
 | *Comment* | Test Case: Delete Selected Attachments delete wikitest.doc |  |
 | *Comment* | Sort by Date Uploaded to get wikitest.doc to the top |  |
@@ -57,26 +56,26 @@
 | wait_for_element_visible_ok | selected | 30000 |
 | check_ok | selected |  |
 | is_checked_ok | selected |  |
-| click_and_wait | //input[@value='Delete Selected Attachments'] |  |
+| click_and_wait | st-attachments-delete |  |
 
 | *Comment* | Test Case: Delete Selected Attachments. See if wikitest.doc got deleted |  |
 | open_ok | /%%workspace%%/?Delete Attachments %%start_time%% |  |
 | wait_for_element_visible_ok | //a[contains(@href,'original/wikitest.jpg')] | 60000 |
 | text_like | //a[contains(@href,'original/wikitest.jpg')] | wikitest.jpg |
-| text_unlike | contentRight | wikitest.doc |
+| text_unlike | st-display-mode-widgets | wikitest.doc |
 
 | *Comment* | Process Indexing Jobs after deleting wikitest.doc |  |
-| pause | 5000 | pause to register index job |
+| pause | 15000 | pause to register index job |
 | st_process_jobs | AttachmentIndex |  |
 
 | *Comment* | Test Case: Delete Selected Attachments Search page and verify that attachment is gone |  |
 | wait_for_element_visible_ok | st-search-term | 30000 |
 | type_ok | st-search-term | Mudville |
 | click_and_wait | st-search-submit |  |
-| text_unlike | contentContainer | Delete Attachments %%start_time%% |
+| text_unlike | content | Delete Attachments %%start_time%% |
 
-| *Comment* | Test Case: Delete Selected Attachments teardown |  |
-
+| *Comment* | Test Case: Delete Selected Attachments TEARDOWN |  |
+| st-process-jobs |  |  |
 | st-admin | purge-page --workspace %%workspace%% --page delete_attachments_%%start_time%% | was purged |
 | deactivate-user | %%user%% |  |
 

@@ -1,0 +1,16 @@
+[%# vim: set et sts=2 sw=2: %]
+<div class="lightbox" id="st-tagqueue-interface">
+  <form id="st-tagqueue" name="st-tagqueue">
+    <p id="st-tagqueue-tagprompt">
+      [% loc('edit.tag-prompt:') %]
+      <input id="st-tagqueue-field" class="st-tagqueue-input" type="text" name="tagfield"/>
+      <input type="submit" id="st-tagqueue-addbutton" class="button"
+          value="[% loc('do.add-tag') %]" />
+    </p>
+    <div class="list" id="st-tagqueue-list" style="display: none">
+      <span class="st-tagqueue-listlabel">
+        [% loc('edit.tag-queue:') %]
+      </span>
+    </div>
+  </form>
+</div>

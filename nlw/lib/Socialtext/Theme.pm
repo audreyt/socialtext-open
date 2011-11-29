@@ -7,17 +7,44 @@ use Socialtext::File qw(mime_type);
 use Socialtext::AppConfig;
 use Socialtext::User;
 use Socialtext::Upload;
+use Socialtext::Image;
+use File::Temp;
 use YAML ();
 use namespace::clean -except => 'meta';
+use Moose::Util::TypeConstraints;
 
-my @COLUMNS = qw( theme_id name header_color header_image_id
-    header_image_tiling header_image_position background_color
+sub Enum {
+    my ($key, @values) = @_;
+    enum __PACKAGE__ . "::$key" => \@values;
+}
+
+Enum Font => qw( Arial Georgia Helvetica Lucida Times Trebuchet serif sans-serif );
+Enum Shade => qw( light dark );
+Enum Tiling => qw( repeat no-repeat repeat-x repeat-y );
+Enum Position => map { ("$_ top", "$_ center", "$_ bottom") } qw( left center right );
+
+my @COLUMNS = qw(
+    theme_id name is_default
+
+    logo_image_id
+
+    header_color header_link_color
+    header_image_id header_image_tiling header_image_position
+
+    foreground_shade
+    primary_color secondary_color tertiary_color
+
+    header_font body_font
+
+    background_color background_link_color
     background_image_id background_image_tiling background_image_position
-    primary_color secondary_color tertiary_color header_font body_font
-    is_default
+
+    favicon_image_id
 );
 
-my @UPLOADS = qw(header_image background_image);
+sub COLUMNS { @COLUMNS }
+
+our @UPLOADS = qw(header_image background_image logo_image favicon_image);
 
 has $_ => (is=>'ro', isa=>'Str', required=>1) for @COLUMNS;
 has $_ => (is=>'ro', isa=>'Socialtext::Upload', lazy_build=>1) for @UPLOADS;
@@ -30,6 +57,16 @@ sub _build_header_image {
 sub _build_background_image {
     my $self = shift;
     return Socialtext::Upload->Get(attachment_id => $self->background_image_id);
+}
+
+sub _build_logo_image {
+    my $self = shift;
+    return Socialtext::Upload->Get(attachment_id => $self->logo_image_id);
+}
+
+sub _build_favicon_image {
+    my $self = shift;
+    return Socialtext::Upload->Get(attachment_id => $self->favicon_image_id);
 }
 
 sub Load {
@@ -148,15 +185,39 @@ sub MakeExportable {
 
     for my $image_name (@UPLOADS) {
         my $id_field = $image_name . "_id";
-        my $image = Socialtext::Upload->Get(attachment_id=>$data->{$id_field});
-        my $copy_to = $themedir . "/" . $image->filename;
-        $image->copy_to_file($copy_to);
 
-        $data->{$image_name} = $image->filename;
+        if (defined $data->{$id_field}) {
+            my $image = Socialtext::Upload->Get(attachment_id=>$data->{$id_field});
+            my $copy_to = $themedir . "/" . $image->filename;
+            $image->copy_to_file($copy_to);
+            $data->{$image_name} = $image->filename;
+        }
+        else {
+            $data->{$image_name} = undef;
+        }
+
         delete $data->{$id_field};
     }
 
     return $data;
+}
+
+sub _valid {
+    my $key = shift;
+    my $checker = find_type_constraint(__PACKAGE__ . "::$key") or die "Cannot find constraint: $key";
+    return sub {
+        my $value = shift;
+
+        return $checker->check($value);
+    };
+}
+
+sub ValidValuesForKey {
+    my ($class, $key) = @_;
+    $key =~ s/.*_//g;
+    $key = ucfirst(lc $key);
+    my $checker = find_type_constraint(__PACKAGE__ . "::$key") or return;
+    wantarray ? @{$checker->values} : $checker->values;
 }
 
 sub ValidSettings {
@@ -164,20 +225,25 @@ sub ValidSettings {
     my $settings = (@_ == 1) ? shift : {@_};
 
     my %tests = (
+        favicon_image_id => \&_valid_attachment_id,
+        logo_image_id => \&_valid_attachment_id,
         base_theme_id => \&_valid_theme_id,
         header_color => \&_valid_hex_color,
         header_image_id => \&_valid_attachment_id,
-        header_image_tiling => \&_valid_tiling,
-        header_image_position => \&_valid_position,
+        header_image_tiling => _valid('Tiling'),
+        header_image_position => _valid('Position'),
+        header_link_color => \&_valid_hex_color,
         background_color => \&_valid_hex_color,
         background_image_id => \&_valid_attachment_id,
-        background_image_tiling => \&_valid_tiling,
-        background_image_position => \&_valid_position,
+        background_image_tiling => _valid('Tiling'),
+        background_image_position => _valid('Position'),
+        background_link_color => \&_valid_hex_color,
         primary_color => \&_valid_hex_color,
         secondary_color => \&_valid_hex_color,
         tertiary_color => \&_valid_hex_color,
-        header_font => \&_valid_font,
-        body_font => \&_valid_font,
+        header_font => _valid('Font'),
+        body_font => _valid('Font'),
+        foreground_shade => _valid('Shade'),
     );
 
     for my $name ( keys %$settings ) {
@@ -190,9 +256,13 @@ sub ValidSettings {
     return 1;
 }
 
+sub ThemeDir {
+    return Socialtext::AppConfig->code_base . '/themes';
+}
+
 sub EnsureRequiredDataIsPresent {
     my $class = shift;
-    my $themedir = Socialtext::AppConfig->code_base . '/themes';
+    my $themedir = $class->ThemeDir();
 
     my $installed = { map { $_->{name} => $_ } @{$class->_AllThemes()} };
     my $all = YAML::LoadFile("$themedir/themes.yaml");
@@ -203,7 +273,9 @@ sub EnsureRequiredDataIsPresent {
 
         my %to_check = %$theme;
         delete $to_check{$_} for qw(
-            header_image is_default name theme_id background_image);
+            header_image is_default name theme_id background_image
+            logo_image favicon_image
+        );
         die "theme $name has invalid settings, refusing to install/update"
             unless $class->ValidSettings(%to_check);
 
@@ -226,32 +298,10 @@ sub _valid_hex_color {
     return lc($color) =~ /^#[0-9a-f]{6}$/;
 }
 
-sub _valid_position {
-    my $position = shift;
-    my @pos = split(/ /, $position);
-
-    return 0 unless scalar(@pos) == 2;
-    return 0 unless grep { lc($pos[0]) eq $_ } qw(left center right);
-    return 0 unless grep { lc($pos[1]) eq $_ } qw(top center bottom);
-    return 1;
-}
-
-sub _valid_tiling {
-    my $tiling = shift;
-
-    return grep { lc($tiling)  eq $_ } qw(horizontal vertical both none);
-}
-
-sub _valid_font {
-    my $font = shift;
-
-    return grep { $font eq $_ }
-        qw(Arial Georgia Helvetica Lucinda Trebuchet Times)
-}
-
 sub _valid_attachment_id {
     my $id = shift;
 
+    return 1 unless defined $id;
     return 0 unless $id =~ /^\d+$/;
 
     my $count = eval {
@@ -315,7 +365,7 @@ sub _CreateAttachmentsIfNeeded {
     my $themedir = shift;
     my $params = shift;
 
-    my $creator = Socialtext::User->SystemUser;
+    my $creator = delete $params->{creator} || Socialtext::User->SystemUser;
 
     # Don't worry about breaking links to old upload objects, they'll get
     # auto-cleaned.
@@ -323,12 +373,15 @@ sub _CreateAttachmentsIfNeeded {
         my $filename = delete $params->{$temp_field};
         next unless $filename;
 
+        my $tempfile = "$themedir/$filename";
+        $tempfile = $class->ResizeFile($tempfile)
+            if $temp_field eq 'logo_image';
+
         my $db_field = $temp_field . "_id";
 
         my @parts = split(/\./, $filename);
         my $mime_guess = 'image/'. $parts[-1];
 
-        my $tempfile = "$themedir/$filename";
         my $file = Socialtext::Upload->Create(
             creator => $creator,
             temp_filename => $tempfile,
@@ -336,8 +389,31 @@ sub _CreateAttachmentsIfNeeded {
             mime_type => mime_type($tempfile, $filename, $mime_guess),
         );
         $file->make_permanent(actor => $creator); 
+        _chown_file_if_needed($file);
 
         $params->{$db_field} = $file->attachment_id;
+    }
+}
+
+sub ResizeFile {
+    my $self = shift;
+    my $file = shift;
+
+    my $spec = Socialtext::Image::spec_resize_get('account');
+    Socialtext::Image::spec_resize($spec, $file => $file);
+
+    return $file;
+}
+
+sub _chown_file_if_needed {
+    my $file = shift;
+
+    return if $>; # we're running non-root, it's a dev env.
+
+    require Socialtext::System;
+    my $dir = $Socialtext::Upload::STORAGE_DIR;
+    if ($file->disk_filename =~ qr{(\Q$dir\E/[^/]+)/}) {
+        Socialtext::System::shell_run(qw(chown -R www-data:www-data), $1);
     }
 }
 

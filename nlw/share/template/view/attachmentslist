@@ -1,0 +1,121 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[% USE decorate %]
+[% WRAPPER $frame_name id="listPage" %]
+  [% INCLUDE element/page/navigation %]
+  [% IF checker.check_permission('delete') %]
+    <form name="actions" action="[% script_name %]" method="post">
+  [% END %]
+  <div id="controls">
+   <div id="deleteFiles">
+    <div class="grid_18">
+      <h2 class="tableTitle" title="[% display_title | html %]">[% display_title | html %]</h2>
+    </div>
+    <div class="grid_6 right" id="controlsRight">
+      [% IF checker.check_permission('delete') %]
+        <a 
+          id="st-attachments-delete" 
+          class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" 
+          role="button"
+          href="#" 
+          onclick="document.forms['actions'].submit(); return false;"
+        >
+          <span class="ui-button-text">[% loc('file.delete-selected') %]</span>
+        </a>
+        <input type="hidden" name="action" value="attachments_delete" />
+        <input type="hidden" name="caller_action" value="[% hub.action %]" />
+      [% END %]
+    </div>
+   </div> 
+    <div class="clear"></div>
+  </div>
+  <div id="contentContainer">
+      [% predicate_with_params = BLOCK %]?[% predicate %];scope=[% scope %];orig_search_term=[% search_term %];sortby=[% sortby %];direction=[% direction || sortdir.$sortby %][%- END %]
+    <div class="clear"></div>
+    [% IF pager %]
+      <div class="grid_24">
+        [% INCLUDE "view/paging" %]
+      </div>
+      <div class="clear"></div>
+    [% END %]
+    <div class="grid_1">
+      <div class="selectall">
+        <input type="checkbox" id="st-listview-selectall"/>
+      </div>
+    </div>
+    <div class="alpha grid_16">
+      <div class="toggle">
+        [% IF pager %]
+          <b>[% loc('info.showing=from,to,total', offset + 1, last, pager.total_entries) %]</b>
+        [% END %]
+      </div>
+    </div>
+    <div class="grid_7 sort_options">
+      [% loc('sort.by:') %]
+      <select id="sort-picker" onchange="sort_by();">
+        [% PROCESS element/listview_sort_by_option name = loc('file.name') field = 'filename' %]
+        [% PROCESS element/listview_sort_by_option name = loc('page.title') field = 'subject' %]
+        [% PROCESS element/listview_sort_by_option name = loc('sort.uploader') field = 'user' %]
+        [% PROCESS element/listview_sort_by_option name = loc('nav.uploaded-date') field = 'date' %]
+        [% PROCESS element/listview_sort_by_option name = loc('file.size') field = 'size' %]
+      </select>
+    </div>
+    <script language="javascript">
+      var query_start = "?action=attachments_listall";
+      function sort_by() {
+        var selected = jQuery('select#sort-picker').val();
+        window.location = query_start + ';' + selected;
+      }
+$('#st-listview-selectall').click(function () {
+    var self = this;
+    $('input[type=checkbox]').each(function() {
+        if ( ! $(this).attr('disabled') ) {
+            $(this).attr('checked', self.checked);
+        }
+    });
+    return true;
+});
+    </script>
+    <div class="clear"></div>
+    <div class="grid_24">
+      <table class="dataTable fixed all_files">
+        [% IF ! offset; offset = 0; END %]
+        [% IF ! last; last = rows.size; END %]
+        [% FOREACH row = rows %]
+          [% IF loop.count - 1 < offset %][% NEXT %][% END %]
+          [% IF loop.count > last %][% BREAK %][% END %]
+          [% IF loop.count % 2 %]<tr class="oddRow">[% ELSE %]<tr>[% END %]
+            <td width="30">
+              [% IF row.page_is_locked AND ! row.user_can_modify %]
+                <img src="[% static_path %]/images/icons/locked-black-15.png" />
+              [% ELSE %]
+                <input name="selected" value="[% row.page_uri %],[% row.id %]" type="checkbox" />
+              [% END %]
+            </td>
+            <td>
+              [% row.link %] ([% row.human_readable_size %]), [% loc('file.attached-to') %] <span class="[% row.style %]-row-title-attached-to query-results-row-title-attached-to">[% row.page_link %]</span>
+              [% loc('file.uploaded-by') %]
+              [% row.user | decorate('user_link') %]
+              [% loc('info.on') %]
+              [% row.user_date %]
+            </td>
+          </tr>
+        [% END %]
+      </table>
+    </div>
+    <div class="clear"></div>
+  </div>
+  <div class="clear"></div>
+  [% IF pager && pager.total_entries %]
+    <div class="grid_24 search_count">
+       <b>[% loc('info.showing=from,to,total', offset + 1, last, pager.total_entries) %]</b>
+    </div>
+    <div class="clear"></div>
+    <div class="grid_24"> [% INCLUDE "view/paging" %] </div>
+    <div class="clear"></div>
+  [% END %]
+  </div>
+  [% IF checker.check_permission('delete') %]
+    </form>
+  [% END %]
+[% END %]

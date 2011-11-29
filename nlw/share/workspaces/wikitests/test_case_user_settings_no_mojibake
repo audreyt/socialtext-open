@@ -18,21 +18,22 @@ Verifies a fix for:
 | st-logoutin | %%test_username%% | %%password%% |
 
 | *Comment* | Use the "My Settings" page to set utf-8 first/last name |  |
-| open-ok | /%%workspace%%/index.cgi?action=users_settings |  |
-| wait_for_element_visible_ok | //input[@name='first_name'] | 30000 |
-| type_ok | //input[@name='first_name'] | %%utf8_first_name%% |
-| type_ok | //input[@name='last_name'] | %%utf8_last_name%% |
+| open_ok | /st/settings |  |
+| wait_for_element_visible_ok | //input[@name='user.first_name'] | 30000 |
+| type_ok | //input[@name='user.first_name'] | %%utf8_first_name%% |
+| type_ok | //input[@name='user.last_name'] | %%utf8_last_name%% |
 | click_and_wait | link=Save |  |
 
 | *Comment* | Verify no mojibake on /:ws/index.cgi?action=users_settings |  |
-| open-ok | /%%workspace%%/index.cgi?action=users_settings |  |
-| value_is | first_name | %%utf8_first_name%% |
-| value_is | last_name | %%utf8_last_name%% |
+| open_ok | /st/settings |  |
+| value_is | //input[@name='user.first_name'] | %%utf8_first_name%% |
+| value_is | //input[@name='user.last_name'] | %%utf8_last_name%% |
 
 | *Comment* | Verify no mojibake on /?action=users_settings |  |
-| open-ok | /?action=users_settings |  |
-| value_is | first_name | %%utf8_first_name%% |
-| value_is | last_name | %%utf8_last_name%% |
+| open_ok | /st/edit_profile |  |
+| wait_for_element_visible_ok | field_first_name | 10000 |
+| value_is | field_first_name | %%utf8_first_name%% |
+| value_is | field_last_name | %%utf8_last_name%% |
 
 | *Comment* | Test Case: user settings no mojibake TEARDOWN |
 | st-admin | set-user-names --email %%test_username%% --f "" --l "" |

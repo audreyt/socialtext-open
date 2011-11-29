@@ -1,6 +1,6 @@
-
 | *Comment* | Test Case: Bare Account |
 
+* Fixture: SocialWidgets
 
 | *Comment* | Test Case: Bare Account Create an account, ideally after a big test run has completed |
 | *Comment* | Test Case: Bare Account There should be no events available at all. Period. |
@@ -14,21 +14,21 @@
 | *Comment* | Test Case: Bare Account Every account has a AUW so until that changes every account has edits |  |
 | st-logoutin | %%user%% | %%password%% |
 | open_ok | /st/dashboard |  |
-| wait_for_element_present_ok | //ul[@id='st-dropdown-0-list']/li[1]/a[text()='all events'] | 5000 |
-| wait_for_element_present_ok | //ul[@id='st-dropdown-0-list']/li[2]/a[text()='signals'] | 5000 |
-|  pause_ok | 8000  | wait for widget to load  |
-| click_ok | //ul[@id='st-dropdown-0-list']/li[2]/a[text()='signals'] |  |
-| wait_for_text_present_ok | There are no new signals in the last 30 days | 30000 |
-| wait_for_element_present_ok | //ul[@id='st-dropdown-0-list']/li[3]/a[text()='contributions'] | 5000 |
-| wait_for_element_present_ok | //ul[@id='st-dropdown-0-list']/li[4]/a[text()='edits'] | 5000 |
-| wait_for_element_present_ok | //ul[@id='st-dropdown-0-list']/li[5]/a[text()='comments'] | 5000 |
-| click_ok | //ul[@id='st-dropdown-0-list']/li[5]/a[text()='comments'] |  |
-| wait_for_text_present_ok | There are no new comments in the last 30 days | 30000 |
-| wait_for_element_present_ok | //ul[@id='st-dropdown-0-list']/li[6]/a[text()='page tags'] | 5000 |
-| click_ok | //ul[@id='st-dropdown-0-list']/li[6]/a[text()='page tags'] |  |
-| wait_for_text_present_ok | There are no new page tags in the last 30 days | 30000 |
-| wait_for_element_present_ok | //ul[@id='st-dropdown-0-list']/li[7]/a[text()='people events'] | 5000 |
-| click_ok | //ul[@id='st-dropdown-0-list']/li[7]/a[text()='people events'] |  |
-| wait_for_text_present_ok | There are no new people events in the last 30 days | 30000 |
+
+| call | [activities-widget] | activity=signals | contributor=everyone |
+| wait_for_text_present_ok | There are no new signals in the last 30 days | 15000 |  |
+
+| call | [activities-widget] | activity=comments | contributor=everyone |
+| wait_for_text_present_ok | There are no new comments in the last 30 days | 15000 |  |
+
+| call | [activities-widget] | activity=tags | contributor=everyone |
+| wait_for_text_present_ok | There are no new page tags in the last 30 days | 15000 |  |
+
+| call | [activities-widget] | activity=people-events | contributor=everyone |
+| wait_for_text_present_ok | There are no new people events in the last 30 days | 15000 |  |
+
+| *Comment* | Test Case: Bare Account TEARDOWN |  |
+| st-admin | deactivate-user --e %%user%% |  |
+| delete-account | %%acct%% |  |
 
 | *Comment* | Test Case: Bare Account COMPLETED |

@@ -69,16 +69,13 @@ sub init {
         die "$_ is mandatory!" unless $self->{$_};
     }
    
-    #Get the workspace skin if the workspace attribute is set
-    #Otherwise, default to s3
+    #Default skin to s3 since skin is obsolete
     my $ws = Socialtext::Workspace->new( name => $self->{workspace} );
-    my $skin = 's3';
     if (defined($ws)) {
-        $skin = $ws->skin_name() || 's3';
         $self->{'workspace_id'} = $ws->workspace_id;
     }
   
-    $self->{'skin'} = $skin;
+    $self->{'skin'} = 's3';
     
     my $short_username = $self->{'username'};
     $short_username =~ s/^([\W\w\.]*)\@.+$/$1/; # truncate if email address
@@ -178,9 +175,8 @@ wait_for_text_present_ok so we've got to use text_like, which has no wait_for)
 =cut
 
 sub click_and_pause {
-  my ($self, $link) = @_;
-  $self->click_ok($link);
-  $self->pause(15000);
+  my ($self, $link, $pause, $andwait) = @_;
+  st_click_pause($self, $link, $pause, $andwait);
 }
 
 
@@ -294,7 +290,7 @@ sub st_check_files_if_highperms {
     my ($self, $file) = @_;
     my $browser = ((($ENV{sauce_browser} || $ENV{selenium_browser} || '') =~ /(\w+)/) ? $1 : 'firefox');
     if ($browser=~/firefox/ )  {
-        $self->handle_command('text_like','contentRight',$file);
+        $self->handle_command('text_like','st-display-mode-widgets',$file);
     }
 }
 
@@ -307,7 +303,7 @@ sub st_upload_attachment_to_wikipage {
     $self->handle_command('wait_for_text_present_ok','Uploaded files: ' . $file, 30000);
     $self->handle_command('wait_for_element_visible_ok', 'st-attachments-attach-closebutton', 30000);
     $self->handle_command('click_ok', 'st-attachments-attach-closebutton');
-    $self->handle_command('pause', 5000, 'pause to register index job');
+    $self->handle_command('pause_ok', 5000, 'pause to register index job');
     $self->handle_command('st_process_jobs','AttachmentIndex');
     $self->handle_command('wait_for_element_visible_ok','link='.$file,30000);
 }
@@ -343,14 +339,10 @@ Verifies that the page title (NOT HTML title) is correct.
 =cut
 
 sub st_page_title {
-    my ($self, $expected_title) = @_;
-    if ($self->{'skin'} eq 's2') {
-        $self->{selenium}->text_like('id=st-list-title', qr/\Q$expected_title\E/);
-    } elsif ($self->{'skin'} eq 's3') {
-        $self->{selenium}->text_like('//div[@id=\'contentContainer\']', qr/\Q$expected_title\E/);
-    } else {
-        ok 0, "Unknown skin type: $self->{'skin'}";
-    }
+
+    my ($self, $expectedTitle) = @_;
+    my $contentDiv = '//div[@id=\'content\']';
+    $self->handle_command('text_like',$contentDiv,$expectedTitle);
 }
 
 =head2 st_page_multi_view( $url, $numviews) 
@@ -417,8 +409,8 @@ sub get_id_from_url {
 
 sub st_page_save {
     my ($self) = @_;
-    st_pause_click($self, 3000, 'st-save-button-link', 'andWait');
-    $self->handle_command('wait_for_element_visible_ok', 'st-edit-button-link');
+    st_pause_click($self, 3000,'st-save-button-link','andWait');
+    $self->handle_command('wait_for_element_visible_ok','st-edit-button-link','15000');
 }
 
 =head2 st_pause_click
@@ -429,8 +421,9 @@ sub st_page_save {
 
 sub st_pause_click {
     my ($self, $pause, $locator, $andwait) = @_;
-    $self->handle_command('pause',$pause);
     my $cmd = $andwait ? 'click_and_wait' : 'click_ok';
+    diag "st_pause_click: pausing $pause, then $cmd $locator";
+    $self->handle_command('pause_ok',$pause);
     $self->handle_command($cmd, $locator);
 }
 
@@ -443,8 +436,10 @@ sub st_pause_click {
 sub st_click_pause {
     my ($self, $locator, $pause, $andwait) = @_;
     my $cmd = $andwait ? 'click_and_wait' : 'click_ok';
+    my $mypause = $pause ? $pause : '15000';
+    diag "st_click_pause: $cmd $locator, pausing $mypause";
     $self->handle_command($cmd, $locator);
-    $self->handle_command('pause',$pause);
+    $self->handle_command('pause_ok',$mypause);
 }
 
 =head2 st_create_wikipage ( $workspace, pagename )
@@ -464,14 +459,12 @@ sub st_create_wikipage {
     my $url = '/' . $workspace . '/?action=new_page';
     $self->{selenium}->open_ok($url);
     $self->handle_command('set_Speed',3000);
-    $self->handle_command('wait_for_element_visible_ok','link=Wiki Text',30000);
-    $self->handle_command('click_ok','link=Wiki Text');
-    $self->handle_command('wait_for_element_visible_ok','wikiwyg_wikitext_textarea',30000);
     $self->handle_command('wait_for_element_visible_ok','st-newpage-pagename-edit',30000);
     $self->handle_command('type_ok','st-newpage-pagename-edit',$pagename);
-    $self->handle_command('wait_for_element_visible_ok','st-save-button-link',30000);
-    $self->handle_command('click_and_wait','st-save-button-link');
+    $self->handle_command('wait_for_element_visible_ok','st-save-button-link',5000);
     $self->handle_command('set_Speed',0);
+    st_pause_click($self, 8000,'st-save-button-link','andWait');
+    $self->handle_command('pause_ok',8000);
 }
 
 =head2 st_update_wikipage ( $workspace, $page, $content) 
@@ -486,17 +479,16 @@ sub st_update_wikipage {
     my $url = '/' . $workspace . '/?'  . $page;
            
     $self->{selenium}->open_ok($url);
-    $self->handle_command('wait_for_element_visible_ok', 'st-edit-button-link', 3000);
+    $self->handle_command('wait_for_element_visible_ok', 'st-edit-button-link', 30000);
     $self->handle_command('click_ok', 'st-edit-button-link');
-    $self->handle_command('set_Speed',3000);
-    $self->handle_command('wait_for_element_visible_ok','link=Wiki Text',30000);
-    $self->handle_command('click_ok','link=Wiki Text');   
-    $self->handle_command('wait_for_element_visible_ok','wikiwyg_wikitext_textarea',30000);
-    $self->handle_command('type_ok','wikiwyg_wikitext_textarea',$content);
-    $self->handle_command('wait_for_element_visible_ok','st-save-button-link',30000);
-    $self->handle_command('pause',$pause);
+    $self->handle_command('wait_for_element_present_ok','//a[contains(@class,"cke_button_wikitext")]',5000);
+    $self->handle_command('click_ok','//a[contains(@class,"cke_button_wikitext")]');
+    $self->handle_command('wait_for_element_present_ok','//textarea[contains(@class,"cke_source")]',5000);
+    $self->handle_command('type_ok','//textarea[contains(@class,"cke_source")]',$content);
+    $self->handle_command('type_ok','//textarea[contains(@class,"cke_source")]',$content);
+    $self->handle_command('type_ok','//textarea[contains(@class,"cke_source")]',$content);
+    $self->handle_command('wait_for_element_visible_ok','st-save-button-link',5000);
     $self->handle_command('click_and_wait','st-save-button-link');
-    $self->handle_command('set_Speed',0);
 }
 
 
@@ -513,11 +505,9 @@ The page must exist in order to have a tag added.
 sub st_add_page_tag {
    my ($self, $url, @tags) = @_;
    $self->handle_command('open_ok',$url);
-   $self->handle_command('set_Speed',3000);
+   $self->handle_command('set_Speed',2000);
    $self->handle_command('wait_for_element_visible_ok','st-pagetools-email', 30000);
    $self->handle_command('wait_for_element_visible_ok','link=Add Tag',30000);
-   $self->handle_command('wait_for_element_visible_ok','st-edit-button-link-bottom',30000);
-   $self->handle_command('wait_for_element_visible_ok','st-comment-button-link-bottom',30000);
    foreach my $tag (@tags) {
        $self->handle_command('click_ok','link=Add Tag');
        $self->handle_command('wait_for_element_visible_ok','st-tags-field',30000);
@@ -542,15 +532,18 @@ clicks the comment button and leaves your note.
 
 sub st_comment_on_page {
     my ($self, $url, $comment) = @_;
-    $self->handle_command('set_Speed',3000);
+    my $commentbutton = '//li[@id=\'st-comment-button\']';
+    my $commentlink = $commentbutton . '/a';
+    my $commentarea = '//textarea[@name="comment"]';
+    my $commentsave = '//div[@class="comment"]//a[contains(@class,"saveButton")]';
+    $self->handle_command('set_Speed',2000);
     $self->handle_command('open_ok', $url);  
-    $self->handle_command('wait_for_element_visible_ok','st-comment-button-link', 30000);
-    $self->handle_command('click_ok','st-comment-button-link');
-    $self->handle_command('wait_for_element_visible_ok','comment',30000);
-    $self->handle_command('type_ok', 'comment', $comment);
-    $self->handle_command('wait_for_element_visible_ok','link=Save',30000);
-    $self->handle_command('click_ok','link=Save');
-    $self->handle_command('wait_for_element_visible_ok','st-comment-button-link', 30000);
+    $self->handle_command('wait_for_element_visible_ok',$commentbutton, 5000);
+    $self->handle_command('click_ok',$commentlink);
+    $self->handle_command('wait_for_element_visible_ok',$commentarea,10000);
+    $self->handle_command('type_ok', $commentarea,$comment);
+    $self->handle_command('wait_for_element_present_ok',$commentsave,5000);
+    $self->handle_command('click_ok',$commentsave);
     $self->handle_command('set_Speed',0);
 }   
 
@@ -565,20 +558,16 @@ Then edits it and types the text you suggest
 =cut
 
 sub st_edit_page {
-  my ($self, $url, $text) = @_;
-  $self->handle_command('set_Speed',3000);
+  my ($self, $url, $content) = @_;
   $self->handle_command('open_ok',  $url); 
   $self->handle_command('wait_for_element_visible_ok', 'st-edit-button-link', 30000);  
   $self->handle_command('click_ok','st-edit-button-link');
-  $self->handle_command('wait_for_element_visible_ok', 'link=Wiki Text',  30000);
-  $self->handle_command('click_ok','link=Wiki Text');
-  $self->handle_command('wait_for_element_visible_ok','wikiwyg_wikitext_textarea',30000);
-  $self->handle_command('type_ok','wikiwyg_wikitext_textarea', $text);
-  $self->handle_command('wait_for_element_visible_ok','st-save-button-link',30000);
+  $self->handle_command('wait_for_element_present_ok','//a[contains(@class,"cke_button_wikitext")]',5000);
+  $self->handle_command('click_ok','//a[contains(@class,"cke_button_wikitext")]');
+  $self->handle_command('wait_for_element_present_ok','//textarea[contains(@class,"cke_source")]',5000);
+  $self->handle_command('type_ok','//textarea[contains(@class,"cke_source")]',$content);
+  $self->handle_command('wait_for_element_visible_ok','st-save-button-link',5000);
   $self->handle_command('click_and_wait','st-save-button-link');
-  $self->handle_command('wait_for_element_visible_ok', 'st-edit-button-link', 30000); 
-  $self->handle_command('pause',1000);
-  $self->handle_command('set_Speed',0);
 }
 
 
@@ -592,7 +581,7 @@ sub st_email_page {
     my ($self, $url, $email) = @_;
     $self->handle_command('open_ok',$url);
     $self->handle_command('wait_for_element_visible_ok','st-pagetools-email', 30000);
-    $self->handle_command('pause', 2000);
+    $self->handle_command('pause_ok', 2000);
     $self->handle_command('click_ok','st-pagetools-email');
     $self->handle_command('wait_for_element_visible_ok','st-email-lightbox', 30000);
     $self->handle_command('wait_for_element_visible_ok','email_recipient', 30000);
@@ -613,30 +602,15 @@ Performs a search, and then validates the result page has the correct title.
 
 
 sub st_search {
-    my ($self, $opt1, $opt2) = @_;
-    my $sel = $self->{selenium};
- 
-    $sel->type_ok('st-search-term', $opt1);
-    
-    if ($self->{'skin'} eq 's2') {
-        $sel->click_ok('link=Search');
-    } elsif ($self->{'skin'} eq 's3') {
-        $sel->click_ok('st-search-submit');
-    } else {
-        ok 0, "Unknown skin type: $self->{'skin'}";
-    }
-    
-    $sel->wait_for_page_to_load_ok($self->{selenium_timeout});
-    
-    $opt2 = '' unless defined $opt2;
+    my ($self, $searchFor, $resultTitle) = @_;
+    my $contentDiv = '//div[@id=\'content\']';
 
-    if ($self->{'skin'} eq 's2') {
-        $self->{selenium}->text_like('id=st-list-title', qr/\Q$opt2\E/);
-    } elsif ($self->{'skin'} eq 's3') {
-        $self->{selenium}->text_like('//div[@id=\'contentContainer\']', qr/\Q$opt2\E/);
-    } else {
-        ok 0, "Unknown skin type: $self->{'skin'}";
-    }
+    $self->handle_command('wait_for_element_visible_ok','st-search-term',5000);
+    $self->handle_command('wait_for_element_visible_ok','st-search-submit',5000);
+    $self->handle_command('type_ok','st-search-term',$searchFor);
+    $self->handle_command('click_and_wait','st-search-submit');
+    $self->handle_command('text_like',$contentDiv,$resultTitle );
+    
 }
 
 =head2 st_result( $expected_result )
@@ -646,17 +620,10 @@ Validates that the search result content contains a correct result.
 =cut
 
 sub st_result {
-    my ($self, $opt1, $opt2) = @_;
+    my ($self, $result) = @_;
+    my $contentDiv = '//div[@id=\'content\']';
 
-    if ($self->{'skin'} eq 's2') {
-        $self->{selenium}->text_like('id=st-search-content', 
-                                 $self->quote_as_regex($opt1));
-    } elsif ($self->{'skin'} eq 's3') {
-        $self->{selenium}->text_like('//div[@id=\'contentContainer\']', $self->quote_as_regex($opt1));
-    } else {
-        ok 0, "Unknown skin type: $self->{'skin'}";
-    }
-
+    $self->handle_command('text_like',$contentDiv,$result );
 }
 
 =head2 st_match_text ($match, $variable_name) 
@@ -772,25 +739,17 @@ sub st_watch_page {
  
     #which aspect of the HTML id we will look at to determine
     #If the correct value is set
-    my $s3_id_type;
-    if (defined($page_name) and length($page_name)>0) {
-        $s3_id_type = 'title';
-    } else {
-        $s3_id_type = 'class';
-    }
+    my $s3_id_type = 'title'; # legacy
     
-    my $s3_expected = $watch_on ? 'watch on' : 'watch';
-    my $is_s3 = 0;
-    if ($self->{'skin'} eq 's3') { 
-        $is_s3 = 1; 
-    } 
+    my $s3_expected = $watch_on ? 'Stop Watching' : 'Watch';
+    my $is_s3 = 1; #legacy
     $page_name = '' if $page_name and $page_name =~ /^#/; # ignore comments
     $verify_only = '' if $verify_only and $verify_only =~ /^#/; # ignore comments
 
     unless ($page_name) {
-        my $html_type = $is_s3 ? "a" : "img"; 
+        #my $html_type = $is_s3 ? "a" : "img";
             
-        return $self->_watch_page_xpath("//$html_type" . "[\@id='st-watchlist-indicator']", 
+        return $self->_watch_page_xpath("//li[\@id='st-watchlist-indicator']/a", 
                                         $watch_re, $verify_only, $s3_expected, $is_s3, $s3_id_type);
     }
 
@@ -1253,10 +1212,130 @@ sub st_click_reset_password {
 }
 
 sub type_lookahead_ok {
-    my ($self, $locator, $text) = @_;
+    die "Deprecated - Please use select-autocompleted-option-ok\n";
+}
+
+sub _autocomplete_element {
+    my $locator = shift;
+    my $element = qq{selenium.browserbot.findElement("$locator")};
+    return qq{
+        (function(){
+            var el = $element;
+            var win = el.ownerDocument.defaultView
+                ? el.ownerDocument.defaultView
+                : el.ownerDocument.parentWindow;
+            return win.jQuery(el);
+        })()
+    };
+}
+
+sub _autocomplete_widget {
+    my $locator = shift;
+    return _autocomplete_element($locator) . ".autocomplete('widget')";
+};
+
+sub _autocomplete_search {
+    my ($self, $locator, $type) = @_;
+
+    my $el = _autocomplete_element($locator);
+    my $widget = _autocomplete_widget($locator);
+
+    # Clear the auto complete
+    $self->{selenium}->get_eval(qq{$widget.find("li").remove()});
+
+    # Wait until our element is present
     $self->wait_for_element_present_ok($locator);
-    $self->type_ok($locator, $text);
-    $self->{selenium}->do_command("keyUp", $locator, substr($text,-1));
+
+    # Search for $type_text
+    $self->{selenium}->type_ok($locator, $type);
+    $self->{selenium}->get_eval(qq{$el.autocomplete("search", "$type")});
+
+    # Wait for items to be rendered
+    $self->wait_for_condition("$widget.find('li').size() > 0", 30000);
+
+    # return the number of li elements
+    return $self->get_eval("$widget.find('li').size()");
+}
+
+sub _autocomplete_trigger_event {
+    my ($self, $locator, $key) = @_;
+    my $el = _autocomplete_element($locator);
+    my $type = 'keydown.autocomplete';
+    $self->{selenium}->get_eval(
+        qq{$el.trigger({type:"$type",keyCode:window.jQuery.ui.keyCode.$key})}
+    );
+}
+
+sub _autocomplete_selected_option {
+    my ($self, $locator) = @_;
+    my $widget = _autocomplete_widget($locator);
+    my $text = $self->get_eval("$widget.find('.ui-state-hover').text()");
+    $text =~ s{\s*$}{};
+    $text =~ s{^\s*}{};
+    return $text;
+}
+
+sub _autocomplete_error {
+    my ($self, $locator) = @_;
+    my $widget = _autocomplete_widget($locator);
+    return $self->get_eval("$widget.find('.ui-autocomplete-error').text()")
+}
+
+sub has_autocompleted_options_ok {
+    my ($self, $locator, $type) = @_;
+    my $elements = $self->_autocomplete_search($locator, $type);
+    ok !$self->_autocomplete_error($locator), 'has_autocompleted_options';
+}
+
+sub has_no_autocompleted_options_ok {
+    my ($self, $locator, $type) = @_;
+    my $elements = $self->_autocomplete_search($locator, $type);
+    is $elements, 1, 'has_autocompleted_options';
+    is $self->_autocomplete_error($locator), "No matches for '$type'",
+        'has_no_autocompleted_options';
+}
+
+sub _autocompleted_option_exists {
+    my ($self, $locator, $type, $match) = @_;
+    my $elements = $self->_autocomplete_search($locator, $type);
+
+    # Click down until the correct item is selected
+    for (1 .. $elements) {
+        $self->_autocomplete_trigger_event($locator, 'DOWN');
+        if ($match eq $self->_autocomplete_selected_option($locator)) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+sub autocompleted_option_exists {
+    my ($self, $locator, $type, $match) = @_;
+    ok $self->_autocompleted_option_exists($locator, $type, $match),
+        "autocompleted_option_exists $match";
+}
+
+sub autocompleted_option_not_exists {
+    my ($self, $locator, $type, $match) = @_;
+    ok !$self->_autocompleted_option_exists($locator, $type, $match),
+        "autocompleted_option_not_exists $match";
+}
+
+sub select_autocompleted_option_ok {
+    my ($self, $locator, $type, $match) = @_;
+    $match ||= $type;
+
+    my $elements = $self->_autocomplete_search($locator, $type);
+
+    # Click down until the correct item is selected
+    for (1 .. $elements) {
+        $self->_autocomplete_trigger_event($locator, 'DOWN');
+        last if $match eq $self->_autocomplete_selected_option($locator);
+    }
+
+    # Just select the element we're on - this might just be the last match
+    $self->_autocomplete_trigger_event($locator, 'ENTER');
+    return;
 }
 
 sub st_unchecked_ok {
@@ -1271,6 +1350,7 @@ sub st_uneditable_ok {
 
 sub st_mobile_account_select_ok {
     my ($self, $accountdesc) = @_;
+    $self->handle_command('open_ok', '/st/m/signals');
     if ($self->_is_wikiwyg()) { 
         $self->wait_for_element_visible_ok($self->{st_mobile_account_select}, 30000);
         $self->wait_for_element_present_ok("link=$accountdesc",30000);
@@ -1355,15 +1435,8 @@ sub _click_user_row {
         $chk_xpath = "//tbody/tr[$row]$click_col";
         
         $sel->$method_name($chk_xpath);
-        if ($self->{'skin'} eq 's3') {
-            $self->click_and_wait('link=Save');
-            $sel->text_like('contentContainer', qr/\QChanges Saved\E/);
-         } elsif ($self->{'skin'} eq 's2') {
-            $self->click_and_wait('Button');
-            $sel->text_like('st-settings-section', qr/\QChanges Saved\E/);
-         } else {
-            ok 0, "Unknown skin type: $self->{'skin'}";
-        }
+        $self->click_and_wait('link=Save');
+        $sel->text_like('content', qr/\QChanges Saved\E/);
         return $chk_xpath;
     }
     ok 0, "Could not find '$email' in the table";

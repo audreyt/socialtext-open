@@ -1,0 +1,12 @@
+[%# vim: set ft=tt2 et sts=2 sw=2: %]
+<div class="widget">
+  <h1>[% loc('nav.news') %]</h1>
+  <div class="content">
+    <ul>
+      [% FOR rc = recent_changes %]
+        <li><a href="[% rc.link %]">[% rc.title %]</a></li>
+      [% END %]
+    </ul>
+    <div class="clear"></div>
+  </div>
+</div>

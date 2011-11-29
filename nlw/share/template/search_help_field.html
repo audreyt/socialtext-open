@@ -1,0 +1,30 @@
+[%# @COPYRIGHT@ -%]
+<p>
+  [% loc("info.available-search-fields:") %]
+</p>
+
+<ul>
+  <li>[% loc("heading.title") %]</li>
+  <li>[% loc("heading.category") %]</li>
+</ul>
+
+<p>
+  [% loc("info.search-field-syntax") %]
+</p>
+
+<pre>
+   title:[% loc("example.hello") %]
+   category:[% loc("example.help") %]
+</pre>
+
+<p>
+  [% loc("info.invalid-search-field") %]
+</p>
+
+<p>
+  [% loc('search.your-query-was=term', self.cgi.search_term) %].
+</p>
+
+<p>
+  [% loc("info.improving-search") %]
+</p>

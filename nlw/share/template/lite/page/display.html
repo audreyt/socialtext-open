@@ -1,0 +1,61 @@
+[%# @COPYRIGHT@ -%]
+[% USE decorate %]
+[% USE JSON %]
+[% PROCESS lite/header.html %]
+
+<script><!--
+var Socialtext = Socialtext || {};
+[% IF user %]
+Socialtext.username = [% user.username.json || "''" %];
+[% END %]
+[% IF ws %]
+Socialtext.wiki_title = [% ws.title.json || "''" %];
+[% END %]
+--></script>
+
+[% MACRO user_link BLOCK %]
+    [% name | decorate('user_link') %]
+[% END %]
+[% USE JSON %]
+<div class="content">
+    [% page_html %]
+</div>
+[% IF user_can_comment_on_page %]
+<hr>
+<div class="comment" data-role="content">
+<form name="commentform"
+      id="st-miki-comment-form"
+        method="post"
+        action="/m/page/[% ws.name %]/[% page.uri %]"
+        enctype="application/x-www-form-urlencoded">
+<div>
+<img align="left" src="[% user.small_photo || "/data/people/$user.user_id/small_photo" %]"/>
+<b style="margin-left: 3px; line-height: 30px">[% loc('comment.add:') %]</b>
+</div>
+<textarea name="comment_body" id="comment_textarea" class="comment_text_area" rows="2" cols="75">
+</textarea>
+<input type="hidden" name="subject" value="[% page.title %]" />
+<input type="hidden" name="revision" value="[% page.revision_num %]" />
+<input type="hidden" name="revision_id" value="[% page.revision_id %]" />
+<input type="hidden" name="action" value="comment" />
+<input id="st-miki-comment-submit" type="submit" data-theme="b" data-role="button" value="[% loc('comment.save') %]" />
+</form>
+</div>
+[% END %]
+<div class="pageinfo">
+    [% SET author = user_link(name=page.last_edited_by.user_id) %]
+    [% SET time = page.datetime_for_user %]
+    [% loc('page.last-updated=time,author', time, author) %]
+    [% IF attachments.size %]
+        <div class="attachments">
+            <p>[% loc('page.files:') %]</p>
+            <ul>
+                [% FOREACH row = attachments %]
+                    <li><a rel="external" href="/data/workspaces/[% ws.name %]/attachments/[% page.uri %]:[% row.id %]/original/[% row.filename | uri %]">[% row.filename | html %]</a></li>
+                [% END %]
+            </ul>
+        </div>
+    [% END %]
+</div>
+            
+[% PROCESS lite/footer.html %]

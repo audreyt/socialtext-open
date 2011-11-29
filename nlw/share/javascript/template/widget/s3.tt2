@@ -1,0 +1,62 @@
+[%- 
+    IF gadget.class;
+        class = gadget.class;
+    ELSIF gadget.fixed;
+        class = 'tan';
+    ELSE;
+        class = 'regular';
+    END
+-%]
+<li id="gadget-[% gadget.instance_id %]" class="gadgetElement [% gadget.fixed ? "fixed" : "draggable" %]">
+<div class="[% class %] widget">
+    <input type="hidden" name="instance_id" value="[% gadget.instance_id %]"/>
+    <input type="hidden" name="gadget_id" value="[% gadget.gadget_id %]"/>
+    <div class="widgetHeader">
+        <div class="widgetHeaderTitle">
+            [% IF !gadget.fixed %]<img class="icon" src="[% share %]/images/[% gadget.icon %].png" />[% END %]
+            <span id="gadget-[% gadget.instance_id %]-title-text" class="widgetHeaderTitleText" title="[% gadget.title %]">
+                [% gadget.title %]
+            </span>
+        </div>
+        <div class="widgetHeaderButtons" style="[% UNLESS editing || !gadget.fixed %]display: none[% END %]">
+            [% IF gadget.classes.cannot_remove %]
+                <div style="width:10px; float:right; height:15px"></div>
+            [% ELSE %]
+                <a class="close" href="#" onclick="gadgets.container.remove('[% gadget.instance_id %]'); return false"></a>
+            [% END %]
+            <a class="minimize" href="#" onclick="gadgets.container.minimize('[% gadget.instance_id %]'); return false"></a>
+            [% IF gadget.minimized %]
+                <script><!--
+                    jQuery(function(){
+                        /* Set the second arg isInitialCall to true to
+                         * suppress the call to update_layout -- {bz: 1491}
+                         */
+                        gadgets.container.minimize('[% gadget.instance_id %]', true);
+                    });
+                --></script>
+            [% END %]
+            <a class="settings" [% UNLESS gadget.has_prefs %]style="display:none"[% END %] href="#" id="gadget-[% gadget.instance_id %]-settings" onclick="gadgets.container.toggleSetup('[% gadget.instance_id %]'); return false"></a>
+            [% IF editing %]
+                <a class="fix [% gadget.fixed ? "fixed" : "unfixed" %]" href="#" onclick="gadgets.container.fix('[% gadget.instance_id %]'); return false"></a>
+            [% END %]
+        </div>
+    </div><!-- widgetHeader END -->
+
+    <div class="widgetContent">
+        <div id="gadget-[% gadget.instance_id %]-preferences" class="preferences [% IF gadget.incomplete %]visible[% ELSE %]hidden[% END %]">
+            [% INCLUDE widget/preferences.tt2 %]
+        </div>
+        <div id="gadget-[% gadget.instance_id %]-content" class="gadgetContent [% IF gadget.incomplete %]hidden[% ELSE %]visible[% END %]">
+            [% IF gadget.content_type == 'inline'; INCLUDE widget/inline.tt2; ELSE; INCLUDE widget/iframe.tt2; END %]
+            <div class="clear"></div>
+        </div>
+        [% IF editing && !gadget.parent_instance_id  %]
+        <div id="gadget-[% gadget.instance_id %]-push" class="widgetPush">
+            <input class="push-widget" name="[% gadget.title %]" id="push_[% gadget.instance_id %]" type="checkbox" /> <label for="push_[% gadget.instance_id %]">[% loc('widget.push-all') %]</label>
+        </div>
+        
+        [% END %]
+    </div><!-- widgetContent END -->
+    <div class="widgetBottom"><div class="widgetBottomRight"></div></div><!-- widgetBottom END -->                                
+</div><!-- widget END -->
+</li>

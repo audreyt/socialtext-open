@@ -10,10 +10,19 @@ use FindBin '$RealBin';
 use lib "$RealBin/../lib";
 use Socialtext::l10n::DevUtils;
 use Socialtext::JSON;
+use List::MoreUtils 'uniq';
 
 chdir "$RealBin/..";
 
-if (!@ARGV) {
+if (@ARGV) {
+    my %DerivedFrom = qw(
+        zz    en
+        zq    en
+        zh_TW zh_CN
+    );
+    @ARGV = uniq map { $DerivedFrom{$_} // $_ } @ARGV;
+}
+else {
     @ARGV = map {
         s!^share/l10n/(.+)/lib\.po!$1!; $_
     } glob("share/l10n/*/lib.po")
@@ -78,8 +87,6 @@ for my $lang (sort { en($a) cmp en($b) } @ARGV) {
     gen_js('zq' => \%zq);
 }
 
-system("dev-bin/jsmake 2>/dev/null");
-
 say $_ for sort @outs;
 
 sub zz {
@@ -107,9 +114,10 @@ sub gen_js {
     if ($lang ne 'en') {
         $lexicon = { %EnglishLexicon, %$lexicon };
     }
-    my $js_file = "share/skin/s3/javascript/l10n/$lang.js";
+    mkdir "share/javascript/l10n" unless -d "share/javascript/l10n";
+    my $js_file = "share/javascript/l10n/$lang.js";
     open my $js, '>:utf8', $js_file;
-    print $js ";var Socialtext = Socialtext || {}; Socialtext.loc_lang = Socialtext.loc_lang || '$lang'; var LocalizedStrings={\"$lang\":{\n";
+    print $js ";var Socialtext = Socialtext || function(){}; Socialtext.loc_lang = Socialtext.loc_lang || '$lang'; var LocalizedStrings={\"$lang\":{\n";
     my $json = encode_json $lexicon;
     utf8::decode($json);
     $json =~ s/\\ufffc/\\n/g;
@@ -129,6 +137,8 @@ sub gen_po {
     my $en_po = "share/l10n/en.po";
     $en_po = $use_first = '' if $lang eq 'en';
     system("msgcat --width 99999 $use_first -s @{[reverse sort glob(qq[share/l10n/$lang/*.po])]} $en_po > $po_file");
+    #my @diff_lines = grep { /^(?!---|\+\+\+)[-+]/ and not /PO-Revision-Date/ } qx(git diff $po_file);
+    #system(git => checkout => $po_file) unless @diff_lines;
     if ($lang ne 'en') {
         system("msgcat --width 99999 $use_first -s @{[reverse sort glob(qq[share/l10n/$lang/*.po])]} > $po_file.orig");
         system("diff -du $po_file.orig $po_file | grep ^+ > $po_file.diff");
@@ -577,6 +587,8 @@ use constant CN2TW => {qw(
     日歷         日曆
     卷動         捲動
     舍棄         捨棄
+    頁眉         頁首
+    頁腳         頁尾
 
     里           裡
     贊           讚

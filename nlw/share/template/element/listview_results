@@ -1,0 +1,51 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+<div class="grid_24">
+  <table class="dataTable fixed" cellspacing="0">
+    [% FOREACH row = rows %]
+      [% row = load_row_times(row) %]
+      [% IF !partial_set AND loop.count - 1 < offset %][% NEXT %][% END %]
+      [% IF !partial_set AND loop.count > last %][% BREAK %][% END %]
+      [% IF loop.count % 2 %]<tr class="oddRow">[% ELSE %]<tr>[% END %]
+        <td width="30"><input type="checkbox" name="page_selected" class="st-listview-selectpage-checkbox" value="[% row.workspace_name %]:[% row.page_uri %]"/></td>
+        <td>
+          [% IF row.is_spreadsheet %]
+             <img class="pageType" src="[% static_path %]/images/icons/sheet-black-15.png" />
+          [% ELSIF row.is_attachment %]
+             <img class="pageType" src="[% static_path %]/images/icons/attachment-black-15.png" />
+          [% ELSE %]
+             <img class="pageType" src="[% static_path %]/images/icons/document-black-15.png" />
+          [% END %]
+          [% FILTER decorate('search_result_title', [row]) %]
+          [% IF row.is_attachment %]
+            <a class="titleLink" href="/data/workspaces/[% row.workspace_name || current_workspace.name %]/attachments/[% row.page_uri %]:[% row.id %]/original/[% row.document_title %]">[% row.document_title %]</a>
+            [% loc('file.attached-to-page') %]
+            <a href="/[% row.workspace_name || current_workspace.name %]/[% row.page_uri %]">[% row.Subject | html %]</a>
+          [% ELSE %]
+            <a class="titleLink" href="/[% row.workspace_name || current_workspace.name %]/[% row.page_uri %]">[% row.Subject | html %]</a>
+          [% END %]
+          [% IF row.workspace_title %][% loc('info.in') %] <a href="/[% row.workspace_name %]">[% row.workspace_title %]</a>[% END %]
+          [% END %]
+          [% IF summaries %]
+            <div class="summary">[% row.Summary %]</div>
+            [% IF row.edit_summary %]
+              <div class="edit_summary">[% loc('nav.summary') %]: [% row.edit_summary %]</div>
+            [% END %]
+          [% END %]
+          <div class="byline">
+            <span class="originally-created-by">[% loc('page.creator') %] [% row.creator | decorate('user_avatar') %] [% loc('info.on') %] [% row.create_time_local %]</span>.
+            <span class="byline-separator">&nbsp;</span>
+            <span class="last-updated-by">[% loc('page.last-updated') %] [% row.username | decorate('user_avatar') %] [% loc('info.on') %] [% row.DateLocal %].</span>
+            <span class="revision-count">(<a href="/[% (row.workspace_name || current_workspace.name) %]/?action=revision_list;page_name=[% row.page_uri %]">[% loc('page.revisions=count', row.revision_count) %]</a>)</span>
+          </div>
+        </td>
+        [% IF listview_extra_columns.watchlist %]
+          <td class="listview-watchlist">
+            <a id="st-watchlist-indicator-[% row.page_uri %]" class="on watch" href="#" title="[% loc('watch.stop') %]">[% loc('watch.stop') %]</a>
+          </td>
+        [% END %]
+      </tr>
+    [% END %]
+  </table>
+</div>
+<div class="clear"></div>

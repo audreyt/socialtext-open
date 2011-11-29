@@ -23,19 +23,7 @@ const cgi_class => 'Socialtext::RenamePage::CGI';
 
 sub register {
     my $self = shift;
-    $self->hub->registry->add(action => 'rename_popup');
     $self->hub->registry->add(action => 'rename_page');
-}
-
-sub rename_popup {
-    my $self = shift;
-    my %p = @_;
-    return encode_json(\%p) if $self->cgi->json;
-    return $self->template_process(
-        'popup/rename',
-        %p,
-        $self->hub->helpers->global_template_vars,
-    );
 }
 
 sub rename_page {
@@ -45,30 +33,19 @@ sub rename_page {
     my $new_id = Socialtext::String::title_to_id($new_title);
 
     if ( $self->_page_title_bad($new_title)) {
-        return $self->rename_popup(
-            page_title_bad => 1,
-        );
+        return encode_json({ page_title_bad => 1 });
     }
     elsif ( Socialtext::String::MAX_PAGE_ID_LEN < length $new_id ) {
-        return $self->rename_popup(
-            page_title_too_long => 1,
-        );
+        return encode_json({ page_title_too_long => 1 });
     }
     elsif ( $new_title eq $self->hub->pages->current->title ) {
-        return $self->rename_popup( same_title => 1 );
+        return encode_json({ same_title => 1 });
     }
     elsif ( $self->_rename() ) {
-        return encode_json({done=>1}) if $self->cgi->json;
-        return $self->template_process('close_window.html',
-            before_window_close => q{window.opener.location='} .
-                Socialtext::AppConfig->script_name . '?' .
-                $new_id . q{';},
-        );
+        return encode_json({done=>1});
     }
 
-    return $self->rename_popup(
-        page_exists => 1,
-    );
+    return encode_json({ page_exists => 1 });
 }
 
 sub _rename {

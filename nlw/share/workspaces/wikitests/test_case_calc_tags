@@ -1,10 +1,10 @@
-| *Comment* | Test Case Calc: Tags |
+| *Comment* | Test Case Calc: Tags |  |
 
 | *Comment* | Test Case Calc: Tags Create tag1 page tagged tag1 |  |
 
 | open_ok | %%workspace%%/index.cgi?action=display;page_type=spreadsheet;page_name=tag1%20content%20spreadsheet%20%%start_time%%#edit |  |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
-| pause | 5000 | I hate pause; needed for entire page load |
+| pause | 15000 | I hate pause; needed for entire page load |
 | st-page-save |  |  |
 | wait_for_element_visible_ok | st-tags-addlink | 30000 |
 | click_ok | st-tags-addlink |  |
@@ -21,7 +21,7 @@
 
 | open_ok | %%workspace%%/index.cgi?action=display;page_type=spreadsheet;page_name=tag12%20content%20spreadsheet%20%%start_time%%#edit |  |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
-| pause | 5000 | I hate pause; needed for entire page load |
+| pause | 15000 | I hate pause; needed for entire page load |
 | st-page-save |  |  |
 | wait_for_element_visible_ok | st-tags-addlink | 30000 |
 | click_ok | st-tags-addlink |  |
@@ -38,7 +38,7 @@
 
 | open_ok | %%workspace%%/index.cgi?action=display;page_type=spreadsheet;page_name=tag2%20content%20spreadsheet%20%%start_time%%#edit |  |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
-| pause | 5000 | I hate pause; needed for entire page load |
+| pause | 15000 | I hate pause; needed for entire page load |
 | st-page-save |  |  |
 | wait_for_element_visible_ok | st-tags-addlink | 30000 |
 | click_ok | st-tags-addlink |  |
@@ -59,16 +59,16 @@ click on several page links | Pages appear; each page has its that tag displayed
 | open_ok | %%workspace%%/index.cgi?action=category_list |  |
 | wait_for_element_present_ok | link=tag2 %%start_time%% |  |
 | text_like | link=tag2 %%start_time%% | tag2 %%start_time%% |
-| clickAndWait | link=tag2 %%start_time%% |  |
-| clickAndWait | link=tag2 content spreadsheet %%start_time%% |  |
+| click_and_wait | link=tag2 %%start_time%% |  |
+| click_and_wait | link=tag2 content spreadsheet %%start_time%% |  |
 | text_like | link=tag2 %%start_time%% | tag2 %%start_time%% |
 
 | *Comment* | Test Case Calc: Tags Checking tag1 links and pages |  |
 
 | open_ok | %%workspace%%/index.cgi?action=category_list |  |
 | text_like | link=tag1 %%start_time%% | tag1 %%start_time%% |
-| clickAndWait | link=tag1 %%start_time%% |  |
-| clickAndWait | link=tag1 content spreadsheet %%start_time%% |  |
+| click_and_wait | link=tag1 %%start_time%% |  |
+| click_and_wait | link=tag1 content spreadsheet %%start_time%% |  |
 | text_like | link=tag1 %%start_time%% | tag1 %%start_time%% |
 
 click: View {link: Category as a weblog} | All pages with that tag appear in weblog form
@@ -92,15 +92,15 @@ Go to All Tags | The deleted tag should not appear in list
 
 | *Comment* | Test Case Calc: Tags Delete a tag from all pages |  |
 | open_ok | /%%workspace%%/index.cgi?tag1_content_spreadsheet_%%start_time%% |  |
-| wait_for_element_visible_ok | //a[@class='delete_tag'] | 30000 |
-| click_ok | //a[@class='delete_tag'] |  |
+| wait_for_element_visible_ok | //a[@class='delete_icon'] | 30000 |
+| click_ok | //a[@class='delete_icon'] |  |
 
 | *Comment* | Test Case Calc: Tags first wait |  |
 | wait_for_text_not_present_ok | Tag 1 %%start_time%% | 30000 |
 
 | open_ok | /%%workspace%%/index.cgi?tag12_content_spreadsheet_%%start_time%% |  |
-| wait_for_element_visible_ok | //a[@class='delete_tag'] | 30000 |
-| click_ok | //a[@class='delete_tag'] |  |
+| wait_for_element_visible_ok | //a[@class='delete_icon'] | 30000 |
+| click_ok | //a[@class='delete_icon'] |  |
 
 | *Comment* | Test Case Calc: Tags second wait |  |
 | wait_for_text_not_present_ok | Tag 2 %%start_time%% | 30000 |
@@ -109,7 +109,7 @@ Go to All Tags | The deleted tag should not appear in list
 | st-process-jobs | PageIndex |  |
 
 | open_ok | %%workspace%%/index.cgi?action=category_list |  |
-| text_unlike | contentContainer | tag1 %%start_time%% |
+| text_unlike | content | tag1 %%start_time%% |
 
 Make a new page and add a new tag (a tag not already in use in workspace) | tag is added
 Delete this page. | Page is deleted. This tag now has zero pages.
@@ -126,11 +126,11 @@ Go to All Tags | The tag from the deleted page should not appear in list.
 | st-process-jobs | PageIndex |  |
 
 | open_ok | %%workspace%%/index.cgi?action=category_list |  |
-| text_unlike | contentContainer | tag2 %%start_time%% |
+| text_unlike | content | tag2 %%start_time%% |
 
 | *Comment* | Test Case Calc: Tags Teardown |  |
 
 | st-admin | purge-page --w %%workspace%% --page tag1_content_spreadsheet_%%start_time%% | was purged |
 | st-admin | purge-page --w %%workspace%% --page tag12_content_spreadsheet_%%start_time%% | was purged |
 
-| *Comment* | Test Case Calc: Tags COMPLETED |
+| *Comment* | Test Case Calc: Tags COMPLETED |  |

@@ -25,51 +25,99 @@ sub register {
     my $registry = shift;
     $registry->add(action => 'changes'); # used for displaying all
     $registry->add(action => 'recent_changes_html');
-    $registry->add(preference => $self->changes_depth);
-    $registry->add(preference => $self->include_in_pages);
-    $registry->add(preference => $self->sidebox_changes_depth);
     $registry->add(wafl => 'recent_changes' => 'Socialtext::RecentChanges::Wafl' );
     $registry->add(
         wafl => 'recent_changes_full' => 'Socialtext::RecentChanges::Wafl' );
+
+    $self->_register_prefs($registry);
+}
+
+sub pref_names {
+    return qw(changes_depth include_in_pages sidebox_changes_depth);
+}
+
+sub changes_depth_data {
+    my $self = shift;
+
+    return {
+        title => loc('wiki.timeframe-for-changes'),
+        default_setting => 7,
+        options => [
+            {setting => 1, display => __('last.24hours')},
+            {setting => 2, display => __('last.2days')},
+            {setting => 3, display => __('last.3days')},
+            {setting => 7, display => __('last.week')},
+            {setting => 14, display => __('last.2weeks')},
+            {setting => 31, display => __('last.month')},
+        ],
+    };
 }
 
 sub changes_depth {
     my $self = shift;
+
+    my $data = $self->changes_depth_data;
     my $p = $self->new_preference('changes_depth');
-    $p->query(__('config.changes-depth?'));
+
+    $p->query($data->{title});
     $p->type('pulldown');
-    my $choices = [
-        1 => __('last.24hours'),
-        2 => __('last.2days'),
-        3 => __('last.3days'),
-        7 => __('last.week'),
-        14 => __('last.2weeks'),
-        31 => __('last.month'),
-    ];
-    $p->choices($choices);
-    $p->default(7);
+    $p->choices($self->_choices($data));
+    $p->default($data->{default_setting});
+
     return $p;
+}
+
+sub sidebox_changes_depth_data {
+    my $self = shift;
+
+    return {
+        title => loc('settings.number-of-items-to-show'),
+        default_setting => 4,
+        depends_on => 'include_in_pages',
+        options => [
+            map { {setting => $_, display => $_ } } qw(2 4 6 7 10 15 20)
+        ],
+    };
 }
 
 sub sidebox_changes_depth {
     my $self = shift;
+
+    my $data = $self->sidebox_changes_depth_data;
     my $p = $self->new_preference('sidebox_changes_depth');
-    $p->query(__('wiki.sidebox-number-of-changes?'));
+
+    $p->query($data->{title});
     $p->type('pulldown');
-    my $choices = [
-        2 => 2, 4 => 4, 6 => 6, 8 => 8, 10 => 10, 15 => 15, 20 => 20
-    ];
-    $p->choices($choices);
-    $p->default(4);
+    $p->choices($self->_choices($data));
+    $p->default($data->{default_setting});
+
     return $p;
+}
+
+sub include_in_pages_data {
+    my $self = shift;
+
+    return {
+        title => loc("wiki.recent-changes-sidebar-widget"),
+        binary => 1,
+        default_setting => 0,
+        options => [
+            {setting => '1', display => loc('do.enabled')},
+            {setting => '0', display => loc('do.disabled')},
+        ],
+    };
 }
 
 sub include_in_pages {
     my $self = shift;
+
+    my $data = $self->include_in_pages_data;
     my $p = $self->new_preference('include_in_pages');
-    $p->query(__('wiki.show-sidebox?'));
+
+    $p->query($data->{title});
     $p->type('boolean');
-    $p->default(0);
+    $p->default($data->{default_setting});
+
     return $p;
 }
 
@@ -92,8 +140,6 @@ sub recent_changes {
         $self->sortdir,
         miki_url      => $self->hub->helpers->miki_path('recent_changes_query'),
         feeds         => $self->_feeds( $self->hub->current_workspace ),
-        unplug_uri    => "?action=unplug",
-        unplug_phrase => loc('info.unplug-recent=count', $self->hub->tiddly->default_count),
         Socialtext::Pageset->new(
             cgi => {$self->cgi->all},
             total_entries => $self->result_set->{hits},

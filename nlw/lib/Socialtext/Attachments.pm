@@ -11,6 +11,7 @@ use Socialtext::Timer qw/time_scope/;
 use Socialtext::SQL qw/:exec :txn/;
 use Socialtext::Attachment;
 use Socialtext::Permission 'ST_READ_PERM';
+use Socialtext::Client::Wiki qw( wiki2html );
 
 use namespace::clean -except => 'meta';
 
@@ -251,6 +252,7 @@ sub inline_all {
     for my $att (@$attachments) {
         $body_new .= $att->image_or_file_wafl();
     }
+    $body_new = wiki2html($body_new) if $page->page_type eq 'xhtml';
     $body_new .= $$body_ref;
     $body_ref = \$body_new;
     $page->body_ref(\$body_new);

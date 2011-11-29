@@ -75,11 +75,6 @@ sub create_zip {
         }
     }
 
-    for my $css ( $self->{hub}->skin->css_files ) {
-        my $file = Socialtext::File::catfile( $dir, basename($css) );
-        copy( $css => $file ) or die "can't copy skin file: $!";
-    }
-
     system( 'zip', '-q', '-r', '-j', $zip_file, $dir )
         and die "zip of $dir into $zip_file failed: $!";
 

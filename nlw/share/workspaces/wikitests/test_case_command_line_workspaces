@@ -96,11 +96,12 @@ show-impersonators
 
 | st-admin | show-impersonators | qr/The command you called \(show-impersonators\) requires an account or a workspace to be specified/ |
 | st-admin | add-workspace-impersonator --workspace %%cmdline_workspace%% --email devnull1@socialtext.com | devnull1@socialtext.com already has the role of 'admin' in the %%cmdline_workspace%% |
+| st-admin | add-workspace-admin --workspace %%cmdline_workspace%% --email %%username%% | now has the role |
 | st-admin | remove-workspace-admin --email devnull1@socialtext.com --workspace %%cmdline_workspace%% | no longer has the role of 'admin' |
 | st-admin | add-workspace-impersonator --workspace %%cmdline_workspace%% --email devnull1@socialtext.com | devnull1@socialtext.com now has the role of 'impersonator' in the %%cmdline_workspace%% |
 | st-admin | show-impersonators --workspace %%cmdline_workspace%% | qr/Email Address.+First.+Last.+devnull1\@socialtext.com/ |
 
-| *Comment* | Test Case: Command Line Tests WORKSPACE Add users from a workspace |
+| *Comment* | Test Case: Command Line Tests WORKSPACE Add users from a workspace |  |
 | st-admin | add-users-from | qr/The command you called \(add-users-from\) requires a workspace to be specified.+A workspace is identified by name with the --workspace option/ |
 | st-admin | add-users-from --workspace fake-workspace | No workspace named "fake-workspace" could be found. |
 | st-admin | add-users-from --workspace %%workspace%% | qr/The command you called \(add-users-from\) requires a workspace to be specified.+A workspace is identified by name with the --target option/ |
@@ -108,7 +109,7 @@ show-impersonators
 | st-admin | add-users-from --workspace %%workspace%% --target %%target_workspace%% | The following users from the %%workspace%% workspace were added to the %%target_workspace%% workspace |
 
 | *Comment* | Test Case: Command Line Tests WORKSPACE show-workspace-config |  |
-| st-admin | show-workspace-config --workspace %%cmdline_workspace%% | qr/Config for %%cmdline_workspace%% Workspace.+account_id.+allows_html_wafl.+allows_skin_upload.+basic_search_only.+cascade_css.+comment_by_email.+comment_form_note_bottom.+comment_form_note_top.+comment_form_window_height.+created_by_user_id.+creation_datetime.+custom_title_label.+customjs_uri.+email_addresses_are_hidden.+email_notification_from_address.+email_notify_is_enabled.+email_weblog_dot_address.+enable_unplugged.+external_links_open_new_window .+header_logo_link_uri.+homepage_is_dashboard.+homepage_weblog.+incoming_email_placement.+invitation_filter.+invitation_template.+logo_uri.+no_max_image_size.+page_title_prefix.+prefers_incoming_html_email.+restrict_invitation_to_search.+show_title_below_logo.+show_welcome_message_below_logo.+skin_name.+sort_weblogs_by_create.+title.+unmasked_email_domain.+workspace_id.+ping URIs.+custom comment form fields/ |
+| st-admin | show-workspace-config --workspace %%cmdline_workspace%% | qr/Config for %%cmdline_workspace%% Workspace.+account_id.+allows_html_wafl.+basic_search_only.+cascade_css.+comment_by_email.+comment_form_note_bottom.+comment_form_note_top.+comment_form_window_height.+created_by_user_id.+creation_datetime.+custom_title_label.+customjs_uri.+email_addresses_are_hidden.+email_notification_from_address.+email_notify_is_enabled.+email_weblog_dot_address.+external_links_open_new_window .+header_logo_link_uri.+homepage_is_dashboard.+homepage_weblog.+incoming_email_placement.+invitation_filter.+invitation_template.+logo_uri.+no_max_image_size.+page_title_prefix.+prefers_incoming_html_email.+restrict_invitation_to_search.+show_title_below_logo.+show_welcome_message_below_logo.+sort_weblogs_by_create.+title.+unmasked_email_domain.+workspace_id.+ping URIs.+custom comment form fields/ |
 
 | st-admin | set-workspace-config | qr/The command you called \(set-workspace-config\) requires a workspace to be specified/ |
 | *Comment* | Test Case: Command Line Tests set-workspace config accepts no third argument |  |
@@ -160,7 +161,7 @@ the `--dir` option is not being tested. Testing it would require specifying a di
 | st-admin | clone-workspace --workspace %%cmdline_workspace%% --target %%cmdline_workspace%%-clone | qr/Cannot restore %%cmdline_workspace%%-clone workspace, it already exists/ |
 | st-admin | clone-workspace --workspace %%cmdline_workspace%% --target %%cmdline_workspace%%-clone --overwrite | qr/The %%cmdline_workspace%% workspace has been cloned to %%cmdline_workspace%%-clone/ |
 | st-admin | add-member --w %%cmdline_workspace%%-clone --e %%email%% |  |
-| pause | 5000 | open_ok was failing with no notice; matt inserted a modes pause |
+| pause | 15000 | open_ok was failing with no notice; matt inserted a modes pause |
 | open_ok | /%%cmdline_workspace%%-clone/index.cgi |  |
 | location_like | /%%cmdline_workspace%%-clone |  |
 
@@ -188,7 +189,7 @@ rename-workspace --workspace --name
 | st-admin | list-workspaces | qr/zomg_%%start_time%%/ |
 | st-admin | rename-workspace --workspace zomg_%%start_time%% --name %%cmdline_workspace%%_2 | qr/The zomg_%%start_time%% workspace has been renamed to %%cmdline_workspace%%_2/ |
 
- list-workspaces [--ids]
+list-workspaces [--ids]
 
 | st-admin | list-workspaces | qr/%%cmdline_workspace%%/ |
 
@@ -210,7 +211,7 @@ purge-attachment
 TODO: figure out a way to calculate the attachment ID
 st-admin | purge-attachment --workspace %%cmdline_workspace%% --page example_page_project_tracking --attachment 20100401162154-11-29454 | attachment was purged from Example Page: Project Tracking page in the %%cmdline_workspace%% workspace. |
 
- search-categories --workspace --search
+search-categories --workspace --search
 delete-category --workspace [--category or --search]
 
 | *Comment* | Test Case: Command Line Tests WORKSPACE search-categories and delete-categories have some odd capitalization schemes for "Welcome" tag |  |

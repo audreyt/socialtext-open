@@ -1,0 +1,19 @@
+@mixin opacity($percent)
+  filter: alpha(opacity = $percent) // IE
+  opacity: ($percent / 100)
+
+@mixin gradient($from, $to)
+  background-color: $from
+  background: -webkit-gradient(linear, 0% 40%, 0% 70%, from($from), to($to))
+  background: -moz-linear-gradient(top,  $from,  $to)
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#{$from}, endColorstr=#{$to})
+
+@mixin dropshadow($x,$y,$strength,$color)
+  -moz-box-shadow: #{$x}px #{$y}px #{$strength}px $darkest
+  -webkit-box-shadow: #{$x}px #{$y}px #{$strength}px $darkest
+  box-shadow: #{$x}px #{$y}px #{$strength}px $darkest
+  /* For IE 8 */
+  -ms-filter: progid:DXImageTransform.Microsoft.Shadow(Strength=#{$strength}, Direction=180, Color='#{$color}')
+  /* For IE 5.5 - 7 */
+  filter: progid:DXImageTransform.Microsoft.Shadow(Strength=#{$strength}, Direction=180, Color=#{$color})
+  *margin-bottom: -#{$strength}px

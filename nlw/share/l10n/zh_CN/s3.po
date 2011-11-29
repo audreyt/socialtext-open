@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Socialtext i18n\n"
-"PO-Revision-Date: 2011-06-15 13:01-0700\n"
+"PO-Revision-Date: 2011-09-28 18:42+0800\n"
 "Last-Translator: Socialtext i18n team\n"
 "Language-Team: Socialtext i18n team\n"
 "MIME-Version: 1.0\n"
@@ -247,6 +247,18 @@ msgstr "用户无需登录即可查看页面。"
 #: share/skin/s3/template/element/settings/workspaces_settings_features_section:43
 msgid "config.yes"
 msgstr "是"
+
+msgid "diff.highlight"
+msgstr "高亮检视"
+
+msgid "diff.html-view"
+msgstr "HTML 检视"
+
+msgid "diff.view"
+msgstr "检视"
+
+msgid "diff.wikitext"
+msgstr "源码格式"
 
 #: share/skin/s3/javascript/lightbox/attachment.tt2:28 share/skin/s3/javascript/lightbox/email.tt2:28
 msgid "do.add"
@@ -513,7 +525,7 @@ msgstr "您刚才编辑的%1显示如下。您可以从此处复制粘贴您的�
 
 #: share/skin/s3/template/view/page_locked:17
 msgid "edit.view-locked"
-msgstr "您的更改的原始wikitext 如下。您可以从此处复制您的更改。"
+msgstr "您的更改的源码格式如下。您可以从此处复制您的更改。"
 
 #: share/skin/s3/template/lite/page/contention.html:7 share/skin/s3/template/lite/page/page_locked.html:7
 msgid "edit.view-unsaved:"
@@ -646,7 +658,7 @@ msgstr "名为“%1”的页面不存在"
 #. (loc("page.type-"+type)
 #: share/skin/s3/javascript/lightbox/create_content.js:73
 msgid "error.no-page=type,tag"
-msgstr "找不到有“%2”标签的%1"
+msgstr "找不到有“模板”或“template”标签的页面"
 
 #: share/skin/s3/javascript/lightbox/email.js:126
 msgid "error.no-recipient"
@@ -1026,7 +1038,7 @@ msgstr "或通过邮件发布"
 #. (support_address)
 #: share/skin/s3/template/element/settings/workspaces_permissions_section:11
 msgid "info.public-wiki"
-msgstr "如果您想要无需登陆即可让用户查看的公共工作区，请联系<a href=\"%1\">Socialtext客服支持</a>."
+msgstr "如果您想要无需登录即可让用户查看的公共工作区，请联系<a href=\"%1\">Socialtext客服支持</a>."
 
 #: share/skin/s3/template/element/settings/users_settings_section:43
 msgid "info.relogin"
@@ -1674,6 +1686,9 @@ msgstr "%1的副本"
 msgid "page.edit"
 msgstr "编辑"
 
+msgid "page.edit-as-xhtml"
+msgstr "编辑"
+
 #. (page.title)
 #: share/skin/s3/template/lite/page/edit.html:2
 msgid "page.edit=title"
@@ -1830,6 +1845,9 @@ msgstr "电子表格"
 msgid "page.type-wiki"
 msgstr "页面"
 
+msgid "page.type-xhtml"
+msgstr "页面"
+
 #: share/skin/s3/template/view/page/display:96
 msgid "page.unlock"
 msgstr "解锁页面"
@@ -1902,7 +1920,7 @@ msgstr "由："
 
 #: share/skin/s3/template/view/page/revision_compare:32
 msgid "revision.color"
-msgstr "颜色查看（无格式的）"
+msgstr "以源码格式检视"
 
 #: share/skin/s3/template/view/page/revision_compare:49
 msgid "revision.compare"
@@ -1959,7 +1977,7 @@ msgstr "标签："
 
 #: share/skin/s3/template/view/page/revision_compare:34
 msgid "revision.view"
-msgstr "查看含格式的"
+msgstr "以显示格式检视"
 
 #: share/skin/s3/template/view/listview:44 share/skin/s3/template/view/listview:57
 msgid "search.be-more-specific"
@@ -2343,6 +2361,12 @@ msgstr "公开的工作区"
 #: share/skin/s3/template/element/workspace_list/public_workspaces:5
 msgid "wiki.public:"
 msgstr "您可以自由查看或编辑这些公开工作区："
+
+msgid "wiki.search"
+msgstr "此工作区"
+
+msgid "wiki.search-all"
+msgstr "我的工作区"
 
 #: share/skin/s3/template/element/search_form:23
 msgid "wiki.search-all:"

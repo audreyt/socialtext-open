@@ -1,67 +1,49 @@
-
 | *Comment* | Test Case: Add Comment |
 
+| set | comment_nosignal | Do not signal this comment %%start_time%% |  |  |
+| set | comment_signal | Do signal this comment %%start_time%% |  |  |
 
-| set | comment_nosignal | Do not signal this comment %%start_time%% |
-| set | comment_signal | Do signal this comment %%start_time%% |
+| *Comment* | Test Case: Add Comment Create Test Page |  |  |  |
 
-| *Comment* | Test Case: Add Comment Create Test Page |  |
-| open_ok | /%%workspace%%/?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | st-newpage-pagename-edit | Comment Test Page %%start_time%% |
-| type_ok | wikiwyg_wikitext_textarea | Comment Test Page Content %%start_time%% |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+| call | [st-edit-new-page] | ws=%%workspace%% | title=Comment Test Page %%start_time%% | content=Comment Test Page Content %%start_time%% |
 
-| *Comment* | Test Case: Add Comment top comment button |  |
-| wait_for_element_visible_ok | st-comment-button-link | 30000 |
-| click_ok | st-comment-button-link |  |
-| wait_for_element_visible_ok | comment | 30000 |
+| *Comment* | Test Case: Add Comment comment button |  |
+| wait_for_element_visible_ok | //li[@id="st-comment-button"]/a | 30000 |
+| click_ok | //li[@id="st-comment-button"]/a |  |
+| wait_for_element_visible_ok | comment | 10000 |
 | type_ok | comment | %%comment_nosignal%% |
-| wait_for_element_visible_ok | link=Save | 30000 |
-| click_ok | link=Save |  |
-| pause | 10000 |
-| text_like | contentContainer | %%comment_nosignal%% |
+| wait_for_element_visible_ok | link=Save | 15000 |
+| st-click-pause | link=Save | 6000 |
+| text_like | content | %%comment_nosignal%% |
 
-| *Comment* | Test Case: Add Comment bottom Comment button |  |
-| wait_for_element_visible_ok | st-comment-button-link-bottom | 30000 |
-| click_ok | st-comment-button-link-bottom |  |
+| *Comment* | Test Case: Add Comment again Comment button |  |
+| click_ok | //li[@id="st-comment-button"]/a |  |
 | wait_for_element_visible_ok | comment | 30000 |
 | type_ok | comment | %%comment_signal%% |
-| wait_for_element_visible_ok | st-comment-st-edit-summary-signal-checkbox | 30000 |
+| wait_for_element_visible_ok | st-comment-st-edit-summary-signal-checkbox | 15000 |
 | check_ok | st-comment-st-edit-summary-signal-checkbox |  |
-| wait_for_element_visible_ok | link=Save | 30000 |
-| click_ok | link=Save |  |
-| pause | 10000 |
-
-
-| text_like | contentContainer | qr/%%comment_nosignal%%.+%%comment_signal%%/ |
-| text_like | contentContainer | qr/contributed by/i |
+| wait_for_element_visible_ok | link=Save | 15000 |
+| st-click-pause | link=Save | 6000 |
+| text_like | content | qr/%%comment_nosignal%%.+%%comment_signal%%/ |
+| text_like | content | qr/contributed by/i |
 
 | *Comment* | Test Case: Add Comment Cancel comment |  |
-| click_ok | st-comment-button-link-bottom |  |
+| click_ok | //li[@id="st-comment-button"]/a |  |
 | wait_for_element_visible_ok | comment | 30000 |
 | type_ok | comment | Comment Cancel %%start_time%% |
-
-| wait_for_element_visible_ok | link=Cancel | 30000 |
-| click_ok | link=Cancel |  |
-| pause | 5000 |
-| text_like | contentContainer | qr/%%comment_nosignal%%.+%%comment_signal%%/ |
-| text_unlike | contentContainer | Comment Cancel %%start_time%% |
+| wait_for_element_visible_ok | link=Cancel | 15000 |
+| st-click-pause | link=Cancel | 6000 |
+| text_like | content | qr/%%comment_nosignal%%.+%%comment_signal%%/ |
+| text_unlike | content | Comment Cancel %%start_time%% |
 
 | *Comment* | Test Case: Add Comment Check for the signal |  |
 | open_ok | /st/signals |  |
 | wait_for_text_present_ok | %%comment_signal%% | 30000 |
-| wait_for_text_not_present_ok | %%comment_nosignal%% | 30000 |
-| wait_for_element_visible_ok | //a[contains(text(),'Comment Test Page %%start_time%%')] | 30000 |
-
-TODO: write an entire new test for Add Comment editing buttons similar to Insert Menu test
+| wait_for_text_not_present_ok | %%comment_nosignal%% | 15000 |
+| wait_for_element_visible_ok | //a[contains(text(),'Comment Test Page %%start_time%%')] | 15000 |
 
 | *Comment* | Test Case: Add Comment TEARDOWN |  |
 | st-process-jobs | PageIndex | %%workspace%% |
 | st-admin | purge-page --w %%workspace%% --p comment_test_page_%%start_time%% | was purged |
 
-| *Comment* | Test Case: Add Comment COMPLETED |
+| *Comment* | Test Case: Add Comment COMPLETED |  |

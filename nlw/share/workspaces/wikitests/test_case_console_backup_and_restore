@@ -14,20 +14,14 @@ Automated backup and restore testing
 | text_like | Socialtext Documentation |  |
 
 | *Comment* | Test Case: Console Backup and Restore: Create a test page in the admin workspace |  |
-| open_ok | /admin/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| type_ok | st-newpage-pagename-edit | Backup Restore %%start_time%% |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | Backup Restore content %%start_time%% |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+
+| call | st-edit-new-page | ws=admin | title=Backup Restore %%start_time%% | content=Backup Restore content %%start_time%% |
+
 | open_ok | /admin/index.cgi?action=recent_changes |  |
 | click_and_wait | link=Backup Restore %%start_time%% |  |
 | wait_for_element_visible_ok | st-page-titletext | 30000 |
 | text_like | st-page-titletext | Backup Restore %%start_time%% |
-| text_like | contentContainer | Backup Restore content %%start_time%% |
+| text_like | content | Backup Restore content %%start_time%% |
 
 | *Comment* | Test Case: Console Backup and Restore: Create a new empty workspace |  |
 | st_admin | create-workspace --name empty-%%start_time%% --title "Empty %%start_time%%" --empty | created |
@@ -105,10 +99,10 @@ Automated backup and restore testing
 | st_login |  |  |
 | open_ok | /admin/index.cgi?action=recent_changes |  |
 | wait_for_element_present_ok | link=Backup Restore %%start_time%% |  |
-| text_unlike | contentContainer | Backup Restore Page 2 %%start_time%% |
+| text_unlike | content | Backup Restore Page 2 %%start_time%% |
 | click_and_wait | link=Backup Restore %%start_time%% |  |
 | text_like | st-page-titletext | Backup Restore %%start_time%% |
-| text_like | contentContainer | Backup Restore content %%start_time%% |
+| text_like | content | Backup Restore content %%start_time%% |
 
 | *Comment* | Test Case: Console Backup and Restore: first new workspace is there |  |
 | open_ok | /empty-%%start_time%% |  |
@@ -120,23 +114,17 @@ Automated backup and restore testing
 | text_like | You are logged in as |  |
 
 | *Comment* | Test Case: Console Backup and Restore: do some operations in admin to verify a working installation |  |
-| open_ok | /admin/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| type_ok | st-newpage-pagename-edit | Backup Restore 3 %%start_time%% |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | Backup Restore 3 content %%start_time%% |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+
+| call | st-edit-new-page | ws=admin | title=Backup Restore 3 %%start_time%% | content=Backup Restore 3 content %%start_time%% |
+
 | open_ok | /admin/index.cgi?action=recent_changes |  |
 | click_and_wait | link=Backup Restore 3 %%start_time%% |  |
-| text_like | contentContainer | Backup Restore 3 content %%start_time%% |
+| text_like | content | Backup Restore 3 content %%start_time%% |
 
 | *Comment* | Test Case: Console Backup and Restore: People and Dashboard |  |
 | click_and_wait | link=Dashboard |  |
 | text_like | st-editing-tools-edit | Welcome |
-| click_and_wait | link=Add Widget |  |
+| click_and_wait | st-add-widget |  |
 | text_like | Widget Gallery |  |
 | click_and_wait | link=People |  |
 | text_like | All People |  |
@@ -145,18 +133,12 @@ Automated backup and restore testing
 | text_like | Workspace Name |  |
 
 | *Comment* | Test Case: Console Backup and Restore: Verify this workspace came back |  |
-| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| type_ok | st-newpage-pagename-edit | Backup Restore %%workspace%% %%start_time%% |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | Backup Restore %%workspace%% content %%start_time%% |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+
+| call | st-edit-new-page | ws=%%workspace%% | title=Backup Restore %%workspace%% %%start_time%% | content=Backup Restore %%workspace%% content %%start_time%% |
+
 | open_ok | /%%workspace%%/index.cgi?action=recent_changes |  |
 | click_and_wait | link=Backup Restore %%workspace%% %%start_time%% |  |
-| text_like | contentContainer | Backup Restore %%workspace%% content %%start_time%% |
+| text_like | content | Backup Restore %%workspace%% content %%start_time%% |
 
 | *Comment* | Test Case: Console Backup and Restore: help-en is there with reasonable content |  |
 | open_ok | /help-en |  |

@@ -46,6 +46,11 @@ sub EnsureRequiredDataIsPresent {
     }
 }
 
+sub compare {
+    my ($l, $r) = @_;
+    return $l->name eq $r->name;
+}
+
 {
     # A persistent per-process cache of Roles.
     #

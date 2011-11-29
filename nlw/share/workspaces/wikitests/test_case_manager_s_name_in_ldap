@@ -20,10 +20,11 @@
 | *Comment* | Test Case: Manager's Name in LDAP My profile - Manager name is editable field |  |
 | st-logoutin | Ozzy Osbourne | ld@pu53r |
 | open_ok | /st/edit_profile |
+| wait_for_text_present_ok | Edit Profile | 30000 |
 | st-name-widget | 1 | edit_profile |
-| st-widget-title-like | edit_profile | Edit Profile |
+| st-widget-title | edit_profile | Edit Profile |
 | st-select-widget-frame | edit_profile |  |
-| wait_for_element_present_ok | //input[@name='supervisor.id'] | 30000 |
+| wait_for_element_present_ok | //input[@name='supervisor.id'] | 10000 |
 | select-frame | relative=parent |  |
 
 | *Comment* | Test Case: Manager's Name in LDAP Configure Manager name to be LDAP-based in control panel |  |
@@ -40,7 +41,7 @@
 | st-logoutin | Ozzy Osbourne | ld@pu53r |
 | open_ok | /st/profile |
 | st-name-widget | 1 | profile |
-| st-widget-title-like | profile | Profile |
+| st-widget-title | profile | Profile |
 | st-select-widget-frame | profile |  |
 | text_like | //body | qr/Manager.+%%manager_name%%/ |
 | wait_for_element_visible_ok | link=%%manager_name%% | 30000 |
@@ -49,7 +50,7 @@
 | *Comment* | Test Case: Manager's Name in LDAP My profile - Manager name is not field |  |
 | open_ok | /st/edit_profile |
 | st-name-widget | 1 | edit_profile |
-| st-widget-title-like | edit_profile | Edit Profile |
+| st-widget-title | edit_profile | Edit Profile |
 | st-select-widget-frame | edit_profile |  |
 | wait_for_element_not_present_ok | //input[@name='supervisor.id'] | 30000 |
 | text_like | //body | %%manager_name%% |
@@ -69,7 +70,7 @@
 | st-logoutin | Ozzy Osbourne | ld@pu53r |
 | open_ok | /st/edit_profile |
 | st-name-widget | 1 | edit_profile |
-| st-widget-title-like | edit_profile | Edit Profile |
+| st-widget-title | edit_profile | Edit Profile |
 | st-select-widget-frame | edit_profile |  |
 | wait_for_element_present_ok | //input[@name='supervisor.id'] | 30000 |
 | select-frame | relative=parent |  |

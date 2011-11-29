@@ -1,3 +1,5 @@
+*TUXTODO: On hold until confirmation emails are actually sent, then remove skip.all*
+
 | *Comment* | Test Case: User Restrictions |  |
 | *Comment* | Test Case: User Restrictions GUI and email checks NOTE: Other restrictions also in test_case_business_control_panel_confirm_user and test_case_command_line_user_restrictions |  |
 
@@ -17,17 +19,6 @@
 | st-admin | add-member --w %%ws%% --e %%emailaddr%% | now has the role of 'member' in the |
 | st-admin | add-workspace-admin --e %%email%% --w %%ws%% | now has the role of 'admin' in the |
 | st-process-jobs |  |  |
-
-| *Comment* | Test Case: User Restrictions - Make sure submitted emails /will/ become pages |  |
-| open_ok | /%%ws%%/ |  |
-| wait_for_element_visible_ok | link=Settings | 30000 |
-| click_and_wait | link=Settings |  |
-| wait_for_element_visible_ok | link=Workspace Privacy | 30000 |
-| click_and_wait | link=Workspace Privacy |  |
-| wait_for_element_visible_ok | //input[@name='guest_has_email_in' and @value='1'] | 30000 |
-| click_ok | //input[@name='guest_has_email_in' and @value='1'] |  |
-| clickAndWait | link=Save |  |
-| text_like | contentContainer | Anyone can send email to %%ws%%. |
 
 | *Comment* | Test Case: User Restrictions - Create confirmations - this will generate emails (this, wikipages) |  |
 | st-admin | add-restriction --email %%emailaddr%% --restriction email_confirmation | has been given the 'email_confirmation' restriction |

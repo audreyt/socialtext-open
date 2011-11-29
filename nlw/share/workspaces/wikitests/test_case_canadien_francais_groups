@@ -38,11 +38,10 @@
 | st-admin | set-permissions --g %%group_id%% --p self-join | have been changed to self-join |  |
 | set | groupx_id | %%group_id%% |  |
 
-| *Comment* | Test Case: Canadien Français (Groups) Test Sorting for Groups in Dropdown (TOD: How?) |  |
-| st-process-jobs |  |  |
-| pause | 5000 |  |  |
-| st-logoutin | %%user%% | %%password%% |
-
+| *Comment* | Test Case: Canadien Français (Groups) Test Sorting for Groups in Dropdown (TOD: How?) |  |  |
+| st-process-jobs |  |  |  |
+| pause | 15000 |  |  |
+| st-logoutin | %%user%% | %%password%% |  |
 
 | *Comment* | Test Case: Canadien Français (Groups) Test Sorting for Groups-To-Join in Groups Directory |  |
 | wait_for_element_present_ok | link=Group Directory | 30000 |
@@ -51,7 +50,7 @@
 | wait_for_element_visible_ok | link=%%groupA%% | 30000 |
 | pause | 10000 |  |
 | select_frame | widget_1 |  |
-| text_like | //body | qr/All Available Groups.+%%groupAA%%.+%%groupA%%.+%%groupL%%.+%%groupM%%.+%%groupN%%.+%%groupX%%/ |
+| text_like | //body | qr/Group.+%%groupAA%%.+%%groupA%%.+%%groupL%%.+%%groupM%%.+%%groupN%%.+%%groupX%%/ |
 | select_frame | relative=parent |  |
 
 | *Comment* | Test Case: Canadien Français (Groups) Test Sorting for Groups-I-Belong-To in Groups Directory |  |
@@ -84,6 +83,5 @@
 | st-admin | delete-group --g %%groupn_id%% | Deleted group id: |
 | st-admin | delete-group --g %%groupx_id%% | Deleted group id: |
 | delete-account | %%acct%% |  |
-
 
 | *Comment* | Test Case: Canadien Français (Groups) COMPLETED |  |

@@ -169,9 +169,6 @@ msgstr "Socialtext 探索"
 msgid "signals.about-bookmarklet!"
 msgstr "将其作为书签（或收藏夹）安装，当您有网页要讯息或分享，只需点击或选择书签就可以发送讯息了！"
 
-msgid "signals.signal-mentions-to-email"
-msgstr "若勾选此选项，每当其他用户在讯息上提及您时，系统即会自动发送电子邮件通知您。"
-
 #: share/plugin/signals/share/javascript/signals.js:820
 msgid "signals.all-groups"
 msgstr "所有群组"
@@ -325,6 +322,9 @@ msgstr "私密回复该讯息。"
 msgid "signals.reply-to-signal-message=url"
 msgstr "这封邮件由 Socialtext 讯息系统发送。您可以按<a href=\"%1\">这里</a>来回复讯息。"
 
+msgid "signals.search"
+msgstr "讯息"
+
 #: share/plugin/signals/template/search_box_signals:1
 msgid "signals.search:"
 msgstr "搜索讯息："
@@ -355,6 +355,9 @@ msgstr "使用这个方便的书签来通过讯息分享所有网站上的页面
 #: share/plugin/signals/template/view/signallist:26
 msgid "signals.showing=from,to,total"
 msgstr "显示第 %1 - %2 项，共 %3 项。"
+
+msgid "signals.signal-mentions-to-email"
+msgstr "若勾选此选项，每当其他用户在讯息上提及您时，系统即会自动发送电子邮件通知您。"
 
 msgid "signals.signal-permalink"
 msgstr "讯息永久链结"

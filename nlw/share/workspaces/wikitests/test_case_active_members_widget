@@ -27,7 +27,7 @@
 | *Comment* | Test Case: Active Members Widget ADD THE WIDGET |  |
 | st_single_widget_in_dashboard | gallery-widget-Active People |  |
 | st-name-widget | 1 | active_members |
-| st-widget-title-like | active_members | Active People |
+| st-widget-title | active_members | Active People |
 | st-widget-settings | active_members |  |
 | wait_for_element_visible_ok | account | 30000 |
 | uncheck_ok | rotate |  |
@@ -44,7 +44,7 @@
 
 | *Comment* | Test Case: Active Members Widget Test Account Combo Box |  |
 | st-name-widget | 1 | active_members |
-| st-widget-title-like | active_members | Active People |
+| st-widget-title | active_members | Active People |
 | st-widget-settings | active_members |  |
 | wait_for_element_visible_ok | account | 30000 |
 | select_ok | account | %%am_acct_two%% |

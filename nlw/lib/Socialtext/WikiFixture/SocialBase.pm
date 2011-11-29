@@ -38,6 +38,7 @@ use YAML qw/LoadFile/;
 use DateTime;
 use File::Basename;
 use File::Spec;
+use Test::Socialtext::User;
 
 # mix-in some commands from the Socialtext fixture
 # XXX move bodies to SocialBase?
@@ -518,15 +519,15 @@ sub st_massive_tags {
 }
 
 sub st_create_page {
-    my ($self, $workspace, $title) = @_;
+    my ($self, $workspace, $title, $usercontent) = @_;
     my $user = Socialtext::User->new(username => $self->{'username'});
     my $hub = new_hub($workspace);
-    my $content = "Content for title test";
+    my $content = $usercontent || "Content for title test";
     Socialtext::Page->new(hub => $hub)->create(
                                   title => $title,
                                   content => $content,
                                   creator => $user);
-    ok 1, "Created $title in $workspace";
+    ok 1, "Created $title in $workspace as $self->{'username'}";
 }
 
 sub stub_page {
@@ -621,8 +622,8 @@ sub st_search_cp_users {
     $self->handle_command('wait_for_element_visible_ok','st-username-search-submit',30000);
     $self->handle_command('type_ok','username',$searchfor);
     $self->handle_command('click_and_wait','st-username-search-submit');
-    my $str = "Users matching " . '"' . $searchfor . '"';
-    $self->handle_command('wait_for_text_present_ok',$str,30000);
+    #my $str = "Users matching " . '"' . $searchfor . '"';
+    #$self->handle_command('wait_for_text_present_ok',$str,30000);
 }
 
 =head2 st_search_cp_account($searchfor)
@@ -650,7 +651,7 @@ sub create_account {
     my $ws = Socialtext::Workspace->new(name => 'admin');
     $acct->enable_plugin($_) for qw/people dashboard widgets signals groups/;
     if ($ws) {
-        $ws->enable_plugin($_) for qw/socialcalc/;
+        $ws->enable_plugin($_) for qw/socialcalc ckeditor/;
     }
     $self->{account_id} = $acct->account_id;
     diag "Created account $name ($self->{account_id})";
@@ -785,6 +786,14 @@ sub create_user {
     return $user;
 }
 
+sub delete_recklessly {
+    my $self = shift;
+    my $user_id = shift;
+
+    Test::Socialtext::User->delete_recklessly($user_id);
+    diag "User ${user_id} deleted recklessly\n";
+}
+
 sub user_primary_account {
     my $self = shift;
     my $username = shift;
@@ -837,9 +846,24 @@ sub delete_user {
 sub deactivate_user {
     my $self = shift;
     my $email = shift;
+
     my $user = Socialtext::User->Resolve($email);
 
     $user->deactivate();
+}
+
+sub reactivate_user {
+    my $self = shift;
+    my $username = shift;
+    my $account_name = shift;
+
+    my $account = $account_name
+        ? Socialtext::Account->new(name => $account_name)
+        : Socialtext::Account->Default();
+
+    my $user = Socialtext::User->Resolve($username);
+
+    $user->reactivate(account => $account);
 }
 
 sub create_group {
@@ -1119,7 +1143,6 @@ sub add_user_to_account {
     my $role = $role_name
         ? Socialtext::Role->new(name => $role_name)
         : undef;
-
     $acct->assign_role_to_user( user => $user, role => $role );
 
     diag "Added User $user_name"
@@ -1168,7 +1191,7 @@ sub create_workspace {
 
     $ws->assign_role_to_account(account => $account) if ($allusers);
 
-    $ws->enable_plugin($_) for qw/socialcalc/;
+    $ws->enable_plugin($_) for qw/socialcalc ckeditor/;
     $self->{workspace_id} = $ws->workspace_id;
     diag "Created workspace $name";
     return $ws;
@@ -1258,7 +1281,7 @@ sub add_member {
     die "No such user $email" unless $user;
 
     my $role = Socialtext::Role->new(name => $role_name || 'member');
-    $ws->assign_role_to_user( user => $user, role => $role );
+    $ws->assign_role_to_user( user => $user, role => $role, reckless => 1);
     diag "Added user $email to $workspace with role " . $role->name;
 }
 
@@ -1272,7 +1295,7 @@ sub remove_member {
     my $user = Socialtext::User->Resolve($email);
     die "No such user $email" unless $user;
 
-    $ws->remove_user(user => $user);
+    $ws->remove_user(user => $user, reckless => 1);
     diag "Removed user $email from $workspace";
 }
 
@@ -1380,6 +1403,7 @@ sub set_gadget_id {
     );
     diag "Set variable $var_name to $self->{$var_name}";
 }
+sub set_widget_id { shift->set_gadget_id(@_) }
 
 sub set_latest_gadget_instance_id {
     my $self = shift;
@@ -1499,6 +1523,7 @@ sub delete {
     my ($self, $uri, $accept) = @_;
     $accept ||= 'text/html';
 
+    diag "DELETE: $uri";
     $self->_call_method('delete', $uri, [Accept => $accept]);
 }
 
@@ -1750,7 +1775,12 @@ Put to the specified URI
 
 =cut
 
-sub put { shift->_call_method('put', @_) }
+sub put {
+    my $self = shift;
+    my $uri = shift;
+    diag "PUT: $uri";
+    $self->_call_method('put', $uri, @_)
+}
 
 =head2 put_json( uri, json )
 
@@ -2964,6 +2994,75 @@ sub st_purge_widget {
     diag loc("test.deleted-widgets=count", $sth->rows)."\n";
 }
 
+sub _widget_layout {
+    my ($self, $url) = @_;
+
+    my @layout = ([], [], []);
+
+    # add old gadgets 
+    $self->get_json($url);
+    $self->json_parse;
+    for my $gadget (@{$self->{json}}) {
+        push @{$layout[$gadget->{col}]}, {
+            instance_id => $gadget->{instance_id},
+        };
+    }
+
+    return \@layout;
+}
+
+sub add_widget_ok {
+    my ($self, $url, $src_or_id, $data) = @_;
+    $data = decode_json($data || '{}');
+    my $col = delete $data->{col} // 2;
+
+    # Get the original layout
+    my $layout = $self->_widget_layout($url);
+
+    # Add the new widget
+    unshift @{$layout->[$col]}, $src_or_id =~ m{^\d+$}
+        ? { install => 1, gadget_id => $src_or_id, %$data }
+        : { install => 1, src => $src_or_id, %$data };
+    
+    # Set the new layout
+    $self->put_json($url, encode_json({ gadgets => $layout }));
+    
+    # Get the instance id of the added widget
+    $self->get_json($url);
+    $self->json_parse;
+    my ($gadget) = grep { $_->{col} == $col and !$_->{row} } @{$self->{json}};
+    $self->{instance_id} = $gadget->{instance_id}
+}
+
+sub purge_dashboards_in_account {
+    my ($self, $account_id) = @_;
+
+    my $url = "/st/account/$account_id/dashboard";
+
+    # Get the current layout
+    my $layout = $self->_widget_layout($url);
+
+    # Purge
+    $self->put_json($url, encode_json({ gadgets => $layout, purge => 1 }));
+}
+
+sub set_widget_prefs {
+    my ($self, $url, $instance_id, $prefs) = @_;
+
+    $prefs = decode_json($prefs);
+
+    # Get the original layout
+    my $layout = $self->_widget_layout($url);
+    for my $col (@$layout) {
+        for my $widget (@$col) {
+            $widget->{preferences} = $prefs
+                if $instance_id == $widget->{instance_id};
+        }
+    }
+
+    $self->put_json($url, encode_json({ gadgets => $layout }));
+}
+
 sub enable_ws_plugin    { shift; _change_plugin('Workspace', 1, @_) }
 sub disable_ws_plugin   { shift; _change_plugin('Workspace', 0, @_) }
 sub enable_acct_plugin  { shift; _change_plugin('Account',   1, @_) }
@@ -3525,18 +3624,17 @@ sub restart_everything {
 
 sub jsmake {
     my ($self, $target, $dir) = @_;
-    require Socialtext::MakeJS;
+    require Socialtext::JavaScript::Builder;
+    my $builder = Socialtext::JavaScript::Builder->new;
+    if ($target =~ /^clean(:?all)?$/) {
+        $builder->clean();
+    }
+
     if ($target eq 'all') {
-        Socialtext::MakeJS->BuildAll;
-    }
-    elsif ($target eq 'cleanall') {
-        Socialtext::MakeJS->CleanAll;;
-    }
-    elsif ($target eq 'clean') {
-        Socialtext::MakeJS->CleanDir($dir);
+        $builder->build();
     }
     else {
-        Socialtext::MakeJS->Build($dir, $target);
+        $builder->build($target);
     }
 }
 
@@ -3570,8 +3668,11 @@ sub masked_url_is {
     }
 
     $self->code_is(200);
-    if ($resp->content =~ /Socialtext\.masked_url = "([^"]*)";/) {
+    my $content = $resp->content;
+    if ($content =~ /st\.masked_url = "([^"]*)";/) {
         is $1, $expected, "masked-url-is $expected";
+        ok $content =~ m{_gaq\.push\(\['_trackPageview', st.masked_url\]\)},
+            'Page tracks analytics';
     }
     else {
         fail "No masked url found - $url";

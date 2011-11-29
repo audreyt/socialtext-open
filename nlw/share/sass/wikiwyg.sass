@@ -1,0 +1,43 @@
+@import reset.sass
+@import colors.sass
+@import text.sass
+
+body
+  font-size: 12px
+  font-family: $body_font
+  color: $darker
+  text-align: left
+  background: none
+  background-color: $tertiary_color
+  zoom: 1
+  &.signals
+    background-color: $lightest
+    margin: 3px
+  &.socialcalc .wiki
+    padding: 0 !important
+    font-size: 100% !important
+  &.signals img, &.socialcalc img
+    vertical-align: middle
+  &.signals a
+    text-decoration: underline
+
+.wiki a
+  color: $primary_color
+  text-decoration: none
+  &.incipient
+    color: $secondary_color
+
+/* Same as in common/css/common.css, but with !important to override our own screen.css settings.
+
+#wysiwyg-editable-div
+  ol, ul, p
+    margin-top: 0 !important
+    margin-bottom: 0 !important
+
+table .current-cell
+  background: $red
+
+.clearHandler
+  font-style: italic
+  color: $darker
+

@@ -197,7 +197,7 @@ NOT_DEFAULT: {
     is( Socialtext::AppConfig->new->db_user, $user->name,
           'default db_user is ' . $user->name );
 
-    ok( -d File::Spec->catdir( Socialtext::AppConfig->_user_checkout_dir, 'share', 'skin', 's2', 'template' ),
+    ok( -d File::Spec->catdir( Socialtext::AppConfig->_user_checkout_dir, 'share', 'template' ),
         'the _user_checkout_dir/share Socialtext::AppConfig finds has a template subdir' );
 
     Socialtext::AppConfig->_set_startup_user(0);

@@ -1,41 +1,53 @@
 | *Comment* | Test Case: Self Register user registration |  |
 
+| set | reg_email | `reg_%%start_time%%@ken.socialtext.net` |
+| set | reg_name | reg %%start_time%% |
+
 | st-config | set self_registration 1 |  |
 | st-config | set allow_network_invitation 1 |  |
 | st-appliance-config | set captcha_enabled 0 | Set captcha_enabled to 'UNDEF' |
 | st-logout |  |  |
+
+| *Comment* | Test Case: Self Register register %%reg_email%% |  |
 | open_ok | /nlw/register.html |  |
 | text_like | Click here to log in with an existing account |  |
-| set | reg_email | reg_%%start_time%%@ken.socialtext.net |
 | type_ok | email_address | %%reg_email%% |
-| type_ok | register_password | password |
-| type_ok | register_password2 | password |
+| type_ok | register_password | %%password%% |
+| type_ok | register_password2 | %%password%% |
 | click_and_wait | register_btn |  |
 | st-message | An email confirming your registration has been sent to %%reg_email%% |  |
 
 | *Comment* | Test Case: Self Register User does not confirm their email address and tries to login. |  |
-| st-login | %%reg_email%% | password |
+| st-login | %%reg_email%% | %%password%% |
 | st-message | You need to confirm your email address to activate this account. |  |
 | st-message | You should have received an email with a confirmation link. |  |
 
 | *Comment* | Test Case: Self Register Resend confirmation and login |  |
 | click_and_wait | //input[@value='Resend confirmation'] |  |
 | st-message | The confirmation email has been resent. |  |
+| st-message | Please follow the link in this email to activate your account. |  |
+
 | type_ok | username | %%reg_email%% |
-| type_ok | password | password |
+| type_ok | password | %%password%% |
 | click_and_wait | login_btn |  |
 | st-message | You need to confirm your email address to activate this account. |  |
 | st-message | You should have received an email with a confirmation link. |  |
 
 | *Comment* | Test Case: Self Register Force confirm |  |
-| st-force-confirmation | %%reg_email%% | password |
-| click_and_wait | //input[@value='Resend confirmation'] |  |
-| st-message | The email address for %%reg_email%% has already been confirmed. |  |
+| st-force-confirmation | %%reg_email%% | %%password%% |
+| st-login | %%reg_email%% | %%password%% |
+| open_ok | /st/dashboard |  |
+| wait_for_text_present_ok | Welcome %%reg_name%% | 15000 |
+| st-logout |  |  |
 
 | *Comment* | Test case: Self Register explicitly login to set the username field to the default username |  |
 | *Comment* | DO NOT change the following explicit login commands to st-login |  |
 | type_ok | username | %%username%% |
 | type_ok | password | %%password%% |
-| click_and_wait | login_btn |
+| click_and_wait | login_btn |  |
+
+| *Comment* | Test case: Self Register TEARDOWN |  |
+| st-process-jobs |  |  |
+| st-admin | deactivate-user --e %%reg_email%% | has been removed |
 
 | *Comment* | Test case: Self Register COMPLETED |  |

@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Socialtext i18n\n"
-"PO-Revision-Date: 2011-08-23 11:12+0800\n"
+"PO-Revision-Date: 2011-11-04 22:33+0800\n"
 "Last-Translator: Socialtext i18n team\n"
 "Language-Team: Socialtext i18n team\n"
 "MIME-Version: 1.0\n"
@@ -213,11 +213,6 @@ msgstr "%*(%1,new mention)..."
 #: share/plugin/widgets/share/javascript/activities/event_list.js:433
 msgid "activities.new-replies=count"
 msgstr "%*(%1,reply,replies)"
-
-#. (new_events + new_replies)
-#: share/plugin/widgets/share/javascript/activities/event_list.js:438
-msgid "activities.new=count"
-msgstr "%1 new"
 
 #. (older)
 #: share/plugin/widgets/share/javascript/template/activities/blocks.tt2:20 share/plugin/widgets/share/javascript/template/activities/blocks.tt2:22
@@ -1198,6 +1193,9 @@ msgstr "Comment"
 #: share/plugin/widgets/share/widgets/one_page/widget.html:28 share/plugin/widgets/share/widgets/one_spreadsheet/widget.html:34 share/plugin/widgets/share/widgets/workspace_activity/widget.html:7
 msgid "page.edit"
 msgstr "Edit"
+
+msgid "page.type-xhtml"
+msgstr "Page"
 
 msgid "page.type-spreadsheet"
 msgstr "Spreadsheet"

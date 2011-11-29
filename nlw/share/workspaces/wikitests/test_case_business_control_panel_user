@@ -1,3 +1,4 @@
+TUXTODO: removed confirmation messages - may never get restored
 
 | *Comment* | Test case: Business Control Panel USER |  |
 | set | new_acct | acct-usertest-%%start_time%% |
@@ -6,16 +7,13 @@
 | set | cli_user_escaped | cliusertest%%start_time%%\@ken.socialtext.net |
 | set | short_cli_user | cliusertest%%start_time%% |
 
-
-
-
 | st-admin | create-account --name '%%new_acct%%' | was created |
 | st-admin | create-workspace --empty --name %%new_workspace%% --title %%new_workspace%% --account '%%new_acct%%' | was created |
 | st-admin | give-accounts-admin --u %%username%% | now has |
 
 | *Comment* | Test case: Business Control Panel create a user, add as admin, verify admin |  |
 | open_ok | /nlw/control/user |  |
-| st-admin | create-user --email %%cli_user%% --password wikicli --first-name Wiki --last-name CLI --account '%%new_acct%%' | A new user with the username "%%cli_user%%" was created |
+| st-admin | create-user --email %%cli_user%% --password %%password%% --first-name Wiki --last-name CLI --account '%%new_acct%%' | A new user with the username "%%cli_user%%" was created |
 | st-admin | add-workspace-admin --email %%cli_user%% --workspace %%new_workspace%% |  |
 | click_and_wait | //a[@name='workspaces'] |  |
 | wait_for_element_visible_ok | name | 30000 |
@@ -47,9 +45,9 @@
 | type_ok | mobile_phone | mobile phone |
 | type_ok | home_phone | home phone |
 | click_and_wait | //input[contains(@id,'add_user')] |  |
-| wait_for_text_present_ok | Added user foo%%start_time%%@bar.com | 30000 |
+| wait_for_text_present_ok | firstname lastname <foo%%start_time%%@bar.com> | 30000 |
 | wait_for_element_visible_ok | link=%%new_acct%% | 30000 |
-| click_and_wait | link=%%new_acct%% |
+| click_and_wait | link=%%new_acct%% |  |
 | wait_for_element_visible_ok | link=firstname lastname <foo%%start_time%%@bar.com> |  |
 
 | *Comment* | Test case: Business Control Panel User reassign accounts for users and workspaces |  |
@@ -78,10 +76,14 @@
 | text_like | qr/Appliance Business Administrator\?\s*no/ism |  |
 | text_like | qr/Appliance Technical Administrator\?\s*no/ism |  |
 | click_and_Wait | //input[@value='Assign Appliance Business Administrator Role'] |  |
-| text_like | Assigned the Appliance Business Administrator role to %%cli_user%% |  |
+
+text_like | Assigned the Appliance Business Administrator role to %%cli_user%% | |
+
 | text_like | qr/Appliance Business Administrator\?\s*yes/ism |  |
 | click_and_wait | //input[@value='Remove Appliance Business Administrator Role'] |  |
-| text_like | Removed the Appliance Business Administrator role from %%cli_user%% |  |
+
+text_like | Removed the Appliance Business Administrator role from %%cli_user%% | |
+
 | text_like | qr/Appliance Business Administrator\?\s*no/ism |  |
 | click_and_wait | //input[@value='Assign Appliance Technical Administrator Role'] |  |
 | text_like | Assigned the Appliance Technical Administrator role to
@@ -89,7 +91,9 @@
 %%cli_user%% |  |
 | text_like | qr/Appliance Technical Administrator\?\s*yes/ism |  |
 | click_and_wait | //input[@value='Remove Appliance Technical Administrator Role'] |  |
-| text_like | Removed the Appliance Technical Administrator role from %%cli_user%% |  |
+
+text_like | Removed the Appliance Technical Administrator role from %%cli_user%% | |
+
 | text_like | qr/Appliance Technical Administrator\?\s*no/ism |  |
 
 | *Comment* | Test case: Business Control Panel User Search |  |
@@ -104,18 +108,13 @@
 | *Comment* | Test case: Business Control Panel Reset Password - FAILS UNDER LDAP BY DESIGN |  |
 | wait_for_element_visible_ok | //input[@value='Reset password'] | 30000 |
 | click_and_wait | //input[@value='Reset password'] |  |
-| text_like | //body | qr/The password for user %%cli_user_escaped%% has been changed to \'.*'/ |
-| st_match_text | has been changed to \'(.*)\' | new_password |
-| open_ok | /st/dashboard |
-| st-logoutin | %%cli_user%% | %%new_password%% |
 
-
-TODO: remove user from Workspace and remove user from Account
+text_like | //body | qr/The password for user %%cli_user_escaped%% has been changed to \'.*'/ |
 
 | *Comment* | Test case: Business Control Panel User TEARDOWN |  |
 
 | st-process-jobs |  |  |
-| st-admin | delete-workspace --workspace %%new_workspace%% --no-export | has been deleted |
+| delete-workspace | %%new_workspace%% |  |
 | delete-account | %%new_acct%% |  |
 
 | *Comment* | Test case: Business Control Panel User COMPLETED |  |

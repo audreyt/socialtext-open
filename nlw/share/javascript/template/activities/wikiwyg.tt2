@@ -1,0 +1,7 @@
+[% IF richText %]
+<iframe style="display:none" frameborder="0" id="[% id("wikiwyg-iframe-$wwid") %]" name="signalFrame" src="[% this.static_path %]/html/blank.html" scrolling="no"></iframe>
+[% ELSE %]
+<textarea style="display:none" id="[% id("wikiwyg-textarea-$wwid") %]"></textarea>
+[% END %]
+<div style="display:none" id="[% id("wikiwyg-div-$wwid") %]"></div>
+<input class="replyTo" type="hidden" value="[% evt.signal_id %]"/>

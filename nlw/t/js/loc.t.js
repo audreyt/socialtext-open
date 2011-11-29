@@ -1,6 +1,6 @@
 module('l10n');
 TestDepLoader.loaddom("empty.html");
-TestDepLoader.loadskinjs('s3', 'loc.js');
+TestDepLoader.loadjs('nlw/share/javascript/loc.js');
 
 Socialtext = {};
 
@@ -32,7 +32,7 @@ test('quant', function() {
 
 test('en locale', function() {
     Socialtext.loc_lang = 'en';
-    TestDepLoader.loadskinjs('s3', 'l10n/en.js');
+    TestDepLoader.loadjs('nlw/share/javascript/l10n/en.js');
 
     equals(loc("Oh hi!"), "Oh hi!", "string not in the po file");
     equals(loc("activities.add-tag"), "Add a tag", "string in the po file");

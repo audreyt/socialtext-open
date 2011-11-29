@@ -13,9 +13,9 @@
 | st-logoutin | %%empty_member%% | %%password%% |
 
 | *Comment* | Test Case: Active Content Empty Messages get an empty Active Content widget |  |
-| st_single_widget_in_dashboard | gallery-widget-Active Content |  |
+| st-single-widget-in-dashboard | gallery-widget-Active Content |  |
 | st-name-widget | 1 | active_content |
-| st-widget-title-like | active_content | Active Content |
+| st-widget-title | active_content | Active Content |
 | st-widget-settings | active_content |  |
 | uncheck_ok | rotate |  |
 | select_ok | view | Viewed Pages |

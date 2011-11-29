@@ -1,43 +1,35 @@
-| *Comment* | Test Case: Calc Tools: Delete Page |
+| *Comment* | Test Case: Calc Tools: Delete Page |  |
 
 | *Comment* | Calc Tools: Delete Page: Create test page |  |
 
-| open_ok | /%%workspace%%/index.cgi?action=display;page_type=spreadsheet;page_name=delete%20spreadsheet%20%%start_time%%#edit |  |
+| open_ok | /%%workspace%%/index.cgi?action=display;page_type=spreadsheet;page_name=Delete%20Spreadsheet%20%%start_time%%#edit |  |
 | wait_for_element_visible_ok | st-save-button-link |  |
-| pause | 5000 | I hate pause; needed for entire page load |
+| pause | 15000 |  |
 | st-page-save |  |  |
 
-| *Comment* | Calc Tools: Delete Page: Create backlinking page by rename |  |
-| click_ok | link=Rename Page |  |
-| wait_for_element_visible_ok | new_title | 30000 |
-| type_ok | new_title | to_be_deleted_spreadsheet_%%start_time%% |
-| wait_for_element_visible_ok | st-rename-savelink | 30000 |
-| click_and_wait | st-rename-savelink |  |
-
 | *Comment* | Calc Tools: Delete Page: Test functions |  |
-| open_ok | /%%workspace%%/index.cgi?to_be_deleted_spreadsheet_%%start_time%% |  |
+| open_ok | /%%workspace%%/Delete Spreadsheet %%start_time%% |  |
 | click_ok | link=Delete Page |  |
 | wait_for_element_visible_ok | st-delete-deletelink | 20000 |
 | click_and_wait | st-delete-deletelink |  |
 | wait_for_element_visible_ok | link=Restore Page |  |
-| text_like | st-page-titletext | Deleted "to_be_deleted_spreadsheet_%%start_time%%" |
+| text_like | content | qr/Deleted.+%%start_time%%/ |
 | click_and_wait | link=Restore Page |  |
-| wait_for_element_visible_ok | controls-right-revisions | 10000 |
-| click_and_wait | controls-right-revisions |  |
-| text_like | contentContainer | qr/Revision 1.+Deleted.+Revision 2.+Revision 1/ |
+| wait_for_element_visible_ok | //a[contains(@href,'action=revision_list')] | 10000 |
+| click_and_wait | //a[contains(@href,'action=revision_list')] |  |
+| text_like | content | qr/Revision 1.+Deleted.+Revision 2.+Revision 1/ |
 
-| click_and_wait | link=Back To Current Revision |  |
+| open_ok | /%%workspace%%/Delete Spreadsheet %%start_time%% |  |
 | click_ok | link=Delete Page |  |
-| wait_for_element_visible_ok | st-delete-deletelink | 20000 |
+| wait_for_element_visible_ok | st-delete-deletelink | 15000 |
 | click_and_wait | st-delete-deletelink |  |
 
-| open_ok | /%%workspace%%/index.cgi?delete_spreadsheet_%%start_time%% |  |
-| click_and_wait | controls-right-revisions |  |
-| text_like | contentContainer | qr/Revision 2.+Revision 1/ |
+| open_ok | /%%workspace%%/Delete Spreadsheet %%start_time%% |  |
+| click_and_wait | //a[contains(@href,'action=revision_list')] |  |
+| text_like | content | qr/Revision 2.+Revision 1/ |
 
-| *Comment* | Calc Tools: Delete Page: Teardown |  |
+| *Comment* | Calc Tools: Delete Page: TEARDOWN |  |
 | st-process-jobs |  |  |
 | st-admin | purge-page --workspace %%workspace%% --page delete_spreadsheet_%%start_time%% | was purged |
-| st-admin | purge-page --workspace %%workspace%% --page to_be_deleted_spreadsheet_%%start_time%% | was purged |
 
-| *Comment* | Test Case: Calc Tools: Delete Page COMPLETED |
+| *Comment* | Test Case: Calc Tools: Delete Page COMPLETED |  |

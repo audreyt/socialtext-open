@@ -1,0 +1,32 @@
+[%# vim: set et sts=2 sw=2: %]
+[% USE decorate %]
+[% USE label_ellipsis %]
+<div class="grid_2">
+  <input onclick="preventSameRevisionCompare()" name="old_revision_id" value="[% id %]" type="radio" [% IF check_old %] checked="checked"[% END %] [% UNLESS page.page_type != 'spreadsheet' %] disabled="disabled"[% END %] />
+
+  <input onclick="preventSameRevisionCompare()" name="new_revision_id" value="[% id %]" type="radio"
+    [% IF check_new %] checked="checked"[% END %] 
+    [% UNLESS page.page_type != 'spreadsheet' %] disabled="disabled"[% END %] />
+</div>
+
+<div class="grid_2">
+  [% IF is_deleted %]
+    [% loc("page.deleted=revision", revision) %]
+  [% ELSE %]
+  <a href="[% script_name %]?action=revision_view;page_name=[% page_uri %];revision_id=[% id %]">
+    [% loc("page.revision=revision", revision) %]
+  </a>
+  [% END %]
+</div>
+
+<div class="grid_4">[% from | decorate('user_avatar') %]</div>
+
+<div class="grid_3">[% date %]</div>
+
+<div class="grid_13">
+  [% FILTER decorate('revision-edit-summary', row.id) %]
+    [% edit_summary | label_ellipsis(edit_summary_maxlength) | html %]
+  [% END %]
+</div>
+
+<div class="clear"></div>

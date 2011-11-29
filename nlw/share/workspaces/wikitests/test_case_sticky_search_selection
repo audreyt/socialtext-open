@@ -1,5 +1,5 @@
 | *Comment* | Test Case: Search Selection is Sticky |  |
-| set | sticky_user | sticky_user_%%start_time%%@david.socialtext.net |
+| set | sticky_user | `sticky_user_%%start_time%%@david.socialtext.net` |
 | set | sticky_group | sticky_group_%%start_time%% |
 | st-admin | create-user --email %%sticky_user%% --password %%password%% | was created |
 | st-admin | add-member --workspace %%workspace%% --email %%sticky_user%% | now has the role |
@@ -18,8 +18,6 @@
 | verifyValue | st-search-action | search_signals |
 | open_ok | /?action=workspaces_listall |  |
 | verifyValue | st-search-action | search_workspaces |
-| open_ok | /st/explore |  |
-| verifyValue | st-search-action | search_signals |
 
 | *Comment* | Test Case: Search Selection is Sticky set dashboard search to People, check |  |
 | open_ok | /st/dashboard |  |
@@ -136,24 +134,6 @@
 | open_ok | /?action=workspaces_listall |  |
 | wait_for_element_visible_ok | st-search-action | 30000 |
 | verifyValue | st-search-action | search_workspaces |
-
-| *Comment* | Test Case: Search Selection is Sticky set explore search to People, check |  |
-| open_ok | /st/explore |  |
-| wait_for_element_visible_ok | st-search-action | 30000 |
-| select_ok | st-search-action | label=Search People: |
-| verifyValue | st-search-action | search_people |
-| st-logoutin | %%sticky_user%% | %%password%% |
-| open_ok | /st/explore |  |
-| wait_for_element_visible_ok | st-search-action | 30000 |
-| verifyValue | st-search-action | search_people |
-
-| *Comment* | Test Case: Search Selection is Sticky set explore search to Signals, check |  |
-| select_ok | st-search-action | label=Search Signals: |
-| verifyValue | st-search-action | search_signals |
-| st-logoutin | %%sticky_user%% | %%password%% |
-| open_ok | /st/explore |  |
-| wait_for_element_visible_ok | st-search-action | 30000 |
-| verifyValue | st-search-action | search_signals |
 
 | *Comment* | Test Case: Search Selection is Sticky TEARDOWN |  |
 | st-process-jobs |  |  |

@@ -1,25 +1,30 @@
-
 | *Comment* | Test Case: Friendly Name 2 |
 
 * Fixture: SocialWidgets
 
 | include | [Test Case: Friendly Name Setup] |
 
-| *Comment* | Test Case: Friendly Name 2 create a wiki |  |
-| st-admin | add-account-admin --account %%fname_acct%% --e %%fname_user%% | now has the role of 'admin' |
-| open_ok | /%%fname_wiki%%/?action=workspaces_create |  |
-| wait_for_element_visible_ok | //input[@name='title'] | 30000 |
-| type_ok | //input[@name='title'] | %%fname_wiki_2%% |
-| wait_for_element_visible_ok | //input[@name='name'] | 30000 |
-| type_ok | //input[@name='name'] | %%fname_wiki_2%% |
-| wait_for_element_visible_ok | -savelink | 30000 |
-| click_and_wait | -savelink |  |
-| wait_for_text_present_ok | You have just created "%%fname_wiki_2%%" |  |
-| st-admin | remove-account-admin --account %%fname_acct%% --e %%fname_user%% | no longer has the role of 'admin' |
-| add-group-to-workspace | %%fname_group_id%% | %%fname_wiki_2%% |
-| st-admin | add-member --email %%fname_checker%% --workspace %%fname_wiki_2%% | now has the role |
-| open_ok | /nlw/submit/logout |  |
-| st-login | %%fname_checker%% | %%password%% |
+| *Comment* | Test Case: Friendly Name 2 create a wiki | admin access |  |
+| st-admin | give-accounts-admin -e %%fname_user%% |  |  |
+| st-admin | add-account-admin --account %%fname_acct%% --e %%fname_user%% | now has the role of 'admin' |  |
+| open_ok | /nlw/control/workspaces/new |  |  |
+| wait_for_element_visible_ok | workspace_title | 30000 |  |
+| type_ok | workspace_title | %%fname_wiki_2%% |  |
+
+| select-autocompleted-option-ok | addUserLookahead | %%fname_prefix%% | %%fname%% |
+
+| wait_for_element_visible_ok | userTable-dropdown-2-0 | 30000 |  |  |  |  |  |
+| select_ok | userTable-dropdown-2-0 | label=Admin |  |  |  |  |  |
+| pause_ok | 3000 |  |  |  |  |  |  |
+| wait_for_element_visible_ok | create | 30000 |  |  |  |  |  |
+| click_and_wait | create |  |  |  |  |  |  |
+| wait_for_text_present_ok | Usage Reports | 30000 |  |  |  |  |  |
+| st-process-jobs |  |  |  |  |  |  |  |
+| st-admin | remove-account-admin --account %%fname_acct%% --e %%fname_user%% | no longer has the role of 'admin' |  |  |  |  |  |
+| add-group-to-workspace | %%fname_group_id%% | %%fname_wiki_2%% |  |  |  |  |  |
+| st-admin | add-member --email %%fname_checker%% --workspace %%fname_wiki_2%% | now has the role |  |  |  |  |  |
+| open_ok | /nlw/submit/logout |  |  |  |  |  |  |
+| st-login | %%fname_checker%% | %%password%% |  |  |  |  |  |
 
 | *Comment* | Test Case: Friendly Name 2 check Control Panel account page |  |
 | open_ok | /nlw/control/account/%%fname_acct_id%% |  |
@@ -63,17 +68,18 @@
 | wait_for_element_visible_ok | user-sort-account | 30000 |
 | click_and_wait | user-sort-account |  |
 | wait_for_text_present_ok | %%fname%% | 30000 |
-| *Comment* | %%fname%% needs to be checked for in two places within the same table, should occur exactly 4 times, no more or less |  |
-| wait_for_element_visible_ok | `//a[contains(text(),%%fname%%)][1]` | 30000 |
-| wait_for_element_visible_ok | `//a[contains(text(),%%fname%%)][2]` | 30000 |
-| wait_for_element_visible_ok | `//a[contains(text(),%%fname%%)][3]` | 30000 |
-| wait_for_element_visible_ok | `//a[contains(text(),%%fname%%)][4]` | 30000 |
-| wait_for_element_not_present_ok | `//a[contains(text(),%%fname%%)][5]` | 30000 |
+
+| *Comment* | %%fname%% needs to be checked for in two places within the same table, should occur exactly 2 times, no more or less |  |
+| wait_for_element_visible_ok | xpath=(//a[contains(text(),"%%fname%%")])[1] | 5000 |
+| wait_for_element_visible_ok | xpath=(//a[contains(text(),"%%fname%%")])[2] | 5000 |
+| wait_for_element_not_present_ok | xpath=(//a[contains(text(),"%%fname%%")])[3] | 5000 |
 
 | *Comment* | Test Case: Friendly Name 2 check Control Panel User |  |
+| wait_for_element_visible_ok | username | 30000 |
+| type_ok | username | %%fname_checker%% |
+| click_and_wait | st-username-search-submit |  |
 | wait_for_element_visible_ok | `//a[contains(text(),'%%fname_checker%%')]` | 30000 |
-| click_and_wait | //a[contains(text(),'%%fname_checker%%')] |  |
-
+| click_and_wait | `//a[contains(text(),'%%fname_checker%%')]` |  |
 | wait_for_text_present_ok | Invited by: "%%fname%%" | 10000 |
 | wait_for_element_present_ok | //div[@id='workspaceTable']/table/tbody/tr[2]/td[6] | 10000 |
 | text_like | //div[@id='workspaceTable']/table/tbody/tr[2]/td[6] | %%fname_user%% |
@@ -92,4 +98,4 @@
 | st-process-jobs |  |  |
 | delete-workspace | %%fname_wiki_2%% |  |
 
-| *Comment* | Test Case: Friendly Name 2 COMPLETED |
+| *Comment* | Test Case: Friendly Name 2 COMPLETED |  |

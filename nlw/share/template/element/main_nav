@@ -1,0 +1,117 @@
+[% MACRO selected(types) FOR type = types; IF type == container.type %] selected [% END; END %]
+
+[% IF signals_only %]
+    [% INCLUDE signals_nav %]
+    [% INCLUDE people_nav %]
+    [% INCLUDE groups_nav %]
+    [% INCLUDE workspaces_nav %]
+    [% INCLUDE nav_buttons grids=12 %]
+[% ELSE %]
+    [% INCLUDE dashboard_nav %]
+    [% INCLUDE people_nav %]
+    [% INCLUDE groups_nav %]
+    [% INCLUDE signals_nav %]
+    [% INCLUDE workspaces_nav %]
+    [% INCLUDE nav_buttons grids=9 %]
+[% END %]
+
+[% buttons = buttons || container.buttons || [] %]
+
+<script>
+    st.buttons.show([% container.buttons.json || buttons.json %]);
+
+    $("#global-workspace-list").navList([
+        {  
+            title: loc("wiki.all"),
+            href: "/?action=workspaces_listall"
+        },
+        {  
+            data: Socialtext.workspaces,
+            defaultId: 'default-workspace-link',
+            href: function(w) { return '/' + w.name },
+            title: function(w) { return w.label },
+            sort: function(a,b) {
+                if (a['default']) return -1;
+                if (b['default']) return 1;
+                if (a.name == b.title) return 0;
+                return (a.title < b.title) ? -1 : 1;
+            },
+            emptyMessage: loc("nav.no-wikis")
+        }
+    ]);
+</script>
+
+[% BLOCK dashboard_nav %]
+<div class="[% selected(['dashboard']) %]grid_3 navGrid first">
+  <div class="navLink">
+      <a class="dashboard" href="/st/dashboard">[% loc('nav.dashboard') %]</a>
+  </div>
+  <div class="underline"></div>
+</div>
+[% END %]
+
+[% BLOCK people_nav %]
+<div id="global-people-directory" class="[% selected(['peoplelist','profile']) %]grid_3 navGrid">
+  <div class="navLink">
+      <a class="people" href="/st/people">[% loc('nav.people') %]</a>
+  </div>
+  <ul class="navList">
+  [% IF user.is_guest %]
+    <li class="emptynotice">[% loc("info.following") %]</li>
+  [% ELSE %]
+    <li class="notinstallednotice">
+      <div>
+          <span class="product-name">[% loc("nav.socialtext-people") %]</span>
+          [% loc("about.people") %]
+      </div>
+      <div>
+        <a href="http://socialtext.com/products/features/Enable-People.php">
+            [% loc("nav.try-people") %]
+        </a>
+      </div>
+      <div>[% loc("info.contact-link") %] <a href="mailto:sales@socialtext.com">sales@socialtext.com</a></div>
+    </li>
+  [% END %]
+  </ul>
+  <div class="underline"></div>
+</div>
+[% END %]
+
+[% BLOCK groups_nav %]
+<div id="global-groups-directory" class="[% selected(['group_directory']) %]grid_3 navGrid">
+  <div class="navLink">
+      <a class="groups" href="/st/groups">[% loc('nav.groups') %]</a>
+  </div>
+  <div class="underline"></div>
+</div>
+[% END %]
+
+[% BLOCK signals_nav %]
+<div class="[% selected(['signals']) %]grid_3 navGrid">
+  <div class="navLink">
+      <a class="activities" href="/st/signals">[% loc('nav.signals') %]</a>
+  </div>
+  <div class="underline"></div>
+</div>
+[% END %]
+
+[% BLOCK workspaces_nav %]
+<div id="global-workspace-list" class="[% selected(['spaces']) %]grid_3 navGrid">
+  <div class="navLink">
+      <a class="spaces" href="/?action=workspaces_listall">[% loc('nav.wikis') %]</a>
+  </div>
+  <div class="underline"></div>
+</div>
+[% END %]
+
+[% BLOCK nav_buttons %]
+<div class="grid_[% grids %] navGrid last">
+  <div class="navItem">
+    <div class="buttons">
+    </div>
+    <div class="clear"></div>
+  </div>
+  <div class="staticUnderline"></div>
+</div>
+<div class="clear"></div>
+[% END %]

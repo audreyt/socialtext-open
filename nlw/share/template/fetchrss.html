@@ -1,0 +1,88 @@
+[%# @COPYRIGHT@ -%]
+[%- USE html_truncate -%]
+<div class="fetchrss_box">
+  <div class="fetchrss_titlebox">
+    [%
+      IF fetchrss_error;
+        PROCESS feed_error_head method = method, fetchrss_url = fetchrss_url;
+      ELSE;
+        PROCESS feed_head feed = feed;
+      END;
+    %]
+  </div>
+  [%
+    IF fetchrss_error;
+      PROCESS feed_error_items fetchrss_error = fetchrss_error;
+    ELSE;
+      PROCESS feed_items entries = feed.entries;
+      PROCESS feed_copyright IF feed.channel.copyright;
+    END;
+  %]
+</div>
+
+[% BLOCK feed_items %]
+ <ul class="fetchrss_items">
+  [% IF NOT entries %](Zero items)[% END %]
+  [% FOREACH item = entries %]
+    [% PROCESS feed_item link = item.link, title = item.title, body = item.content.body %]
+  [% END %]
+ </ul>
+[% END %]
+
+[% BLOCK feed_error_items %]
+<ul class="fetchrss_item">
+  <li class="fetchrss_item">
+    [% loc('rss.error:') %] [% fetchrss_error %]
+  </li>
+</ul>
+[% END %]
+
+[% BLOCK feed_head %]
+  [% PROCESS feed_image image = feed.rss.image IF feed.rss.image.link && feed.rss.image.url %]
+  [% PROCESS feed_title feed = feed IF feed.title %]
+[% END %]
+
+[% BLOCK feed_error_head %]
+ <div class="fetchrss_title">
+     [% method %]: [% fetchrss_url %]
+ </div>
+[% END %]
+
+[% BLOCK feed_copyright %]
+  <div class="fetchrss_copyright">[% feed.channel.copyright %]</div>
+[% END %]
+
+[% BLOCK feed_item %]
+  <li class="fetchrss_item">
+    <a href="[% link %]">[% title | html %]</a>
+    [% IF style && item.issued %]
+      <span class="fetchrss_date">[% date_for_user(item.issued) %]</span>
+    [% END %]
+
+    [% IF style == 'full' && body %]
+      <p class="fetchrss_description">[% item.content.body %]</p>
+    [% ELSIF style == 'summary' %]
+      [% IF item.summary.body %]
+        <p class="fetchrss_description">[% item.summary.body %]</p>
+      [% ELSIF body %]
+        <p class="fetchrss_description">[% item.content.body | html_truncate(350) %]</p>
+      [% END %]
+    [% END %]
+  </li>
+[% END %]
+
+[% BLOCK feed_title %]
+ <div class="fetchrss_title">
+   <a href="[% feed.link %]">[% feed.title %]</a>
+ </div>
+[% END %]
+
+[% BLOCK feed_image %]
+  [%
+    width = '';
+    height = '';
+    SET width = 'width="${image.width}"' IF image.width;
+    SET height = 'height="${image.height}"' IF image.height;
+  %]
+    <a href="[% image.link %]"><img src="[% image.url %]" alt="[% image.title %]" border="0" [% width %] [% height %] /></a>
+[% END %]

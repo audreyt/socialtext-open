@@ -60,17 +60,13 @@
 | wait_for_text_present_ok | TODAY | 30000 |
 | wait_for_element_visible_ok | //a[contains(text(),'mention')] | 30000 |
 | wait_for_element_visible_ok | //div[@class='filterSection networks']/input | 30000 |
-| type_lookahead_ok | //div[@class='filterSection networks']/input | %%group1_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%group1_suffix%%')] | 10000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%group1_suffix%%')] | 10000 |
+| select-autocompleted-option-ok | //div[@class='filterSection networks']/input | %%group1_prefix%% |
 | wait_for_element_visible_ok | link=Sunpowered Systems | 30000 |
 | wait_for_element_visible_ok | link=Team Calendar | 30000 |
 | wait_for_element_visible_ok | link=Application Developers Webinar | 30000 |
 | wait_for_element_not_present_ok | link=%%refresh_link%% | 30000 |
 | wait_for_element_visible_ok | //div[@class='filterSection networks']/input | 30000 |
-| type_lookahead_ok | //div[@class='filterSection networks']/input | %%group2_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%group2_suffix%%')] | 10000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%group2_suffix%%')] | 10000 |
+| select-autocompleted-option-ok | //div[@class='filterSection networks']/input | %%group2_prefix%% |
 | wait_for_element_visible_ok | link=Sales Presentations | 30000 |
 | wait_for_element_visible_ok | link=Sales Tactics And Best Practices - Part II.pptx | 30000 |
 | wait_for_element_visible_ok | link=VanCo Sales Presentation 123.docx | 30000 |
@@ -91,17 +87,13 @@
 | wait_for_text_present_ok | TODAY | 30000 |
 | wait_for_element_visible_ok | //a[contains(text(),'mention')] | 30000 |
 | wait_for_element_visible_ok | //div[@class='filterSection people']/input | 30000 |
-| type_lookahead_ok | //div[@class='filterSection people']/input | %%person1_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%person1_suffix%%')] | 10000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%person1_suffix%%')] | 10000 |
+| select-autocompleted-option-ok | //div[@class='filterSection people']/input | %%person1_prefix%% |
 | wait_for_element_visible_ok | link=Alternative Energy Tech | 30000 |
 | wait_for_element_visible_ok | link=Inventory Status Report | 30000 |
 | wait_for_element_visible_ok | link=Bay Area Home Owners Association | 30000 |
 | wait_for_element_not_present_ok | link=%%refresh_link%% | 30000 |
 | wait_for_element_visible_ok | //div[@class='filterSection people']/input | 30000 |
-| type_lookahead_ok | //div[@class='filterSection people']/input | %%person2_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%person2_suffix%%')] | 10000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%person2_suffix%%')] | 10000 |
+| select-autocompleted-option-ok | //div[@class='filterSection people']/input | %%person2_prefix%% |
 | wait_for_element_visible_ok | link=Solar Power Conference | 30000 |
 | wait_for_element_visible_ok | link=Alternative Energy Tech | 30000 |
 | wait_for_element_not_present_ok | link=%%refresh_link%% | 30000 |
@@ -122,15 +114,11 @@
 | wait_for_text_present_ok | TODAY | 30000 |
 | wait_for_element_visible_ok | //a[contains(text(),'mention')] | 30000 |
 | wait_for_element_visible_ok | //div[@class='filterSection tags']/input | 30000 |
-| type_lookahead_ok | //div[@class='filterSection tags']/input | %%tag1_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag1_suffix%%')] | 10000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag1_suffix%%')] | 10000 |
+| select-autocompleted-option-ok | //div[@class='filterSection tags']/input | %%tag1_prefix%% |
 | wait_for_element_visible_ok | link=Alternative Energy Tech | 30000 |
 | wait_for_element_not_present_ok | link=%%refresh_link%% | 30000 |
 | wait_for_element_visible_ok | //div[@class='filterSection tags']/input | 30000 |
-| type_lookahead_ok | //div[@class='filterSection tags']/input | %%tag2_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag2_suffix%%')] | 10000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag2_suffix%%')] | 10000 |
+| select-autocompleted-option-ok | //div[@class='filterSection tags']/input | %%tag2_prefix%% |
 | wait_for_element_visible_ok | link=home_solar_panels.jpg | 30000 |
 | wait_for_element_visible_ok | link=Alternative Energy Tech | 30000 |
 | wait_for_element_not_present_ok | link=%%refresh_link%% | 30000 |

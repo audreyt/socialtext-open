@@ -7,7 +7,6 @@
 | open_ok | /%%workspace%%/?action=display;page_type=spreadsheet;page_name=ns%20%%start_time%%#edit |  |
 | wait_for_element_visible_ok | st-save-button-link |  |
 | st-page-save |  |  |
-| wait_for_element_visible_ok | st-edit-button-link | 30000 |
 | wait_for_element_present_ok | link=Export to CSV | 30000 |
 
 | *Comment* | Test Case: Calc New Page. Re-open and Save ns %%start_time%% |  |
@@ -16,13 +15,11 @@
 | st-page-save |  |  |
 | wait_for_element_present_ok | link=Export to CSV | 30000 |
 
-| *Comment* | Test Case: Calc New Page. try to save with existing page title: np ss %%start_time%% |  |
-| pause | 5000 |  |
-| open_ok | /%%workspace%%/?action=display;page_type=spreadsheet;page_name=Untitled%20Spreadsheet#edit |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| type_ok | st-newpage-pagename-edit | np ss %%start_time%% |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| click_ok | st-save-button-link |  |
+| *Comment* | Test Case: Calc New Page. try to save with existing page title: np ss %%start_time%% |  |  |  |
+| pause | 15000 |  |  |  |
+
+| call | [st-edit-new-sheet] | ws=%%workspace%% | title=np ss %%start_time%% |  |
+| click_ok | st-save-button-link |  |  |  |
 
 | *Comment* | Test Case: Calc New Page. Page Already Exists |  |
 | *Comment* | Test Case: Calc New Page. This fails if you go too fast. setSpeed 2000 |  |
@@ -33,28 +30,26 @@
 | wait_for_element_visible_ok | st-newspreadsheet-duplicate-option-different | 30000 |
 | check_ok | st-newspreadsheet-duplicate-option-different |  |
 | is_checked_ok | st-newspreadsheet-duplicate-option-different |  |
-| wait_for_element_visible_ok | st-newspreadsheet-duplicate-pagename | 30000 |
+| wait_for_element_visible_ok | st-newspreadsheet-duplicate-pagename | 15000 |
 | type_ok | st-newspreadsheet-duplicate-pagename | np ss %%start_time%% Two |
-| wait_for_element_present_ok | st-newpage-duplicate-okbutton | 30000 |
+| wait_for_element_present_ok | st-newspreadsheet-duplicate-okbutton | 15000 |
 | click_and_wait | st-newspreadsheet-duplicate-okbutton |  |
 | wait_for_element_visible_ok | st-page-titletext | 30000 |
 | text_like | st-page-titletext | np ss %%start_time%% Two |
 | location_like | /%%workspace%%/np_ss_%%start_time%%_two |  |
 
-| *Comment* | Test Case: Calc New Page. try to save with existing page title: np ss %%start_time%% Two |  |
-| pause | 5000 |  |
-| open_ok | /%%workspace%%/?action=display;page_type=spreadsheet;page_name=Untitled%20Spreadsheet#edit |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| type_ok | st-newpage-pagename-edit | np ss %%start_time%% Two |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| click_ok | st-save-button-link |  |
+| *Comment* | Test Case: Calc New Page. try to save with existing page title: np ss %%start_time%% Two |  |  |  |
+| pause | 15000 |  |  |  |
+
+| call | [st-edit-new-sheet] | ws=%%workspace%% | title=np ss %%start_time%% Two |  |
+| click_ok | st-save-button-link |  |  |  |
 
 | *Comment* | Test Case: Calc New Page. Page Already Exists |  |
 | *Comment* | Test Case: Calc New Page. Use duplicate option suggest |  |
 | wait_for_element_visible_ok | st-newspreadsheet-duplicate-option-suggest | 30000 |
 | check_ok | st-newspreadsheet-duplicate-option-suggest |  |
 | is_checked_ok | st-newspreadsheet-duplicate-option-suggest |  |
-| wait_for_element_present_ok | st-newpage-duplicate-okbutton | 30000 |
+| wait_for_element_present_ok | st-newspreadsheet-duplicate-okbutton | 15000 |
 | click_and_wait | st-newspreadsheet-duplicate-okbutton |  |
 | wait_for_element_visible_ok | st-page-titletext | 30000 |
 | text_like | st-page-titletext | qr/%%short_username%%.+np ss %%start_time%% Two/ism |

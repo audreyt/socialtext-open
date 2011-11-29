@@ -1,45 +1,47 @@
 | *Comment* | Test Case: Edit Contention Execute. Must be preceded by TC: Edit Contention Setup. |  |
-| *Comment* | value for variable `page` must be same as in TC: Edit Contention Setup. |  |
+| *Comment* | value for variable `ec_page` must be same as in TC: Edit Contention Setup. |  |
 | *Comment* | short username is %%short_username%%. atmail is %%atmail%% |  |
 
-| set | page | Special Edit Contention Page |
+| set | ec_page | Special Edit Contention Page |
+| set | ec_user | ec.user.%%start_time%%@david.socialtext.net |
+| create-user | %%ec_user%% | %%password%% |
+| st-admin | add-member --email %%ec_user%% --workspace %%workspace%% | now has the role |
+| st-logoutin | %%ec_user%% | %%password%% |
 
-| open_ok | /%%workspace%%/?%%page%% |  |
+| open_ok | /%%workspace%%/?%%ec_page%% |  |
 | wait_for_text_present_ok | opened this page for editing | 15000 |
 
 | *Comment* | Test Case: Edit Contention Execute. Warning Text should disappear on its own. |  |
-| wait_for_element_visible_ok | link=Edit | 30000 |
-| click_ok | link=Edit |  |
+| wait_for_element_visible_ok | st-edit-button-link | 30000 |
+| click_ok | st-edit-button-link |  |
 
 | *Comment* | Test Case: Edit Contention Execute. slow down or buttons don't work. |  |
 | set_speed_ok | 2000 |  |
-| wait_for_element_visible_ok | link=Edit Anyway | 30000 |
-| wait_for_element_visible_ok | link=Return to Page View | 30000 |
+| wait_for_element_visible_ok | edit_anyway | 30000 |
+| wait_for_element_visible_ok | edit_return | 30000 |
 | wait_for_text_present_ok | has opened this page for editing | 30000 |
 | text_like | qr/%%atmail%%/ism |  |
 
 | *Comment* | Test Case: Edit Contention Execute. Test Return to Page View and Edit Anyway |  |
-| click_ok | link=Return to Page View |  |
-| wait_for_element_not_present_ok | link=Edit Anyway | 10000 |
-| wait_for_element_not_present_ok | link=Return to Page View | 10000 |
+| click_and_wait | //a[contains(@class,"close")] |  |
+| wait_for_element_not_present_ok | edit_anyway | 10000 |
+| wait_for_element_not_present_ok | edit_return | 10000 |
 
 | *Comment* | Test Case: Edit Contention Execute. This is just really slow in IE. I hate pause. |  |
 | pause | 10000 |  |
 
-| wait_for_element_visible_ok | link=Edit | 30000 |
-| click_ok | link=Edit |  |
-| wait_for_element_visible_ok | link=Edit Anyway | 30000 |
-| wait_for_element_visible_ok | link=Return to Page View | 30000 |
-| click_ok | link=Edit Anyway |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
+| wait_for_element_visible_ok | st-edit-button-link | 30000 |
+| click_ok | st-edit-button-link |  |
+| wait_for_element_visible_ok | edit_anyway | 30000 |
+| wait_for_element_visible_ok | edit_return | 30000 |
+| click_ok | edit_anyway |  |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |
 
 | *Comment* | Test Case: Edit Contention Execute. Save anyway. |  |
-| set_speed_ok | 0 |  |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| wait_for_element_visible_ok | link=Save | 30000 |
-| click_and_wait | link=Save |  |
+| st-page-save |  |  |
 
 | *Comment* | Test Case: Edit Contention Execute. TEARDOWN. Teardown will be done by Test Case: Edit Contention Reset |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%ec_user%% |  |
 
 | *Comment* | Test Case: Edit Contention Execute COMPLETED |  |

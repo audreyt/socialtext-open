@@ -3,7 +3,7 @@
 
 use strict;
 use warnings;
-use Test::Socialtext tests => 121;
+use Test::Socialtext tests => 110;
 use Test::Socialtext::User;
 use Test::Socialtext::Fatal;
 use Test::Differences;
@@ -115,48 +115,6 @@ SKIP: {
     $profile->save;
 }
 
-Account_skins: {
-    # set skins
-    my $ws      = $test->workspaces->next;
-    my $ws_name = $ws->name;
-    $ws->update(skin_name => 'reds3');
-    my $ws_skin = $ws->skin_name;
-
-    $test = Socialtext::Account->new(name => 'Test Account');
-    is($test->skin_name, 's3', 'the default skin for accounts');
-
-    $test->update(skin_name => 's2');
-    is($test->skin_name, 's2', 'set the account skin');
-    is(
-        Socialtext::Workspace->new(name => $ws_name)->skin_name,
-        $ws_skin,
-        'updating account skin does not change workspace skins'
-    );
-    my $new_test = Socialtext::Account->new(name => 'Test Account');
-    is($new_test->skin_name, 's2', 'set the account skin');
-
-    # reset account and workspace skins
-    $new_test->reset_skin('reds3');
-
-    $test = Socialtext::Account->new(name => 'Test Account');
-    is(
-        $test->skin_name,
-        'reds3',
-        'reset_skin sets the skins of account workspaces'
-    );
-    is(
-        Socialtext::Workspace->new(name => $ws_name)->skin_name,
-        '',
-        'reset_skin sets the skins of account workspaces'
-    );
-
-    eq_or_diff( [], $test->custom_workspace_skins, 'custom workspace skins is empty.');
-    $ws->update( skin_name => 's3' );
-    eq_or_diff( ['s3'], $test->custom_workspace_skins, 'custom workspace skins updated.');
-    my $mess = $test->custom_workspace_skins( include_workspaces => 1 );
-    is( $ws_name, $mess->{s3}[0]{name}, 'custom skins with workspaces.');
-}
-
 use Test::MockObject;
 my $mock_adapter = Test::MockObject->new({});
 $mock_adapter->mock('hook', sub {});
@@ -197,13 +155,6 @@ Exporting_account_people: {
     is $users[1]{email_address}, 'devnull2@example.com', 'user 2 email';
     is $users[2]{username}, 'dummy3', 'user 3 username';
     is $users[2]{email_address}, 'devnull3@example.com', 'user 3 email';
-
-    {
-        use bytes;
-        ok $data->{logo}, 'logo was exported';
-        my $exported_logo = MIME::Base64::decode($data->{logo});
-        ok $$logo_ref eq $exported_logo, 'exported the correct image';
-    }
 }
 
 # Now blow the account and users away for the re-import

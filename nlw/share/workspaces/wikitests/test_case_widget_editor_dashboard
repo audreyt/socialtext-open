@@ -2,27 +2,38 @@
 
 * Fixture: SocialWidgets
 
+| *Comment* | Test Case: Widget Editor Dashboard create user and account. login. |  |
+| set | weacct | we-acct-%%start_time%% |
+| set | weuser | weuser.%%start_time%%@ken.socialtext.net |
+| create_account | %%weacct%% |  |
+
+| create_user | %%weuser%% | %%password%% | %%weacct%% |
+
+| st-logoutin | %%weuser%% | %%password%% |
+| st-admin | give-accounts-admin --e %%weuser%% | now has |
+
+| *Comment* | Test Case: Widget Editor Dashboard. Navigate to account |  |
+| open_ok | /nlw/control/account/%%account_id%% |  |
+
 | *Comment* | Test Case: Widget Editor Dashboard navigate to editor for new widget |  |
-| open_ok | /st/dashboard |  |
-| wait_for_element_visible_ok | //a[@class='addButton'] | 30000 |
-| click_and_wait | //a[@class='addButton'] |  |
-| wait_for_element_visible_ok | gallery-margin | 30000 |
-| click_and_wait | gallery-margin |  |
-| wait_for_element_visible_ok | gallery-add-content | 30000 |
-| click_ok | gallery-add-content |  |
-| wait_for_element_visible_ok | method-editor | 30000 |
+| wait_for_element_visible_ok | st-gallery-add-widget | 10000 |
+| click_ok | st-gallery-add-widget |  |
+| wait_for_element_visible_ok | method-editor | 15000 |
 | click_ok | method-editor |  |
-| wait_for_element_visible_ok | st-add-widget | 30000 |
-| click_and_wait | st-add-widget |  |
+| click_ok | st-add-widget |  |
 
 | *Comment* | Test Case: Widget Editor Dashboard check elements |  |
-| wait_for_text_present_ok | Hello World! | 30000 |
+| wait_for_text_present_ok | Hello World! | 15000 |
 | st-name-widget | 2 | preview |
-| st-widget-title-like | preview | Hello World! |
+| st-widget-title | preview | Hello World! |
 | st-select-widget-frame | preview |  |
-| wait_for_text_present_ok | Hello, world! | 30000 |
+| wait_for_text_present_ok | Hello, world! | 15000 |
 | select-frame | relative=parent |  |
 
 | include | [Test Case: Widget Editor Edit] |  |
+
+| *Comment* | Test Case: Widget Editor Dashboard TEARDOWN |  |
+| st-admin | deactivate-user --e %%weuser%% |  |
+| delete_account | %%weacct%% |  |
 
 | *Comment* | Test Case: Widget Editor Dashboard COMPLETED |  |

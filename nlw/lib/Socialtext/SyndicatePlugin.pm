@@ -60,8 +60,13 @@ Establish the existence of the 'syndication depth' preference and
 sub register {
     my $self = shift;
     my $registry = shift;
-    $registry->add(preference => $self->syndication_depth);
     $registry->add(action => 'rss20');
+
+    $self->_register_prefs($registry);
+}
+
+sub pref_names {
+    return qw(syndication_depth);
 }
 
 =head2 syndicate()
@@ -131,6 +136,19 @@ sub rss20 {
             . $query_string );
 }
 
+
+sub syndication_depth_data {
+    my $self = shift;
+
+    return {
+        title => loc('rss.number-of-posts-to-syndicate'),
+        default_setting => 10,
+        options => [
+            map { {setting => $_, display => $_ } } qw(5 10 15 20 25 50 100)
+        ],
+    };
+}
+
 =head2 syndication_depth()
 
 An L<Socialtext::Preference> controlling the maximum number of pages to
@@ -140,20 +158,15 @@ is unset for the user, the default, 10, is used.
 =cut
 sub syndication_depth {
     my $self = shift;
+
+    my $data = $self->syndication_depth_data;
     my $p = $self->new_preference('syndication_depth');
-    $p->query(__('feed.number-of-posts?'));
+
+    $p->query($data->{title});
     $p->type('pulldown');
-    my $choices = [
-        5   => '5',
-        10  => '10',
-        15  => '15',
-        20  => '20',
-        25  => '25',
-        50  => '50',
-        100 => '100',
-    ];
-    $p->choices($choices);
-    $p->default(10);
+    $p->choices($self->_choices($data));
+    $p->default($data->{default_setting});
+
     return $p;
 }
 

@@ -27,70 +27,46 @@
 | st-admin | create-workspace --empty --name %%new_ws%% --title %%new_ws%% --empty |  |
 | st-admin | add-member --email %%email%% --workspace %%new_ws%% |  |
 
-| st-admin | create-user --email %%all_files_user_1%% --password 123456 |  |
+| st-admin | create-user --email %%all_files_user_1%% --password %%password%% |  |
 | st-admin | add-member --email %%all_files_user_1%% --workspace %%new_ws%% |  |
-| st-admin | create-user --email %%all_files_user_2%% --password 123456 |  |
+| st-admin | create-user --email %%all_files_user_2%% --password %%password%% |  |
 | st-admin | add-member --email %%all_files_user_2%% --workspace %%new_ws%% |  |
 
 | *Comment* | Test Case: All Files set permissions to member-only |  |
 | st-admin | set-permissions --workspace %%new_ws%% --permission member-only |  |
 
 | *Comment* | Test Case: All Files user_1 uploads wikitest.doc and wikitest.jpg |  |
-| st-logoutin | %%all_files_user_1%% | 123456 |
+| st-logoutin | %%all_files_user_1%% | %%password%% |
 
-| st-admin | update-page --e %%all_files_user_1%% --w %%new_ws%% --p "All Files %%start_time%% 1" < %%wikitest_client_files%%wikitest.txt | has been created |
-| open_ok | /%%new_ws%%/?All Files %%start_time%% 1 |  |
-| wait_for_element_visible_ok | st-attachments-uploadbutton | 30000 |
-| click_ok | st-attachments-uploadbutton |  |
-| wait_for_element_visible_ok | st-attachments-attach-filename | 30000 |
-| attach_file_ok | st-attachments-attach-filename | %%jpg_file%% |
-| wait_for_element_visible_ok | //a[contains(@href,'original/wikitest.jpg')] | 30000 |
+| set | new_title_1 | All Files %%start_time%% 1 |
+| st-admin | update-page --e %%all_files_user_1%% --w %%new_ws%% --p "%%new_title_1%%" < %%wikitest_client_files%%wikitest.txt | has been created |
 
-| *Comment* | Test Case: All Files wikitest.jpg upload waits for the Done button |  |
-| wait_for_element_visible_ok | st-attachments-attach-closebutton | 120000 |
-| wait_for_element_visible_ok | st-attachments-attach-filename | 30000 |
-| attach_file_ok | st-attachments-attach-filename | %%doc_file%% |
-| wait_for_element_visible_ok | //a[contains(@href,'original/wikitest.doc')] | 30000 |
-
-| *Comment* | Test Case: All Files wikitest.doc upload waits for the Done button |  |
-| wait_for_element_visible_ok | st-attachments-attach-closebutton | 120000 |
-| click_ok | st-attachments-attach-closebutton |  |
+| call | [st-attach-file] | ws=%%new_ws%% | title=%%new_title_1%% | file=wikitest.doc |
+| call | [st-attach-file] | ws=%%new_ws%% | title=%%new_title_1%% | file=wikitest.jpg |
 
 | *Comment* | Test Case: All Files verify jpg and doc uploads |  |
-| wait_for_element_visible_ok | contentRight | 30000 |
-| wait_for_element_visible_ok | //a[contains(@href,'original/wikitest.jpg')] | 30000 |
-| wait_for_element_visible_ok | //a[contains(@href,'original/wikitest.doc')] | 30000 |
+| wait_for_element_visible_ok | //a[contains(@href,'original/wikitest.jpg')] | 15000 |
+| wait_for_element_visible_ok | //a[contains(@href,'original/wikitest.doc')] | 15000 |
 | text_like | //a[contains(@href,'original/wikitest.jpg')] | wikitest.jpg |
 | text_like | //a[contains(@href,'original/wikitest.doc')] | wikitest.doc |
 
-| *Comment* | Test Case: All Files user_2 uploads wikitestzip.zip |  |
-| st-logoutin | %%all_files_user_2%% | 123456 |
-| st-admin | update-page --e %%all_files_user_2%% --w %%new_ws%% --p "All Files %%start_time%% 2" < %%wikitest_client_files%%wikitest.txt | has been created |
-| open_ok | /%%new_ws%%/?All Files %%start_time%% 2 |  |
+| *Comment* | Test Case: All Files user_2 uploads wikitestzip.zip |  |  |  |
+| st-logoutin | %%all_files_user_2%% | %%password%% |  |  |
+| set | new_title_2 | All Files %%start_time%% 2 |  |  |
+| st-admin | update-page --e %%all_files_user_2%% --w %%new_ws%% --p "%%new_title_2%%" < %%wikitest_client_files%%wikitest.txt | has been created |  |  |
 
-| wait_for_element_visible_ok | st-attachments-uploadbutton | 30000 |
-| click_ok | st-attachments-uploadbutton |  |
-| wait_for_element_visible_ok | st-attachments-attach-filename | 30000 |
-| attach_file_ok | st-attachments-attach-filename | %%zip_file%% |
-| wait_for_element_visible_ok | //a[contains(@href,'original/wikitestzip.zip')] | 30000 |
-
-| *Comment* | Test Case: All Files wikitestzip.zip upload waits for the Done button |  |
-| wait_for_element_visible_ok | st-attachments-attach-closebutton | 120000 |
-| click_ok | st-attachments-attach-closebutton |  |
+| call | [st-attach-file] | ws=%%new_ws%% | title=%%new_title_2%% | file=wikitestzip.zip |
 
 | *Comment* | Test Case: All Files verify zip upload |  |
-| wait_for_element_visible_ok | contentRight | 30000 |
 | wait_for_element_visible_ok | //a[contains(@href,'original/wikitestzip.zip')] | 30000 |
 | text_like | //a[contains(@href,'original/wikitestzip.zip')] | wikitestzip.zip |
 
 | *Comment* | Test Case: All Files. Display HH:MM:SS for logged in user |  |
-| open_ok | /?action=preferences_settings;preferences_class_id=timezone |  |
-| wait_for_element_visible_ok | timezone__time_display_seconds | 30000 |
-| check_ok | timezone__time_display_seconds |  |
-| click_and_wait | link=Save |  |
+
+| include | [st-timezone-seconds] |  |
 
 | *Comment* | Test Case: All Files list view |  |
-| open_ok | /%%new_ws%%/index.cgi?action=attachments_listall |  |
+| open_ok | /%%new_ws%%/?action=attachments_listall |  |
 | text_like | All Files |  |
 
 | *Comment* | Test Case: All Files Sorting tests |  |
@@ -98,45 +74,46 @@
 
 | *Comment* | Test Case: All Files sorted Filename desc |  |
 | select_and_wait | sort-picker | label=Filename (↓) |
-| text_like | contentContainer | qr/wikitestzip\.zip \(24kb\), attached to All Files %%start_time%% 2.+wikitest\.jpg \(.+\), attached to All Files %%start_time%% 1/ |
+| text_like | content | qr/wikitestzip\.zip \(24kb\), attached to All Files %%start_time%% 2.+wikitest\.jpg \(.+\), attached to All Files %%start_time%% 1/ |
 
 | *Comment* | Test Case: All Files default sorted Filename asc |  |
 | select_and_wait | sort-picker | label=Filename (↑) |
-| text_like | contentContainer | qr/wikitest\.jpg \(.+\), attached to All Files %%start_time%% 1.+wikitestzip\.zip \(24kb\), attached to All Files %%start_time%% 2/ |
+| text_like | content | qr/wikitest\.jpg \(.+\), attached to All Files %%start_time%% 1.+wikitestzip\.zip \(24kb\), attached to All Files %%start_time%% 2/ |
 
 | *Comment* | Test Case: All Files sort File size desc |  |
 | select_and_wait | sort-picker | label=Size |
-| text_like | contentContainer | qr/wikitest\.doc \(27kb\), attached to All Files %%start_time%% 1.+wikitestzip\.zip \(24kb\), attached to All Files %%start_time%% 2.+wikitest\.jpg \(.+\), attached to All Files %%start_time%% 1/ |
+| text_like | content | qr/wikitest\.doc \(27kb\), attached to All Files %%start_time%% 1.+wikitestzip\.zip \(24kb\), attached to All Files %%start_time%% 2.+wikitest\.jpg \(.+\), attached to All Files %%start_time%% 1/ |
 
 | *Comment* | Test Case: All Files sort File size asc |  |
 | select_and_wait | sort-picker | label=Size (↑) |
-| text_like | contentContainer | qr/wikitest\.jpg \(.+\), attached to All Files %%start_time%% 1.+wikitestzip\.zip \(24kb\), attached to All Files %%start_time%% 2.+wikitest\.doc \(27kb\), attached to All Files %%start_time%% 1/ |
+| text_like | content | qr/wikitest\.jpg \(.+\), attached to All Files %%start_time%% 1.+wikitestzip\.zip \(24kb\), attached to All Files %%start_time%% 2.+wikitest\.doc \(27kb\), attached to All Files %%start_time%% 1/ |
 
 | *Comment* | Test Case: All Files sort Title asc |  |
 | select_and_wait | sort-picker | label=Page Title |
-| text_like | contentContainer | qr/All Files %%start_time%% 1.+All Files %%start_time%% 2/ |
+| text_like | content | qr/All Files %%start_time%% 1.+All Files %%start_time%% 2/ |
 
 | *Comment* | Test Case: All Files sort Title desc |  |
 | select_and_wait | sort-picker | label=Page Title (↓) |
-| text_like | contentContainer | qr/All Files %%start_time%% 2.+All Files %%start_time%% 1/ |
+| text_like | content | qr/All Files %%start_time%% 2.+All Files %%start_time%% 1/ |
 
 | *Comment* | Test Case: All Files sort Uploaded by asc |  |
 | select_and_wait | sort-picker | label=Uploaded By |
-| text_like | contentContainer | qr/All Files %%start_time%% 1.+All Files %%start_time%% 2/ |
+| text_like | content | qr/All Files %%start_time%% 1.+All Files %%start_time%% 2/ |
 
 | *Comment* | Test Case: All Files sort Uploaded by desc |  |
 | select_and_wait | sort-picker | label=Uploaded By (↓) |
-| text_like | contentContainer | qr/All Files %%start_time%% 2.+All Files %%start_time%% 1/ |
+| text_like | content | qr/All Files %%start_time%% 2.+All Files %%start_time%% 1/ |
 
 | *Comment* | Test Case: All Files sort Date desc |  |
 | select_and_wait | sort-picker | label=Date Uploaded |
-| text_like | contentContainer | qr/All Files %%start_time%% 2.+All Files %%start_time%% 1/ |
+| text_like | content | qr/All Files %%start_time%% 2.+All Files %%start_time%% 1/ |
 
 | *Comment* | Test Case: All Files sort Date asc |  |
 | select_and_wait | sort-picker | label=Date Uploaded (↑) |
-| text_like | contentContainer | qr/All Files %%start_time%% 1.+All Files %%start_time%% 2/ |
+| text_like | content | qr/All Files %%start_time%% 1.+All Files %%start_time%% 2/ |
 
-| *Comment* | Test Case: All Files Teardown |  |
+| *Comment* | Test Case: All Files TEARDOWN |  |
+| st-process-jobs |  |  |
 | st-admin | delete-workspace --workspace %%new_ws%% --no-export | has been deleted |
 
-| *Comment* | Test Case: All Files COMPLETED |
+| *Comment* | Test Case: All Files COMPLETED |  |

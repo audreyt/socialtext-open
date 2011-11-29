@@ -687,7 +687,7 @@ SELECT page_id,
     WHERE NOT deleted 
       AND workspace_id = ? 
       AND name ~* ?
-      AND page_type = ?
+      AND page_type IN (?)
     ORDER BY last_edit_time DESC
 ) AS X ORDER BY name
 EOT
@@ -709,7 +709,7 @@ $COMMON_SELECT
     JOIN page_tag USING (page_id, workspace_id) 
 WHERE NOT deleted 
   AND page.workspace_id = ? 
-  AND LOWER(page_tag.tag) = LOWER(?) AND page.page_type = ? ORDER BY page.last_edit_time DESC, page.name asc LIMIT ?
+  AND LOWER(page_tag.tag) = LOWER(?) AND page.page_type IN (?) ORDER BY page.last_edit_time DESC, page.name asc LIMIT ?
 EOT
         args => [9,'foo','wiki',33],
     );
@@ -731,7 +731,7 @@ $COMMON_SELECT
 WHERE NOT deleted
   AND page.workspace_id = ? 
   AND last_edit_time > 'now'::timestamptz - ?::interval 
-  AND LOWER(page_tag.tag) = LOWER(?) AND page.page_type = ? ORDER BY page.last_edit_time DESC, page.name asc LIMIT ?
+  AND LOWER(page_tag.tag) = LOWER(?) AND page.page_type IN (?) ORDER BY page.last_edit_time DESC, page.name asc LIMIT ?
 EOT
         args => [9,'88 seconds','foo', 'spreadsheet', 20],
     );
@@ -750,7 +750,7 @@ EOT
 $COMMON_SELECT
 WHERE NOT deleted 
   AND page.workspace_id = ? 
-  AND page.page_type = ?
+  AND page.page_type IN (?)
 OFFSET ? 
 EOT
         args => [9,'wiki',765],

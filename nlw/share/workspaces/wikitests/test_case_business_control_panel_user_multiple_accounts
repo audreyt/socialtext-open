@@ -22,20 +22,18 @@
 | open_ok | /nlw/control/user/%%user_id%% |  |
 | wait_for_text_present_ok | Add User to Account: | 30000 |
 | wait_for_element_visible_ok | addAccountLookahead | 30000 |
-| type_lookahead_ok | addAccountLookahead | %%acct2%% |
-| wait_for_element_visible_ok | link=%%acct2%% | 30000 |
-| click_ok | link=%%acct2%% |  |
+| select-autocompleted-option-ok | addAccountLookahead | %%acct2%% |
 | wait_for_text_present_ok | Accounts (2) | 30000 |
 | text_like | //body | qr/%%acct2%%.+Member of Account.+%%primacct%%.+Primary Account/ |
 | wait_for_element_visible_ok | link=Name | 30000 |
 | click_ok | link=Name |  |
 
 | *Comment* | Test Case: Business Control Panel User. Sort does not cause page load. Pause. |  |
-| pause | 5000 | Yes, pause is bad. Wait for javascript. text_like doesn't have a wait_for; wait_for_text_present_ok doesn't do regexps |
+| pause | 15000 | Yes, pause is bad. Wait for javascript. text_like doesn't have a wait_for; wait_for_text_present_ok doesn't do regexps |
 | text_like | //body | qr/%%primacct%%.+Primary Account.+%%acct2%%.+Member of Account/ |
 | wait_for_element_visible_ok | link=Name | 30000 |
 | click_ok | link=Name |  |
-| pause | 5000 | Yes, pause is bad. Wait for javascript. text_like doesn't have a wait_for; wait_for_text_present_ok doesn't do regexps |
+| pause | 15000 | Yes, pause is bad. Wait for javascript. text_like doesn't have a wait_for; wait_for_text_present_ok doesn't do regexps |
 | text_like | //body | qr/%%acct2%%.+Member of Account.+%%primacct%%.+Primary Account/ |
 
 | *Comment* | Test Case: Business Control Panel User TODO - Flip Primary-ness of accounts |  |

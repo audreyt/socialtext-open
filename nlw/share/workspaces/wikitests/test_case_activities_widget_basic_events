@@ -12,24 +12,19 @@
 | add-member | %%signalsuser%% | %%ws%% |  |
 | st-admin | enable-plugin --all-accounts --p signals |  |  |
 
-| *Comment* | Test Case: Activities Widget Basic Events. Generate wiki events |  |
-| st-admin | update-page --workspace %%ws%% --email %%signalsuser%% --page "Edit Summary Signal %%start_time%%" < %%wikitest_client_files%%wikitest_toc.txt | The "Edit Summary Signal %%start_time%%" page has been created. |
-
-| st-process-jobs | PageIndex |  |
 
 | st-logoutin | %%signalsuser%% | %%password%% |
-| open_ok | /%%ws%%/index.cgi?Edit Summary Signal %%start_time%% |  |
-| wait_for_element_visible_ok | st-edit-button-link | 30000 |
-| click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
+
+
+| call | [st-edit-fill-page] | ws=%%ws%% | title=Edit Summary Signal %%start_time%% | content=test content |
+
+
 | wait_for_element_present_ok | st-edit-summary-text-area | 30000 |
 | click_ok | st-edit-summary-text-area |  |
 | type_ok | st-edit-summary-text-area | Super Edit Summary From Signal %%start_time%% |
 | click_ok | st-edit-summary-signal-checkbox |  |
 | st-page-save |  |  |
+| st-process-jobs | PageIndex |  |
 
 | *Comment* | Test Case: Activities Widget Basic Events. Generate Basic Signals |  |
 | http-user-pass | %%signalsuser%% | %%password%% |
@@ -46,10 +41,10 @@
 
 | *Comment* | Test Case: Activities Widget Basic Events. Back at Dashboard with widget |  |
 | wait_for_text_present_ok | Welcome | 30000 |
-| text_like | st-editing-tools-edit | Welcome |
+| text_like | st-wikinav-profile | Welcome |
 | wait_for_text_present_ok | Activities | 30000 |
 | st-name-widget | 1 | activities_widget |
-| st-widget-title-like | activities_widget | Activities |
+| st-widget-title | activities_widget | Activities |
 | st-widget-settings | activities_widget |  |
 | wait_for_element_visible_ok | limit | 30000 |
 | select_ok | limit | 25 |
@@ -57,29 +52,29 @@
 | wait_for_element_not_visible_ok | limit | 30000 |
 
 | *Comment* | Test Case: Activities Widget Basic Events. Signals in widget. Select signals. |  |
-| wait_for_element_present_ok | link=signals | 10000 |
-| click_ok | link=signals |  |
+| wait_for_element_present_ok | link=Signals | 10000 |
+| click_ok | link=Signals |  |
 
 | *Comment* | Test Case: Activities Widget Basic Events. Verify Text |  |
 | open_ok | /st/dashboard |  |
-| st_verify_text_in_activities_widget | activities_widget | She rocks in the treehouse %%start_time%% |
-| st_verify_text_in_activities_widget | activities_widget | Rockin and a bopin %%start_time%% |
-| st_verify_text_in_activities_widget | activities_widget | All the little birds %%start_time%% |
-| st_verify_text_in_activities_widget | activities_widget | Love to hear the robin going %%start_time%% |
-| st_verify_text_in_activities_widget | activities_widget | Signal %%start_time%% |
-| st_verify_text_in_activities_widget | activities_widget | qr/Super.+Edit.+Summary.+From.+Signal.+%%start_time%%/ |
+| st-verify-text-in-activities-widget | She rocks in the treehouse %%start_time%% |
+| st-verify-text-in-activities-widget | Rockin and a bopin %%start_time%% |
+| st-verify-text-in-activities-widget | All the little birds %%start_time%% |
+| st-verify-text-in-activities-widget | Love to hear the robin going %%start_time%% |
+| st-verify-text-in-activities-widget | Signal %%start_time%% |
+| st-verify-text-in-activities-widget | qr/Super.+Edit.+Summary.+From.+Signal.+%%start_time%%/ |
 
 | *Comment* | Test case: Activities Widget Basic Events. Wait for Signal to appear in Profile Activity |  |
 | open_ok | /st/profile |  |
 | wait_for_text_present_ok | Activities | 30000 |
 | st-name-widget | 3 | profile_activity |
-| st-widget-title-like | profile_activity | Activities |
-| st_verify_text_in_activities_widget | profile_activity | She rocks in the treehouse %%start_time%% |
-| st_verify_text_in_activities_widget | profile_activity | Rockin and a bopin %%start_time%% |
-| st_verify_text_in_activities_widget | profile_activity | All the little birds %%start_time%% |
-| st_verify_text_in_activities_widget | profile_activity | Love to hear the robin going %%start_time%% |
-| st_verify_text_in_activities_widget | profile_activity | Signal %%start_time%% |
-| st_verify_text_in_activities_widget | profile_activity | qr/Super.+Edit.+Summary.+From.+Signal.+%%start_time%%/ |
+| st-widget-title | profile_activity | Activities |
+| st-verify-text-in-activities-widget | She rocks in the treehouse %%start_time%% |
+| st-verify-text-in-activities-widget | Rockin and a bopin %%start_time%% |
+| st-verify-text-in-activities-widget | All the little birds %%start_time%% |
+| st-verify-text-in-activities-widget | Love to hear the robin going %%start_time%% |
+| st-verify-text-in-activities-widget | Signal %%start_time%% |
+| st-verify-text-in-activities-widget | qr/Super.+Edit.+Summary.+From.+Signal.+%%start_time%%/ |
 
 | *Comment* | Test Case: Activities Widget Basic Events TEARDOWN |  |
 | st-process-jobs |  |  |

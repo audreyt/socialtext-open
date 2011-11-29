@@ -1,0 +1,25 @@
+[%# vim: set et sts=2 sw=2: %]
+[% WRAPPER $frame_name id="contentPage" %]
+  <div id="contentContainer">
+    <div id="contentTitle" class="grid_24">
+      <h2 id="st-page-titletext" class="tableTitle" title="[% display_title %]">[% display_title %]</h2>
+    </div>
+    <div class="clear"></div>
+    <div id="contentColumns" class="grid_24">
+      <br />
+      [% loc('page.delete-epilogue') %]
+      <br />
+      <br />
+      <form method="post" action="[% script_name %]">
+        <input type="hidden" name="action" value="undelete_page" />
+        <input type="hidden" name="page_id" value="[% page_id %]" />
+
+        <a id="restore_btn">[% loc('page.restore') %]</a>
+        <script>$('#restore_btn').button().click(function() { $(this).parents('form').submit() });</script>
+      </form>
+      <br />
+      [% backlinks_description %]
+    </div>
+    <div class="clear"></div>
+  </div>
+[% END %]

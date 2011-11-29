@@ -12,7 +12,6 @@
 | set | old_acct | anycorp |
 | set | old_acct_name | AnyCorp |
 | set | old_acct_page | %%old_acct_name%% Central |
-| set | auw_checkbox | //table[@id='workspaces']/tbody/tr/td[1]/input[1] |
 
 | create_account | %%ndd_acct%% |  |  |
 | set | ndd_acct_id | %%account_id%% |  |
@@ -31,47 +30,46 @@
 | wait_for_element_not_present_ok | //a[contains(text(),'%%central%%')] | 10000 |
 | wait_for_element_not_present_ok | //a[contains(text(),'%%fake_central%%')] | 10000 |
 
-| *Comment* | Test Case: New Default Dashboard manually create the fake central wiki |  |
-| st-admin | create-workspace --account %%ndd_acct%% --name %%fake_central%% --title "Fake Central" | created |
+| *Comment* | Test Case: New Default Dashboard manually create the fake %%fake_central%% wiki |  |  |
+| create-workspace | %%fake_central%% | %%ndd_acct%% | Fake Central |
 
 | *Comment* | Test Case: New Default Dashboard check that fake central wiki has been created |  |
 | open_ok | /nlw/control/workspace |  |
 | wait_for_element_not_present_ok | //a[contains(text(),'%%central%%')] | 10000 |
 | wait_for_element_present_ok | //a[contains(text(),'%%fake_central%%')] | 10000 |
 
-| *Comment* | Test Case: New Default Dashboard check new dashboard |  |
+| *Comment* | Test Case: New Default Dashboard check new dashboard for %%ndd_user%% |  |
 | st-logoutin | %%ndd_user%% | %%password%% |
 | open_ok | /st/dashboard |  |
 | wait_for_text_present_ok | Fill in your | 10000 |
-| is_element_present_ok | contentContainer | link=%%central_page%% |
-| st-name-widget | 1 | newbie |
-| st-widget-title-like | newbie | I'm new. What do I do? |
-| st-name-widget | 3 | news |
-| st-widget-title-like | news | News and Announcements |
-| wait_for_element_visible_ok | link=Creating Your Socialtext Solution | 30000 |
+| is_element_present_ok | content | link=%%central_page%% |
+| is_text_present_ok | I'm new. What do I do? |  |
+| st-widget-title | news | News and Announcements |
+| wait_for_element_visible_ok | link=Creating Your Socialtext Solution | 15000 |
 
 | *Comment* | Test Case: New Default Dashboard check for page locking in central workspace |  |
 | st-admin | add-workspace-admin --workspace %%central%% --email %%ndd_user%% | has the role |
-| open_ok | /%%central%%/?action=workspaces_permissions |  |
-| wait_for_element_visible_ok | settings-lock-pages | 30000 |
-| is_checked_ok | settings-lock-pages |  |
 
-| *Comment* | Test Case: New Default Dashboard login to old account as new member, create central wiki |  |
+| call | [st-spaces-accordion] | index=1 | section=Features |
+
+| wait_for_element_visible_ok | //input[@type="checkbox" and @name="workspace.setting.allows_page_locking"] | 15000 |
+| is_checked_ok | //input[@type="checkbox" and @name="workspace.setting.allows_page_locking"] |  |
+
+| *Comment* | Test Case: New Default Dashboard login to old account as %%new_user%%, create central wiki |  |
 | st-logoutin | %%new_user%% | %%password%% |
 | open_ok | /st/dashboard |  |
 | wait_for_text_present_ok | Fill in your | 10000 |
-| is_element_present_ok | contentContainer | link=%%old_acct_page%% |
-| st-name-widget | 1 | newbie |
-| st-widget-title-like | newbie | I'm new. What do I do? |
-| st-name-widget | 3 | news |
-| st-widget-title-like | news | News and Announcements |
-| wait_for_element_visible_ok | link=Creating Your Socialtext Solution | 30000 |
+| is_element_present_ok | content | link=%%old_acct_page%% |
+| is_text_present_ok | I'm new. What do I do? |  |
+| st-widget-title | news | News and Announcements |
+| wait_for_element_visible_ok | link=Creating Your Socialtext Solution | 15000 |
+
 
 | *Comment* | Test Case: New Default Dashboard login to old account, see old dashboard but new central wiki |  |
 | st-logoutin | %%old_user%% | %%old_pass%% |
 | open_ok | /st/dashboard |  |
 | st-name-widget | 3 | activities |
-| st-widget-title-like | activities | Activities |
+| st-widget-title | activities | Activities |
 | wait_for_text_present_ok | Post to | 30000 |
 | open_ok | /%%old_acct%%-central |  |
 | wait_for_text_present_ok | %%old_acct_name%% Central | 30000 |
@@ -79,62 +77,58 @@
 | *Comment* | Test Case: New Default Dashboard login as new member, change default dashboard |  |
 | st-logoutin | %%new_user%% | %%password%% |
 | open_ok | /st/dashboard |  |
-| wait_for_element_visible_ok | link=Administer Dashboards | 30000 |
-| click_and_wait | link=Administer Dashboards |  |
+| wait_for_element_visible_ok | st-admin-dashboard | 30000 |
+| click_and_wait | st-admin-dashboard |  |
 | wait_for_text_present_ok | This is the default dashboard | 30000 |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
+| wait_for_element_visible_ok | st-edit-layout | 15000 |
+| click_ok | st-edit-layout |  |
+| wait_for_element_visible_ok | st-add-widget | 15000 |
+| click_ok | st-add-widget |  |
 | wait_for_element_visible_ok | gallery-widget-Active Content | 30000 |
-| click_and_wait | gallery-widget-Active Content |  |
-| wait_for_element_visible_ok | dashboard-save-layout | 30000 |
-| click_ok | dashboard-save-layout |  |
-| wait_for_element_visible_ok | st-save-widget-template | 30000 |
-| click_ok | st-save-widget-template |  |
-| wait_for_element_visible_ok | link=Close | 30000 |
-| click_and_wait | link=Close |  |
+| click_and_pause | gallery-widget-Active Content | 15000 |
+| wait_for_element_visible_ok | st-save-layout | 15000 |
+| click_ok | st-save-layout |  |
+| wait_for_element_visible_ok | save-layout-save | 15000 |
+| click_and_pause | save-layout-save | 15000 |
 
 | *Comment* | Test Case: New Default Dashboard login as newer member, see new dashboard |  |
 | st-logoutin | %%newer_user%% | %%password%% |
 | open_ok | /st/dashboard |  |
 | st-name-widget | 5 | new |
-| st-widget-title-like | new | Active Content |
+| st-widget-title | new | Active Content |
 
 | *Comment* | Test Case: New Default Dashboard revert to default dashboard |  |
 | st-logoutin | %%new_user%% | %%password%% |
 | open_ok | /st/dashboard |  |
-| wait_for_element_visible_ok | link=Administer Dashboards | 30000 |
-| click_and_wait | link=Administer Dashboards |  |
+| wait_for_element_visible_ok | st-admin-dashboard | 30000 |
+| click_and_wait | st-admin-dashboard |  |
 | wait_for_text_present_ok | This is the default dashboard | 30000 |
-| wait_for_element_visible_ok | dashboard-revert-layout | 30000 |
-| click_ok | dashboard-revert-layout |  |
-| wait_for_element_visible_ok | dashboard-revert-yes | 30000 |
-| pause | 5000 |  |
-| click_and_wait | dashboard-revert-yes |  |
-| wait_for_element_visible_ok | dashboard-save-layout | 30000 |
-| click_ok | dashboard-save-layout |  |
-| wait_for_element_visible_ok | st-save-widget-template | 30000 |
-| click_ok | st-save-widget-template |  |
-| wait_for_element_visible_ok | link=Close | 30000 |
-| click_and_wait | link=Close |  |
+| wait_for_element_visible_ok | st-edit-layout | 15000 |
+| click_ok | st-edit-layout |  |
+| wait_for_element_visible_ok | st-revert-layout | 15000 |
+| click_and_pause | st-revert-layout | 8000 |
+| wait_for_element_visible_ok | st-save-layout | 30000 |
+| click_ok | st-save-layout |  |
+| wait_for_element_visible_ok | save-layout-save | 15000 |
+| click_and_pause | save-layout-save | 15000 |
 
 | *Comment* | Test Case: New Default Dashboard login as newest user, see default dashboard |  |
 | st-logoutin | %%newest_user%% | %%password%% |
 | open_ok | /st/dashboard |  |
-| st-name-widget | 1 | original |
-| st-widget-title-like | original | I'm new. What do I do? |
+| wait_for_text_present_ok | I'm new. What do I do? | 30000 |
 
 | *Comment* | Test Case: New Default Dashboard login as old member, still see old dashboard |  |
 | st-logoutin | %%old_user%% | %%old_pass%% |
 | open_ok | /st/dashboard |  |
 | st-name-widget | 3 | activities |
-| st-widget-title-like | activities | Activities |
+| st-widget-title | activities | Activities |
+| text_unlike | //body | I'm new |
 
 | *Comment* | Test Case: New Default Dashboard old member sees new default dashboard |  |
-| wait_for_element_visible_ok | link=Administer Dashboards | 30000 |
-| click_and_wait | link=Administer Dashboards |  |
+| wait_for_element_visible_ok | st-admin-dashboard | 30000 |
+| click_and_wait | st-admin-dashboard |  |
 | wait_for_text_present_ok | This is the default dashboard | 30000 |
-| st-name-widget | 1 | original |
-| st-widget-title-like | original | I'm new. What do I do? |
+| wait_for_text_present_ok | I'm new. What do I do? | 15000 |
 
 | *Comment* | Test Case: New Default Dashboard TEARDOWN |  |
 | st-process-jobs |  |  |

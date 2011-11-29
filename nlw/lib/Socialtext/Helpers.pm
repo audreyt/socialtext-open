@@ -1,12 +1,11 @@
 # @COPYRIGHT@
 package Socialtext::Helpers;
-use strict;
-use warnings;
+use Moose;
+use methods-invoker;
 use Encode;
 
 # vaguely akin to RubyOnRails' "helpers"
 use Socialtext;
-use base 'Socialtext::Base';
 use Socialtext::File;
 use Socialtext::TT2::Renderer;
 use Socialtext::l10n;
@@ -18,22 +17,23 @@ use Email::Address;
 use Email::Valid;
 use File::Path ();
 
-our $ENABLE_FRAME_CACHE = 1;
-my $PROD_VERSION = Socialtext->product_version;
-my $CODE_BASE = Socialtext::AppConfig->code_base;
+use namespace::clean -except => 'meta';
 
-sub class_id { 'helpers' }
+extends 'Socialtext::Base';
 
-sub static_path { "/static/$PROD_VERSION" }
+our $ENABLE_FRAME_CACHE = 0;
+
+use constant class_id => 'helpers';
+use constant static_path => "/static/" .  Socialtext->product_version;
+use constant script_path => 'index.cgi';
 
 my $supported_format = {
     'en' => '%B %Y',
     'ja' => '%Y年 %m月',
 };
 
-sub _get_date_format {
-    my $self = shift;
-    my $locale = $self->hub->best_locale;
+method _get_date_format {
+    my $locale = $->hub->best_locale;
     my $locale_format = $supported_format->{$locale};
     if (!defined $locale_format) {
         $locale = 'en';
@@ -46,11 +46,7 @@ sub _get_date_format {
     );
 }
 
-sub format_date {
-    my $self = shift;
-    my $year = shift;
-    my $month = shift;
-
+method format_date ($year, $month) {
     # Create DateTime object
     my $datetime = DateTime->new(
         time_zone => 'local',
@@ -62,7 +58,7 @@ sub format_date {
         second => 0
     );
 
-    my $format = $self->_get_date_format;
+    my $format = $->_get_date_format;
     my $date_str = $format->format_datetime($datetime);
     Encode::_utf8_on($date_str);
     return $date_str;
@@ -71,15 +67,11 @@ sub format_date {
 
 # XXX most of this should become Socialtext::Links or something
 
-sub full_script_path {
-    my $self = shift;
-    '/' . $self->hub->current_workspace->name . '/index.cgi'
+method full_script_path {
+    '/' . $->hub->current_workspace->name . '/index.cgi'
 }
 
-sub script_path { 'index.cgi' }
-
-sub query_string_from_hash {
-    my $self = shift;
+method query_string_from_hash {
     my %query = @_;
     return %query
       ? join '', map { ";$_=$query{$_}" } keys %query
@@ -87,104 +79,50 @@ sub query_string_from_hash {
 }
 
 # XXX need to refactor the other stuff in this file to use this
-sub script_link {
-    my $self = shift;
-    my $label = shift;
-    my %query = @_;
-    my $url = $self->script_path . '?' . $self->query_string_from_hash(%query);
+method script_link($label, %query) {
+    my $url = $->script_path . '?' . $->query_string_from_hash(%query);
     return qq(<a href="$url">$label</a>);
 }
 
-sub page_display_link {
-    my $self = shift;
-    my $name = shift;
-    my $page = $self->hub->pages->new_from_name($name);
-    return $self->page_display_link_from_page($page);
+method page_display_link($name) {
+    my $page = $->hub->pages->new_from_name($name);
+    return $->page_display_link_from_page($page);
 }
 
-sub page_display_link_from_page {
-    my $self = shift;
-    my $page = shift;
-    my $path = $self->script_path . '?' . $page->uri;
-    my $title = $self->html_escape($page->name);
+method page_display_link_from_page($page) {
+    my $path = $->script_path . '?' . $page->uri;
+    my $title = $->html_escape($page->name);
     return qq(<a href="$path">$title</a>);
 }
 
-sub page_edit_link {
-    my $self = shift;
-    my $page_name = shift;
-    my $link_text = shift;
-    my $extra = $self->query_string_from_hash(@_);
-    return
-        '<a href="' . $self->page_edit_path($page_name) . $extra . '">'
-        . $self->html_escape($link_text)
-        . '</a>';
+method page_display_path($page_name) {
+    return $->script_path() . "?$page_name";
 }
 
-sub page_display_path {
-    my $self = shift;
-    my $page_name = shift;
-    my $path = $self->script_path();
-    return $path . '?' . $page_name;
-}
-
-sub page_edit_path {
-    my $self = shift;
-    my $page_name = shift;
-    my $path = $self->script_path();
-    return $path . '?' . $self->page_edit_params($page_name)
+method page_edit_path($page_name) {
+    return $->script_path() . '?' . $->page_edit_params($page_name)
 }
 
 # ...aaand we need this one, too.
-sub page_edit_params {
-    my $self = shift;
-    my $page_name = shift;
+method page_edit_params($page_name) {
     return 'action=display;page_name='
-        . $self->uri_escape($page_name)
+        . $->uri_escape($page_name)
         . ';js=show_edit_div'
 }
 
-sub preference_path {
-    my $self = shift;
-    my $pref = shift;
-    $self->script_path
-        . "?action=preferences_settings;preferences_class_id=$pref"
-        . $self->query_string_from_hash(@_)
-}
-
-sub _get_workspace_list_for_template {
-    my $self = shift;
-    return $self->{_workspacelist} if $self->{_workspacelist};
-
-    require Socialtext::Workspace;      # lazy-load, to reduce startup impact
+has 'default_workspace' => (
+    is => 'ro', isa => 'Maybe[HashRef]', lazy_build => 1
+);
+method _build_default_workspace {
+    require Socialtext::Workspace;
     my $ws = Socialtext::Workspace->Default;
 
-    my @workspaces = 
-    return $self->{_workspacelist} = [
-        lsort_by label => map {+{
-            label => $_->title,
-            name => $_->name,
-            account => $_->account->name,
-            id => $_->workspace_id,
-            ($ws and $ws->name eq $_->name) ? (default => 1) : (),
-        }} $self->hub->current_user->workspaces->all
-    ];
-}
-
-sub default_workspace {
-    my $self = shift;
-    require Socialtext::Workspace;      # lazy-load, to reduce startup impact
-    my $ws = Socialtext::Workspace->Default;
-
-    return ( defined $ws && $ws->has_user( $self->hub->current_user ) )
+    return ( defined $ws && $ws->has_user( $->hub->current_user ) )
         ? { label => $ws->title, link => "/" . $ws->name }
         : undef;
 }
 
-sub _get_appliance_config_value {
-    my $self = shift;
-    my $key = shift;
-
+method appliance_conf_val($key) {
     # Appliance Code is probably not installed if there's an error.
     local $@;
     eval "require Socialtext::Appliance::Config";
@@ -196,21 +134,51 @@ sub _get_appliance_config_value {
     return Socialtext::Appliance::Config->new->value($key);
 }
 
-sub signals_only {
-    my $self = shift;
-    return $self->_get_appliance_config_value('signals_only');
+has 'signals_only' => (is => 'ro', isa => 'Bool', lazy_build => 1);
+method _build_signals_only {
+    $->appliance_conf_val('signals_only');
 }
 
-sub desktop_update_enabled {
-    my $self = shift;
-    $self->_get_appliance_config_value('desktop_update_enabled');
+has 'desktop_update_enabled' => (is => 'ro', isa => 'Bool', lazy_build => 1);
+method _build_desktop_update_enabled {
+    $->appliance_conf_val('desktop_update_enabled');
 }
 
-sub global_template_vars {
-    my $self = shift;
-    my $hub = $self->hub;
-    my $cur_ws = $hub->current_workspace;
-    my $cur_user = $hub->current_user;
+has 'plugins_enabled' => (is => 'ro', isa => 'ArrayRef', lazy_build => 1);
+method _build_plugins_enabled {
+    return [
+        map { $_->name }
+        grep {
+            $->hub->current_workspace->is_plugin_enabled($_->name) ||
+            $->hub->current_user->can_use_plugin($_->name)
+        } Socialtext::Pluggable::Adapter->plugins
+    ];
+}
+
+has 'plugins_enabled_for_ws_account' => (
+    is => 'ro', isa => 'ArrayRef', lazy_build => 1
+);
+method _build_plugins_enabled_for_ws_account {
+    return [
+        map { $_->name }
+        grep {
+            $->hub->current_workspace->account->is_plugin_enabled($_->name)
+        } Socialtext::Pluggable::Adapter->plugins
+    ]
+}
+
+has 'ui_is_expanded' => (
+    is => 'ro', isa => 'Bool', lazy_build => 1
+);
+method _build_ui_is_expanded {
+    my $cookies = eval { Apache::Cookie->fetch() } || {};
+    return defined $cookies->{ui_is_expanded};
+}
+
+method global_template_vars {
+    my $hub = $->hub;
+    my $cur_ws = $->hub->current_workspace;
+    my $cur_user = $->hub->current_user;
 
     Socialtext::Timer->Continue('global_tt2_vars');
 
@@ -226,9 +194,9 @@ sub global_template_vars {
     my $locale = $hub->best_locale;
 
     my $use_frame_cache
-        = $ENABLE_FRAME_CACHE && $self->hub->skin->skin_name ne 's2';
+        = $ENABLE_FRAME_CACHE && $->hub->skin->skin_name ne 's2';
     my $frame_name
-        = $use_frame_cache ? $self->_render_user_frame : 'layout/html';
+        = $use_frame_cache ? $->_render_user_frame : 'layout/html';
     my %result = (
         frame_name        => $frame_name,
         firebug           => $hub->rest->query->param('firebug') || 0,
@@ -251,10 +219,18 @@ sub global_template_vars {
 
         $thunker->(css       => sub { $hub->skin->css_info }),
         $thunker->(skin_info => sub { $hub->skin->skin_info }),
-        $thunker->(user      => sub { $self->_get_user_info }),
-        $thunker->(wiki      => sub { $self->_get_wiki_info }),
+        $thunker->(user      => sub { $->legacy_user_info }),
+        $thunker->(wiki      => sub { $->workspace_info }),
         $thunker->(customjs  => sub { $hub->skin->customjs }),
         $thunker->(skin_name => sub { $hub->skin->skin_name }),
+
+        # System stuff
+        static_path   => $->static_path,
+        system_status => $->hub->main ?
+            $->hub->main->status_message() : undef,
+
+        # Themes
+        theme => $->theme_info,
 
         # possibly this is only used for s2 skin stuff?
         $thunker->('search_box_snippet', sub { 
@@ -268,35 +244,20 @@ sub global_template_vars {
             );
         }),
 
-        $thunker->(miki_url => sub { $self->miki_path }),
+        $thunker->(miki_url => sub { $->miki_path }),
         $thunker->(desktop_url => sub {
-            return '' unless $self->desktop_update_enabled;
+            return '' unless $->desktop_update_enabled;
             return '/st/desktop/badge';
         }),
         $thunker->(stax_info => sub { $hub->stax->hacks_info }),
         $thunker->(workspaceslist => sub {
-                $self->_get_workspace_list_for_template }),
-        $thunker->(default_workspace => sub { $self->default_workspace }),
-        $thunker->(ui_is_expanded => sub {
-            my $cookies = eval { Apache::Cookie->fetch() } || {};
-            return defined $cookies->{ui_is_expanded};
+                $->user_info->{workspaces}
         }),
-        $thunker->('plugins_enabled' => sub {
-            return [
-                map { $_->name }
-                grep {
-                    $cur_ws->is_plugin_enabled($_->name) ||
-                    $cur_user->can_use_plugin($_->name)
-                } Socialtext::Pluggable::Adapter->plugins
-            ];
-        }),
+        $thunker->(default_workspace => sub { $->default_workspace }),
+        $thunker->(ui_is_expanded => sub { $->ui_is_expanded }),
+        $thunker->('plugins_enabled' => sub { $->plugins_enabled }),
         $thunker->('plugins_enabled_for_current_workspace_account' => sub {
-            return [
-                map { $_->name }
-                grep {
-                    $cur_ws->account->is_plugin_enabled($_->name)
-                } Socialtext::Pluggable::Adapter->plugins
-            ]
+            return $->plugins_enabled_for_ws_account
         }),
         $thunker->(self_registration => sub {
                 return Socialtext::AppConfig->self_registration
@@ -312,15 +273,60 @@ sub global_template_vars {
         }),
         $thunker->(role_for_user => sub { 
                 $cur_ws->role_for_user($cur_user) || undef }),
-        $thunker->(signals_only => sub { $self->signals_only }),
+        $thunker->(signals_only => sub { $->signals_only }),
         $thunker->(is_workspace_admin => sub {
                 $hub->checker->check_permission('admin_workspace') ? 1 : 0 }),
+        $thunker->(js_bootstrap => sub { $->js_bootstrap }),
+        $thunker->(can_create_groups => sub {
+            !$->user_info->{is_guest} &&
+                Socialtext::Group->User_can_create_group(
+                    $->hub->current_user
+                ) ? 1 : 0
+        }),
 
         $hub->pluggable->hooked_template_vars,
     );
 
     Socialtext::Timer->Pause('global_tt2_vars');
     return %result;
+}
+
+has 'js_bootstrap' => (is => 'rw', isa => 'HashRef', lazy_build => 1);
+method _build_js_bootstrap {
+    return {
+        version => Socialtext->product_version,
+        # Socialtext.new_page = [% IF is_new %]true;[% ELSE %]false;[% END %]
+        # Socialtext.accept_encoding = [% accept_encoding.json || '""' %];
+        loc_lang => $self->hub->best_locale,
+        viewer => $->user_info,
+        workspace => $->workspace_info,
+        dev_mode => $ENV{NLW_DEV_MODE},
+        static_path => $->static_path,
+        miki_url => $->miki_path,
+
+        invite_url => $->invite_url,
+
+        content_types => $->hub->pluggable->content_types,
+
+        # wikiwyg
+        ui_is_expanded => $self->ui_is_expanded,
+
+        Socialtext::AppConfig->debug_selenium
+            ? ( UA_is_Selenium => 1 ) : (),
+
+        perms => {
+            edit => $->hub->checker->check_permission('edit')
+        },
+        action => $->hub->cgi->action,
+
+        plugins_enabled => $self->plugins_enabled,
+        plugins_enabled_for_current_workspace_account =>
+            $self->plugins_enabled_for_ws_account,
+    };
+}
+
+method add_js_bootstrap ($vars) {
+    $->js_bootstrap({ %{$->js_bootstrap}, %$vars });
 }
 
 sub clean_user_frame_cache {
@@ -333,24 +339,26 @@ sub user_frame_path {
     return Socialtext::Paths::cache_directory('user_frame');
 }
 
-sub _render_user_frame {
-    local $ENABLE_FRAME_CACHE = 0;
-    my $self = shift;
+has 'invite_url' => (is => 'ro', isa => 'Maybe[Str]', lazy_build => 1);
+method _build_invite_url { $->hub->pluggable->hook('template_var.invite_url') }
 
-    my $frame_path = $self->user_frame_path;
-    my $user_id = $self->hub->current_user->user_id;
+method _render_user_frame {
+    local $ENABLE_FRAME_CACHE = 0;
+
+    my $frame_path = $->user_frame_path;
+    my $user_id = $->hub->current_user->user_id;
     $user_id =~ m/^(\d\d?)/;
     my $user_prefix = $1;
 
-    my $loc_lang = $self->hub->best_locale;
-    my $is_guest = $self->hub->current_user->is_guest ? 1 : 0;
+    my $loc_lang = $->hub->best_locale;
+    my $is_guest = $->hub->current_user->is_guest ? 1 : 0;
 
-    my $can_invite = $self->hub->pluggable->hook('template_var.invite_url');
-    $can_invite = ($can_invite ? 1 : 0);
+    my $can_invite = $self->invite_url ? 1 : 0;
 
     my $can_create_group = (
-        (!$is_guest && Socialtext::Group->User_can_create_group($self->hub->current_user))
-            ? 1 : 0
+        (!$is_guest
+            && Socialtext::Group->User_can_create_group($->hub->current_user)
+        ) ? 1 : 0
     );
 
     my $frame_dir = "$frame_path/$user_prefix/$user_id";
@@ -364,9 +372,9 @@ sub _render_user_frame {
     my $renderer = Socialtext::TT2::Renderer->instance();
     my $frame_content = $renderer->render(
         template => 'layout/user_frame',
-        paths    => $self->hub->skin->template_paths,
+        paths    => $->hub->skin->template_paths,
         vars     => {
-            $self->hub->helpers->global_template_vars,
+            $->hub->helpers->global_template_vars,
             generate_user_frame => 1,
         }
     );
@@ -380,14 +388,27 @@ sub _render_user_frame {
     return $frame_tmpl;
 }
 
+method theme_info {
+    my $account = $->hub->current_user->primary_account;
+    my $theme = $account->prefs->all_prefs()->{theme};
 
-sub miki_path {
-    my ($self, $link) = @_;
+    return +{
+         st_logo_shade => $theme->{foreground_shade},
+         account_logo => $theme->{logo_image_id}
+             ? "/data/accounts/".$account->account_id."/theme/images/logo"
+             : undef,
+         account_favicon => $theme->{favicon_image_id}
+             ? "/data/accounts/".$account->account_id."/theme/images/favicon"
+             : undef,
+    };
+}
+
+method miki_path($link) {
     require Socialtext::Formatter::LiteLinkDictionary;
 
     my $miki_path      = '/m';
-    my $page_name      = $self->hub->pages->current->name;
-    my $workspace_name = $self->hub->current_workspace->name;
+    my $page_name      = $->hub->pages->current->name;
+    my $workspace_name = $->hub->current_workspace->name;
 
     if ($workspace_name) {
         $miki_path = Socialtext::Formatter::LiteLinkDictionary->new->format_link(
@@ -399,30 +420,53 @@ sub miki_path {
     return $miki_path;
 }
 
-sub _get_user_info {
-    my ($self) = @_;
-    my $user = $self->hub->current_user;
+has legacy_user_info => (is => 'ro', isa => 'HashRef', lazy_build => 1);
+method _build_legacy_user_info {
+    my $info = $->user_info;
     return {
-        username           => $user->guess_real_name,
-        userid             => $user->username,
-        id                 => $user->user_id,
+        %{$->user_info},
+        username => $info->{guess_real_name},
+        userid => $info->{username},
+        id => $info->{user_id},
+        can_use_plugin     => sub {
+            $->hub->current_user->can_use_plugin(@_);
+        },
+    }
+}
+
+has user_info => (is => 'ro', isa => 'HashRef', lazy_build => 1);
+method _build_user_info {
+    require Socialtext::Workspace;
+    my $user = $->hub->current_user;
+    my $ws = Socialtext::Workspace->Default;
+    return {
+        guess_real_name    => $user->guess_real_name,
+        first_name         => $user->first_name,
+        middle_name        => $user->middle_name,
+        last_name          => $user->last_name,
+        username           => $user->username,
+        user_id            => $user->user_id,
         email_address      => $user->email_address,
         is_guest           => $user->is_guest,
         is_business_admin  => $user->is_business_admin,
-        is_technical_admin  => $user->is_technical_admin,
+        is_technical_admin => $user->is_technical_admin,
         primary_account_id => $user->primary_account_id,
-        accounts           => sub {
-            return [
-                map {+{
-                    account_id => $_->account_id,
-                    name => $_->name,
-                    plugins => [$_->plugins_enabled],
-                }} $user->accounts
-            ],
-        },
-        can_use_plugin     => sub {
-            $user->can_use_plugin(@_);
-        },
+        accounts           => [
+            map {+{
+                account_id => $_->account_id,
+                name => $_->name,
+                plugins => [$_->plugins_enabled],
+            }} $user->accounts
+        ],
+        workspaces         => [
+            lsort_by label => map {+{
+                label => $_->title,
+                name => $_->name,
+                account => $_->account->name,
+                id => $_->workspace_id,
+                ($ws and $ws->name eq $_->name) ? (default => 1) : (),
+            }} $->hub->current_user->workspaces->all
+        ],
     };
 }
 
@@ -433,28 +477,28 @@ sub skin_uri {
     return $skin->skin_uri();
 }
 
-sub _get_wiki_info {
-    my ($self) = @_;
-    my $wiki = $self->hub->current_workspace;
-    my $skin = $self->hub->skin->skin_name;
+has 'workspace_info' => ( is => 'ro', isa => 'HashRef', lazy_build => 1 );
+method _build_workspace_info {
+    my $ws = $->hub->current_workspace;
+    my $skin = $->hub->skin->skin_name;
 
     return {
-        title         => $wiki->title,
-        central_page  => Socialtext::String::title_to_id( $wiki->title ),
-        logo          => $wiki->logo_uri_or_default,
-        name          => $wiki->name,
-        has_dashboard => $wiki->homepage_is_dashboard,
-        is_public     => $wiki->permissions->is_public,
-        uri           => $wiki->uri,
-        skin          => $skin,
-        email_address => $wiki->email_in_address,
-        static_path   => $self->static_path,
-        skin_uri      => \&skin_uri,
-        comment_form_window_height => $wiki->comment_form_window_height,
-        system_status              => $self->hub->main ?
-            $self->hub->main->status_message() : undef,
-        comment_by_email           => $wiki->comment_by_email,
-        email_in_address           => $wiki->email_in_address,
+        title         => $ws->title,
+        central_page  => Socialtext::String::title_to_id( $ws->title ),
+        logo          => $ws->logo_uri_or_default,
+        name          => $ws->name,
+        has_dashboard => $ws->homepage_is_dashboard,
+        is_public     => $ws->permissions->is_public,
+        web_uri       => $ws->uri,
+        email_address => $ws->email_in_address,
+        comment_form_window_height => $ws->comment_form_window_height,
+        comment_by_email           => $ws->comment_by_email,
+        email_in_address           => $ws->email_in_address,
+
+        allows_html_wafl => $ws->allows_html_wafl,
+        enable_spreadsheet => $ws->enable_spreadsheet,
+        enable_xhtml => $ws->enable_xhtml,
+        account_id => $ws->account_id,
     };
 }
 
@@ -532,4 +576,4 @@ sub _parse_email_address {
     return lc $address->address, $first, $last;
 }
 
-1;
+__PACKAGE__->meta->make_immutable(inline_constructor => 0);

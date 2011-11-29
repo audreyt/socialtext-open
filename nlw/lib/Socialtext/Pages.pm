@@ -624,9 +624,14 @@ sub _fetch_pages {
     }
 
     if ( $p{type} ) {
-        $p{where} .= ' AND ' if $p{where};
-        $p{where} .= 'page.page_type = ?';
-        push @{ $p{bind} }, $p{type};
+        my @types = split(/\s*,\s*/, $p{type});
+        if (@types) {
+            $p{where} .= ' AND ' if $p{where};
+            $p{where} .= "page.page_type IN (@{[
+                join(', ', ('?') x @types)
+            ]})";
+            push @{ $p{bind} }, @types;
+        }
     }
 
     my $deleted = '1=1';
@@ -711,8 +716,13 @@ sub Minimal_by_name {
 
     my $and_type = '';
     if ($p{type}) {
-        $and_type = 'AND page_type = ?';
-        push @bind, $p{type};
+        my @types = split(/\s*,\s*/, $p{type});
+        if (@types) {
+            $and_type = "AND page_type IN (@{[
+                join(', ', ('?') x @types)
+            ]})";
+            push @bind, @types;
+        }
     }
 
     if ($limit) {
@@ -779,8 +789,8 @@ sub TaggedCount {
         SELECT count(*) 
           FROM page
           JOIN page_tag USING (page_id, workspace_id)
-         WHERE NOT deleted AND workspace_id = ? AND tag = ?
-    }, $p{workspace_id}, $p{tag});
+         WHERE NOT deleted AND workspace_id = ? AND LOWER(tag) = ?
+    }, $p{workspace_id}, lc($p{tag}));
 }
 
 ################################################################################

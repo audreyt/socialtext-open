@@ -1,28 +1,17 @@
-| *Comment* | Test Case: Tools: Export as HTML |
+| *Comment* | Test Case: Tools: Export as HTML |  |  |  |
 
-| *Comment* | Test Case: Tools: Export as HTML Create test page |  |
-| open_ok | /%%workspace%%/?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| type_ok | st-newpage-pagename-edit | HTML %%start_time%% |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | HTML %%start_time%% content |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+| *Comment* | Test Case: Tools: Export as HTML Create test page |  |  |  |
 
-TODO: Selenium unhappy with HTML opening in new window.
+| st-create-page | %%workspace%% | HTML %%start_time%% | HTML %%start_time%% content |
+| st-process-jobs |  |  |  |
+| open_ok | /%%workspace%%/HTML_%%start_time%% |  |  |
 
-| *Comment* | Test Case: Tools: Export as HTML Test Export |  |
-
- click_ok | //a[contains(@href,'action=display_html')] |
-
-TODO: HTML opens in new window. See if Selenium can select and test that window
-
- text_like | HTML %%start_time%% | |
- text_like | HTML %%start_time%% content | |
+| *Comment* | Test Case: Tools: Export as HTML Test Export |  |  |  |
+| wait_for_element_present_ok | link=Export as HTML | 30000 |  |  |
+| click_and_wait | link=Export as HTML |  |  |  |
+| wait_for_text_present_ok | HTML %%start_time%% content | 30000 |  |  |
 
 | *Comment* | Test Case: Tools: Export as HTML Teardown |  |
 | st-admin | purge-page --w %%workspace%% --page html_%%start_time%% | was purged |
 
-| *Comment* | Test Case: Tools: Export as HTML COMPLETED |
+| *Comment* | Test Case: Tools: Export as HTML COMPLETED |  |

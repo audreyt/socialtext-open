@@ -1,0 +1,418 @@
+// updated by reed@bertopro.com on 3/16/10 (March) 10-03-16b
+
+body.wiki.xhtml
+  font: 13px / 1.3 $body_font
+  visibility: visible !important
+
+.wiki.xhtml ol
+  padding-left: 35px
+
+.wiki ol
+  padding-left: 1em
+
+.wiki
+  padding: 0 !important
+  line-height: normal !important
+  font-size: 12px !important
+  ul
+    padding-left: 1.4em
+    margin-top: 0.5em
+    margin-bottom: 0.5em
+  ol
+    list-style: decimal outside none
+  ul
+    list-style: disc outside none
+    ul
+      list-style-type: circle
+  ol
+    ul
+      list-style-type: circle
+    ol ul, ul ul
+      list-style-type: square
+  ul
+    ol ul, ul ul
+      list-style-type: square
+  li
+    padding: 3px 0px
+    margin-left: 1em
+  table td, th
+    vertical-align: top
+  table.st-ss
+    td, th
+      vertical-align: inherit
+  p, li // Text elements
+    font-size: 12px !important
+  td
+    font-size: 12px
+
+.wiki
+  p, li
+    line-height: 15px
+  td
+    line-height: 15px
+
+.wiki.xhtml
+  p, li
+    line-height: normal !important
+  td
+    line-height: normal !important
+
+// Wiki Content Styles
+// Default font settings.
+// The font-size percentage is of 16px. (0.75 * 16px = 12px)
+
+#st-revision-display
+  font-size: 12px !important
+  line-height: 15px
+
+div#contentColumns div#contentLeft .wiki p
+  line-height: normal
+
+// Headings
+
+.wiki
+  h1, h2, h3, h4, h5, h6
+    font-weight: normal
+    line-height: 1.2 !important
+    font-family: $header_font
+  h1
+    font-size: 2em
+  h2
+    font-size: 1.7em
+  h3
+    font-size: 1.4em
+
+.wiki.xhtml
+  h1, h2, h3
+    margin-bottom: 0.5em
+    margin-top: 0.5em
+  br + br + h1, br + br + h2, br + br + h3
+    margin-top: 0em
+
+.wiki
+  h1, h3
+    margin-bottom: 0.5em
+  h2
+    margin-bottom: 0.75em
+
+div#contentColumns div#contentLeft .wiki h3
+  font-size: 1.4em
+  margin-bottom: 0.5em
+
+.wiki
+  h4
+    font-size: 1.2em
+    margin-bottom: 0.5em
+  h5
+    font-size: 1em
+    font-weight: bold
+    margin-bottom: 0.5em
+  h6
+    font-size: 1em
+    font-weight: bold
+  h1 img, h2 img, h3 img, h4 img, h5 img, h6 img
+    margin: 0
+  p
+    margin-bottom: 1.3em !important
+    margin-top: 0 !important
+    img
+      &.left
+        padding: 0
+        border: 1px #999 solid
+        margin: 1.5em
+        float: left
+        margin: 1.5em 1.5em 1.5em 0
+      &.right
+        float: right
+        margin: 1.5em 0 1.5em 1.5em
+  span.nlw_phrase img
+    float: none
+    margin: 0px
+    vertical-align: baseline
+  blockquote
+    margin: 1em 0px 1em 40px
+  strong
+    font-weight: bold
+  em
+    font-style: italic
+  dfn
+    font-style: italic
+    font-weight: bold
+  abbr, acronym
+    border-bottom: 1px dotted #666
+  address
+    margin: 0 0 1.5em
+    font-style: italic
+  del, strike
+    color: $darker
+  pre, code
+    margin: 1.5em 0
+    white-space: pre
+  pre, code, tt
+    font: 1em 'andale mono', 'lucida console', monospace
+    line-height: 1.5
+
+// Lists
+
+  li
+    ul, ol
+      margin: 0 0 0 1.5em
+  ul, ol
+    margin: 0 0 0.5em 1.5em
+    line-height: 1.2em
+  ul
+    list-style-type: disc
+  ol
+    list-style-type: decimal
+  dl
+    margin: 0 0 1.5em 0
+    dt
+      font-weight: bold
+  dd
+    margin-left: 1.5em
+  div.inlineWidget table
+    th, td
+      border: 0px
+      padding: inherit
+
+// Tables (Wiki only - no XHTML for now)
+
+@mixin table-base
+  border-collapse: collapse
+  width: auto
+  margin-left: 1px
+  &.st-ss
+    border-collapse: inherit
+    margin-bottom: inherit
+    width: inherit
+  th
+    font-weight: bold
+    background: $light
+  &.st-ss th
+    font-weight: inherit
+    background: inherit
+  th, td
+    border: 1px solid black
+    padding: 0.2em
+  &.st-ss
+    th, td
+      border: inherit
+      padding: inherit
+      font-size: inherit
+      line-height: inherit
+  &.borderless
+    th, td
+      border: none
+      padding: 0.2em
+  tr.odd td
+    background: $tertiary_color
+  tfoot
+    font-style: italic
+  caption
+    background: $lighter
+  &.st-ss
+    tr.even td
+      background: inherit
+    tfoot
+      font-style: inherit
+    caption
+      background: inherit
+
+.wiki
+  table
+    @include table-base
+  sup, sub
+    line-height: 0
+
+.wiki.xhtml
+  table.formatter_table
+    @include table-base
+  table.xhtml_table
+    margin-bottom: 1.2em
+  sup, sub
+    font-size: smaller
+  sup
+    vertical-align: super
+  sub
+    vertical-align: sub
+
+
+// Misc classes
+
+.wiki
+  .small
+    font-size: .8em
+    margin-bottom: 1.875em
+    line-height: 1.875em
+  .large
+    font-size: 1.2em
+    line-height: 2.5em
+    margin-bottom: 1.25em
+  .hide
+    display: none
+  .quiet
+    color: $darker
+  .loud
+    color: $darkest
+  .highlight
+    background: $tertiary_color
+  .added
+    background: $positive_change
+    color: $lightest
+  .removed
+    background: $red
+    color: $lightest
+  .first
+    margin-left: 0
+    padding-left: 0
+  .last
+    margin-right: 0
+    padding-right: 0
+  .top
+    margin-top: 0
+    padding-top: 0
+  .bottom
+    margin-bottom: 0
+    padding-bottom: 0
+  &:first-child // Socialtext classes
+    padding-top: 1em
+  /* {bz: 1445}: Gecko needs this to show left border of collapsed tables.
+  padding-left: 1px
+  a
+    color: $primary_color
+  a.incipient, .wafl_existence_error
+    border-bottom: 1px $primary_color dashed
+  a.incipient:hover, .wafl_existence_error:hover
+    text-decoration: none
+    border-bottom: 1px $primary_color solid
+  .wafl_box, .fetchrss_box
+    background: $lightest
+    color: inherit
+    padding: 0 0 3px 0
+    margin-bottom: 0
+    border: 2px solid $light
+  .wafl_titlebox, .fetchrss_titlebox
+    background: $lighter
+    font-size: 120%
+    padding: .5em
+    margin-bottom: .25em
+    border-bottom: 2px solid $light
+  .wafl_titlebox a, .fetchrss_titlebox a
+    font-weight: normal
+  .wafl_items, .fetchrss_items
+    padding: 0 1em 0 1em
+  ul
+    &.item_list
+      list-style-type: none
+      margin-left: 0
+      li.item a
+        font-weight: inherit
+    &.fetchrss_items li.fetchrss_item a
+      font-weight: inherit
+    &.item_list li.item p.snippet, &.fetchrss_items li.fetchrss_item p.fetchrss_description
+      margin-top: 0.25em !important
+
+// there's wafl_box defs in wiki.css & screen.css
+
+.wafl_box .wafl_items
+  .wiki ul, ul.item_list
+    margin: 0 1.5em 0 1.5em
+    padding: 0 0 0 7px
+
+.wiki ul.fetchrss_items
+  margin: 0 1.5em 0 1.5em
+  padding: 0 0 0 1em
+
+.wafl_box .wafl_items ul.item_list li
+  list-style-type: disc
+  line-height: 1em
+  padding: 0
+
+div
+  &.fetchrss_box ul.fetchrss_items
+    margin-bottom: 0px
+  &#contentColumns div#contentLeft div.wafl_box div.wafl_items ul.item_list li p
+    line-height: 1em
+
+.wafl_box .wafl_items .wiki
+  padding: 0
+  br
+    display: none
+
+td .wafl_box
+  margin-bottom: 0
+
+.wiki.xhtml
+  table
+    border-collapse: collapse
+  table[border], table[border] td
+    border: 1px solid black
+  table[border="0"], table[border="0"] td
+    border: 0px !important
+  table.sort, table[data-sort]
+    tr:first-child td
+      padding-right: 24px !important
+      background-position: top right
+      background-repeat: no-repeat
+      background-image: url(/static/images/tablesorter/unsorted.png)
+      background-color: $lighter
+
+.wiki
+  .wiki-include-page
+    margin: 0 0 1em 0
+    padding: 1em 0 1em 0
+    background: white url(/static/images/includeTile.png) repeat-y scroll top left
+    border: none
+  .wiki-include-title
+    font-size: 150%
+    margin-left: 1.33em
+    margin-bottom: 0.5em
+    a
+      font-weight: normal
+      &.incipient
+        border-bottom: 1px dashed
+        text-decoration: none
+  .wiki-include-content
+    margin-left: 2em
+  table.sort td.header
+    padding-right: 24px !important
+    background-position: top right
+    background-repeat: no-repeat
+    background-image: url(/static/images/tablesorter/unsorted.png)
+    background-color: $lighter
+    &.headerSortUp
+      background-image: url(/static/images/tablesorter/sorted-up.png)
+    &.headerSortDown
+      background-image: url(/static/images/tablesorter/sorted-down.png)
+    &:hover
+      background-image: url(/static/images/tablesorter/unsorted-hover.png)
+    &.headerSortUp:hover
+      background-image: url(/static/images/tablesorter/sort-up-hover.png)
+    &.headerSortDown:hover
+      background-image: url(/static/images/tablesorter/sort-down-hover.png)
+  .syntaxhighlighter
+    .toolbar
+      display: none !important
+    overflow-y: hidden !important
+  ul.waflWidget
+    list-style: none
+    margin: 0
+    padding: 0
+    .widgetHeaderButtons
+      display: none
+  div.widget div.widgetHeaderTitle
+    img
+      display: none
+    font-size: 11px
+    padding-left: 12px
+    padding-top: 6px
+    font-weight: bold
+    white-space: nowrap
+
+img.st-widget
+  display: block
+  clear: both
+  &.st-inline-widget
+    display: inline
+    clear: none
+

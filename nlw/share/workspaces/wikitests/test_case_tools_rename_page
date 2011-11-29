@@ -1,92 +1,84 @@
-| *Comment* | Test Case: Tools: Rename Page |
-
+| *Comment* | Test Case: Tools: Rename Page |  |
 | *Comment* | Test Case: Tools: Rename Page Create test page |  |
-| open_ok | /%%workspace%%/?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| type_ok | st-newpage-pagename-edit | Rename This Page %%start_time%% |
-| type_ok | wikiwyg_wikitext_textarea | Rename This Page %%start_time%% content |
+
+| set | this_title | Rename This Page %%start_time%% |  |  |
+| set | this_id | rename_this_page_%%start_time%% |  |  |
+| set | new_title | Page_Renamed_%%start_time%% |  |  |
+| set | new_id | Page_Renamed_%%start_time%% |  |  |
+| set | this_content | Rename This Page %%start_time%% content |  |  |
+| set | new_content | Rename This Page %%start_time%% NEW content |  |  |
+| set | this_tag | Rename This Tag %%start_time%% |  |  |
+
+| st-create-page | %%workspace%% | %%this_title%% | %%this_content%% |
+| st-process-jobs |  |  |  |
+| open_ok | /%%workspace%%/%%this_title%% |  |  |
 
 | *Comment* | Test Case: Tools: Rename Page Create test tag |  |
-| wait_for_element_visible_ok | st-edit-mode-tagbutton | 30000 |
-| click_ok | st-edit-mode-tagbutton |  |
-| wait_for_element_visible_ok | st-tagqueue-field | 30000 |
-| type_ok | st-tagqueue-field | Rename This Tag %%start_time%% |
-| click_ok | st-tagqueue-addbutton |  |
-| click_ok | st-tagqueue-close |  |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
-| wait_for_element_visible_ok | link=Rename This Tag %%start_time%% | 30000 |
+| call | [st-tag-page] | tag_to_apply=%%this_tag%% |
 | st_upload_if_highperms | wikitest.jpg |  |
 
 | *Comment* | Test Case: Tools: Rename Page. Rename the page |  |
 | click_ok | link=Rename Page |  |
-| wait_for_element_visible_ok | st-rename-form | 30000 |
-| wait_for_element_visible_ok | st-rename-newname | 30000 |
+| wait_for_element_visible_ok | st-rename-form | 15000 |
+| wait_for_element_visible_ok | st-rename-newname | 15000 |
 
 | *Comment* | Deliberately use non-space containing name for location_like compare |  |
-| type_ok | st-rename-newname | Page_Renamed_%%start_time%% |
+| type_ok | st-rename-newname | %%new_title%% |
 | click_and_wait | st-rename-savelink |  |
 
-| *Comment* | Test Case: Tools: Rename Page. verify rename |  |
-| location_like | `/%%workspace%%/page_renamed_%%start_time%%` |  |
-| wait_for_element_visible_ok | contentRight | 30000 |
-| text_like | contentRight | Rename This Tag %%start_time%% |
-| text_like | st-page-titletext | Page_Renamed_%%start_time%% |
-| click_and_wait | link=Rename This Page %%start_time%% |  |
-| text_like | st-page-titletext | Rename This Page %%start_time%% |
-| text_like | contentContainer | Page renamed to Page_Renamed_%%start_time%% |
-| wait_for_element_visible_ok | link=Rename This Tag %%start_time%% | 30000 |
-| st_check_files_if_highperms | wikitest.jpg |  |
+| *Comment* | Test Case: Tools: Rename Page. verify rename |  |  |  |
+| location_like | `/%%workspace%%/%%new_title%%` |  |  |  |
+| wait_for_element_visible_ok | st-display-mode-widgets | 15000 |  |  |
+| text_like | st-display-mode-widgets | %%this_tag%% |  |  |
+| text_like | st-page-titletext | %%new_title%% |  |  |
+| click_and_wait | link=%%this_title%% |  |  |  |
+| text_like | st-page-titletext | %%this_title%% |  |  |
+| text_like | content | Page renamed to %%new_title%% |  |  |
+| wait_for_element_visible_ok | link=%%this_tag%% | 15000 |  |  |
+| st_check_files_if_highperms | wikitest.jpg |  |  |  |
 
-| *Comment* | Test Case: Tools: Rename Page. Edit the original the page |  |
-| open_ok | /%%workspace%%/?Rename This Page %%start_time%% |  |
-| click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | Rename This Page %%start_time%% NEW content |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+| *Comment* | Test Case: Tools: Rename Page. Edit the original the page |  |  |  |
+
+| call | st-edit-this-page | ws=%%workspace%% | thispage=%%this_title%% | content=%%new_content%% |
 
 | *Comment* | Test Case: Tools: Rename Page. Rename the edited page and Cancel |  |
 | click_ok | link=Rename Page |  |
-| wait_for_element_visible_ok | st-rename-form | 30000 |
-| wait_for_element_visible_ok | st-rename-newname | 30000 |
+| wait_for_element_visible_ok | st-rename-form | 15000 |
+| wait_for_element_visible_ok | st-rename-newname | 15000 |
 | type_ok | st-rename-newname | Untitled Page |
 | click_ok | st-rename-savelink |  |
 | wait_for_element_visible_ok | st-rename-error | 30000 |
 | text_like | st-rename-error | The page name you selected, "Untitled Page", is not allowed. Please enter or change the page name. |
-| click_ok | st-rename-cancellink |  |
-| wait_for_element_not_visible_ok | st-rename-form | 30000 |
+| st-click-pause | st-rename-cancellink | 15000 |
+| location_like | %%this_id%% |  |
 
-| *Comment* | Test Case: Tools: Rename Page. Rename the edited page |  |
-| click_and_wait | link=Dashboard | navigate away and back |
-| open_ok | /%%workspace%%/?Rename This Page %%start_time%% |  |
+| *Comment* | Test Case: Tools: Rename Page. Rename the edited page. navigate away and back |  |
+| click_and_wait | link=Workspaces |  |
+| open_ok | /%%workspace%%/%%this_title%% |  |
 | click_ok | link=Rename Page |  |
-| wait_for_element_visible_ok | st-rename-savelink | 30000 |
-| wait_for_element_visible_ok | st-rename-newname | 30000 |
-| type_ok | st-rename-newname | Page_Renamed_%%start_time%% |
+| wait_for_element_visible_ok | st-rename-savelink | 15000 |
+| wait_for_element_visible_ok | st-rename-newname | 15000 |
+| type_ok | st-rename-newname | %%new_title%% |
 | click_ok | st-rename-savelink |  |
-| wait_for_element_visible_ok | st-rename-error | 30000 |
-| text_like | st-rename-error | The new page name you selected, "Page_Renamed_%%start_time%%", is already in use |
+| wait_for_element_visible_ok | st-rename-error | 15000 |
+| text_like | st-rename-error | The new page name you selected, "%%new_title%%", is already in use |
+
+| *Comment* | Test Case: Tools: Rename Page. Force Rename the edited page. |  |
 | click_and_wait | st-rename-savelink |  |
 
-| *Comment* | Test Case: Tools: Rename Page. verify 2nd rename using space-containing URL |  |
-| location_like | `/%%workspace%%/page_renamed_%%start_time%%` |  |
+| *Comment* | Test Case: Tools: Rename Page. verify 2nd rename |  |
+| location_like | `/%%workspace%%/%%new_id%%` |  |
 
 | *Comment* | Test Case: Tools: Rename Page. verify rename of edited page |  |
-| open_ok | /%%workspace%%/?action=revision_list;page_name=page_renamed_%%start_time%% |  |
-| text_like | contentContainer | qr/revision 3/i |
+| open_ok | /%%workspace%%/?action=revision_list;page_name=%%new_id%% |  |
+| text_like | content | qr/revision 3/i |
 | click_and_wait | link=Compare Revisions |  |
-| text_like | contentContainer | Rename This Page %%start_time%% content |
-| text_like | contentContainer | Rename This Page %%start_time%% NEW content |
+| text_like | content | Rename This Page %%start_time%% content |
+| text_like | content | Rename This Page %%start_time%% NEW content |
 
 | *Comment* | Test Case: Tools: Rename Page TEARDOWN |  |
 | st-process-jobs |  |  |
-| st-admin | purge-page --w %%workspace%% --page rename_this_page_%%start_time%% | was purged |
-| st-admin | purge-page --w %%workspace%% --page page_renamed_%%start_time%% | was purged |
+| st-admin | purge-page --w %%workspace%% --page %%this_id%% | was purged |
+| st-admin | purge-page --w %%workspace%% --page %%new_id%% | was purged |
 
-| *Comment* | Test Case: Tools: Rename Page COMPLETED |
+| *Comment* | Test Case: Tools: Rename Page COMPLETED |  |

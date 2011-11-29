@@ -32,30 +32,15 @@
 | set | empty_acct | %%am_acct_one%% |
 | set | empty_user | %%view_edit_email%% |
 
-| *Comment* | Test Case: Active Members - %%view_edit_email%% Creates a page in %%am_ws_1%% |  |
-| st-logoutin | %%view_edit_email%% | %%password%% |
+| *Comment* | Test Case: Active Members - %%view_edit_email%% Creates a page in %%am_ws_1%% |  |  |  |
+| st-logoutin | %%view_edit_email%% | %%password%% |  |  |
 
-| open_ok | /%%am_ws_1%%/ |  |
-| open_ok | /%%am_ws_1%%/?action=new_page |  |
+| call | st-edit-new-page | ws=%%am_ws_1%% | title=%%createme_page1%% | content=%%createme_page1%% Content |
 
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| type_ok | st-newpage-pagename-edit | %%createme_page1%% |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+| *Comment* | Test Case: Active Members - %%view_edit_email%% creates a page in %%am_ws_2%% |  |  |  |
+| open_ok | /%%am_ws_2%%/ |  |  |  |
 
-| *Comment* | Test Case: Active Members - %%view_edit_email%% creates a page in %%am_ws_2%% |  |
-| open_ok | /%%am_ws_2%%/ |  |
-| open_ok | /%%am_ws_2%%/?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| type_ok | st-newpage-pagename-edit | %%createme_page2%% |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+| call | st-edit-new-page | ws=%%am_ws_2%% | title=%%createme_page2%% | content=%%createme_page2%% Content |
 
 | *Comment* | Test Case: Active Members - Other users view profiles, view/edit pages, and send signals |  |
 | st-logoutin | %%members_email_1%% | %%password%% |

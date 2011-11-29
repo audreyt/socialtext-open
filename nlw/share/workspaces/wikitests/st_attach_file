@@ -1,0 +1,16 @@
+| *Comment* | st-attach-file: ws=%%ws%% title=%%title%% file=%%file%% |  |
+
+| set_default | scheme | http |
+| set_default | files_host | wikitest_files.topaz.socialtext.net |
+
+| *Comment* | %%file%% must be available at %%scheme%%://%%files_host%%/%%file%% |  |
+
+| open_ok | /%%ws%%/%%title%% |  |
+| wait_for_element_visible_ok | st-attachments-uploadbutton | 10000 |
+| click_ok | st-attachments-uploadbutton |  |
+| wait_for_element_visible_ok | st-attachments-attach-filename | 10000 |
+| attach_file_ok | st-attachments-attach-filename | %%scheme%%://%%files_host%%/%%file%% |
+| wait_for_element_visible_ok | //a[contains(@href,'original/%%file%%')] | 30000 |
+| text_like | st-attachments-attach-uploadmessage | qr/Uploaded.+%%file%%/ |
+| wait_for_element_visible_ok | st-attachments-attach-closebutton | 15000 |
+| st_click_pause | st-attachments-attach-closebutton | 2000 |

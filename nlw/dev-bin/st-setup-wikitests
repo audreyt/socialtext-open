@@ -15,17 +15,17 @@ $NLW_BIN/st-admin give-accounts-admin  --e $USERNAME  >/dev/null 2>/dev/null || 
 $NLW_BIN/st-admin give-system-admin  --e $USERNAME  >/dev/null 2>/dev/null || true
 
 echo "Set up wikitests"
-    $NLW_DEVBIN/wikitests-to-wiki
+$NLW_DEVBIN/wikitests-to-wiki
 
-echo ENABLING Socialcalc for all workspaces
-$NLW_DEVBIN/st-socialcalc enable
+echo ENABLING Socialcalc and ckeditor for all workspaces
+$NLW_BIN/st-admin enable-plugin --all-workspaces --plugin socialcalc
+$NLW_BIN/st-admin enable-plugin --all-workspaces --plugin ckeditor
 
 echo "Importing latest help workspace"
 $NLW_BIN/st-admin delete-workspace --workspace help-en --no-export
 $NLW_BIN/st-admin import-workspace --tarball $NLW_BIN/../share/l10n/help/help-en.tar.gz
 
 echo "No longer populating reports DB"
-#echo "CTRL-C to halt reports DB setup"
 
 #echo ""
 #echo Populating reports DB
@@ -50,6 +50,8 @@ fi
 cd $NLW_LIB
 $APPLIANCE_SBIN/st-appliance-config set captcha_enabled 0
 $APPLIANCE_SBIN/st-appliance-config set max_objects_for_control_panel 999
+$NLW_BIN/st-config set debug_selenium 1
+$NLW_BIN/st-config set analytics_id ''
 cd $ST_CURRENT
 
 echo Done setting up wikitests

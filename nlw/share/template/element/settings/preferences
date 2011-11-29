@@ -1,0 +1,85 @@
+<h3>[% loc('class.wikiwyg') %]</h3>
+
+[% FOREACH setting IN prefs.wikiwyg.keys %]
+  [% INCLUDE element/settings/setting_select
+    pref='prefs.wikiwyg.' _ setting
+    option=prefs.wikiwyg.$setting
+  %]
+[% END %]
+
+<hr />
+
+<h3>[% loc('class.display') %]</h3>
+
+[% FOREACH setting IN prefs.display.keys %]
+  [% INCLUDE element/settings/setting_select
+    pref='prefs.display.' _ setting
+    option=prefs.display.$setting
+  %]
+[% END %]
+
+<hr />
+
+<h3>[% loc('class.email_notify') %]</h3>
+
+[% FOREACH setting IN prefs.email_notify.keys %]
+  [% INCLUDE element/settings/setting_select
+    pref='prefs.email_notify.' _ setting
+    option=prefs.email_notify.$setting
+  %]
+[% END %]
+
+<hr />
+
+<h3>[% loc("class.recent_changes") %]</h3>
+
+[% INCLUDE element/settings/setting_select
+  pref='prefs.recent_changes.changes_depth'
+  option=prefs.recent_changes.changes_depth
+%]
+
+[% INCLUDE element/settings/setting_select
+  pref='prefs.recent_changes.include_in_pages'
+  option=prefs.recent_changes.include_in_pages
+%]
+
+[% INCLUDE element/settings/setting_select
+  pref='prefs.recent_changes.sidebox_changes_depth'
+  option=prefs.recent_changes.sidebox_changes_depth
+%]
+
+<hr />
+
+<h3>[% loc('settings.rss') %]</h3>
+
+[% FOREACH setting IN prefs.syndicate.keys %]
+  [% INCLUDE element/settings/setting_select
+    pref='prefs.syndicate.' _ setting
+    option=prefs.syndicate.$setting
+  %]
+[% END %]
+
+<hr />
+
+<h3>[% loc('nav.watchlist') %]</h3>
+
+[% FOREACH setting IN prefs.watchlist.keys %]
+  [% INCLUDE element/settings/setting_select
+    pref='prefs.watchlist.' _ setting
+    option=prefs.watchlist.$setting
+  %]
+[% END %]
+
+<hr />
+
+<h3>[% loc('blog.blogs') %]</h3>
+
+[% FOREACH setting IN prefs.weblog.keys %]
+  [% INCLUDE element/settings/setting_select
+    pref='prefs.weblog.' _ setting
+    option=prefs.weblog.$setting
+  %]
+[% END %]
+
+<hr />
+

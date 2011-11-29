@@ -61,7 +61,7 @@ sub DELETE {
     });
 }
 
-# Remove a Group from a Workspace
+# Add a Group from a Workspace
 sub PUT {
     my ($self, $rest) = @_;
     $self->can_admin(sub {

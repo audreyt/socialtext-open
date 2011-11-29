@@ -1,0 +1,743 @@
+@import colors.sass
+@import reset.sass
+@import text.sass
+@import mixins.sass
+
+$margin: 10px
+
+@media print
+  @import print.sass
+
+@import subgrids.sass
+
+body
+  font-size: 12px
+  font-family: $body_font
+  color: $darker
+  background: $body_background
+
+#st-system-status
+  position: relative
+  background-color: $tertiary_color
+  border-top: 1px solid $darker
+  border-bottom: 1px solid $darker
+  text-align: center
+  padding: 0.5em 1em
+  .uiDisabled
+    margin-top: -8px
+
+#content
+  position: relative
+  zoom: 1
+  background-color: $lightest
+  padding-top: 8px
+  .uiDisabled
+    margin-top: -8px
+
+a
+  color: $primary_color
+  text-decoration: none
+  &:hover
+    text-decoration: underline
+
+// Icons
+a.icon-delete
+  padding: 4px
+  background: $lightest url(#{$static}/images/icons/close-darker-8.png) no-repeat 0 0px
+  &:hover
+    background-image: url(#{$static}/images/icons/close-gray-8.png)
+
+// When we have multiple buttons, space them out
+.buttons .button
+  margin-right: 10px
+
+.hidden
+  display: none
+
+input
+  padding: 2px 5px
+  font-size: 110%
+  border-radius: 2px
+  border: 1px solid $light
+  &[type="submit"], &[type="button"], &[type="reset"]
+    border: 1px solid $tertiary_color
+    color: $primary_contrast
+    background-color: $primary_color
+    font-family: $body_font
+    padding: 4px 11px
+    line-height: 1.4
+    cursor: pointer
+    text-align: center
+    font-size: 100%
+    &:not(.ui-button)
+      border-radius: 4px
+      -moz-border-radius: 4px
+      -webkit-border-radius: 4px
+    &:hover
+      @include opacity(70)
+  &[type="radio"], &[type="checkbox"]
+    border: none
+  &.disabled
+    background-color: $lighter
+    color: $darker
+  &.hidden
+    /* For hiding submit buttons
+    display: block
+    height: 0
+    width: 0
+    position: absolute
+    @include opacity(0)
+  &.initial
+    color: $grey
+
+select
+  -webkit-border-radius: 2px
+  -moz-border-radius: 2px
+  border-radius: 2px
+  border: 1px solid $light
+
+/**
+ * Headings
+
+h1, h2, h3, h4
+  color: $darker
+  padding: 0
+  margin: 0
+  font-family: $header_font
+
+h1
+  font-size: 18px
+
+h2
+  font-size: 16px
+
+h3
+  font-size: 14px
+
+h4
+  font-size: 13px
+
+/**
+ * Some helpful classes
+
+/* padding
+
+@for $i from 1 through 50
+  .pad#{$i}
+    padding: #{$i}px
+  .vpad#{$i}
+    padding-top: #{$i}px
+    padding-bottom: #{$i}px
+  .hpad#{$i}
+    padding-left: #{$i}px
+    padding-right: #{$i}px
+
+.superscript
+  font-size: small
+  vertical-align: top
+
+.center
+  text-align: center
+.right
+  text-align: right
+.left
+  text-align: left
+
+.bold
+  font-weight: bold
+
+.error
+  color: $red
+
+.opaque
+  @include opacity(50)
+
+.warning
+  background-color: $tertiary_color
+  border: 1px solid $light
+  padding: 5px
+  .more p
+    display: inline
+
+/**
+ * Text tabs (top content widgets, etc...)
+
+.tabs
+  text-align: center
+  padding: 5px 0
+  border-bottom: 1px solid $light
+  a
+    margin: 0 5px
+  span
+    margin: 0 5px
+    font-weight: bold
+
+/**
+ * Progress Bar
+
+.progressbar
+  border: 1px solid $light
+  height: 17px
+  position: relative
+  border-radius: 2px
+  @if lightness($secondary_color) < 50%
+    background-color: $grey
+  .value
+    background-color: $secondary_color
+    height: 17px
+  .text
+    position: absolute
+    top: 1px
+    left: 5px
+    @if lightness($secondary_color) < 50%
+      color: $lightest
+    @else
+      color: $darkest
+
+header
+  height: 100px
+  color: $header_contrast
+  @include dropshadow(3,3,4,$darkest)
+  background: $header_background
+  .title
+    padding-top: 25px
+  a
+    color: $header_link_color
+    text-decoration: none
+  .topLinks
+    margin-top: 30px
+    text-align: right
+  .searchForm
+    margin-top: 10px
+    text-align: right
+    .searchText
+      width: 140px
+      padding: 0 0 0 4px
+    .searchText, .submit, .ui-selectmenu
+      height: 25px
+      vertical-align: top
+    .ui-selectmenu
+      color: $header_link_color
+      margin-top: 4px
+
+/**
+ * Footer
+
+footer
+  color: $foreground_color
+  font-size: 13px
+  line-height: 19px
+  height: 40px
+  position: relative
+  a
+    color: $background_link_color
+  .socialtext
+    margin-top: 7px
+  .tagline
+    margin-top: 10px
+  .links
+    margin-top: 10px
+    text-align: right
+
+.divider
+  height: 10px
+  margin: 0 10px
+  border-right: 1px solid $foreground_color
+
+/**
+ * Widgets
+
+#st-page-content
+  .draggable .widgetHeader
+    cursor: default
+  .widgetHeader .buttons
+    display: none
+
+.widgetColumn
+  min-height: 300px
+  -height: 300px
+  .widgetHeader
+    height: 20px
+  .draggable .widgetHeader
+    cursor: move
+  .widgetTitle
+    float: left
+    h1
+      height: 1.2em
+      overflow: hidden
+      text-overflow: ellipsis
+  .placeholder
+    border: 3px dotted $light
+
+.locked-page
+  background-repeat: no-repeat !important
+  background-position: left !important
+  background-image: url(#{$static}/images/icons/locked-black-15.png) !important
+
+.widget
+  margin-bottom: 15px
+  .content
+    padding-top: 10px
+    border-top: 1px solid $light
+    overflow: hidden
+  .buttons
+    float: right
+    .close, .settings, .fix
+      display: block
+      float: right
+      width: 12px
+      height: 12px
+      margin: 5px
+      background-color: transparent
+      background-image: none
+      background-repeat: no-repeat
+      background-position: top left
+    .close:hover, .settings:hover, .fix:hover
+      @include opacity(70)
+    .close
+      background-image: url(#{$static}/images/icons/close-darker-12.png)
+    .settings
+      background-image: url(#{$static}/images/icons/configure-darker-12.png)
+    .fixed
+      background-image: url(#{$static}/images/icons/locked-black-15.png)
+    .unfixed
+      background-image: url(#{$static}/images/icons/unlocked-black-15.png)
+  .widgetPush
+    background: $lighter
+    text-align: center
+    margin-top: 10px
+    font-style: italic
+    color: $darker
+
+/**
+ * Dropdowns
+
+ul
+  &#network-list, &#signal_network-list
+    width: 150px
+  &.dropdownOptions
+    position: absolute
+    display: none
+    z-index: 3500
+    /* above the signalthis iframe
+    display: block
+    background-color: $lightest
+    padding: 0
+    margin: 0
+    text-align: left
+    width: 100px
+    border: 1px solid black
+    border-top: none
+    li
+      display: block
+      list-style: none
+      margin: 0
+      padding: 3px
+      border-top: 1px solid $darkest
+      overflow: hidden
+    a
+      white-space: nowrap
+      /* Styles that are inherited in widgets:
+      font-size: 11px
+    li
+      &:hover, &.hover
+        background-color: $tertiary_color
+      &:hover a, &.hover a
+        text-decoration: underline
+      &.selected
+        background-color: $tertiary_color
+      &.disabled
+        background-color: $lightest
+        a
+          color: $light
+          cursor: default
+          text-decoration: none
+          &:hover
+            text-decoration: none
+
+div.users ul
+  list-style-type: none
+  padding: 0
+  li
+    position: relative
+    padding: 5px 0
+    span
+      margin-left: 14px
+      color: black
+
+.notice
+  background-color: $tertiary_color
+  border-top: 1px solid $darker
+  border-bottom: 1px solid $darker
+  padding: 4px
+  text-align: center
+  display: none
+  .error
+    color: $red
+  pre.error
+    text-align: left
+    margin: auto
+    width: 50%
+
+#globalNav
+  @import globalNav.sass
+
+.activitiesWidget
+  @import activities.sass
+
+.inlineWidget
+  @import inline.sass
+
+.uiDisabled
+  position: absolute
+  z-index: 2000
+  .background
+    z-index: 2001
+    width: 100%
+    height: 100%
+    background: $lighter
+    @include opacity(70)
+  .spinner
+    z-index: 2002
+    width: 100%
+    height: 100%
+    background: transparent url(#{$static}/images/ajax-loader.gif) no-repeat center
+    position: absolute
+
+// Dialog boxes
+.ui-dialog-content
+  .fieldTitle
+    float: left
+    width: 125px
+  .field
+    float: left
+    input
+      width: 250px
+  .checkbox
+    float: left
+    width: 20px
+  .checkboxDesc
+    padding-left: 30px
+
+#settings-main
+  hr
+    margin: 20px 0px
+  th
+    font-weight: bold
+    padding: 5px
+  td
+    padding: 5px
+  th
+    &.first
+      padding-left: 0px
+    &.last
+      padding-right: 0px
+  td.last
+    padding-right: 0px
+  p.error
+    margin-bottom: 3px
+  .input-label
+    padding-top: 5px
+    text-align: right
+
+#settings-sidebar
+  -webkit-border-radius: 2px
+  -moz-border-radius: 2px
+  border-radius: 2px
+  border: 1px solid $light
+  background-color: $tertiary_color
+  .pad
+    padding: 0px 3px
+  .top
+    padding-left: 5px
+  .header
+    cursor: pointer
+    padding-left: 25px
+  ul
+    padding: 0px
+    margin: 0px
+
+ul.incominglinks li
+  list-style: none
+  padding-bottom: .4em
+  margin: 0
+
+// blogs
+div.blogentry
+  h3.blogheader
+    margin: 0 0 4px 0
+    font-size: 20px
+    font-weight: normal
+  p.weblog_info
+    padding: 5px 0
+    font-style: italic
+  p.weblog_info_bottom
+    margin: 10px 0 10px 0
+    border-bottom: 1px solid $light
+    padding: 5px 0
+    font-style: italic
+
+// Generic table styles
+td
+  span.info
+    font-style: italic
+
+td.info
+  font-style: italic
+  padding-left: 1em
+  padding-right: 4px
+
+th.text
+  font-weight: bold
+  padding-left: 1em
+  padding-right: 4px
+
+td.text
+  padding-left: 1em
+  padding-right: 4px
+
+td.numeric
+  text-align: right
+  padding-left: 1em
+  padding-right: 4px
+
+th.numeric
+  font-weight: bold
+  text-align: right
+  padding-left: 1em
+  padding-right: 4px
+
+h2.tableTitle
+  padding-bottom: 0.4em
+
+// horizontal actions
+ul.horizontal_actions
+  float: left
+  list-style: none
+  img
+    margin-right: 5px
+  .separator
+    border-right: $grey 1px dotted
+  li
+    padding: 0 10px 0 10px
+    margin-left: 0
+    float: left
+    position: relative
+    top: 8px
+  .first
+    padding-left: 0px
+
+// vertical actions
+ul.vertical_actions
+  list-style: none
+  li
+    line-height: 1.5em
+    margin-left: 1em
+
+// Horizontal menu
+ul.horizontal-menu
+  li
+    display: inline
+    list-style-type: none
+    padding-right: 0.5em
+    margin-left: 0
+
+// Specific tables
+table.all_files
+  tr
+    td
+      padding-top: .3em
+      padding-bottom: .3em
+
+// paginator
+div.pagination-container
+  text-align: center
+
+span.paging-numbers
+  margin: 0 1em
+
+span.paging-button
+  margin: 0 0.3em
+
+div.search_count
+  text-align: center
+
+// List view
+div.sort_options
+  text-align: right
+
+// people
+div.peoplelist-photo
+  padding-top: 8px
+  padding-bottom: 6px
+
+div.peoplelist-desc
+  padding-top: 8px
+  padding-bottom: 6px
+
+// People list tools
+#st-pagetools-tools
+  background: url(#{$static}/images/icons/toolsIcon.png) left center no-repeat
+  padding-left: 19px
+
+// search export menu
+.listtoolsExport
+  margin-top: 1px
+  .ui-selectmenu-status
+    background: #fff url(#{$static}/images/icons/export-black-15.png) left center no-repeat
+    padding-left: 19px !important
+  li.export
+    display: none
+  .pdfexport a
+    background: url(#{$static}/images/icons/pdficon_small.gif) 3px 50% no-repeat
+    padding-left: 23px
+  .rtfexport a
+    background: url(#{$static}/images/icons/page_word.png) 3px 50% no-repeat
+    padding-left: 23px
+
+.tools
+  padding-left: 10px
+  ul
+    margin: 0
+  li
+    margin: 0 0 0 10px
+    list-style: none
+    white-space: nowrap
+    a:hover
+      text-decoration: none
+    .arrow
+      font-size: 10px
+    .expanded
+      display: none
+    .subtools
+      display: none
+    &.item
+      margin: 3px 0
+      padding-left: 18px
+      background: transparent url(#{$static}/images/icons/help-black-15.png) no-repeat 0 0px
+      &#st-comment-button
+        background-image: url(#{$static}/images/icons/conversation-black-15.png)
+      &#st-like-button
+        background-image: url(#{$static}/images/icons/thumbsup-black-15.png)
+      &#st-watchlist-indicator
+        background-image: url(#{$static}/images/icons/watch-black-15.png)
+      &#st-page-options
+        background-image: url(#{$static}/images/icons/config-black-15.png)
+      &#st-pagetools-print
+        background-image: url(#{$static}/images/icons/print-black-15.png)
+      &#st-email-menu
+        background-image: url(#{$static}/images/icons/email-black-15.png)
+        .item
+          background-image: url(#{$static}/images/icons/email-black-15.png)
+      &#st-export-menu
+        background-image: url(#{$static}/images/icons/document-black-15.png)
+        .item
+          background-image: url(#{$static}/images/icons/document-black-15.png)
+      &#st-pagetools-duplicate, &#st-pagetools-rename
+        background-image: url(#{$static}/images/icons/document-black-15.png)
+
+// Tags
+#st-tags-form
+  display: none
+
+#st-email-form
+  th
+    padding-right: 10px
+    vertical-align: middle
+  input
+    margin-left: 0px
+  .email_input
+    width: 280px
+  .email_input_button
+    width: 116px
+  .email_input_textarea
+    width: 440px
+
+div.sample-email
+  padding: 0.2em
+  border-radius: 5px
+  border: 1px solid $background_color
+  margin-top: 0.5em
+
+/**
+ * List views
+.listView
+  .header
+    font-weight: bold
+    padding-bottom: 10px
+  .listRow
+    padding: 5px 0
+    line-height: 25px
+    &.odd
+      background-color: $lighter
+
+div#tooManyResults
+  margin-top: 1em
+  p
+    margin: 0 0 0.5em 0
+
+td.listview-watchlist
+  vertical-align: top !important
+  padding-top: 6px !important
+
+p.setting_warning
+  color: $red
+  font-weight: bold
+
+#contentWarning
+  text-align: center
+
+// Containers
+
+.containerTitle
+  margin-bottom: 5px
+  border-bottom: 1px solid $light
+  height: 30px
+  img, h1
+    float: left
+  .prefix
+    float: left
+    background: $grey
+    color: $lightest
+    text-transform: uppercase
+    margin: 3px 5px 0 5px
+    font-size: 10pt
+    padding: 1px 5px
+
+#container_action_script
+  padding-bottom: 10px
+
+#lastsignal
+  img
+    float: left
+  .signal
+    padding-left: 30px
+    .body
+      font-size: 150%
+    .ago
+      color: $grey
+
+td.widgetUserPrefsButtons
+  text-align: center
+  padding-top: 15px
+  input
+    cursor: pointer
+
+#st-login-form
+  padding-top: 5px
+  .login_field
+    padding: 5px 10px
+  .publicWorkspaces
+    border-left: 1px dashed $light
+    min-height: 200px
+    padding: 5px 0 0 10px
+
+@import wiki.sass
+@import control.sass
+@import jquery-ui.sass
+@import jquery-ui-selectmenu.sass
+@import bubble.sass
+@import ckeditor.sass
+@import socialcalc.sass
+@import autocomplete.sass
+@import revision.sass

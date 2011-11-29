@@ -1,0 +1,20 @@
+[% PROCESS activities/blocks.tt2 %]
+
+[% INCLUDE lookahead %]
+<div id='outer'>
+    [% INCLUDE filters %]
+
+    <div id="main">
+        <div id='messages'></div>
+
+        <div id="loading" class="loading-spinner">
+            <img id="spinner" src="[% this.static_path %]/images/ajax-loader.gif"/>
+        </div>
+
+        <div id='event_list'>
+        </div>
+
+        <div id="more">[% loc('activities.more') %]</div>
+
+    </div>
+</div>

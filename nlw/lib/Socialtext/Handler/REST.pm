@@ -17,6 +17,7 @@ use File::Basename;
 use File::Spec;
 use Readonly;
 use Scalar::Util qw(blessed);
+use List::MoreUtils qw(uniq);
 use YAML;
 use Socialtext::Log qw(st_timed_log);
 use Socialtext::Timer;
@@ -258,7 +259,7 @@ sub loadResource {
     for my $template (keys %{ $self->resourceHooks() }) {
         my $regex = join "\\/+",
                     map {
-                        /^:__/
+                        (/^:__/ or (($template eq '/:ws/:pname') and /^:pname$/))
                             ? '(.+)'
                             : /^:ws$/
                                 ? '(?!(?:nlw|challenge|data|feed|js|m|settings|st)/)([^\/]+)'
@@ -477,18 +478,23 @@ sub makeHandlerFromClass {
     return sub { $class->new(@_)->$method(@_) };
 }
 
-# FIXME: This needs to come out before release, or at least be disabled by
-# default.
 sub defaultResourceHandler {
+    unless ($ENV{NLW_DEV_MODE}) {
+        $_[0]->header( -status => HTTP_404_Not_Found,
+                       -type   => 'text/plain' );
+        return "No File or Method found for your request.";
+    }
+
+    $_[0]->header( -status => HTTP_404_Not_Found,
+                   -type   => 'text/html; charset=UTF-8' );
     no warnings 'once';
     local $YAML::SortKeys = 0;
     local $YAML::UseCode = 1;
-
-    $_[0]->header( -status => HTTP_404_Not_Found,
-                   -type   => 'text/html' );
     # Delete Socialtext objects.  Usually noise anyway.
     delete $_[0]->{$_} for qw(_user);
-    return "No File or Method found for your request.  <!-- State is dumped below.\n\n" . Dump(@_) . '-->';
+    my $dump = eval { Dump(@_) };
+    $dump =~ s/-->/--\x{200d}>/g;
+    return "No File or Method found for your request.  <!-- State is dumped below.\n\n$dump-->";
 }
 
 # XXX: The framework should use another layer of indirection over
@@ -518,7 +524,13 @@ sub getContentPrefs {
     if (my $type = $self->query->param('accept')) {
         return ($type, '*/*');
     }
-    return $self->SUPER::getContentPrefs(@_);
+    my @types = uniq($self->SUPER::getContentPrefs(@_));
+    my @reduced_types = grep { not m{^(?:image/|application/(?!json|(?:.+\+)?xml))} } @types;
+    if ("@reduced_types" eq '*/*') {
+        # Assume HTML when there's no specific Accept header (for IE7/8).
+        unshift @types, 'text/html';
+    }
+    return @types;
 }
 
 sub getContent {

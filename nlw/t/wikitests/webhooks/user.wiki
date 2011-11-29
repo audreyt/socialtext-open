@@ -1,0 +1,125 @@
+* Fixture: WebHook
+
+| *Comment*      | Setup  |                                      |
+| set            | u1     | u1-%%start_time%%@ken.socialtext.net |
+| create-user    | %%u1%% | password                             |
+| set            | u2     | u2-%%start_time%%@ken.socialtext.net |
+| create-user    | %%u2%% | password                             |
+| set            | u3     | u3-%%start_time%%@ken.socialtext.net |
+| create-user    | %%u3%% | password                             |
+| set            | u4     | u4-%%start_time%%@ken.socialtext.net |
+| create-user    | %%u4%% | password                             |
+
+| clear-webhooks |
+| clear-webhook  |
+
+| comment       | No webhooks, deactivate user does not fire webhooks |   |
+| st-clear-jobs |                                                     |   |
+| st-admin      | deactivate-user --email %%u1%%                      |   |
+| job-count     | WebHook                                             | 0 |
+
+| comment               | Deactivate a user                  |               |    |
+| new-webhook-testcase  |                                    |               |    |
+| add-webhook           | user.deactivate                    | http://tou.ch | {} |
+| st-admin              | deactivate-user --email %%u2%%     |               |    |
+| job-count             | WebHook                            | 1             |    |
+| st-process-jobs       |                                    |               |    |
+| job-count             | WebHook                            | 0             |    |
+| webhook-payload-parse |                                    |               |    |
+| json-like             | [{"class":"user.deactivate"}]      |               |    |
+| json-like             | [{"object":{"username":"%%u2%%"}}] |               |    |
+
+| comment               | Reactivate a user                  |               |    |
+| new-webhook-testcase  |                                    |               |    |
+| add-webhook           | user.activate                      | http://tou.ch | {} |
+| reactivate-user       | %%u2%%                             |               |    |
+| job-count             | WebHook                            | 1             |    |
+| st-process-jobs       |                                    |               |    |
+| job-count             | WebHook                            | 0             |    |
+
+| comment               | user joins account                                     |                     |    |
+| set                   | acct2                                                  | acct2%%start_time%% |    |
+| create-account        | %%acct2%%                                              |                     |    |
+| set                   | acct2_id                                               | %%account_id%%      |    |
+| new-webhook-testcase  |                                                        |                     |    |
+| add-webhook           | user.joinaccount                                       | http://tou.ch       | {} |
+| add-user-to-account   | %%u3%%                                                 | %%acct2%%           |    |
+| job-count             | WebHook                                                | 1                   |    |
+| st-process-jobs       |                                                        |                     |    |
+| job-count             | WebHook                                                | 0                   |    |
+| webhook-payload-parse |                                                        |                     |    |
+| json-like             | [{"class":"user.joinaccount"}]                         |                     |    |
+| json-like             | [{"object":{"user":{"username":"%%u3%%"}}}]            |                     |    |
+| json-like             | [{"object":{"account":{"account_id":"%%acct2_id%%"}}}] |                     |    |
+
+| comment                  | user leaves account                                    |               |    |
+| new-webhook-testcase     |                                                        |               |    |
+| add-webhook              | user.leaveaccount                                      | http://tou.ch | {} |
+| remove-user-from-account | %%u3%%                                                 | %%acct2%%     |    |
+| job-count                | WebHook                                                | 1             |    |
+| st-process-jobs          |                                                        |               |    |
+| job-count                | WebHook                                                | 0             |    |
+| webhook-payload-parse    |                                                        |               |    |
+| json-like                | [{"class":"user.leaveaccount"}]                        |               |    |
+| json-like                | [{"object":{"user":{"username":"%%u3%%"}}}]            |               |    |
+| json-like                | [{"object":{"account":{"account_id":"%%acct2_id%%"}}}] |               |    |
+
+| comment              | user changes primary account                                    |                     |    |
+| user-primary-account | %%u3%%                                                          | %%acct2%%           |    |
+| set                  | acct3                                                           | acct3%%start_time%% |    |
+| create-account       | %%acct3%%                                                       |                     |    |
+| set                  | acct3_id                                                        | %%account_id%%      |    |
+| new-webhook-testcase |                                                                 |                     |    |
+| add-webhook          | user.joinaccount                                                | http://tou.ch       | {} |
+| user-primary-account | %%u3%%                                                          | %%acct3%%           |    |
+| comment              | primary account change generates a joinaccount webhook          |                     |    |
+| job-count            | WebHook                                                         | 1                   |    |
+| st-process-jobs      |                                                                 |                     |    |
+| job-count            | WebHook                                                         | 0                   |    |
+| new-webhook-testcase |                                                                 |                     |    |
+| add-webhook          | user.leaveaccount                                               | http://tou.ch       | {} |
+| user-primary-account | %%u3%%                                                          | %%acct2%%           |    |
+| comment              | primary account change does not generate a leaveaccount webhook |                     |    |
+| job-count            | WebHook                                                         | 0                   |    |
+
+| new-webhook-testcase |                  |                                      |    |
+| add-webhook          | user.joinaccount | http://tou.ch                        | {} |
+| set                  | u5               | u5-%%start_time%%@ken.socialtext.net |    |
+| create-user          | %%u5%%           | password                             |    |
+| job-count            | WebHook          | 1                                    |    |
+| st-process-jobs      |                  |                                      |    |
+| job-count            | WebHook          | 0                                    |    |
+
+| new-webhook-testcase |             |                                      |    |
+| add-webhook          | user.create | http://tou.ch                        | {} |
+| set                  | u6          | u6-%%start_time%%@ken.socialtext.net |    |
+| create-user          | %%u6%%      | password                             |    |
+| job-count            | WebHook     | 1                                    |    |
+| st-process-jobs      |             |                                      |    |
+| job-count            | WebHook     | 0                                    |    |
+
+# create account
+| comment           | setup for account import        |                                        |        |
+| set               | ie                              | ie%%start_time%%                       |        |
+| create-account    | %%ie%%                          |                                        |        |
+| set               | ieid                            | %%account_id%%                         |        |
+| set               | ieu1                            | ieu1-%%start_time%%@ken.socialtext.net |        |
+| create-user       | %%ieu1%%                        | password                               | %%ie%% |
+| set               | ieu1id                          | %%user_id%%                            |        |
+| set               | ieu2                            | ieu2-%%start_time%%@ken.socialtext.net |        |
+| create-user       | %%ieu2%%                        | password                               | %%ie%% |
+| set               | ieu2id                          | %%user_id%%                            |        |
+| set               | ieu3                            | ieu3-%%start_time%%@ken.socialtext.net |        |
+| create-user       | %%ieu3%%                        | password                               | %%ie%% |
+| st-admin          | export-account --account %%ie%% |                                        |        |
+| delete-recklessly | %%ieu1id%%                      |                                        |        |
+| delete-recklessly | %%ieu2id%%                      |                                        |        |
+
+| comment              | import account should fire 2 user create webhooks                          |               |    |
+| new-webhook-testcase |                                                                            |               |    |
+| add-webhook          | user.create                                                                | http://tou.ch | {} |
+| st-admin             | import-account --directory /tmp/%%ie%%.id-%%ieid%%.export --name new%%ie%% |               |    |
+| job-count            | WebHook                                                                    | 2             |    |
+| st-process-jobs      |                                                                            |               |    |
+| job-count            | WebHook                                                                    | 0             |    |
+

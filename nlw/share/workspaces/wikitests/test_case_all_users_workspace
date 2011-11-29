@@ -29,7 +29,7 @@
 | st-process-jobs |  |  |
 | st-logoutin | %%auw_user%% | %%password%% |
 | open_ok | /?action=workspaces_listall |  |
-| is_element_present_ok | //div[@id='contentContainer'] | link=%%auw_wiki%% |
+| is_element_present_ok | //div[@id='content'] | link=%%auw_wiki%% |
 
 | *Comment* | Test Case: All Users Workspace use CLI to remove user from account, check that user got removed from wiki |  |
 | st-admin | set-user-account --email %%auw_user%% --account %%hostname%% | was updated |
@@ -43,7 +43,7 @@
 | st-admin | set-user-account --email %%auw_user%% --account %%auw_acct%% | was updated |
 | st-process-jobs |  |  |
 | open_ok | /?action=workspaces_listall |  |
-| is_element_present_ok | //div[@id='contentContainer'] | link=%%auw_wiki%% |
+| is_element_present_ok | //div[@id='content'] | link=%%auw_wiki%% |
 
 | *Comment* | Test Case: All Users Workspace test CLI commands for removing account from wiki |  |
 | st-admin | remove-member --account %%auw_acct%% | The command you called (remove-member) requires one of --workspace --username --email --group and one of --account --group --workspace |
@@ -60,25 +60,25 @@
 | wait_for_element_visible_ok | //input[@name='value'] | 30000 |
 | check_ok | //input[@name='value'] |  |
 | is_checked_ok | //input[@name='value'] |  |
-| wait_for_element_visible_ok | `//input[@value='Update'][2]` | 30000 |
-| click_and_wait | `//input[@value='Update'][2]` |  |
-| wait_for_text_present_ok | Account settings updated. | 30000 |
+| wait_for_element_visible_ok | xpath=(//input[@value='Update'])[3] | 30000 |
+| click_and_wait | xpath=(//input[@value='Update'])[3] |  |
+| wait_for_text_present_ok | Account settings updated. | 15000 |
 | is_checked_ok | //input[@name='value'] |  |
 
 | *Comment* | Test Case: All Users Workspace check that the user got added to the wiki |  |
 | st-process-jobs |  |  |
 | st-logoutin | %%auw_user%% | %%password%% |
 | open_ok | /?action=workspaces_listall |  |
-| is_element_present_ok | //div[@id='contentContainer'] | link=%%auw_wiki%% |
+| is_element_present_ok | //div[@id='content'] | link=%%auw_wiki%% |
 
 | *Comment* | Test Case: All Users Workspace test CLI errors for changing the account of an AUW |  |
 | st-admin | set-workspace-config --workspace %%auw_wiki%% account_id 1 | This workspace is the all users workspace for the %%auw_acct%% account. Aborting. |
 
 | *Comment* | Test Case: All Users Workspace check content of wiki settings UI |  |
 | st-logoutin | %%auw_admin%% | %%password%% |
-| open_ok | /%%auw_wiki%%/?action=users_listall |  |
-| wait_for_text_present_ok | All users from the %%auw_acct%% account | 30000 |
-| text_like | qr/All users from the.+%%auw_acct%%.+account are also members of this.+"all users".+workspace./ |  |
+| open_ok | /st/settings/%%auw_wiki_id%%/prefs/manage |  |
+| wait_for_text_present_ok | All users of the %%auw_acct%% account | 30000 |
+| text_like | qr/All users of the.+%%auw_acct%%.+account are members of this workspace/ |  |
 
 | *Comment* | Test Case: All Users Workspace check that AUW text appears on wiki's control panel page |  |
 | st-logoutin | %%username%% | %%password%% |
@@ -94,9 +94,9 @@
 | is_checked_ok | //input[@name='value'] |  |
 | uncheck_ok | //input[@name='value'] |  |
 | st_unchecked_ok | //input[@name='value'] |  |
-| wait_for_element_visible_ok | `//input[@value='Update'][2]` | 30000 |
-| click_and_wait | `//input[@value='Update'][2]` |  |
-| wait_for_text_present_ok | Account settings updated. | 30000 |
+| wait_for_element_visible_ok | xpath=(//input[@value='Update'])[3] | 30000 |
+| click_and_wait | xpath=(//input[@value='Update'])[3] |  |
+| wait_for_text_present_ok | Account settings updated. | 15000 |
 | st_unchecked_ok | //input[@name='value'] |  |
 
 | *Comment* | Test Case: All Users Workspace check that user got removed from the wiki |  |
@@ -115,9 +115,9 @@
 | wait_for_element_visible_ok | //table[@id='workspaces']/tbody/tr[2]/td[1]/input[@name='value'] | 30000 |
 | check_ok | //table[@id='workspaces']/tbody/tr[2]/td[1]/input[@name='value'] |  |
 | is_checked_ok | //table[@id='workspaces']/tbody/tr[2]/td[1]/input[@name='value'] |  |
-| wait_for_element_visible_ok | `//input[@value='Update'][2]` | 30000 |
-| click_and_wait | `//input[@value='Update'][2]` |  |
-| wait_for_text_present_ok | Account settings updated. | 30000 |
+| wait_for_element_visible_ok | xpath=(//input[@value='Update'])[3] | 30000 |
+| click_and_wait | xpath=(//input[@value='Update'])[3] |  |
+| wait_for_text_present_ok | Account settings updated. | 15000 |
 | is_checked_ok | //table[@id='workspaces']/tbody/tr[1]/td[1]/input[@name='value'] |  |
 | is_checked_ok | //table[@id='workspaces']/tbody/tr[2]/td[1]/input[@name='value'] |  |
 
@@ -125,8 +125,8 @@
 | st-process-jobs |  |  |
 | st-logoutin | %%auw_user%% | %%password%% |
 | open_ok | /?action=workspaces_listall |  |
-| is_element_present_ok | //div[@id='contentContainer'] | link=%%auw_wiki%% |
-| is_element_present_ok | //div[@id='contentContainer'] | link=%%auw_wiki_2%% |
+| is_element_present_ok | //div[@id='content'] | link=%%auw_wiki%% |
+| is_element_present_ok | //div[@id='content'] | link=%%auw_wiki_2%% |
 
 | *Comment* | Test Case: All Users Workspace remove both wikis through control panel |  |
 | st-logoutin | %%username%% | %%password%% |
@@ -139,9 +139,9 @@
 | is_checked_ok | //table[@id='workspaces']/tbody/tr[2]/td[1]/input[@name='value'] |  |
 | uncheck_ok | //table[@id='workspaces']/tbody/tr[2]/td[1]/input[@name='value'] |  |
 | st_unchecked_ok | //table[@id='workspaces']/tbody/tr[2]/td[1]/input[@name='value'] |  |
-| wait_for_element_visible_ok | `//input[@value='Update'][2]` | 30000 |
-| click_and_wait | `//input[@value='Update'][2]` |  |
-| wait_for_text_present_ok | Account settings updated. | 30000 |
+| wait_for_element_visible_ok | xpath=(//input[@value='Update'])[3] | 30000 |
+| click_and_wait | xpath=(//input[@value='Update'])[3] |  |
+| wait_for_text_present_ok | Account settings updated. | 15000 |
 | st_unchecked_ok | //table[@id='workspaces']/tbody/tr[1]/td[1]/input[@name='value'] |  |
 | st_unchecked_ok | //table[@id='workspaces']/tbody/tr[2]/td[1]/input[@name='value'] |  |
 

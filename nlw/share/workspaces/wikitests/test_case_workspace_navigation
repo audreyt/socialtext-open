@@ -2,92 +2,59 @@
 
 | *Comment* | Test each link at the top of the page |  |
 | set | ws | wrkspace-nav-%%start_time%% |
-| set | ws_title | Workspace Nav %%start_time%% |
-| st-admin | create-workspace --name %%ws%% --title "%%ws_title%%" | was created |
+| set | ws_title | wrkspace-nav-%%start_time%% |
+| create-workspace | %%ws%% |  |
 | st-admin | add-member --e %%username%% --workspace %%ws%% | now has the role of |
 | st-admin | add-workspace-admin --e %%username%% --workspace %%ws%% | now has the role of |
+| st-admin | update-page --w %%ws%% --e %%email%% --p "%%ws%%" < %%wikitest_client_files%%wikitest.txt | has been created |
 | st-admin | update-page --w %%ws%% --e %%email%% --p "Page 1 %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |
 | st-admin | update-page --w %%ws%% --e %%email%% --p "Page 2 %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |
 | st-admin | update-page --w %%ws%% --e %%email%% --p "Page 3 %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |
 
 | *Comment* | Test Case: Workspace Navigation Title |  |
 | open_ok | /%%ws%%/ |  |
-| text_like | workspaceNav | qr/Workspace:\s+%%ws_title%%/sm |
+| text_like | //div[@class='workspaceNav'] | qr/Workspaces.+%%ws_title%%/sm |
 | click_and_wait | link=Settings | navigate away |
-| text_like | contentLeft | Settings |
+| text_like | content | Settings |
 | click_and_wait | link=%%ws_title%% |  |
 | location_like | /%%ws%% |  |
-| text_like | contentTitle | %%ws_title%% |
+| text_like | st-page-titletext | %%ws_title%% |
 
 | *Comment* | Test Case: Workspace Navigation What's New |  |
-| click_and_wait | link=What's New |  |
-| text_like | contentContainer | Changes in Last |
+| select_and_wait | st-jump-to | label=What's New |
+| text_like | content | Changes in Last |
 | click_and_wait | link=%%ws_title%% |  |
 
 | *Comment* | Test Case: Workspace Navigation My Watchlist |  |
-| click_and_wait | link=My Watchlist |  |
-| text_like | contentContainer | Pages You're Watching |
+| select_and_wait | st-jump-to | label=Watchlist |
+| text_like | content | Pages You're Watching |
 | click_and_wait | link=%%ws_title%% |  |
 
 | *Comment* | Test Case: Workspace Navigation Blogs |  |
-| click_and_wait | link=Blogs |  |
-| text_like | st-editing-tools-edit | Blog: |
-
-| *Comment* | Test Case: Workspace Navigation test for Add Members link |  |
-| click_and_wait | link=%%ws_title%% |  |
-| text_like | workspaceNav | Add Members |
-| click_and_wait | link=Add Members |  |
-| text_like | Invite Other Users |  |
-| click_and_wait | link=%%ws_title%% |  |
+| select_and_wait | st-jump-to | label=Blogs |
+| text_like | content | Blog: |
 
 | *Comment* | Test Case: Workspace Navigation All Files/Tags/Pages |  |
-| click_and_wait | link=What's New |  |
-| click_and_wait | link=All Files |  |
-| text_like | contentContainer | All Files |
-| click_and_wait | link=%%ws_title%% |  |
-| click_and_wait | link=What's New |
-| click_and_wait | link=All Tags |  |
-| text_like | contentContainer | All Tags in |
-| click_and_wait | link=%%ws_title%% |  |
-| click_and_wait | link=What's New |
-| click_and_wait | link=All Pages |  |
-| text_like | contentContainer | All Pages |
+| select_and_wait | st-jump-to | label=All Files |
+| text_like | content | All Files |
+| select_and_wait | st-jump-to | label=All Tags |
+| text_like | content | All Tags in |
+| select_and_wait | st-jump-to | label=All Pages |
+| text_like | content | All Pages |
 
 *Settings => What's New. Choose and save a different number of entries, N.*
 
 | *Comment* | Test Case: Workspace Navigation Interval |  |
-| click_and_wait | link=Settings |  |
-| click_and_wait | //a[contains(@href,'preferences_class_id=recent_changes')] |  |
-| select_ok | recent_changes__changes_depth | label=Last Month |
-| click_and_wait | link=Save |  |
-| click_and_wait | link=What's New |  |
-| text_like | contentContainer | qr/Changes in Last Month \(\d+\) out of \(\d+\) Total Pages/ |
-| click_and_wait | link=Settings |  |
-| click_and_wait | //a[contains(@href,'preferences_class_id=recent_changes')] |  |
-| select_ok | recent_changes__changes_depth | label=Last Week |
-| click_and_wait | link=Save |  |
-| click_and_wait | link=What's New |  |
-| text_like | contentContainer | qr/Changes in Last Week \(\d+\) out of \(\d+\) Total Pages/ |
-
-| *Comment* | Test Case: Workspace Navigation set up Notepad |  |
-| *Comment* | Create a unique notepad page |  |
-| click_and_wait | link=%%ws_title%% |  |
-| click_and_wait | link=Settings |  |
-| click_and_wait | link=Your Notepad |  |
-| type_ok | favorites__which_page | Notepad for %%start_time%% |
-| click_and_wait | link=Save |  |
-
-| *Comment* | Test Case: Workspace Navigation edit Notepad |  |
-| open_ok | /%%ws%%/?Notepad for %%start_time%% |  |
-| wait_for_element_visible_ok | st-create-content-savelink | 30000 |
-| click_and_wait | st-create-content-savelink |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | Notepad entry for %%start_time%% |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
-| wait_for_text_present_ok | Notepad entry for %%start_time%% | 30000 |
+| open_ok | /st/settings/%%workspace_id%%/prefs/preferences |  |
+| select_ok | prefs.recent_changes.changes_depth | label=Last Month |
+| click_and_wait | //a[@class='save ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'] |  |
+| open_ok | /%%ws%%/?action=recent_changes |  |
+| text_like | content | qr/Changes in Last Month \(\d+\) out of \(\d+\) Total Pages/ |
+| open_ok | /st/settings/%%workspace_id%%/prefs/preferences |  |
+| select_ok | prefs.recent_changes.changes_depth | label=Last Week |
+| click_and_wait | //a[@class='save ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'] |  |
+| open_ok | /%%ws%%/?action=recent_changes |  |
+| text_like | content | qr/Changes in Last Week \(\d+\) out of \(\d+\) Total Pages/ |
 
 | *Comment* | Test Case: Workspace Navigation new spreadsheet not tested because of dialog for title |  |
 

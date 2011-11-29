@@ -5,17 +5,22 @@ use warnings;
 use Pod::Usage;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
-use Socialtext::MakeJS;
+use Socialtext::JavaScript::Builder;
+
+my $builder = Socialtext::JavaScript::Builder->new(
+    verbose => 1,
+);
 
 pod2usage() unless (@ARGV);
 while (my $command = shift) {
+    no warnings 'once';
     $Socialtext::MakeJS::VERBOSE = $command !~ m/^\@/;
     $command =~ s/^[\@-]+//;
     if ($command eq 'clean') {
-        Socialtext::MakeJS->CleanAll;
+        $builder->clean();
     }
     elsif ($command eq 'all') {
-        Socialtext::MakeJS->BuildAll;
+        $builder->build();
     }
     else {
         die "Unknown command $command";

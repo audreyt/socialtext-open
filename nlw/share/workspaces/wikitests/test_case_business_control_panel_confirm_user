@@ -3,9 +3,9 @@
 
 | st-config | set self_registration 1 |  |
 | st-config | set allow_network_invitation 1 |  |
+
 | set | self_reg | mattself%%start_time%% |
 | set | eself_reg | %%self_reg%%@matt.socialtext.net |
-
 | set | self_reg2 | mattself2%%start_time%% |
 | set | eself_reg2 | %%self_reg2%%@matt.socialtext.net |
 
@@ -23,7 +23,7 @@
 | click_and_wait | register_btn |  |
 | wait_for_text_present_ok | An email confirming your registration has been sent to | 30000 |
 | open_ok | /st/dashboard |  |
-| wait_for_text_present_ok | Log in to Socialtext | 30000 |
+| wait_for_text_present_ok | Log in | 30000 |
 | wait_for_element_visible_ok | username | 30000 |
 
 | *Comment* | Test Case: Business Control Panel Confirm User login as %%username%% |  |
@@ -36,14 +36,13 @@
 | wait_for_element_visible_ok | //input[@value='Confirm user'] | 30000 |
 | click_and_wait | //input[@value='Confirm user'] |  |
 | wait_for_text_present_ok | User is confirmed | 30000 |
-| wait_for_text_present_ok | The "%%self_reg%%" user was confirmed. | 30000 |
 
 | *Comment* | Test Case: Business Control Panel Confirm User, logout, login as self-register |  |
 | st-process-jobs |  |  |
 | open_ok | /st/dashboard |  |
 | st-logoutin | %%eself_reg%% | password |
 | open_ok | /st/dashboard |  |
-| wait_for_text_present_ok | Welcome, New User | 30000 |
+| wait_for_text_present_ok | Welcome %%self_reg%% | 30000 |
 
 | *Comment* | Test Case: Confirm User, self-register user2 |  |
 | click_and_wait | link=Log out |  |
@@ -65,7 +64,9 @@
 | *Comment* | Test Case: Business Control Panel Confirm User login as %%eself_reg2%% |  |
 | st-login | %%eself_reg2%% | %%password%% |
 | open_ok | /st/dashboard |  |
-| wait_for_text_present_ok | Welcome, New User | 30000 |
+| wait_for_text_present_ok | Welcome | 10000 |
+| wait_for_text_present_ok | %%self_reg%% | 10000 |
+| text-like | qr/Welcome.+%%self_reg%%/ism |  |
 
 | *Comment* | Test Case: Business Control Panel Confirm User TEARDOWN |  |
 | st-admin | deactivate-user --e %%eself_reg%% | removed |

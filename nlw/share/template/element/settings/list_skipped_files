@@ -1,0 +1,6 @@
+[%# @COPYRIGHT@ -%]
+<div class="st-skippedfiles">
+  <span class="st-section-label">[% loc('info.skipped-import-files') %]</span><br/>
+  <span class="st-section-label">[% loc('error.these-files-were-not-imported:') %] </span>
+  <span class="st-skippedfiles-list">[% skipped_files.join(', ') %]</span>
+</div>

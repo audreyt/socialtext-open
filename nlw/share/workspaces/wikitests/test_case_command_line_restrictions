@@ -24,7 +24,7 @@
 | st-admin | add-member --email %%emailok2%% --workspace %%ws%% | qr/%%emailok2%% now has the role of 'member' in the %%ws%% workspace/ism |
 | st-admin | invite-user --email %%emailbad%% --workspace %%ws%% --from %%emailok2%% | An invite has been sent to "%%emailbad%%" to join the "%%ws%%" workspace. |
 | st-admin | set-workspace-config -w %%ws%% invitation_filter %%domain%% | The workspace config for %%ws%% has been updated. |
-| st-admin | invite-user --email %%emailbad2%% --workspace %%ws%% --from %%emailok2%% | The email address, %%emailbad2%%, does not match the workspace invitation filter %%domain%%. |
+| st-admin | invite-user --email %%emailbad2%% --workspace %%ws%% --from %%emailok2%% | Invite failed for email address %%emailbad2%% : WORKSPACE INVITATION FILTER |
 | st-admin | invite-user --email %%emailok%% --workspace %%ws%% --from %%emailok2%% | An invite has been sent to "%%emailok%%" to join the "%%ws%%" workspace. |
 
 | *Comment* | Test Case: Command Line Tests RESTRICTED teardown |  |

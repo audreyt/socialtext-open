@@ -26,7 +26,7 @@ DISPLAY: {
     my $output = $hub->display->display();
 
     ok( $output ne '', 'output exists' );
-    like( $output, qr/<div id="st-page-content">/,
+    like( $output, qr/<div .*id="st-page-content">/,
         'checking for screen layout' );
     like(
         $output, qr/id="st-page-titletext"[^>]*>\s*Zac&#39;s First Page/s,

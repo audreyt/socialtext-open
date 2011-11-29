@@ -1,6 +1,5 @@
 | *Comment* | Test Case: Canadien Francais (Users) |  |
 
-
 * Fixture: SocialWidgets
 
 | *Comment* | Test Case: Canadien Francais (Users) Create Raw Account |  |
@@ -48,11 +47,11 @@
 | st-admin | set-user-profile --email %%userP%% preferred_name %%userP_short%% | Profile field 'preferred_name' set to |
 | st-admin | set-user-names --e %%userP%% --l "Smith%%userP_short%%" | updated |
 
-| set | userX_short | Xylophone%%start_time%% |
-| set | userX | %%userX_short%%@matt.socialtext.net |
-| st-admin | create-user --e %%userX%% --p %%password%% --account %%acct%% | was created |
-| st-admin | set-user-profile --email %%userX%% preferred_name %%userX_short%% | Profile field 'preferred_name' set to |
-| st-admin | set-user-names --e %%userX%% --l "Smith%%userX_short%%" | updated |
+| set | userX_short | Xylophone%%start_time%% |  |
+| set | userX | %%userX_short%%@matt.socialtext.net |  |
+| st-admin | create-user --e %%userX%% --p %%password%% --account %%acct%% | was created |  |
+| st-admin | set-user-profile --email %%userX%% preferred_name %%userX_short%% | Profile field 'preferred_name' set to |  |
+| st-admin | set-user-names --e %%userX%% --l "Smith%%userX_short%%" | updated |  |
 
 | st-process-jobs |  |  |  |
 
@@ -64,8 +63,7 @@
 | wait_for_element_visible_ok | link=%%userE_short%% | 30000 |
 | wait_for_element_visible_ok | link=%%userL_short%% | 30000 |
 | wait_for_element_visible_ok | link=%%userP_short%% | 30000 |
-| text_like | //body | qr/%%userAA_short%%.+%%userA_short%%.+%%userB_short%%.+%%userE_short%%.+%%userL_short%%.+%%userP_short%%.+%%userX_short%%/ |
-
+| text_like | content | qr/%%userAA_short%%.+%%userA_short%%.+%%userB_short%%.+%%userE_short%%.+%%userL_short%%.+%%userP_short%%.+%%userX_short%%/ |
 
 | *Comment* | Test Case: Canadien Francais (Users) Search Results |  |
 | open_ok | /?action=people |  |
@@ -79,8 +77,7 @@
 | wait_for_element_visible_ok | sort-picker | 30000 |
 | select_and_wait | sort-picker | label=Name |
 | wait_for_element_visible_ok | link=%%userA_short%% | 30000 |
-| text_like | //body | qr/%%userAA_short%%.+%%userA_short%%.+%%userB_short%%.+%%userE_short%%.+%%userL_short%%.+%%userP_short%%.+%%userX_short%%/ |
-
+| text_like | content | qr/%%userAA_short%%.+%%userA_short%%.+%%userB_short%%.+%%userE_short%%.+%%userL_short%%.+%%userP_short%%.+%%userX_short%%/ |
 
 | *Comment* | Test Case: Canadien Francais (Users) In Mobile Search Results |  |
 | open_ok | /m/people |  |
@@ -114,8 +111,7 @@
 | wait_for_element_visible_ok | link=%%tagme%% | 30000 |  |
 | click_and_wait | link=%%tagme%% |  |  |
 | wait_for_element_visible_ok | link=%%userA_short%% | 30000 |  |
-| text_like | //body | qr/%%userAA_short%%.+%%userA_short%%.+%%userB_short%%.+%%userL_short%%.+%%userP_short%%.+%%userX_short%%/ |  |
-
+| text_like | content | qr/%%userAA_short%%.+%%userA_short%%.+%%userB_short%%.+%%userL_short%%.+%%userP_short%%.+%%userX_short%%/ |  |
 
 This is not yet implemented as of 4/21/2011 - taking the check out
 *Comment* | Test Case: Canadien Francais (Users) In Mobile | |
@@ -141,6 +137,5 @@ wait_for_element_visible_ok | link=%%userE%% | 30000 |
 | deactivate-user | %%userP%% |  |
 | deactivate-user | %%userX%% |  |
 | delete-account | %%acct%% |  |
-
 
 | *Comment* | Test Case: Canadien Francais COMPLETED |  |

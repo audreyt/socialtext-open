@@ -1,6 +1,6 @@
 # @COPYRIGHT@
 package Socialtext::DisplayPlugin;
-use strict;
+use 5.12.0;
 use warnings;
 
 use base 'Socialtext::Plugin';
@@ -32,12 +32,39 @@ sub register {
     my $registry = shift;
     $registry->add(action => 'new_page');
     $registry->add(action => 'display');
+    $registry->add(action => 'submit_comment');
     $registry->add(action => 'random_page');
     $registry->add(action => 'display_html');
     $registry->add(action => 'page_info');
     $registry->add(action => 'preview');
-    $registry->add(preference => $self->mouseover_length);
-    $registry->add(preference => $self->include_breadcrumbs);
+    $registry->add(action => 'homepage');
+    $registry->add(wafl => date => 'Socialtext::Date::Wafl');
+
+    $self->_register_prefs($registry);
+}
+
+sub homepage {
+    my $self = shift;
+    if (my $ws = $self->hub->current_workspace) {
+        return $self->redirect('/'.$ws->name);
+    }
+    return $self->redirect('/');
+}
+
+sub submit_comment {
+    my $self = shift;
+    my $page = $self->hub->pages->current;
+    return unless $self->hub->checker->check_permission('comment');
+    return unless $self->hub->checker->can_modify_locked($page);
+    $page->add_comment(
+        $self->cgi->comment,
+        $self->cgi->signal_comment_to_network
+    );
+    return 'success';
+}
+
+sub pref_names {
+    return qw(mouseover_length include_breadcrumbs);
 }
 
 sub page_info {
@@ -80,9 +107,15 @@ sub new_page {
     $uri = $uri . ';caller_action=' . $self->cgi->caller_action
         if $self->cgi->caller_action;
 
-    if ($self->hub->current_workspace->enable_spreadsheet) {
-        $uri = $uri . ';page_type=' . $self->cgi->page_type
-            if $self->cgi->page_type;
+    given ($self->cgi->page_type) {
+        when ('spreadsheet') {
+            $uri .= ';page_type=' . $self->cgi->page_type
+                if $self->hub->current_workspace->enable_spreadsheet;
+        }
+        when ('xhtml') {
+            $uri .= ';page_type=' . $self->cgi->page_type
+                if $self->hub->current_workspace->enable_xhtml;
+        }
     }
 
     $uri = $uri . ';page_name=' . $page->uri . '#edit';
@@ -99,6 +132,21 @@ sub preview {
     $self->hub->viewer->text_to_html($wiki_text);
 }
 
+
+sub mouseover_length_data {
+    my $self = shift;
+
+    return {
+        title => loc('wiki.show-page-snippets-on-mouse-hover'),
+        binary => 1,
+        default_setting => 1,
+        options => [
+            {setting => '1', display => loc('do.enabled')},
+            {setting => '0', display => loc('do.disabled')},
+        ],
+    };
+}
+
 # The name mouseover_length is historical. It used to allow users to
 # select how many characters from the page to show. We changed it to a
 # boolean as part of the UJ, but it's easiest to keep the name so that
@@ -106,18 +154,41 @@ sub preview {
 # false.
 sub mouseover_length {
     my $self = shift;
+
+    my $data = $self->mouseover_length_data;
     my $p = $self->new_preference('mouseover_length');
-    $p->query(__('wiki.mouseover-link?'));
-    $p->default(1);
+
+    $p->query($data->{title});
+    $p->type('boolean');
+    $p->default($data->{default_setting});
+
     return $p;
+}
+
+sub include_breadcrumbs_data {
+    my $self = shift;
+
+    return {
+        title => loc('wiki.recently-viewed-sidebar-widget'),
+        binary => 1,
+        default_setting => 0,
+        options => [
+            {setting => '1', display => loc('do.enabled')},
+            {setting => '0', display => loc('do.disabled')},
+        ],
+    };
 }
 
 sub include_breadcrumbs {
     my $self = shift;
+
+    my $data = $self->include_breadcrumbs_data;
     my $p = $self->new_preference('include_breadcrumbs');
-    $p->query(__('wiki.include-breadcrumbs?'));
+
+    $p->query($data->{title});
     $p->type('boolean');
-    $p->default(0);
+    $p->default($data->{default_setting});
+
     return $p;
 }
 
@@ -169,9 +240,8 @@ sub display {
             $start_in_edit_mode = 1;
         }
         my $page_type = $self->cgi->page_type || '';
-        $page->page_type(
-            $page_type eq 'spreadsheet' && 'spreadsheet' || 'wiki'
-        );
+        $page_type = 'wiki' unless $page_type ~~ ['spreadsheet', 'xhtml'];
+        $page->page_type( $page_type );
         push @new_tags, $self->_new_tags_to_add();
         if (my $template = $self->cgi->template) {
             my $tmpl_page = $self->hub->pages->new_from_name($template);
@@ -179,15 +249,19 @@ sub display {
                 my @template_tags = (lc('template'), lc(loc('tag.template')));
                 push @new_tags, grep { not( lc($_) ~~ @template_tags ) }
                                 @{ $tmpl_page->tags };
-                my $content = $tmpl_page->content;
 
-                if (my $variables = $self->cgi->variables) {
-                    my $decoded_vars = Socialtext::JSON::decode_json_utf8($variables) || {};
-                    my %vars;
-                    while (my ($key, $val) = each %$decoded_vars) {
-                        $vars{lc $key} = $val;
+                my $content = '';
+                if ($page_type eq 'wiki') {
+                    $content = $tmpl_page->to_wikitext;
+
+                    if (my $variables = $self->cgi->variables) {
+                        my $decoded_vars = Socialtext::JSON::decode_json_utf8($variables) || {};
+                        my %vars;
+                        while (my ($key, $val) = each %$decoded_vars) {
+                            $vars{lc $key} = $val;
+                        }
+                        $content =~ s/%%(.*?)%%/$vars{lc $1}/eg;
                     }
-                    $content =~ s/%%(.*?)%%/$vars{lc $1}/eg;
                 }
 
                 if ($page->mutable) {
@@ -269,15 +343,44 @@ sub _render_display {
     push @$new_attachments, map {
         $_->to_hash(formatted => 1)
     } @$template_attachments if $template_attachments;
+            
+    # Update js_bootstrap for pages
+    my $accept_encoding => eval {
+        $self->hub->rest->request->header_in('Accept-Encoding');
+    };
+    $self->hub->helpers->add_js_bootstrap({
+        template_name        => scalar $self->cgi->template,
+        start_in_edit_mode   => $start_in_edit_mode,
+        accept_encoding      => $accept_encoding,
+        double_click_to_edit =>
+            $self->hub->wikiwyg->preferences->wikiwyg_double->value,
+        page => {
+            id              => $page->page_id,
+            title           => $page->title,
+            type            => $page->type,
+            full_uri        => $page->full_uri,
+            size            => $page->size,
+            attachments     => $attachments,
+            new_title       => scalar $self->cgi->new_title,
+            new_attachments => $new_attachments,
+            variables       => (Socialtext::JSON::decode_json_utf8(
+                $self->cgi->variables || '{}'
+            ) || {}),
+            revision_id     => $page->revision_id,
+            is_new          => $is_new_page,
+            is_incipient    => ($self->cgi->is_incipient ? 1 : 0),
+            tags            => $self->_getCurrentTags($page),
+            new_tags        => $new_tags,
+            caller          => ($self->cgi->caller_action || ''),
+            display_title   => html_escape($page->name),
+        },
+    });
 
     # TODO: Thunk like in global_template_vars?
     return $self->template_render(
         template => 'view/page/display',
         vars     => {
             $self->hub->helpers->global_template_vars,
-            accept_encoding         => eval {
-                $self->hub->rest->request->header_in( 'Accept-Encoding' )
-            } || '',
             local_time              => sub {
                 loc(
                     "time.at=date,time",
@@ -288,21 +391,16 @@ sub _render_display {
             title                   => $page->name,
             page                    => $self->_get_page_info($page),
             template_name           => $self->cgi->template || '',
-            tag_count               => scalar @{ $page->tags }, # counts recent changes!
-            tags                    => $self->_getCurrentTags($page),
-            initialtags             => $self->_getCurrentTagsJSON($page),
-            workspacetags           => $self->_get_workspace_tags,
             is_homepage             => (
                   !$self->hub->current_workspace->homepage_is_dashboard
                   and $page->page_id eq title_to_id(
                       $self->hub->current_workspace->title)
             ),
-            is_new                  => $is_new_page,
-            is_incipient            => ($self->cgi->is_incipient ? 1 : 0),
-            start_in_edit_mode      => $start_in_edit_mode,
-            new_tags                => $new_tags,
             attachments             => $attachments,
             new_attachments         => $new_attachments,
+            variables               => (Socialtext::JSON::decode_json_utf8(
+                $self->cgi->variables || '{}'
+            ) || {}),
             watching                => $self->hub->watchlist->page_watched,
             login_and_edit_path => '/challenge?'
                 . uri_escape(
@@ -310,8 +408,6 @@ sub _render_display {
                   . '?action=edit;page_name=' . $page->uri
                 ),
             feeds => $self->_feeds( $self->hub->current_workspace, $page ),
-            wikiwyg_double =>
-                $self->hub->wikiwyg->preferences->wikiwyg_double->value,
             Socialtext::BrowserDetect::safari()
                 ? ( raw_wikitext => $page->content ) : (),
             current_user_workspace_count =>
@@ -321,8 +417,6 @@ sub _render_display {
             recent_changes => \@recent_changes,
             include_breadcrumbs     => $include_breadcrumbs,
             breadcrumbs             => \@breadcrumbs,
-            enable_unplugged        =>
-                $self->hub->current_workspace->enable_unplugged,
             st_page_accessories     => $st_page_accessories,
         },
     );
@@ -371,7 +465,6 @@ sub _get_page_info {
 
     return {
         title           => $page->name,
-        new_title       => scalar $self->cgi->new_title,
         display_title   => html_escape($page->name),
         id              => $page->id,
         is_default_page => (
@@ -410,8 +503,8 @@ sub _get_page_info {
         },
         is_original => $page->revision_num <= 1 ? 1 : 0,
         incoming    => $self->hub->backlinks->all_backlinks_for_page($page),
-        caller      => ($self->cgi->caller_action || ''),
         is_active   => $page->active,
+        is_xhtml => $page->is_xhtml,
         is_spreadsheet => $page->is_spreadsheet,
         Socialtext::BrowserDetect::safari()
                 ? (raw_wikitext => $page->content)
@@ -479,7 +572,6 @@ sub _getCurrentTagsJSON {
 
 }
 
-
 # XXX - the filtering being done here should be replaced with a
 # formatter subclass or LinkDictionary that is used just when formatting
 # is done for this method. See also Socialtext::Page::to_absolute_html()
@@ -501,6 +593,7 @@ sub display_html {
         display_title => $title,
     );
 }
+
 
 sub qualify_links {
     my $self = shift;
@@ -536,8 +629,24 @@ cgi 'new_blog_entry';
 cgi 'add_tag';
 cgi 'is_incipient';
 
+# For commenting
+cgi 'comment';
+cgi 'signal_comment_to_network';
+
 # For Page Creator integration
 cgi 'new_title';
 cgi 'variables';
+
+package Socialtext::Date::Wafl;
+
+use base 'Socialtext::Formatter::WaflPhrase';
+
+sub html {
+    my $self = shift;
+    my $raw_date = $self->arguments;
+    my $date = eval { $self->hub->timezone->date_local($raw_date) };
+    $date = $raw_date if $@;
+    return $date;
+}
 
 1;

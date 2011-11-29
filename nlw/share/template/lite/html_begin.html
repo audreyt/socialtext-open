@@ -1,0 +1,37 @@
+[%# @COPYRIGHT@ -%]
+[%- USE decorate -%]
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <title>[% "$ws.title : " IF ws.title %][%- title | html %]</title>
+        <link rel="apple-touch-icon" href="/static/[% app_version %]/images/apple-touch-icon.png"/>
+        <link rel="stylesheet" href="/data/accounts/[% user.primary_account_id %]/theme/miki.css?[% app_version %]" />
+        [% IF enable_jquery_mobile %]
+            [% DEFAULT page_html = '' %]
+            [% IF page_html.search("container\.renderGadget") %]
+            <script type="text/javascript" charset="utf-8" src="/js/[% app_version %]/socialtext-mobile-container.jgz"></script>
+                [% INCLUDE widget/syndicator %]
+            [% ELSE %]
+            <script type="text/javascript" charset="utf-8" src="/js/[% app_version %]/socialtext-mobile.jgz"></script>
+            [% END %]
+            [% INCLUDE 'element/wiki/js-bootstrap' %]
+        [% END %]
+        <script type="text/javascript" charset="utf-8" src="/js/[% app_version %]/l10n-[% loc_lang || 'en' %].jgz"></script>
+        <script type="text/javascript"><!--
+            if (typeof Socialtext == 'undefined') {
+                Socialtext = {};
+            }
+            Socialtext.mobile = true;
+            Socialtext.prototype.static_path = "/static/[% app_version %]";
+        --></script>
+        <meta name = "viewport" content = "width=device-width, initial-scale=1">
+    </head>
+    <body>
+        [% FILTER decorate('body_begin') %]
+        [% END %]
+        <div style="display:none">
+            <strong>[% warning || loc("error.css-disabled") %]</strong>
+            <br/>
+        </div>
+        <div data-role="page">

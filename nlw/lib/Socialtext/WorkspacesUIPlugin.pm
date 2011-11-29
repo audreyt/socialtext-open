@@ -16,6 +16,7 @@ use Socialtext::File::Copy::Recursive qw(dircopy);
 use Socialtext::Log 'st_log';
 use Socialtext::Group ();
 use YAML qw(LoadFile);
+use Socialtext::SQL qw(sql_execute);
 
 sub class_id { 'workspaces_ui' }
 const cgi_class => 'Socialtext::WorkspacesUI::CGI';
@@ -38,6 +39,117 @@ sub register {
     $registry->add(action => 'workspaces_self_join');
 }
 
+# this is a special case. workspace prefs are actually attrs on the
+# "Workspace" table and, as such, are handled differently.
+sub pref_names {
+    return qw(
+        incoming_email_placement homepage_weblog
+        email_notify_is_enabled sort_weblogs_by_create
+        allows_page_locking guest_has_email_in title
+    );
+#   No longer supported: homepage_is_dashboard
+}
+
+
+sub homepage_weblog_data {
+    my $self = shift;
+
+    return {
+        title => loc('wiki.link'),
+        additional => loc('info.homepage-or-blog'),
+    };
+}
+
+sub title_data {
+    return {
+        title => loc('wiki.title'),
+        additional => loc('example.title'),
+    };
+}
+
+sub incoming_email_placement_data {
+    my $self = shift;
+
+    return {
+        title => loc('wiki.placement-of-emailed-content'),
+        default_setting => 'bottom',
+        options => [
+            {setting => 'bottom', display => loc('page.bottom')},
+            {setting => 'top', display => loc('page.top')},
+            {setting => 'replace', display => loc('page.replace')},
+        ],
+    };
+}
+
+sub enable_unplugged_data {
+    my $self = shift;
+
+    return {
+        title => loc('nav.socialtext-unplugged'),
+        default_setting => 0,
+        binary => 1,
+        options => [
+            {setting => 1, display => loc('do.enabled')},
+            {setting => 0, display => loc('do.disabled')},
+        ],
+    };
+}
+
+sub email_notify_is_enabled_data {
+    my $self = shift;
+
+    return {
+        title => loc('wiki.email-notifications'),
+        default_setting => 1,
+        binary => 1,
+        options => [
+            {setting => 1, display => loc('do.enabled')},
+            {setting => 0, display => loc('do.disabled')},
+        ],
+    };
+}
+
+sub sort_weblogs_by_create_data {
+    my $self = shift;
+
+    return {
+        title => loc('blog.weblog-sort-order'),
+        additional => loc('info.blog-sort'),
+        default_setting => 0,
+        options => [
+            {setting => 1, display => loc('sort.by-last-updated-time')},
+            {setting => 0, display => loc('sort.by-create-time')},
+        ],
+    };
+}
+
+sub allows_page_locking_data {
+    my $self = shift;
+
+    return {
+        title => loc('nav.page-locking'),
+        default_setting => 0,
+        binary => 1,
+        options => [
+            {setting => 1, display => loc('do.enabled')},
+            {setting => 0, display => loc('do.disabled')},
+        ],
+    };
+}
+
+sub guest_has_email_in_data {
+    my $self = shift;
+
+    return {
+        title => loc('wiki.email-senders?'),
+        default_setting => 0,
+        options => [
+            {setting => 0, display => loc('wiki.only-registered-users')},
+            {setting => 1, display => loc('explore.anyone')},
+        ],
+    };
+}
+
 sub workspaces_listall {
     my $self = shift;
 
@@ -46,19 +158,30 @@ sub workspaces_listall {
     $self->_update_selected_workspaces()
         if $self->cgi->Button;
 
-    my $settings_section = $self->template_process(
-        'element/settings/workspaces_listall_section',
-        workspaces => $self->hub->current_user->workspaces,
-        $self->status_messages_for_template,
-    );
+    my $sql = qq{
+        SELECT
+          w.workspace_id id,
+          w.name,
+          w.title,
+          coalesce(usuc.user_count,0) user_count,
+          coalesce(usgc.group_count,0) group_count
+        FROM
+          "Workspace" w
+          JOIN user_workspaces uw on uw.workspace_set_id = w.user_set_id
+          LEFT OUTER JOIN user_set_user_count usuc on usuc.user_set_id = w.user_set_id
+          LEFT OUTER JOIN user_set_group_count usgc on usgc.user_set_id = w.user_set_id
+        WHERE
+          uw.user_set_id = ?
+        ORDER BY
+          w.title
+    };
+    my $sth = sql_execute($sql, $self->hub->current_user->user_id);
+    my $workspaces = $sth->fetchall_arrayref({});
 
-    $self->screen_template('view/settings');
+    $self->screen_template('view/user_workspacelist');
     return $self->render_screen(
-        settings_table_id => 'settings-table',
-        settings_section  => $settings_section,
-        hub               => $self->hub,
-        display_title     => loc('config.wiki-list'),
-        pref_list         => $self->_get_pref_list('global'),
+        display_title => loc('nav.my-wikis'),
+        workspaces => $workspaces,
     );
 }
 
@@ -364,7 +487,7 @@ sub _update_workspace_settings {
     my $self = shift;
 
     my %update;
-    for my $f ( qw( title incoming_email_placement enable_unplugged
+    for my $f ( qw( title incoming_email_placement 
                     email_notify_is_enabled sort_weblogs_by_create
                     homepage_is_dashboard allows_page_locking )
     ) {
@@ -535,7 +658,6 @@ sub _create_workspace {
             clone_pages_from                => $clone_from,
             created_by_user_id              => $hub->current_user->user_id,
             account_id                      => $account_id,
-            enable_unplugged                => 1,
 
             # begin customization inheritances
             cascade_css                     => $skin->cascade_css,
@@ -721,7 +843,6 @@ cgi 'account_id';
 cgi 'account_name';
 cgi 'permission_set_name';
 cgi 'guest_has_email_in';
-cgi 'enable_unplugged';
 cgi 'uploaded_skin';
 cgi 'skin_reset';
 cgi skin_file => '-upload';

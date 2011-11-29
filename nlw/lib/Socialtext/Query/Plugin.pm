@@ -335,11 +335,14 @@ sub _make_row {
     my $id = $page->id;
     if ( $hit->isa('Socialtext::Search::AttachmentHit') ) {
         my $att_id = $hit->attachment_id;
-        my $att = $hit_hub->attachments->load(
-            id      => $att_id,
-            page_id => $page_uri,
-        );
-        return {} if $att->is_deleted || $att->is_temporary;
+        my $att;
+        eval {
+            $att = $hit_hub->attachments->load(
+                id      => $att_id,
+                page_id => $page_uri,
+            );
+        };
+        return {} if !$att or $att->is_deleted or $att->is_temporary;
         $document_title = $att->filename;
         $date = $att->created_at_str;
         $date_local = $hit_hub->timezone->get_date($att->created_at);

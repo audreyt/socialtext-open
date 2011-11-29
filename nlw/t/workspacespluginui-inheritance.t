@@ -6,7 +6,7 @@
 
 use strict;
 use warnings;
-use Test::Socialtext tests => 20;
+use Test::Socialtext tests => 12;
 
 ###############################################################################
 # Fixtures: empty destructive
@@ -98,30 +98,6 @@ sub toggle {
         $custom_params{'show_welcome_message_below_logo'},
         "show_welcome_message_below_logo didn't match our toggle" );
 
-    is( $new_ws->cascade_css,
-        $ws->cascade_css,
-        "cascade_css didn't match empty ws" );
-    
-    is( $new_ws->cascade_css,
-        $custom_params{'cascade_css'},
-        "cascade_css didn't match our toggle" );    
-
-    is( $new_ws->customjs_name,
-        $ws->customjs_name,
-        "customjs_name matched empty ws" );
-
-    is( $new_ws->customjs_name,
-        $custom_params{'customjs_name'},
-        "customjs_name matched our new value" );
-
-    is( $new_ws->customjs_uri,
-        $ws->customjs_uri,
-        "customjs_uri matched empty ws" );
-
-    is( $new_ws->customjs_uri,
-        $custom_params{'customjs_uri'},
-        "customjs_uri matched our new value" );
-
     is( $new_ws->header_logo_link_uri, 
         $ws->header_logo_link_uri,
         "header_logo_link_uri didn't match empty ws" );
@@ -129,13 +105,5 @@ sub toggle {
     is( $new_ws->header_logo_link_uri, 
         $custom_params{'header_logo_link_uri'},
         "header_logo_link_uri didn't match our new value" );
-
-    is( $new_ws->skin_name,
-        $ws->skin_name,
-        "skin_name didn't match empty ws" );
-
-    is( $new_ws->skin_name,
-        $custom_params{'skin_name'},
-        "skin_name didn't match our new value" );
 
 }

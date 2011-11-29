@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Socialtext i18n\n"
-"PO-Revision-Date: 2011-05-18 08:08-0700\n"
+"PO-Revision-Date: 2011-09-07 11:50+0800\n"
 "Last-Translator: Socialtext i18n team\n"
 "Language-Team: Socialtext i18n team\n"
 "MIME-Version: 1.0\n"
@@ -351,6 +351,9 @@ msgstr "给某人添加这个标签"
 msgid "people.add-tag-to-user=name:"
 msgstr "为用户添加标签\"%1\"："
 
+msgid "people.add=tag"
+msgstr "添加标签“%1”"
+
 #: share/plugin/people/share/people.js:31
 msgid "people.cancel-add-tag"
 msgstr "取消"
@@ -434,10 +437,13 @@ msgstr "相关度"
 
 #: share/plugin/people/template/lite/profile.html:13
 msgid "people.stop-following"
-msgstr "停止下面的"
+msgstr "停止关注"
 
 msgid "people.tag-name"
 msgstr "标签名称"
+
+msgid "people.to-person:"
+msgstr "給用戶："
 
 #: share/plugin/people/template/view/peoplelist:13
 msgid "people.tools"

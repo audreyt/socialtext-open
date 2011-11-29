@@ -1,0 +1,13 @@
+| set | pause_time | 6000 |
+| set_default | widget_Title | %%widget%% |
+
+| *Comment* | st-add-widget: %%widget%% |  |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+| click_ok | st-add-widget |  |
+
+| *Comment* | use wait_for_element_present instead of _visible because the lightbox is already hidden in the page |  |
+| wait_for_element_present_ok | //a[@id='gallery-widget-%%widget%%'] | 10000 |
+
+| click_ok | //a[@id='gallery-widget-%%widget%%'] |  |
+| pause_ok | %%pause_time%% |  |
+| text_like | content | %%widget_Title%% |

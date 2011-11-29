@@ -13,13 +13,13 @@
 
 | *Comment* | Test Case: Group Directory Verify Directory |  |
 | st-name-widget | 1 | my_groups |
-| st-widget-title-like | my_groups | My Groups |
+| st-widget-title | my_groups | My Groups |
 | st-select-widget-frame | my_groups |  |
 | wait_for_element_visible_ok | link=%%group_name%% | 30000 |
 | text_like | //body | %%group_name%% (private) |
 | select-frame | relative=parent |  |
 | st-name-widget | 2 | available_groups |
-| st-widget-title-like | available_groups | All Available Groups |
+| st-widget-title | available_groups | All Available Groups |
 
 | *Comment* | Test Case: Group Directory Create one private, two self-join groups in the account SETUP |  |
 | set | alpha_first_selfjoin | alpha-selfjoin-%%start_time%% |
@@ -39,13 +39,13 @@
 | *Comment* | Test Case: Group Directory Refresh the page see 2 self-join groups with buttons |  |
 | refresh |  |  |
 | st-name-widget | 1 | my_groups |
-| st-widget-title-like | my_groups | My Groups |
+| st-widget-title | my_groups | My Groups |
 | st-select-widget-frame | my_groups |  |
 | wait_for_element_visible_ok | link=%%group_name%% | 30000 |
 | text_like | //body | %%group_name%% (private) |
 | select-frame | relative=parent |  |
 | st-name-widget | 2 | available_groups |
-| st-widget-title-like | available_groups | All Available Groups |
+| st-widget-title | available_groups | All Available Groups |
 | st-select-widget-frame | available_groups |  |
 | wait_for_element_visible_ok | link=%%alpha_second_selfjoin%% | 30000 |
 | wait_for_element_visible_ok | link=%%alpha_first_selfjoin%% | 30000 |
@@ -57,7 +57,7 @@
 | wait_for_element_visible_ok | st-create-group | 30000 |
 | click_ok | st-create-group | 30000 |
 | wait_for_element_present_ok | st-create-group-next | 30000 |
-| wait_for_element_present_ok | st-lightbox-cancel-create-group | 30000 |
+| wait_for_element_present_ok | st-create-group-cancel | 30000 |
 | wait_for_text_present_ok | Create Group | 30000 |
 | wait_for_text_present_ok | Will not be displayed in the Group Directory and new members must be invited by | 30000 |
 
@@ -70,14 +70,14 @@
 | open_ok | /st/groups |  |  |
 
 | st-name-widget | 1 | my_groups |
-| st-widget-title-like | my_groups | My Groups |
+| st-widget-title | my_groups | My Groups |
 | st-select-widget-frame | my_groups |  |
 | wait_for_element_visible_ok | link=%%group_name%% | 30000 |
 | text_like | //body | %%group_name%% (private) |
 | select-frame | relative=parent |  |
 
 | st-name-widget | 2 | available_groups |
-| st-widget-title-like | available_groups | All Available Groups |
+| st-widget-title | available_groups | All Available Groups |
 | st-select-widget-frame | available_groups |  |
 | wait_for_element_visible_ok | link=%%alpha_second_selfjoin%% | 30000 |
 | wait_for_element_visible_ok | link=%%alpha_first_selfjoin%% | 30000 |

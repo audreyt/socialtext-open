@@ -1,0 +1,38 @@
+<div id="st-widget-opensocial-gallery-widgets">
+    [% FOR section = gadgets %]
+        <h4 class="vpad10">[% section.title %]</h4>
+        <table class="galleryWidget" style="width: 99%; table-layout: fixed">
+            [% WHILE section.gadgets.size %]
+                [% widget1 = section.gadgets.shift() %] 
+                [% widget2 = section.gadgets.shift() %] 
+                <tr>
+                    [% INCLUDE thumbnail_section widget=widget1 %]
+                    [% INCLUDE thumbnail_section widget=widget2 IF widget2 %]
+                </tr>
+                <tr>
+                    [% INCLUDE text_section widget=widget1 %]
+                    [% INCLUDE text_section widget=widget2 IF widget2 %]
+                </tr>
+            [% END %]
+        </table>
+    [% END %]
+</div>
+
+[% BLOCK thumbnail_section %]
+    <td style="width:20%">
+        <img src="/data/gadgets/[% widget.gadget_id %]/thumbnail" width="90" height="45" onerror="this.src='/nlw/plugin/widgets/images/thumbs/default.png'" />
+    </td>
+    <td style="padding:13px 0; width:30%">
+        <input type="hidden" name="gadget_id" value="[% widget.gadget_id %]"/>
+        <input type="hidden" name="src" value="[% widget.src %]"/>
+        <a id="gallery-widget-[% widget.title %]" href="#gallery-widget-[% widget.title %]" class="add-now ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"><span class="ui-button-text">[% loc('widget.add-now') %]</span></a>
+    </td>
+[% END %]
+
+[% BLOCK text_section %]
+    <td style="width:50%" colspan="2">
+        <div style="font-weight:bold">[% widget.title %]</div>
+        <div style="margin-top:3px; margin-bottom:10px; margin-right:10px">[% widget.description %]</div>
+    </td>
+[% END %]
+

@@ -1,0 +1,119 @@
+| *Comment* | Test Case: Consolidated Settings Defaults |  |
+
+| set | cs_user | cs.user.%%start_time%%@david.socialtext.net |
+| set | cs_wiki_1 | cs_workspace_1_%%start_time%% |
+| set | cs_wiki_2 | cs_workspace_2_%%start_time%% |
+| set | cs_acct | cs-account-%%start_time%% |
+
+| create-account | %%cs_acct%% |  |  |
+| create-user | %%cs_user%% | %%password%% | %%cs_acct%% |
+
+| *Comment* | Test Case: Consolidated Settings Defaults verify global settings screen text |  |
+| st-logoutin | %%cs_user%% | %%password%% |
+| open_ok | /st/dashboard |  |
+| wait_for_element_visible_ok | link=Settings | 30000 |
+| click_and_wait | link=Settings |  |
+| wait_for_text_present_ok | My Settings | 30000 |
+| text_like | settings-main | qr/First Name.+Middle Name.+Last Name.+6 characters.+Current.+New.+Retype New/ |
+| wait_for_text_present_ok | Time | 30000 |
+| text_like | settings-main | qr/Timezone.+Daylight Savings.+Summer.+Date Format.+Time Format/ |
+| wait_for_text_present_ok | Language | 30000 |
+| text_like | settings-main | Display Language |
+| wait_for_text_present_ok | Signals | 30000 |
+| text_like | settings-main | Send Socialtext Signals private messages as email |
+
+| *Comment* | Test Case: Consolidated Settings Default the menu for the central wiki should contain only two links |  |
+| open_ok | /st/settings |  |
+| click_ok | //div[@tabindex='0'] |  |
+| wait_for_element_visible_ok | link=Preferences | 30000 |
+| wait_for_element_visible_ok | link=Create Blog | 30000 |
+| wait_for_element_not_present_ok | link=Unsubscribe | 30000 |
+| wait_for_element_not_present_ok | link=Features | 30000 |
+| wait_for_element_not_present_ok | link=Manage Users | 30000 |
+
+| create-workspace | %%cs_wiki_1%% | %%cs_acct%% |  |
+| set | cs_wiki_1_id | %%workspace_id%% |  |
+| create-workspace | %%cs_wiki_2%% | %%cs_acct%% |  |
+| set | cs_wiki_2_id | %%workspace_id%% |  |
+
+| st-admin | add-workspace-admin --workspace %%cs_wiki_1%% --email %%cs_user%% | now has the role |
+| st-admin | add-member --workspace %%cs_wiki_2%% --email %%cs_user%% | now has the role |
+| st-process-jobs |  |  |
+
+| *Comment* | Test Case: Consolidated Settings Defaults different wikis should have different menu options |  |
+
+| *Comment* | Test Case: Consolidated Settings Defaults the sub-menu for %%cs_wiki_1%% should have all 5 links |  |
+| open_ok | /st/settings |  |
+| click_ok | //div[@tabindex='-1'] |  |
+| wait_for_element_visible_ok | //a[@href='/st/settings/%%cs_wiki_1_id%%/prefs/features'] | 30000 |
+| wait_for_element_visible_ok | //a[@href='/st/settings/%%cs_wiki_1_id%%/prefs/preferences'] | 30000 |
+| wait_for_element_visible_ok | //a[@href='/st/settings/%%cs_wiki_1_id%%/prefs/blog'] | 30000 |
+| wait_for_element_visible_ok | //a[@href='/st/settings/%%cs_wiki_1_id%%/prefs/unsubscribe'] | 30000 |
+| wait_for_element_visible_ok | //a[@href='/st/settings/%%cs_wiki_1_id%%/prefs/manage'] | 30000 |
+
+| *Comment* | Test Case: Consolidated Settings Defaults the sub-menu for %%cs_wiki_2%% should have only 3 links |  |
+| open_ok | /st/settings |  |
+| click_ok | `xpath=(//div[@tabindex='-1'])[2]` |  |
+| wait_for_element_visible_ok | //a[@href='/st/settings/%%cs_wiki_2_id%%/prefs/preferences'] | 30000 |
+| wait_for_element_visible_ok | //a[@href='/st/settings/%%cs_wiki_2_id%%/prefs/unsubscribe'] | 30000 |
+| wait_for_element_visible_ok | //a[@href='/st/settings/%%cs_wiki_2_id%%/prefs/blog'] | 30000 |
+| wait_for_element_not_present_ok | //a[@href='/st/settings/%%cs_wiki_2_id%%/prefs/features'] | 30000 |
+| wait_for_element_not_present_ok | //a[@href='/st/settings/%%cs_wiki_2_id%%/prefs/manage'] | 30000 |
+
+| *Comment* | Test Case: Consolidated Settings Defaults check the contents of features page |  |
+| open_ok | /st/settings |  |
+| click_ok | //div[@tabindex='-1'] |  |
+| wait_for_element_visible_ok | //a[@href='/st/settings/%%cs_wiki_1_id%%/prefs/features'] | 30000 |
+| click_and_wait | //a[@href='/st/settings/%%cs_wiki_1_id%%/prefs/features'] |  |
+| wait_for_text_present_ok | Appearance | 30000 |
+| text_like | settings-main | qr/Workspace Title.+Workspace Link.+Central Page/ |
+| wait_for_text_present_ok | Features | 30000 |
+| text_like | settings-main | qr/Placement of emailed content.+Email Notifications.+Weblog sort order/ |
+| wait_for_text_present_ok | Privacy | 30000 |
+| text_like | settings-main | qr/Who can send email to this workspace?.+Page Locking/ |
+
+| *Comment* | Test Case: Consolidated Settings Defaults check the contents of preferences page |  |
+| wait_for_element_visible_ok | //a[@href='/st/settings/%%cs_wiki_1_id%%/prefs/preferences'] | 30000 |
+| click_and_wait | //a[@href='/st/settings/%%cs_wiki_1_id%%/prefs/preferences'] |  |
+| wait_for_text_present_ok | Page Editing | 30000 |
+| text_like | settings-main | Double-click to edit page |
+| wait_for_text_present_ok | Screen Layout | 30000 |
+| text_like | settings-main | qr/Recently Viewed sidebar widget.+Show page snippets on mouse hover/ |
+| wait_for_text_present_ok | Email Notification | 30000 |
+| text_like | settings-main | qr/Email digest information.+Sort order of updates.+Frequency of updates/ |
+| wait_for_text_present_ok | What's New | 30000 |
+| text_like | settings-main | qr/Timeframe for changes.+What's New sidebar widget/ |
+| wait_for_text_present_ok | RSS | 30000 |
+| text_like | settings-main | Number of posts to syndicate |
+| wait_for_text_present_ok | Watchlist | 30000 |
+| text_like | settings-main | qr/Watchlist digest information.+Frequence of updates/ |
+| wait_for_text_present_ok | Blogs | 30000 |
+| text_like | settings-main | Number of posts to show |
+
+| *Comment* | Test Case: Consolidated Settings Defaults check the contents of create blog page |  |
+| wait_for_element_visible_ok | //a[@href='/st/settings/%%cs_wiki_1_id%%/prefs/blog'] | 30000 |
+| click_and_wait | //a[@href='/st/settings/%%cs_wiki_1_id%%/prefs/blog'] |  |
+| wait_for_text_present_ok | Create Blog | 30000 |
+| text_like | settings-main | Blog Name |
+
+| *Comment* | Test Case: Consolidated Settings Defaults check the contents of unsubscribe page |  |
+| wait_for_element_visible_ok | //a[@href='/st/settings/%%cs_wiki_1_id%%/prefs/unsubscribe'] | 30000 |
+| click_and_wait | //a[@href='/st/settings/%%cs_wiki_1_id%%/prefs/unsubscribe'] |  |
+| wait_for_text_present_ok | Unsubscribe | 30000 |
+| text_like | settings-main | Unsubscribe from this Workspace |
+
+| *Comment* | Test Case: Consolidated Settings Defaults check the contents of manage users page |  |
+| wait_for_element_visible_ok | //a[@href='/st/settings/%%cs_wiki_1_id%%/prefs/manage'] | 30000 |
+| click_and_wait | //a[@href='/st/settings/%%cs_wiki_1_id%%/prefs/manage'] |  |
+| wait_for_text_present_ok | Invite New Users | 30000 |
+| text_like | settings-main | Email addresses to invite |
+| wait_for_text_present_ok | Manage Users | 30000 |
+| text_like | settings-main | %%cs_user%% |
+
+| *Comment* | Test Case: Consolidated Settings Defaults TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%cs_user%% |  |
+| delete-workspace | %%cs_wiki_1%% |  |
+| delete-workspace | %%cs_wiki_2%% |  |
+| delete-workspace | %%cs_acct%%-central |  |
+| delete-account | %%cs_acct%% |  |

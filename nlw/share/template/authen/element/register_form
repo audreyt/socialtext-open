@@ -32,16 +32,18 @@
   </dl>
 
   <div>[% captcha_form %]</div>
-  <div class="hidesubmit"><input type="submit"></div>
 
-  <div class="loginButtons">
-    <ul class="formButtons" style="float: left">
-      <li class="flexButtonBlue">
-        <a class="genericBlueButton" id="register_btn" href="#" onclick="document.forms['register'].submit(); return false">
-          [% loc('login.register') %]
-        </a>
-      </li>
-    </ul>
+  <div class="register_field">
+    <a style="float:left" id="register_btn" href="#">[% loc('login.register') %]</a>
     <div class="clear"></div>
   </div>
+  
 </form>
+<script>
+$(function(){
+$('#register_btn').button().click(function() {
+  $(this).parents('form').submit();
+  return false;
+});
+});
+</script>

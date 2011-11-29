@@ -4,82 +4,77 @@
 | set | new_ws | userprefs-%%start_time%%-1 |
 | set | new_user | userPrefs1.%%start_time%%@ken.socialtext.net |
 | set | new_name | userPrefs1 %%start_time%% |
+| set | dmsend | `//input[@name="plugin.signals.dm_sends_email"]` |
+| set | mmsend | `//input[@name="plugin.signals.mention_sends_email"]` |
 | include | [Test Case: Preferences UI User Setup] |  |
 
 | *Comment* | Test Case: Preferences UI User 1. Signals notification. Default is on |  |
 | click_and_wait | link=Settings |  |
-| click_and_wait | link=Notifications |  |
-| text_like | Send private messages as email |  |
-| value_is | dm_sends_email | on |
+| wait_for_text_present_ok | Send Mentions of Me as Email |  |
+| text_like | Send Private Signals as Email |  |
+| is_checked_ok | %%dmsend%% |  |
+| uncheck_ok | %%dmsend%% |  |
+| st_unchecked_ok | %%dmsend%% |  |
 
-| *Comment* | Test Case: Preferences UI User 1. Signals notification. Turn it off |  |
-| uncheck_ok | dm_sends_email |  |
-| value_is | dm_sends_email | off |
+| *Comment* | Test Case: Preferences UI User 1. Signals notification. Turn it on |  |
+| check_ok | %%dmsend%% |  |
+| is_checked_ok | %%dmsend%% |  |
 | click_and_wait | link=Save |  |
-| text_like | qr/Changes Saved/i |  |
-| value_is | dm_sends_email | off |
+| wait_for_text_present_ok | Saved |  |
+| is_checked_ok | %%dmsend%% |  |
 
 | *Comment* | Test Case: Preferences UI User 1. Signals notification. Save without changing value. |  |
 | click_and_wait | link=Save |  |
-| text_like | qr/Changes Saved/i |  |
-| value_is | dm_sends_email | off |
+| wait_for_text_present_ok | Saved |  |
+| is_checked_ok | %%dmsend%% |  |
 
 | *Comment* | Test Case: Preferences UI User 1. Signals notification. Cancel chooses previous values |  |
-| check_ok | dm_sends_email |  |
-| value_is | dm_sends_email | on |
+| uncheck_ok | %%dmsend%% |  |
+| st_unchecked_ok | %%dmsend%% |  |
 | click_ok | link=Cancel |  |
-| value_is | dm_sends_email | off |
+| is_checked_ok | %%dmsend%% |  |
 
 | *Comment* | Test Case: Preferences UI User 1. Signals notification. Navigate away, return, verify value |  |
-| click_and_wait | link=My Settings |  |
-| click_and_wait | link=Notifications |  |
-| value_is | dm_sends_email | off |
+| open_ok | /?action=workspaces_listall |  |
+| click_and_wait | link=Settings |  |
+| is_checked_ok | %%dmsend%% |  |
 
-| *Comment* | Test Case: Preferences UI User 1. Signals notification. Turn it back on |  |
-| check_ok | dm_sends_email |  |
-| value_is | dm_sends_email | on |
+| *Comment* | Test Case: Preferences UI User 1. Signals notification. Turn it back off |  |
+| uncheck_ok | %%dmsend%% |  |
+| st_unchecked_ok | %%dmsend%% |  |
 | click_and_wait | link=Save |  |
-| text_like | qr/Changes Saved/i |  |
-| value_is | dm_sends_email | on |
+| wait_for_text_present_ok | Saved |  |
+| st_unchecked_ok | %%dmsend%% |  |
 
-| *Comment* | Test Case: Preferences UI User 1: Signals does appear if signals is disabled for account but is enabled for another acct |  |
+| *Comment* | Test Case: Preferences UI User 1: Signals does appear if signals is disabled for %%new_account%% but is enabled for %%hostname%% and %%new_user%% is indirect member via %%workspace%% |  |
 | st-admin | enable-plugin --plugin signals --account %%hostname%% |  |
 | st-admin | add-member --email %%new_user%% --workspace %%workspace%% | now has the role of 'member' in the |
 | disable_account_plugin | %%new_account%% | signals |
 | click_and_wait | link=Settings |  |
-| wait_for_element_present_ok | link=Notifications | 10000 |
+| wait_for_text_present_ok | Send Private Signals as Email | 10000 |
 | st-admin | remove-member --email %%new_user%% --workspace %%workspace%% | no longer has the role of 'member' |
 
-| *Comment* | Test Case: Preferences UI User 1: Signals does not appear if signals plugin is disabled for account |  |
-| open_ok | /%%new_ws%%/?action=users_settings |  |
-| text_unlike | //body | Notifications |
+| *Comment* | Test Case: Preferences UI User 1: Signals does not appear if signals plugin is disabled for %%new_account%% |  |
+| open_ok | /st/settings |  |
+| wait_for_text_not_present_ok | Send Private Signals as Email | 10000 |
 | st-admin | enable-plugin --plugin signals --account %%new_account%% |  |
 
-| *Comment* | Test Case: Preferences UI User 1: My Workspaces |  |
+| *Comment* | Test Case: Preferences UI User 1: List of workspaces |  |
 | click_and_wait | link=Settings |  |
-| click_and_wait | link=My Workspaces |  |
-| text_like | contentRight | %%new_ws%% |
-| text_unlike | contentRight | help-en |
-| add_member | %%new_user%% | %%workspace%% |
-| click_and_wait | link=My Workspaces |  |
-| text_like | contentRight | %%new_ws%% |
-| text_like | contentRight | %%title%% |
-| text_like | contentRight | %%workspace%% |
-| text_unlike | contentRight | help-en |
-| st-admin | remove-member --w %%workspace%% --e %%new_user%% | no longer has the role of 'member' |
-| click_and_wait | link=My Workspaces |  |
-| text_like | contentRight | %%new_ws%% |
-| text_unlike | contentRight | %%workspace%% |
-| text_unlike | contentRight | help-en |
+| text_like | spaces-accordion | %%new_ws%% |
+| text_unlike | spaces-accordion | Socialtext Documentation |
 
-| *Comment* | Test Case: Preferences UI User 1: List All |  |
-| click_and_wait | link=Settings |  |
-| click_and_wait | link=List All Users |  |
-| text_like | contentRight | %%new_name%% |
-| add_member | %%username%% | %%new_ws%% |
-| click_and_wait | link=List All Users |  |
-| text_like | contentRight | %%new_name%% |
-| text_like | contentRight | %%username%% |
+| *Comment* | Test Case: Preferences UI User 1: add %%new_user%% to Socialtext Documentation |  |
+| add_member | %%new_user%% | help-en |
+| open_ok | /st/settings |  |
+| text_like | spaces-accordion | %%new_ws%% |
+| text_like | spaces-accordion | Socialtext Documentation |
+
+| *Comment* | Test Case: Preferences UI User 1: remove %%new_user%% from Socialtext Documentation |  |
+| st-admin | remove-member --w help-en --e %%new_user%% | no longer has the role of 'member' |
+| open_ok | /st/settings |  |
+| text_like | spaces-accordion | %%new_ws%% |
+| text_unlike | spaces-accordion | Socialtext Documentation |
 
 | include | [Test Case: Preferences UI User Teardown] |  |
 

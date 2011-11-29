@@ -1,0 +1,129 @@
+[% WRAPPER layout/html id="dashBoard" head_template="element/gallery_head" %]
+[% USE JSON %]
+
+<div id="controls">
+    <div id="st-editing-tools-edit">
+        <h1 id="st-wiki-title">[% loc('widgets.gallery') %]</h1>
+    </div>
+<div id="controlsRight">
+[% IF user.is_business_admin %]
+    [% IF params.manage %]
+        [% INCLUDE button
+            id="gallery-add-content"
+            class="addWidgetButton"
+            onclick="addUpdateWidget(); return false"
+            text=loc('widgets.add-to-gallery')
+            color="Blue"
+        %]
+    [% ELSE %]
+        [% SET id = account_id || user.primary_account_id %]
+        [% INCLUDE button
+            id="gallery-margin"
+            class="manageButton"
+            href="?gallery=1;account_id=$id;manage=1"
+            text=loc('widgets.manage-gallery-for-accounts')
+            color="Blue"
+        %]
+    [% END %]
+[% END %]
+</div>
+</div>
+
+[% IF params.manage AND user.is_business_admin %]
+<div style="display:block" class="notice">
+    [% loc('widgets.gallery-switch=account:', gallery.account_name) %]
+    <select>
+        [% FOR account = user.accounts() %]
+        <option [% IF account.account_id == gallery.account_id %]selected="true"[% END %] value="[% account.account_id %]">
+            [% account.name %]
+        </option>
+        [% END %]
+    </select>
+</div>
+[% END %]
+
+<div id="contentContainer">
+    [% FOR section = gallery.sections %]
+        <div class="galleryTitle">
+            <span>[% section.title %]</span>
+        </div>
+    [% END %]
+    <div class="clear"></div>
+
+    [% FOR section = gallery.sections %]
+        <div class="gallerySection">
+            [% FOR gadget = section.gadgets %]
+                [% NEXT IF gadget.removed AND NOT params.manage %]
+                [% INCLUDE gadget %]
+            [% END %]
+        </div>
+    [% END %]
+    <div class="clear"></div>
+</div>
+[% END %]
+
+[% BLOCK gadget %]
+    <div class="galleryWidget[% IF gadget.removed %] removed[% END %]">
+        <img class="thumbnail" src="/data/gadgets/[% gadget.gadget_id %]/thumbnail" onerror="this.src='/nlw/plugin/widgets/images/thumbs/default.png'" />
+        <div class="title">
+            <span>[% gadget.title %]</span>
+            [% IF params.manage; INCLUDE manage_links; END %]
+        </div>
+        [% IF gadget.description && gadget.description.split(' ').size > 250;
+            gadget.description = gadget.description.split(' ').splice(0, 250).join(' ') _ '...';
+           END %]
+        <div class="description">[% gadget.description || loc('widgets.no-description') %]</div>
+        [% IF !gadget.removed %]
+            [% INCLUDE button
+                id="gallery-widget-$gadget.title"
+                href="?add_widget=1;gadget_id=$gadget.gadget_id"
+                onclick="if(window.addClicked)return false;window.addClicked=true;return true"
+                text=loc('widget.add-it-now')
+            %]
+        [% END %]
+        <div class="clear"></div>
+    </div>
+[% END %]
+
+[% BLOCK button %]
+    [% a_class = color ? "generic${color}Button" : 'greyButton' %]
+    [% UNLESS color; color = "Grey"; END %]
+    [% IF onclick; onclick="$onclick; return false"; END %]
+    <ul class="[% class %] widgetButton">
+        <li style="float:left" class="flexButton[% color %]">
+            <a id="[% id %]" class="[% a_class %]"
+               href="[% href || '#' %]" onclick="[% onclick %]">
+                [% text %]
+            </a>
+        </li>
+    </ul>
+[% END %]
+
+[% BLOCK manage_links %]
+    [% IF gadget.account_id AND !gadget.removed %]
+        <a href="#" title="[% loc('widgets.about-update') %]"
+           id="gallery-update-[% gadget.title %]"
+           onclick="addUpdateWidget([% gadget.gadget_id %], '[% gadget.src %]', '[% gadget.xml %]' ? true: false); return false">
+            [% loc('widgets.update') %]</a>
+    [% END %]
+    [% IF gadget.removed %]
+        <a href="#" title="[% loc('widgets.about-restore') %]"
+           id="gallery-restore-[% gadget.title %]"
+           onclick="restoreWidget([% gadget.gadget_id %], '[% gadget.title.replace("'","\\'") | html %]'); return false">
+            [% loc('widgets.restore') %]
+        </a>
+        [% IF gadget.account_id %]
+            <a href="#" title="[% loc('widget.about-delete') %]"
+               id="gallery-delete-[% gadget.title %]"
+               onclick="deleteWidget([% gadget.gadget_id %], '[% gadget.title.replace("'","\\'") | html %]'); return false">
+                [% loc('widgets.delete') %]
+            </a>
+        [% END %]
+    [% ELSIF ! gadget.socialtext %]
+        <a href="#" title="[% loc('do.remove') %]"
+           id="gallery-remove-[% gadget.title %]"
+           onclick="removeWidget([% gadget.gadget_id %], '[% gadget.title.replace("'","\\'") | html %]'); return false">
+            [% loc('widgets.remove') %]
+        </a>
+    [% END %]
+[% END %]

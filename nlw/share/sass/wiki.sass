@@ -1,0 +1,295 @@
+.tools
+  padding: 0
+  ul
+    margin: 0
+  li
+    margin: 0 0 0 10px
+    list-style: none
+    white-space: nowrap
+    a:hover
+      text-decoration: underline
+    .arrow
+      font-size: 10px
+    .expanded
+      display: none
+    .subtools
+      display: none
+    &.item
+      margin: 3px 0
+      padding-left: 18px
+      background: transparent url(#{$static}/images/icons/help-black-15.png) no-repeat 0 0px
+      &#controls-right-revisions
+        background-image: none
+        text-align: center
+        border-bottom: 1px solid $light
+        padding: 0 0 5px 0
+      &#st-comment-button
+        background-image: url(#{$static}/images/icons/conversation-black-15.png)
+      &#st-admin-unlock-link
+        background-image: url(#{$static}/images/icons/locked-black-15.png)
+      &#st-admin-lock-link
+        background-image: url(#{$static}/images/icons/unlocked-black-15.png)
+      &#st-like-button
+        background: none
+        padding-left: 0
+      &#st-watchlist-indicator
+        background-image: url(#{$static}/images/icons/watch-black-15.png)
+      &#st-signalthis-indicator
+        background-image: url(#{$static}/images/icons/share-black-15.png)
+      &#st-page-options
+        background-image: url(#{$static}/images/icons/config-black-15.png)
+      &#st-pagetools-print
+        background-image: url(#{$static}/images/icons/print-black-15.png)
+      &#st-email-menu
+        background-image: url(#{$static}/images/icons/email-black-15.png)
+        .item
+          background-image: url(#{$static}/images/icons/email-black-15.png)
+      &#st-export-menu
+        background-image: url(#{$static}/images/icons/document-black-15.png)
+        .item
+          background-image: url(#{$static}/images/icons/document-black-15.png)
+      &#st-pagetools-duplicate, &#st-pagetools-rename, &#st-pagetools-copy
+        background-image: url(#{$static}/images/icons/document-black-15.png)
+      &#st-pagetools-delete
+        background-image: url(#{$static}/images/icons/close-black-15.png)
+      &#st-blog-rss
+        background-image: url(#{$static}/images/icons/rss.png)
+
+// Tags
+#st-tags-form
+  display: none
+
+#st-tags-listing, #st-attachment-listing
+  ul
+    margin: 0
+    li
+      margin: 0
+      padding: 0
+      position: relative
+      float: left
+      padding-right: 12px
+      list-style: none
+      .delete_icon
+        position: absolute
+        display: block
+        width: 8px
+        height: 13px
+        top: 0
+        right: 0
+        background: transparent url(#{$static}/images/icons/close-darker-8.png) no-repeat 0 4px
+        &:hover
+          @include opacity(70)
+
+#st-attachment-listing ul li
+  width: 95%
+
+#st-tags-listing ul li
+  margin: 0 10px
+
+#st-attachment-listing ul li .delete_icon
+  right: 5px
+  top: 5px
+
+// Attachments
+#dropbox
+  display: none
+  border: 2px solid $light
+  -moz-border-radius: 8px
+  -webkit-border-radius: 8px
+  background-color: $lighter
+  text-align: center
+  color: $light
+  font-size: 2em
+  margin: 10px 20px
+  padding: 30px 0
+  &.over
+    background-color: $tertiary_color
+    color: $darker
+
+.dropbox-progress
+  margin: 5px 20px
+  height: 10px !important
+
+#st-attachment-listing
+  li
+    padding: 0 5px
+    border-bottom: 1px $lighter solid
+    list-style: none
+    margin: 0
+  .fileInfo
+    color: $light
+    font-style: italic
+    a
+      color: $light
+      font-style: italic
+      text-decoration: underline
+  li
+    &.hover, &:hover
+      background-color: $tertiary_color
+    &.hover .fileInfo, &:hover .fileInfo
+      color: $grey
+    &.hover .fileInfo a, &:hover .fileInfo a
+      color: $primary_color
+
+#st-edit-summary
+  float: left
+  margin-left: 10px
+  form .field
+    float: left
+    input
+      width: 200px
+      background-color: $lightest
+      &.default
+        background-color: transparent
+        &.focus
+          background-color: $lightest
+      &.focus
+        background-color: $lightest
+  .signal
+    float: left
+    white-space: nowrap
+    label:focus
+      outline: none
+  .preview
+    padding: 4px 0px 4px 0px
+  .minor
+    text-align: right
+    float: right
+    width: 150px
+
+/* Comment insertion
+.commentWrapper
+  height: 200px
+.comment
+  display: none
+  textarea
+    background-color: $tertiary_color
+    border: 1px solid $darkest
+    width: 95%
+    height: 100px
+  .formButtons li
+    float: left
+    margin-right: 10px
+
+@-moz-document url-prefix()
+  .workspaceNav div.breadcrumb
+    a
+      padding-bottom: 2px
+    span a
+      padding-bottom: 1px
+
+@media screen and (-webkit-min-device-pixel-ratio:0) 
+  .workspaceNav div.breadcrumb
+    a
+      padding-bottom: 3px
+    span a
+      padding-bottom: 2px
+
+.workspaceNav
+  height: 28px
+  margin-bottom: 5px
+  border-bottom: 1px dashed $light
+  .breadcrumb
+    padding: 5px 0
+    *
+      line-height: 20px
+      padding-top: 0
+      padding-bottom: 0
+      margin-top: 0
+      margin-bottom: 0
+    a
+      *padding-bottom: 1px
+    .spaces
+      padding-left: 18px
+      background: transparent url(#{$static}/images/icons/spaces-black-15.png) no-repeat top left
+    .arrow
+      padding: 0 5px
+      line-height: 17px
+    .jump_to
+      .ui-selectmenu
+        margin-left: 5px
+
+#st-page-attribution
+  padding: 5px 0
+  height: 25px
+  border-top: 1px dashed $light
+
+.showHide
+  height: 30px
+  position: relative
+  h1
+    margin-top: 2px
+
+#st-page-boxes-show-link, #st-page-boxes-hide-link
+  position: absolute
+  right: $margin
+  top: 8px
+  .arrow
+    font-size: 10px
+    margin: 0 5px
+  &:hover
+    text-decoration: none
+#st-page-boxes-show-link
+  display: none
+
+/* datatable (search results et al)
+
+.pagination-container
+  margin: 0.5em 0
+  padding: 0.5em 0
+  border-bottom: 1px $light solid
+  border-top: 1px $light solid
+  .paging-numbers
+    .paging-button
+      a, b
+        padding: 2px 8px
+      a
+        background: $lighter
+
+.dataTable
+  tbody
+    tr
+      td:nth-child(1)
+        vertical-align: top
+        align: center
+      td
+        vertical-align: bottom
+        padding-top: 3px
+        padding-bottom: 3px
+        .pageType
+          vertical-align: middle
+        .titleLink
+          font-size: 125%
+          text-decoration: underline
+        .summary
+          margin: 0.5em 0 0.5em 17px
+        .edit_summary
+          margin: 0.5em 0 0.5em 17px
+          padding: 2px 5px
+          background-color: $tertiary_color
+        .byline
+          font-size: 93%
+          margin: 0.5em 0 0.5em 17px
+          color: $grey
+          font-style: italic
+
+#st-listview-form
+  vertical-align: bottom
+  .toggle
+    padding: 3px 0
+  .toggle, .sort_options
+    margin-top: 0.25em 0
+  .dataTable
+    border-top: 1px $light solid
+    margin-top: 3px
+    width: 100%
+
+.st-listview-selectpage-checkbox
+  padding: 3px 0
+
+.jump_to
+  vertical-align: top
+  
+#st-display-mode-container
+  .content
+    overflow-x: auto

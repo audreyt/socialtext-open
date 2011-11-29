@@ -11,7 +11,7 @@ This testcase traverses the UI to all the places that differ from the Default UI
 
 | st-config | set self_registration 1 |  |
 | st-config | set allow_network_invitation 1 |  |
-| st-appliance-config | set captcha_enabled 0 | Set captcha_enabled to 'UNDEF' |
+| st-appliance-config-set | captcha_enabled 0 | Set captcha_enabled to 'UNDEF' |
 
 | *Comment* | %%username%% : %%password%% : %%email%% |  |
 
@@ -22,10 +22,10 @@ This testcase traverses the UI to all the places that differ from the Default UI
 | text_like | Username: |  |
 
 | *Comment* | Test Case: Verify LDAP Enabled: I forgot my Password (LDAP users can't reset pwd) |  |
-| click_and_wait | link=I don't know my password. |  |
+| open_ok | /nlw/forgot_password.html |  |
 | text_like | Socialtext password help |  |
 | type_ok | username | %%username%% |
-| click_and_wait | //input[@value='Submit'] |  |
+| click_and_wait | st-forgot-password-submit |  |
 | st-message | there is no way to reset your password |  |
 | click_and_wait | link=Log in to Socialtext |  |
 
@@ -43,17 +43,12 @@ This testcase traverses the UI to all the places that differ from the Default UI
 | *Comment* | Test Case: Verify LDAP Enabled: My Settings (no settings) |  |
 | *Comment* | Test Case: Verify LDAP Enabled: st-login should login as LDAP user |  |
 | st-login | %%username%% | %%password%% |
-| open_ok | /%%workspace%%/index.cgi?action=users_settings |  |
-| text_like | Your user name and password cannot be changed |  |
-
-| *Comment* | Test Case: Verify LDAP Enabled: Manage All Users (no pwd reset) |  |
-| click_and_wait | link=Manage All Users |  |
-| text_like | contentContainer | Admin |
-| text_unlike | contentContainer | Reset Password |
+| open_ok | /st/settings |  |
+| text_unlike | //body | First Name |
+| text_unlike | //body | Current Password |
 
 | *Comment* | Test Case: Verify LDAP Enabled: Profile should display appropriate Welcome message |  |
 | open_ok | /st/dashboard |  |
-| text-like | css=#controls .welcome | devnullx LDAP Dev |
-| text-unlike | css=#controls .welcome | New User |
+| text-like | //body | devnullx LDAP Dev |
 
 | *Comment* | Test Case: Verify LDAP Enabled COMPLETED |  |

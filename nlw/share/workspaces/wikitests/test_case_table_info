@@ -1,66 +1,63 @@
+*Skip.all because screw it*
+
 | *Comment* | Test Case: Table Info |  |
 
 Don't even THINK about removing the extra wait_for and text_present "Additional interlocks" in this test.
 
 | open_ok | /%%workspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text | 30000 |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 30000 |
 
-| *Comment* | Test Case: Table Info. Enter a table one char at a time |  |
-| keyPress | wikiwyg_wikitext_textarea | \124 |
-| keyPress | wikiwyg_wikitext_textarea | a |
-| keyPress | wikiwyg_wikitext_textarea | \124 |
-| keyPress | wikiwyg_wikitext_textarea | b |
-| keyPress | wikiwyg_wikitext_textarea | \124 |
-| keyPress | wikiwyg_wikitext_textarea | \13 |
-| keyPress | wikiwyg_wikitext_textarea | \124 |
-| keyPress | wikiwyg_wikitext_textarea | c |
-| keyPress | wikiwyg_wikitext_textarea | \124 |
-| keyPress | wikiwyg_wikitext_textarea | d |
-| keyPress | wikiwyg_wikitext_textarea | \124 |
-| keyPress | wikiwyg_wikitext_textarea | \13 |
-| type_ok | st-newpage-pagename-edit | Table Info %%start_time%% |
+| *Comment* | Test Case: Table Info. Enter a table one char at a time |  |  |
+| keyPress | //textarea[contains(@class,"cke_source")] | \124 |  |
+| keyPress | //textarea[contains(@class,"cke_source")] | a |  |
+| keyPress | //textarea[contains(@class,"cke_source")] | \124 |  |
+| keyPress | //textarea[contains(@class,"cke_source")] | b |  |
+| keyPress | //textarea[contains(@class,"cke_source")] | \124 |  |
+| keyPress | //textarea[contains(@class,"cke_source")] | \13 |  |
+| keyPress | //textarea[contains(@class,"cke_source")] | \124 |  |
+| keyPress | //textarea[contains(@class,"cke_source")] | c |  |
+| keyPress | //textarea[contains(@class,"cke_source")] | \124 |  |
+| keyPress | //textarea[contains(@class,"cke_source")] | d |  |
+| keyPress | //textarea[contains(@class,"cke_source")] | \124 |  |
+| keyPress | //textarea[contains(@class,"cke_source")] | \13 |  |
+| type_ok | st-newpage-pagename-edit | Table Info %%start_time%% |  |
 
-| st_pause_click | 2000 | link=Save | and_wait |
+| st-page-save |  |  |  |
 
 | *Comment* | Test Case: Table Info. Verify the table content. |  |
 | wait_for_element_visible_ok | link=Edit | 30000 |
 | click_ok | link=Edit |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text | 30000 |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/a.+b.+c.+d/` |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 30000 |
+| verifyValue | //textarea[contains(@class,"cke_source")] | `qr/a.+b.+c.+d/` |
 
 | *Comment* | Test Case: Table Info. Testing table info relies on cursor being in table when switch to Rich Text mode. |  |
 
-| *Comment* | Test Case: Table Info. Sort ON, Border OFF |  |
-| wait_for_element_visible_ok | link=Rich Text | 30000 |
-| click_ok | link=Rich Text |  |
-| wait_for_element_not_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| wait_for_element_visible_ok | st-page-editing-wysiwyg | 30000 |
-| wait_for_element_visible_ok | //img[@id='wikiwyg_button_table-settings' and @class='wikiwyg_button'] | 30000 |
-| st_pause_click | 3000 | wikiwyg_button_table-settings |
-| wait_for_element_visible_ok | st-table-settings | 30000 |
+| *Comment* | Test Case: Table Info. Sort ON |  |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wysiwyg")] | 30000 |
+| click_and_pause | //a[contains(@class,"cke_button_wysiwyg")] | 3000 |
+| wait_for_element_visible_ok | cke_27 | 30000 |
+| st_pause_click | 3000 | cke_27 |
+| wait_for_element_visible_ok | //div[@class='cke_dialog_body'] | 30000 |
 
 | *Comment* | Test Case: Table Info. Additional interlocks 1 |  |
-| wait_for_text_present_ok | Edit Table | 30000 |
-| text_like | st-table-settings | Edit Table |
-| text_like | st-table-settings | qr/Table is Sortable/i |
-| text_like | st-table-settings | qr/Show Cell Borders/i |
+| wait_for_text_present_ok | Table Properties | 30000 |
+| text_like | //div[@class='cke_dialog_body'] | qr/Table is Sortable/i |
 | pause | 3000 |  |
-| wait_for_element_visible_ok | sort | 30000 |
-| check_ok | sort |  |
-| is_checked_ok | sort |  |
-| wait_for_element_visible_ok | border | 30000 |
-| uncheck_ok | border |  |
-| st_unchecked_ok | border |  |
-| wait_for_element_visible_ok | table-info-save | 5000 |
-| st_pause_click | 3000 | table-info-save |
-| wait_for_element_not_visible_ok | st-table-settings | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/sort:on border:off/` |
+| wait_for_element_visible_ok | cke_118_uiElement | 30000 |
+| check_ok | cke_118_uiElement |  |
+| is_checked_ok | cke_118_uiElement |  |
+| wait_for_element_visible_ok | cke_154_uiElement | 15000 |
+| st_pause_click | 3000 | cke_154_uiElement |
+| wait_for_element_not_present_ok | //div[@class='cke_dialog_body'] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 30000 |
+| verifyValue | //textarea[contains(@class,"cke_source")] | `qr/sort:on/` |
+
+| BREAK |  |  |
 
 | *Comment* | Test Case: Table Info. Sort OFF, Border ON in Rich Text mode |  |
 | wait_for_element_visible_ok | link=Rich Text | 30000 |
@@ -83,14 +80,14 @@ Don't even THINK about removing the extra wait_for and text_present "Additional 
 | wait_for_element_visible_ok | sort | 30000 |
 | uncheck_ok | sort |  |
 | st_unchecked_ok | sort |  |
-| wait_for_element_visible_ok | table-info-save | 5000 |
+| wait_for_element_visible_ok | table-info-save | 15000 |
 | st_pause_click | 3000 | table-info-save |
 | wait_for_element_not_visible_ok | st-table-settings | 30000 |
-| click_ok | link=Wiki Text |  |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
 | wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
 | verifyValue | wikiwyg_wikitext_textarea | `qr/sort:off border:on/` |
 
-| *Comment* | Test Case: Table Info. Sort OFF, Border OFF |  |
+| *Comment* | Test Case: Table Info. Sort ON, Border OFF |  |
 | wait_for_element_visible_ok | link=Rich Text | 30000 |
 | click_ok | link=Rich Text |  |
 | wait_for_element_not_visible_ok | wikiwyg_wikitext_textarea | 30000 |
@@ -109,14 +106,14 @@ Don't even THINK about removing the extra wait_for and text_present "Additional 
 | uncheck_ok | sort |  |
 | st_unchecked_ok | sort |  |
 | wait_for_element_visible_ok | border | 30000 |
-| uncheck_ok | border |  |
-| st_unchecked_ok | border |  |
-| wait_for_element_visible_ok | table-info-save | 5000 |
+| check_ok | border |  |
+| is_checked_ok | border |  |
+| wait_for_element_visible_ok | table-info-save | 15000 |
 | st_pause_click | 3000 | table-info-save |
 | wait_for_element_not_visible_ok | st-table-settings | 30000 |
 | click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/sort:off border:off/` |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 30000 |
+| verifyValue | wikiwyg_wikitext_textarea | `qr/sort:on border:off/` |
 
 | *Comment* | Test Case: Table Info. Sort ON, Border ON |  |
 | wait_for_element_visible_ok | link=Rich Text | 30000 |
@@ -139,7 +136,7 @@ Don't even THINK about removing the extra wait_for and text_present "Additional 
 | wait_for_element_visible_ok | border | 30000 |
 | check_ok | border |  |
 | is_checked_ok | border |  |
-| wait_for_element_visible_ok | table-info-save | 5000 |
+| wait_for_element_visible_ok | table-info-save | 15000 |
 | st_pause_click | 3000 | table-info-save |
 | wait_for_element_not_visible_ok | st-table-settings | 30000 |
 | click_ok | link=Wiki Text |  |

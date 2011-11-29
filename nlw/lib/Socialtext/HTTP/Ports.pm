@@ -95,6 +95,13 @@ sub userd_port {
         : PORTS_START_AT() + 8000 + $>;
 }
 
+memoize 'wikid_port';
+sub wikid_port {
+    return Socialtext::AppConfig->is_appliance()
+        ? _default_backend_http_port() + 5
+        : PORTS_START_AT() + 4500 + $>;
+}
+
 # WARNING An offset of 9000 cannot be used; since most users have a UNIX user
 # id > 2000, using an offset of 9000 will put the port into the ephemeral port
 # range.  Refactor the code to not need this large of an offset.

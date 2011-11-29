@@ -66,7 +66,7 @@
 | wait_for_element_visible_ok | link=%%user2_short%% | 30000 |
 | click_and_wait | link=%%user2_short%% |  |
 | wait_for_element_visible_ok | link=Follow this person | 30000 |
-| pause | 5000 | needed for IE7 |
+| pause | 15000 | needed for IE7 |
 | click_ok | link=Follow this person |  |
 | wait_for_element_visible_ok | link=Stop following this person | 30000 |
 
@@ -143,9 +143,7 @@
 | wait_for_element_present_ok | link=%%group_link%% | 30000 |
 | wait_for_element_present_ok | link=%%tag_link%% | 30000 |
 | wait_for_element_visible_ok | //div[@class='filterSection people']/input | 30000 |
-| type_lookahead_ok | //div[@class='filterSection people']/input | %%user1_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%user1_suffix%%')] | 10000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%user1_suffix%%')] | 10000 |
+| select-autocompleted-option-ok | //div[@class='filterSection people']/input | %%user1_prefix%% |
 | wait_for_element_not_present_ok | link=%%url%% | 30000 |
 | wait_for_element_not_present_ok | link=%%page%% | 30000 |
 | wait_for_element_present_ok | link=%%jpg%% | 30000 |
@@ -156,9 +154,7 @@
 
 | *Comment* | Test Case: Explore 1 Filter by Group %%group1%% |  |
 | wait_for_element_visible_ok | //div[@class='filterSection networks']/input | 30000 |
-| type_lookahead_ok | //div[@class='filterSection networks']/input | %%group1_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%group1_suffix%%')] | 10000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%group1_suffix%%')] | 10000 |
+| select-autocompleted-option-ok | //div[@class='filterSection networks']/input | %%group1_prefix%% |
 | wait_for_element_not_present_ok | link=%%jpg%% | 30000 |
 | wait_for_element_not_present_ok | link=%%txt%% | 30000 |
 | wait_for_element_not_present_ok | link=%%zip%% | 30000 |
@@ -169,9 +165,7 @@
 
 | *Comment* | Test Case: Explore 1 Filter by Tag %%tag%% |  |
 | wait_for_element_visible_ok | //div[@class='filterSection tags']/input | 30000 |
-| type_lookahead_ok | //div[@class='filterSection tags']/input | %%tag_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag_suffix%%')] | 10000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag_suffix%%')] | 10000 |
+| select-autocompleted-option-ok | //div[@class='filterSection tags']/input | %%tag_prefix%% |
 | wait_for_element_not_present_ok | link=%%jpg%% | 30000 |
 | wait_for_element_not_present_ok | link=%%txt%% | 30000 |
 | wait_for_element_not_present_ok | link=%%zip%% | 30000 |
@@ -181,7 +175,7 @@
 | wait_for_element_not_present_ok | link=%%tag_link%% | 30000 |
 
 | *Comment* | Test Case: Explore 1 remove Group filter, see tag link |  |
-| wait_for_element_visible_ok | //div[@class='filterSection networks']/ul/li[2]/a | 5000 |
+| wait_for_element_visible_ok | //div[@class='filterSection networks']/ul/li[2]/a | 15000 |
 | click_ok | //div[@class='filterSection networks']/ul/li[2]/a |  |
 | wait_for_element_visible_ok | link=%%tag_link%% | 30000 |
 | wait_for_text_present_ok | #%%tag%% | 30000 |

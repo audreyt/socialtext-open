@@ -1,0 +1,86 @@
+[%# vim: set et sts=2 sw=2: %]
+[% USE html_encode %]
+[% USE Number.Format %]
+[%- USE decorate -%]
+
+[%- MACRO ago_text(minutes) BLOCK -%]
+    [%- IF minutes < 1 -%][% loc('ago.<1minute') -%]
+    [%- ELSIF minutes == 1 -%][% loc('ago.1minute') -%]
+    [%- ELSIF minutes < 50 -%][% loc('ago.minutes=count', minutes) -%]
+    [%- ELSIF minutes < 90 -%][% loc('ago.about-1hour') -%]
+    [%- ELSIF minutes < 1080 -%]
+      [%- hours = minutes / 60 | round(0) -%]
+      [% loc('ago.hours=count', hours) -%]
+    [%- ELSIF minutes < 1440 -%][% loc('ago.1day') -%]
+    [%- ELSIF minutes < 2880 -%][% loc('ago.about-1day') -%]
+    [%- ELSE -%]
+      [%- days = minutes / 1440 | round(0) -%]
+      [% loc('ago.days=count', days) -%]
+    [%- END -%]
+[%- END -%]
+
+[% WRAPPER $frame_name id="contentPage" %]
+
+[% INCLUDE element/page/navigation %]
+
+<div id="st-editor" style="display:none"></div>
+
+<div class="showHide">
+  <div class="grid_18">
+    <h1 id="st-page-titletext" title="[% page.display_title %]">[% page.display_title %]</h1>
+  </div>
+  <div class="grid_6">
+    [% SET locked = page_locked_for_user %]
+    [% INCLUDE 'element/page/display/edit-button' %]
+    <a id="st-page-boxes-hide-link" href="#"><span class="arrow">&#9660;</span>[% loc('nav.hide') %]</a>
+    <a id="st-page-boxes-show-link" href="#"><span class="arrow">&#9658;</span>[% loc('nav.show') %]</a>
+  </div>
+  <div class="clear"></div>
+</div>
+
+<div id="st-display-mode-container" class="grid_18" data-expanded="grid_18" data-collapsed="grid_24">
+
+  <div class="widget">
+    <div class="content" id="st-page-content">
+      [% IF page.edit_in_progress %]
+      <div id="contentWarning" class="grid_16 warning">
+        [% IF page.edit_in_progress.user_link %]
+         [% page.edit_in_progress.user_link %]
+        [% ELSE %]
+         <a href="mailto:[% page.edit_in_progress.email_address %]">[% page.edit_in_progress.username %]</a>
+        [% END %]
+        [% loc('page.editing=ago', ago_text(page.edit_in_progress.minutes_ago)) %]
+        [%# TODO: Bring up edit_warning_help.tt2 dialog...
+            <a href="#" id="st-edit-warning-help">(?)</a> %]
+      </div>
+      <div class="clear"></div>
+      [% END %]
+
+      [% page.content %]
+    </div>
+  </div>
+  <div id="st-comment-interface"></div>
+</div>
+
+<div id="st-display-mode-widgets" class="grid_6">
+  [% INCLUDE element/page/display/tools %]
+  [% INCLUDE element/page/display/tags %]
+  [% INCLUDE element/page/display/links %]
+  [% INCLUDE element/page/display/attachments %]
+  [% INCLUDE element/page/display/recent_changes IF include_recent_changes %]
+  [% INCLUDE element/page/display/breadcrumbs IF include_breadcrumbs %]
+</div>
+
+<div id="st-display-mode-hidden-widgets" class="grid_2">
+</div>
+
+<div class="clear"></div>
+
+[% INCLUDE element/page/display/attribution %]
+
+<div class="clear"></div>
+
+[% END %]
+<script><!--
+$(function(){st.setupPageHandlers()});
+--></script>

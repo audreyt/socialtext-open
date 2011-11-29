@@ -10,7 +10,7 @@
 | set | shared_acct | PAW Account %%start_time%% |
 
 | *Comment* | Test Case: Profile Activity Widget. create an account shared by %%luser%% and %%tuser%% |  |
-| st-admin | create-account --name "%%shared_acct%%" | created |
+| create-account | %%shared_acct%% |  |
 | st-admin | create-user --e %%luser%% --p %%password%% --account "%%shared_acct%%" | created |
 | st-admin | enable-plugin --account "%%shared_acct%%" --p signals |  |
 | st-admin | enable-plugin --account "%%shared_acct%%" --p groups |  |
@@ -33,18 +33,21 @@
 | text_like | Activities |  |
 
 | *Comment* | Test Case: Profile Activity Widget. Send and check public signal |  |
-| st_send_signal_via_activities_widget | activitieswidget | Public signal to %%tuser%% at %%start_time%% WHOOPEE |
+| st-send-signal-in-activities-widget | Public signal to %%tuser%% at %%start_time%% WHOOPEE |  |
 | st_find_user | %%tuser%% |  |
 
 | *Comment* | Test Case: Profile Activity Widget. Send and check private signal |  |  |
-| st_send_signal_via_activities_widget | activitieswidget | Private signal to %%tuser%% at %%start_time%% HURRAY | private |
+| st-send-signal-in-activities-widget | Private signal to %%tuser%% at %%start_time%% HURRAY | private |  |
+| wait_for_text_present_ok | automatically adjust your filters to show the new signal. | 30000 |  |
+| wait_for_element_visible_ok | link=here | 30000 |  |
+| click_and_pause | link=here | 3000 |  |
 
 | *Comment* | Test Case: Profile Activity Widget. Check without /qr first to invoke wait_for |  |
-| st-verify-text-in-activities-widget | activitieswidget | Private signal to %%tuser%% at %%start_time%% HURRAY |
+| st-verify-text-in-activities-widget | Private signal to %%tuser%% at %%start_time%% HURRAY |  |
 
 | *Comment* | Test Case: Profile Activity Widget. Check after waiting for Private signal |  |
-| st-verify-text-in-activities-widget | activitieswidget | qr/%%tuser%%.+Public signal to %%tuser%% at %%start_time%% WHOOPEE/ism |
-| st-verify-text-in-activities-widget | activitieswidget | qr/You.+private to.+%%tuser%%/ism |
+| st-verify-text-in-activities-widget | qr/%%tuser%%.+Public signal to %%tuser%% at %%start_time%% WHOOPEE/ism |  |
+| st-verify-text-in-activities-widget | qr/You.+private to.+%%tuser%%/ism |  |
 
 | *Comment* | Test Case: Profile Activity Widget. Clean start: navigate to the %%tuser%% Profile page |  |
 | st_process_jobs | PersonIndex |  |
@@ -58,16 +61,16 @@
 | text_like | qr/Showing\s*all\s*events.+from.+%%tuser%%\s*within/ism |  |
 
 | *Comment* | Test Case: Profile Activity Widget. The widget defaults to mentioning the viewed user when clicked |  |
-| wait_for_element_present_ok | //div[@class='mainWikiwyg setupWikiwyg wikiwyg'] | 10000 |
+| wait_for_element_present_ok | //div[@class='setupWikiwyg wikiwyg'] | 10000 |
 | text_like | qr/What are you working on/ism |  |
-| click_ok | //div[@class='mainWikiwyg setupWikiwyg wikiwyg'] |  |
+| click_ok | //div[@class='setupWikiwyg wikiwyg'] |  |
 | wait_for_element_visible_ok | //div[@class='message mention'] | 10000 |
 | wait_for_element_visible_ok | link=%%tuser%% | 10000 |
 
 | *Comment* | Test Case: Profile Activity Widget. message "You are composing a message to username" |  |
 | text_like | //div[@class='message mention'] | qr/You are composing a message to.+%%tuser%%/ism |
 
-| *Comment* | Test Case: Profile Activity Widget. ... with a checkbox that reads: (make this signal private: {{[]}}) |  |
+| *Comment* | Test Case: Profile Activity Widget. ... with a checkbox that reads: (make this signal private: {{[]}} ) |  |
 | text_like | qr/Make this signal private/ism |  |
 
 | *Comment* | Test Case: Profile Activity Widget. checking the checkbox changes the message to "... composing a private message ..." |  |
@@ -91,26 +94,24 @@
 | text_like | qr/Showing\s*all\s*events.+from.+%%tuser%%\s*within/ism |  |
 
 | *Comment* | Test Case: Profile Activity Widget. ... and cannot be changed |  |
-| wait_for_element_not_present_ok | //span[@id='feed']/a | 5000 |
-| wait_for_element_not_present_ok | //ul[@id='st-dropdown-1-list'] | 5000 |
+| click_ok | //a[contains(@id,"expander")] |  |
+| wait_for_element_not_present_ok | feed-everyone | 30000 |
+| wait_for_element_not_present_ok | feed-followed | 30000 |
+| wait_for_element_not_present_ok | feed-conversations | 30000 |
 
 | *Comment* | Test Case: Profile Activity Widget. list values for ".. within <group>" filter shows all shared groups |  |
-| wait_for_element_present_ok | //ul[@id='st-dropdown-2-list']/li[1]/a[text()='All shared groups'] | 5000 |
-| wait_for_element_present_ok | //ul[@id='st-dropdown-2-list']/li[2]/a | 5000 |
-| wait_for_element_present_ok | //ul[@id='st-dropdown-2-list']/li[3]/a | 5000 |
-
-| *Comment* | Test Case: Profile Activity Widget. "Post to" list shows all shared groups between viewer and viewee |  |
-| wait_for_element_present_ok | //ul[@id='st-dropdown-3-list']/li[1]/a | 5000 |
-| wait_for_element_present_ok | //ul[@id='st-dropdown-3-list']/li[2]/a | 5000 |
+| wait_for_element_visible_ok | network-all | 30000 |
+| wait_for_element_visible_ok | account-%%account_id%% | 30000 |
+| wait_for_element_visible_ok | group-%%group_id%% | 30000 |
 
 | *Comment* | Test Case: Profile Activity Widget. list values for "Showing <event-type>" filter are all the standard choices |  |
-| wait_for_element_present_ok | //ul[@id='st-dropdown-0-list']/li[1]/a[text()='all events'] | 5000 |
-| wait_for_element_present_ok | //ul[@id='st-dropdown-0-list']/li[2]/a[text()='signals'] | 5000 |
-| wait_for_element_present_ok | //ul[@id='st-dropdown-0-list']/li[3]/a[text()='contributions'] | 5000 |
-| wait_for_element_present_ok | //ul[@id='st-dropdown-0-list']/li[4]/a[text()='edits'] | 5000 |
-| wait_for_element_present_ok | //ul[@id='st-dropdown-0-list']/li[5]/a[text()='comments'] | 5000 |
-| wait_for_element_present_ok | //ul[@id='st-dropdown-0-list']/li[6]/a[text()='page tags'] | 5000 |
-| wait_for_element_present_ok | //ul[@id='st-dropdown-0-list']/li[7]/a[text()='people events'] | 5000 |
+| wait_for_element_visible_ok | action-all-events | 30000 |
+| wait_for_element_visible_ok | action-signals | 30000 |
+| wait_for_element_visible_ok | action-contributions | 30000 |
+| wait_for_element_visible_ok | action-edits | 30000 |
+| wait_for_element_visible_ok | action-comments | 30000 |
+| wait_for_element_visible_ok | action-tags | 30000 |
+| wait_for_element_visible_ok | action-people-events | 30000 |
 
 | *Comment* | Test Case: Profile Activity Widget. You go to your own profile page |  |
 | open_ok | /st/profile |  |
@@ -122,7 +123,10 @@
 
 | *Comment* | Test Case: Profile Activity Widget. ... no "you are composing a message to ..." message appears |  |
 | *Comment* | Test Case: Profile Activity Widget. ... you don't mention yourself |  |
-| wait_for_element_not_present_ok | //div[@class='message mention'] | 5000 |
+| wait_for_element_present_ok | //div[@class='setupWikiwyg wikiwyg'] | 10000 |
+| text_like | qr/What are you working on/ism |  |
+| click_and_pause | //div[@class='setupWikiwyg wikiwyg'] | 2000 |
+| text_unlike | //div[@class='activitiesWidget'] | You are composing a message |
 
 | *Comment* | Test Case: Profile Activity Widget TEARDOWN |  |
 | st-process-jobs |  |  |

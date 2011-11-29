@@ -1,0 +1,107 @@
+[% BLOCK lookahead %]
+<div class="lookahead">
+    <div class="message"></div>
+    <div class="lookaheadDiv"><input/></div>
+    <div class="buttons">
+        <a href="#" class="insert button">[% loc('do.ok') %]</a>
+        <a href="#" class="cancel button">[% loc('do.cancel') %]</a>
+    </div>
+</div>
+[% END %]
+
+[% BLOCK older_replies %]
+    [% SET replies = this.visibleReplies(event) %]
+    [% SET older = event.num_replies - replies.size %]
+    [% IF older %]
+        <div class="closed">
+            <a href="#" class="reply_message">
+                <span class="arrow">&#9658;</span>
+                [% IF event.incomplete_replies %]
+                    [% loc('activities.other-replies=count', older) %]
+                [% ELSE %]
+                    [% loc('activities.other-replies=count', older) %]
+                [% END %]
+                [% loc('activities.click-to-expand') %]
+            </a>
+            <img class="loading" src="[% this.static_path %]/images/ajax-loader.gif"/>
+        </div>
+    [% ELSIF replies.size > 2 %]
+        <div class="open">
+            <a href="#" class="reply_message">
+                <span class="arrow">&#9660;</span>
+                [% loc('activities.all-replies') %]
+                [% loc('activities.click-to-collapse') %]
+            </a>
+        </div>
+    [% END %]
+[% END %]
+
+[% BLOCK search_sort %]
+<div style="display: block;" id="[% id('sort') %]">
+    <span id="[% id('sort-prompt') %]">Sort by:</span>
+    <select id="[% id('sort-picker') %]">
+        [% FOR option = this.sortOptions %]
+            <option [% IF option.selected %]selected="selected" [% END %]value="[% option.value %]">[% option.name %]</option>
+        [% END %]
+    </select>
+</div>
+[% END %]
+
+[% BLOCK desktop_download %]
+    <div id="[% id('download-socialtext-desktop') %]">
+        Download <a target="_blank" href="http://socialtext.com/products/desktop.php"
+        onclick="
+            var $_link = $('#st-wikinav-link-desktop', window.top.document);
+            if ($_link.length == 0) { return true; }
+            $_link.click(); return false;
+        ">Socialtext Desktop</a>!
+        <br />
+        Try out the <a target="_blank" href="/?action=signal_this">Signals Bookmarklet</a>!
+    </div>
+[% END %]
+
+[% BLOCK network_options %]
+    [% FOR section = options %]
+        [% IF section.networks.size %]
+            <optgroup class="[% section.class %]" label="[% section.title %]">
+                [% FOR net = section.networks %]
+                    <option value="[% net.value %]" class="[% net.class %]">
+                        [% net.title %]
+                    </option>
+                [% END %]
+            </optgroup>
+        [% END %]
+    [% END %]
+[% END %]
+
+[% BLOCK mobile_signals %]
+    <div class="networks">
+        [% post_to_prompt || loc('activities.post-to') %]
+        <select class="signal_network" id="[% id('signal_network') %]"></select>
+    </div>
+    <div class="clear"></div>
+
+    <div class="grid_sub_20 sub_alpha">
+        <div class="mainWikiwyg">
+            <div id="[% id('mainWikiwyg') %]" class="setupWikiwyg wikiwyg">
+                <div class="clearHandler">[% this.startText %]</div>
+            </div>
+        </div>
+    </div>
+    <div class="sub_omega grid_sub_4 post">
+        <a href="#" id="[% id('post') %]">[% loc('nav.go') %]</a>
+        <div class="count" id="[% id('count') %]"></div>
+    </div>
+    <div class="clear"></div>
+
+    <div class="links">
+        <h3 class="title">Link</h3>
+        <div class="cancel" href="#">X</div>
+        <div class="link"></div>
+    </div>
+    <div class="clear"></div>
+[% END %]
+
+[% BLOCK enable_notifications_link %]
+    (<a onclick="window.webkitNotifications.requestPermission(); return false" class="enable-notifications" href="#">[% loc('activities.click-to-enable-desktop-notifications') %]</a>)
+[% END %]

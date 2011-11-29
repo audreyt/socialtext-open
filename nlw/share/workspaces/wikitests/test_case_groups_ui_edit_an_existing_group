@@ -10,8 +10,8 @@
 
 | *Comment* | Test Case: Groups UI Edit an Existing Group - Not Admin - No Edit Link |  |
 | open_ok | /?group/%%group_id%% |  |
-| wait_for_element_not_present_ok | link=Edit Group | 10000 |
-| wait_for_element_not_present_ok | link=Edit Layout | 10000 |
+| wait_for_element_not_present_ok | st-edit-group | 10000 |
+| wait_for_element_not_present_ok | st-edit-layout | 10000 |
 
 
 | *Comment* | Test Case: Groups UI Edit an Existing Group - Become Admin - Yes Edit Link |  |
@@ -19,17 +19,17 @@
 | open_ok | /?group/%%group_id%% |  |
 
 | *Comment* | Test Case: Groups UI Edit an Existing Group - edit the group |  |
-| wait_for_element_visible_ok | link=Edit Group | 30000 |
-| wait_for_element_visible_ok | link=Edit Layout | 30000 |
-| click_and_wait | link=Edit Group | 30000 |
+| wait_for_element_visible_ok | st-edit-group | 30000 |
+| wait_for_element_visible_ok | st-edit-layout | 30000 |
+| click_and_wait | st-edit-group | 30000 |
 
 | *Comment* | Test Case: Groups UI Edit an Existing Group - PAUSE |  |
-| pause | 5000 |  |
+| pause | 15000 |  |
 
 | *Comment* | Test Case: Groups UI Edit an Existing Group Change the Values & Click Save |  |
 
 | st-name-widget | 1 | info_widget |
-| st-widget-title-like | info_widget | Information |
+| st-widget-title | info_widget | Information |
 | st-select-widget-frame | info_widget |  |
 
 | wait_for_element_visible_ok | name | 30000 |
@@ -44,11 +44,11 @@
 | click_and_wait | create-group |  |
 
 | *Comment* | Test Case: Groups UI Edit an Existing Group - PAUSE |  |
-| pause | 5000 |  |
+| pause | 15000 |  |
 
 | *Comment* | Test Case: Groups UI Edit an Existing Group See the new values |  |
 | st-name-widget | 1 | info_widget |
-| st-widget-title-like | info_widget | Information |
+| st-widget-title | info_widget | Information |
 | st-select-widget-frame | info_widget |  |
 | wait_for_element_visible_ok | link=%%group_user_short%% | 30000 |
 | text_like | //body | Administrators |

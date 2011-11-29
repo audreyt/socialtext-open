@@ -1,5 +1,8 @@
 | *Comment* | STARTING Test Case: Reset to Default Dashboard |
 
+| set | rss_header_text | Enterprise Social Software Blog |
+| set | cancel_button | `//div[@id='save-lightbox']/div[2]/a[2]` |
+
 * Fixture: SocialWidgets
 
 | *Comment* | Test Case: Reset to Default Dashboard create a fresh account |  |
@@ -12,51 +15,64 @@
 | *Comment* | Test Case: Reset to Default Dashboard - add accounts admin |  |
 | st-admin | give-accounts-admin --e %%mwgmail%% --account "%%acct%%" | now has accounts admin access |
 | st-logoutin | %%mwgmail%% | %%password%% |
-| open_ok | /?dashboard | 60000 |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| wait_for_element_visible_ok | link=Administer Dashboards | 30000 |
-| click_and_wait | link=Administer Dashboards |  |
+| open_ok | /st/dashboard |  |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+| wait_for_element_visible_ok | st-admin-dashboard | 15000 |
+| click_and_wait | st-admin-dashboard |  |
 
 | *Comment* | Test Case: Reset to Default Dashboard - Add RSS Viewer |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | //a[@id='gallery-widget-RSS Viewer'] | 30000 |
-| click_and_wait | //a[@id='gallery-widget-RSS Viewer'] |  |
+| wait_for_element_visible_ok | st-edit-layout | 10000 |
+| click_ok | st-edit-layout |  |
+| wait_for_element_visible_ok | st-add-widget | 15000 |
+| click_ok | st-add-widget |  |
+| wait_for_element_visible_ok | //a[@id='gallery-widget-RSS Viewer'] | 10000 |
+| click_ok | //a[@id='gallery-widget-RSS Viewer'] |  |
 
 | *Comment* | Test Case: Reset to Default Dashboard - Test for RSS Viewer |  |
-| wait_for_text_present_ok | Enterprise Social Software Blog | 30000 |
-| st-name-widget | 5 | rssv |
-| st-widget-title-like | rssv | Enterprise Social Software Blog |
-| text_like | Push to all dashboards |  |
+| wait_for_text_present_ok | %%rss_header_text%% | 10000 |
+| st-widget-title | rssv | %%rss_header_text%% |
+| wait_for_element_visible_ok | st-save-layout | 15000 |
+| click_ok | st-save-layout |  |
+| wait_for_text_present_ok | Save Confirmation | 10000 |
+| wait_for_text_present_ok | Force update this dashboard | 15000 |
+| wait_for_element_visible_ok | save-layout-save | 10000 |
+| wait_for_element_visible_ok | force-update | 10000 |
+| check_ok | force-update |  |
+| is_checked_ok | force-update |  |
+| click_and_pause | save-layout-save | 2000 |
 
 | *Comment* | Test Case: Reset to Default Dashboard - Add Wikipedia |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | //a[@id='gallery-widget-Wikipedia'] | 30000 |
-| click_and_wait | //a[@id='gallery-widget-Wikipedia'] |  |
+| open_ok | /st/dashboard |  |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+| wait_for_element_visible_ok | st-admin-dashboard | 15000 |
+| click_and_wait | st-admin-dashboard |  |
+| wait_for_element_visible_ok | st-edit-layout | 10000 |
+| click_ok | st-edit-layout |  |
+| wait_for_element_visible_ok | st-add-widget | 10000 |
+| click_ok | st-add-widget |  |
+| wait_for_element_visible_ok | //a[@id='gallery-widget-Wikipedia'] | 10000 |
+| click_ok | //a[@id='gallery-widget-Wikipedia'] |  |
 
 | *Comment* | Test Case: Reset to Default Dashboard - Test for Wikipedia |  |
-| wait_for_text_present_ok | Wikipedia | 30000 |
-| st-name-widget | 5 | wikipedia |
-| st-widget-title-like | wikipedia | Wikipedia |
-| text_like | Push to all dashboards |  |
+| wait_for_text_present_ok | Wikipedia | 10000 |
+| st-widget-title | wikipedia | Wikipedia |
+| wait_for_element_visible_ok | st-save-layout |  |
+| click_ok | st-save-layout |  |
+| wait_for_text_present_ok | Force update this dashboard | 15000 |
 
 | *Comment* | Test Case: Reset to Default Dashboard - Save... and force update |  |
-| click_ok | //a[contains(text(),'Save')] |  |
-| wait_for_text_present_ok | Save Confirmation | 30000 |
-| wait_for_element_visible_ok | st-save-widget-template | 30000 |
-| wait_for_element_visible_ok | force-update | 30000 |
+| wait_for_text_present_ok | Save Confirmation | 10000 |
+| wait_for_element_visible_ok | save-layout-save | 10000 |
+| wait_for_element_visible_ok | force-update | 10000 |
 | check_ok | force-update |  |
-| click_ok | st-save-widget-template |  |
-| *Comment* | Selenium can't see Success message. Re-open the Dashboard and verify. |  |
+| click_and_pause | save-layout-save | 2000 |
 
 | *Comment* | Test Case: Reset to Default Dashboard - verify force update |  |
-| open_ok | /?dashboard | 60000 |
+| open_ok | /st/dashboard |  |
 | wait_for_text_present_ok | Wikipedia | 30000 |
 | st-name-widget | 5 | wikipedia |
-| st-widget-title-like | wikipedia | Wikipedia |
+| st-widget-title | wikipedia | Wikipedia |
 | st-select-widget-frame | wikipedia |  |
-| text_unlike | //body | Push to all dashboards |
 | text_like | Wiki Search |  |
 | select-frame | relative=parent |  |
 
@@ -65,43 +81,45 @@
 
 | *Comment* | Test Case: Reset to Default Dashboard login as brand new user |  |
 | st-logoutin | %%mwgmail%%-2 | %%password%% |
-| open_ok | /?dashboard | 60000 |
+| open_ok | /st/dashboard |  |
 | wait_for_text_present_ok | Wikipedia | 30000 |
-| wait_for_text_present_ok | Enterprise Social Software Blog | 30000 |
+| wait_for_text_present_ok | %%rss_header_text%% | 15000 |
 
 | *Comment* | Test Case: Reset to Default Dashboard Revert to Default... |  |
 | st-admin | give-accounts-admin --e %%mwgmail%%-2 --account "%%acct%%" | now has accounts admin access |
-| open_ok | /?dashboard | 60000 |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| wait_for_element_visible_ok | link=Administer Dashboards | 30000 |
-| click_and_wait | link=Administer Dashboards |  |
-| wait_for_element_visible_ok | //a[contains(text(),'Revert to Default')] |  |
-| click_ok | //a[contains(text(),'Revert to Default')] |  |
-| *Comment* | must wait for page to load but can't use click and wait because lightbox comes up immediately. |  |
-| pause | 15000 | I hate pause |
-| wait_for_text_present_ok | Are you sure you want to revert to the Socialtext defaults? | 30000 |
-| wait_for_element_visible_ok | //a[@id='dashboard-revert-yes'] | 30000 |
-| click_and-wait | //a[@id='dashboard-revert-yes'] |  |
+| open_ok | /st/dashboard |  |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+| wait_for_element_visible_ok | st-admin-dashboard | 15000 |
+| click_and_wait | st-admin-dashboard |  |
+| wait_for_element_visible_ok | st-edit-layout | 15000 |
+| click_ok | st-edit-layout |  |
+| wait_for_element_visible_ok | st-revert-layout |  |
+| click_ok | st-revert-layout |  |
 | wait_for_text_not_present_ok | Wikipedia | 30000 |
-| wait_for_text_not_present_ok | Enterprise Social Software Blog | 30000 |
+| wait_for_text_not_present_ok | %%rss_header_text%% | 15000 |
+
+| *Comment* | Test Case: Reset to Default Dashboard Revert to Default... and force update |  |
+| wait_for_element_visible_ok | st-save-layout |  |
+| click_ok | st-save-layout |  |
+| wait_for_element_visible_ok | save-layout-save | 10000 |
+| click_and_pause | save-layout-save | 2000 |
 
 | *Comment* | Test Case: Reset to Default Dashboard Wikipedia and RSS are gone |  |
-| open_ok | /?dashboard | 60000 |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| wait_for_element_visible_ok | link=Administer Dashboards | 30000 |
-| click_and_wait | link=Administer Dashboards |  |
-| wait_for_element_visible_ok | //a[contains(text(),'Revert to Default')] |  |
-| wait_for_text_not_present_ok | Wikipedia | 30000 |
-| wait_for_text_not_present_ok | Enterprise Social Software Blog | 30000 |
+| open_ok | /st/dashboard |  |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+| wait_for_element_visible_ok | st-admin-dashboard | 15000 |
+| click_and_wait | st-admin-dashboard |  |
+| wait_for_text_not_present_ok | Wikipedia | 15000 |
+| wait_for_text_not_present_ok | %%rss_header_text%% | 15000 |
 
 | *Comment* | Test Case: Reset to Default Dashboard should have two WikiPage widgets |  |
-| wait_for_text_present_ok | Learning Resources | 30000 |
-| text_like | contentColumns | I'm new. What do I do? |
-| text_like | contentColumns | Learning Resources |
+| wait_for_text_present_ok | Learning Resources | 15000 |
+| text_like | content | I'm new. What do I do? |
+| text_like | content | Learning Resources |
 
 | *Comment* | Test Case: Reset to Default Dashboard TEARDOWN |  |
 | st-process-jobs |  |  |
+| st-admin | deactivate-user --email %%mwgmail%% | has been |
 | delete-account | %%acct%% | Recklessly deleting |
-| st-admin | deactivate-user --email %%mwgmail%% | been deactivated |
 
-| *Comment* | Test Case: Reset to Default Dashboard COMPLETED |
+| *Comment* | Test Case: Reset to Default Dashboard COMPLETED |  |

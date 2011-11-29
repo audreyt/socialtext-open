@@ -1,0 +1,34 @@
+$lightest: #ffffff
+$lighter: #e8e8e8
+$light: #cccccc
+$grey: #999999
+$darker: #333333
+$darkest: #000000
+
+$red: #d93636
+$negative_change: #ff6666
+$positive_change: #66ff66
+
+$primary_contrast: $lightest
+@if lightness($primary_color) > 50%
+  $primary_contrast: $darkest
+
+$primary_complement: $darkest
+@if (lightness($primary_color) > 50%)
+  $primary_complement: darken($primary_color, 6)
+@else
+  $primary_complement: lighten($primary_color, 10)
+
+$background_complement: $darkest
+@if (lightness($background_color) > 50%)
+  $background_complement: darken($background_color, 6)
+@else
+  $background_complement: lighten($background_color, 10)
+
+$primary_contrast_disabled: $light
+@if (lightness($primary_color) > 50%)
+  $primary_contrast_disabled: $darker
+
+$header_contrast: $lightest
+@if (lightness($header_color) > 50%)
+  $header_contrast: $darkest

@@ -1,52 +1,45 @@
 Note: This test relies on the default content of the test-data workspace
 
-| *Comment* | Starting Test Case: Sidebar: Incoming Links |  |
+| *Comment* | Starting Test Case: Sidebar: Incoming Links |  |  |  |
 
 Add a link to a non-existent page in an existing page | incipient page link appears in existing page | incipient page link has dotted underline
 Navigate to a page known to have zero incoming links | system displays "There are no pages that link to this page yet."
 
-| *Comment* | Test Case: Sidebar: Incoming Links. create TC Incoming Links %%start_time%% |  |
-| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | st-newpage-pagename-edit | TC Incoming Links %%start_time%% |
-| type_ok | wikiwyg_wikitext_textarea | [TC Incoming Links New Page %%start_time%%] [House Payment] |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+| *Comment* | Test Case: Sidebar: Incoming Links. create TC Incoming Links %%start_time%% |  |  |  |
+
+| call | [st-edit-new-page] | ws=%%workspace%% | title=TC Incoming Links %%start_time%% | `content=[TC Incoming Links New Page %%start_time%%] [House Payment]` |
 
 | *Comment* | Test Case: Sidebar: Incoming Links. no incoming links |  |
 | wait_for_text_present_ok | TC Incoming Links %%start_time%% | 30000 |
 | wait_for_element_visible_ok | link=TC Incoming Links New Page %%start_time%% | 10000 |
-| text_like | contentRight | There are no pages that link to this page yet |
+| text_like | st-display-mode-widgets | There are no pages that link to this page yet |
 
 Click non-existent link | new page appears ready for editing
 edit and save new page | existing page appears in new page incoming links
 
-| *Comment* | Test Case: Sidebar: Incoming Links. create a backlink |  |
-| click_ok | link=TC Incoming Links New Page %%start_time%% |  |
-| wait_for_element_visible_ok | blank-radio | 20000 |
-| click_ok | blank-radio |  |
-| wait_for_element_visible_ok | st-create-content-savelink | 20000 |
-| click_and_wait | st-create-content-savelink |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | TC Incoming Links New Page %%start_time%% content |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+| *Comment* | Test Case: Sidebar: Incoming Links. create a backlink |  |  |  |
+| click_ok | link=TC Incoming Links New Page %%start_time%% |  |  |  |
+| wait_for_element_visible_ok | st-create-content-savelink | 30000 |  |  |
+| click_and_wait | st-create-content-savelink |  |  |  |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |  |  |
+
+| call | [st-save-page] | content=TC Incoming Links New Page %%start_time%% content |  |  |
 
 | *Comment* | Test Case: Sidebar: Incoming Links. verify backlinks |  |
 | wait_for_element_visible_ok | link=TC Incoming Links %%start_time%% | 10000 |
-| text_like | contentRight | TC Incoming Links %%start_time%% |
+| text_like | st-display-mode-widgets | TC Incoming Links %%start_time%% |
 | open_ok | /%%workspace%%/house_payment |  |
 | wait_for_element_visible_ok | link=TC Incoming Links %%start_time%% | 30000 |
-| text_like | contentRight | TC Incoming Links %%start_time%% |
+| text_like | st-display-mode-widgets | TC Incoming Links %%start_time%% |
 
 navigate to and delete existing page | page is gone
 navigate to new page | Incoming link to old page is gone
 
 | *Comment* | Test Case: Sidebar: Incoming Links. delete TC Incoming Links %%start_time%% |  |
-| clickAndWait | link=TC Incoming Links %%start_time%% |  |
+| click_and_wait | link=TC Incoming Links %%start_time%% |  |
+| wait_for_element_visible_ok | st-page-options | 30000 |
+| click_ok | st-page-options |  |
+| wait_for_element_present_ok | link=Delete Page | 10000 |
 | click_ok | link=Delete Page |  |
 | wait_for_element_visible_ok | st-delete-deletelink | 20000 |
 | click_and_wait | st-delete-deletelink |  |
@@ -55,7 +48,10 @@ navigate to new page | Incoming link to old page is gone
 | open_ok | /%%workspace%%/?TC Incoming Links New Page %%start_time%% |  |
 | text_like | There are no pages that link to this page yet. |  |
 
-| *Comment* | Test Case: Sidebar: Incoming Links. delete TC Incoming Links New Page %%start_time%% |
+| *Comment* | Test Case: Sidebar: Incoming Links. delete TC Incoming Links New Page %%start_time%% |  |
+| wait_for_element_visible_ok | st-page-options | 30000 |
+| click_ok | st-page-options |  |
+| wait_for_element_present_ok | link=Delete Page | 10000 |
 | click_ok | link=Delete Page |  |
 | wait_for_element_visible_ok | st-delete-deletelink | 20000 |
 | click_and_wait | st-delete-deletelink |  |
@@ -63,7 +59,7 @@ navigate to new page | Incoming link to old page is gone
 Navigate to a page known to have incoming links | incoming links appear in sidepanel
 Navigate to a page known to have many incoming links | all incoming links appear in sidepanel
 
-| *Comment* | Test Case: Sidebar: Incoming Links. Verify existing backlinks |
+| *Comment* | Test Case: Sidebar: Incoming Links. Verify existing backlinks |  |
 | open_ok | /%%workspace%%/?Start Here |  |
 | text_like | link=What else is here? | What else is here? |
 | text_like | link=Workspace Tour - Table of Contents | Workspace Tour - Table of Contents |

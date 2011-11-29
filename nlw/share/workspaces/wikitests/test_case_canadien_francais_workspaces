@@ -39,22 +39,16 @@
 
 | *Comment* | Test Case: Canadien Francais (Workspaces)- Test Sorting in Global Nav Dropdown |  |
 | st-logoutin | %%user%% | %%password%% |
-| open_ok | /?action=workspace_list |  |
+| open_ok | /?action=people |  |
+| wait_for_element_visible_ok | global-workspace-list | 30000 |
+| mouseOver | global-workspace-list |  |
 | wait_for_text_present_ok | %%wsAA%% | 30000 |
-| text_like | //body | qr/All My Workspaces.*%%wsAA%%.+%%wsA%%.+%%wsB%%.+%%wsE%%.+%%wsN%%.+%%wsX%%.*Explore/ |
-
-
-| *Comment* | Test Case: Canadien Francais (Workspaces) - Test Sorting in workspace_list |  |
-| st-logoutin | %%user%% | %%password%% |
-| open_ok | /?action=workspace_list |  |
-| wait_for_text_present_ok | %%wsAA%% | 30000 |
-| text_like | //body | qr/Workspaces you belong to.*%%wsAA%%.+%%wsA%%.+%%wsB%%.+%%wsE%%.+%%wsN%%.+%%wsX%%/ |
-
+| text_like | globalNav | qr/All My Workspaces.+%%wsAA%%.+%%wsA%%.+%%wsB%%.+%%wsE%%.+%%wsN%%.+%%wsX%%/ |
 
 | *Comment* | Test Case: Canadien Francais (Workspaces) - Test Sorting in workspace_listall |  |
 | open_ok | /?action=workspaces_listall |  |
 | wait_for_text_present_ok | %%wsAA%% | 30000 |
-| text_like | //body | qr/Workspace Title.*%%wsAA%%.+%%wsA%%.+%%wsB%%.+%%wsE%%.+%%wsN%%.+%%wsX%%/ |
+| text_like | content | qr/All My Workspaces.+%%wsAA%%.+%%wsA%%.+%%wsB%%.+%%wsE%%.+%%wsN%%.+%%wsX%%/ |
 
 | *Comment* | Test Case: Canadien Francais (Workspaces) - Test Sorting in mobile workspace list |  |
 | st-logoutin | %%user%% | %%password%% |
@@ -64,12 +58,12 @@
 
 | *Comment* | Test Case: Canadien Francais (Workspaces) - Test Display in Workspace Widget in Dashboard |  |
 | open_ok | /st/dashboard |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+| click_ok | st-add-widget |  |
 | wait_for_element_visible_ok | gallery-widget-Workspaces | 30000 |
-| click_and_wait | gallery-widget-Workspaces |  |
-| text_like | //body | qr/%%wsAA%%.+%%wsA%%.+%%wsB%%.+%%wsE%%.+%%wsN%%.+%%wsX%%(?!Workspace)/ |
-
+| click_ok | gallery-widget-Workspaces |  |
+| wait_for_text_present_ok | views | 10000 |
+| text_like | content | qr/%%wsAA%%.+%%wsA%%.+%%wsB%%.+%%wsE%%.+%%wsN%%.+%%wsX%%(?!Workspace)/ |
 
 | *Comment* | Test Case: Canadien Francais (Workspaces) TEARDOWN |  |
 | st-process-jobs |  |  |

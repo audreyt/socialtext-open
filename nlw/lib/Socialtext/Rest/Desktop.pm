@@ -41,7 +41,7 @@ sub app_url {
 sub GET {
     my ($self, $rest) = @_;
 
-    unless (Socialtext::Helpers->desktop_update_enabled) {
+    unless (Socialtext::Helpers->new->desktop_update_enabled) {
         $rest->header( -status => HTTP_404_Not_Found );
         return '';
     }
@@ -52,6 +52,10 @@ sub GET {
     if ($filename =~ /^(?:flair-)?badge(?:.html)?$/) {
         return $self->hub->template->process(
             ($PrefersFlair ? "desktop/flair-badge.html" : "desktop/badge.html"),
+            user => {
+                primary_account_id =>
+                    $self->hub->current_user->primary_account_id,
+            },
             app_url     => $self->app_url,
             app_version => $self->app_version,
             static_appliance_url => Socialtext::URI::uri(

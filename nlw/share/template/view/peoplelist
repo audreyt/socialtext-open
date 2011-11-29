@@ -1,0 +1,107 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[% USE decorate %]
+[% predicate_with_params = BLOCK %]?[% predicate %];tag=[% tag | uri %];sortby=[% sort_by %][% people_selector %][% END %]
+
+[% WRAPPER layout/html head_template="people_head" %]
+  [% IF checker.check_permission('delete') %]
+    <form action="[% script_name %]" method="post">
+  [% END %]
+  <div id="peopleDirectory">
+    <div class="grid_10"><h1>[% display_title | html %]</h1></div>
+    <div class="clear"></div>
+    <div class="grid_13">
+      [% INCLUDE element/listview_account_filter %] &mdash;
+      <span><b>[% loc('people.showing=from,to,total', offset + 1, last, pager.total_entries) %]</b></span>
+
+      [% IF is_search %]
+        <div class="sort">
+          [% loc('sort.by:') %]
+          <select id="sort-picker" onchange="sort_by();">
+            <option [% IF sort_by=="relevance" %]selected="selected"[% END %] value="sortby=relevance">[% loc("people.sort-relevance") %]</option>
+            <option [% IF sort_by=="name" %]selected="selected"[% END %] value="sortby=name">[% loc("people.sort-name") %]</option>
+          </select>
+        </div>
+      [% END %]
+    </div>
+    <div class="grid_6 alpha peopleCount">
+    &nbsp;
+    </div>
+    <div class="grid_5">
+      [% IF tag %]
+        <ul class="jd_menu medium_width">
+          <li>
+            <a id="st-pagetools-tools" href="#">[% loc('people.tools') %]</a>
+            <ul>
+              <li>
+                <a href="#" onclick="People.add_tag_to_me('[% tag.replace("'", "\\\'") %]')">
+                  [% loc('people.add-tag-to-myself') %]
+                </a>
+              </li>
+              <li>
+                <a href="#" onclick="People.show_add_to_user('[% tag.replace("'", "\\\'") %]')">
+                  [% loc('people.add-tag-to-someone') %]
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      [% ELSE %]
+        <ul></ul>
+      [% END %]
+    </div>
+    <div class="clear"></div>
+
+    <div class="grid_24">
+      [% INCLUDE "view/paging" %]
+    </div>
+    <div class="clear"></div>
+    [% FOREACH row = rows %]
+      <div class="peoplelist-row [% IF loop.count % 2 %] oddRow[% END %]">
+        <div class="grid_2 peoplelist-photo">
+          [% row.id | decorate('user_photo') %]
+        </div>
+        <div class="grid_8 peoplelist-desc"> 
+          [% row.id | decorate('user_link') %]
+          [% FOR field = ['email','position','location','work_phone'] %]
+            [% IF row.$field %]<div style="line-height: 1.5em">[% row.$field %]</div>[% END %]
+          [% END %]
+        </div>
+      </div>
+      <div class="clear"></div>
+    [% END %]
+    [% IF pager && pager.total_entries %]
+    <div class="grid_24">
+      [% INCLUDE "view/paging" %]
+    </div>
+    <div class="clear"></div>
+    [% END %]
+  </div><!-- contentContainer -->
+
+  <script language="javascript">
+      var query_start = "?[% predicate %];"
+                      + "search_term=[% search_term %];";
+      [%
+        DEFAULT sid = 'search'
+        # What follows is a somewhat hackish way of injecting the
+        # account/group selector into the search box filter terms
+      %]
+      var people_selector = "[% people_selector %]".replace(/^;/,"");
+      var kv_pairs = people_selector.split(';');
+      for (var i in kv_pairs) {
+        var parts = kv_pairs[i].split('=',2);
+        if (parts.length == 2) {
+          var new_input = jQuery('<input type="hidden" />');
+          new_input.attr('name',parts[0]);
+          new_input.attr('value',parts[1]);
+          jQuery('form#st-[%sid%]-form').append(new_input);
+        }
+      }
+      function sort_by() {
+        var selected = jQuery('select#sort-picker').val();
+        window.location = "?[% predicate %];" + selected;
+      }
+  </script>
+
+[% END %]
+

@@ -1,0 +1,26 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[% USE decorate %]
+[% WRAPPER $frame_name id="listPage" %]
+  <div class="grid_23 prefix_1">
+    <h2 class="tableTitle" title="[% display_title | html %]">[% display_title | html %]</h2>
+    <table class="dataTable workspacelist">
+      <tr>
+        <th>[% loc('wiki.wiki-title') %]</th>
+        <th class="numeric">[% loc('wiki.users') %]</th>
+        <th class="numeric">[% loc('wiki.groups') %]</th>
+      </tr>
+      [% FOREACH workspace = workspaces %]
+        [% IF loop.count % 2 %]<tr class="oddRow">[% ELSE %]<tr>[% END %]
+        <td>
+          <a href="/[% workspace.name %]">[% workspace.title | html %]</a>
+        </td>
+        <td class="numeric">[% workspace.user_count %]</td>
+        <td class="numeric">[% workspace.group_count %]</td>
+        </tr>
+      [% END %]
+    </table><!-- dataTable END -->
+  </div>
+  <div class="clear vpad10"></div>
+[% END %]
+

@@ -60,16 +60,14 @@
 | st-logoutin | %%eusersix%% | %%password%% |
 | open_ok | /st/edit_profile |  |
 | wait_for_element_visible_ok | field_supervisor | 30000 |
-| type-lookahead-ok | xpath=//div[@id='field_supervisor']/input[@class='relationship'] | Caroline |
-| wait-for-element-present-ok | link=Caroline Kennedy |  |
-| click-ok | link=Caroline Kennedy |  |
+| select-autocompleted-option-ok | //div[@id='field_supervisor']/input[contains(@class,'relationship')] | Caroline |
 | wait_for_element_visible_ok | update_profile | 30000 |
-| st-pause-click | 5000 | update_profile |
+| st-pause-click | 15000 | update_profile |
 
 | *Comment* | Test Case: People Relevance Search: relevance order: Names then relationships then tags then other fields |  |
 | st-process-jobs |  |  |
 | st-logoutin | %%euserone%% | %%password%% |
-| open_ok | /st/dashboard |  |
+| open_ok | /st/people |  |
 | st-search-for | Search People: | Kennedy |
 | wait_for_text_present_ok | People matching 'Kennedy' | 30000 |
 | wait_for_text_present_ok | Showing 1 - 6 of 6 total. | 30000 |

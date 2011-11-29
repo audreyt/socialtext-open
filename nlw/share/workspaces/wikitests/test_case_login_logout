@@ -30,29 +30,53 @@
 | st-login | %%username%% | wrong_password |
 | st-message | Wrong email address or password - please try again |  |
 
-| *Comment* | Test Case: Login/Logout Login with real admin user/pass |  |
-| st-login | %%username%% | %%password%% |
-| text_like | Add Members |  |
-| st-logout |  |  |
+| *Comment* | Test Case: Login/Logout make a new user with a new WS |  |  |
+| set | lluser | ll-user-%%start_time%%@ken.socialtext.net |  |
+| create_user | %%lluser%% | %%password%% |  |
+| st-admin | add-member --w %%workspace%% --e %%lluser%% | now has the role of 'member' |  |
 
-| *Comment* | Test Case: Login/Logout Login with real non-admin user/pass |  |
-| st-admin | create-user --email %%inout_user%% --password %%password%% |  |
-| st-admin | add-member --email %%inout_user%% --workspace %%workspace%% |  |
-| st-login | %%inout_user%% | %%password%% |
-| text_unlike | //body | Add Members |
+| *Comment* | Test Case: Login/Logout Login with non-admin user/pass |  |  |  |
+| st-login | %%lluser%% | %%password%% |  |  |
+| text_like | Canonical Test Data Set |  |  |  |
+
+| call | [st-spaces-accordion] | index=1 | section=Unsubscribe |  |
+
+| pause | 10000 |  |  |  |
+
+| text_like | spaces-accordion | Preferences |
+| text_like | spaces-accordion | Unsubscribe |
+| text_like | spaces-accordion | Create Blog |
+| text_unlike | spaces-accordion | Features |
+| text_unlike | spaces-accordion | Manage Users |
+
+| *Comment* | Test Case: Login/Logout add workspace admin |  |  |  |
+| st-admin | add-workspace-admin --w %%workspace%% --e %%lluser%% | now has the role of 'admin' |  |  |
+
+| call | [st-spaces-accordion] | index=1 | section=Features |  |
+
+| pause | 10000 |  |  |  |
+
+| text_like | spaces-accordion | Features |
+| text_like | spaces-accordion | Preferences |
+| text_like | spaces-accordion | Unsubscribe |
+| text_like | spaces-accordion | Create Blog |
+| text_like | spaces-accordion | Manage Users |
 | st-logout |  |  |
 
 | *Comment* | Test Case: Login/Logout Forgotten password (bad user): |  |
-| click_and_wait | link=I don't know my password. |  |
+| set | submit | st-forgot-password-submit |
+| open_ok | /nlw/forgot_password.html |  |
 | text_like | Socialtext password help |  |
 | type_ok | username | mr.poopypants |
-| click_and_wait | //input[@value='Submit'] |  |
+| click_and_wait | %%submit%% |  |
 | st-message | mr.poopypants is not registered as a user. Try a different entry? |  |
 
 | *Comment* | Test Case: Login/Logout Forgotten password (good user): |  |
+| st-admin | create-user --email %%inout_user%% --password %%password%% |  |
+| st-admin | add-member --email %%inout_user%% --workspace %%workspace%% |  |
 | text_like | Socialtext password help |  |
 | type_ok | username | %%inout_user%% |
-| click_and_wait | //input[@value='Submit'] |  |
+| click_and_wait | %%submit%% |  |
 | st-message | An email with instructions on changing your password has been sent to %%inout_user%% |  |
 | st-force-confirmation | %%inout_user%% | %%password%% |
 
@@ -61,44 +85,48 @@
 | location_like | qr/\/nlw\/login\.html/ |  |
 | st-login | %%inout_user%% | %%password%% |
 
+| set | old_password | //input[@type="password" and @name="user.old_password"] |  |
+| set | new_password | //input[@type="password" and @name="user.new_password"] |  |
+| set | new_password_retype | //input[@type="password" and @name="user.new_password_retype"] |  |
+
 | *Comment* | Test Case: Login/Logout Settings: old password incorrect |  |
 | click_and_wait | link=Settings |  |
-| type_ok | old_password | incorrect_password |
-| type_ok | new_password | new_password |
-| type_ok | new_password_retype | new_password |
+| type_ok | %%old_password%% | incorrect_password |
+| type_ok | %%new_password%% | new_password |
+| type_ok | %%new_password_retype%% | new_password |
 | click_and_wait | link=Save |  |
-| text_like | error: Old password is incorrect |  |
+| text_like | Current password not correct |  |
 
 | *Comment* | Test Case: Login/Logout Settings: new password < 6 chars |  |
 | click_and_wait | link=Settings |  |
-| type_ok | old_password | %%password%% |
-| type_ok | new_password | bad |
-| type_ok | new_password_retype | bad |
+| type_ok | %%old_password%% | %%password%% |
+| type_ok | %%new_password%% | bad |
+| type_ok | %%new_password_retype%% | bad |
 | click_and_wait | link=Save |  |
-| text_like | error: Passwords must be at least 6 characters long. |  |
+| text_like | Passwords must be at least 6 characters long. |  |
 
 | *Comment* | Test Case: Login/Logout Settings: new password mismatch |  |
 | click_and_wait | link=Settings |  |
-| type_ok | old_password | %%password%% |
-| type_ok | new_password | new_password1 |
-| type_ok | new_password_retype | new_password2 |
+| type_ok | %%old_password%% | %%password%% |
+| type_ok | %%new_password%% | new_password1 |
+| type_ok | %%new_password_retype%% | new_password2 |
 | click_and_wait | link=Save |  |
-| text_like | error: New passwords do not match |  |
+| text_like | New password does not match |  |
 
 | *Comment* | Test Case: Login/Logout Settings: utf8 password |  |
 | click_and_wait | link=Settings |  |
-| type_ok | old_password | %%password%% |
-| type_ok | new_password | 所以那城名叫巴別 |
-| type_ok | new_password_retype | 所以那城名叫巴別 |
+| type_ok | %%old_password%% | %%password%% |
+| type_ok | %%new_password%% | 所以那城名叫巴別™ |
+| type_ok | %%new_password_retype%% | 所以那城名叫巴別™ |
 | click_and_wait | link=Save |  |
-| text_like | Changes Saved |  |
+| text_like | Saved |  |
 
 | *Comment* | Test Case: Login/Logout Set a new password |  |
-| type_ok | old_password | 所以那城名叫巴別 |
-| type_ok | new_password | new_password |
-| type_ok | new_password_retype | new_password |
+| type_ok | %%old_password%% | 所以那城名叫巴別™ |
+| type_ok | %%new_password%% | new_password |
+| type_ok | %%new_password_retype%% | new_password |
 | click_and_wait | link=Save |  |
-| text_like | Changes Saved |  |
+| text_like | Saved |  |
 | st-logout |  |  |
 
 | *Comment* | Test Case: Login/Logout Login with old password |  |
@@ -110,11 +138,11 @@
 
 | *Comment* | Test Case: Login/Logout restore original password |  |
 | click_and_wait | link=Settings |  |
-| type_ok | old_password | new_password |
-| type_ok | new_password | %%password%% |
-| type_ok | new_password_retype | %%password%% |
+| type_ok | %%old_password%% | new_password |
+| type_ok | %%new_password%% | %%password%% |
+| type_ok | %%new_password_retype%% | %%password%% |
 | click_and_wait | link=Save |  |
-| text_like | Changes Saved |  |
+| text_like | Saved |  |
 
 | *Comment* | Test Case: Login/Logout Login with original password |  |
 | st-logout |  |  |
@@ -124,14 +152,14 @@
 | *Comment* | Test Case: Login page shows list of public Workspaces |  |
 | open | /nlw/login.html |  |
 | wait_for_element_visible_ok | st-login-form |  |
-| text_like | free access to view and contribute to any of these public wikis |  |
+| text_like | Public workspaces on this server |  |
 
 | *Comment* | Test Case: Logout page shows list of public Workspaces |  |
 | open | /nlw/logout.html |  |
-| wait_for_element_visible_ok | logoutPage |
-| text_like | free access to view and contribute to any of these public wikis |  |
+| text_like | Public workspaces on this server |  |
 
-| *Comment* | Test Case: Login/Logout TEARDOWN |  |
-| st-admin | remove-member --email %%inout_user%% --workspace %%workspace%% |  |
+| *Comment* | Test Case: Login/Logout TEARDOWN |  |  |
+| st-admin | deactivate_user --email %%inout_user%% |  |  |
+| st-admin | deactivate_user --email %%lluser%% |  |  |
 
-| *Comment* | Test case: Login/Logout COMPLETED |  |
+| *Comment* | Test case: Login/Logout COMPLETED |  |  |

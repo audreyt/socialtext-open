@@ -1,39 +1,22 @@
 | *Comment* | Test Case: Authenticated-User-Only |
 
 | set | auth_w | auth-user-%%start_time%% |
-| st-admin | create-workspace --empty --name %%auth_w%% --title %%auth_w%% | was created |
+| st-admin | create-workspace --name %%auth_w%% --title %%auth_w%% | was created |
 | st-admin | set-permissions --workspace %%auth_w%% --permissions authenticated-user-only | The permissions for the %%auth_w%% workspace have been changed to authenticated-user-only. |
-| st-admin | set-workspace-config --workspace %%auth_w%% skin_name s3 | The workspace config for %%auth_w%% has been updated |
 | st-logout |  |  |
 
-| open_ok | /%%auth_w%%/index.cgi |  |
-| wait-for-element-present-ok | st-login-form | 1000 |
-| st-admin | create-user --email newuser_%%start_time%%@ken.socialtext.net --password 123456 |  |
-| st-login | newuser_%%start_time%%@ken.socialtext.net | 123456 |
+| open_ok | /%%auth_w%%/ |  |
+| wait-for-element-present-ok | st-login-form | 15000 |
+| st-admin | create-user --email newuser_%%start_time%%@ken.socialtext.net --password %%password%% |  |
+| st-login | newuser_%%start_time%%@ken.socialtext.net | %%password%% |
 
 | open_ok | /%%auth_w%%/?Announcements and Links |  |
-| wait_for_element_visible_ok | contentRight | 10000 |
-| text_like | contentRight | Upload Files |
+| text_like | content | Upload Files |
 
-| text_like | st-editing-tools-edit | Edit |
-| text_like | st-editing-tools-edit | Comment |
-| click_and_wait | link=Settings |  |
+| wait_for_element_visible_ok | link=Edit | 15000 |
+| wait_for_element_visible_ok | link=Comment | 15000 |
 
-| text_like | contentLeft | My Settings |
-| text_like | contentLeft | List All Users |
-| text_like | contentLeft | My Workspaces |
-| text_like | contentLeft | Unsubscribe |
-| text_like | contentLeft | Blog |
-| text_like | contentLeft | Page Editing |
-| text_like | contentLeft | Screen Layout |
-| text_like | contentLeft | Your Notepad |
-| text_like | contentLeft | What's New |
-| text_like | contentLeft | Syndicate |
-| text_like | contentLeft | Watchlist |
-| text_like | contentLeft | Blogs |
-| text_unlike | contentLeft | Manage All Users |
-
-| *Comment* | Test Case: Authenticated-User-Only Teardown |  |
-| st-admin | delete-workspace --workspace %%auth_w%% --no-export | has been deleted |
+| *Comment* | Test Case: Authenticated-User-Only TEARDOWN |  |
+| delete-workspace | %%auth_w%% |  |
 
 | *Comment* | Test Case: Authenticated-User-Only COMPLETED |

@@ -1,0 +1,215 @@
+[%# vim: set et sts=2 sw=2: -%]
+[%# This file will create a template that will later be rendered for a user %]
+[% TAGS <% %> %]
+<%- USE html_encode -%>
+<%- USE decorate -%>
+<%- USE label_ellipsis -%>
+[%- USE html_encode -%]
+[%- USE decorate -%]
+[%- USE label_ellipsis -%]
+
+<%- MACRO desktop_link BLOCK -%>
+<a id="<% id %>" href="[% desktop_url %]" target="_blank"
+   onclick="$.showLightbox('<div width=100% style=text-align:center><iframe src=[% desktop_url %] width=480 height=300 scrolling=no border=0 style=margin:15px;background:url(/static/images/ajax-loader.gif);background-repeat:no-repeat;background-position:center></iframe></div>'); return false"><% loc('nav.desktop') %></a>
+<%- END -%>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><!-- UserFrame -->
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    [% IF firebug %]
+    <script type='text/javascript' src='http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js'></script>
+    [% END %]
+
+    [% FILTER decorate "head" %]
+    <title>[% title || display_title |html %][% IF workspace_present AND wiki.title %] / [% wiki.title |html %][% END %]</title>
+
+    [% FILTER decorate "head_css" %]
+    [% IF css_template; INCLUDE $css_template; END %]
+    [% END %]
+
+    [% IF feeds %]
+      [% IF feeds.rss %]
+        [% FOREACH feed IN feeds.rss %]
+    <link rel="alternate" type="application/rss+xml" title="[% feed.value.title | html_encode %]" href="[% feed.value.url %]" />
+        [% END %]
+      [% END %]
+
+      [% IF feeds.atom %]
+        [% FOREACH feed IN feeds.atom %]
+    <link rel="alternate" type="application/atom+xml" title="[% feed.value.title | html_encode %]" href="[% feed.value.url %]" />
+        [% END %]
+      [% END %]
+
+      [% IF feeds.json %]
+        [% FOREACH feed IN feeds.json %]
+    <link rel="alternate" type="application/json" title="[% feed.value.title | html_encode %]" href="[% feed.value.url %]" />
+        [% END %]
+      [% END %]
+    [% END %]
+
+    <link rel="apple-touch-icon" href="/static/skin/common/images/apple-touch-icon.png"/>
+
+    <script type="text/javascript" charset="utf-8"
+      src="[% wiki.skin_uri('s3') %]/javascript/l10n-<% loc_lang %>.js.gz">
+    </script>
+
+    <script type="text/javascript" charset="utf-8"
+      src="[% wiki.skin_uri('s3') %]/javascript/socialtext-s3.js.gz">
+    </script>
+
+    [% IF head_template %]
+      [% INCLUDE $head_template %]
+    [% END %]
+
+    [% INCLUDE "element/wiki/js-bootstrap" %]
+
+    [% IF customjs %]
+    <script type="text/javascript" charset="utf-8" src="[% customjs %]"></script>
+    [% END %]
+
+    <meta name="keywords" content="<% loc('about.keywords') %>"/>
+    [% END %]
+  </head>
+  <body id="[% id || 'socialtext-wiki' %]" onload="if (typeof Socialtext != 'undefined') Socialtext.body_loaded = true">
+    [% FILTER decorate('body_begin') %]
+    [% END %]
+    <div id="mainWrap">
+      <div id="header" class="st-wiki-nav">
+        <div id="logo"><a href="/"><% loc('nav.socialtext') %></a></div><!-- logo END -->
+        <div id="globalNav" class="st-wiki-nav-content">
+          <ul class="st-wiki-nav-actions">
+            <% UNLESS user.is_guest %>
+              <li id="st-wikinav-profile">[% loc('info.welcome=user', '<b>' _ user.username _ '</b>') | decorate('welcome') %]</li>
+            <% END %>
+            [% IF miki_url %]
+            <li id="st-wikinav-mobile"><a href="[% miki_url |html %]"><% loc('nav.mobile') %></a></li>
+            [% END %]
+            [% IF desktop_url %]
+            <li id="st-wikinav-desktop"><%- desktop_link(id="st-wikinav-link-desktop") -%></li>
+            [% END %]
+            <li id="st-wikinav-setting"><a href="/[% current_workspace.name %]?action=users_settings"><% loc('nav.settings') %></a></li>
+            [% IF user.is_business_admin %]
+              <li id="st-wikinav-control"><a href="/nlw/control">[% loc('nav.control-panel') %]</a></li>
+            [% END %]
+            <li id="st-wikinav-help"><a href="/help/" target="_blank"><% loc('nav.help') %></a></li>
+            <% IF user.is_guest %>
+              [% IF self_registration AND NOT checker.check_permission('self_join') %]
+                <li id="st-wikinav-login"><a href="/challenge?[% wiki.uri | html %]"><% loc('nav.login') %></a></li>
+                <li class="last"><a href="/nlw/register.html?redirect_to=[% hub.current_workspace.uri %]"><% loc('do.register') %></a></li>
+              [% ELSE %]
+                <li id="st-wikinav-login" class="last"><a href="/challenge?[% wiki.uri | html %]"><% loc('nav.login') %></a></li>
+              [% END %]
+            <% ELSE %>
+              <li id="st-wikinav-logout" class="last"><a id="logout_btn" href="/nlw/submit/logout[% IF wiki.is_public %]?redirect_to=[% wiki.uri | html %][% END %]"><% loc('nav.logout') %></a></li>
+            <% END %>
+          </ul>
+          [% IF !authen_page %]
+          <div>
+            [% INCLUDE element/search_form %]
+          </div>
+          [% END %]
+        </div><!-- globalNav END -->
+      </div><!-- header END -->
+      <div id="mainNav" class="st-wiki-subnav-dashboard">
+      </div><!-- mainNav END -->
+
+      <div id="st-actions-bar">
+          [% IF wiki.system_status %]
+              <div id="st-system-status">[% wiki.system_status %]</div>
+          [% END %]
+      </div>
+
+[% IF content_id.match('^st-(homepage|editcontention|listview)$') %]
+      <div id="st-display-mode-container" class="st-content st-content-no-controls">  	
+        <div id="contentContainer">
+           [% content %]
+        </div>
+[% ELSE %]
+
+      [% IF workspace_present %] 
+      <!-- workspaceNav BEGIN -->
+      <div id="workspaceContainer">
+        <div id="workspaceNav">
+          <ul>
+            <li>[% current_workspace.permissions.current_set_display_name %] [% loc("nav.wiki") %]:
+              [% IF current_workspace.title != current_page.title || action %]
+              <a href="/[% current_workspace.name %]" id="workspaceName" class="here">[% current_workspace.title |html %]</a>
+              [% ELSE %]
+              <span class="here">[% current_workspace.title |html %]</span>
+              [% END %]
+              </li>
+            [% FILTER decorate('workspace_nav') %]
+            <li><a href="/[% current_workspace.name %]?action=recent_changes"><% loc("nav.news") %></a></li>
+            <% IF !user.is_guest %>
+            <li><a href="/[% current_workspace.name %]?action=display_watchlist"><% loc("nav.my-watchlist") %></a></li>
+            <% END %>
+            <li><a href="/[% current_workspace.name %]?action=blog_display"><% loc("blog.blogs") %></a></li>
+            [% IF is_workspace_admin %]
+            <li><a href="/[% current_workspace.name %]?action=users_invitation"><% loc("wiki.invite") %></a></li>
+            [% END %]
+            [% END %]
+          </ul>
+            [% IF checker.check_permission('edit') %]
+              <div id="newPageButton">
+                <a id="st-create-content-link" href="/[% current_workspace.name %]?action=new_page">+ <% loc("page.new") %></a>
+              </div>
+            [% ELSE %]
+              <div id="newPageButton" class="disabled">
+              &nbsp;
+              </div>
+            [% END %]
+        </div>
+      </div>
+      <!-- workspaceNav END -->
+      [% END %]
+      <div id="st-display-mode-container" class="st-content">  	
+        [% content %]
+[% END %]
+        <div id="footer">
+          <div id="footerLinks">
+            <ul>
+              <li class="first">
+                <a target="_blank" id="st-footer-link-socialtext" href="http://www.socialtext.com/">
+                  <% loc('info.socialtext') %>
+                  v[% app_version %]
+                </a>
+              </li>
+              <li>
+                <a target="_blank" id="st-footer-link-community" href="http://www.socialtext.net/exchange/">
+                  <% loc('nav.community') %>
+                </a>
+              </li>
+            </ul>
+          </div><!-- footerLinks END -->
+          <div id="footerGlobal">
+            <ul>
+              [% IF miki_url %]
+                <li><a id="st-footer-link-mobile" href="[% miki_url |html %]"><% loc('nav.mobile') %></a></li>
+              [% END %]
+              [% IF desktop_url %]
+                <li><%- desktop_link(id="st-footer-link-desktop") -%></li>
+              [% END %]
+                <li><a id="st-footer-link-setting" href="/[% current_workspace.name %]?action=users_settings"><% loc('nav.settings') %></a></li>
+                <li><a id="st-footer-link-help" href="/help/" target="_blank"><% loc('nav.help') %></a></li>
+              <% IF user.is_guest %>
+                [% IF self_registration %]
+                  <li><a id="st-footer-link-login" href="/challenge?[% wiki.uri | html %]"><% loc('nav.login') %></a></li>
+                    [% UNLESS workspace_present AND checker.check_permission('self_join') %]
+                      <li class="last"><a id="st-footer-link-register" href="/nlw/register.html?redirect_to=[% hub.current_workspace.uri %]"><% loc('do.register') %></a></li>
+                    [% END %]
+                [% ELSE %]
+                  <li  class="last"><a id="st-footer-link-login" href="/challenge?[% wiki.uri | html %]"><% loc('nav.login') %></a></li>
+                [% END %]
+              <% ELSE %>
+                <li class="last"><a id="st-footer-link-logout" href="/nlw/submit/logout[% IF wiki.is_public %]?redirect_to=[% wiki.uri | html %][% END %]"><% loc('nav.logout') %></a></li>
+              <% END %>
+            </ul>
+          </div><!-- footerGlobal END -->
+        </div><!-- footer END -->
+      </div><!-- contentWrap END -->
+    </div><!-- mainWrap END -->
+    [% FILTER decorate('body_end') %]
+    [% END %]
+  </body>
+</html>

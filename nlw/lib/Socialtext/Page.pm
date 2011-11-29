@@ -1,5 +1,6 @@
 package Socialtext::Page;
 # @COPYRIGHT@
+use 5.12.0;
 use Moose;
 
 use Moose::Util::TypeConstraints;
@@ -30,6 +31,7 @@ use Socialtext::Validate qw(validate :types SCALAR SCALARREF ARRAYREF UNDEF BOOL
 use Socialtext::WikiText::Emitter::SearchSnippets;
 use Socialtext::WikiText::Parser;
 use Socialtext::l10n qw(loc system_locale);
+use Socialtext::Client::Wiki qw( html2wiki wiki2html );
 
 use Digest::SHA1 'sha1_hex';
 use Carp;
@@ -49,8 +51,9 @@ use Try::Tiny;
 sub class_id { 'page' }
 
 Readonly my $SYSTEM_EMAIL_ADDRESS       => 'noreply@socialtext.com';
-Readonly my $WIKITEXT_TYPE              => 'text/x.socialtext-wiki';
-Readonly my $HTML_TYPE                  => 'text/html';
+Readonly my $WIKITEXT_TYPE              => 'text/x.socialtext-wiki'; # Source (wiki)
+Readonly my $XHTML_TYPE                 => 'application/xhtml+xml'; # Source (xhtml)
+Readonly my $HTML_TYPE                  => 'text/html'; # Rendered
 
 our $CACHING_DEBUG = 0;
 our $DISABLE_CACHING = 0;
@@ -104,6 +107,7 @@ has 'rev' => (
             has_tag tags_sorted is_recently_modified age_in_minutes
             age_in_seconds age_in_english datetime_for_user datetime_utc
             annotations annotation_triplets anno_blob
+            is_xhtml
         )),
     },
 );
@@ -613,6 +617,7 @@ sub to_result {
         creator         => $creator->username,
         edit_summary    => $self->edit_summary,
         is_spreadsheet  => $self->is_spreadsheet,
+        is_xhtml        => $self->is_xhtml,
         page_id         => $self->page_id,
         page_uri        => $self->uri,
         revision_count  => $self->revision_count,
@@ -673,8 +678,16 @@ sub append {
     croak "page isn't mutable" unless $self->mutable;
     my $new = ref($_[1]) ? $_[1] : \$_[1];
     my $body_ref = $self->body_ref;
+    my $hr = "\n---\n";
+
+    if ($self->is_xhtml) {
+        # Run wiki2html before we get append_html implemented
+        $hr = '<hr />';
+        $new = \(scalar wiki2html($$new));
+    }
+
     if ($body_ref && length($$body_ref)) {
-        my $body = "$$body_ref\n---\n$$new"; # deliberate copy
+        my $body = $$body_ref . $hr . $$new; # deliberate copy
         $body_ref = \$body;
     } else {
         $body_ref = $new;
@@ -1044,12 +1057,36 @@ sub content {
     return ${$self->body_ref};
 }
 
+sub to_wikitext {
+    my $self = shift;
+    $self->content_as_type(@_, type => $WIKITEXT_TYPE)
+}
+
+sub to_xhtml {
+    my $self = shift;
+    $self->content_as_type(@_, type => $XHTML_TYPE)
+}
+
 sub content_as_type {
     my $self = shift;
     my %p    = @_;
     my $type = $p{type} || $WIKITEXT_TYPE;
     if ($type eq $HTML_TYPE) {
         return $self->_content_as_html($p{link_dictionary}, $p{no_cache});
+    }
+    elsif ($type eq $XHTML_TYPE and $self->page_type eq 'xhtml') {
+        return '<div xmlns="http://www.w3.org/1999/xhtml" class="wiki xhtml">'
+             . ${ $self->body_ref }
+             . '</div>';
+    }
+    elsif ($type eq $XHTML_TYPE and $self->page_type eq 'wiki') {
+        return '<div xmlns="http://www.w3.org/1999/xhtml" class="wiki">'
+             . wiki2html(${ $self->body_ref })
+             . '</div>';
+
+    }
+    elsif ($type eq $WIKITEXT_TYPE and $self->page_type eq 'xhtml') {
+        return html2wiki(${ $self->body_ref });
     }
     elsif ($type eq $WIKITEXT_TYPE) {
         return ${ $self->body_ref };
@@ -1141,9 +1178,11 @@ sub content_or_default {
 
 sub default_content {
     my $self = shift;
-    return $self->is_spreadsheet
-        ? loc('sheet.creating').'   '
-        : loc('edit.default-text').'   ';
+    return ((
+        $self->is_spreadsheet ? loc('sheet.creating')
+      : $self->is_xhtml ? loc('xhtml.creating')
+      : loc('edit.default-text')
+    ).'   ')
 }
 
 sub get_units {
@@ -1186,6 +1225,10 @@ sub get_units {
             my $dval = $cell->datavalue . "\n";
             $chunker->(\$dval);
         }
+    }
+    elsif ($self->is_xhtml) {
+        my $wikitext = html2wiki($$body_ref);
+        $chunker->(\$wikitext);
     }
     else {
         $chunker->($body_ref);
@@ -1306,6 +1349,10 @@ sub to_html {
         [$content_ref, $self]
     ) if $self->is_spreadsheet;
 
+    return $self->hub->pluggable->hook('render.xhtml.html',
+        [$content_ref, $self]
+    ) if $self->is_xhtml;
+
     return $self->hub->viewer->process($content_ref, $page)
         if $DISABLE_CACHING;
 
@@ -1360,7 +1407,7 @@ sub to_html {
 sub _cache_html {
     my $self = shift;
     my $html_ref = shift;
-    return if $self->is_spreadsheet;
+    return if $self->is_spreadsheet or $self->is_xhtml;
 
     my $t = time_scope('cache_wt');
 
@@ -1873,7 +1920,12 @@ sub preview_text {
         $content_ref = \$content;
     }
 
+    # Turn all newlines and tabs into plain spaces
     my $excerpt = $self->_to_plain_text($content_ref);
+    $excerpt =~ s/^\s+//g;
+    $excerpt =~ s/\s\s*/ /g;
+    $excerpt =~ s/\s+\z//;
+
     $excerpt = substr($excerpt, 0, $ExcerptLength) . '...'
         if length $excerpt > $ExcerptLength;
     return html_escape($excerpt);
@@ -1897,6 +1949,10 @@ sub _to_plain_text {
 
     if ($self->is_spreadsheet) {
         return $self->_to_spreadsheet_plain_text($content_ref);
+    }
+
+    if ($self->is_xhtml) {
+        return $self->_to_xhtml_plain_text($content_ref);
     }
 
     # Why not go through the chunker? it's slower than returning when you use
@@ -1930,6 +1986,17 @@ sub _to_spreadsheet_plain_text {
         sheet => Socialtext::Sheet->new(sheet_source => $content_ref),
         hub   => $self->hub,
     )->sheet_to_text();
+}
+
+sub _to_xhtml_plain_text {
+    my $self = shift;
+    my $content_ref = shift;
+    require Socialtext::XHTML;
+    require Socialtext::XHTML::Renderer;
+    return Socialtext::XHTML::Renderer->new(
+        xhtml => Socialtext::XHTML->new(xhtml_source => $content_ref),
+        hub   => $self->hub,
+    )->xhtml_to_text();
 }
 
 # REVIEW: We should consider throwing exceptions here rather than return codes.
@@ -2060,10 +2127,12 @@ sub rename {
         );
         return 0 unless $ok;
 
-        my $localized_str = loc("page.renamed=title", $new_page_title);
+        my $localized_str = wiki2html(
+            loc("page.renamed=title", $new_page_title)
+        );
         my $rev = $self->edit_rev();
         $rev->body_ref(\$localized_str);
-        $rev->page_type('wiki');
+        $rev->page_type('xhtml');
         $self->store();
 
         return 1;
@@ -2129,8 +2198,8 @@ sub send_as_email {
     my $body_content;
 
     my $make_body_content = sub {
-        if ($self->is_spreadsheet) {
-            my $content = $self->to_absolute_html();
+        if ($self->is_spreadsheet or $self->is_xhtml) {
+            my $content = $self->to_absolute_html($self->body_ref);
             return $content unless $p{body_intro} =~ /\S/;
             my $intro = $self->hub->viewer->process($p{body_intro}, $self);
             return "$intro<hr/>$content";
@@ -2165,7 +2234,7 @@ sub send_as_email {
     );
 
     my $text_body = Text::Autoformat::autoformat(
-        $p{body_intro} . ($self->is_spreadsheet ? "\n" : $self->content), {
+        $p{body_intro} . ($self->is_spreadsheet ? "\n" : $self->is_xhtml ? $self->_to_plain_text : $self->content), {
             all    => 1,
             # This won't actually work properly until the next version
             # of Text::Autoformat, as 1.13 has a bug.

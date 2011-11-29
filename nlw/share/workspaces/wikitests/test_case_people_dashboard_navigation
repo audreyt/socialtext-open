@@ -36,11 +36,11 @@
 | create_user | %%new_email%% | %%password%% | %%defaultaccount%% |
 
 | *Comment* | Test Case: People Dashboard Navigation - make sure %%username%% is in %%defaultaccount%% account |  |  |
-| st-admin | add-member --account %%defaultaccount%% --u %%username%% | has the role of 'member' |
+| st-admin | add-member --account %%defaultaccount%% --u %%username%% | has the role of 'member' |  |
 
 | open_ok | / |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+| click_ok | st-add-widget |  |
 
 TO DO - Add testability hooks and confirm Grey Ghost Icon
 
@@ -106,9 +106,27 @@ TO DO - Add testability hooks and confirm Grey Ghost Icon
 | text_like | Showing 1 - 0 of 0 total |  |
 
 | *Comment* | Test Case: People Dashboard Navigation TEARDOWN |  |
-
-Note: you can't verify the remove because you may be trying to remove from the primary account. Let It Be.
-
-| st-admin | remove-member --account %%defaultaccount%% --u %%username%% |  |
+| deactivate-user | %%baseusername%%01@ken.socialtext.net |  |
+| deactivate-user | %%baseusername%%02@ken.socialtext.net |  |
+| deactivate-user | %%baseusername%%03@ken.socialtext.net |  |
+| deactivate-user | %%baseusername%%04@ken.socialtext.net |  |
+| deactivate-user | %%baseusername%%05@ken.socialtext.net |  |
+| deactivate-user | %%baseusername%%06@ken.socialtext.net |  |
+| deactivate-user | %%baseusername%%07@ken.socialtext.net |  |
+| deactivate-user | %%baseusername%%08@ken.socialtext.net |  |
+| deactivate-user | %%baseusername%%09@ken.socialtext.net |  |
+| deactivate-user | %%baseusername%%10@ken.socialtext.net |  |
+| deactivate-user | %%baseusername%%11@ken.socialtext.net |  |
+| deactivate-user | %%baseusername%%12@ken.socialtext.net |  |
+| deactivate-user | %%baseusername%%13@ken.socialtext.net |  |
+| deactivate-user | %%baseusername%%14@ken.socialtext.net |  |
+| deactivate-user | %%baseusername%%15@ken.socialtext.net |  |
+| deactivate-user | %%baseusername%%16@ken.socialtext.net |  |
+| deactivate-user | %%baseusername%%17@ken.socialtext.net |  |
+| deactivate-user | %%baseusername%%18@ken.socialtext.net |  |
+| deactivate-user | %%baseusername%%19@ken.socialtext.net |  |
+| deactivate-user | %%baseusername%%20@ken.socialtext.net |  |
+| deactivate-user | %%baseusername%%21@ken.socialtext.net |  |
+| deactivate-user | %%new_email%% |  |
 
 | *comment* | Test Case: People Dashboard Navigation COMPLETED |  |

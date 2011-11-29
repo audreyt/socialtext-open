@@ -82,7 +82,7 @@ Test that POSTing an avatar (off of the web) changes the Last-Modified header.  
 | sleep | 2 |
 
 | Comment     | post a new photo                  |
-| upload-file | share/skin/common/images/logo.png |
+| upload-file | share/images/logo.png |
 | PUT-json | /data/groups/%%gid%% | {"name":"awesome","permission_set":"private","photo_id":"%%upload_id%%"} |
 | code-is | 202 |
 

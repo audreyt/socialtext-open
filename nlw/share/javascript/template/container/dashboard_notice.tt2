@@ -1,0 +1,14 @@
+[% id = container.account_id || container.viewer.primary_account_id %]
+[% name = container.account_name || container.viewer.primary_account_name %]
+
+[% loc('dashboard.switch-from=account:', name) %]
+<select id="st-change-account">
+    [% FOR a = st.viewer.accounts %]
+    <option [% IF a.account_id == id %]selected="true"[% END %] value="/st/account/[% a.account_id %]/dashboard">[% a.name %]</option>
+    [% END %]
+</select>
+<script>
+$('#st-change-account').change(function() {
+    location = $(this).val();
+});
+</script>

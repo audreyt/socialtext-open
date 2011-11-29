@@ -80,7 +80,7 @@
     [%- TRY -%]
         [%- INCLUDE "data/events/$event_class_icons" -%]
     [%- CATCH -%]
-        <img class="asset-icon" src="[% skin_uri('/images/asset-icons/edit-16.png') %]"/>
+        <img class="asset-icon" src="/static/images/icons/edit-black-25.png" />
     [%- END -%]
 [%- ELSE -%]
     [%- actor -%][%- ago UNLESS no_ago -%][%- ' ' IF no_ago -%]

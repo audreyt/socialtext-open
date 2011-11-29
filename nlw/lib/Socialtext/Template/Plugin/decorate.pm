@@ -27,7 +27,7 @@ sub filter {
     my $pluggable = $self->{_CONTEXT}->stash->get('pluggable');
     my $name = shift @$args;
 
-    my $cache_key = "$name.$text";
+    my $cache_key = join("\t", $name, $text, @$args);
     if (defined $ActivePluggable and $ActivePluggable == 0+$pluggable) {
         if (exists $DecorateCache{$cache_key}) {
             return $DecorateCache{$cache_key};

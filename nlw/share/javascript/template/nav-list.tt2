@@ -1,0 +1,34 @@
+<ul class="navList [% IF entry.exists('icon') %] icons[% END %]">
+    [%- FOR entry = entries -%]
+        [% IF entry.data %]
+            [% IF entry.data.size %]
+                <li class="entries">
+                    <ul>
+                    [%- FOR item = entry.data -%]
+                        <li>[% INCLUDE navListLink %]</li>
+                    [%- END -%]
+                    </ul>
+                </li>
+            [% ELSE %]
+                <li class="emptynotice">[% entry.emptyMessage %]</li>
+            [% END %]
+        [% ELSE %]
+            [% IF entry.href.defined OR entry.onclick.defined %]
+            <li>
+                <a href="[% entry.href || '#' %]"[% IF entry.onclick.defined %] onClick="[% entry.onclick %]"[% END %]>[% entry.title %]</a>
+            </li>
+            [% ELSE %]
+            <li>
+                <a class="label" name="st-dropaction-[% action.title %]">[% action.title %]</a>
+            </li>
+            [% END %]
+        [% END %]
+    [%- END -%]
+</ul>
+
+[% BLOCK navListLink %]
+    <a [% IF entry.defaultId AND item.default %] id="[% entry.defaultId %]"[% END %]href="[% entry.href(item) %]">
+    [%- IF entry.exists('icon') %]<img src="[% entry.icon(item) %]"/>[% END -%]
+        [%- entry.title(item) | label_ellipsis(25) | html_encode %][% IF item.default %] ([% loc("nav.default") %])[% END -%]
+    </a>
+[% END %]

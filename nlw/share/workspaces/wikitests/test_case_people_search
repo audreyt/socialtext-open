@@ -42,12 +42,24 @@
 | create-user | %%euserfive%% | %%password%% | %%diffacct%% |
 | add-member | %%euserfive%% | %%diffws%% |  |
 
-| *Comment* | Test Case: People Search Edit and search FIVE Profiles |  |
+| *Comment* | Test Case: People Search Edit and search FIVE Profiles |  |  |
+
+| st-logoutin | %%euserfour%% | %%password%% |
+| set | current_user | %%euserfour%% |
+| set | location | South Bend, IN |
+| set | default_field | default-four |
+| set | first | Markus |
+| set | middle | Z. |
+| set | last | Gaertner |
+| include | [Test Case: People Search Edit A Profile] |  |
+| include | [Test Case: People Search Field Search] |  |
+
 | st-logoutin | %%euserone%% | %%password%% |
 | set | current_user | %%euserone%% |
 | set | location | Monterey, CA |
 | set | default_field | default-one |
 | set | first | James |
+| set | middle | T. |
 | set | last | Mcguire |
 | include | [Test Case: People Search Edit A Profile] |  |
 | include | [Test Case: People Search Field Search] |  |
@@ -57,6 +69,7 @@
 | set | location | Palo Alto, CA |
 | set | default_field | default-two |
 | set | first | James |
+| set | middle | Q. |
 | set | last | Bach |
 | include | [Test Case: People Search Edit A Profile] |  |
 | include | [Test Case: People Search Field Search] |  |
@@ -66,22 +79,15 @@
 | set | location | Grand Rapids, MI |
 | set | default_field | default-three |
 | set | first | Michael |
+| set | middle | S. |
 | set | last | Bolton |
-| include | [Test Case: People Search Edit A Profile] |  |
-| include | [Test Case: People Search Field Search] |  |
-
-| st-logoutin | %%euserfour%% | %%password%% |
-| set | current_user | %%euserfour%% |
-| set | location | South Bend, IN |
-| set | default_field | default-four |
-| set | first | Markus |
-| set | last | Gaertner |
 | include | [Test Case: People Search Edit A Profile] |  |
 | include | [Test Case: People Search Field Search] |  |
 
 | st-logoutin | %%euserfive%% | %%password%% |
 | set | current_user | %%euserfive%% |
 | set | first | Joe |
+| set | middle | JJ |
 | set | last | Harter |
 | set | default_field | default-five |
 | set | location | Oshkosh, WI |
@@ -92,11 +98,11 @@
 | st-logoutin | %%euserone%% | %%password%% |
 | include | [Test Case: People Search Execute Search] |  |
 
-| *Comment* | Test Case: People Search TEARDOWN |
+| *Comment* | Test Case: People Search TEARDOWN |  |
 | st-process-jobs |  |  |
-| st-admin | delete-workspace --workspace %%ws%% --no-export | has been deleted |
-| st-admin | delete-workspace --workspace %%diffws%% --no-export | has been deleted |
+| delete-workspace | %%ws%% |  |
+| delete-workspace | %%diffws%% |  |
 | delete-account | %%acct%% |  |
 | delete-account | %%diffacct%% |  |
 
-| *Comment* | Test Case: People Search COMPLETED |
+| *Comment* | Test Case: People Search COMPLETED |  |

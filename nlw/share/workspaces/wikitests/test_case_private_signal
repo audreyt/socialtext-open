@@ -3,13 +3,18 @@
 * Fixture: SocialWidgets
 
 | *Comment* | Test Case: Private Signal - create two users |  |
+| set | ps_acct | ps-account-%%start_time%% |
 | set | psshort | psuser%%start_time%% |
 | set | psuser | `%%psshort%%@ken.socialtext.net` |
 | set | psshort_two | psusertwo%%start_time%% |
 | set | psusertwo | `%%psshort_two%%@ken.socialtext.net` |
+| set | psshort_three | psuserthree%%start_time%% |
+| set | psuserthree | `%%psshort_three%%@david.socialtext.net` |
 
-| create-user | %%psuser%% | %%password%% |
-| create-user | %%psusertwo%% | %%password%% |
+| create-account | %%ps_acct%% |  |  |
+| create-user | %%psuser%% | %%password%% | %%ps_acct%% |
+| create-user | %%psusertwo%% | %%password%% | %%ps_acct%% |
+| create-user | %%psuserthree%% | %%password%% | %%ps_acct%% |
 
 | st-admin | enable-plugin --all-accounts --plugin signals |  |
 | st-logoutin | %%psuser%% | %%password%% |
@@ -23,29 +28,35 @@
 
 | wait_for_element_visible_ok | link=Signals | 30000 |
 | click_and_wait | link=Signals |  |
-| text_like | st-editing-tools-edit | Signals |
+| wait_for_text_present_ok | Activities | 30000 |
 | st-send-signal-in-activities-widget | %%signal%% |  |
 
 | *Comment* | Test Case: Private Signal. %%psshort%% sends privmsg to %%psshort_two%% |  |
-| wait_for_element_present_ok | //div[@class='private'] | 10000 |
-| click_ok | //div[@class='private'] |  |
-| wait_for_element_visible_ok | //input[@class='lookahead-prompt'] | 10000 |
-| type-lookahead-ok | //input[@class='lookahead-prompt'] | %%psshort_two%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a | 10000 |
-| st_pause_click | 1000 | //div[@class='lookaheadItem']/a |
+| wait_for_element_present_ok | //a[@title='Send a private message'] | 10000 |
+| click_ok | //a[@title='Send a private message'] |  |
+| wait_for_element_visible_ok | //input[@autocomplete='off'] | 10000 |
+| select-autocompleted-option-ok | //input[@autocomplete='off'] | %%psshort_two%% |
 
 | *Comment* | Test Case: Private Signal. %%psshort%% looks for Private message confirmation |  |
 | wait-for-element-visible-ok | //div[@class='message private'] | 10000 |
 | text_like | //div[@class='message private'] | You are composing a private message to %%psshort_two%% |
 | st-type_signal | %%private%% |  |
-| click_ok | //a[@class='btn post'] |  |
+| click_ok | //a[contains(@id,"widget") and contains(@id,"post")] |  |
 | wait-for-element-not-present-ok | //div[@class='message private'] | 10000 |
 
 | *Comment* | Test Case: Private Signal %%psshort_two%% replies to private signal |  |
 | st-logoutin | %%psusertwo%% | %%password%% |
 | open_ok | /st/signals |  |
 | wait_for_text_present_ok | %%private%% | 30000 |
-| st-send-reply | %%private_reply%% |  |
+| wait_for_element_visible_ok | //a[@class='replyLink'] | 30000 |
+| click_ok | //a[@class='replyLink'] |  |
+| wait_for_element_visible_ok | //body[@class='wiki signals'] | 30000 |
+| type_ok | //body[@class='wiki signals'] | %%private_reply%% |
+
+| *Comment* | Test Case: Private Signal find and click the reply Go button |  |
+| wait_for_element_visible_ok | xpath=(//div[@class="post hidden"])[1] | 10000 |
+| click_ok | xpath=(//div[@class="post hidden"])[1] |  |
+| wait_for_text_present_ok | By you | 30000 |
 
 | *Comment* | Test Case: Private Signal. %%psshort%% sends pubmsg to %%psshort_two%% |  |
 | st-logoutin | %%psuser%% | %%password%% |
@@ -53,33 +64,29 @@
 | st-send-signal-in-activities-widget | %%public%% |  |
 
 | *Comment* | Test Case: Private Signal. All signals appear in activities widget |  |
-| st-verify-text-within-activities-widget | %%signal%% |  |
-| st-verify-text-within-activities-widget | %%private%% |  |
-| st-verify-text-within-activities-widget | %%private_reply%% |  |
-| st-verify-text-within-activities-widget | %%public%% |  |
+| st-verify-text-in-activities-widget | %%signal%% |  |
+| st-verify-text-in-activities-widget | %%private%% |  |
+| st-verify-text-in-activities-widget | %%private_reply%% |  |
+| st-verify-text-in-activities-widget | %%public%% |  |
 
 | *Comment* | Test Case: Private Signal. login as another user, see public but not private signals. |  |
-| st-logoutin | %%username%% | %%password%% |
+| st-logoutin | %%psuserthree%% | %%password%% |
 
 | open_ok | /st/signals |  |
-| text_like | st-editing-tools-edit | Signals |
-| st-name-widget | 1 | signals |
-| st-verify-text-in-activities-widget | signals | %%signal%% |
-| st-verify-text-in-activities-widget | signals | %%public%% |
-| st-text-unlike-in-activities-widget | signals | %%private%% |
-| st-text-unlike-in-activities-widget | signals | %%private_reply%% |
+| st-verify-text-in-activities-widget | %%signal%% |  |
+| st-verify-text-in-activities-widget | %%public%% |  |
+| text-unlike | //div[@class='activitiesWidget'] | %%private%% |
+| text-unlike | //div[@class='activitiesWidget'] | %%private_reply%% |
 
 | *Comment* | Test Case: Private Signal. Start privmsg, cancel, send public msg |  |
-| set | cancel | Public Hello after Cancel to %%psshort%% from %%short_username%% |
-| set | private | Private Hello to %%psshort%% from %%short_username%% |
+| set | cancel | Public Hello after Cancel to %%psshort%% from %%psshort_three%% |
+| set | private | Private Hello to %%psshort%% from %%psshort_three%% |
 
-| *Comment* | Test Case: Private Signal. %%short_username%% initiates privmsg to %%psshort%% |  |
-| wait_for_element_present_ok | //div[@class='private'] | 10000 |
-| click_ok | //div[@class='private'] |  |
-| wait_for_element_visible_ok | //input[@class='lookahead-prompt'] | 10000 |
-| type-lookahead-ok | //input[@class='lookahead-prompt'] | %%psshort%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a | 10000 |
-| st_pause_click | 1000 | //div[@class='lookaheadItem']/a |
+| *Comment* | Test Case: Private Signal. %%psshort_three%% initiates privmsg to %%psshort%% |  |
+| wait_for_element_present_ok | //a[@title='Send a private message'] | 10000 |
+| click_ok | //a[@title='Send a private message'] |  |
+| wait_for_element_visible_ok | //input[@autocomplete='off'] | 10000 |
+| select-autocompleted-option-ok | //input[@autocomplete='off'] | %%psshort%% |
 | wait-for-element-visible-ok | //div[@class='message private'] | 10000 |
 | text_like | //div[@class='message private'] | You are composing a private message to %%psshort%% |
 
@@ -88,7 +95,8 @@
 | click_ok | //a[@class='cancel'] |  |
 | wait_for_element_not_present_ok | //div[@class='message private'] | 10000 |
 | st-type_signal | %%cancel%% |  |
-| click_ok | //a[@class='btn post'] |  |
+| click_ok | //a[contains(@id,"widget") and contains(@id,"post")] |  |
+| wait_for_text_present_ok | By you | 30000 |
 
 | *Comment* | Test Case: Private Signal send and verify the public signal |  |
 | open_ok | /st/signals |  |
@@ -99,8 +107,8 @@
 | *Comment* | Test Case: Private Signal delete the private signal, verify |  |
 | st-logoutin | %%psuser%% | %%password%% |
 | open_ok | /st/signals |  |
-| wait_for_element_visible_ok | `xpath=(//a[@class='hoverLink hideLink'])[2]` | 30000 |
-| click_ok | `xpath=(//a[@class='hoverLink hideLink'])[2]` |  |
+| wait_for_element_visible_ok | `xpath=(//a[@class='hideLink'])[2]` | 30000 |
+| click_ok | `xpath=(//a[@class='hideLink'])[2]` |  |
 | pause | 2000 |  |
 | verifyConfirmation | Are you sure you want to delete this entire Conversation?\nYou cannot undelete it. |  |
 | wait_for_text_not_present_ok | %%private%% | 30000 |
@@ -113,5 +121,6 @@
 | st-process-jobs |  |  |
 | st-admin | deactivate-user --e %%psuser%% |  |
 | st-admin | deactivate-user --e %%psusertwo%% |  |
+| delete-account | %%ps_acct%% |  |
 
 | *Comment* | Test Case: Private Signal COMPLETED |  |

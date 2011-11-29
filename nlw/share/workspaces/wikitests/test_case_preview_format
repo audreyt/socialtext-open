@@ -1,59 +1,76 @@
 
 | *Comment* | Starting Test Case: Preview Format |  |
-| *Comment* | now contains only tests for RT 27049 |  |
 | *Comment* | the idea is to add 3 headers with a TOC widget in the middle of the page |  |
 | *Comment* | in Preview mode, the TOC widget should render the headers as links |  |
-
 
 | *Comment* | create a page from file, because we can't type newlines with type_ok |  |
 | st-admin | update-page --workspace %%workspace%% --email %%email%% --page "Edit This Page TOC %%start_time%%" < %%wikitest_client_files%%wikitest_toc.txt | The "Edit This Page TOC %%start_time%%" page has been created. |
 
-| open_ok | /%%workspace%%/index.cgi?Edit This Page TOC %%start_time%% |  |
+| open_ok | /%%workspace%%/Edit This Page TOC %%start_time%% |  |
 | click_ok | st-edit-button-link |  |
-| wait_for_text_present_ok | Editing: | 30000 |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 10000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
 
 | *Comment* | Test Case: Preview Format Validate contents of the page before Preview |  |
 | *Comment* | head1, TOC widget , head2, head3 |  |
 
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 30000 |
 
-| *Comment* | Test Case: Preview Format verify_value does not seem to work any more |  |
-
-verify_value | wikiwyg_wikitext_textarea | qr/\^ head1.+{toc: }.+\^\^ head2.+\^\^\^ head3/ |
+| *Comment* | Test Case: Preview Format verify_value in WIKITEXT mode |  |
+| verifyValue | //textarea[contains(@class,"cke_source")] | qr/\^ head1.+{toc: }.+\^\^ head2.+\^\^\^ head3/ |
+| st-page-save |  |  |
 
 | *Comment* | Test Case: Preview Format click Preview button |  |
+| wait_for_element_visible_ok | st-edit-button-link | 30000 |
+| click_ok | st-edit-button-link |  |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 10000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
 | text_like | st-preview-button-link | Preview |
 | click_ok | st-preview-button-link |  |
-| wait_for_text_present_ok | head | 30000 |
+| wait_for_text_present_ok | Edit More | 10000 |
 
 | *Comment* | Test Case: Preview Format check that all the headings are displayed, and the links to all the headings as well |  |
 | *Comment* | Test Case: Preview Format If TOC were broken, "head" links would not appear |  |
-| wait_for_text_present_ok | head2 | 30000 |
+| wait_for_text_present_ok | head | 15000 |
+| wait_for_text_present_ok | head2 | 15000 |
+| wait_for_element_visible_ok | //body | 10000 |
+| pause_ok | 2000 |  |
 | text_like | qr/head1.+head1.+head2.+head3.+head2.+head3/ |  |
 
 | *Comment* | Test Case: Preview Format Check that the links exist |  |
-| wait_for_element_present_ok | link=head1 | 10000 |
-| wait_for_element_present_ok | link=head2 | 10000 |
-| wait_for_element_present_ok | link=head3 | 10000 |
+| wait_for_element_present_ok | link=head1 | 15000 |
+| wait_for_element_present_ok | link=head2 | 15000 |
+| wait_for_element_present_ok | link=head3 | 15000 |
 
+| wait_for_element_present_ok | st-preview-button-link | 30000 |
 | text_like | st-preview-button-link | Edit More |
 | click_ok | st-preview-button-link |  |
 
+| wait_for_text_present_ok | Preview | 15000 |
+| wait_for_element_present_ok | st-preview-button-link | 30000 |
 | text_like | st-preview-button-link | Preview |
-| click_ok | st-mode-wysiwyg-button | Simple |
-| wait_for_text_present_ok | Editing: | 30000 |
+
+| *Comment* | Test Case: Preview Format Check that TOC is OK in Preview coming from RICHTEXT mode |  |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wysiwyg")] | 10000 |
+| click_ok | //a[contains(@class,"cke_button_wysiwyg")] |  |
+| wait_for_element_present_ok | st-preview-button-link | 10000 |
 | text_like | st-preview-button-link | Preview |
 | click_ok | st-preview-button-link |  |
-| wait_for_text_present_ok | head | 30000 |
+| wait_for_text_present_ok | head | 15000 |
 
-| *Comment* | Test Case: Preview Format Check that TOC is OK in Preview coming from Simple mode |  |
-| pause | 5000 | wait for render |
+| pause_ok | 15000 | wait for render |
 | text_like | qr/head1.+head1.+head2.+head3.+head2.+head3/ |  |
+
+| *Comment* | Test Case: Preview Format Check again that the links exist |  |
+| wait_for_element_present_ok | link=head1 | 15000 |
+| wait_for_element_present_ok | link=head2 | 15000 |
+| wait_for_element_present_ok | link=head3 | 15000 |
 | text_like | st-preview-button-link | Edit More |
 
-| *Comment* | Test Case: Preview Format teardown |  |
+| click_and_wait | st-save-button-link |  |
+
+| *Comment* | Test Case: Preview Format TEARDOWN |  |
+| st-process-jobs |  |  |
 | st-admin | purge-page --workspace %%workspace%% --page edit_this_page_toc_%%start_time%% | was purged |
 
 | *Comment* | Test Case: Preview Format COMPLETED |  |

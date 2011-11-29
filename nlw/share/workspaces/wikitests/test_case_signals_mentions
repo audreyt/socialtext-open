@@ -29,6 +29,7 @@
 
 | *Comment* | Test Case: Signals Mentions - login %%convuser%% |  |
 | st-logoutin | %%convuser%% | %%password%% |
+| open_ok | /st/dashboard |  |
 
 | *Comment* | Test Case: Signals Mentions - non-mention signal by someone else |  |
 | open_ok | /st/signals |  |
@@ -46,20 +47,7 @@
 | open_ok | /st/signals |  |
 | st-send-signal-in-activities-widget | %%replycode%% |  |
 | open_ok | /st/signals |  |
-| wait_for_element_visible_ok | //a[@class='hoverLink replyLink'] | 10000 |
-| click_ok | //a[@class='hoverLink replyLink'][last()] |  |
-| wait_for_element_visible_ok | //div[@class='replies']//iframe[@name='signalFrame'] | 5000 |
-| pause | %%first_pause%% |  |
-
-| select_frame | //div[@class='replies']//iframe[@name='signalFrame'] |  |
-| click_ok | //body |  |
-| type_ok | //body | {user: %%actor%%} %%replytext%% |
-| select_frame | relative=parent |  |
-| wait_for_element_visible_ok | //a[@class='btn post postReply'] | 5000 |
-| pause | 4000 |  |
-| click_ok | //a[@class='btn post postReply'] |
-| pause | 5000 |  |
-| wait_for_text_present_ok | %%replytext%% | 30000 |
+| st-send-reply | {user: %%actor%%} %%replytext%% | 0 |
 
 | *Comment* | Test Case: Signals Mentions - third non-mention signal by someone else |  |
 | open_ok | /st/signals |  |
@@ -69,7 +57,7 @@
 | open_ok | /st/signals |  |
 | st-find-user | %%search_for_actor%% |  |
 | st-name-widget | 3 | activities |
-| st-widget-title-like | activities | Activities |
+| st-widget-title | activities | Activities |
 | st-send-signal-in-activities-widget | %%privatetext%% | 1 |
 
 | *Comment* | Test Case: Signals Mentions - fourth non-mention signal by someone else |  |
@@ -83,7 +71,7 @@
 | *Comment* | Test Case: Signals Mentions - Load %%actor%% Activity Widget |  |
 | st-single-widget-in-dashboard | gallery-widget-Activities |  |
 | st-name-widget | 1 | activities_widget |
-| st-widget-title-like | activities_widget | Activities |
+| st-widget-title | activities_widget | Activities |
 | st-widget-settings | activities_widget |  |
 | wait_for_element_visible_ok | limit | 30000 |
 | select-ok | limit | 25 |
@@ -94,29 +82,33 @@
 
 | *Comment* | Test Case: Signals Mentions reopen dashboard |  |
 | open_ok | /st/dashboard |  |
-| wait_for_element_present_ok | link=signals | 10000 |
-| click_ok | link=signals |  |
+| wait_for_element_present_ok | link=Signals | 10000 |
+| click_ok | link=Signals |  |
 
 | *Comment* | Test Case: Signals Mentions First four signals are there; no filtering yet |  |
 
-| st_verify_text_in_activities_widget | activities_widget | %%mentioncode%% |
-| st_verify_text_in_activities_widget | activities_widget | %%replycode%% |
-| st_verify_text_in_activities_widget | activities_widget | %%shouldnotappear%% |
-| st_verify_text_in_activities_widget | activities_widget | %%replytext%% |
+| st-verify-text-in-activities-widget | %%mentioncode%% |
+| st-verify-text-in-activities-widget | %%replycode%% |
+| st-verify-text-in-activities-widget | %%shouldnotappear%% |
+| st-verify-text-in-activities-widget | %%replytext%% |
 
 | *Comment* | Test Case: Signals Mentions Second four signals are there; no filtering yet |  |
-| st_verify_text_in_activities_widget | activities_widget | %%privatetext%% |
-| st_verify_text_in_activities_widget | activities_widget | %%shouldnotappear_two%% |
-| st_verify_text_in_activities_widget | activities_widget | %%shouldnotappear_three%% |
-| st_verify_text_in_activities_widget | activities_widget | %%shouldnotappear_four%% |
+| st-verify-text-in-activities-widget | %%privatetext%% |  |
+| st-verify-text-in-activities-widget | %%shouldnotappear_two%% |  |
+| st-verify-text-in-activities-widget | %%shouldnotappear_three%% |  |
+| st-verify-text-in-activities-widget | %%shouldnotappear_four%% |  |
 
 | *Comment* | Test Case: Signals Mentions - Conversations Change to convos only, verify mentions /are/ present, straight signals, not so much |  |
-| wait_for_element_present_ok | link=my conversations | 5000 |
-| click_ok | link=my conversations |  |
+| wait_for_element_present_ok | //a[contains(@id,"expander")] | 15000 |
+| click_ok | //a[contains(@id,"expander")] |  |
+| wait_for_element_visible_ok | feed-conversations | 15000 |
+| click_ok | feed-conversations |  |
+| pause_ok | 2000 |  |
+| open_ok | /st/signals |  |
 
-| st_verify_text_in_activities_widget | activities_widget | %%mentioncode%% |
-| st_verify_text_in_activities_widget | activities_widget | %%replycode%% |
-| st_verify_text_in_activities_widget | activities_widget | %%privatetext%% |
+| st-verify-text-in-activities-widget | %%mentioncode%% |
+| st-verify-text-in-activities-widget | %%replycode%% |
+| st-verify-text-in-activities-widget | %%privatetext%% |
 
 | st_text_unlike_in_activities_widget | activities_widget | %%shouldnotappear%% |
 | st_text_unlike_in_activities_widget | activities_widget | %%shouldnotappear_two%% |

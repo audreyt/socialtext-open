@@ -5,6 +5,11 @@ use Template::Plugin::Filter;
 use JavaScript::Minifier::XS qw(minify);
 use base qw( Template::Plugin::Filter );
 
+my $minify = eval {
+    require Socialtext::AppConfig;
+    return Socialtext::AppConfig->minify_javascript eq 'on';
+};
+
 sub init {
     my $self = shift;
 
@@ -18,7 +23,8 @@ sub init {
 
 sub filter {
     my ($self, $text) = @_;
-    return minify($text);
+    return minify($text) if $minify;
+    return $text;
 }
 
 1;

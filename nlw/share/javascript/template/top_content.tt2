@@ -1,0 +1,69 @@
+<div class="topContent">
+
+<div class="tabs">
+    [% FOR tab = tabs %]
+        [% IF tab == action %]
+            <span>[% tabs.$tab.title %]</span>
+        [% ELSE %]
+            <a class="[% tab %]" href="#">[% tabs.$tab.title %]</a>
+        [% END %]
+    [% END %]
+</div>
+
+<div class="vpad3">
+[% IF message %]
+    <strong>[% message %]</strong>
+[% ELSE %]
+    [% loc('widgets.most-active-in=noun,period', tabs.$action.noun, period) %]
+    [% IF tabs.$action.data.meta.account %]
+        [% loc('widgets.from-account') %] <strong>[% tabs.$action.data.meta.account.name %]</strong>
+    [%- END -%]
+    [%- IF context == 'workspace' && tabs.$action.data.meta.workspace -%]:
+        <a href="[% tabs.$action.data.meta.workspace.uri %]">[% tabs.$action.data.meta.workspace.title %]</a>
+    [% END %]
+    [% IF rotating %]<i>[% loc('widgets.rotate-is-on') %]</i>[% END %]
+[% END %]
+</div>
+
+[% IF !rows.size %]
+    <em>[% tabs.$action.none_message || 'None' %]</em>
+[% END %]
+<table style="width: 100%; border: 0">
+[% FOR row = rows %]
+    [% IF row.count %]
+<tr style="vertical-align: top"><td width="5%" style="padding: 3px 0">
+        <div class="assetIcon">
+            [% IF row.is_spreadsheet %]
+                <img src="/static/images/icons/sheet-black-15.png" style="height: 15px" />
+            [% ELSIF row.is_person %]
+                <img src="/data/people/[% row.user_id %]/small_photo" style="height: 27px; margin-right: 3px" />
+            [% ELSE %]
+                <img src="/static/images/icons/document-black-15.png" style="height: 15px" />
+            [% END %]
+        </div>
+</td><td width="75%" style="padding: 3px 0">
+        <div class="asset">
+            [% IF row.uri %]
+                <a href="[% row.uri %]">
+                    [% row.title %]
+                </a>
+            [% ELSE %]
+                [% row.title %]
+            [% END %]
+            [% IF needsContext %]
+                <div class="context">
+                    [% loc('activities.from') %] <a href="[% row.context_uri %]">[% row.context_title %]</a>
+                </div>
+            [% END %]
+        </div>
+</td><td width="20%" style="padding: 3px 0">
+            <div class="progressbar" style="margin-right: 10px">
+                <div class="value"
+                     style="width:[% (row.count / maxCount) * 100 %]%"></div>
+                <span class="text">[% row.count %]
+            </div>
+</td></tr>
+    [% END %]
+[% END %]
+</table>
+</div>

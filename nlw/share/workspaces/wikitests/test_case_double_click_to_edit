@@ -5,7 +5,7 @@
 
 | *Comment* | Test Case: Double Click to Edit waiting for Save button |  |
 | wait_for_element_visible_ok | st-save-button-link | 10000 |
-| text_like | st-editing-title | qr/Editing:\s+DCTE %%start_time%%/ism |
+| text_like | st-xhtml-name | DCTE %%start_time%% |
 
 | *Comment* | Test Case: Double Click to Edit TEARDOWN |  |
 | st-admin | purge-page --w %%workspace%% --p dcte_%%start_time%% | was purged |

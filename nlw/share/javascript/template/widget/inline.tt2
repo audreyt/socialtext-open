@@ -1,0 +1,5 @@
+<div class="inlineWidget">
+    <div class="inlineWidgetContent">
+        [% gadget.content.replace('</([sS][cC][rR])([iI][pP][tT])>(.)', '</$1" + "$2>$3') %]
+    </div>
+</div>

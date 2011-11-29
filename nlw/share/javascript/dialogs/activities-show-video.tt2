@@ -1,0 +1,8 @@
+[% IF params.video %]
+    <div class="center video" style="height:[% params.height %]px">
+    </div>
+[% ELSE %]
+    <div class="center">
+        <img style="max-width: 480px; max-height: 360px" src="[% params.url %]"/>
+    </div>
+[% END %]

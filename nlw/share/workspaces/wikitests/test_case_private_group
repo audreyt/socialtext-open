@@ -33,15 +33,11 @@
 | st_open_noeval | /st/group/%%group_id%% |  |
 | wait_for_element_visible_ok | st-leave-group |  |
 | click_ok | st-leave-group |  |
-| wait_for_element_visible_ok | st-lightbox-cancel-leave-group | 30000 |
-| wait_for_element_visible_ok | st-lightbox-leave-group | 30000 |
+| wait_for_element_visible_ok | st-lightbox-cancel-leave-group | 15000 |
+| wait_for_element_visible_ok | st-lightbox-leave-group | 15000 |
 | text_like | //body | This action cannot be undone. Are you sure you'd like to leave this group? |
-
-| *Comment* | Test Case: Private Group - wait for the f#$%^king JS to finish loading |  |
-| pause | 8000 |  |
-
 | click_ok | st-lightbox-cancel-leave-group |  |
-| wait_for_element_not_present_ok | st-lightbox-leave-group | 10000 |
+| wait_for_element_not_present_ok | st-lightbox-leave-group | 15000 |
 
 | st-name-widget | 4 | members_widget |
 | st-select-widget-frame | members_widget |  |
@@ -60,23 +56,17 @@
 | wait_for_element_visible_ok | st-lightbox-leave-group | 30000 |
 | text_like | //body | This action cannot be undone. Are you sure you'd like to leave this group? |
 
-| *Comment* | Test Case: Private Group Wait for the f$%&king JS to load. Wait a long time. |  |
-| pause | 8000 |
-
 | *Comment* | Test Case: Private Group. click_ok to leave. Don't even think about using click_and_wait |  |
-| click_ok | st-lightbox-leave-group |  |
-
-| *Comment* | Test Case: Private Group Wait for the f$%&king JS to execute. Wait a long time. |  |
-| pause | 15000 |
+| click_and_wait | st-lightbox-leave-group |  |
 
 | *Comment* | Test Case: User Deactivates Group should end up at the dashboard |  |
 | location_like | /st/dashboard |  |
 
 | *Comment* | Test Case: Private Group Login as group member %%user2%% - verify left group |  |
 | st_open_noeval | /st/group/%%group_id%% |  |
-| wait_for_text_present_ok | The group you are trying to view does not exist. Please check with the group administrator or contact Socialtext Support. | 30000 |
-| wait_for_element_not_present_ok | st-leave-group | 30000 |
-| wait_for_element_not_present_ok | st-join-group | 30000 |
+| wait_for_text_present_ok | The group you are trying to view does not exist. Please check with the group administrator or contact Socialtext Support. | 15000 |
+| wait_for_element_not_present_ok | st-leave-group | 15000 |
+| wait_for_element_not_present_ok | st-join-group | 15000 |
 
 | *Comment* | Test Case: Private Group TEARDOWN |  |
 | st-process-jobs |  |  |

@@ -1,0 +1,5 @@
+<img class="asset-icon" src="/static/images/icons/share-black-25.png" />
+<div class="signal">
+  <div class="body">[% signal.body %]</div>
+  <a target="_blank" class="ago" href="[% signal.uri %]">[%- PROCESS activities/ago.tt2 at=signal.at -%]</a>
+</div>

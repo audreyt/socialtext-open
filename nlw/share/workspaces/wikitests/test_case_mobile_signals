@@ -1,37 +1,51 @@
-* Fixture: SocialWidgets
-
 | *Comment* | Test Case: Mobile Signals |  |
 
+* Fixture: SocialWidgets
+
 | *Comment* | Test Case: Mobile Signals. Click mobile from Dashboard, opens mobile signals |  |
-| open_ok | /st/dashboard |  |
-| wait_for_element_visible_ok | link=Mobile | 30000 |
+| wait_for_element_visible_ok | link=Mobile | 15000 |
 | click_and_wait | link=Mobile |  |
 
-| pause | 8000 | I Hate Pause |
+| *Comment* | Test Case: Mobile Signals. Nav |  |
 
-| *Comment* | Test Case: Mobile Signals. Word but not Link |  |
-| wait_for_text_present_ok | %%miki_signal_text%% | 30000 |
-| wait_for_text_present_ok | Signals | 3000 |
+| is_element_present_ok | //a[@id="mobile-activities"] |  |
+| text_like | `xpath=(//span[@class="ui-btn-text"])[2]` | People |
+
+| is_element_present_ok | //a[@id="mobile-people"] |  |
+| text_like | `xpath=(//span[@class="ui-btn-text"])[3]` | Activity |
+
+| is_element_present_ok | //a[@id="mobile-workspace_list"] |  |
+| text_like | `xpath=(//span[@class="ui-btn-text"])[4]` | Workspaces |
+
+| *Comment* | Test Case: Mobile Signals. Navigate to workspaces, check Signals nav |  |
+| click_and_wait | //a[@id="mobile-workspace_list"] |  |
+
+| is_element_present_ok | //a[@id="mobile-signals"] |  |
+| text_like | `xpath=(//span[@class="ui-btn-text"])[1]` | Signals |
+
+| *Comment* | Test Case: Mobile Signals. Open signals |  |
+| click_and_wait | //a[@id="mobile-signals"] | 10000 |
 
 | *Comment* | Test Case: Mobile Signals. Send a signal |  |
+| st_type_signal | Siggy %%start_time%% First Sig |  |
 | wait_for_element_visible_ok | %%miki_signal_submit%% | 3000 |
-| st-type-signal | Siggy Siggy Siggy %%start_time%% Sig | 1 |
-| st_pause_click | 5000 | %%miki_signal_submit%% |
+| st_pause_click | 3000 | %%miki_signal_submit%% |
+
+| *Comment* | Test Case: Mobile Signals. Select everyone |  |
+| wait_for_element_visible_ok | //a[contains(@id,"expander")] | 30000 |
+| click_ok | //a[contains(@id,"expander")] |  |
+| wait_for_element_visible_ok | feed-everyone | 30000 |
+| click_ok | feed-everyone |  |
 
 | *Comment* | Test Case: Mobile Signals. Verify a signal |  |
-| wait_for_text_present_ok | less than a minute ago | 3000 |
-| wait_for_text_present_ok | Siggy Siggy Siggy %%start_time%% Sig | 3000 |
+| wait_for_text_present_ok | less than a minute ago | 10000 |
+| wait_for_text_present_ok | Siggy %%start_time%% First Sig | 5000 |
 
-| *Comment* | Test Case: Mobile Signals. Verify in people I follow, pausing for repaint |  |
-| click_and_pause | link=%%miki_people_i_follow%% |  |
-| wait_for_text_present_ok | Siggy Siggy Siggy %%start_time%% Sig | 3000 |
-| click_ok | link=%%miki_everyone%% |  |
+| *Comment* | Test Case: Mobile Signals. Send 20 more signals to fill up the display |  |
+| http-user-pass | %%username%% | %%password%% |
+| post-signals | 20 | Siggy %%start_time%% |
 
-| *Comment* | Test Case: Mobile Signals. Send 20 more signals to fill up the display |  |  |
-| http-user-pass | %%username%% | %%password%% |  |
-| post-signals | 20 | Siggy Siggy Siggy %%start_time%% | 1 |
-
-| include | [Test Case: Miki Dropdowns WikiWyg] |
-| include | [Test Case: Miki Dropdowns IE] |
+| include | [Test Case: Miki Dropdowns WikiWyg] |  |
+| include | [Test Case: Miki Dropdowns IE] |  |
 
 | *Comment* | Test Case: Mobile Signals COMPLETED |  |

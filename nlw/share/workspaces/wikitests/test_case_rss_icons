@@ -1,5 +1,4 @@
 * HighPermissions
-
 This test will NOT RUN IN any IE because IE presents feed pages as XML, not HTML, and Se simply can't see non-HTML pages.
 
 Selenium seems to need to run multi-window to run this test successfully, because the test
@@ -18,16 +17,10 @@ It seems that Selenium cannot analyze the content of feed pages because they are
 | *Comment* | Test Case: RSS Icons purge the Chinese page in case it is already there. |  |
 | st-admin | purge-page --workspace %%workspace%% --page %E7%89%9B%E6%84%9B%E6%88%91 |  |
 
-| *Comment* | Test Case: RSS Icons page with Chinese chars in title can't do from command line |  |
-| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | A simple page with a Chinese character title |
-| type_ok | st-newpage-pagename-edit | 牛愛我 |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+| *Comment* | Test Case: RSS Icons page with Chinese chars in title can't do from command line |  |  |
+| open_ok | /%%workspace%%/index.cgi?action=new_page |  |  |
+
+| call | st-edit-save-page | content=A simple page with a Chinese character title | title=牛愛我 |
 
 | *Comment* | Test Case: RSS Icons . Force index since this is testing for indexed pages that have been deleted. |  |
 | st-admin | index-workspace --workspace %%workspace%% --sync | The %%workspace%% workspace has been indexed. |
@@ -61,31 +54,25 @@ Search result. Single Page. What's New. Watchlist. All Pages. Blogs.
 | open_ok | /%%workspace%%/?Start here |  |
 | wait_for_element_visible_ok | link=Watch | 30000 |
 | click_ok | link=Watch |  |
-| open_ok | /%%workspace%%/?action=recent_changes |  |
-| click_and_wait | link=Your Watchlist |  |
+| wait_for_element_visible_ok | link=Stop Watching | 10000 |
+| select_and_wait | st-jump-to | label=Watchlist |
 | wait_for_element_visible_ok | //img[contains(@src,'rss.png')] | 30000 |
 | click_and_wait | //img[contains(@src,'rss.png')] |  |
 | location_like | /feed/workspace/%%workspace%% |  |
 | open_ok | /%%workspace%%/?Start here |  |
 | wait_for_element_visible_ok | link=Stop Watching | 30000 |
 | click_ok | link=Stop Watching |  |
+| wait_for_element_visible_ok | link=Watch | 10000 |
 
 | *Comment* | Test Case: RSS Icons All Pages |  |
-| open_ok | /%%workspace%%/?action=recent_changes |  |
-| click_and_wait | link=All Pages |  |
+| select_and_wait | st-jump-to | label=All Pages |
 | wait_for_element_visible_ok | //img[contains(@src,'rss.png')] | 30000 |
 | click_and_wait | //img[contains(@src,'rss.png')] |  |
 | location_like | /feed/workspace/%%workspace%% |  |
 
 | *Comment* | Test Case: RSS Icons Blogs |  |
 | open_ok | /%%workspace%%/ |  |
-| click_and_wait | link=Blogs |  |
-| wait_for_element_visible_ok | //img[contains(@src,'rss.png')] | 30000 |
-| click_and_wait | //img[contains(@src,'rss.png')] |  |
-| location_like | /feed/workspace/%%workspace%% |  |
-
-| open_ok | /%%workspace%%/ |  |
-| click_and_wait | link=Blogs |  |
+| select_and_wait | st-jump-to | label=Blogs |
 | click_and_wait | link=Subscribe to Feed |  |
 | location_like | /feed/workspace/%%workspace%% |  |
 

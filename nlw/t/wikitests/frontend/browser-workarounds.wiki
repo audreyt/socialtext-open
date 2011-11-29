@@ -2,29 +2,19 @@ Test many of the different browser workarounds.
 
 * Fixture: SocialRest
 
-| SET | js_uri | /static/3.7.4.6/skin/s3/javascript/socialtext-s3.js |
-| SET | js_gz_uri | %%js_uri%%.gz |
+| SET | base_js_uri | /js/4.7.7.10/socialtext-starfish |
+| SET | js_uri | %%base_js_uri%%.js |
+| SET | js_gz_uri | %%base_js_uri%%.jgz |
 | SET | ie6_ua | Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729) |
 | SET | android_ua | Mozilla/5.0 (Linux; U; Android 1.0; en-us; dream) AppleWebKit/525.10+ (KHTML, like Gecko) Version/3.0.4 Mobile Safari/523.12.2 |
 | SET | blackberry_ua | BlackBerry8700/4.1.0 Profile/MIDP-2.0 Configuration/CLDC-1.1 |
 | standard-test-setup |
 
-| *Comment*   | By default, javascript is not gzipped |                                     |
+| *Comment*   | By default, javascript is gzipped |                                     |
 | GET         | %%js_gz_uri%%                         |                                     |
-| Code-is     | 301                                   |                                     |
-| header-like | Location                              | skin/s3/javascript/socialtext-s3.js |
-
-| *Comment* | Javascript should be gzipped if available |                        |                      |
-| GET       | %%js_gz_uri%%                             |                        | Accept-Encoding=gzip |
-| Code-is   | 200                                       |                        |                      |
+| Code-is     | 200                                   |                                     |
 | header-is | Content-Type                              | application/javascript |                      |
 | header-is | Content-Encoding                          | gzip                   |                      |
-
-| *Comment*      | Disable gzip for IE6 |                                     |
-| set-user-agent | %%ie6_ua%%           |                                     |
-| GET            | %%js_gz_uri%%        |                                     |
-| Code-is        | 301                  |                                     |
-| header-like    | Location             | skin/s3/javascript/socialtext-s3.js |
 
 | *Comment* | iGoogle rewrite hacks |
 | GET       | /ig/ifpc_relay        |

@@ -75,6 +75,16 @@ sub get_html {
     });
 }
 
+sub POST_gadget {
+    my $self = shift;
+    warn $self->rest->getContent;
+    $self->if_authorized_to_edit(sub {
+        my $data = decode_json($self->rest->getContent);
+        my $ginstance = $self->container->install_gadget(%$data);
+        return encode_json($self->container->gadget_vars($ginstance));
+    });
+}
+
 sub install_gadget {
     my $self = shift;
     my %params =$self->rest->query->Vars;
@@ -90,11 +100,15 @@ sub PUT_layout {
         my %gadgets = map { $_->gadget_instance_id => 1 }
                       @{$self->container->gadgets};
 
-        my $layout = decode_json($self->rest->getContent);
+        my $data = decode_json($self->rest->getContent);
+
         my $business_admin = $self->rest->user->is_business_admin;
         my @positions;
-        for my $x (0 .. $#$layout) {
-            my $col = $layout->[$x];
+
+        my $cols = $data->{gadgets};
+
+        for my $x (0 .. $#$cols) {
+            my $col = $cols->[$x];
             for my $y (0 .. $#$col) {
                 my $g = $col->[$y];
 
@@ -108,10 +122,14 @@ sub PUT_layout {
                 else {
                     # Install the new gadget
                     $gadget = $self->container->install_gadget(
+                        src => $g->{src},
                         gadget_id => $g->{gadget_id},
                         fixed => $g->{fixed},
                         class => $g->{class}
                     );
+
+                    # Update the gadget_instance_id now that it's installed
+                    $g->{gadget_instance_id} = $gadget->gadget_instance_id;
                 }
             
                 # Move this widget to it's position
@@ -120,11 +138,17 @@ sub PUT_layout {
                 # set preferences if they're being passed as part of the layout
                 $gadget->set_preferences($g->{preferences})
                     if $g->{preferences};
+
+                if (exists $g->{fixed}) {
+                    $gadget->fix if $g->{fixed} and !$gadget->fixed;
+                    $gadget->unfix if !$g->{fixed} and $gadget->fixed;
+                }
             }
         }
 
-        for my $gadget_id (keys %gadgets) {
-            my $gadget = $self->container->get_gadget_instance($gadget_id);
+        for my $instance_id (keys %gadgets) {
+            my $gadget = $self->container->get_gadget_instance($instance_id);
+            $gadget->free_children;
             $gadget->delete;
         }
 
@@ -132,6 +156,9 @@ sub PUT_layout {
             my $gadget = shift @$gadget_position;
             $gadget->position(@$gadget_position)
         }
+
+        # Pass back $data so it can be used `around` PUT_layout
+        return $data;
     });
 }
 
@@ -152,6 +179,12 @@ sub GET_default_gadgets {
             row => $row,
             %$gadget_info,
         );
+
+        # Override preferences in the temporary gadget
+        my $prefs = $gadget_info->{prefs} || [];
+        my %overridden = map { $_->[0] => $_->[1] } @$prefs;
+        $instance->override_preferences(\%overridden);
+
         push @gadgets, $self->container->gadget_vars($instance);
     }
     $self->rest->header(-type => 'application/json; charset=utf-8');

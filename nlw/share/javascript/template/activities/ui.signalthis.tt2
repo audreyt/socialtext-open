@@ -1,0 +1,23 @@
+[% PROCESS activities/blocks.tt2 %]
+
+<link rel="stylesheet" type="text/css" href="[% this.share %]/css/inline.css" media="screen" />
+
+<img src="/static/images/icons/close-darker-12.png" width="12" height="12" style="padding-top: 2px"
+     class="close" title="[% loc('activities.close-this-window') %]"
+     onclick="var $frame = $('#st-signal-this-frame'); $frame.fadeOut(function(){$frame.remove()});"/>
+<div class="top">
+[% loc('activities.signal-this-page') %]
+</div>
+<div id='outer'>
+    <div class="signals" id="[% id('signals') %]">
+        [% INCLUDE activities/elements/signals.tt2 post_to_prompt="Post to" %]
+    </div>
+    <div class="main">
+        <div id="[% id('messages') %]" class="messages">
+            <div id="[% id('signal_network_warning') %]" class="message" style="display: none; background: url(/static/images/warning-icon.png) no-repeat 7px 0px #FFFDD3; padding-left: 20px">
+                [% loc('info.edit-summary-signal-visibility') %]
+            </div>
+            <div class="sent message" style="display: none">[% loc('activities.signal-sent!') %]</div>
+        </div>
+    </div>
+</div>

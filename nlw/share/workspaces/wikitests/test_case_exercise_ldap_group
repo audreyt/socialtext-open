@@ -12,7 +12,7 @@
 | open_ok | / |  |
 | st-logoutin | Lemmy Kilmister | ld@pu53r |
 | open_ok | /%%ldapy_ws%%/ |  |
-| text_like | //body | You are not authorized to view this workspace |
+| text_like | //body | Log in |
 
 | *Comment* | Test Case: Exercise LDAP Group Add an account |  |
 | create-account | %%ldapy_account%% |  |
@@ -36,23 +36,23 @@
 | open_ok | /%%ldapy_ws%% |  |
 | wait_for_element_visible_ok | st-edit-button-link | 30000 |
 | wait_for_element_present_ok | link=Motorhead | 30000 |
-| click_and_wait | link=Motorhead |  |
+| click_and_pause | link=Motorhead | 10000 |
 
 | *Comment* | Test Case: Exercise LDAP see the workspace, see the members on the group home page |  |
-| wait_for_text_present_ok | Motorhead | 30000 |
-| text_like | st-editing-tools-edit | Motorhead |
+| wait_for_text_present_ok | Information | 30000 |
+| text_like | content | Motorhead |
 | st-name-widget | 1 | information_widget |
-| st-widget-title-like | information_widget | Information |
+| st-widget-title | information_widget | Information |
 | st-select-widget-frame | information_widget |  |
 | text_like | //body | Motorhead |
 | select-frame | relative=parent |  |
 | st-name-widget | 2 | workspaces_widget |
-| st-widget-title-like | workspaces_widget | Workspaces |
+| st-widget-title | workspaces_widget | Workspaces |
 | st-select-widget-frame | workspaces_widget |  |
 | wait_for_element_visible_ok | link=%%ldapy_ws%% | 30000 |
 | select-frame | relative=parent |  |
 | st-name-widget | 3 | membership_widget |
-| st-widget-title-like | membership_widget | Membership |
+| st-widget-title | membership_widget | Membership |
 | st-select-widget-frame | membership_widget |  |
 | wait_for_element_visible_ok | link=Eddie Clarke | 30000 |
 | wait_for_element_visible_ok | link=Lemmy Kilmister | 30000 |
@@ -72,7 +72,7 @@
 | st-logoutin | Lemmy Kilmister | ld@pu53r |
 | st-admin | remove-member --g %%created_group_id%% --w %%ldapy_ws%% |  |
 | open_ok | /%%ldapy_ws%%/ |  |
-| text_like | //body | You are not authorized to view this workspace |
+| text_like | //body | Log in |
 
 | *Comment* | Test Case: Exercise LDAP Group TEARDOWN |  |
 

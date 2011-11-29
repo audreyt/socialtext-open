@@ -1,0 +1,84 @@
+ul.jd_menu_vertical
+  margin: 0px
+  padding: 0px
+  list-style-type: none
+  width: 300px
+  ul
+    display: none
+    position: absolute
+    display: none
+    list-style-type: none
+    margin: 0px
+    padding: 0px
+    z-index: 10000
+    li
+      float: none
+      margin: 0px
+  li
+    float: none
+
+ul.jd_menu_vertical
+  height: auto
+
+ul.jd_menu
+  margin: 0px
+  padding: 0px
+  list-style-type: none
+  ul
+    display: none
+    position: absolute
+    display: none
+    list-style-type: none
+    margin: 0px
+    padding: 0px
+    z-index: 10000
+    li
+      float: none
+      margin: 0px
+  li
+    float: left
+
+ul.jd_menu, ul.jd_menu_vertical
+  height: 20px
+
+ul.jd_menu ul, ul.jd_menu_vertical ul
+  height: 20px
+  border-top: 1px solid $darker
+  border-left: 1px solid $darker
+  border: 1px solid $darker
+  background-color: $lightest
+
+ul.jd_menu ul
+  height: auto
+
+* html ul.jd_menu ul
+  width: 1%
+
+ul.jd_menu li
+  font-family: sans-serif
+  font-size: 12px
+  color: $darkest
+  line-height: 12px
+  margin: 0px
+  padding: 4px 7px 3px 7px
+  height: 13px
+  cursor: pointer
+  white-space: nowrap
+
+ul.jd_menu li li
+  width: 120px
+
+ul.medium_width li li
+  width: 160px
+
+ul.jd_menu li a
+  color: $darkest
+  text-decoration: none
+
+ul.jd_menu li.jdm_hover, ul.jd_menu li.jdm_active
+  color: $darkest
+  padding: 3px 6px 2px 6px
+  background-color: $tertiary_color
+  border-left: 1px solid $tertiary_color
+  border-top: 1px solid $tertiary_color
+  border: 1px solid $darker

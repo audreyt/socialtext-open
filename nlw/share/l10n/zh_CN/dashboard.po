@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Socialtext i18n\n"
-"PO-Revision-Date: 2011-05-18 04:24-0700\n"
+"PO-Revision-Date: 2011-09-28 18:45+0800\n"
 "Last-Translator: Socialtext i18n team\n"
 "Language-Team: Socialtext i18n team\n"
 "MIME-Version: 1.0\n"
@@ -21,6 +21,24 @@ msgstr "管理显示板"
 msgid "dashboard.confirm-revert?"
 msgstr "您确认要恢复到Socialtext的默认设置么？"
 
+msgid "dashboard.container-types"
+msgstr "容器类型"
+
+msgid "dashboard.dashboard-gallery"
+msgstr "工具库"
+
+msgid "dashboard.dashboards"
+msgstr "显示板"
+
+msgid "dashboard.dashboards-and-wiki-pages"
+msgstr "显示板和共笔页面"
+
+msgid "dashboard.delete-widget"
+msgstr "删除小工具"
+
+msgid "dashboard.edit"
+msgstr "编辑"
+
 #. (account.name)
 #: share/plugin/dashboard/template/dashboard_hello:5
 msgid "dashboard.for=account"
@@ -30,9 +48,39 @@ msgstr "%1 的显示板"
 msgid "dashboard.force-update"
 msgstr "同时强制升级现有用户的显示板"
 
+msgid "dashboard.groups-and-dashboards"
+msgstr "群组和显示板"
+
+msgid "dashboard.groups-and-profiles"
+msgstr "群组和档案"
+
+msgid "dashboard.groups-and-wiki-pages"
+msgstr "群组和共笔页面"
+
+msgid "dashboard.groups-dashboards-and-wiki-pages"
+msgstr "群组、显示板和共笔页面"
+
+msgid "dashboard.groups-profiles-and-dashboards"
+msgstr "群组、档案和显示板"
+
+msgid "dashboard.groups-profiles-and-wiki-pages"
+msgstr "群组、档案和共笔页面"
+
 #: share/plugin/dashboard/template/widget_editor_links:3
 msgid "dashboard.preview"
 msgstr "预览"
+
+msgid "dashboard.profiles"
+msgstr "个人档案"
+
+msgid "dashboard.profiles-and-dashboards"
+msgstr "个人档案和显示板"
+
+msgid "dashboard.profiles-and-wiki-pages"
+msgstr "个人档案和共笔页面"
+
+msgid "dashboard.profiles-dashboards-and-wiki-pages"
+msgstr "个人档案、显示板和共笔页面"
 
 #: share/plugin/dashboard/template/widget_editor_links:8
 msgid "dashboard.publish"
@@ -67,21 +115,43 @@ msgstr "成功保存所选帐户的默认布局。"
 msgid "dashboard.switch-from=account:"
 msgstr "这是帐户\"%1\"下面所有用户共享的默认显示板。切换到帐户："
 
+msgid "dashboard.view-default-dashboard-layout"
+msgstr "查看默认显示板布局"
+
+msgid "dashboard.visibility"
+msgstr "可见性"
+
+msgid "dashboard.visible"
+msgstr "可见"
+
 #: share/plugin/dashboard/template/dashboard_hello:14
 msgid "dashboard.welcome"
 msgstr "欢迎"
+
+msgid "dashboard.widget-added"
+msgstr "成功添加您的小工具。关闭对话框以回到帐户管理界面。"
+
+msgid "dashboard.widget-description"
+msgstr "描述"
+
+msgid "dashboard.widget-hidden"
+msgstr "隐藏"
+
+msgid "dashboard.widget-updated"
+msgstr "成功更新您的小工具。关闭对话框以回到帐户管理界面。"
 
 #: share/plugin/dashboard/share/javascript/lightbox/save-layout.tt2:12
 msgid "dashboard.widgets-to-push:"
 msgstr "下面的小工具将会被推送："
 
+msgid "dashboard.wiki-pages"
+msgstr "共笔页面"
+
 #: share/plugin/dashboard/share/widgets/widget_editor/config.yaml:5
 msgid "description.widget_editor"
 msgstr "编辑小工具"
 
-#: share/plugin/dashboard/share/javascript/lightbox/save-layout.tt2:20
-#: share/plugin/dashboard/template/dashboard_links:18
-#: share/plugin/dashboard/template/widget_editor_links:13
+#: share/plugin/dashboard/share/javascript/lightbox/save-layout.tt2:20 share/plugin/dashboard/template/dashboard_links:18 share/plugin/dashboard/template/widget_editor_links:13
 msgid "do.cancel"
 msgstr "取消"
 

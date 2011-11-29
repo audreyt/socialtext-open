@@ -1,3 +1,5 @@
+tuxhold until lookahead works
+
 | *Comment* | Starting Test Case: Calc Tagging |  |
 
 | set | t_ws | calc_tagging_ws_%%start_time%% |
@@ -6,7 +8,7 @@
 
 | open_ok | %%t_ws%%/index.cgi?action=display;page_type=spreadsheet;page_name=tag%20page%20%%start_time%%#edit |  |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
-| pause | 5000 | I hate pause; needed for entire page load |
+| pause | 15000 | I hate pause; needed for entire page load |
 | st-page-save |  |  |
 
 | *Comment* | Test Case: Calc Tagging. fog tag added |  |
@@ -30,7 +32,7 @@
 
 | *Comment* | Test Case: Calc Tagging. verify Chinese chars |  |
 | wait_for_element_visible_ok | st-tags-listing | 30000 |
-| pause | 5000 | pause needed because wait_for doesn't work on Chinese chars |
+| pause | 15000 | pause needed because wait_for doesn't work on Chinese chars |
 | text_like | st-tags-listing | 所以 |
 
 | *Comment* | Test Case: Calc Tagging. foo bar tag added |  |
@@ -80,7 +82,7 @@ Add any other tag to three different pages | tag is added
 | *Comment* | Tag Page 1 |  |
 | open_ok | %%t_ws%%/index.cgi?action=display;page_type=spreadsheet;page_name=tag%20page%201%20%%start_time%%#edit |  |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
-| pause | 5000 | I hate pause; needed for entire page load |
+| pause | 15000 | I hate pause; needed for entire page load |
 | st-page-save |  |  |
 | wait_for_element_visible_ok | st-tags-addlink | 30000 |
 | wait_for_element_visible_ok | link=Add Tag | 30000 |
@@ -98,7 +100,7 @@ Add any other tag to three different pages | tag is added
 | *Comment* | Tag Page 2 |  |
 | open_ok | %%t_ws%%/index.cgi?action=display;page_type=spreadsheet;page_name=tag%20page%202%20%%start_time%%#edit |  |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
-| pause | 5000 | I hate pause; needed for entire page load |
+| pause | 15000 | I hate pause; needed for entire page load |
 | st-page-save |  |  |
 | wait_for_element_visible_ok | st-tags-addlink | 30000 |
 | click_ok | link=Add Tag |  |
@@ -115,7 +117,7 @@ Add any other tag to three different pages | tag is added
 | *Comment* | Tag Page 3 |  |
 | open_ok | %%t_ws%%/index.cgi?action=display;page_type=spreadsheet;page_name=tag%20page%203%20%%start_time%%#edit |  |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
-| pause | 5000 | I hate pause; needed for entire page load |
+| pause | 15000 | I hate pause; needed for entire page load |
 | st-page-save |  |  |
 | wait_for_element_visible_ok | st-tags-addlink | 30000 |
 | click_ok | link=Add Tag |  |
@@ -130,40 +132,32 @@ Add any other tag to three different pages | tag is added
 | text_like | link=tagtest %%start_time%% | tagtest %%start_time%% |
 
 | *Comment* | Test Case: Calc Tagging. Delete Tag |  |
-| open_ok | /%%t_ws%%/?tag page 2 %%start_time%% |
-| wait_for_element_present_ok | //a[@class='delete_tag'] | 30000 |
-| click_ok | //a[@class='delete_tag'] |  |
-| wait_for_element_visible_ok | st-no-tags-placeholder | 30000 |
-| text_like | st-no-tags-placeholder | There are no tags for this page. |
+| open_ok | /%%t_ws%%/?tag page 2 %%start_time%% |  |
+| wait_for_element_present_ok | //a[@class='delete_icon'] | 30000 |
+| click_ok | //a[@class='delete_icon'] |  |
 
 Navigate to All Tags in list view | All Tags appears
 Observe that tag | tag is still in list
 Click that tag | Tag list page appears with two remaining tagged pages
 
 | open_ok | /%%t_ws%%/?action=recent_changes |  |
-| click_and_wait | link=All Tags |  |
-| text_like | contentContainer | tagtest %%start_time%% |
+| select_and_wait | st-jump-to | label=All Tags |
+| text_like | content | tagtest %%start_time%% |
 | click_and_wait | link=tagtest %%start_time%% |  |
-| text_like | contentContainer | tag page 1 %%start_time%% |
-| text_like | contentContainer | tag page 3 %%start_time%% |
-
+| text_like | content | tag page 1 %%start_time%% |
+| text_like | content | tag page 3 %%start_time%% |
 
 | *Comment* | Test Case: Calc Tagging verify suggestions foo bar, fog, and Foster City |  |
 | open_ok | %%t_ws%%/index.cgi?action=display;page_type=spreadsheet;page_name=tag%20page%204%20%%start_time%%#edit |  |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
-| pause | 5000 | I hate pause; needed for entire page load |
+| pause | 15000 | I hate pause; needed for entire page load |
 | st-page-save |  |  |
 | wait_for_element_visible_ok | link=Add Tag | 30000 |
 | click_ok | link=Add Tag |  |
 | wait_for_element_visible_ok | st-tags-field | 30000 |
-| type_lookahead_ok | st-tags-field | fo |
-| wait_for_element_visible_ok | link=foster City %%start_time%% | 30000 |
-| wait_for_element_visible_ok | link=foo bar %%start_time%% | 30000 |
-| wait_for_element_visible_ok | link=fog %%start_time%% | 30000 |
+| select-autocompleted-option-ok | st-tags-field | fo | foster City %%start_time%% |
 
 | *Comment* | Test Case: Calc Tagging use lookahead to add a tag |  |
-| click_ok | link=foster City %%start_time%% |  |
-| wait_for_text_not_present_ok | There are no tags for this page. | 30000 |
 | wait_for_element_visible_ok | st-tags-listing | 30000 |
 | wait_for_text_present_ok | foster City %%start_time%% | 30000 |
 | text_like | st-tags-listing | foster City %%start_time%% |

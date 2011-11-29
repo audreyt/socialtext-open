@@ -5,17 +5,10 @@ use strict;
 use warnings;
 
 use mocked 'Apache::Cookie';
-use Test::Socialtext tests => 8;
+use Test::Socialtext tests => 7;
 fixtures(qw( empty ));
 
 my $hub = new_hub('empty');
-
-{
-    my $plugin = $hub->rename_page;
-
-    my $html = $plugin->rename_popup();
-    ok ($html =~ /Rename/, 'Got us a rename box');
-}
 
 BAD_PAGE_TITLE: {
     my $class      = 'Socialtext::RenamePagePlugin';

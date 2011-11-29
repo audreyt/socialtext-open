@@ -2,8 +2,8 @@
 
 | *Comment* | Test Case: Untitled Page Cleared new page |  |
 | open_ok | /%%workspace%%/?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
 | wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
 | verifyValue | st-newpage-pagename-edit | Untitled Page |
 | click_ok | st-newpage-pagename-edit |  |

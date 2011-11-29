@@ -1,0 +1,20 @@
+| *Comment* | st-edit-fill-page: ws=%%ws%% title=%%title%% content=%%content%% |  |
+
+| open_ok | /%%ws%%/?action=new_page |  |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
+| type_ok | st-newpage-pagename-edit | %%title%% |
+| pause_ok | 1000 |  |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 10000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 10000 |
+| pause_ok | 4000 |  |
+| type_ok | //textarea[contains(@class,"cke_source")] | %%content%% |
+| pause_ok | 1000 |  |
+| type_ok | //textarea[contains(@class,"cke_source")] | %%content%% |
+| pause_ok | 1000 |  |
+| type_ok | //textarea[contains(@class,"cke_source")] | %%content%% |
+| pause_ok | 1000 |  |
+| type_ok | //textarea[contains(@class,"cke_source")] | %%content%% |
+| pause_ok | 1000 |  |
+| type_ok | //textarea[contains(@class,"cke_source")] | %%content%% |
+| pause_ok | 4000 |  |

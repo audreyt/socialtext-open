@@ -9,12 +9,12 @@
         'GET':
             '*/*':     &default [Test::Socialtext::Rest, GET]
         '*':                    [Test::Socialtext::Rest, bad_method]
-[%- END %]
 -
     '/js/:__file__':
         'GET':
             '*/*':     &default [Socialtext::Handler::JavaScript, GET]
         '*':                    [Socialtext::Handler::JavaScript, bad_method]
+[%- END %]
 -
     '/data/jobs':
         'GET':
@@ -268,11 +268,13 @@
             '*/*':           &default [Socialtext::Rest::Page, GET_html]
             'text/html':              *default
             'text/x.socialtext-wiki': [Socialtext::Rest::Page, GET_wikitext]
+            'application/xhtml+xml':  [Socialtext::Rest::Page, GET_xhtml]
             'application/json':       [Socialtext::Rest::Page, GET_json]
             'text/x-yaml':            [Socialtext::Rest::Page, GET_yaml]
         'DELETE': [Socialtext::Rest::Page, DELETE]
         'PUT':
             'text/x.socialtext-wiki': [Socialtext::Rest::Page, PUT_wikitext]
+            'application/xhtml+xml':  [Socialtext::Rest::Page, PUT_xhtml]
             'application/json':       [Socialtext::Rest::Page, PUT_json]
             'text/html':              [Socialtext::Rest::Page, PUT_html]
             '*/*':                    [Socialtext::Rest::Page, bad_type]
@@ -551,11 +553,16 @@
     '/data/accounts/:acct/theme':
         'GET':
             '*/*':              [Socialtext::Rest::AccountTheme, bad_type]
-            'application/json': [Socialtext::Rest::AccountTheme, GET_theme]
+            'application/json': [Socialtext::Rest::AccountTheme, GET_json]
         'PUT':
             '*/*':              [Socialtext::Rest::AccountTheme, bad_type]
             'application/json': [Socialtext::Rest::AccountTheme, PUT_theme]
         '*':                    [Socialtext::Rest::AccountTheme, bad_method]
+-
+    '/data/accounts/:acct/theme/:filename':
+        'GET':
+            '*/*': [Socialtext::Rest::AccountTheme, GET_css]
+        '*':       [Socialtext::Rest::AccountTheme, bad_method]
 -
     '/data/accounts/:acct/theme/images/:filename':
         'GET':
@@ -694,6 +701,24 @@
     '/data':
         '*':                    [Socialtext::Rest, redirect_workspaces]
 -
+    '/st/settings':
+        'GET':           [Socialtext::Handler::Settings, GET]
+        'POST':
+            'application/x-www-form-urlencoded': [Socialtext::Handler::Settings, POST]
+            '*/*':       [Socialtext::Handler::Settings, bad_type]
+        '*':             [Socialtext::Handler::Settings, bad_method]
+-
+    '/st/settings/:workspace_id/prefs/:pref':
+        'GET':           [Socialtext::Handler::Settings, GET_space]
+        'POST':
+            'application/x-www-form-urlencoded': [Socialtext::Handler::Settings, POST_space]
+            '*/*':       [Socialtext::Handler::Settings, bad_type]
+        '*':             [Socialtext::Handler::Settings, bad_method]
+-
+    '/st/grids/:cols/:width':
+        'GET':     [Socialtext::Handler::Grids, GET_css]
+        '*':       [Socialtext::Handler::Grids, bad_method]
+-
     '/settings/default_workspace':
         'GET':  
             '*/*': &default     [Socialtext::Rest::Settings::DefaultWorkspace, bad_type]
@@ -704,30 +729,28 @@
 -
     '/data/settings/theme':
         'GET':
-            'application/json': [Socialtext::Rest::SettingsTheme, GET_theme]
+            'application/json': [Socialtext::Rest::SettingsTheme, GET_json]
         'PUT':
             'application/json': [Socialtext::Rest::SettingsTheme, PUT_theme]
         '*':                    [Socialtext::Rest::SettingsTheme, bad_method]
 -
     '/data/settings/theme/images/:filename':
-        'GET':
-            '*/*': [Socialtext::Rest::SettingsTheme, GET_image]
+        'GET':     [Socialtext::Rest::SettingsTheme, GET_image]
         '*':       [Socialtext::Rest::SettingsTheme, bad_method]
 -
     '/data/themes':
         'GET':
-            'application/json': [Socialtext::Rest::Themes, GET_themes]
+            'application/json': [Socialtext::Rest::Themes, GET_all]
         '*':                    [Socialtext::Rest::Themes, bad_method]
 -
     '/data/themes/:theme':
         'GET':
-            'application/json': [Socialtext::Rest::Themes, GET_theme]
+            'application/json': [Socialtext::Rest::Themes, GET_json]
         '*':                    [Socialtext::Rest::Themes, bad_method]
 -
     '/data/themes/:theme/images/:filename':
-        'GET':
-            '*/*': [Socialtext::Rest::Themes, GET_image]
-        '*':       [Socialtext::Rest::Themes, bad_method]
+        'GET':                  [Socialtext::Rest::Themes, GET_image]
+        '*':                    [Socialtext::Rest::Themes, bad_method]
 -
     '/m':
         'GET':                  [Socialtext::Rest::Lite, homepage]

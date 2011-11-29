@@ -173,8 +173,6 @@ sub category_display {
         sortdir                => $self->sortdir,
         sortby                 => $sortby,
         direction              => $direction,
-        unplug_uri    => "?action=unplug;tag=$uri_escaped_category",
-        unplug_phrase => loc('info.unplug=tag', $html_escaped_category),
         load_row_times         => \&Socialtext::Query::Plugin::load_row_times,
         Socialtext::Pageset->new(
             cgi => {$self->cgi->all},

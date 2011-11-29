@@ -10,7 +10,7 @@ use Test::Differences;
 # List of things that are OK to include "/nlw/login.html" in them.
 my @skip_paths = qw(
     ./share/migrations/
-    ./share/workspaces/stl10n/
+    ./share/workspaces/
 );
 my %skip_files =
     map { $_ => 1 }

@@ -1,0 +1,25 @@
+#!/usr/bin/env st-coffee
+argv = require('optimist').argv
+
+require('zappa') argv.port, argv.host || '127.0.0.1', ->
+  def html2wiki: require 'html2wiki'
+  def wiki2html: require 'wiki2html'
+  view layout: -> html -> body -> @body
+
+  get '/': -> render 'index'
+  view index: ->
+    for name, value of { wiki: "Wiki to HTML", html: "HTML to Wiki" }
+      form method:'post', -> p ->
+        textarea {name}; br()
+        input {type:'submit', value}
+
+  use 'bodyParser'
+  post '/': ->
+    if @wiki?
+      send wiki2html @wiki
+    else if @html?
+      html2wiki @html, (errors, wikitext) ->
+        if errors
+          response.header "X-Error", JSON.stringify(errors)
+        send wikitext
+    else redirect '/'

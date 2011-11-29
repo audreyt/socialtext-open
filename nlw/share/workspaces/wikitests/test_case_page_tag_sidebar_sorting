@@ -1,31 +1,39 @@
 Verify that the list of Tags in the sidebar on a Page appear in the correct sorted order.
 
-Addresses Bug {bz: 3421}
-
-| *Comment* | Test Case: Page Tag Sidebar Sorting |
+| *Comment* | Test Case: Page Tag Sidebar Sorting |  |
 
 | set | ws_name | pagetag-%%start_time%% |
 
-| *Comment* | Test Case: Page Tag Sidebar Sorting.  Create new test WS |
-| st-admin | create-workspace --empty --name %%ws_name%% --title %%ws_name%% --empty | A new workspace named "%%ws_name%%" was created. |
-| st-admin | add-member --workspace %%ws_name%% --email %%email%%            |                                                  |
+| *Comment* | Test Case: Page Tag Sidebar Sorting. Create new test WS |  |
+| st-admin | create-workspace --empty --name %%ws_name%% --title %%ws_name%% | A new workspace named "%%ws_name%%" was created. |
+| st-admin | add-member --workspace %%ws_name%% --email %%email%% |  |
 
-| *Comment* | Test Case: Page Tag Sidebar Sorting.  Create some pages and tag them |
-| st-create-wikipage | %%ws_name%%                   | Page Tag Sort 1 |
-| st-add-page-tag    | /%%ws_name%%/?Page Tag Sort 1 | One             | Two | three |
+| *Comment* | Test Case: Page Tag Sidebar Sorting. Create some pages and tag them |  |
+| st-create-wikipage | %%ws_name%% | Page Tag Sort 1 |
+| call | [st-tag-page] | tag_to_apply=One |
+| refresh |  |  |
+| call | st-tag-page | tag_to_apply=Two |
+| refresh |  |  |
+| call | st-tag-page | tag_to_apply=three |
 
-| st-create-wikipage | %%ws_name%%                   | Page Tag Sort 2 |
-| st-add-page-tag    | /%%ws_name%%/?Page Tag Sort 2 | Two             | three |
+| st-create-wikipage | %%ws_name%% | Page Tag Sort 2 |  |
+| call | st-tag-page | tag_to_apply=Two |  |
+| refresh |  |  |  |
+| call | st-tag-page | tag_to_apply=three |  |
 
-| st-create-wikipage | %%ws_name%%                   | Page Tag Sort 3 |
-| st-add-page-tag    | /%%ws_name%%/?Page Tag Sort 3 | three           |
 
-| *Comment* | Test Case: Page Tag Sidebar Sorting.  Verify *alphabetical* sorting of tags on page "1" |
-| open-ok                     | /%%ws_name%%/?Page Tag Sort 1 |               |
-| wait-for-element-visible-ok | st-tags-listing               | 30000         |
-| text-like                   | st-tags-listing               | One three Two |
+| *Comment* | Test Case: Page Tag Sidebar Sorting. Verify *alphabetical* sorting of tags on page "1" |  |
+| open-ok | /%%ws_name%%/Page Tag Sort 1 |  |
+| wait-for-element-visible-ok | st-display-mode-widgets | 10000 |
+| text-like | st-display-mode-widgets | One three Two |
 
-| *Comment* | Test Case: Page Tag Sidebar Sorting.  Teardown |
-| st-admin | delete-workspace --workspace %%ws_name%% --no-export | has been deleted |
 
-| *Comment* | Test Case: Page Tag Sidebar Sorting. COMPLETED |
+| *Comment* | Test Case: Page Tag Sidebar Sorting. Verify *alphabetical* sorting of tags on page "2" |  |
+| open-ok | /%%ws_name%%/Page Tag Sort 2 |  |
+| wait-for-element-visible-ok | st-display-mode-widgets | 10000 |
+| text-like | st-display-mode-widgets | three Two |
+
+| *Comment* | Test Case: Page Tag Sidebar Sorting. TEARDOWN |  |
+| delete-workspace | %%ws_name%% |  |
+
+| *Comment* | Test Case: Page Tag Sidebar Sorting. COMPLETED |  |

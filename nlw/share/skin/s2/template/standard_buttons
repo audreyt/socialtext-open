@@ -1,4 +1,0 @@
-<input id="st-standard-submitbutton" type="submit" name="Button" value="[% submit_value %]" [%
-  IF submit_onclick; submit_onclick; END %] class="standard-button-submit" />
-<input id="st-standard-cancelbutton" type="reset" name="Button" value="[% loc('Cancel') %]" [%
-  IF cancel_onclick; cancel_onclick; END %] class="standard-button-cancel" />

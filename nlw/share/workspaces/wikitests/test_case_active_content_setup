@@ -1,3 +1,5 @@
+*On hold until st-multi-page-watch is fixed*
+
 | *Comment* | Test Case: Active Content Setup |  |
 
 | *Comment* | Test Case: Active Content Setup. Create objects. Use st-admin to avoid wikiD code errors. |  |
@@ -46,7 +48,7 @@
 
 | *Comment* | Test Case: Active Content Setup Create Watch page though GUI |  |
 | st-create-wikipage | %%acw%% | Active Content Watch %%start_time%% |
-| st-page-multi-watch | 4 |
+| st-page-multi-watch | 4 |  |
 | st-page-multi-view | /%%acw%%/?Active Content Watch %%start_time%% | 4 |
 
 | *Comment* | Test Case: Active Content Setup Create Emailed page though GUI |  |  |
@@ -63,12 +65,9 @@
 | open_ok | /%%acw%%/?Active Content Edit %%start_time%% |  |
 | wait_for_element_visible_ok | st-edit-button-link |  |
 | click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | %%conv_user%% edits |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+
+| call | st-save-page | content=%%conv_user%% edits |
+
 | st-page-multi-view | /%%acw%%/?Active Content Edit %%start_time%% | 5 |
 
 | *Comment* | Test Case: Active Content Setup comment on a page |  |
@@ -78,8 +77,7 @@
 | wait_for_element_visible_ok | comment | 30000 |
 | type_ok | comment | %%conv_user%% comments |
 | wait_for_element_visible_ok | link=Save | 30000 |
-| st_click_pause | link=Save | 5000 |
-| wait_for_element_visible_ok | link=Comment | 30000 |
+| st_click_pause | link=Save | 15000 |
 | st-page-multi-view | /%%acw%%/?Active Content Comment %%start_time%% | 5 |
 
 | *Comment* | Test Case: Active Content Setup tag a page |  |

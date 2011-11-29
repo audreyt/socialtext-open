@@ -1,0 +1,22 @@
+=== tabs/tabs.js
+==================================================================
+--- tabs/tabs.js	(revision 15308)
++++ tabs/tabs.js	(local)
+@@ -456,12 +456,15 @@
+   rightNavTd.appendChild(rightNav);
+   navTr.appendChild(rightNavTd);
+ 
++  var tabSet = this;
+   // Register onclick event handlers for smooth scrolling.
+   leftNav.onclick = function(event) {
+-    this.smoothScroll_(wrapper, -120);
++    tabSet.smoothScroll_(wrapper, -120);
++    return false;
+   };
+   rightNav.onclick = function(event) {
+-    this.smoothScroll_(wrapper, 120);
++    tabSet.smoothScroll_(wrapper, 120);
++    return false;
+   };
+ 
+   // Swap left and right scrolling if direction is RTL.

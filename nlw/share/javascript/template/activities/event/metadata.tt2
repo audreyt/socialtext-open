@@ -1,0 +1,54 @@
+[% MACRO actor BLOCK %]<a target="_blank" href="[% event.actor.uri %]">[%- event.actor.best_full_name -%]</a>[% END %]
+<div class="metadata">
+    [% IF event.event_class == 'signal' && event.action == 'signal' %]
+        [% IF this.viewer_id == event.actor.id %]
+            <span class="source">[% loc('activities.by-you') %]</span>
+        [% ELSE %]
+            [% loc('activities.by=user', actor) %]
+        [% END %]
+    [% ELSE %]
+        [% IF this.viewer_id == event.actor.id %]
+            <span class="source">[% loc('activities.you') %]</span>
+        [% ELSE %]
+            [% actor %]
+        [% END %]
+    [% END %]
+    [% IF event.at %]
+        [% IF event.context.uri %]
+        <a target="_blank" class="ago" value="[% event.at %]" href="[% event.context.uri %]">[%- PROCESS activities/ago.tt2 at=event.at -%]</a>
+        [% ELSE %]
+        <span class="ago" value="[% event.at %]">
+            [%- PROCESS activities/ago.tt2 at=event.at -%]
+        </span>
+        [% END %]
+    [% END %]
+
+    [% INCLUDE network_meta %]
+</div>
+
+[% BLOCK network_meta %]
+    [% SET targets = this.signalTargets(event) %]
+    [% IF targets.size || (event.signal_id AND event.person) %]
+        [%- UNLESS event.context.in_reply_to -%]
+            [%- IF event.signal_id AND event.person %]
+                <span class="destination">
+                    [%- IF event.person.id == viewer_id -%]
+                        [%- loc('activities.private-to-you') -%]
+                    [%- ELSE %]
+                        [%- loc('activities.private-to=user', person) -%]
+                    [%- END -%]
+                </span>
+            [%- ELSIF targets.size > 1 -%]
+                <span class="destinationNetworks" title="[% targets.join(', ') %]">
+                    [%- loc("activities.to-groups=count", targets.size) -%]
+                </span>
+            [%- ELSE -%]
+                <span class="destinationNetworks">
+                    [%- loc("activities.to=target", targets.0) -%]
+                </span>
+            [%- END -%]
+        [%- END -%]
+
+        <div class="clear"></div>
+    [% END %]
+[% END %]

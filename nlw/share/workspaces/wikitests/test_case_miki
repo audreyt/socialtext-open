@@ -32,15 +32,15 @@
 | add_member | %%mikiuser%% | %%ws%% |  |
 | add_member | %%othermikiuser%% | %%ws%% |  |
 
-| st-logoutin | %%othermikiuser%% | %%password%% |
+| st-logoutin | %%othermikiuser%% | %%password%% |  |
 
 | *Comment* | Test case: Miki Open global nav, should be signals |  |
-| open_ok | /st/dashboard/ |  |
 | wait_for_element_present_ok | link=Mobile | 30000 |
 | click_and_wait | link=Mobile |  |
 | wait_for_element_visible_ok | link=Workspaces | 30000 |
-| wait_for_element_visible_ok | link=Activity | 30000 |
-| wait_for_element_visible_ok | link=Log out | 30000 |
+| wait_for_element_visible_ok | link=Activity | 15000 |
+| wait_for_element_visible_ok | link=People | 15000 |
+| wait_for_element_visible_ok | link=Log out | 15000 |
 
 | st_check_emergent_signal_wikiwyg_mobile |  |  |
 
@@ -50,9 +50,6 @@
 | open_ok | /st/dashboard |  |
 | wait_for_element_visible_ok | link=Mobile | 30000 |
 | click_and_wait | link=Mobile |  |
-| wait_for_element_visible_ok | link=Workspaces | 30000 |
-| wait_for_element_visible_ok | link=Activity | 30000 |
-| wait_for_element_visible_ok | link=Log out | 30000 |
 | wait_for_element_visible_ok | %%st_mobile_account_select%% | 30000 |
 
 | text_like | //body | %%miki_signal_disclaimer%% |
@@ -60,37 +57,43 @@
 | text_like | %%miki_signal_text%% |  |
 
 | *Comment* | Test case: Miki Send Signals |  |
-| st-type-signal | %%signal1%% | 1 |
-| wait_for_element_visible_ok | %%miki_signal_submit%% | 30000 |
-| click_and_pause | %%miki_signal_submit%% |  |
-| wait_for_text_present_ok | less than a minute ago | 30000 |
-| wait_for_text_present_ok | %%signal1%% | 30000 |
+| st_type_signal | %%signal1%% |  |
+| wait_for_element_visible_ok | %%miki_signal_submit%% | 15000 |
+| click_and_pause | %%miki_signal_submit%% | 10000 |
+| wait_for_text_present_ok | less than a minute ago | 15000 |
+| wait_for_text_present_ok | %%signal1%% | 15000 |
 | text_like | //body | qr/%%signal1%%.+By.+minute.+to.+%%mikiacct%%/ism |
 
-| *Comment* | Test case: Miki Send MULTI Signals |  |
-| st_mobile_account_select_ok | %%mikiacct%% (primary, 2 users) |  |
-| st_mobile_account_select_ok | %%othermikiacct%% (2 users) |  |
+| *Comment* | Test case: Miki MULTI Signals |  |
+| select_ok | mobile_signal_network | %%mikiacct%% (primary, 2 users) |
+| select_ok | mobile_signal_network | %%othermikiacct%% (2 users) |
 
-| st-type-signal | %%multisignal%% | 1 |
-| wait_for_element_visible_ok | %%miki_signal_submit%% | 30000 |
-| click_and_pause | %%miki_signal_submit%% |  |
-| wait_for_text_present_ok | less than a minute ago | 30000 |
-| wait_for_text_present_ok | %%multisignal%% | 30000 |
-| text_like | //body | qr/%%multisignal%%.+By.+minute.+to.+%%othermikiacct%%/ism |
+| *Comment* | Test case: Miki Send one Signal |  |  |
+| st_type_signal | %%multisignal%% |  |  |
+| wait_for_element_visible_ok | %%miki_signal_submit%% | 15000 |  |
+| click_and_pause | %%miki_signal_submit%% | 10000 |  |
+
+| *Comment* | Test Case: Miki See signal under "all my groups" |  |  |
+| wait_for_element_visible_ok | //a[contains(@id,"expander")] | 15000 |  |
+| click_ok | //a[contains(@id,"expander")] |  |  |
+| wait_for_element_visible_ok | network-all | 15000 |  |
+| click_ok | network-all |  |  |
+| wait_for_text_present_ok | less than a minute ago | 15000 |  |
+| wait_for_text_present_ok | %%multisignal%% | 15000 |  |
+| text_like | //body | qr/%%multisignal%%.+By.+minute.+to.+%%mikiacct%%/ism |  |
 
 | *Comment* | Test case: Miki Log In as 'main' user, see global nav |  |
-| wait_for_element_visible_ok | link=Log out | 30000 |
+| wait_for_element_visible_ok | link=Log out | 15000 |
 | click_and_wait | link=Log out |  |
 | wait_for_element_visible_ok | link=I don't know my password. | 30000 |
 | st-login | %%mikiuser%% | %%password%% |
 
-| open_ok | /st/dashboard/ |  |
 | wait_for_element_present_ok | link=Mobile | 30000 |
 | click_and_wait | link=Mobile |  |
 | wait_for_element_visible_ok | link=Workspaces | 30000 |
-| wait_for_element_visible_ok | link=Activity | 30000 |
-| wait_for_element_visible_ok | link=Log out | 30000 |
-| wait_for_element_visible_ok | link=People | 30000 |
+| wait_for_element_visible_ok | link=Activity | 15000 |
+| wait_for_element_visible_ok | link=Log out | 15000 |
+| wait_for_element_visible_ok | link=People | 15000 |
 | text_like | //body | Signals |
 
 | *Comment* | Test case: Miki As 'main' user, see old signals |  |
@@ -101,7 +104,7 @@
 | click_and_wait | link=People |  |
 | wait_for_element_visible_ok | st-search-text | 30000 |
 | type_ok | st-search-text | %%othershortuser%% |
-| wait_for_element_visible_ok | st-search-submit | 30000 |
+| wait_for_element_visible_ok | st-search-submit | 15000 |
 | click_and_wait | st-search-submit |  |
 
 | wait_for_element_visible_ok | link=%%othershortuser%% | 30000 |
@@ -183,38 +186,12 @@
 | click_and_wait | link=Log out |  |
 | wait_for_element_visible_ok | link=I don't know my password. | 30000 |
 
-| *Comment* | Test Case: Miki traditional Miki verification as %%username%% |  |
-| st-login | %%username%% | %%password%% |
-| open_ok | /%%workspace%%/ |  |
-
-| *Comment* | Test Case: Miki create test blog for capitalization test |  |
-| click_and_wait | link=Settings |  |
-| click_and_wait | link=Create New Blog |  |
-| type_ok | weblog_title | Caps Test Blog %%start_time%% |
-| click_and_wait | link=Save |  |
-
-| *Comment* | Test Case: Miki Open the blog with caps |  |
-| open_ok | /m/tag/%%workspace%%/Caps Test Blog %%start_time%% Blog |  |
-| text_like | link=First Post in Caps Test Blog %%start_time%% Blog | First Post in Caps Test Blog %%start_time%% Blog |
-| text_like | Tag: Caps Test Blog %%start_time%% Blog |  |
-
-| *Comment* | Test Case: Miki Open the blog without caps |  |
-| open_ok | /m/tag/%%workspace%%/caps test blog %%start_time%% blog |  |
-| text_like | link=First Post in Caps Test Blog %%start_time%% Blog | First Post in Caps Test Blog %%start_time%% Blog |
-| text_like | Tag: caps test blog %%start_time%% blog |  |
-
-| *Comment* | Test Case: Miki |  |
-| wait_for_element_visible_ok | link=What's New | 30000 |
-| click_and_wait | link=What's New |  |
-| click_and_wait | link=First Post in Caps Test Blog %%start_time%% Blog |  |
-| text_like | This is the first post in Caps Test Blog %%start_time%% Blog |  |
-
 | *Comment* | Test Case: Miki TEARDOWN |  |
 | st-process-jobs |  |  |
 | deactivate-user | %%mikiuser%% |  |
 | deactivate-user | %%othermikiuser%% |  |
-| st-admin | delete_workspace --no-export --w %%ws%% | has been deleted |
-| st-admin | delete_workspace --no-export --w %%otherws%% | has been deleted |
+| delete_workspace | %%ws%% |  |
+| delete_workspace | %%otherws%% |  |
 | delete-account | %%mikiacct%% |  |
 | delete-account | %%othermikiacct%% |  |
 

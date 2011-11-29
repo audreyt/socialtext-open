@@ -23,43 +23,8 @@ const cgi_class => 'Socialtext::DuplicatePage::CGI';
 
 sub register {
     my $self = shift;
-    $self->hub->registry->add(action => 'duplicate_popup');
     $self->hub->registry->add(action => 'duplicate_page');
     $self->hub->registry->add(action => 'copy_to_workspace');
-    $self->hub->registry->add(action => 'copy_to_workspace_popup');
-}
-
-sub duplicate_popup {
-    my $self = shift;
-    my %p = @_;
-    return encode_json(\%p) if $self->cgi->json;
-    return $self->template_process(
-        'popup/duplicate',
-        %p,
-        $self->hub->helpers->global_template_vars,
-    );
-}
-
-sub copy_to_workspace_popup {
-    my $self = shift;
-    my %p = @_;
-
-    if ($self->cgi->json) {
-        delete $p{target_workspace};
-        return encode_json(\%p);
-    }
-
-    my $current_workspace = $self->hub->current_workspace;
-    my $workspaces = $self->hub->current_user->workspaces(
-        exclude => [ $self->hub->current_workspace->workspace_id ],
-    );
-
-    $self->template_process(
-        'popup/copy_to_workspace',
-        workspaces => $workspaces,
-        %p,
-        $self->hub->helpers->global_template_vars,
-    );
 }
 
 sub duplicate_page {
@@ -68,58 +33,35 @@ sub duplicate_page {
     my $new_id = Socialtext::String::title_to_id($new_title);
 
     if ( $self->_page_title_bad($new_title) ) {
-        return $self->duplicate_popup(
-            page_title_bad => 1,
-        );
+        return encode_json({ page_title_bad => 1 });
     }
     elsif ( Socialtext::String::MAX_PAGE_ID_LEN < length $new_id ) {
-        return $self->duplicate_popup(
-            page_title_too_long => 1,
-        );
+        return encode_json({ page_title_too_long => 1 });
     }
     elsif ( $self->_duplicate( $self->hub->current_workspace ) ) {
-        return encode_json({done=>1}) if $self->cgi->json;
-        return $self->template_process('close_window.html',
-            before_window_close => q{window.opener.location='} .
-                Socialtext::AppConfig->script_name . '?' .
-                $new_id . q{';},
-        );
+        return encode_json({done=>1});
     }
-
-    return $self->duplicate_popup(
-        page_exists => 1,
-    );
+    return encode_json({ page_exists => 1 });
 }
 
 sub copy_to_workspace {
     my $self = shift;
-    unless ( $self->cgi->target_workspace_id ) {
-        return $self->template_process('close_window.html');
-    }
 
     my $new_title = $self->cgi->new_title;
     my $new_id = Socialtext::String::title_to_id($new_title);
 
     my $target_ws = Socialtext::Workspace->new( workspace_id => $self->cgi->target_workspace_id );
     if ( $self->_page_title_bad( $new_title ) ) {
-        return $self->copy_to_workspace_popup(
-            page_title_bad => 1,
-        );
+        return encode_json({ page_title_bad => 1 });
     }
     elsif ( Socialtext::String::MAX_PAGE_ID_LEN < length $new_id ) {
-        return $self->copy_to_workspace_popup(
-            page_title_too_long => 1,
-        );
+        return encode_json({ page_title_too_long => 1 });
     }
     elsif ( $self->_duplicate($target_ws) ) {
-        return encode_json({done=>1}) if $self->cgi->json;
-        return $self->template_process('close_window.html');
+        return encode_json({done=>1});
     }
 
-    return $self->copy_to_workspace_popup(
-        page_exists => 1,
-        target_workspace => $target_ws,
-    );
+    return encode_json({ page_exists => 1, target_workspace => $target_ws->title });
 }
 
 sub mass_copy_to {

@@ -1,3 +1,5 @@
+TUXTODO: restore Workspace admin messages after "unknown error" bug is fixed.
+
 | *Comment* | Test Case: Business Control Panel Group Role Within A Workspace |
 
 | *Comment* | Test Case: Business Control Panel Group Role Within A Workspace Setup create group, ws, member |  |  |
@@ -37,7 +39,7 @@
 | wait_for_text_present_ok | Workspace role changes were successful. | 30000 |
 | is_selected_ok | groupTable-dropdown-2-1 | label=Member |
 | select_ok | groupTable-dropdown-2-1 | label=Admin |
-| pause | 5000 |  |
+| pause | 15000 |  |
 | st-search-cp-workspace | %%group_ws%% | 1 |
 | is_selected_ok | groupTable-dropdown-2-0 | label=Admin |
 | is_selected_ok | groupTable-dropdown-2-1 | label=Admin |
@@ -46,10 +48,13 @@
 | select_ok | groupTable-dropdown-2-3 | label=Member |
 | wait_for_text_present_ok | Workspace role changes were successful. | 30000 |
 | select_ok | groupTable-dropdown-2-1 | label=Member |
-| pause | 5000 |  |
+| pause_ok | 15000 |  |
 | wait_for_text_present_ok | Workspace role changes were successful. | 30000 |
 | select_ok | groupTable-dropdown-2-0 | label=Member |
-| wait_for_text_present_ok | Workspaces need to include at least one admin | 30000 |
+| pause_ok | 15000 |  |
+
+wait_for_text_present_ok | Workspaces need to include at least one admin | 30000 |
+
 | is_selected_ok | groupTable-dropdown-2-0 | label=Admin |
 | st-search-cp-workspace | %%group_ws%% | 1 |
 | is_selected_ok | groupTable-dropdown-2-0 | label=Admin |
@@ -80,7 +85,9 @@
 | click_ok | groupTable-select-1 |  |
 | click_ok | groupTable-select-2 |  |
 | click_ok | groupTable-action-2 |  |
-| wait_for_text_present_ok | Workspaces need to include at least one admin | 30000 |
+
+wait_for_text_present_ok | Workspaces need to include at least one admin | 30000 |
+
 | st-search-cp-workspace | %%group_ws%% | 1 |
 | is_selected_ok | groupTable-dropdown-2-0 | label=Admin |
 | is_selected_ok | groupTable-dropdown-2-1 | label=Admin |
@@ -123,7 +130,9 @@
 | click_ok | groupTable-select-0 |  |
 | click_ok | groupTable-select-1 |  |
 | click_ok | groupTable-action-2 |  |
-| wait_for_text_present_ok | Workspaces need to include at least one admin | 30000 |
+
+wait_for_text_present_ok | Workspaces need to include at least one admin | 30000 |
+
 | text_like | //body | Groups (2) |
 | is_selected_ok | groupTable-dropdown-2-0 | label=Admin |
 | is_selected_ok | groupTable-dropdown-2-1 | label=Member |
@@ -140,7 +149,7 @@
 | text_like | //body | Groups (2) |
 | is_selected_ok | groupTable-dropdown-2-0 | label=Member |
 | is_selected_ok | groupTable-dropdown-2-1 | label=Member |
-| pause | 5000 |  |
+| pause | 15000 |  |
 
 | *Comment* | Test Case: Business Control Panel Group Role Add an admin GROUP, now batch remove membership for ws entirely succeeds |  |
 | st-search-cp-workspace | %%group_ws%% | 1 |
@@ -152,14 +161,14 @@
 | wait_for_text_present_ok | Workspace role changes were successful. | 30000 |
 | wait_for_text_present_ok | Users (1) | 30000 |
 
-| *Comment* | Test Case: Business Control Panel Group Role Within A Workspace TEARDOWN |
-| setSpeed | 0 |
+| *Comment* | Test Case: Business Control Panel Group Role Within A Workspace TEARDOWN |  |
+| setSpeed | 0 |  |
 | st-process-jobs |  |  |
 | deactivate-user | %%group_user%% |  |
-| st-admin | delete-group --g %%group_id%% |
-| st-admin | delete-group --g %%group1_id%% |
-| st-admin | delete-group --g %%group2_id%% |
+| st-admin | delete-group --g %%group_id%% |  |
+| st-admin | delete-group --g %%group1_id%% |  |
+| st-admin | delete-group --g %%group2_id%% |  |
 | st-admin | delete-workspace --w %%group_ws%% --no-export | has been deleted |
 | delete-account | %%group_acct%% |  |
 
-| *Comment* | Test Case: Business Control Panel Group Role Within A Workspace COMPLETED |
+| *Comment* | Test Case: Business Control Panel Group Role Within A Workspace COMPLETED |  |

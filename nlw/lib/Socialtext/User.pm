@@ -352,6 +352,8 @@ sub create {
     $user->_update_profile_with_extra_attrs();
     $user->_index();
 
+    $user->_call_hook('nlw.user.create');
+
     return $user;
 }
 
@@ -1036,6 +1038,7 @@ sub reactivate {
     unless ($self->is_externally_sourced) {
         $self->create_password_change_confirmation;
     }
+    $self->_call_hook('nlw.user.activate');
 }
 
 sub _index {

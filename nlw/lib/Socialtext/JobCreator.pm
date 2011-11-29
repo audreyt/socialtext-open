@@ -83,7 +83,6 @@ sub index_page {
         page_job_class => 'Socialtext::Job::PageIndex',
         @_,
     );
-    
 
     return if $page->is_bad_page_title($page->id);
 
@@ -111,11 +110,11 @@ sub index_page {
     });
     push @job_ids, $job_id;
 
-    my $attachments = $page->hub->attachments->all( page_id => $page->id );
+    my $attachments = $page->hub->attachments->all( 
+        page_id => $page->id,
+        deleted_ok => 1,
+    );
     foreach my $attachment (@$attachments) {
-        # We delete attachments immediately from the index (or file a job)
-        # when they're removed from the page.
-        next if $attachment->deleted();
         for my $indexer (@{ $opts{indexers} }) {
             my $job_id;
             if (ref($indexer) =~ m/solr/i) {

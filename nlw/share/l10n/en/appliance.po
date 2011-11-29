@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Socialtext i18n\n"
-"PO-Revision-Date: 2011-05-13 07:49-0700\n"
+"PO-Revision-Date: 2011-11-04 22:00-0700\n"
 "Language-Team: Socialtext i18n team\n"
 "Last-Translator: Socialtext i18n team\n"
 "MIME-Version: 1.0\n"
@@ -380,6 +380,10 @@ msgstr "(leave blank to use appliance's built-in SMTP server)"
 #: ../appliance/libsocialtext-appliance-perl/template/overview.html:8
 msgid "console.link-to-control-panel"
 msgstr "To view and manage the Workspaces, Accounts, Groups and Users on the system, go to the <a href=\"/nlw/control/\">Control Panel</a> tool."
+
+#: ../appliance/libsocialtext-appliance-perl/template/overview.html:10
+msgid "console.link-to-admin-guide"
+msgstr "For administration documentation, go to the <a href=\"/help-adminguide/\">Administrator's Guide</a>."
 
 #: ../appliance/libsocialtext-appliance-perl/template/setup.html:44
 msgid "console.login-message"

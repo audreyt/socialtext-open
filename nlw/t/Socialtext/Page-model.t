@@ -84,6 +84,7 @@ Create_from_row: {
         creator => $creator->username,
         edit_summary => 'edit summary',
         is_spreadsheet => '',
+        is_xhtml => '',
         page_id => 'some_page_id',
         page_uri => 'some_page_id',
         revision_count => 987,

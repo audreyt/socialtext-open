@@ -1,32 +1,39 @@
 | *Comment* | Test Case: Weblog naming with Latin-1 character provoked by {bz: 3442} |  |
 | *Comment* | This testcase will fail until BZ 3442 is fixed |  |
 
-| *Comment* | Test Case: Weblog naming: Make a blog with a Latin-1 char in its name |  |
-| open_ok | /%%workspace%%/?action=users_settings |  |
-| click_and_wait | link=Create New Blog |  |
-| type_ok | weblog_title | claus´ blog %%start_time%% |
-| click_and_wait | link=Save |  |
-| text_like | st-editing-tools-edit | claus´ blog %%start_time%% |
+| set | lb_wiki | lb_workspace_%%start_time%% |
+| create-workspace | %%lb_wiki%% |  |
+| st-admin | add-workspace-admin --e %%username%% --w %%lb_wiki%% | now has the role |
 
 | *Comment* | Test Case: Weblog naming: Make a blog with a Latin-1 char in its name |  |
-| open_ok | /%%workspace%% |  |
-| click_and_wait | link=Blogs |  |
+| open_ok | /st/settings/%%workspace_id%%/prefs/blog |  |
+| wait_for_element_visible_ok | workspace.do.create_blog | 30000 |
+| type_ok | workspace.do.create_blog | claus´ blog %%start_time%% |
+| wait_for_element_visible_ok | link=Save | 3000 |
+| click_and_wait | link=Save |  |
+| pause | 10000 |  |
+| wait_for_element_visible_ok | content | 30000 |
+| text_like | content | claus´ blog %%start_time%% |
+
+| *Comment* | Test Case: Weblog naming: Make a blog with a Latin-1 char in its name |  |
+| open_ok | /%%lb_wiki%% |  |
+| select_and_wait | st-jump-to | label=Blogs |
 
 | *Comment* | Test Case: Weblog naming: Selenium can't handle a Latin-1 character in this command ! |  |
 
 | wait_for_text_present_ok | blog %%start_time%% | 10000 |
-| text_like | contentContainer | First Post in claus |
-| text_like | contentContainer | blog %%start_time%% |
+| text_like | content | First Post in claus |
+| text_like | content | blog %%start_time%% |
 
 | *Comment* | Test Case: Weblog naming: cause a change |  |
-| st-admin | update-page --w %%workspace%% --e %%email%% --p "Make Me a Malted %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |
+| st-admin | update-page --w %%lb_wiki%% --e %%email%% --p "Make Me a Malted %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |
 
 | *Comment* | Test Case: Weblog naming: Is Recent Changes blog working? |  |
-| select_and_wait | //select[@name='category'] | value=recent changes |
+| select_and_wait | page-control-category-selector | label=Recent Changes |
 | text_like | Make Me a Malted %%start_time%% |  |
 
 | *Comment* | Test Case: Weblog naming with Latin-1 character TEARDOWN |  |
-| st-process-jobs | PageIndex | %%workspace%% |
-| st-admin | purge-page --w %%workspace%% --p make_me_a_malted_%%start_time%% | was purged |
+| st-process-jobs | PageIndex | %%lb_wiki%% |
+| delete-workspace | %%lb_wiki%% |  |
 
 | *Comment* | Test Case: Weblog naming with Latin-1 character COMPLETED |  |

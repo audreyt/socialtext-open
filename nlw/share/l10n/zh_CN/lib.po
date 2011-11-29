@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Socialtext i18n\n"
-"PO-Revision-Date: 2011-07-05 14:39-0700\n"
+"PO-Revision-Date: 2011-11-04 23:35+0800\n"
 "Last-Translator: Socialtext i18n team\n"
 "Language-Team: Socialtext i18n team\n"
 "MIME-Version: 1.0\n"
@@ -429,6 +429,9 @@ msgstr "导航框：%1"
 msgid "blog.new"
 msgstr "新建博客"
 
+msgid "blog.number-of-posts-to-show"
+msgstr "显示的文章数"
+
 #: lib/Socialtext/WeblogPlugin.pm:49
 msgid "blog.number-of-posts?"
 msgstr "在博客视图中显示多少博客？"
@@ -447,6 +450,9 @@ msgstr "%2 工作区中 %1 的最近更新"
 #: lib/Socialtext/WeblogPlugin.pm:197
 msgid "blog.rss=blog"
 msgstr "博客：%1 RSS"
+
+msgid "blog.weblog-sort-order"
+msgstr "博客排列顺序"
 
 #: lib/Socialtext/Hub.pm:197
 msgid "bug.contact-support"
@@ -1014,7 +1020,7 @@ msgstr "重置为默认桌面标志。桌面用户需要注销并重新登录才
 
 #: lib/Socialtext/Handler/ControlPanel.pm:872
 msgid "desktop.relogin-for-skin"
-msgstr "设置已保存。桌面用户需要重新登陆才能启用新的主题。"
+msgstr "设置已保存。桌面用户需要重新登录才能启用新的主题。"
 
 msgid "desktop.text-color"
 msgstr "文本颜色"
@@ -1024,9 +1030,18 @@ msgstr "文本颜色"
 msgid "do.add-users=group"
 msgstr "添加用户到 %1 群组"
 
+msgid "do.disabled"
+msgstr "停用"
+
+msgid "do.enabled"
+msgstr "启用"
+
 #: lib/Socialtext/Pluggable/Plugin/SocialCalc.pm:50
 msgid "do.export-csv"
 msgstr "导出为 CSV"
+
+msgid "do.theme"
+msgstr "主题"
 
 #: lib/Socialtext/Page.pm:1134
 msgid "edit.default-text"
@@ -1035,16 +1050,22 @@ msgstr "请在此输入文字。"
 #. ($app_name)
 #: lib/Socialtext/User/Restrictions/email_confirmation.pm:87
 msgid "email.confirmation-subject=app"
-msgstr "已登陆到应用 %1"
+msgstr "已登录到应用 %1"
 
 #. ($ws->title()
 #: lib/Socialtext/User/Restrictions/email_confirmation.pm:84
 msgid "email.confirmation-subject=wiki"
-msgstr "已登陆到工作区 %1"
+msgstr "已登录到工作区 %1"
 
 #: lib/Socialtext/EmailReceiver/Base.pm:671
 msgid "email.date:"
 msgstr "日期："
+
+msgid "email.digest-information"
+msgstr "电子邮件摘要信息"
+
+msgid "email.frequency-of-updates"
+msgstr "更新频率"
 
 #: lib/Socialtext/EmailNotifyPlugin.pm:29
 msgid "email.frequency?"
@@ -1084,6 +1105,9 @@ msgstr "%1 工作区的最近更新"
 msgid "email.sent-from-socialtext-appliance"
 msgstr "此电子邮件发送自 Socialtext 设备。"
 
+msgid "email.signal-mention-by=user"
+msgstr "%1 在讯息里提及您"
+
 #: lib/Socialtext/User/Restrictions/email_confirmation.pm:78
 msgid "email.socialtext"
 msgstr "Socialtext"
@@ -1091,6 +1115,9 @@ msgstr "Socialtext"
 #: lib/Socialtext/User/Restrictions/email_confirmation.pm:77
 msgid "email.socialtext-appliance"
 msgstr "Socialtext 设备"
+
+msgid "email.sort-order-of-updates"
+msgstr "页面更新的排列顺序"
 
 #. ($p->{name})
 #: lib/Socialtext/Account.pm:1118
@@ -1241,6 +1268,9 @@ msgstr "用户 %1 修改密码出错"
 msgid "error.change-profile-field-failed"
 msgstr "无法更新资料字段。"
 
+msgid "error.changing-container-types"
+msgstr "变更容器类型时出错"
+
 #: lib/Socialtext/Appliance/BackupCleanup.pm:29
 msgid "error.cleaning-not-implemented"
 msgstr "清除功能尚未实现。"
@@ -1288,6 +1318,9 @@ msgstr "无法创建帐户 %1。"
 #: lib/Socialtext/Handler/ControlPanel.pm:2333
 msgid "error.create=wiki"
 msgstr "无法创建工作区 %1。"
+
+msgid "error.current-password-not-correct"
+msgstr "当前密码不正确"
 
 msgid "error.date-must-be-in-iso8601-format"
 msgstr "日期必须使用 ISO8601 格式 YYYY-mm-dd HH:MM:SS(.NNNNNN)[+-]zzzz。可以使用“T”分隔日期与时间，而分数形式的秒数是可选的。"
@@ -1757,6 +1790,9 @@ msgstr "必须提供一个名字用以创建帐户"
 msgid "error.new-account-type-required"
 msgstr "必须指定更新的帐户类型。"
 
+msgid "error.new-password-does-not-match"
+msgstr "新密码不匹配"
+
 #: lib/Socialtext/UserSettingsPlugin.pm:87
 msgid "error.new-password-mismatch"
 msgstr "新密码不匹配"
@@ -2173,7 +2209,7 @@ msgstr "注册号被停用。"
 
 #: lib/Socialtext/Handler/Base.pm:122 lib/Socialtext/Handler/ControlPanel.pm:52 lib/Socialtext/Rest.pm:62
 msgid "error.relogin"
-msgstr "登录会话已过期，请重新认证。"
+msgstr "登录阶段已过期，请重新认证。"
 
 #: lib/Socialtext/Gadgets/Gallery.pm:230
 msgid "error.remove-account-widget"
@@ -2210,6 +2246,9 @@ msgstr "无法从主帐户删除用户"
 #: lib/Socialtext/UserSettingsPlugin.pm:237
 msgid "error.removing-last-admin"
 msgstr "不能取消最后管理员的权限。"
+
+msgid "error.removing-last-wiki-admin=user"
+msgstr "%1 无法删除，因为每个工作区至少需要一个管理员。"
 
 #: lib/Socialtext/Hub.pm:189
 msgid "error.request"
@@ -2262,6 +2301,9 @@ msgstr "%1 已是 %3 帐户的 %2"
 #: lib/Socialtext/CLI.pm:1367
 msgid "error.role-exists=user,role,wiki"
 msgstr "%1 已是 %3 工作区的 %2"
+
+msgid "error.saving-settings"
+msgstr "保存设定时出错"
 
 #: lib/Socialtext/Appliance/Model/Setup.pm:356
 msgid "error.saving-system-time-to-hardware-clock"
@@ -2536,10 +2578,19 @@ msgstr "必须指定一个workspace_id到网址（%1）。"
 msgid "error.wiki-name-required"
 msgstr "工作区名字是必填字段"
 
+msgid "error.wiki-not-authorized"
+msgstr "未授权"
+
+msgid "error.wiki-not-found"
+msgstr "找不到工作区"
+
 #. ($self->{uri})
 #: lib/Socialtext/Handler/ControlPanel.pm:1746
 msgid "error.wiki-required=uri"
 msgstr "必须指定一个工作区到网址（%1）"
+
+msgid "error.wiki-requires-at-least-one-admin"
+msgstr "每个工作区至少需要一个管理员。"
 
 #: lib/Socialtext/Workspace.pm:611
 msgid "error.wiki-title-required"
@@ -2743,6 +2794,12 @@ msgstr "此字段的内容会在用户数据刷新后自动随着外部资料更
 msgid "info.forbidden-profile"
 msgstr "注意：不和其他人分享群组，则无法查看他们的个人资料。"
 
+msgid "info.homepage-blog-data"
+msgstr "当用户点击工作区的标题，将会转到工作区的中心页。如果您希望使用博客的名字代替，请在这里输入名称。"
+
+msgid "info.homepage-or-blog"
+msgstr "当用户点击工作区的标题，将会转到工作区的中心页。如果您希望使用博客的名字代替，请在这里输入名称。"
+
 #. ($wafl, $user->primary_account->name)
 #: lib/Socialtext/User/Restrictions/email_confirmation.pm:136
 msgid "info.just-joined=user,group!"
@@ -2872,15 +2929,18 @@ msgstr "语言设定"
 msgid "loc.system-default=lang"
 msgstr "%1（默认）"
 
+msgid "locales.display-language"
+msgstr "显示语言"
+
 #. ($address)
 #: lib/Socialtext/Handler/Authen.pm:531
 msgid "login.confirmed=email"
-msgstr "邮箱 %1 已确认，请登陆。"
+msgstr "邮箱 %1 已确认，请登录。"
 
 #. ($address, $targetws->title)
 #: lib/Socialtext/Handler/Authen.pm:528
 msgid "login.confirmed=email,wiki"
-msgstr "邮箱 %1 已确认，并且已加入工作区 %2，请登陆。"
+msgstr "邮箱 %1 已确认，并且已加入工作区 %2，请登录。"
 
 #: lib/Socialtext/Lite.pm:134
 msgid "login.disabled"
@@ -3042,6 +3102,9 @@ msgstr "编辑了 %2 的页面 %1"
 msgid "page.deleted=name"
 msgstr "已删除“%1”"
 
+msgid "page.double-click-to-edit"
+msgstr "双击以编辑页面"
+
 #. ($edit_summary, $page_link, $workspace->title)
 #: lib/Socialtext/Page.pm:405
 msgid "page.edited=summary,page,wiki"
@@ -3104,6 +3167,9 @@ msgstr "电子表格"
 
 #: lib/Socialtext/Pluggable/Plugin/Default.pm:45
 msgid "page.type-wiki"
+msgstr "页面"
+
+msgid "page.type-xhtml"
 msgstr "页面"
 
 #. ($page->name, $workspace->title()
@@ -3393,6 +3459,9 @@ msgstr "%1 发送讯息"
 msgid "revision.compare=old,new"
 msgstr "对比版本 %1 和 %2"
 
+msgid "rss.number-of-posts-to-syndicate"
+msgstr "要聚合的博客数"
+
 #. ($workspace->title, $query{search_term})
 #: lib/Socialtext/SearchPlugin.pm:208
 msgid "search.atom=wiki,query"
@@ -3427,6 +3496,18 @@ msgstr "搜索结果"
 msgid "search.rss=wiki,query"
 msgstr "%1 - 用 RSS 搜索 %2"
 
+msgid "settings.features"
+msgstr "功能"
+
+msgid "settings.manage-users"
+msgstr "管理用户"
+
+msgid "settings.number-of-items-to-show"
+msgstr "显示的项目数"
+
+msgid "settings.saved"
+msgstr "已保存"
+
 #: lib/Socialtext/Page.pm:1133
 msgid "sheet.creating"
 msgstr "正在创建新的电子表格..."
@@ -3434,6 +3515,9 @@ msgstr "正在创建新的电子表格..."
 #: lib/Socialtext/DisplayPlugin.pm:68 lib/Socialtext/PageRevision.pm:412
 msgid "sheet.untitled"
 msgstr "未命名电子表格"
+
+msgid "signal.mention-by=sender"
+msgstr "%1 提及您的讯息"
 
 #: lib/Socialtext/Pluggable/Plugin/Signals.pm:333
 msgid "signals.importing"
@@ -3456,6 +3540,9 @@ msgstr "已发送的私人讯息"
 msgid "signals.private-message-sent-to-you=sender:"
 msgstr "%1 传了一则私人讯息给您："
 
+msgid "signals.send-private-signals-as-email"
+msgstr "以电子邮件形式发送私信"
+
 #. ($1)
 #: lib/Socialtext/Pluggable/Plugin/Signals.pm:653
 msgid "signals.tagged=tag"
@@ -3465,6 +3552,12 @@ msgstr "标记了 #%1 的讯息"
 #: lib/Socialtext/Handler/ControlPanel.pm:2538
 msgid "sort.ascending=field"
 msgstr "按照 %1 正序排列"
+
+msgid "sort.by-create-time"
+msgstr "按创建时间"
+
+msgid "sort.by-last-updated-time"
+msgstr "按最后更新时间"
 
 #. (_field_display_name($field)
 #: lib/Socialtext/Handler/ControlPanel.pm:2539
@@ -3503,6 +3596,60 @@ msgstr "删除 %1 上传的小工具"
 msgid "test.deleted-widgets=count"
 msgstr "已删除 %1 个小工具"
 
+msgid "theme.background_color"
+msgstr "背景色"
+
+msgid "theme.background_image"
+msgstr "背景图像"
+
+msgid "theme.background_image_position"
+msgstr "背景图像位置"
+
+msgid "theme.background_image_tiling"
+msgstr "背景图像铺设"
+
+msgid "theme.background_link_color"
+msgstr "背景链接颜色"
+
+msgid "theme.body_font"
+msgstr "正文字体"
+
+msgid "theme.favicon_image"
+msgstr "收藏夹图标"
+
+msgid "theme.foreground_shade"
+msgstr "主菜單字体亮度"
+
+msgid "theme.header_color"
+msgstr "页眉颜色"
+
+msgid "theme.header_font"
+msgstr "标题字体"
+
+msgid "theme.header_image"
+msgstr "页眉图像"
+
+msgid "theme.header_image_position"
+msgstr "页眉图像位置"
+
+msgid "theme.header_image_tiling"
+msgstr "页眉图像铺设"
+
+msgid "theme.header_link_color"
+msgstr "页眉链接颜色"
+
+msgid "theme.logo_image"
+msgstr "标志图片"
+
+msgid "theme.primary_color"
+msgstr "主要颜色"
+
+msgid "theme.secondary_color"
+msgstr "次要颜色"
+
+msgid "theme.tertiary_color"
+msgstr "第三颜色"
+
 #. ($self->hub->timezone->date_local( $_[0], dateonly => 1)
 #: lib/Socialtext/DisplayPlugin.pm:267
 msgid "time.at=date,time"
@@ -3513,15 +3660,27 @@ msgstr "%1 %2"
 msgid "time.count=days"
 msgstr "%1 天"
 
+msgid "time.date-format"
+msgstr "日期格式"
+
+msgid "time.daylight-savings-summer"
+msgstr "夏令时间"
+
 #. (int($age / 86400)
 #: lib/Socialtext/PageRevision.pm:377
 msgid "time.days=count"
 msgstr "%1 天"
 
+msgid "time.do-not-include-seconds"
+msgstr "不包括秒"
+
 #. (int($age / 3600)
 #: lib/Socialtext/PageRevision.pm:376
 msgid "time.hours=count"
 msgstr "%1 小时"
+
+msgid "time.include-seconds-in-time-format"
+msgstr "在时间格式中包括秒"
 
 #. (int($age / 60)
 #: lib/Socialtext/PageRevision.pm:375
@@ -3541,6 +3700,12 @@ msgstr "从不"
 #: lib/Socialtext/PageRevision.pm:374
 msgid "time.seconds=count"
 msgstr "%1 秒"
+
+msgid "time.time-format"
+msgstr "时间格式"
+
+msgid "time.timezone"
+msgstr "时区"
 
 #. (int($age / 604800)
 #: lib/Socialtext/PageRevision.pm:378
@@ -3844,6 +4009,12 @@ msgstr "%1 工作区的关注列表更新"
 msgid "watch.empty=wiki"
 msgstr "%1 中的关注列表为空。"
 
+msgid "watchlist.digest-information"
+msgstr "关注列表摘要信息"
+
+msgid "watchlist.frequence-of-updates"
+msgstr "更新的频率"
+
 #. ($widget->{src})
 #: lib/Socialtext/Pluggable/Plugin/Widgets.pm:313
 msgid "widget.adding=src"
@@ -3928,6 +4099,9 @@ msgstr "用户“%1”不可以锁定页面。"
 msgid "wiki.double-click-to-edit?"
 msgstr "双击编辑页面？"
 
+msgid "wiki.email-notifications"
+msgstr "电子邮件通知"
+
 #: lib/Socialtext/WorkspacesUIPlugin.pm:662
 msgid "wiki.enabled-locking"
 msgstr "页面锁定已启用。"
@@ -3983,6 +4157,18 @@ msgstr "%1 群组不属于此工作区"
 msgid "wiki.notes-title"
 msgstr "公告和链接"
 
+msgid "wiki.only-registered-users"
+msgstr "仅限注册用户"
+
+msgid "wiki.placement-of-emailed-content"
+msgstr "电子邮件的内容的放置"
+
+msgid "wiki.recent-changes-sidebar-widget"
+msgstr "“最近修改”侧边栏小工具"
+
+msgid "wiki.recently-viewed-sidebar-widget"
+msgstr "“最近浏览”侧边栏小工具"
+
 #. ($group->driver_group_name)
 #: lib/Socialtext/Handler/ControlPanel.pm:1527
 msgid "wiki.removed=group"
@@ -3991,6 +4177,9 @@ msgstr "%1 群组已从此工作区移除"
 #: lib/Socialtext/BreadCrumbsPlugin.pm:33
 msgid "wiki.show-breadcrumbs-sidebox?"
 msgstr "显示“最近浏览”侧边栏？"
+
+msgid "wiki.show-page-snippets-on-mouse-hover"
+msgstr "鼠标悬停时显示页面片段"
 
 #: lib/Socialtext/RecentChangesPlugin.pm:70
 msgid "wiki.show-sidebox?"
@@ -4008,6 +4197,9 @@ msgstr "显示多少页面在侧边栏？"
 msgid "wiki.sidebox-number-of-changes?"
 msgstr "一段时间内，页面侧边栏应该显示多少项目？"
 
+msgid "wiki.timeframe-for-changes"
+msgstr "变更时限"
+
 #: lib/Socialtext/Workspace.pm:317
 msgid "wiki.top-page"
 msgstr "首页"
@@ -4020,3 +4212,6 @@ msgstr "欢迎"
 #: lib/Socialtext/User/Restrictions/email_confirmation.pm:62
 msgid "wiki.welcome-confirm=name"
 msgstr "欢迎来到 %1 工作区 - 请确认注册邮箱"
+
+msgid "xhtml.creating"
+msgstr "正在创建页面..."

@@ -1,7 +1,6 @@
 | *Comment* | Test Case: Show Direct Reports |
 
 * Fixture: SocialWidgets
-
 skip.ie because update-profile causes Se to exit in IE
 
 Here's the basic setup:
@@ -139,7 +138,6 @@ Manager see's 'em all
 | wait_for_element_not_present_ok | link=user3_short%% | 30000 |
 | wait_for_element_not_present_ok | link=user3_short%% | 30000 |
 
-
 | *Comment* | Test Case: Show Direct Reports Permissions - User04 will see Manager has user01, User02, User04, User05 as direct report (Not user03) |  |
 | st-logoutin | %%user4%% | %%password%% |
 | st-find-user | %%manager_short%% |  |
@@ -162,7 +160,6 @@ Manager see's 'em all
 | wait_for_element_not_present_ok | link=user2_short%% | 30000 |
 | wait_for_element_not_present_ok | link=user4_short%% | 30000 |
 
-
 | *Comment* | Test Case: Show Direct Reports Permissions - ... We remove Manager from joiner2 |  |
 | st-admin | remove-member --e %%manager%% --w %%joiner2%% | no longer has the role of |
 | st-process-jobs |  |  |
@@ -179,7 +176,6 @@ Manager see's 'em all
 | text_unlike | //body | %%user1_short%% |
 | text_unlike | //body | Employees |
 
-
 | *Comment* | Test Case: Show Direct Reports Permissions - User02 sees no manager and no peers |  |
 | st-logoutin | %%user2%% | %%password%% |
 | wait_for_element_visible_ok | link=%%user2_short%% | 30000 |
@@ -191,7 +187,6 @@ Manager see's 'em all
 | wait_for_element_not_present_ok | link=user3_short%% | 30000 |
 | wait_for_element_not_present_ok | link=user4_short%% | 30000 |
 | wait_for_element_not_present_ok | link=user5_short%% | 30000 |
-
 
 | *Comment* | Test Case: Show Direct Reports Permissions - User02 sees user04 has no peers |  |
 | st-logoutin | %%user2%% | %%password%% |

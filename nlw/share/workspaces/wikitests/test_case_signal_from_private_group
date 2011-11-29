@@ -17,9 +17,9 @@
 | st-admin | create-user --e %%user2%% --p %%password%% --account %%acct%% | was created |
 
 | *Comment* | Test Case: Signal From Private Group. logout explicitly to avoid spurious Basic Authentication pop-up |  |
-| pause | 5000 |  |
+| pause | 15000 |  |
 | open_ok | /nlw/submit/logout |  |
-| pause | 5000 |  |
+| pause | 15000 |  |
 | st-login | %%user1%% | %%password%% |
 
 | *Comment* | Test Case: Signal From Private Group. %%user1_short%% creates a private group |  |  |
@@ -33,10 +33,10 @@
 | set | public_1 | Signal 1 %%start_time%% |
 
 | st-name-widget | 3 | activity_widget |
-| st-send-signal-via-activities-widget | activity_widget | %%public_1%% |
+| st-send-signal-in-activities-widget | %%public_1%% |
 | open_ok | /st/group/%%group_id%% |  |
 | st-name-widget | 3 | activity_widget |
-| st_verify_text_in_activities_widget | activity_widget | %%public_1%% |
+| st-verify-text-in-activities-widget | %%public_1%% |
 
 | *Comment* | Test Case: Signal From Private Group - Find the Permalink and signal ID |  |
 | http-user-pass | %%user1%% | %%password%% |
@@ -51,7 +51,7 @@
 | *Comment* | Test Case: Signal From Private Group - Examine the permalink |  |
 | open_ok | /st/signals/%%signal_hash%% |  |
 | st-name-widget | 1 | outer_widget |
-| st_verify_text_in_activities_widget | outer_widget | %%public_1%% |
+| st-verify-text-in-activities-widget | %%public_1%% |
 
 | *Comment* | Test Case: Signal From Private Group - navigate away from permalink |  |
 | open_ok | /?action=workspaces_listall |  |
@@ -59,7 +59,7 @@
 | *Comment* | Test Case: Signal From Private Group - Examine the signal ID |  |
 | open_ok | /st/signals/%%signal_id%% |  |
 | st-name-widget | 1 | outer_widget |
-| st_verify_text_in_activities_widget | outer_widget | %%public_1%% |
+| st-verify-text-in-activities-widget | %%public_1%% |
 
 | *Comment* | Test Case: Private Group Login as group member %%user2_short%% can not see permalink. Tests {bz: 4086} |  |
 | st-logoutin | %%user2%% | %%password%% |

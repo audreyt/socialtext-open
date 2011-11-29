@@ -4,7 +4,7 @@
 use warnings;
 use strict;
 use Socialtext::AppConfig;
-use Test::Socialtext tests => 15;
+use Test::Socialtext tests => 19;
 use IO::File;
 
 fixtures('db');
@@ -74,11 +74,12 @@ for my $f (
     qw( admin_wiki.htm
     quick_start.htm
     welcome.htm
-    screen.css
     revolts.doc
     socialtext-logo-30.gif )
   ) {
     ok -e $f, "$f exists";
+
+    ok !-e 'screen.css', 'no screen.css file';
 }
 
 my $html_file = "$test_dir/junk/welcome.htm";
@@ -86,8 +87,8 @@ open my $fh, '<', $html_file
   or die "Cannot read $html_file: $!";
 my $html = do { local $/; <$fh> };
 
-like $html, qr/link.+ href="screen.css"/,
-  'admin_wiki.htm has valid css link to screen.css';
+unlike $html, qr/link.+ href="screen.css"/,
+  'admin_wiki.htm has no link to screen.css';
 like $html, qr/href="revolts.doc"/, 'welcome.htm has valid link to revolts.doc';
 like $html, qr/src="socialtext-logo-30.gif"/,
   'welcome.htm has img link to socialtext-logo-30.gif';

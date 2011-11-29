@@ -12,37 +12,34 @@
 
 | *Comment* | Test Case: Mobile Activity. CANNOT USE update-page BECAUSE NO EVENTS ARE CREATED |  |
 
-| *Comment* | Test Case: Mobile Activity. %%username%% starts a conversation in %%ma%% |  |
-| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0000 |
+| *Comment* | Test Case: Mobile Activity. %%username%% starts a conversation in %%ma%% |  |  |  |
+| call | [st-edit-new-page] | ws=%%ma%% | title=Mobile Activity %%start_time%% 0000 | content=test content |
 
-| *Comment* | Test Case: Mobile Activity. %%mau%% creates 11 pages in %%ma%% |  |
+| *Comment* | Test Case: Mobile Activity. %%mau%% creates 11 pages in %%ma%% |  |  |  |
 
-| st-logoutin | %%mau%% | %%password%% |  |
+| st-logoutin | %%mau%% | %%password%% |  |  |
 
-| *Comment* | Test Case: Mobile Activity. CANNOT USE update-page BECAUSE NO EVENTS ARE CREATED |  |
+| *Comment* | Test Case: Mobile Activity. CANNOT USE update-page BECAUSE NO EVENTS ARE CREATED |  |  |  |
 
-| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0001 |
-| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0002 |
-| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0003 |
-| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0004 |
-| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0005 |
-| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0006 |
-| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0007 |
-| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0008 |
-| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0009 |
-| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0010 |
-| st-create-wikipage | %%ma%% | Mobile Activity %%start_time%% 0011 |
+| call | [st-edit-new-page] | ws=%%ma%% | title=Mobile Activity %%start_time%% 0001 | content=test content |
+| call | [st-edit-new-page] | ws=%%ma%% | title=Mobile Activity %%start_time%% 0002 | content=test content |
+| call | [st-edit-new-page] | ws=%%ma%% | title=Mobile Activity %%start_time%% 0003 | content=test content |
+| call | [st-edit-new-page] | ws=%%ma%% | title=Mobile Activity %%start_time%% 0004 | content=test content |
+| call | [st-edit-new-page] | ws=%%ma%% | title=Mobile Activity %%start_time%% 0005 | content=test content |
+| call | [st-edit-new-page] | ws=%%ma%% | title=Mobile Activity %%start_time%% 0006 | content=test content |
+| call | [st-edit-new-page] | ws=%%ma%% | title=Mobile Activity %%start_time%% 0007 | content=test content |
+| call | [st-edit-new-page] | ws=%%ma%% | title=Mobile Activity %%start_time%% 0008 | content=test content |
+| call | [st-edit-new-page] | ws=%%ma%% | title=Mobile Activity %%start_time%% 0009 | content=test content |
+| call | [st-edit-new-page] | ws=%%ma%% | title=Mobile Activity %%start_time%% 0010 | content=test content |
+| call | [st-edit-new-page] | ws=%%ma%% | title=Mobile Activity %%start_time%% 0011 | content=test content |
 
 | *Comment* | Test Case: Mobile Activity. %%mau%% continues the conversation in %%ma%% |  |
 | open_ok | /%%ma%%?Mobile Activity %%start_time%% 0000 |  |
 | wait_for_element_visible_ok | st-edit-button-link | 30000 |
 | click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | %%mau%% continues the conversation in %%ma%% |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+
+| call | st-save-page | content=%%mau%% continues the conversation in %%ma%% |
+
 | wait_for_element_visible_ok | st-edit-button-link | 60000 |
 
 | st-logoutin |  |  |

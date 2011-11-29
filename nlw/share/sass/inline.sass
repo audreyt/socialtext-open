@@ -1,0 +1,342 @@
+.dropdown
+  position: relative
+  *position: static
+  /* {bz: 5403}
+  .value
+    white-space: nowrap
+  .fakeLink
+    color: $primary_color
+    text-decoration: underline
+    z-index: 1000
+  select
+    position: absolute
+    height: 5px
+    right: 0
+    top: 0
+    opacity: 0
+    z-index: 2000
+
+.profileWidget
+  margin: 0 auto
+  text-align: left
+  color: $darker
+  .collapsed
+    display: none
+  .profile
+    text-align: left
+    color: $darker
+    .bold
+      font-weight: bold
+      font-size: 11px
+    .mainInfo
+      float: left
+      margin-left: 15px
+      .profileName
+        font-weight: bold
+        font-size: 13px
+    padding: 0
+    margin: 0
+    line-height: 14px
+    dl dt
+      text-transform: none
+  .statusImage
+    vertical-align: middle
+    height: 16px
+  a.heading
+    text-decoration: none
+    color: $darker
+  .profile
+    .fieldTitle
+      float: left
+      text-align: right
+      width: 35%
+    .value
+      float: left
+      margin-left: 10px
+      width: 55%
+  a.heading:hover
+    text-decoration: underline
+  dl
+    &.mainInfo
+      float: left
+      margin-left: 15px
+    dt
+      font-weight: bold
+      font-size: 11px
+    &.mainInfo dt
+      font-size: 13px
+
+.profileTagsWidget
+  .tagList
+    margin: 10px 0
+    text-align: left
+    .tag
+      list-style: none
+      margin-right: 1em
+      float: left
+      a
+        white-space: nowrap
+        float: left
+        &.icon-delete
+          display: block
+          margin: 3px
+  .entry
+    white-space: nowrap
+    height: 30px
+    input.text
+      width: 130px
+
+/* profile_tags widget End
+
+/* my_workspaces widget Start
+
+.myWorkspacesWidget
+  .default td
+    background-color: $lighter
+    font-weight: bold
+  .ws-views
+    color: $darker
+    text-align: right
+    padding-right: 3px
+  .ws-contrib
+    color: $darker
+    text-align: right
+    padding-right: 10px
+  span
+    text-align: left
+    color: $darkest
+  table
+    width: 100%
+    tr td
+      &:first-child
+        padding-left: 10px
+      padding-top: 3px
+      padding-bottom: 3px
+      padding-left: 0px
+      padding-right: 0px
+      line-height: 1.2
+    td
+      .new-page-link
+        font-size: 90%
+        white-space: nowrap
+      a
+        &:hover
+          text-decoration: underline
+          display: inline
+        text-decoration: none
+        display: inline
+
+.exploreWidget
+  .assetList
+    .asset
+      padding: 0 0 5px 0
+    .timeframe
+      border-top: 1px solid $grey
+      padding-left: 25px
+      padding-bottom: 10px
+      legend
+        padding: 0 7px
+        font-weight: bold
+        color: $grey
+    .empty
+      padding: 0 0 15px 30px
+      color: $grey
+      font-style: italic
+    .assetTitle
+      position: relative
+      margin-bottom: 25px
+  .assetTitle
+    .icon, .count, .arrow, .assetAvatars
+      position: absolute
+  .asset
+    .icon
+      left: 0
+    .expand
+      position: absolute
+      left: 0
+      top: 22px
+    .count
+      display: block
+      left: 20px
+      top: 1px
+      width: 20px
+      padding: 3px 0
+      background-color: $darker
+      color: $lightest
+      margin: 0 0 0 7px
+    .arrow
+      font-size: 14px
+    .right
+      color: $grey
+      left: 48px
+      top: 2px
+    .down
+      color: $primary_color
+      left: 31px
+      top: 19px
+  .assetTitle
+    .titleLink, .assetTags, .hrefLink
+      padding-left: 70px
+    .titleLink a
+      font-size: 13pt
+    .hrefLink a
+      font-size: 10pt
+      text-decoration: none
+  .assetAvatars
+    right: 5px
+    top: 0
+    img
+      border: 1px solid $darkest
+      width: 27px
+      height: 27px
+  .assetTags .tag
+    color: $grey
+    font-size: 10pt
+    a
+      color: $grey
+      font-size: 10pt
+  .assetList
+    text-align: left
+  .moreMentions
+    padding: 3px
+    background-color: $lighter
+    margin: 5px 48px 0 30px
+    text-align: center
+    padding: 7px 0
+  .moreAssetsLoading
+    display: none
+  .asset .event_list
+    margin: 0 0 0 19px
+
+#assetOverlay
+  display: none
+  position: absolute
+  z-index: 2001
+  padding: 0
+  margin: 0
+  top: 0
+  left: 0
+  .background
+    background: $lightest
+    opacity: 0.8
+    filter: alpha(opacity = 80)
+    width: 100%
+    height: 100%
+  .loading
+    position: absolute
+    top: 150px
+    left: 50%
+
+.exploreFilters
+  font-size: 12px
+  a
+    font-size: 12px
+  color: $darker
+  text-align: left
+  .description
+    font-style: italic
+    font-size: 95%
+    margin: 0 0 15px 5px
+  .filterSection
+    margin: 0 0 15px 5px
+  .disabled
+    color: $light
+    .filterSectionTitle, ul.list li.selected, .lookahead
+      color: $light
+  .filterSectionTitle
+    font-weight: bold
+    margin-bottom: 5px
+    color: $grey
+    a
+      text-decoration: none
+  ul.list
+    list-style-type: none
+    padding: 0
+  .networks .lookahead, .tags .lookahead, .people .lookahead
+    margin: 5px 0 0 0
+  .lookahead
+    width: 94%
+  ul.list li
+    text-decoration: underline
+    cursor: pointer
+    margin: 3px 0
+    &.selected
+      color: $darker
+      font-weight: bold
+      text-decoration: none
+      cursor: default
+    &.fixed
+      color: $darker
+      text-decoration: none
+      cursor: default
+  .afterTime input, .beforeTime input
+    width: 0
+    border: none
+    visibility: hidden
+    background-color: none
+  .searchBox
+    float: left
+    margin-right: 10px
+  .searchButton
+    float: left
+    clear: none
+  .permalink
+    margin: 5px 10px 5px 5px
+    padding: 3px 0 5px 0
+    border: 1px solid $darker
+    text-align: center
+    background-color: $tertiary_color
+
+.explorePermalinkDialog
+  .description
+    padding: 8px 0
+  textarea
+    width: 300px
+    height: 100px
+
+.wikiPageWidget table
+  &.st-ss
+    th span
+      display: none !important
+    td, th
+      vertical-align: inherit
+  td
+    vertical-align: top
+
+#st-signal-this-frame
+  .close
+    cursor: pointer
+    position: absolute
+    right: 5px
+    *right: 0px
+    border: 4px solid $light
+  .top
+    cursor: move
+    text-align: left
+    font-size: 120%
+    font-weight: bold
+    width: 100%
+    background-color: $light
+    padding: 4px 0
+    text-indent: 4px
+  .signals
+    *background: transparent
+    -background: transparent
+  .avatar
+    display: none
+  .mainInput
+    margin-left: 0
+    -height: 20px
+  span.networks
+    white-space: nowrap
+  .main
+    background-color: $tertiary_color
+  .sent
+    font-size: 15px
+    font-weight: bold
+  .message
+    margin: 0
+
+.topContent
+  .assetIcon
+    text-align: center

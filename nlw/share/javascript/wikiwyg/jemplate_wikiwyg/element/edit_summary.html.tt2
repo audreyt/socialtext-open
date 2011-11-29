@@ -1,0 +1,21 @@
+<div id="st-edit-summary">
+    <div class="body">
+        <form action="#">
+            <div class="field">
+                <input type="text" id="st-edit-summary-text-area" maxlength="250" class="input initial" value="[% loc("edit.summarize") %]">
+            </div>
+            [% IF plugins_enabled.grep("signals").size && plugins_enabled_for_current_workspace_account.grep("signals").size -%]
+            <div class="signal">
+                <div class="preview" style="display: none;">Your Signal will appear as:<div id="st-edit-summary-signal-preview" class="text"></div></div>
+                <input id="st-edit-summary-signal-checkbox" type="checkbox" /><label for="st-edit-summary-signal-checkbox">[% loc('edit.signal-to') %]</label>
+                <input id="st-edit-summary-signal-to" type="hidden" />
+                <select id="signal_network"></select>
+                <img id="signal_network_warning" src="/static/images/warning-icon.png" style="margin-right: -20px; position: relative; display: none" title="[% loc('info.edit-summary-signal-visibility') %]" />
+            </div>
+            [%- END %]
+         [%#    <div class="minor">
+                <input id="st-edit-summary-minor-checkbox" type="checkbox" /><label for="st-edit-summary-minor-checkbox">Minor edit</label>&nbsp;&nbsp;
+            </div> %]
+        </form>
+    </div>
+</div>

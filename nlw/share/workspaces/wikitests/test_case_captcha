@@ -3,21 +3,21 @@
 | st-config | set self_registration 1 | Wrote updated config file |
 
 | *Comment* | Test Case: Captcha Register, see no captcha |  |
-| st-appliance-config | set captcha_enabled 0 |  |
+| st-appliance-config_set | captcha_enabled 0 |  |
 | open_ok | /nlw/submit/logout |  |
 | wait_for_element_visible_ok | link=Register | 30000 |
 | click_and_wait | link=Register |  |
 | wait_for_element_not_present_ok | recaptcha_table | 30000 |
 
 | *Comment* | Test Case: Captcha Change values, see captcha |  |
-| st-appliance-config | set captcha_enabled 1 |  |
+| st-appliance-config_set | captcha_enabled 1 |  |
 | open_ok | /nlw/submit/login |  |
 | wait_for_element_visible_ok | link=Register | 30000 |
 | click_and_wait | link=Register |  |
 | wait_for_element_visible_ok | recaptcha_table | 30000 |
 
 | *Comment* | Test Case: Captcha Change values back, see no captcha |  |
-| st-appliance-config | set captcha_enabled 0 |  |
+| st-appliance-config_set | captcha_enabled 0 |  |
 | open_ok | /nlw/submit/login |  |
 | wait_for_element_visible_ok | link=Register | 30000 |
 | click_and_wait | link=Register |  |

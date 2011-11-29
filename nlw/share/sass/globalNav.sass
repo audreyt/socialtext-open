@@ -1,0 +1,120 @@
+/**
+ * Global Navigation
+
+// paddingless positioning of the global nav
+.navGrid
+  height: 50px
+  position: relative
+  z-index: 100
+  margin: 0
+  padding: 0 $margin
+  .navItem, .navLink
+    height: 45px
+    position: absolute
+    border-left: 2px solid $darkest
+    left: 0
+    width: 100%
+  &:hover, &.hover
+    z-index: 101
+    .underline
+      background-color: $secondary_color
+  .emptynotice
+    white-space: normal
+  .notinstallednotice
+    white-space: normal
+    a
+      text-decoration: underline
+
+.underline, .staticUnderline
+  height: 3px
+  position: absolute
+  top: 45px
+  left: 0
+  background-color: $lightest
+  border-top: 2px solid $secondary_color
+  width: 100%
+
+.selected .underline
+  background-color: $secondary_color
+
+a
+  &.invite
+    color: $primary_contrast !important
+    &:hover
+      border-width: 1px
+  &:visited, &:active
+    color: $foreground_color
+  color: $foreground_color
+
+.navLink
+  a
+    top: 10px
+    position: relative
+    color: $foreground_color
+    font-size: 13px
+    height: 25px // big enough for the icons
+    display: block
+    padding: 5px 0 0 40px
+    font-weight: bold
+    text-decoration: none
+    background: transparent no-repeat 8px 0
+    &.dashboard
+      background-image: url(#{$static}/images/icons/#{$foreground_shade}/home-25.png)
+    &.spaces
+      background-image: url(#{$static}/images/icons/#{$foreground_shade}/spaces-25.png)
+    &.activities
+      background-image: url(#{$static}/images/icons/#{$foreground_shade}/activities-25.png)
+    &.groups
+      background-image: url(#{$static}/images/icons/#{$foreground_shade}/groups-25.png)
+    &.people
+      background-image: url(#{$static}/images/icons/#{$foreground_shade}/people-25.png)
+
+.buttons
+  float: right
+  margin-top: 9px
+  padding-right: 12px
+  &.editLayout
+    padding-right: 0px
+  .editMode
+    display: none
+
+// Drop downs
+ul.navList
+  position: absolute
+  display: none
+  list-style: none
+  padding: 0 
+  margin: 0
+  background-color: $background_color
+  color: $foreground_color
+  z-index: 1000
+  -webkit-overflow-scrolling: touch
+  border: 2px solid $secondary_color
+  li
+    margin: 0
+    padding: 0
+    a:hover
+      text-decoration: none 
+    &.last
+      border-bottom: none
+    &.entries
+      max-height: 300px
+      overflow-y: auto
+      overflow-x: hidden
+      -webkit-overflow-scrolling: touch
+      border-bottom: none
+      img
+        margin-right: 5px
+      ul
+        padding: 0
+        margin: 0
+    a, &.emptynotice
+      display: block
+      padding: 3px 20px 3px 5px
+      border-bottom: 1px solid $background_complement
+      white-space: nowrap
+      background-color: $background_color
+    &.emptynotice
+      white-space: normal
+    a:hover
+      background-color: $background_complement

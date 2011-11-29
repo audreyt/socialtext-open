@@ -1,0 +1,13 @@
+| set | cdp_wiki | cdp_wiki |
+
+| open_ok | /%%cdp_wiki%%/index.cgi?duplicate_of_dupe_spreadsheet |  |
+| wait_for_element_visible_ok | st-page-titletext | 30000 |
+| text_like | st-page-titletext | Duplicate of Dupe Spreadsheet |
+| wait_for_element_visible_ok | link=Duplicate Spreadsheet Tag | 30000 |
+| st_check_files_if_highperms | wikitest.jpg |  |
+
+| *Comment* | Test Case: Calc Tools: Duplicate Page TEARDOWN |  |
+| st-process-jobs |  |  |
+| delete-workspace | %%cdp_wiki%% |  |
+
+| *Comment* | Test Case: Calc Tools: Duplicate Spreadsheet COMPLETED |  |

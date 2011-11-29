@@ -67,7 +67,7 @@ sub handler {
             # XXX authenticated users get redirected to the workspace list,
             # while everyone else just goes to "/" (which may redirect
             # elsewhere as needed).
-            my $redirect_to = $rest->user->is_authenticated ? '/?action=workspace_list' : '/';
+            my $redirect_to = $rest->user->is_authenticated ? '/?action=workspaces_listall' : '/';
             $rest->header(
                 -status   => HTTP_302_Found,
                 -Location => $redirect_to,

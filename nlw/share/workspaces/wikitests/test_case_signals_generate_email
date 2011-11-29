@@ -1,0 +1,89 @@
+| *Comment* | Test Case: Signals Generate Email |  |
+
+* Fixture: SocialWidgets
+
+| set | sge_acct | sce_account_%%start_time%% |
+| set | sge_wiki | sge-workspace-%%start_time%% |
+| set | sge_wiki_spaces | sge workspace %%start_time%% |
+| set | sge_user | %%sge_wiki%%@%%wikiemail%% |
+| set | sge_user_prefix | sge |
+| set | sge_user_suffix | %%start_time%% |
+| set | sge_signaller | sge.signaller.%%start_time%%@david.socialtext.net |
+| set | sge_signaller_under | sge_signaller_%%start_time%% |
+| set | sge_signaller_short | sge signaller %%start_time%% |
+
+| create-account | %%sge_acct%% |  |  |
+| create-workspace | %%sge_wiki%% | %%sge_acct%% |  |
+| create-user | %%sge_user%% | %%password%% | %%sge_acct%% |
+| create-user | %%sge_signaller%% | %%password%% | %%sge_acct%% |
+| st-admin | add-member --workspace %%sge_wiki%% --email %%sge_user%% | now has the role |  |
+| st-admin | add-member --workspace %%sge_wiki%% --email %%sge_signaller%% | now has the role |  |
+
+| *Comment* | Test Case: Signals Generate Email send 1st signal, with mention |  |
+| st-logoutin | %%sge_signaller%% |  |
+| open_ok | /st/signals |  |
+| st_send_signal_in_activities_widget | `This is the first mention {user: %%sge_user%%}` |  |
+
+| *Comment* | Test Case: Signals Generate Email send 2nd signal, a private message |  |
+| st-find-user | %%sge_wiki_spaces%% |  |
+| st_send_signal_in_activities_widget | This is just a private message | PRIVATE |
+
+| *Comment* | Test Case: Signals Generate Email send 3rd signal, a private message with a mention |  |
+| refresh |  |  |
+| st_send_signal_in_activities_widget | `This is a PM with a mention of {user: %%sge_user%%}` | PRIVATE |
+
+| *Comment* | Test Case: Signals Generate Email wait 90 seconds for email delivery |  |
+| pause | 90000 |  |
+
+| *Comment* | Test Case: Signals Generate Email verify the contents of the received emails |  |
+
+| *Comment* | Test Case: Signals Generate Email verify first mention |  |
+| open_ok | /%%sge_wiki%%/signal_mention_by_%%sge_signaller_under%% |  |
+| wait_for_text_present_ok | Signal mention by %%sge_signaller_short%% | 30000 |
+| text_like | You were mentioned by %%sge_signaller_short%%: |  |
+| text_like | This is the first mention %%sge_wiki_spaces%% |  |
+| text_like | This message was sent by Socialtext Signals. You can reply to this message here. |  |
+| text_like | To stop receiving Socialtext Signals emails or to change your preferences, please visit your settings. |  |
+
+| *Comment* | Test Case: Signals Generate Email verify two emails: "just a private" and "private mention" |  |
+| open_ok | /%%sge_wiki%%/%%sge_signaller_under%%_sent_you_a_private_message |  |
+| wait_for_text_present_ok | %%sge_signaller_short%% sent you a private message | 30000 |
+| text_like | You have received a private message from %%sge_signaller_short%%: |  |
+| text_like | This is just a private message |  |
+| text_like | Reply privately to this signal. |  |
+| text_like | This message was sent from Socialtext Signals. |  |
+| text_like | To stop receiving Socialtext Signals emails or to change your preferences, please visit your settings. |  |
+| text_like | This is a PM with a mention of %%sge_wiki_spaces%% |  |
+| text_like | qr/You have received.+You have received/ |  |
+| text_like | qr/sent from Socialtext.+sent from Socialtext/ |  |
+
+| *Comment* | Test Case: Signals Generate Email verify that only two private emails were received |  |
+| open_ok | /%%sge_wiki%%/?action=recent_changes |  |
+| wait_for_text_present_ok | Originally created by | 30000 |
+| text_like | st-listview-form | qr/%%sge_wiki%%.+%%sge_wiki%%/ |
+| text_unlike | st-listview-form | qr/%%sge_wiki%%.+%%sge_wiki%%.+%%sge_wiki%%/ |
+
+| *Comment* | Test Case: Signals Generate Email check the links included in the email |  |
+| open_ok | /%%sge_wiki%%/signal_mention_by_%%sge_signaller_under%% |  |
+| wait_for_element_visible_ok | link=here | 30000 |
+| click_ok | link=here |  |
+| pause | 20000 |  |
+| selectWindow | Socialtext Signals - Permalink |  |
+| wait_for_text_present_ok | Signals - Permanent Link | 30000 |
+| wait_for_text_present_ok | This is the first mention | 30000 |
+| open_ok | /%%sge_wiki%%/signal_mention_by_%%sge_signaller_under%% |  |
+| wait_for_element_visible_ok | link=your settings | 30000 |
+| click_ok | link=your settings |  |
+| pause | 10000 |  |
+| selectWindow | User Settings |  |
+| wait_for_text_present_ok | Mentions of Me | 30000 |
+| wait_for_text_present_ok | Private Signals | 30000 |
+
+| *Comment* | Test Case: Signals Generate Email TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%sge_user%% |  |
+| deactivate-user | %%sge_signaller%% |  |
+| delete-workspace | %%sge_wiki%% |  |
+| delete-account | %%sge_acct%% |  |
+
+| *Comment* | Test Case: Signals Generate Email COMPLETED |  |

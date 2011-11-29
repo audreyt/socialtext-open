@@ -9,77 +9,76 @@ This logoutin FOR STANDALONE TESTING ONLY
 st-logoutin | %%euserone%% | %%password%% |
 
 | *Comment* | Test Case: People Search Execute Search For User #1 by first name |  |
-| open_ok | / |  |
+| open_ok | /st/people |  |
 | st-search-for | Search People: | james |
 | wait_for_text_present_ok | People matching | 30000 |
-| wait_for_element_visible_ok | link=James Bach | 30000 |
-| wait_for_element_visible_ok | link=James Mcguire | 30000 |
-| text_like | contentContainer | qr/Showing 1 - 2 of 2 total/ism |
-| text_unlike | contentContainer | qr/Michael Bolton/ism |
-| text_unlike | contentContainer | qr/Joe Harter/ism |
-| text_unlike | contentContainer | qr/Markus Gäèrtner/ism |
+| wait_for_element_visible_ok | link=James Q. Bach | 30000 |
+| wait_for_element_visible_ok | link=James T. Mcguire | 30000 |
+| text_like | content | qr/Showing 1 - 2 of 2 total/ism |
+| text_unlike | content | qr/Michael S. Bolton/ism |
+| text_unlike | content | qr/Joe JJ. Harter/ism |
+| text_unlike | content | qr/Markus Z. Gaertner/ism |
 
 | *Comment* | Test Case: People Search Execute Search For User #1 by last name |  |
-| open_ok | / |  |
+| open_ok | /st/people |  |
 | st-search-for | Search People: | mcguire |
 | wait_for_text_present_ok | People matching | 30000 |
-| wait_for_element_visible_ok | link=James Mcguire | 30000 |
-| text_like | contentContainer | qr/Showing 1 - 1 of 1 total/ism |
-| text_unlike | contentContainer | qr/James Bach/ism |
-| text_unlike | contentContainer | qr/Michael Bolton/ism |
-| text_unlike | contentContainer | qr/Joe Harter/ism |
-| text_unlike | contentContainer | qr/Markus Gäèrtner/ism |
+| wait_for_element_visible_ok | link=James T. Mcguire | 30000 |
+| text_like | content | qr/Showing 1 - 1 of 1 total/ism |
+| text_unlike | content | qr/James Q. Bach/ism |
+| text_unlike | content | qr/Michael S. Bolton/ism |
+| text_unlike | content | qr/Joe JJ. Harter/ism |
+| text_unlike | content | qr/Markus Z. Gaertner/ism |
 
 | *Comment* | Test Case: People Search Execute Search For User #1 by email address |  |
-| open_ok | / |  |
+| open_ok | /st/people |  |
 | st-search-for | Search People: | %%euserone%% |
 | wait_for_text_present_ok | People matching | 30000 |
-| wait_for_element_visible_ok | link=James Mcguire | 30000 |
-| text_like | contentContainer | qr/Showing 1 - 1 of 1 total/ism |
-| text_unlike | contentContainer | qr/James Bach/ism |
-| text_unlike | contentContainer | qr/Michael Bolton/ism |
-| text_unlike | contentContainer | qr/Joe Harter/ism |
-| text_unlike | contentContainer | qr/Markus Gäèrtner/ism |
+| wait_for_element_visible_ok | link=James T. Mcguire | 30000 |
+| text_like | content | qr/Showing 1 - 1 of 1 total/ism |
+| text_unlike | content | qr/James Q. Bach/ism |
+| text_unlike | content | qr/Michael Bolton/ism |
+| text_unlike | content | qr/Joe JJ. Harter/ism |
+| text_unlike | content | qr/Markus Z. Gaertner/ism |
 
 | *Comment* | Test Case: People Search Execute Search For User #2 by location |  |
-| open_ok | / |  |
+| open_ok | /st/people |  |
 | st-search-for | Search People: | Palo Alto |
 | wait_for_text_present_ok | People matching | 30000 |
-| wait_for_element_visible_ok | link=James Bach | 30000 |
-| text_like | contentContainer | qr/Showing 1 - 1 of 1 total/ism |
-| text_unlike | contentContainer | qr/James Mcguire/ism |
-| text_unlike | contentContainer | qr/Michael Bolton/ism |
-| text_unlike | contentContainer | qr/Joe Harter/ism |
-| text_unlike | contentContainer | qr/Markus Gäèrtner/ism |
+| wait_for_element_visible_ok | link=James Q. Bach | 30000 |
+| text_like | content | qr/Showing 1 - 1 of 1 total/ism |
+| text_unlike | content | qr/James T. Mcguire/ism |
+| text_unlike | content | qr/Michael S. Bolton/ism |
+| text_unlike | content | qr/Joe JJ. Harter/ism |
+| text_unlike | content | qr/Markus Z. Gaertner/ism |
 
 | *Comment* | Test Case: People Search Execute Search For User #3 Extra Fields |  |
-| open_ok | / |  |
+| open_ok | /st/people |  |
 | st-search-for | Search People: | default-three |
 | wait_for_text_present_ok | People matching | 30000 |
-| wait_for_element_visible_ok | link=Michael Bolton | 30000 |
-| text_like | contentContainer | qr/Showing 1 - 1 of 1 total/ism |
-| text_unlike | contentContainer | qr/James Mcguire/ism |
-| text_unlike | contentContainer | qr/James Bach/ism |
-| text_unlike | contentContainer | qr/Joe Harter/ism |
-| text_unlike | contentContainer | qr/Markus Gäèrtner/ism |
+| wait_for_element_visible_ok | link=Michael S. Bolton | 30000 |
+| text_like | content | qr/Showing 1 - 1 of 1 total/ism |
+| text_unlike | content | qr/James T. Mcguire/ism |
+| text_unlike | content | qr/James Q. Bach/ism |
+| text_unlike | content | qr/Joe JJ. Harter/ism |
+| text_unlike | content | qr/Markus Z. Gaertner/ism |
 
 | *Comment* | Test Case: People Search Execute Search For User #4 by Last Name & UTF-8 |  |
-| open_ok | / |  |
+| open_ok | /st/people |  |
 | st-search-for | Search People: | Gaertner |
 | wait_for_text_present_ok | People matching | 30000 |
-| wait_for_element_visible_ok | link=Markus Gaertner | 30000 |
-| text_like | contentContainer | qr/Showing 1 - 1 of 1 total/ism |
-| text_unlike | contentContainer | qr/James Mcguire/ism |
-| text_unlike | contentContainer | qr/James Bach/ism |
-| text_unlike | contentContainer | qr/Joe Harter/ism |
+| wait_for_element_visible_ok | link=Markus Z. Gaertner | 30000 |
+| text_like | content | qr/Showing 1 - 1 of 1 total/ism |
+| text_unlike | content | qr/James T. Mcguire/ism |
+| text_unlike | content | qr/James Q. Bach/ism |
+| text_unlike | content | qr/Joe JJ. Harter/ism |
 
 | *Comment* | Test Case: People Search Execute Search For User #5 Shouldn't show up |  |
-| open_ok | / |  |
+| open_ok | /st/people |  |
 | st-search-for | Search People: | Harter |
 | wait_for_text_present_ok | People matching | 30000 |
-| text_unlike | contentContainer | qr/James Whitaker/ism |
-| text_unlike | contentContainer | qr/James Bach/ism |
-| text_unlike | contentContainer | qr/Joe Harter/ism |
-| text_unlike | contentContainer | qr/Markus Gäèrtner/ism |
+| text_unlike | content | qr/James Q. Bach/ism |
+| text_unlike | content | qr/Joe JJ. Harter/ism |
+| text_unlike | content | qr/Markus Z. Gaertner/ism |
 
-| *Comment* | Test Case: People Search Execute Search COMPLETED |
+| *Comment* | Test Case: People Search Execute Search COMPLETED |  |

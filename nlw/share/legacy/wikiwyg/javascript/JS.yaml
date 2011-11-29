@@ -1,0 +1,58 @@
+---
+'socialtext-editor.js':
+    parts:
+        - {dir: skin/s3/javascript, file: main.js}
+        - {dir: skin/common/javascript, file: 'rangy-core.js'}
+        - {dir: skin/common/javascript, file: 'rangy-serializer.js'}
+        - {dir: skin/common/javascript, file: 'rangy-init.js'}
+        - {dir: skin/common/javascript, file: 'jquery.rangyinputs.js'}
+        - jemplate_wikiwyg.js
+        - jemplate_wikiwyg_edit.js
+        - lib/Wikiwyg.js
+        - Widgets.js
+        - lib/Wikiwyg/Widgets.js
+        - lib/Wikiwyg/Toolbar.js
+        - lib/Wikiwyg/Preview.js
+        - lib/Wikiwyg/Wysiwyg.js
+        - lib/Wikiwyg/HTML.js
+        - Wikiwyg/MessageCenter.js
+        - lib/Wikiwyg/Wikitext.js
+        - Wikiwyg/DataValidator.js
+        - wikiwyg.js
+        - lib/Document/Emitter.js
+        - lib/Document/Emitter/HTML.js
+        - lib/Document/Parser.js
+        - lib/Document/Parser/Wikitext.js
+'socialtext-editor-light.js':
+    parts:
+        - {dir: skin/s3/javascript, file: main.js}
+        - {dir: skin/common/javascript, file: 'rangy-core.js'}
+        - {dir: skin/common/javascript, file: 'rangy-serializer.js'}
+        - {dir: skin/common/javascript, file: 'rangy-init.js'}
+        - {dir: skin/common/javascript, file: 'jquery.rangyinputs.js'}
+        - lib/Wikiwyg.js
+        - Widgets.js
+        - lib/Wikiwyg/Widgets.js
+        - lib/Wikiwyg/Wikitext.js
+        - lib/Wikiwyg/Wysiwyg.js
+'jemplate_wikiwyg.js':
+    parts:
+        - jemplate: jemplate_wikiwyg
+        - jemplate: jemplate
+'jemplate_wikiwyg_edit.js':
+    parts:
+        - widget_template: widget_edit.tt2
+          all: 1
+        - widget_template: widget_menu.tt2
+          target: jemplate/insert_widget_menu
+'Widgets.js':
+    parts:
+        - { json: 'Widgets.yaml', name: 'Wikiwyg.Widgets' }
+#'../../../../share/node_modules/Widgets.coffee':
+#    parts:
+#        - json: 'Widgets.yaml'
+#          name: 'Widgets'
+#          nocomment: true
+#          epilogue: >
+#              (window.Wikiwyg ||= {}).Widgets = Widgets if window?;
+#              module?.exports = Widgets

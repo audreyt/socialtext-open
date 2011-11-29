@@ -16,61 +16,103 @@ field notify_requested => 0;
 sub register {
     my $self = shift;
     my $registry = shift;
-    $registry->add(preference => $self->notify_frequency);
-    $registry->add(preference => $self->sort_order);
-    $registry->add(preference => $self->links_only);
+
+    $self->_register_prefs($registry);
 }
 
 our $Default_notify_frequency_in_minutes = 24 * 60;
 our $Minimum_notify_frequency_in_minutes = 1;
 
+sub pref_names {
+    return qw(notify_frequency sort_order links_only);
+}
+
+sub notify_frequency_data {
+    my $self = shift;
+
+    return {
+        title => loc('email.frequency-of-updates'),
+        default_setting => $Default_notify_frequency_in_minutes,
+        options => [
+            {setting => 0, display => __('time.never')},
+            {setting => 1, display => __('every.minute')},
+            {setting => 5, display => __('every.5minutes')},
+            {setting => 15, display => __('every.15minutes')},
+            {setting => 60, display => __('every.hour')},
+            {setting => 360, display => __('every.6hours')},
+            {setting => 1440, display => __('every.day')},
+            {setting => 4320, display => __('every.3days')},
+            {setting => 10080, display => __('every.week')},
+        ],
+    };
+}
+
 sub notify_frequency {
     my $self = shift;
+
+    my $data = $self->notify_frequency_data;
     my $p = $self->new_preference('notify_frequency');
-    $p->query(__('email.frequency?'));
+
+    $p->query($data->{title});
     $p->type('pulldown');
-    my $choices = [
-        0 => __('time.never'),
-        1 => __('every.minute'),
-        5 => __('every.5minutes'),
-        15 => __('every.15minutes'),
-        60 => __('every.hour'),
-        360 => __('every.6hours'),
-        1440 => __('every.day'),
-        4320 => __('every.3days'),
-        10080 => __('every.week'),
-    ];
-    $p->choices($choices);
-    $p->default($Default_notify_frequency_in_minutes);
+    $p->choices($self->_choices($data));
+    $p->default($data->{default_setting});
+
     return $p;
+}
+
+sub sort_order_data {
+    my $self = shift;
+
+    return {
+        title => loc('email.sort-order-of-updates'),
+        default_setting => 'chrono',
+        options => [
+            {setting => 'chrono', display => __('sort.oldest-first')},
+            {setting => 'reverse', display => __('sort.newest-first')},
+            {setting => 'name', display => __('sort.page-name')},
+        ],
+    };
 }
 
 sub sort_order {
     my $self = shift;
+
+    my $data = $self->sort_order_data;
     my $p = $self->new_preference('sort_order');
-    $p->query(__('email.page-digest-sort?'));
+
+    $p->query($data->{title});
     $p->type('radio');
-    my $choices = [
-        chrono => __('sort.oldest-first'),
-        reverse => __('sort.newest-first'),
-        name => __('sort.page-name'),
-    ];
-    $p->choices($choices);
-    $p->default('chrono');
+    $p->choices($self->_choices($data));
+    $p->default($data->{default_setting});
+
     return $p;
+}
+
+sub links_only_data {
+    my $self = shift;
+
+    return {
+        title => loc('email.digest-information'),
+        default_setting => 'expanded',
+        options => [
+            {setting => 'condensed', display => __('email.page-name-link-only')},
+            {setting => 'expanded', display => __('email.page-name-link-author-date')},
+        ],
+    };
 }
 
 sub links_only {
     my $self = shift;
+
+    my $data = $self->links_only_data;
     my $p = $self->new_preference('links_only');
-    $p->query(__('email.page-digest-details?'));
+
+    $p->query($data->{title});
     $p->type('radio');
-    my $choices = [
-        condensed => __('email.page-name-link-only'),
-        expanded => __('email.page-name-link-author-date'),
-    ];
-    $p->choices($choices);
-    $p->default('expanded');
+    $p->choices($self->_choices($data));
+    $p->default($data->{default_setting});
+
     return $p;
 }
 

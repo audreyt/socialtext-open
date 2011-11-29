@@ -1,3 +1,4 @@
+
 | *Comment* | Test Case: Page Tracker Widget |  |
 
 * Fixture: SocialWidgets
@@ -5,6 +6,7 @@
 | set | user | ptw.user.%%start_time%%@david.socialtext.net |
 | set | acct | ptw-account-%%start_time%% |
 | set | wiki | ptw-workspace-%%start_time%% |
+| set | wiki_dropdown | ptw-workspace-%%start_time%% (ptw-workspace-%%start_time%%) |
 | set | wiki_prefix | ptw-work |
 | set | wiki_suffix | space-%%start_time%% |
 | set | page | tracked page %%start_time%% |
@@ -29,21 +31,19 @@
 
 | st-admin | update-page --w %%wiki%% --e %%user%% --p "%%page%%" < %%wikitest_client_files%%wikitest.txt | has been created |
 | st-process-jobs |  |  |
-| st-add-page-tag | /%%wiki%%/index.cgi?%%page%% | %%tag_1%% |
-| st-add-page-tag | /%%wiki%%/index.cgi?%%page%% | %%tag_2%% |
+| open_ok | /%%wiki%%/%%page%% |  |
+| call | [st-tag-page] | tag_to_apply=%%tag_1%% |
+| call | [st-tag-page] | tag_to_apply=%%tag_2%% |
 
-| *Comment* | Test Case: Page Tracker put widget in dashboard, select proper frame |  |
-| st-single-widget-in-dashboard | gallery-widget-Page Tracker |  |
-| pause | 5000 |  |
-| selectFrame | //div[@class='widgetContent']//iframe[@class='widgetWindow'] |  |
-| text_like | //form[@id='formPrefs'] | Widget Title: |
+| *Comment* | Test Case: Page Tracker put widget in dashboard, select proper frame |  |  |
+| st-single-widget-in-dashboard | gallery-widget-Page Tracker |  |  |
+| wait_for_element_visible_ok | //iframe[@class='widgetWindow'] | 30000 |  |
+| pause_ok | 15000 | Giant Pause before selectFrame |  |
+| select_frame_ok | //iframe[@class='widgetWindow'] |  |  |
+| pause_ok | 15000 | Giant Pause after selectFrame |  |
 
-| *Comment* | Test Case: Page Tracker Widget fill the basics section |  |
-| text_like | //form[@id='formPrefs'] | Basics |
-| wait_for_element_visible_ok | Workspace | 30000 |
-| type_lookahead_ok | Workspace | %%wiki_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%wiki_suffix%%')] | 30000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%wiki_suffix%%')] |  |
+| select-autocompleted-option-ok | Workspace | %%wiki_prefix%% | %%wiki_dropdown%% |
+
 | pause | 2000 |  |
 | wait_for_element_visible_ok | //input[@name='Title'] | 30000 |
 | type_ok | Title | %%title%% |
@@ -54,28 +54,24 @@
 | click_ok | StateTags-row-new |  |
 | wait_for_element_visible_ok | StateTags-PageTag-0 | 30000 |
 | wait_for_element_visible_ok | StateTags-PageTag-new | 30000 |
-| type_lookahead_ok | StateTags-PageTag-new | %%tag_1_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag_1_suffix%%')] | 30000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag_1_suffix%%')] |  |
+| select-autocompleted-option-ok | StateTags-PageTag-new | %%tag_1_prefix%% |
 | pause | 2000 |  |
 | wait_for_element_visible_ok | StateTags-Heading-new | 30000 |
 | type_ok | StateTags-Heading-new | %%heading%% |
 | wait_for_element_visible_ok | StateTags-Notes-new | 30000 |
 | type_ok | StateTags-Notes-new | %%heading_note%% |
 
-| *Comment* | Test Case: Page Tracker Widget fill the page filtering section |  |
-| text_like | //form[@id='formPrefs'] | Page Filtering (optional) |
-| wait_for_element_visible_ok | IncludeTags-row-new | 30000 |
-| click_ok | IncludeTags-row-new |  |
-| wait_for_element_visible_ok | IncludeTags-PageTag-0 | 30000 |
-| wait_for_element_visible_ok | IncludeTags-PageTag-new | 30000 |
-| type_lookahead_ok | IncludeTags-PageTag-new | %%tag_2_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag_2_suffix%%')] | 30000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag_2_suffix%%')] |  |
-| pause | 2000 |  |
-| wait_for_element_visible_ok | ExcludeTags-PageTag-new | 30000 |
-| type_lookahead_ok | ExcludeTags-PageTag-new | zzzzzz |
-| wait_for_text_present_ok | No matches | 30000 |
+| *Comment* | Test Case: Page Tracker Widget fill the page filtering section |  |  |
+| text_like | //form[@id='formPrefs'] | Page Filtering (optional) |  |
+| wait_for_element_visible_ok | IncludeTags-row-new | 30000 |  |
+| click_ok | IncludeTags-row-new |  |  |
+| wait_for_element_visible_ok | IncludeTags-PageTag-0 | 30000 |  |
+| wait_for_element_visible_ok | IncludeTags-PageTag-new | 30000 |  |
+| select-autocompleted-option-ok | IncludeTags-PageTag-new | %%tag_2_prefix%% |  |
+| pause | 2000 |  |  |
+| wait_for_element_visible_ok | ExcludeTags-PageTag-new | 30000 |  |
+
+autocompleted_option_exists | ExcludeTags-PageTag-new | zzz | No matches for 'zzz' |
 
 | *Comment* | Test Case: Page Tracker Widget fill the item background section |  |
 | text_like | //form[@id='formPrefs'] | Item Background (optional) |
@@ -83,9 +79,7 @@
 | click_ok | BackgroundTags-row-new |  |
 | wait_for_element_visible_ok | BackgroundTags-PageTag-0 | 30000 |
 | wait_for_element_visible_ok | BackgroundTags-PageTag-new | 30000 |
-| type_lookahead_ok | BackgroundTags-PageTag-new | %%tag_2_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag_2_suffix%%')] | 30000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag_2_suffix%%')] |  |
+| select-autocompleted-option-ok | BackgroundTags-PageTag-new | %%tag_2_prefix%% |
 | pause | 2000 |  |
 | wait_for_element_visible_ok | BackgroundTags-BackgroundColor-new | 30000 |
 | type_ok | BackgroundTags-BackgroundColor-new | #ABCDEF |
@@ -97,9 +91,7 @@
 | wait_for_element_visible_ok | StampTags-PageTag-0 | 30000 |
 | wait_for_element_visible_ok | StampTags-StampNote-new | 30000 |
 | wait_for_element_visible_ok | StampTags-PageTag-new | 30000 |
-| type_lookahead_ok | StampTags-PageTag-new | %%tag_2_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag_2_suffix%%')] | 30000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag_2_suffix%%')] |  |
+| select-autocompleted-option-ok | StampTags-PageTag-new | %%tag_2_prefix%% |
 | pause | 2000 |  |
 | wait_for_element_visible_ok | StampTags-StampNote-new | 30000 |
 | type_ok | StampTags-StampNote-new | %%other_note%% |
@@ -112,10 +104,9 @@
 
 | *Comment* | Test Case: Page Tracker Widget check widget in dashboard |  |
 | open_ok | /st/dashboard |  |
-| wait_for_element_visible_ok | //div[@class='regular widget'] | 30000 |
 | wait_for_text_present_ok | %%title%% | 30000 |
 | st-name-widget | 1 | tracker |
-| st-widget-title-like | tracker | %%title%% |
+| st-widget-title | tracker | %%title%% |
 | st-select-widget-frame | tracker |  |
 | wait_for_text_present_ok | %%other_note%% | 30000 |
 | wait_for_text_present_ok | %%page%% | 30000 |

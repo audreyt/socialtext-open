@@ -14,6 +14,10 @@ HTML_ARCHIVE: {
     my $ws      = create_test_workspace();
     my $ws_name = $ws->name();
 
+    my (undef, $hub) = $ws->_main_and_hub();
+    my $page = $hub->pages->new_from_name("Temp Page");
+    $page->store();
+
     my $file = Cwd::abs_path(
         ( File::Temp::tempfile( SUFFIX => '.zip', OPEN => 0 ) )[1] );
     expect_success(

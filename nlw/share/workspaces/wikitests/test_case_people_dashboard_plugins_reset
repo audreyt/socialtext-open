@@ -1,8 +1,8 @@
 | *Comment* | Test Case: People Dashboard Plugins Reset |  |
 
-| *Comment* | The purpose of this test case is to follow People Dashboard Plugins in case it bombs out and re-enable People and Dashboard. Don't check the output of enable commands. |
+| *Comment* | The purpose of this test case is to follow People Dashboard Plugins in case it bombs out and re-enable Signals and Dashboard. Don't check the output of enable commands. |
 
 | st-admin | enable-plugin --all-accounts --p dashboard |  |
-| st-admin | enable-plugin --all-accounts --p people |  |
+| st-admin | enable-plugin --all-accounts --p signals |  |
 
 | *Comment* | Test Case: People Dashboard Plugins Reset COMPLETED |  |

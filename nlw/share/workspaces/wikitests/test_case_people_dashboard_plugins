@@ -22,27 +22,29 @@
 
 | *Comment* | Test Case: People Dashboard Plugins Create an pages and signals, tag |  |
 | st-logoutin | %%user%% | %%password%% |
-| tag_profile_via_gui | %%tagtoadd%% |  |
+| open_ok | /st/dashboard |  |
 | st-create-wikipage | %%ws%% | %%page1%% |
+| pause_ok | 5000 | avoid consecutive create wikipage calls |
 | st-create-wikipage | %%ws%% | %%page2%% |
+| tag_profile_via_gui | %%tagtoadd%% |  |
 | http-user-pass | %%user%% | %%password%% |
 | post-signal | %%signal1%% |  |
 | post-signal | %%signal2%% |  |
 
-| *Comment* | Test Case: People Dashboard Plugins Setup Activities Widget |  |
-| st_single_widget_in_dashboard | gallery-widget-Activities |  |
+| *Comment* | Test Case: People Dashboard Plugins Setup Activities Widget |  |  |
+| call | [single-activities-widget] | activity=all-events | contributor=everyone |
 
 | *Comment* | Test Case: People Dashboard Plugins Set event limit to 25 |  |
 | st-name-widget | 1 | activities_widget |
-| st-widget-title-like | activities_widget | Activities |
+| st-widget-title | activities_widget | Activities |
 | st-widget-settings | activities_widget |  |
-| wait_for_element_visible_ok | limit | 30000 |
+| wait_for_element_visible_ok | limit | 15000 |
 | select_ok | limit | 25 |
 | click_ok | st-savebutton-%%activities_widget%% |  |
-| wait_for_element_not_visible_ok | limit | 30000 |
+| wait_for_element_not_visible_ok | limit | 15000 |
 
 | *Comment* | Test Case: People Dashboard Plugins See pages, Signals, Tags |  |
-| wait_for_text_present_ok | edited %%page1%% in %%ws%% | 30000 |
+| wait_for_text_present_ok | edited %%page1%% in %%ws%% | 15000 |
 | text_like | //body | edited %%page2%% in %%ws%% |
 | text_like | //body | tagged themself %%tagtoadd%% |
 | text_like | //body | %%signal1%% |
@@ -50,9 +52,9 @@
 
 | *Comment* | Test Case: People Dashboard Plugins Disable Signals, see only pages, people tags |  |
 | st-admin | disable-plugin --plugin signals --account %%acct%% | The signals plugin is now disabled |
-| refresh |  |  |
+| open_ok | /st/dashboard |  |
 | st-name-widget | 1 | activities_widget |
-| wait_for_text_present_ok | edited %%page1%% in %%ws%% | 30000 |
+| wait_for_text_present_ok | edited %%page1%% in %%ws%% | 15000 |
 | text_like | //body | edited %%page2%% in %%ws%% |
 | text_like | //body | tagged themself %%tagtoadd%% |
 | text_unlike | //body | %%signal1%% |
@@ -60,21 +62,19 @@
 
 | *Comment* | Test Case: People Dashboard Plugins disable people see only pages NOT people tags or signals |  |
 | st-admin | disable-plugin --plugin people --account %%acct%% | is now disabled |
-| refresh |  |  |
+| open_ok | /st/dashboard |  |
 | st-name-widget | 1 | activities_widget |
-| wait_for_text_present_ok | edited %%page1%% in %%ws%% | 30000 |
+| wait_for_text_present_ok | edited %%page1%% in %%ws%% | 15000 |
 | text_like | //body | edited %%page2%% in %%ws%% |
 | text_unlike | //body | tagged themself %%tagtoadd%% |
 | text_unlike | //body | %%signal1%% |
 | text_unlike | //body | %%signal2%% |
 
-| *Comment* | Test Case: People Dashboard Plugins enable signals NOTE |  |
-| *Comment* | Test Case: People Dashboard Plugins enable signals NOTE This will implicitly enable people |  |
-| *Comment* | Test Case: People Dashboard Plugins enable signals NOTE Per Tracy Ruggles, 6/24/2010 irc log 11:38 AM |  |
+| *Comment* | Test Case: People Dashboard Plugins enable signals (also enables people) |  |
 | st-admin | enable-plugin --plugin signals --account %%acct%% | is now enabled |
-| refresh |  |  |
+| open_ok | /st/dashboard |  |
 | st-name-widget | 1 | activities_widget |
-| wait_for_text_present_ok | edited %%page1%% in %%ws%% | 30000 |
+| wait_for_text_present_ok | edited %%page1%% in %%ws%% | 15000 |
 | text_like | //body | edited %%page2%% in %%ws%% |
 | text_like | //body | tagged themself %%tagtoadd%% |
 | text_like | //body | %%signal1%% |
@@ -86,4 +86,4 @@
 | st-admin | delete-workspace --no-export --w %%ws%% |  |
 | delete-account | %%acct%% |  |
 
-| *Comment* | Test Case: People Dashboard Plugins COMPLETED |
+| *Comment* | Test Case: People Dashboard Plugins COMPLETED |  |

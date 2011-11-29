@@ -1,4 +1,7 @@
+
 | *Comment* | Test Case: Business Control Panel Mass Add Users |  |
+
+
 
 | *Comment* | Test Case: Business Control Panel Mass Add Users Create Account |  |
 | set | acct | acctmassadd-%%start_time%% |
@@ -31,7 +34,9 @@
 
 | *Comment* | Test case: Business Control Panel Mass Add Users verify Multiple Users |  |
 | wait_for_text_present_ok | Loaded users from wikitest.csv | 10000 |
-| wait_for_text_present_ok | Updated user | 10000 |
+| *Comment* | Page can say Added User or Updated User on subsequent runs |  |
+| text_like | user kirk |  |
+|  text_like |  user james |  |
 
 | *Comment* | Test Case: Business Control Panel Mass Add Users TEARDOWN |  |
 | st-process-jobs |  |  |

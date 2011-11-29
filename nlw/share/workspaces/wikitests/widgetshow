@@ -4,7 +4,7 @@
 | set | ws_acct | widgetshow_account_%%start_time%% |
 | set | ws_grp | widgetshow_group_%%start_time%% |
 | set | ws_wiki | widgetshow_wiki_%%start_time%% |
-| set_default | pt | 5000 |
+| set_default | pt | 15000 |
 
 | create-account | %%ws_acct%% |  |  |
 | create-user | %%ws_user%% | %%password%% | %%ws_acct%% |
@@ -15,8 +15,8 @@
 | st-logoutin | %%ws_user%% | %%password%% |
 
 | open_ok | /st/dashboard |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+| click_and_wait | st-add-widget |  |
 
 | *Comment* | SEE Widget Gallery |  |
 | pause | %%pt%% |  |

@@ -1,4 +1,4 @@
-| *Comment* | Test Case: Business Control Panel Group Add to Workspace Verifies Group Add to Workspace PLUS add-as-admin |
+| *Comment* | Test Case: Business Control Panel Group Add to Workspace Verifies Group Add to Workspace PLUS add-as-admin |  |  |
 | *Comment* | Test Case: Business Control Panel Group Add to Workspace Create a WS, a group, two users |  |  |
 
 | set | ws | wsgiw-%%start_time%% |  |
@@ -39,8 +39,8 @@
 | wait_for_element_visible_ok | invite-as-admins | 30000 |
 
 | *Comment* | Test Case: Business Control Panel Group Add to Workspace Add To a workspace |  |
-| wait_for_element_visible_ok | //select | 30000 |
-| select-ok | //select | %%ws%% |
+| wait_for_element_visible_ok | workspace_id | 30000 |
+| select-ok | workspace_id | label=%%ws%% |
 | click-and-wait | //input[@value='Add to Workspace'] |  |
 
 | *Comment* | Test Case: Business Control Panel Group Add to Workspace Verify redirect, message |  |
@@ -58,8 +58,8 @@
 | click_and_wait | add-workspace |  |
 
 | wait_for_element_visible_ok | //select[@name='workspace_id'] | 30000 |
-| wait_for_element_present_ok | //select[@name='workspace_id']/option[contains(text(),'%%workspace%%')] | 5000 |
-| wait_for_element_not_present_ok | //select[@name='workspace_id']/option[contains(text(),'%%ws%%')] | 5000 |
+| wait_for_element_present_ok | //select[@name='workspace_id']/option[contains(text(),'%%workspace%%')] | 15000 |
+| wait_for_element_not_present_ok | //select[@name='workspace_id']/option[contains(text(),'%%ws%%')] | 15000 |
 
 | *Comment* | Test Case: Business Control Panel Group Add to Workspace Add as admin |  |
 | open-ok | /nlw/control/group/%%group_id%% |  |
@@ -77,8 +77,8 @@
 | check_ok | invite-as-admins |  |
 | is_checked_ok | invite-as-admins |  |
 
-| wait_for_element_visible_ok | //select | 30000 |
-| select-ok | //select | %%workspaceforadmin%% |
+| wait_for_element_visible_ok | workspace_id | 30000 |
+| select-ok | workspace_id | label=%%workspaceforadmin%% |
 | wait_for_element_visible_ok | //input[@value='Add to Workspace'] | 30000 |
 | click-and-wait | //input[@value='Add to Workspace'] |  |
 
@@ -104,4 +104,4 @@
 | delete-group | %%group_id%% |  |
 | delete-account | %%account%% |  |
 
-| *Comment* | Test Case: Business Control Panel Group Add to Workspace COMPLETED |
+| *Comment* | Test Case: Business Control Panel Group Add to Workspace COMPLETED |  |

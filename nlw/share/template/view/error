@@ -1,0 +1,7 @@
+[%# @COPYRIGHT@ -%]
+[%# vim: set et sts=2 sw=2: %]
+[% WRAPPER $frame_name id="loginPage" title=loc("nav.error") %]
+<div id="st-display-mode-container" class="authentication">
+  <h3 class="error vpad50 center">[% error_string %]</div>
+</div>
+[% END %]

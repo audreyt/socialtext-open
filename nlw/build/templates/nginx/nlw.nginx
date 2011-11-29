@@ -73,16 +73,43 @@
 
 [%# The rewrite file must come before any of the redirect confs below %]
 [% PROCESS 'nginx/rewrite.nginx' %]
+    location /nlw/theme {
+        internal;
+        alias [% config.cache_dir %]/theme/;
+        add_header Cache-Control "public, must-revalidate, max-age=0, post-check=0, pre-check=0";
+    }
 
-    [%- IF config.is_dev %]
-        location ~ "^/static/skin/([^/]+)/javascript/(.*)" {
-            proxy_pass http://localhost:[% apache_perl_port %]/js/skin/$1/$2;
-        }
+    rewrite ^/js/[\d\.]+/(.+)$ /js/$1;
 
-        location ~ "^/nlw/plugin/([^/]+)/javascript/(.*)" {
-            proxy_pass http://localhost:[% apache_perl_port %]/js/plugin/$1/$2;
-        }
+    [%- UNLESS config.is_dev %]
+    rewrite ^/js/(.+)$ /nlw/js/$1;
     [%- END %]
+
+    location ~ "^/nlw/js/(.+.js)$" {
+        alias [% config.data_root_dir %]/storage/javascript/$1;
+        expires 1y;
+        internal;
+        types {}
+        default_type application/javascript;
+    }
+
+    location ~ "^/nlw/js/(.+.htc)$" {
+        alias [% config.data_root_dir %]/storage/javascript/$1;
+        expires 1y;
+        internal;
+        types {}
+        default_type 'text/x-component';
+    }
+    
+    location ~ "^/nlw/js/(.+.jgz)$" {
+        alias [% config.data_root_dir %]/storage/javascript/$1;
+        expires 1y;
+        internal;
+        types {}
+        default_type application/javascript;
+        add_header Content-Encoding "gzip";
+        gzip off;
+    }
 
     location /nlw/static/ {
         internal;
@@ -90,36 +117,9 @@
         expires 1y;
     }
 
-    location ~ "^/nlw/static/(.+.js.gz)$" {
-        alias [% config.static_dir %]/$1;
-        expires 1y;
-        types {}
-        default_type application/javascript;
-        add_header Content-Encoding "gzip";
-        gzip off;
-    }
-
-    location ~ "^/static/(.+.js.gz)$" {
-        alias [% config.static_dir %]/$1;
-        expires 1y;
-        types {}
-        default_type application/javascript;
-        add_header Content-Encoding "gzip";
-        gzip off;
-    }
-
     location ~ ^/static/(.+) {
         alias [% config.static_dir %]/$1;
         expires 1y;
-    }
-
-    location ~ "^/nlw/plugin/([^/]+)/(.+.js.gz)" {
-        alias [% config.static_dir %]/plugin/$1/share/$2;
-        expires 1y;
-        types {}
-        default_type application/javascript;
-        add_header Content-Encoding "gzip";
-        gzip off;
     }
 
     location ~ "^/nlw/plugin/([^/]+)/(.+)" {
@@ -141,6 +141,12 @@
         internal;
         alias [% config.data_root_dir %]/attachments/;
         expires 1y;
+    }
+    # Same as above, but for endpoints with mutable content (e.g. account logo)
+    location /nlw/attachments-uncached/ {
+        internal;
+        alias [% config.data_root_dir %]/attachments/;
+        add_header Cache-Control "public, must-revalidate, max-age=0, post-check=0, pre-check=0";
     }
 
     # DON'T cache RPC relay
@@ -166,8 +172,17 @@
         root [% config.data_root_dir %]/docroot;
     }
 
-    # Force IE8 to emulate IE7, to avoid IE8 rendering issues.
-    add_header X-UA-Compatible IE=EmulateIE7;
+    set $x_ua_compatible "";
+    # For IE6/7/8, if user has ChromeFrame installed, use it.
+    if ($http_user_agent ~ "MSIE [67]") {
+      set $x_ua_compatible "chrome=IE8";
+    }
+    # Force IE8 to emulate IE7 to prevent it from crashing.
+    if ($http_user_agent ~ "MSIE 8") {
+      set $x_ua_compatible "IE=EmulateIE7,chrome=IE8";
+    }
+    # IE9 and later don't need X-UA-Compatible at all.
+    add_header X-UA-Compatible $x_ua_compatible;
 
     location ~ "^/static/.+\.js$" {
       # Safari doesn't like compressed JS, so *only* compress HTML content

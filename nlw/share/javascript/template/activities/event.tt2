@@ -1,0 +1,79 @@
+[%- PROCESS activities/macros.tt2 -%]
+[% SET signal_class = this.signalClass(event) %]
+[% SET replies = this.visibleReplies(event) %]
+[% SET older = event.num_replies - replies.size %]
+<div class="avatar">
+    <a href="[% event.actor.uri %]" target="_blank">
+        <img class="actor_photo"
+            src="[% this.base_uri %]/data/people/[% event.actor.id %]/photo"/>
+    </a>
+    [%- IF signal_class == 'private' -%]
+        <div class="type">[% loc('activities.private') %]</div>
+    [%- ELSIF signal_class == 'mention' -%]
+        <div class="type">[% loc('activities.mention') %]</div>
+    [%- ELSIF signal_class -%]
+        <div class="type">[% signal_class %]</div>
+    [%- END -%]
+</div>
+
+<div class="indented">
+[%- try_include("activities/event/${event.event_class}.tt2",
+                "Unknown event class: ${event.event_class}") -%]
+</div>
+
+[% IF event.context.annotations.link %]
+    <div class="links">
+        <h3 class="title">Link</h3>
+        <div class="link">
+            [% event.context.annotations.link.html %]
+        </div>
+    </div>
+[% END %]
+
+<div class="assetIcon">
+    [%- try_include("activities/event/${event.event_class}.icons.tt2",
+                    "Unknown event class: ${event.event_class}.icons") -%]
+</div>
+
+[% IF event.signal_id %]
+    <div class="replies indented">
+        <div class="older">[% INCLUDE older_replies %]</div>
+
+        <div class="clear"></div>
+
+        [% FOR reply = replies %]
+            <div class="reply signal[% reply.signal_id %]">
+                [% INCLUDE activities/reply.tt2 event=reply %]
+            </div>
+        [% END %]
+
+        [% IF this.signals_enabled && (event.open || event.num_replies) %]
+            <div class="top_line"></div>
+            <div class="clear"></div>
+
+            <div class="wikiwygWrapper">
+                <div class="wikiwyg" id="[% id("reply-$event.signal_id") %]">
+                    <div class="clearHandler">
+                        [% loc('activities.add-to-conversation') %] »
+                    </div>
+                </div>
+                [% INCLUDE lookahead %]
+                <div class="attachmentList"></div>
+                <div class="toolbar" style="display:none">
+                    [% INCLUDE activities/elements/toolbar.tt2 showDirect=0 %]
+                </div>
+                <div class="post hidden">
+                    <a href="#" class="button" id="[% id('post') %]">[% loc('nav.go') %]</a>
+                    <div class="count" id="[% id('count') %]"></div>
+                </div>
+            </div>
+            <div class="omega grid_2"></div>
+        [% END %]
+        
+        <div class="clear"></div>
+    </div>
+[% ELSE %]
+    <div class="vpad3"></div>
+[% END %]
+
+<div class="clear"></div>

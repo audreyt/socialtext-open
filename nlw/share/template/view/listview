@@ -1,0 +1,181 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[%- USE decorate -%]
+[%- USE JSON -%]
+
+[% WRAPPER $frame_name id="listPage" %]
+  [% INCLUDE element/page/navigation %]
+  [% INCLUDE header %]
+
+  [% predicate_with_params = BLOCK %]?[% predicate |html %];scope=[% scope |html %];orig_search_term=[% search_term |html %];sortby=[% sortby |html %];direction=[% (direction || sortdir.$sortby) |html %][%- END %]
+  [% query_start = BLOCK %]?[% predicate %];scope=[% scope %];orig_search_term=[% search_term %];summaries=[% summaries %][%- END %]
+
+  [% IF !rows.size %]
+    [% INCLUDE no_results %]
+  [% ELSIF too_many %]
+    [% INCLUDE too_many_results %]
+  [% ELSIF search_timeout %]
+    <div class="grid_24" id="tooManyResults">
+      <p> [% loc('search.too-general') %] </p>
+      <p> [% loc('search.be-more-specific') %] </p>
+      <br />
+      <div id="inlineSearch">
+        [% INCLUDE element/search_form sid='search-again' %]
+      </div>
+    </div>
+    <div class="clear"></div>
+  [% ELSE %]
+    [% IF listview_content_actions %]
+      <div class="grid_24">[% PROCESS $listview_content_actions %]</div>
+      <div class="clear"></div>
+    [% END %]
+    <form id="st-listview-form" method="post" action="/[% current_workspace.name %]/">
+      <input id="st-listview-action" name="action" value="" type="hidden">
+      <input id="st-listview-filename" name="filename" value="" type="hidden">
+      [% IF pager %]
+        <div class="grid_24">[% INCLUDE "view/paging" %]</div>
+        <div class="clear"></div>
+      [% END %]
+
+      [% IF ! offset; offset = 0; END %]
+      [% IF ! last; last = rows.size; END %]
+
+      [% INCLUDE listview_header %]
+      [% INCLUDE element/listview_results %]
+      <div class="clear"></div>
+    </form>
+    [% IF pager && pager.total_entries %]
+      <div class="grid_24 search_count">
+         <b>[% loc('info.showing=from,to,total', offset + 1, last, pager.total_entries) %]</b>
+      </div>
+      <div class="clear"></div>
+      <div class="grid_24">[% INCLUDE "view/paging" %]</div>
+      <div class="clear"></div>
+    [% END %]
+  [% END %]
+  <div class="clear vpad5"></div>
+
+  <script><!--
+  $(function(){st.setupListview([% query_start.json %])});
+  --></script>
+[% END %]
+
+[% BLOCK header %]
+  [% IF too_many %]
+    <div class="grid_24">
+      <h1 title="[% display_title | html %]">[% display_title | html %]</h2>
+    </div>
+  [% ELSE %]
+    <div class="grid_20">
+      <h1 title="[% display_title | html %]">[% display_title | html %]</h2>
+    </div>
+    <div class="grid_4" id="controlsRight">
+      [% IF feeds.rss.page %]
+        <a style="float: left; margin-right: 10px; margin-top: 1px" href="[% feeds.rss.page.url %]"><img border="0" src="[% static_path %]/images/icons/rss.png"/></a>
+      [% END %]
+      <select id="st-listtools-export" class="listtoolsExport">
+          <option class="export" value="export">[% loc('do.export') %]</option>
+          [% IF loc_system_lang != 'ja' %]
+          <option title="[% loc('nav.create-pdf') %]" class="pdfexport" href="#" value="pdf">[% loc('export.pdf') %]</option>
+          [% END %]
+          <option title="[% loc('nav.create-word') %]" class="rtfexport" href="#" value="rtf">[% loc('export.word') %]</option>
+      </select>
+    </div>
+  [% END %]
+
+  <div class="clear"></div>
+[% END %]
+
+[% BLOCK no_results %]
+  <div class="grid_24" style="font-size:110%" id="tooManyResults">
+    [% IF empty_message %]
+      [% empty_message %]
+    [% ELSIF empty_include %]
+      [% INCLUDE $empty_include %]
+    [% ELSE %]
+      <p style="margin:10px 0">
+        [% loc('error.no-search-results') %]
+      </p>
+      [% IF action == 'search_workspace' %]
+      <p style="margin:8px 0">
+        [% loc('info.no-search-results') %]
+      </p>
+      [% END %]
+    [% END %]
+    [% IF action == 'search_workspace' %]
+      <div id="inlineSearch">
+        [% INCLUDE element/search_form sid='search-again' %]
+      </div>
+    [% END %]
+  </div>
+
+  <div class="clear"></div>
+[% END %]
+
+[% BLOCK too_many_results %]
+  <div class="grid_24">
+    <div id="tooManyResults">
+      <p> [% loc('search.too-many=count', too_many) %] </p>
+      <p>
+        [% loc('search.limit=count' , appconfig.search_warning_threshold) %]
+      </p>
+      <p> [% loc('search.be-more-specific') %] </p>
+      <br />
+      <div id="inlineSearch">
+        [% INCLUDE element/search_form sid='search-again' %]
+      </div>
+    </div>
+  </div>
+
+  <div class="clear"></div>
+[% END %]
+
+[% BLOCK listview_header %]
+  <div class="grid_1">
+    <div class="selectall">
+      <input type="checkbox" id="st-listview-selectall"/>
+    </div>
+  </div>
+  <div class="alpha grid_16">
+    <div class="toggle">
+      [% loc('nav.show:') %]
+      [% IF summaries %]
+        <a href="[% predicate_with_params %];summaries=0;limit=[% limit %];offset=[% offset %]" [% IF ! summaries %] class="selected" [% END %]>[% loc('page.titles') %]</a> &#166; 
+        <strong>[% loc('page.summaries') %]</strong>
+      [% ELSE %]
+        <strong>[% loc('page.titles') %]</strong> &#166;
+        <a href="[% predicate_with_params %];summaries=1;limit=[% limit %];offset=[% offset %]" [% IF summaries %] class="selected" [% END %]>[% loc('page.summaries') %]</a>
+      [% END %]
+      [% IF pager %]
+        &mdash;
+        <b>[% loc('info.showing=from,to,total', offset + 1, last, pager.total_entries) %]</b>
+      [% END %]
+    </div>
+  </div>
+  [% IF !hide_sort_widget %]
+    <div class="grid_7 sort_options">
+      [% loc('sort.by:') %]
+      <select id="sort-picker">
+        [% FILTER decorate('search_sort_options') %]
+        [% IF allow_relevance %]
+          [% PROCESS element/listview_sort_option name = loc('sort.relevance') field = 'Relevance' %]
+        [% END %]
+          [% PROCESS element/listview_sort_option name = loc('sort.title') field = 'Subject' %]
+        [% IF show_workspace %]
+          [% PROCESS element/listview_sort_option name = loc('sort.wiki') field = 'Workspace' %]
+        [% END %]
+        [% IF ! no_user_sorting %]
+          [% PROCESS element/listview_sort_option name = loc('sort.last-edited') field = 'username' %]
+          [% PROCESS element/listview_sort_option name = loc('sort.creator') field = 'creator' %]
+        [% END %]
+        [% PROCESS element/listview_sort_option name = loc('sort.edited') field = 'Date' %]
+        [% PROCESS element/listview_sort_option name = loc('sort.created') field = 'create_time' %]
+        [% PROCESS element/listview_sort_option name = loc('sort.revisions') field = 'revision_count' %]
+        [% END %]
+      </select>
+    </div>
+  [% END %]
+  
+  <div class="clear"></div>
+[% END %]
+

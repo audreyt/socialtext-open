@@ -1,8 +1,10 @@
 | *Comment* | STARTING Test Case: Command Line LDAP USERS |  |
 
 | set | cli_user | `devnullx` |
+| set | gotta_have_an_admin | %%email%% |
 | set | cmdline_workspace | clw_%%start_time%% |
 | st-admin | create-workspace --empty --name %%cmdline_workspace%% --title %%cmdline_workspace%% | A new workspace named "%%cmdline_workspace%%" was created. |
+| st-admin | add-workspace-admin --username %%gotta_have_an_admin%% --workspace %%cmdline_workspace%% | qr/%%gotta_have_an_admin%% now has the role of 'admin' in the %%cmdline_workspace%% workspace/ism |
 
 | *Comment* | Test Case: Command Line LDAP user Add member |  |
 | st-admin | add-member --username %%cli_user%% --workspace %%cmdline_workspace%% | qr/%%cli_user%% now has the role of 'member' in the %%cmdline_workspace%% workspace/ism |
@@ -49,9 +51,9 @@
 
 | *Comment* | Test Case: Command Line LDAP user deactivate user TODO: add this back in when we can create a unique user to deactivate. This is causing TC: Verify LDAP Enabled to fail unnecessarily |  |
 
- st-admin | deactivate-user --username %%cli_user%% | qr/%%cli_user%% has been removed from workspaces.+%%cmdline_workspace%%(,.+%%workspace%%)?/ |
+st-admin | deactivate-user --username %%cli_user%% | qr/%%cli_user%% has been removed from workspaces.+%%cmdline_workspace%%(,.+%%workspace%%)?/ |
 
- *Comment* | Test Case: Command Line LDAP user Add member BACK to %%workspace%% | |
+*Comment* | Test Case: Command Line LDAP user Add member BACK to %%workspace%% | |
 st-admin | add-workspace-admin --username %%cli_user%% --workspace %%workspace%% | qr/%%cli_user%% now has the role of 'admin' in the %%workspace%% workspace/ism |
 
 | *Comment* | Test Case: Command Line LDAP USERS commands should fail |  |
@@ -60,9 +62,10 @@ st-admin | add-workspace-admin --username %%cli_user%% --workspace %%workspace%%
 | st-admin | set-user-names --username %%cli_user%% --first-name CLI --last-name USER | qr/Remotely sourced Users cannot be updated via Socialtext/ism |
 
 | *Comment* | Test Case: Command Line LDAP user TEARDOWN |  |
+| st-process-jobs |  |  |
 | st-admin | delete-workspace --workspace %%cmdline_workspace%% --no-export | has been deleted |
 
 | *Comment* | Test Case: Command Line LDAP user Add member BACK to %%workspace%% just in case needed |  |
 | st-admin | add-workspace-admin --username %%cli_user%% --workspace %%workspace%% | has the role of 'admin' |
 
-| *Comment* | Test Case: Command Line: LDAP USERS COMPLETED |
+| *Comment* | Test Case: Command Line: LDAP USERS COMPLETED |  |

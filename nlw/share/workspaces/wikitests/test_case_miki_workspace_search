@@ -43,7 +43,7 @@
 | wait_for_element_visible_ok | link=hello26 | 30000 |
 | wait_for_element_not_present_ok | link=hello27 | 30000 |
 | wait_for_element_visible_ok | mobile-paging-next | 30000 |
-| wait_for_element_not_present_ok | mobile-paging-previous | 5000 |
+| wait_for_element_not_present_ok | mobile-paging-previous | 15000 |
 
 | *Comment* | Test Case: Miki Workspace Search - Pagination Page Two |  |
 | wait_for_element_visible_ok | mobile-paging-next | 30000 |
@@ -108,7 +108,7 @@
 | wait_for_element_visible_ok | link=hello26 | 30000 |
 | wait_for_element_not_present_ok | link=hello27 | 30000 |
 | wait_for_element_visible_ok | mobile-paging-next | 30000 |
-| wait_for_element_not_present_ok | mobile-paging-previous | 5000 |
+| wait_for_element_not_present_ok | mobile-paging-previous | 15000 |
 
 | *Comment* | Test Case: Miki Workspace Search TODO: What's New Should link to all by date. Does not yet. |
 | open_ok | /%%pws%%/ |

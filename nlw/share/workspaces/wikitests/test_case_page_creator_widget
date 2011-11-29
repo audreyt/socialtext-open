@@ -1,3 +1,5 @@
+TUXTODO: On hold until st-edit-new-page can pass %%dev%% correctly
+
 | *Comment* | Test Case: Page Creator Widget |  |
 
 | set | pcw_user | pcw.user.%%start_time%%@david.socialtext.net |
@@ -21,59 +23,42 @@
 
 | *Comment* | Test Case: Page Creator Widget check all widget galleries for widget |  |
 | open_ok | /st/dashboard |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | gallery-widget-Page Creator | 30000 |
-| wait_for_text_present_ok | Create pages from customized forms. | 30000 |
+| wait_for_element_visible_ok | st-add-widget | 15000 |
+| click_ok | st-add-widget |  |
+| wait_for_element_visible_ok | gallery-widget-Page Creator | 15000 |
+| wait_for_text_present_ok | Create pages from customized forms. | 15000 |
 | open_ok | /st/group/%%group_id%% |  |
-| wait_for_element_visible_ok | st-edit-layout | 30000 |
+| wait_for_element_visible_ok | st-edit-layout | 15000 |
 | click_ok | st-edit-layout |  |
-| wait_for_element_visible_ok | st-add-widget | 30000 |
+| wait_for_element_visible_ok | st-add-widget | 15000 |
 | click_ok | st-add-widget |  |
-| wait_for_element_visible_ok | gallery-widget-Page Creator | 30000 |
-| wait_for_text_present_ok | Create pages from customized forms. | 30000 |
+| wait_for_element_visible_ok | gallery-widget-Page Creator | 15000 |
+| wait_for_text_present_ok | Create pages from customized forms. | 15000 |
 | open_ok | /st/profile |  |
-| wait_for_element_visible_ok | st-edit-layout | 30000 |
+| wait_for_element_visible_ok | st-edit-layout | 15000 |
 | click_ok | st-edit-layout |  |
-| wait_for_element_visible_ok | st-add-widget | 30000 |
+| wait_for_element_visible_ok | st-add-widget | 15000 |
 | click_ok | st-add-widget |  |
-| wait_for_element_visible_ok | gallery-widget-Page Creator | 30000 |
-| wait_for_text_present_ok | Create pages from customized forms. | 30000 |
+| wait_for_element_visible_ok | gallery-widget-Page Creator | 15000 |
+| wait_for_text_present_ok | Create pages from customized forms. | 15000 |
 
 | *Comment* | Test Case: Page Creator Widget create a template page to feed into the widget |  |
-| open_ok | /%%pcw_wiki%%/?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| wait_for_element_visible_ok | st-newpage-pagename-edit |  |
-| type_ok | st-newpage-pagename-edit | %%pcw_template_page%% |
-| click_ok | wikiwyg_wikitext_textarea |  |
 | set | pp | `%%` |
-| type_ok | wikiwyg_wikitext_textarea | %%pp%%dev%%pp%% |
-| click_ok | st-edit-mode-tagbutton |  |
-| wait_for_element_visible_ok | st-tagqueue-field | 30000 |
-| type_ok | st-tagqueue-field | story |
-| click_ok | st-tagqueue-addbutton |  |
-| wait_for_text_present_ok | Tags to apply: story | 30000 |
-| type_ok | st-tagqueue-field | template |
-| click_ok | st-tagqueue-addbutton |  |
-| wait_for_text_present_ok | Tags to apply: story, template | 30000 |
-| click_ok | st-tagqueue-close |  |
-| wait_for_element_not_visible_ok | st-tagqueue-field | 10000 |
-| st-page-save |  |  |
+| set | a | `%%d` |
+| set | b | `ev%%` |
 
-| *Comment* | Test Case: Page Creator Widget make a new page, insert the widget |  |
-| open_ok | /%%pcw_wiki%%/?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| wait_for_element_visible_ok | st-newpage-pagename-edit |  |
-| type_ok | st-newpage-pagename-edit | %%pcw_form_page%% |
-| type_ok | wikiwyg_wikitext_textarea |  |
+| call | [st-edit-new-page] | ws=%%pcw_wiki%% | title=%%pcw_template_page%% | content=%%a%%%%b%% |
+| call | [st-tag-page] | tag_to_apply=story |  |  |
+| call | [st-tag-page] | tag_to_apply=template |  |  |
+
+| *Comment* | Test Case: Page Creator Widget make a new page, insert the widget |  |  |  |
+
+| call | [st-edit-fill-page] | ws=%%pcw_wiki%% | title=%%pcw_form_page%% |  |
+
 | click_ok | link=Widget... |  |
 | wait_for_element_visible_ok | gallery-widget-Page Creator | 30000 |
 | wait_for_text_present_ok | Create pages from customized forms. | 30000 |
-| pause_ok | 5000 | wait for gallery JS to load |
+| pause_ok | 15000 | wait for gallery JS to load |
 | click_ok | gallery-widget-Page Creator |  |
 
 | *Comment* | Test Case: Page Creator Widget takes a looooong time for the JS to load ... |  |
@@ -84,12 +69,8 @@
 | wait_for_element_visible_ok | //input[@id='field-new'] | 30000 |
 | wait_for_element_visible_ok | //input[@id='Workspace' and @type='text'] | 30000 |
 | text_like | qr/Basics.+Workspace.+Template.+Page Title.+Widget Title/ism |  |
-| type_lookahead_ok | //input[@id='Workspace' and @type='text'] | %%pcw_wiki_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%pcw_wiki_suffix%%')] | 30000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%pcw_wiki_suffix%%')] |  |
-| type_lookahead_ok | //input[@id='Template' and @type='text'] | %%pcw_template_page_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%pcw_template_page_suffix%%')] | 30000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%pcw_template_page_suffix%%')] |  |
+| select-autocompleted-option-ok | //input[@id='Workspace' and @type='text'] | %%pcw_wiki_prefix%% |
+| select-autocompleted-option-ok | //input[@id='Template' and @type='text'] | %%pcw_template_page_prefix%% |
 | type_ok | PageTitle | %%pp%%type%%pp%%: %%pp%%title%%pp%% |
 | verifyValue | Title | Page Creator |
 
@@ -138,7 +119,6 @@
 | type_ok | xpath=(//input[@class='field-choices ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c'])[3] | Tech Story |
 | click_ok | xpath=(//input[@title='Make this choice pre-selected.'])[2] |  |
 
-
 | *Comment* | Test Case: Page Creator Widget create and fill out a "dev" field |  |
 | click_ok | field-row-new |  |
 | wait_for_element_visible_ok | xpath=(//input[@value='title'])[3] | 30000 |
@@ -163,11 +143,11 @@
 
 | *Comment* | Test Case: Page Creator Widget use the widget to create a page |  |
 | wait_for_text_present_ok | Page Creator | 30000 |
-| pause_ok | 5000 |  |
+| pause_ok | 15000 |  |
 | selectFrame | //iframe[@class='widgetWindow'] |  |
 | wait_for_element_visible_ok | link-create-page |  |
 | click_ok | link-create-page |  |
-| verifyAlert | Required field missing: title |  |
+| verifyAlert | Missing required field: title |  |
 
 | *Comment* | Test Case: Page Creator Widget fill in the form fields |  |
 | is_selected_ok | var-type | label=Story |

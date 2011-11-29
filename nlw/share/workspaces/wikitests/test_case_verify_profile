@@ -15,14 +15,17 @@
 | *Comment* | Test Case: Verify Profile. Access profile |  |
 | st-logoutin | %%e_user%% | %%password%% |
 | open_ok | /st/profile |  |
-| wait_for_element_visible_ok | `link=Edit Profile` | 30000 |
+| wait_for_element_visible_ok | `st-edit-profile` | 30000 |
 
-| *Comment* | Test Case: Verify Profile. Verify profile present. |  |
-| st-name-widget | 1 | profile |
-| st-widget-title-like | profile | Profile |
-| st-select-widget-frame | profile |  |
+| *Comment* | Test Case: Verify Profile. See if Colleagues is there. Can't do much else. |  |
+| wait_for_text_present_ok | Colleagues | 15000 |
+| select_frame_ok | //iframe |  |
+| text_like | Follows |  |
+| text_like | Followers |  |
+| text_like | Groups |  |
+| select-frame | relative=parent |  |
 
-| *Comment* | Test Case: Verify Profile. Verify values. |
+| *Comment* | Test Case: Verify Profile. Verify profile values. |
 | text_like | %%fname%% %%mname%% %%lname%% |
 | text_like | Position %%short_e_user%% |
 | text_like | Company %%short_e_user%% |
@@ -35,16 +38,16 @@
 | text_like | qr/Mobile.+555-mobile-%%short_e_user%%/ |
 | text_like | qr/Home.+555-home-%%short_e_user%%/ |
 
-| *Comment* | regexs needed becausing whitespace is missing in the page layout |
+| *Comment* | regexs needed becausing whitespace is missing in the page layout |  |
 | text_like | IM |  |
 | text_like | qr/AIM.+AOL %%short_e_user%%/ |  |
 | text_like | qr/Office Communicator.+MSOCS %%short_e_user%%/ |  |
-|  | wait_for_element_present_ok | //img[contains(@src,'api.oscar.aol.com')] | 5000 |
+| wait_for_element_present_ok | //img[contains(@src,'api.oscar.aol.com')] | 15000 |
 | text_like | qr/Yahoo!.+Yahoo %%short_e_user%%/ |  |
-| wait_for_element_present_ok | //img[contains(@src,'opi.yahoo.com')] | 5000 |
+| wait_for_element_present_ok | //img[contains(@src,'opi.yahoo.com')] | 15000 |
 | text_like | qr/GTalk.+GTalk %%short_e_user%%/ |  |
 | text_like | qr/Skype.+Skype %%short_e_user%%/ |  |
-| wait_for_element_present_ok | //img[contains(@src,'mystatus.skype.com')] | 5000 |
+| wait_for_element_present_ok | //img[contains(@src,'mystatus.skype.com')] | 15000 |
 | text_like | qr/Sametime.+Sametime %%short_e_user%%/ |  |
 | text_like | qr/Twitter.+Twitter %%short_e_user%%/ |  |
 
@@ -54,45 +57,31 @@
 | text_like | `qr/Linked.+http\:\/\/linkedIn\/%%short_e_user%%/ism` |
 | text_like | `qr/Facebook.+http\:\/\/facebook\/%%short_e_user%%/sim` |
 
-| text_like | Manager |
-| text_like | supervisor |
-| text_like | Assistant |
-| text_like | assistant |
+TUXDO: Restore these tests when Manager is restored
+wait_for_element_visible_ok | link=%%short_super%% | 15000 |
+text_like | Manager |
 
-| wait_for_element_visible_ok | link=%%short_super%% | 30000 |
-| wait_for_element_visible_ok | link=%%short_assistant%% | 30000 |
+| wait_for_element_visible_ok | link=%%short_assistant%% | 15000 |
+| text_like | Assistant |  |
 
 | *Comment* | Test Case: Verify Profile. PHOTO |  |
-| wait_for_element_present_ok | //img[@class='bigAvatar'] | 1000 |
-| select-frame | relative=parent |  |
+| wait_for_element_present_ok | //img[@class='bigAvatar'] | 15000 |
 
 | *Comment* | Test Case: Verify Profile. Verify tags present. |  |
 | text-like | Tags |  |
-| wait_for_element_visible_ok | new_tag | 30000 |
+| wait_for_element_visible_ok | new_tag | 15000 |
 | type_ok | new_tag | VPT %%start_time%% |
 | click_ok | //input[@value='Add Tag'] |  |
 
 | *Comment* | Test Case: Verify Profile. verify VPT added |  |
-| wait_for_element_visible_ok | link=VPT %%start_time%% | 30000 |
+| wait_for_element_visible_ok | link=VPT %%start_time%% | 15000 |
 | text_like | link=VPT %%start_time%% | VPT %%start_time%% |
 
 | *Comment* | Test Case: Verify Profile. Verify Updates present. |  |
-| wait_for_text_present_ok | Activities | 30000 |
-| st-name-widget | 3 | updates |
-| st-widget-title-like | updates | Activities |
-| st-select-widget-frame | updates |  |
+| wait_for_text_present_ok | Activities | 15000 |
 | wait_for_text_present_ok | tagged themself VPT %%start_time%% | 30000 |
 | text_like | qr/%%fname%% %%mname%% %%lname%%.+tagged themself VPT %%start_time%%/ism |  |
 | text_like | qr/%%fname%% %%mname%% %%lname%%.+edited their own profile/ism |  |
-| select-frame | relative=parent |  |
-
-| *Comment* | Test Case: Verify Profile. See if Colleagues is there. Can't do much else. |  |
-| wait_for_text_present_ok | Colleagues | 30000 |
-| st-name-widget | 4 | colleagues |
-| st-widget-title-like | colleagues | Colleagues |
-| st-select-widget-frame | colleagues |  |
-| text_like | Follows |  |
-| text_like | Followers |  |
 | select-frame | relative=parent |  |
 
 | *Comment* | Test Case: Verify Profile COMPLETED |  |

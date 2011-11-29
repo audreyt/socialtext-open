@@ -1,0 +1,18 @@
+[% PROCESS activities/blocks.tt2 %]
+
+[% IF this.appdata.pluginsEnabled('signals') %]
+    <div class="signals" id="[% id('signals') %]">
+        [% INCLUDE mobile_signals %]
+    </div>
+
+    <div class="filter_bar">[% INCLUDE activities/elements/filters.tt2 %]</div>
+    <div id="[% id('messages') %]" class="messages"></div>
+
+    <div class="loading-spinner" id="[% id('loading') %]">
+        <img id="[% id('spinner') %]" src="[% this.static_path %]/images/ajax-loader.gif"/>
+    </div>
+
+    <div class="event_list" id="[% id('event_list') %]"></div>
+
+    <div class="more" id="[% id('more') %]">[% loc('activities.more') %]</div>
+[% END %]

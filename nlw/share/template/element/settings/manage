@@ -1,0 +1,204 @@
+[%# vim: set et sts=2 sw=2: %]
+<script language="javascript">
+
+jQuery(document).ready(function() {
+    var newUsers = [];
+
+    function renderNewUsers() {
+        var ul = jQuery('<ul>');
+        for (var i in newUsers) {
+            li = jQuery('<li>')
+              .append(newUsers[i].best_full_name)
+              .append('<a id="' + newUsers[i].user_id + '" href="#" class="remove icon"><span>x</span><div class="removeIcon"></div></a>')
+              .append('<input type="hidden" name="workspace.do.invite_user" value="' + newUsers[i].user_id + '">'); 
+
+            if (i == 0) {
+                li.addClass('first');
+            }
+            ul.append(li);
+        }
+        jQuery('#newUsers').html('');
+        jQuery('#newUsers').append(ul);
+
+        // Bind the remove icon to remove the user from the list
+        jQuery('#newUsers a.remove').click(function() {
+            var user_id = $(this).attr('id');
+            newUsers = $.grep(newUsers, function(u) {
+                return user_id != u.user_id;
+            });
+            renderNewUsers();
+            return false;
+        });
+    };
+
+    jQuery('#user')
+      .one('click', function() {
+          $(this).removeClass('lookahead-prompt').val('');
+      })
+      .lookahead({
+          url: '/data/users',
+          clearOnHide: true,
+          requireMatch: [%- IF space.require_registered -%]true[%- ELSE -%]false[%- END -%],
+          params: {accept: 'application/json'},
+          linkText: function (user) {
+              return [user.best_full_name, user.user_id];
+          },
+          getEntryThumbnail: function(user) {
+              return '/data/people/' + user.value + '/small_photo';
+          },
+          displayAs: function(user) { return user.title; },
+          onAccept: function(id, item) {
+              jQuery('#user').val('');
+
+              var user = item.title
+                  ? {best_full_name: item.title, user_id: item.value}
+                  : {best_full_name: id, user_id: id};
+
+              newUsers.push(user);
+              renderNewUsers();
+          },
+      });
+});
+
+</script>
+
+<h3>[% loc('invite.new-users') %]</h3>
+
+[% IF invite_errors %]
+  <p class="error">
+    [% loc('error.inviting-users') %]</p>
+    <ul>
+  [% FOREACH error IN invite_errors.keys %]
+      <li>
+    [% IF error == 'ACCOUNT DOMAIN FILTER' %]
+      [% loc('error.invite-users=domain-restriction', space.domain_restriction) %]
+    [% ELSIF error == 'WORKSPACE INVITATION FILTER' %]
+      [% loc('error.invite-users=invitation-filter', space.invitation_filter) %]
+    [% ELSIF error == 'USER DELETED' %]
+      [% loc('error.invite-users-deleted') %]
+    [% ELSIF error == 'WORKSPACE RESTRICT TO REGISTERED' %]
+      [% loc('error.invite-users-unregistered') %]
+    [% ELSIF error == 'INVALID EMAIL ADDRESS' %]
+      [% loc('error.invalid-email-addresses') %]
+    [% ELSE %]
+      [% loc('error.invite-users=message', error) %]
+    [% END %]
+    [% PROCESS list_of_emails emails=invite_errors.$error %]
+    </li>
+  [% END %]
+    </ul>
+[% END %]
+
+[% IF space.require_registered %]<p>[% loc('info.wiki-requires-registered') %]</p>[% END %]
+
+[% IF space.invitation_filter %]<p>[% loc('info.wiki=invitation-filter', space.invitation_filter) %]</p>[% END %]
+
+[% IF space.domain_restriction %]<p>[% loc('info.wiki=domain-restriction', space.domain_restriction) %]</p>[% END %]
+
+<p>[% loc('info.invite-users') %]</p>
+<div class="sub_alpha grid_sub_6 input-label">
+  [% loc('wiki.email-address-to-invite') %]:
+</div>
+<div class="sub_omega grid_sub_18">
+    <input id="user" name="please.ignore.me"
+      class="lookahead-prompt" type="text"
+      value="[% loc('email.lookahead-prompt') %]"
+    />
+    <div class="users" id="newUsers">
+    </div>
+</div>
+<div class="clear"></div>
+
+<hr />
+
+[% IF space.auw_for %]
+  <div class="grid_12">
+    [% loc('info.all-user-wiki=account', space.auw_for) %]
+  </div>
+  <div class="clear"></div>
+[% END %]
+
+[% IF space.users.size > 0 %]
+<div class="grid_12">
+  <h3>[% loc('settings.manage-users') %]</h3>
+  <table>
+    <tr>
+      <th class="first">[% loc('do.remove') %]</th>
+      <th>[% loc('user.email-address') %]</th>
+      <th>[% loc('user.admin') %]</th>
+      <th class="last">[% loc('password.reset') %]</th>
+    </tr>
+
+  [% FOREACH user_and_role IN space.users %]
+    [% user = user_and_role.0 %]
+    [% role = user_and_role.1 %]
+
+    <tr>
+      <td class="first">
+        <input type="checkbox" value="[% user.user_id %]"
+          name="workspace.do.remove_user" />
+      </td>
+      <td>[% user.name_and_email | html %] </td>
+      <td>
+        <input type="checkbox" value="[% user.user_id %]"
+         name="workspace.do.should_be_admin"
+         [% IF role.name == 'admin' %]checked="checked"[% END %]
+        />
+        <input type="hidden" value="[% user.user_id %].[% role.role_id %]"
+          name="workspace.do.valid_user" />
+      </td>
+      <td class="last">
+        <input type="checkbox" value="[% user.user_id %]"
+          name="workspace.do.reset_password"
+          [% UNLESS user.can_update_store %]disabled="disabled"[%END%]
+        />
+      </td>
+  </tr>
+
+  [% END %]
+  </table>
+</div>
+<div class="clear"></div>
+
+<hr />
+[% END %]
+
+[% IF space.groups.size > 0 %]
+<div class="grid_12">
+  <h3>[% loc('wiki.member-groups') %]</h3>
+
+  <table>
+    <tr>
+      <th class="first">[% loc('group.name') %]</th>
+      <th>[% loc('config.users') %]</th>
+      <th class="last">[% loc('user.role') %]</th>
+    </tr>
+
+  [% FOREACH group_and_role IN space.groups %]
+    [% group = group_and_role.0 %]
+    [% role = group_and_role.1 %]
+
+    <tr>
+      <td class="first"><a href="/st/group/[% group.group_id %]">
+        [% group.driver_group_name | html %]</a>
+      </td>
+      <td class="right">[% group.user_count %]</td>
+      <td class="last">[% role.name | html %]</td>
+    </tr>
+
+  [% END %]
+
+  </table>
+</div>
+<div class="clear"></div>
+
+<hr />
+[% END %]
+
+[% BLOCK  list_of_emails %]
+  <ul>
+  [% FOR email IN emails %]
+    <li>[% email | html %]</li>
+  [% END %]
+  </ul>
+[% END %]

@@ -1,5 +1,3 @@
-*This test sporadically fails very rarely. 30 Second pause seems to be enough 90% of the time.*
-
 | *Comment* | Test Case: Signals Video Link |  |
 
 | set | video_user | video_user_%%start_time%%@david.socialtext.net |  |
@@ -25,12 +23,12 @@
 | wait_for_text_present_ok | Copy and paste the URL for the video below. We support embedding video from YouTube, Vimeo, SlideShare and Google Video. | 30000 |
 | wait_for_element_visible_ok | //input[@name='video_url'] | 30000 |
 | type_ok | //input[@name='video_url'] | %%vimeo_link%% |
-| pause | 30000 |  |
+| wait_for_element_not_present_ok | //button[@disabled='disabled'] | 10000 |
 | verifyValue | //input[@name='video_title'] | qr/%%vimeo_title%%/ |
-| click_ok | //a[@class='btn done'] |  |
+| click_ok | activities-add-video-ok |  |
 | pause | 3000 |  |
-| wait_for_element_visible_ok | link=Post | 5000 |
-| click_ok | link=Post |  |
+| wait_for_element_visible_ok | //a[contains(@id,"widget") and contains(@id,"post")] | 15000 |
+| click_ok | //a[contains(@id,"widget") and contains(@id,"post")] |  |
 | wait_for_text_present_ok | By you | 30000 |
 | wait_for_text_present_ok | %%vimeo_title%% | 30000 |
 
@@ -41,12 +39,12 @@
 | wait_for_text_present_ok | Copy and paste the URL for the video below. We support embedding video from YouTube, Vimeo, SlideShare and Google Video. | 30000 |
 | wait_for_element_visible_ok | //input[@name='video_url'] | 30000 |
 | type_ok | //input[@name='video_url'] | %%youtube_link%% |
-| pause | 30000 |  |
+| wait_for_element_not_present_ok | //button[@disabled='disabled'] | 10000 |
 | verifyValue | //input[@name='video_title'] | qr/%%youtube_title%%/ |
-| click_ok | //a[@class='btn done'] |  |
+| click_ok | activities-add-video-ok |  |
 | pause | 3000 |  |
-| wait_for_element_visible_ok | link=Post | 5000 |
-| click_ok | link=Post |  |
+| wait_for_element_visible_ok | //a[contains(@id,"widget") and contains(@id,"post")] | 15000 |
+| click_ok | //a[contains(@id,"widget") and contains(@id,"post")] |  |
 | wait_for_text_present_ok | By you | 30000 |
 | wait_for_text_present_ok | %%youtube_title%% | 30000 |
 
@@ -57,12 +55,12 @@
 | wait_for_text_present_ok | Copy and paste the URL for the video below. We support embedding video from YouTube, Vimeo, SlideShare and Google Video. | 30000 |
 | wait_for_element_visible_ok | //input[@name='video_url'] | 30000 |
 | type_ok | //input[@name='video_url'] | %%slide_link%% |
-| pause | 30000 |  |
+| wait_for_element_not_present_ok | //button[@disabled='disabled'] | 10000 |
 | verifyValue | //input[@name='video_title'] | qr/%%slide_title%%/ |
-| click_ok | //a[@class='btn done'] |  |
+| click_ok | activities-add-video-ok |  |
 | pause | 3000 |  |
-| wait_for_element_visible_ok | link=Post | 5000 |
-| click_ok | link=Post |  |
+| wait_for_element_visible_ok | //a[contains(@id,"widget") and contains(@id,"post")] | 15000 |
+| click_ok | //a[contains(@id,"widget") and contains(@id,"post")] |  |
 | wait_for_text_present_ok | By you | 30000 |
 | wait_for_text_present_ok | %%slide_title%% | 30000 |
 
@@ -73,12 +71,12 @@
 | wait_for_text_present_ok | Copy and paste the URL for the video below. We support embedding video from YouTube, Vimeo, SlideShare and Google Video. | 30000 |
 | wait_for_element_visible_ok | //input[@name='video_url'] | 30000 |
 | type_ok | //input[@name='video_url'] | %%google_link%% |
-| pause | 30000 |  |
+| wait_for_element_not_present_ok | //button[@disabled='disabled'] | 10000 |
 | verifyValue | //input[@name='video_title'] | qr/%%google_title%%/ |
-| click_ok | //a[@class='btn done'] |  |
+| click_ok | activities-add-video-ok |  |
 | pause | 3000 |  |
-| wait_for_element_visible_ok | link=Post | 5000 |
-| click_ok | link=Post |  |
+| wait_for_element_visible_ok | //a[contains(@id,"widget") and contains(@id,"post")] | 15000 |
+| click_ok | //a[contains(@id,"widget") and contains(@id,"post")] |  |
 | wait_for_text_present_ok | By you | 30000 |
 | wait_for_text_present_ok | %%google_title%% | 30000 |
 
@@ -107,35 +105,39 @@
 | wait_for_text_present_ok | Copy and paste the URL for the video below. We support embedding video from YouTube, Vimeo, SlideShare and Google Video. | 30000 |
 | wait_for_element_visible_ok | //input[@name='video_url'] | 30000 |
 | type_ok | //input[@name='video_url'] | %%vimeo_link%% |
-| wait_for_element_visible_ok | //a[@class='btn done'] | 30000 |
-| click_ok | //a[@class='btn done'] |  |
+| wait_for_element_not_present_ok | //button[@disabled='disabled'] | 10000 |
+| wait_for_element_visible_ok | activities-add-video-ok | 30000 |
+| click_ok | activities-add-video-ok |  |
 | pause | 3000 |  |
 | wait_for_element_visible_ok | //a[@title='Add a video link'] | 30000 |
 | click_ok | //a[@title='Add a video link'] |  |
 | wait_for_text_present_ok | Copy and paste the URL for the video below. We support embedding video from YouTube, Vimeo, SlideShare and Google Video. | 30000 |
 | wait_for_element_visible_ok | //input[@name='video_url'] | 30000 |
 | type_ok | //input[@name='video_url'] | %%youtube_link%% |
-| wait_for_element_visible_ok | //a[@class='btn done'] | 30000 |
-| click_ok | //a[@class='btn done'] |  |
+| wait_for_element_not_present_ok | //button[@disabled='disabled'] | 10000 |
+| wait_for_element_visible_ok | activities-add-video-ok | 30000 |
+| click_ok | activities-add-video-ok |  |
 | pause | 3000 |  |
 | wait_for_element_visible_ok | //a[@title='Add a video link'] | 30000 |
 | click_ok | //a[@title='Add a video link'] |  |
 | wait_for_text_present_ok | Copy and paste the URL for the video below. We support embedding video from YouTube, Vimeo, SlideShare and Google Video. | 30000 |
 | wait_for_element_visible_ok | //input[@name='video_url'] | 30000 |
 | type_ok | //input[@name='video_url'] | %%slide_link%% |
-| wait_for_element_visible_ok | //a[@class='btn done'] | 30000 |
-| click_ok | //a[@class='btn done'] |  |
+| wait_for_element_not_present_ok | //button[@disabled='disabled'] | 10000 |
+| wait_for_element_visible_ok | activities-add-video-ok | 30000 |
+| click_ok | activities-add-video-ok |  |
 | pause | 3000 |  |
 | wait_for_element_visible_ok | //a[@title='Add a video link'] | 30000 |
 | click_ok | //a[@title='Add a video link'] |  |
 | wait_for_text_present_ok | Copy and paste the URL for the video below. We support embedding video from YouTube, Vimeo, SlideShare and Google Video. | 30000 |
 | wait_for_element_visible_ok | //input[@name='video_url'] | 30000 |
 | type_ok | //input[@name='video_url'] | %%google_link%% |
-| wait_for_element_visible_ok | //a[@class='btn done'] | 30000 |
-| click_ok | //a[@class='btn done'] |  |
+| wait_for_element_not_present_ok | //button[@disabled='disabled'] | 10000 |
+| wait_for_element_visible_ok | activities-add-video-ok | 30000 |
+| click_ok | activities-add-video-ok |  |
 | pause | 3000 |  |
-| wait_for_element_visible_ok | link=Post | 5000 |
-| click_ok | link=Post |  |
+| wait_for_element_visible_ok | //a[contains(@id,"widget") and contains(@id,"post")] | 15000 |
+| click_ok | //a[contains(@id,"widget") and contains(@id,"post")] |  |
 | wait_for_text_present_ok | By you | 30000 |
 | open_ok | /st/signals |  |
 | wait_for_element_visible_ok | link=%%vimeo_title%% | 30000 |

@@ -1,1 +1,0 @@
-../../common/submodule/js-class/lib/Class.js

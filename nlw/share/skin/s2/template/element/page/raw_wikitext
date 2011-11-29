@@ -1,7 +1,0 @@
-[% IF raw_wikitext %]
-<form action="/" name="st-raw-wikitext-dummyform">
-<textarea id="st-raw-wikitext-textarea">
-[% raw_wikitext -%]
-</textarea>
-</form>
-[% END %]

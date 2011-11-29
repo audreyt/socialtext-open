@@ -24,9 +24,7 @@
 | wait_for_element_visible_ok | todo-invite | 30000 |
 | click_ok | todo-invite |  |
 | wait_for_element_visible_ok | workspaceLookahead | 30000 |
-| type-lookahead-ok | workspaceLookahead | %%new_ws_title%% |
-| wait_for_element_visible_ok | link=%%new_ws_title%% - %%new_ws_title%% | 30000 |
-| click_ok | link=%%new_ws_title%% - %%new_ws_title%% |  |
+| select-autocompleted-option-ok | workspaceLookahead | %%new_ws_title%% |
 | click_and_wait | //input[@id='invite-button'] |  |
 | wait_for_text_present_ok | Congratulations! You successfully added 2 users to 1 workspace. They will receive an invitation message to each workspace. | 30000 |
 | wait_for_text_present_ok | Search by username: | 30000 |
@@ -36,4 +34,4 @@
 | *Comment* | Test Case: Business Control Panel Invite Users to Existent Workspace TEARDOWN |  |
 | st-admin | delete-workspace --w %%new_ws_title%% --no-export | has been deleted |
 
-| *Comment* | Test Case: Business Control Panel Invite Users to Existent Workspace COMPLETED |
+| *Comment* | Test Case: Business Control Panel Invite Users to Existent Workspace COMPLETED |  |

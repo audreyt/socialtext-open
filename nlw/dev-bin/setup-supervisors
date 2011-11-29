@@ -16,6 +16,7 @@ my %services = (
     pushd =>   "plugins/push/service",
     proxy =>   "plugins/widgets/service",
     userd =>   "nlw/service/st-userd",
+    wikid =>   "nlw/service/st-wikid",
     'nlw-psgi' =>   "nlw",
 );
 

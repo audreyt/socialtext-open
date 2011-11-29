@@ -1,9 +1,5 @@
 * Fixture: SocialWidgets
 
-| set_default | shared_account | Replies-1301372332 |
-| set_default | topic_signal | Topic for Reply at 1301372332 |
-| set_default | reply_prefix | Reply at 1301372332 |
-
 | *Comment* | Test Case: Mobile Replies FF Imported variables |  |
 | *Comment* | %%shared_account%% %%topic_signal%% %%reply_prefix%% |  |
 
@@ -19,58 +15,47 @@
 | st-open-m-signals |  |  |
 | wait_for_text_present_ok | %%topic_signal%% | 30000 |
 | text_like | qr/%%topic_signal%%.+%%reply_prefix%%-1.+%%reply_prefix%%-2/ |  |
-| wait_for_text_not_present_ok | %%reply_prefix%%-0-0 | 5000 |
-| wait_for_text_not_present_ok | %%reply_prefix%%-0-1 | 5000 |
-| wait_for_text_not_present_ok | %%reply_prefix%%-0-2 | 5000 |
+| wait_for_text_not_present_ok | %%reply_prefix%%-0-0 | 15000 |
+| wait_for_text_not_present_ok | %%reply_prefix%%-0-1 | 15000 |
+| wait_for_text_not_present_ok | %%reply_prefix%%-0-2 | 15000 |
 
 | *Comment* | Test Case: Mobile Replies FF Open the Replies FF and Check |  |
-| wait_for_element_visible_ok | `//div[@class='older'][last()]` | 30000 |
+| wait_for_element_visible_ok | `//div[@class='older'][last()]` | 15000 |
 | click_ok | `//div[@class='older'][last()]` |  |
-| wait_for_text_present_ok | %%reply_prefix%%-0-0 | 30000 |
+| wait_for_text_present_ok | %%reply_prefix%%-0-0 | 15000 |
 | text_like | qr/%%reply_prefix%%-0-0.+%%reply_prefix%%-0-1.+%%reply_prefix%%-0-2.+%%reply_prefix%%-1.+%%reply_prefix%%-2/ |  |
 
 | *Comment* | Test Case: Mobile Replies FF Check Permalink View |  |
-| wait_for_element_present_ok | //a[contains(text(),'minute')] | 30000 |
+| wait_for_element_present_ok | //a[contains(text(),'minute')] | 15000 |
 | click_ok | //a[contains(text(),'minute')] |  |
-| pause | 10000 | for popup |
-| selectWindow | Signals - Permalink |  |
+| pause | 10000 | for new window |
+| select_window_ok | Socialtext Signals - Permalink |  |
+| pause | 10000 | for new window |
+| text_like | //div[@class='widgetTitle']/h1 | Permanent Link |
 | wait_for_text_present_ok | %%topic_signal%% | 30000 |
-| wait_for_text_present_ok | All Replies | 30000 |
+| wait_for_text_present_ok | All Replies | 15000 |
 | text_like | qr/%%reply_prefix%%-0-0.+%%reply_prefix%%-0-1.+%%reply_prefix%%-0-2.+%%reply_prefix%%-1.+%%reply_prefix%%-2/ |  |
 
 | *Comment* | Test Case: Mobile Replies FF Post New Signal from Mobile UI |  |
 | st-open-m-signals |  |  |
 | wait_for_text_present_ok | %%topic_signal%% | 30000 |
-| st-send-page-signal | new_signal_%%start_time%% |  |
-| wait_for_text_present_ok | new_signal_%%start_time%% | 30000 |
+| wait_for_element_visible_ok | signalFrame | 30000 |
+| select-frame | signalFrame |  |
+| pause_ok | 2000 |  |
+| type_ok | //body | new_signal_%%start_time%% |
+| pause_ok | 2000 |  |
+| select-frame | relative=parent |  |
+| wait_for_element_visible_ok | mobile_post | 10000 |
+| click_ok | mobile_post |  |
+| wait_for_text_present_ok | By you | 15000 |
 | text_like | qr/new_signal_%%start_time%%.+By you/ism |  |
 
 | *Comment* | Test Case: Mobile Replies FF Check that new signal is above old signal |  |
 | text_like | qr/new_signal_%%start_time%%.+replies %%start_time%% seeder/ism |  |
 
 | *Comment* | Test Case: Mobile Replies FF use Mobile UI to Post reply to new signal |  |
-| st-send-reply | new_signal_reply_%%start_time%% |  |
-| wait_for_text_present_ok | new_signal_reply_%%start_time%% | 30000 |
+| st-send-reply | new_signal_reply_%%start_time%% | 0 |
+| wait_for_text_present_ok | new_signal_reply_%%start_time%% | 15000 |
 | text_like | qr/new_signal_%%start_time%%.+new_signal_reply_%%start_time%%/ |  |
-
-| *Comment* | Test Case: Mobile Replies FF Use [Test Case: Replies Include] to Reply to original signal |  |
-| open_ok | /?action=people |  |
-| wait_for_element_visible_ok | link=replies %%start_time%% seeder | 30000 |
-| click_and_wait | link=replies %%start_time%% seeder |  |
-| wait_for_element_visible_ok | link=Follow this person | 30000 |
-| wait_for_element_visible_ok | `//div[@class='older'][last()]` | 30000 |
-| click_ok | `//div[@class='older'][last()]` |  |
-| st-name-widget | 3 | signals |
-| st-widget-title-like | signals | Activities |
-| st-select-widget-frame | signals |  |
-
-| set | i | 3 |
-| include | [Test Case: Replies Include] |  |
-
-| *Comment* | Test Case: Mobile Replies FF Check that old signal is now on top |  |
-| open_ok | /st/m/signals |  |
-| wait_for_text_present_ok | %%reply_prefix%%-%%i%% | 30000 |
-| wait_for_element_present_ok | link=replies %%start_time%% seeder | 30000 |
-| text_like | qr/replies %%start_time%% seeder.+new_signal_%%start_time%%/ism |  |
 
 | *Comment* | Test Case: Mobile Replies FF COMPLETED |  |

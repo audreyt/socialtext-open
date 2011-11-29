@@ -31,6 +31,7 @@ use MIME::Base64 ();
 use Socialtext::JSON::Proxy::Helper;
 use File::Basename qw(dirname);
 use namespace::clean -except => 'meta';
+use Scalar::Util 'reftype';
 
 our $VERSION = '0.01';
 
@@ -389,7 +390,6 @@ sub export {
     my $export_file = $opts{file} || "$dir/account.yaml";
     my %prefs = $self->_mangle_pref_blob_for_export($dir);
 
-    my $logo_ref = $self->logo->logo;
     my $data     = {
         %prefs,
         # versioning
@@ -400,7 +400,6 @@ sub export {
         skin_name                  => $self->skin_name,
         email_addresses_are_hidden => $self->email_addresses_are_hidden,
         users                      => $self->all_users_as_hash(want_private_fields => 1),
-        logo                       => MIME::Base64::encode($$logo_ref),
         allow_invitation           => $self->allow_invitation,
         plugins                    => [ $self->plugins_enabled ],
         plugin_preferences         =>
@@ -509,6 +508,11 @@ sub import_file {
     my $import_file = $opts{file};
     my $import_name = $opts{name};
     my $hub = $opts{hub};
+
+    unless ($opts{dir}) {
+        require File::Basename;
+        $opts{dir} = File::Basename::dirname($import_file);
+    }
 
     my $hash = LoadFile($import_file);
 
@@ -1188,6 +1192,7 @@ sub _validate_and_clean_data {
     my $p = shift;
 
     my $is_create = ref $self ? 0 : 1;
+    delete $p->{backup_skin_name};
 
     if (defined $p->{name}) {
         $p->{name} = Socialtext::String::scrub( $p->{name} );
@@ -1203,26 +1208,6 @@ sub _validate_and_clean_data {
     if ($p->{all_users_workspace}) {
         push @errors, 'Updating the all-users workspace via $acct->update is deprecated';
     }
-
-    if ( $p->{skin_name} ) {
-        my $skin = Socialtext::Skin->new(name => $p->{skin_name});
-        unless ($skin->exists) {
-            if ($p->{backup_skin_name}) {
-                $skin = Socialtext::Skin->new(name => $p->{backup_skin_name});
-            }
-            my $msg = loc(
-                "error.no-skin=name", $p->{skin_name}
-            );
-            if ($skin->exists) {
-                warn $msg . "\n";
-                warn "Falling back to the $p->{backup_skin_name} skin.\n";
-            }
-            else {
-                push @errors, $msg;
-            }
-        }
-    }
-    delete $p->{backup_skin_name};
 
     if ( defined $p->{name} && Socialtext::Account->new( name => $p->{name} ) ) {
         push @errors, loc('error.account-exists=name',$p->{name} );
@@ -1438,6 +1423,50 @@ sub create_central_workspace {
 
     $self->pref_table->set(central_workspace => $wksp->name);
     return $wksp;
+}
+
+sub remove_theme_prefs {
+    my ($self) = @_;
+    my $prefs = $self->prefs;
+    $prefs->delete('theme');
+    $self->_clean_theme_cache;
+}
+
+sub update_theme_prefs {
+    my ($self, $updates) = @_;
+    my $prefs = $self->prefs;
+    my $current = $prefs->all_prefs->{theme};
+    my $settings;
+    
+    if (ref $updates eq 'CODE') {
+        $settings = $updates->($current);
+    }
+    elsif (reftype $updates eq 'HASH') {
+        $settings = {%$current, %$updates};
+    }
+    else {
+        die 'Usage: $account->update_theme_prefs(HASHREF|CODEREF)';
+    }
+
+    require Socialtext::Theme;
+    unless (Socialtext::Theme->ValidSettings($settings)) {
+        die "Invalid theme setting:\n" . YAML::Dump($settings);
+    }
+
+    $prefs->save({ theme => $settings });
+    $self->_clean_theme_cache;
+}
+
+sub _clean_theme_cache {
+    my ($self) = @_;
+    require Socialtext::SASSy;
+    my $sass = Socialtext::SASSy->new(
+        account => $self,
+        filename => 'style.css',
+        dir_name => $self->name,
+    );
+    require File::Path;
+    File::Path::remove_tree($sass->cache_dir);
 }
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);

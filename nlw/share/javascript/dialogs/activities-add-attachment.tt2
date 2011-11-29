@@ -1,0 +1,16 @@
+<div class="attachmentPopup">
+  <iframe style="display:none"  class="formtarget" name="attach-formtarget" src="[% static_path %]/html/blank.html"></iframe>
+  <form name="attachForm" method="post" action="[% base_uri %]/data/uploads" enctype="multipart/form-data" target="attach-formtarget">
+    <p>
+        [% loc('info.browse') %]
+        [% loc('info.done') %]
+        <span class="hint">
+        [% loc('activities.maximum-file-size=mb', max_filesize) %]</span>
+    </p>
+    <p class="fileprompt">
+        <input type="file" name="file" class="file"/>
+    </p>
+    <input type="submit" class="hidden"/>
+    <div class="error"></div>
+  </form>
+</div>

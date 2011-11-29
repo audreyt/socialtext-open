@@ -77,7 +77,6 @@ Readonly our @COLUMNS => (
     'sort_weblogs_by_create',
     'external_links_open_new_window',
     'basic_search_only',
-    'enable_unplugged',
     'skin_name',
     'custom_title_label',
     'header_logo_link_uri',
@@ -140,6 +139,11 @@ sub enable_spreadsheet {
     return $self->is_plugin_enabled('socialcalc');
 }
 
+sub enable_xhtml {
+    my ($self, $option) = @_;
+    return $self->is_plugin_enabled('ckeditor');
+}
+
 # Special case the "help" workspace.  Since existing Wikitext (and rarely used
 # code) still refer to the "help" workspace, we need to capture that here and
 # call help_workspace(), which should automagically load up the right
@@ -191,6 +195,15 @@ sub _new {
     }
 
     return $new_obj;
+}
+
+sub guest_has_email_in {
+    my $self = shift;
+
+    return $self->permissions->role_can(
+        role       => Socialtext::Role->Guest(),
+        permission => ST_EMAIL_IN_PERM,
+    );
 }
 
 sub new_from_hash_ref {
@@ -517,6 +530,107 @@ sub delete_search_index {
     }
 }
 
+around assign_role_to_user => sub {
+    my $orig = shift;
+    my $self = shift;
+    my %p = (
+        user => undef, role => undef, actor => undef, reckless => 0, @_);
+
+    my $currentRole = $self->role_for_user($p{user}, direct => 1);
+    if ($currentRole and !$p{reckless}) {
+        my $admin = Socialtext::Role->Admin();
+        if ($currentRole->role_id == $admin->role_id
+             and $p{role}->role_id != $admin->role_id) {
+            my $count = $self->role_count(
+                role   => Socialtext::Role->Admin(),
+                direct => 1,
+            );
+            Socialtext::Exception::User->throw(
+                error => 'ADMIN_REQUIRED',
+                user => $p{user},
+                username => $p{user}->username,
+            ) if $count < 2;
+        }
+    }
+
+    $orig->($self, %p);
+};
+
+around assign_role_to_group => sub {
+    my $orig = shift;
+    my $self = shift;
+    my %p = @_;
+
+   $p{role} ||= $self->role_default($p{group});
+
+    my $current_role = $self->role_for_group($p{group}, direct => 1);
+    return if $current_role && $current_role->role_id == $p{role}->role_id;
+
+    my $admin = Socialtext::Role->Admin();
+    my $new_is_admin = $p{role}->role_id == $admin->role_id;
+    my $is_admin = $current_role && $current_role->role_id == $admin->role_id;
+
+    if ($is_admin && !$new_is_admin && !$p{reckless}) {
+        my $admin_count = $self->role_count(role => $admin, direct => 1);
+
+        Socialtext::Exception::Conflict->throw(error => 'ADMIN_REQUIRED')
+            unless $admin_count > 1;
+    }
+
+    $orig->($self, %p);
+};
+
+around remove_user => sub {
+    my $orig = shift;
+    my $self = shift;
+    my %p = (
+        user => undef,
+        reckless => 0,
+        @_
+    );
+
+    unless ($p{reckless}) {
+        my $userRole = $self->role_for_user($p{user}, direct => 1);
+        my $admin = Socialtext::Role->Admin();
+        if ($userRole->name eq $admin->name) {
+            my $count = $self->role_count(
+                role => Socialtext::Role->Admin(),
+                direct => 1,
+            );
+            Socialtext::Exception::User->throw(
+                error => 'ADMIN_REQUIRED',
+                user => $p{user},
+                username => $p{user}->username,
+            ) if $count < 2;
+        }
+    }
+
+    $orig->($self, %p);
+};
+
+around remove_group => sub {
+    my $orig = shift;
+    my $self = shift;
+    my %p = @_;
+
+    unless ($p{reckless}) {
+        my $current_role = $self->role_for_group($p{group}, direct => 1);
+        Socialtext::Exception::Conflict->throw(error => 'NO_ROLE')
+            unless $current_role;
+
+        my $admin = Socialtext::Role->Admin();
+
+        if ($current_role->role_id == $admin->role_id) {
+            my $admin_count = $self->role_count(role => $admin, direct => 1);
+
+            Socialtext::Exception::Conflict->throw(error => 'ADMIN_REQUIRED')
+                unless $admin_count > 1;
+        }
+    }
+
+    $orig->($self, %p);
+};
+
 sub delete {
     my $self = shift;
     my $timer = Socialtext::Timer->new;
@@ -526,7 +640,7 @@ sub delete {
 
     my $mc = $self->users();
     while ( my $user = $mc->next() ) {
-        $self->remove_user(user => $user);
+        $self->remove_user(user => $user, reckless => 1);
     }
 
     Socialtext::EmailAlias::delete_alias( $self->name );
@@ -1718,6 +1832,41 @@ sub load_pages_from_disk {
     }
 }
 
+sub last_edit_for_user {
+    my $self = shift;
+    my $user_id = shift;
+
+    my $sql = "
+        SELECT
+          page_id,
+          edit_time,
+          page_type,
+          name
+        FROM
+          page_revision 
+        WHERE
+          workspace_id = ?
+        AND edit_time = (
+          SELECT
+            MAX(edit_time)
+          FROM
+            page_revision
+          WHERE
+            workspace_id = ?
+          AND
+            editor_id = ?
+          AND
+            deleted = false)
+    ";
+
+    my $sth = sql_execute($sql,
+        $self->workspace_id,
+        $self->workspace_id,
+        $user_id,
+    );
+    return $sth->fetchrow_hashref();
+}
+
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
 package Socialtext::NoWorkspace;
@@ -1884,14 +2033,6 @@ used to generate filesystem and URI paths to the various files.
 In the future, this will be replaced with something more
 sophisticated, when skins become first class entities in the system.
 
-=head2 enable_unplugged
-
-If set to a true value, enable_unplugged will cause the workspace to
-display icons that, when clicked, will generate a zip archive of a
-tiddlytext version of the relevant pages from the workspace. A tiddlytext
-is a version of TiddlyWiki for editing Socialtext workspaces pages offline
-and then syncing them back to the server.
-
 =head2 logo_uri
 
 The URI to the workspace's logo.
@@ -2026,8 +2167,6 @@ PARAMS can include:
 
 =item * clone_pages_from - clone pages from another workspace, defaults to false
 
-=item * enable_unplugged - defaults to 0
-
 =back
 
 Creating a workspace creates the necessary paths on the filesystem,
@@ -2114,8 +2253,6 @@ Returns a formatted address comprising the title of the Workspace and
 the address set via email_notification_from_address.
 
 =head2 $workspace->skin_name()
-
-=head2 $workspace->enable_unplugged()
 
 =head2 $workspace->creation_datetime()
 

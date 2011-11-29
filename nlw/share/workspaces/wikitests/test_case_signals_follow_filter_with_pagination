@@ -40,30 +40,28 @@
 | st-search-for | Search People: | %%short_signaler%% |
 | wait_for_element_visible_ok | link=%%short_signaler%% | 30000 |
 | click_and_wait | link=%%short_signaler%% |  |
-| wait_for_element_visible_ok | link=Follow this person | 30000 |
-| click_ok | link=Follow this person |  |
-| wait_for_element_visible_ok | link=Stop following this person | 30000 |
+| wait_for_element_visible_ok | st-watchperson-indicator | 30000 |
+| click_ok | st-watchperson-indicator |  |
+| wait_for_element_visible_ok | //button[@title='Stop following this person'] | 30000 |
 
 | *Comment* | Test Case: Signals Follow Filter With Pagination follower checks signals, filters for following |  |
 | wait_for_element_visible_ok | link=Signals | 30000 |
 | click_and_wait | link=Signals |  |
-| st-name-widget | 1 | signals |
-| st-select-widget-frame | signals |  |
-| wait_for_element_present_ok | link=everyone | 30000 |
-| click_ok | link=everyone |  |
-| select-frame | relative=parent |  |
 
-| st_verify_text_in_activities_widget | signals | nfsig-%%start_time%% 65 |
-| st_verify_text_in_activities_widget | signals | nfsig-%%start_time%% 46 |
+| st-verify-text-in-activities-widget | nfsig-%%start_time%% 65 |
+| st-verify-text-in-activities-widget | nfsig-%%start_time%% 46 |
 
 | *Comment* | Test Case: Signals Follow Filter With Pagination follower checks signals, filter to only People I Follow |  |  |
-| wait_for_element_present_ok | link=people I follow | 30000 |  |
-| click_ok | link=people I follow |  |  |
+| wait_for_element_visible_ok | //a[contains(@id,"expander")] | 30000 |  |
+| click_ok | //a[contains(@id,"expander")] |  |  |
+| wait_for_element_visible_ok | feed-followed | 30000 |  |
+| click_ok | feed-followed |  |  |
+| pause_ok | 2000 |  |  |
+| open_ok | /st/signals |  |  |
 | st_text_unlike_in_activities_widget | signals | nfsig-%%start_time%% | 30000 |
 
 | *Comment* | Test Case: Signals Follow Filter With Pagination follower checks pagination |  |
 | st_text_unlike_in_activities_widget | signals | ssig-%%start_time%% ONE |
-| st-select-widget-frame | signals |  |
 | wait_for_text_present_ok | ssig-%%start_time%% 2 | 30000 |
 | wait_for_text_present_ok | ssig-%%start_time%% 3 | 30000 |
 | wait_for_text_present_ok | ssig-%%start_time%% 10 | 30000 |
@@ -80,14 +78,15 @@
 | wait_for_text_present_ok | ssig-%%start_time%% 15 | 30000 |
 | wait_for_text_present_ok | ssig-%%start_time%% 19 | 30000 |
 
-| *Comment* | Test Case: Signals Follow Filter With Pagination follower unfilters signals |  |
-| select-frame | relative=parent |  |
-| wait_for_element_present_ok | link=everyone | 30000 |
-| click_ok | link=everyone |  |
-| st-select-widget-frame | signals |  |
-| wait_for_text_present_ok | nfsig-%%start_time%% 65 | 30000 |
-| wait_for_text_present_ok | nfsig-%%start_time%% 46 | 30000 |
-| select-frame | relative=parent |  |
+| *Comment* | Test Case: Signals Follow Filter With Pagination follower unfilters signals |  |  |
+| wait_for_element_visible_ok | //a[contains(@id,"expander")] | 30000 |  |
+| click_ok | //a[contains(@id,"expander")] |  |  |
+| wait_for_element_visible_ok | feed-everyone | 30000 |  |
+| click_ok | feed-everyone |  |  |
+| pause_ok | 2000 |  |  |
+| open_ok | /st/signals |  |  |
+| wait_for_text_present_ok | nfsig-%%start_time%% 65 | 30000 |  |
+| wait_for_text_present_ok | nfsig-%%start_time%% 46 | 30000 |  |
 
 | *Comment* | Test Case: Signals Follow Filter With Pagination TEARDOWN |  |
 | st-process-jobs |  |  |

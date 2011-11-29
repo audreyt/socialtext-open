@@ -1,20 +1,41 @@
+THIS TEST FAILS. IT IS TAGGED tuxhold
+It always fails to set the users new time values.
+Watch the test run and you can see it.
+
+
 | *Comment* | Test Case: Global Time Override |  |
 
+| st-admin | give-system-admin --e %%email%% | now has system admin access |
+
 | set | user | gto.user.%%start_time%%@david.socialtext.net |
-| set | acct | gto_acct_%%start_time%% |
 | set | user2 | gto.user.2.%%start_time%%@david.socialtext.net |
+| set | user3 | gto.user.3.%%start_time%%@david.socialtext.net |
+| set | acct | gto_acct_%%start_time%% |
+
+| set | ttimezone | //select[@name="prefs.timezone.timezone"] |
+| set | tdst | //select[@name="prefs.timezone.dst"] |
+
+| set | tformat | //input[@type="radio" and @name="prefs.timezone.date_display_format"] |
+| set | t1224 | //input[@type="radio" and @name="prefs.timezone.time_display_12_24"] |
+
+"open" versions of these radio button selectors to be composed with values
+| set | oformat | //input[@type="radio" and @name="prefs.timezone.date_display_format" |
+| set | o1224 | //input[@type="radio" and @name="prefs.timezone.time_display_12_24" |
+
+| set | tsecs | //input[@name="prefs.timezone.time_display_seconds"] |
 
 | create-account | %%acct%% |  |  |
 | create-user | %%user%% | %%password%% | %%acct%% |
 | create-user | %%user2%% | %%password%% | %%acct%% |
+| create-user | %%user3%% | %%password%% | Socialtext |
 
 | *Comment* | Test Case: Global Time Override set the global settings |  |
 | open_ok | /console/?rm=Setup |  |
 | wait_for_element_visible_ok | timezone__timezone | 30000 |
-| wait_for_element_visible_ok | timezone__dst | 30000 |
-| wait_for_element_visible_ok | timezone__date_display_format | 30000 |
-| wait_for_element_visible_ok | timezone__time_display_12_24 | 30000 |
-| wait_for_element_visible_ok | timezone__time_display_seconds | 30000 |
+| wait_for_element_visible_ok | timezone__dst | 15000 |
+| wait_for_element_visible_ok | timezone__date_display_format | 15000 |
+| wait_for_element_visible_ok | timezone__time_display_12_24 | 15000 |
+| wait_for_element_visible_ok | timezone__time_display_seconds | 15000 |
 | select_ok | timezone__timezone | label=+0300 Baghdad |
 | select_ok | timezone__dst | label=currently in DST |
 | select_ok | timezone__date_display_format | value=d_mmm_yy |
@@ -30,13 +51,19 @@
 
 | *Comment* | Test Case: Global Time Override check that the new user has the new global settings |  |
 | st-logoutin | %%user%% | %%password%% |
-| open_ok | /?action=preferences_settings;preferences_class_id=timezone |  |
-| wait_for_element_visible_ok | timezone__time_display_seconds | 30000 |
-| is_selected_ok | timezone__timezone | label=+0300 Baghdad |
-| is_selected_ok | timezone__dst | label=currently in DST |
-| is_selected_ok | timezone__date_display_format | value=d_mmm_yy |
-| is_selected_ok | timezone__time_display_12_24 | value=24 |
-| st_unchecked_ok | timezone__time_display_seconds |  |
+| open_ok | /st/settings |  |
+| wait_for_element_visible_ok | %%ttimezone%% | 30000 |
+| wait_for_element_visible_ok | %%tdst%% | 15000 |
+| wait_for_element_visible_ok | %%tformat%% | 15000 |
+| wait_for_element_visible_ok | %%t1224%% | 15000 |
+| wait_for_element_visible_ok | %%tsecs%% | 15000 |
+| is_selected_ok | %%ttimezone%% | label=+0300 Baghdad |
+| is_selected_ok | %%tdst%% | label=currently in DST |
+
+| value_is | %%oformat%% and @value="d_mmm_yy"] | on |
+| value_is | %%o1224%% and @value="24"] | on |
+
+| st_unchecked_ok | %%tsecs%% |  |
 
 | *Comment* | Test Case: Global Time Override set the account settings |  |
 | st-logoutin | %%username%% | %%password%% |
@@ -53,62 +80,113 @@
 | is_selected_ok | timezone__time_display_12_24 | value=12 |
 | is_checked_ok | timezone__time_display_seconds |  |
 | click_and_wait | `xpath=(//input[@value='Update'])[2]` |  |
-| wait_for_text_present_ok | Account settings updated | 30000 |
+
+| *Comment* | Test Case: Global Time Override verify the account settings |  |
+| open_ok | /nlw/control/account/%%account_id%% |  |
+| wait_for_element_visible_ok | timezone__timezone | 30000 |
+| is_selected_ok | timezone__timezone | label=+0900 Japan, Korean |
+| is_selected_ok | timezone__dst | label=never in DST |
+| is_selected_ok | timezone__date_display_format | value=yyyy_mm_dd |
+| is_selected_ok | timezone__time_display_12_24 | value=12 |
+| is_checked_ok | timezone__time_display_seconds |  |
 
 | *Comment* | Test Case: Global Time Override check that user now has account settings |  |
 | st-logoutin | %%user%% | %%password%% |
-| open_ok | /?action=preferences_settings;preferences_class_id=timezone |  |
-| wait_for_element_visible_ok | timezone__time_display_seconds | 30000 |
-| is_selected_ok | timezone__timezone | label=+0900 Japan, Korean |
-| is_selected_ok | timezone__dst | label=never in DST |
-| is_selected_ok | timezone__date_display_format | value=yyyy_mm_dd |
-| is_selected_ok | timezone__time_display_12_24 | value=12 |
-| is_checked_ok | timezone__time_display_seconds |  |
+| open_ok | /st/settings |  |
+| wait_for_element_visible_ok | %%ttimezone%% | 30000 |
+| wait_for_element_visible_ok | %%tdst%% | 15000 |
+| wait_for_element_visible_ok | %%tformat%% | 15000 |
+| wait_for_element_visible_ok | %%t1224%% | 15000 |
+| wait_for_element_visible_ok | %%tsecs%% | 15000 |
+
+| is_selected_ok | %%ttimezone%% | label=+0900 Japan, Korean |
+| is_selected_ok | %%tdst%% | label=never in DST |
+
+| value_is | %%oformat%% and @value="yyyy_mm_dd"] | on |
+| value_is | %%o1224%% and @value="12"] | on |
+
+| is_checked_ok | %%tsecs%% |  |
+
+| *Comment* | Slow things down so you can watch |  |
+| set_speed_ok | 2000 |  |
 
 | *Comment* | Test Case: Global Time Override set new user settings |  |
-| select_ok | timezone__timezone | label=+0100 Central European |
-| select_ok | timezone__dst | label=currently not in DST |
-| select_ok | timezone__date_display_format | value=d_mmm_yy |
-| select_ok | timezone__time_display_12_24 | value=24 |
-| uncheck_ok | timezone__time_display_seconds |  |
-| is_selected_ok | timezone__timezone | label=+0100 Central European |
-| is_selected_ok | timezone__dst | label=currently not in DST |
-| is_selected_ok | timezone__date_display_format | value=d_mmm_yy |
-| is_selected_ok | timezone__time_display_12_24 | value=24 |
-| st_unchecked_ok | timezone__time_display_seconds |  |
-| click_and_wait | -savelink |  |
-| wait_for_text_present_ok | Preferences saved | 30000 |
+| select_ok | %%ttimezone%% | label=+0100 Central European |
+| select_ok | %%tdst%% | label=currently not in DST |
+
+| click_ok | %%oformat%% and @value="d_mmm_yy"] |
+| click_ok | %%o1224%% and @value="24"] |
+
+| uncheck_ok | %%tsecs%% |  |
+
+| is_selected_ok | %%ttimezone%% | label=+0100 Central European |
+| is_selected_ok | %%tdst%% | label=currently not in DST |
+
+| value_is | %%oformat%% and @value="d_mmm_yy"] | on |
+| value_is | %%o1224%% and @value="24"] | on |
+
+| st_unchecked_ok | %%tsecs%% |  |
+
+| click_and_wait | link=Save |  |
+| wait_for_text_present_ok | Saved | 15000 |
+
+| *Comment* | THE VALUES WERE NOT SAVED |  |
+
+
+| *Comment* | Let things run at normal speed |  |
+| set_speed_ok | 0 |  |
 
 | *Comment* | Test Case: Global Time Override check that user now has user settings |  |
-| open_ok | /index.cgi?action=preferences_settings;preferences_class_id=timezone |  |
-| wait_for_element_visible_ok | timezone__time_display_seconds | 30000 |
-| is_selected_ok | timezone__timezone | label=+0100 Central European |
-| is_selected_ok | timezone__dst | label=currently not in DST |
-| is_selected_ok | timezone__date_display_format | value=d_mmm_yy |
-| is_selected_ok | timezone__time_display_12_24 | value=24 |
-| st_unchecked_ok | timezone__time_display_seconds |  |
+| *Comment* | THIS TEST FAILS USER DOES NOT HAVE THE SETTINGS |  |
+| open_ok | /st/settings |  |
+| wait_for_element_visible_ok | %%ttimezone%% | 30000 |
+| wait_for_element_visible_ok | %%tdst%% | 15000 |
+| wait_for_element_visible_ok | %%tformat%% | 15000 |
+| wait_for_element_visible_ok | %%t1224%% | 15000 |
+| wait_for_element_visible_ok | %%tsecs%% | 15000 |
+| is_selected_ok | %%ttimezone%% | label=+0100 Central European |
+| is_selected_ok | %%tdst%% | label=currently not in DST |
+
+| value_is | %%oformat%% and @value="d_mmm_yy"] | on |
+| value_is | %%o1224%% and @value="24"] | on |
+
+| st_unchecked_ok | %%tsecs%% |  |
 
 | *Comment* | Test Case: Global Time Override check that a user who shares the account still has the account-level prefs |  |
 | st-logoutin | %%user2%% | %%password%% |
-| open_ok | /?action=preferences_settings;preferences_class_id=timezone |  |
-| wait_for_element_visible_ok | timezone__time_display_seconds | 30000 |
-| is_selected_ok | timezone__timezone | label=+0900 Japan, Korean |
-| is_selected_ok | timezone__dst | label=never in DST |
-| is_selected_ok | timezone__date_display_format | value=yyyy_mm_dd |
-| is_selected_ok | timezone__time_display_12_24 | value=12 |
-| is_checked_ok | timezone__time_display_seconds |  |
+| open_ok | /st/settings |  |
+| wait_for_element_visible_ok | %%ttimezone%% | 30000 |
+| wait_for_element_visible_ok | %%tdst%% | 15000 |
+| wait_for_element_visible_ok | %%tformat%% | 15000 |
+| wait_for_element_visible_ok | %%t1224%% | 15000 |
+| wait_for_element_visible_ok | %%tsecs%% | 15000 |
+
+| is_selected_ok | %%ttimezone%% | label=+0900 Japan, Korean |
+| is_selected_ok | %%tdst%% | label=never in DST |
+
+| value_is | %%oformat%% and @value="yyyy_mm_dd"] | on |
+| value_is | %%o1224%% and @value="12"] | on |
+
+| is_checked_ok | %%tsecs%% |  |
 
 | *Comment* | Test Case: Global Time Override check that a user who does not share the account still has the global-level prefs |  |
-| st-logoutin | %%username%% | %%password%% |
-| open_ok | /?action=preferences_settings;preferences_class_id=timezone |  |
-| wait_for_element_visible_ok | timezone__time_display_seconds | 30000 |
-| is_selected_ok | timezone__timezone | label=+0300 Baghdad |
-| is_selected_ok | timezone__dst | label=currently in DST |
-| is_selected_ok | timezone__date_display_format | value=d_mmm_yy |
-| is_selected_ok | timezone__time_display_12_24 | value=24 |
-| st_unchecked_ok | timezone__time_display_seconds |  |
+| st-logoutin | %%user3%% | %%password%% |
+| open_ok | /st/settings |  |
+| wait_for_element_visible_ok | %%ttimezone%% | 30000 |
+| wait_for_element_visible_ok | %%tdst%% | 15000 |
+| wait_for_element_visible_ok | %%tformat%% | 15000 |
+| wait_for_element_visible_ok | %%t1224%% | 15000 |
+| wait_for_element_visible_ok | %%tsecs%% | 15000 |
+| is_selected_ok | %%ttimezone%% | label=+0300 Baghdad |
+| is_selected_ok | %%tdst%% | label=currently in DST |
+
+| value_is | %%oformat%% and @value="d_mmm_yy"] | on |
+| value_is | %%o1224%% and @value="24"] | on |
+
+| st_unchecked_ok | %%tsecs%% |  |
 
 | *Comment* | Test Case: Global Time Override restore the global settings to default |  |
+| st-logoutin | %%username%% | %%password%% |
 | open_ok | /console/?rm=Setup |  |
 | wait_for_element_visible_ok | timezone__timezone | 30000 |
 | select_ok | timezone__timezone | label=-0800 Pacific |
@@ -125,19 +203,27 @@
 | is_selected_ok | timezone__timezone | label=-0800 Pacific |
 
 | *Comment* | Test Case: Global Time Override check that user still has user-level settings |  |
+| *Comment* | THIS TEST FAILS USER DOES NOT HAVE THE SETTINGS |  |
 | st-logoutin | %%user%% | %%password%% |
-| open_ok | /index.cgi?action=preferences_settings;preferences_class_id=timezone |  |
-| wait_for_element_visible_ok | timezone__time_display_seconds | 30000 |
-| is_selected_ok | timezone__timezone | label=+0100 Central European |
-| is_selected_ok | timezone__dst | label=currently not in DST |
-| is_selected_ok | timezone__date_display_format | value=d_mmm_yy |
-| is_selected_ok | timezone__time_display_12_24 | value=24 |
-| st_unchecked_ok | timezone__time_display_seconds |  |
+| open_ok | /st/settings |  |
+| wait_for_element_visible_ok | %%ttimezone%% | 30000 |
+| wait_for_element_visible_ok | %%tdst%% | 15000 |
+| wait_for_element_visible_ok | %%tformat%% | 15000 |
+| wait_for_element_visible_ok | %%t1224%% | 15000 |
+| wait_for_element_visible_ok | %%tsecs%% | 15000 |
+| is_selected_ok | %%ttimezone%% | label=+0100 Central European |
+| is_selected_ok | %%tdst%% | label=currently not in DST |
+
+| value_is | %%oformat%% and @value="d_mmm_yy"] | on |
+| value_is | %%o1224%% and @value="24"] | on |
+
+| st_unchecked_ok | %%tsecs%% |  |
 
 | *Comment* | Test Case: Global Time Override TEARDOWN |  |
 | st-process-jobs |  |  |
 | deactivate-user | %%user%% |  |
 | deactivate-user | %%user2%% |  |
+| deactivate-user | %%user3%% |  |
 | delete-account | %%acct%% | Recklessly deleting |
 
 | *Comment* | Test Case: Global Time Override COMPLETED |  |

@@ -3,8 +3,8 @@
 
 | *Comment* | Test Case: Email Spreadsheet open the email-page |  |
 | open_ok | /%%workspace%%/Car Loan |  |
-| wait_for_element_visible_ok | link=Email | 30000 |
-| click_ok | link=Email |  |
+| wait_for_element_present_ok | //a[@title='Email this page '] | 30000 |
+| click_ok | //a[@title='Email this page '] |  |
 
 | *Comment* | Test Case: Email Spreadsheet add receipients |  |
 | wait_for_element_visible_ok | email_recipient | 30000 |
@@ -28,11 +28,11 @@
 | *Comment* | Test Case: Email Spreadsheet Check Reception |  |
 | open_ok | /%%workspace%%/index.cgi?Email Spreadsheet %%start_time%% |  |
 | text_like | st-page-titletext | Email Spreadsheet %%start_time%% |
-| text_like | contentContainer | qr/Hello, this is a page from the workspace that I wanted you to see/ism |
+| text_like | content | qr/Hello, this is a page from the workspace that I wanted you to see/ism |
 | wait_for_element_visible_ok | //a[contains(@href,'/%%workspace%%/car_loan')] |  |
 
 | *Comment* | Test Case: Email Spreadsheet Teardown |  |
 
 | st-admin | purge-page --w %%workspace%% --page email_spreadsheet_%%start_time%% | was purged |
 
-| *Comment* | Test Case: Email Spreadsheet COMPLETED |
+| *Comment* | Test Case: Email Spreadsheet COMPLETED |  |

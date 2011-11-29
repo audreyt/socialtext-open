@@ -1,113 +1,118 @@
 | *Comment* | STARTING Test Case: Link Interface |  |
 
 | *Comment* | Test Case: Link Interface create page to be linked to |  |
-| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | st-newpage-pagename-edit | Link Interface LinkMe %%start_time%% |
-| type_ok | wikiwyg_wikitext_textarea | Link Interface LinkMe %%start_time%% content |
-| st-page-save |  |  |
+| st-admin | update-page --w %%workspace%% --e %%email%% --p "Link Interface LinkMe %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |
 
 | *Comment* | Test Case: Link Interface create page containing the link |  |
-| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
+| open_ok | /%%workspace%%/?action=new_page |  |
 | wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
 | type_ok | st-newpage-pagename-edit | Link Interface %%start_time%% |
-| type_ok | wikiwyg_wikitext_textarea | Link Interface Content %%start_time%% |
 
-| *Comment* | Test Case: Link Interface. switch to Simple, use Link dialog to make the wiki link |  |
-| wait_for_element_visible_ok | link=Rich Text | 30000 |
-| click_ok | link=Rich Text |  |
-| pause | 10000 | for Simple editor to appear, dammit. Nothing to wait_for |
-| click_ok | wikiwyg_button_link |  |
-| wait_for_element_visible_ok | add-wiki-link | 30000 |
-| click_ok | add-wiki-link |  |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_st_wikilink")] | 15000 |
+| MouseOver_ok | //a[contains(@class,"cke_button_st_wikilink")] |  |
+| pause_ok | 2000 |  |
+| click_ok | //a[contains(@class,"cke_button_st_wikilink")] |  |
+| wait_for_element_visible_ok | wiki-link-text | 15000 |
 | type_ok | wiki-link-text | TC: Link Interface |
 | type_ok | st-widget-workspace_id | %%workspace%% |
 | type_ok | st-widget-page_title | Link Interface LinkMe %%start_time%% |
 | type_ok | wiki-link-section | section two |
 | click_ok | st-widget-link-savebutton |  |
 
-| *Comment* | Test Case: Link Interface. There is no choice but to pause until the link widget lozenge is calculated and rendered |  |
-| pause | 10000 |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| *Comment* | Test Case: Link Interface. Save |  |
 | st-page-save |  |  |
 
 | *Comment* | Test Case: Link Interface. Save the page and re-open for editing |  |
 | wait_for_element_visible_ok | st-edit-button-link | 30000 |
 | click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 10000 |
+| MouseOver_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+
+| *Comment* | click WIKITEXT |  |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
 
 | *Comment* | Test Case: Link Interface. verify wiki link rendered correctly |  |
 | *Comment* | Test Case: Link Interface NOTE: this action MUST be verifyValue. Neither text_like nor verify_value_ok work correctly here |  |
-| verifyValue | wikiwyg_wikitext_textarea | `"TC: Link Interface"{link: %%workspace%% [Link Interface LinkMe %%start_time%%] section two}` |
 
-| *Comment* | Test Case: Link Interface Bogus Input |  |
-| wait_for_element_visible_ok | link=Rich Text | 30000 |
-| click_ok | link=Rich Text |  |
-| pause | 10000 |  |
-| click_ok | wikiwyg_button_link |  |
-| wait_for_element_visible_ok | add-wiki-link | 30000 |
-| click_ok | add-wiki-link |  |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 15000 |
+| verifyValue | //textarea[contains(@class,"cke_source")] | `"TC: Link Interface"{link: %%workspace%% [Link Interface LinkMe %%start_time%%] section two}` |
+| *Comment* | Test Case: Link Interface. Save the page to avoid alerts |  |
+| st-page-save |  |  |
+
+| *Comment* | Test Case: Link Interface Bogus Input - reopen |  |
+| open_ok | /%%workspace%%/Link Interface %%start_time%% |  |
+| wait_for_element_visible_ok | st-edit-button-link | 30000 |
+| click_ok | st-edit-button-link |  |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_st_wikilink")] | 15000 |
+| MouseOver_ok | //a[contains(@class,"cke_button_st_wikilink")] |  |
+| pause_ok | 2000 |  |
+| click_ok | //a[contains(@class,"cke_button_st_wikilink")] |  |
+| wait_for_element_visible_ok | wiki-link-text | 15000 |
 | type_ok | wiki-link-text | TC: Link Interface |
 | type_ok | st-widget-workspace_id | DoesNotExist |
 | click_ok | st-widget-link-savebutton |  |
 
 | *Comment* | Test Case: Link Interface pause is necessary for the error to appear |  |
-| pause | 5000 |  |
+| pause | 15000 |  |
 | text_like | That workspace does not exist |  |
-| wait_for_element_visible_ok | st-widget-link-cancelbutton | 30000 |
+| wait_for_element_visible_ok | st-widget-link-cancelbutton | 15000 |
 | click_ok | st-widget-link-cancelbutton |  |
-| wait_for_element_not_visible_ok | add-wiki-link | 30000 |
-
-| *Comment* | Test Case: Link Interface get a fresh page for Web Link |  |
-| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| type_ok | st-newpage-pagename-edit | Link Interface Web Link %%start_time%% |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | link=Rich Text | 30000 |
-| click_ok | link=Rich Text |  |
-| pause | 5000 |  |
-| include | [Test Case: Link Interface Web Link] |  |
+| wait_for_element_not_present_ok | add-wiki-link | 15000 |
+| *Comment* | Test Case: Link Interface. Save the page again to avoid alerts |  |
+| st-page-save |  |  |
 
 | *Comment* | Test Case: Link Interface make a section link |  |
-| *Comment* | Insert some required whitespace for the section link |  |
-| type_ok | wikiwyg_wikitext_textarea | ` link goes here ` |
-| wait_for_element_visible_ok | link=Rich Text | 30000 |
-| click_ok | link=Rich Text |  |
-| pause | 10000 |  |
-| click_ok | wikiwyg_button_link |  |
-| wait_for_element_visible_ok | add-section-link | 30000 |
+| open_ok | /%%workspace%%/Link Interface %%start_time%% |  |
+| wait_for_element_visible_ok | st-edit-button-link | 30000 |
+| click_ok | st-edit-button-link |  |
+| wait_for_element_present_ok | //a[contains(@class,"cke_button_wikitext")] | 10000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+| wait_for_element_present_ok | //textarea[contains(@class,"cke_source")] | 10000 |
+| pause_ok | 4000 |  |
+
+| *Comment* | Insert some required whitespace for the section link. Save. |  |
+| type_ok | //textarea[contains(@class,"cke_source")] | ` link goes here ` |
+| *Comment* | Test Case: Link Interface. Save the page again to avoid alerts |  |
+| st-page-save |  |  |
+
+| open_ok | /%%workspace%%/Link Interface %%start_time%% |  |
+| wait_for_element_visible_ok | st-edit-button-link | 30000 |
+| click_ok | st-edit-button-link |  |
+
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_st_wikilink")] | 15000 |
+| MouseOver_ok | //a[contains(@class,"cke_button_st_wikilink")] |  |
+| pause_ok | 2000 |  |
+| click_ok | //a[contains(@class,"cke_button_st_wikilink")] |  |
+| wait_for_element_visible_ok | add-section-link | 15000 |
 | click_ok | add-section-link |  |
 | type_ok | section-link-text | a section link |
 | click_ok | st-widget-link-savebutton |  |
 
 | *Comment* | Test Case: Link Interface. Pause unti the web link widget lozenge is calculated and rendered |  |
-| pause | 10000 | pause for rendering |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| pause | 15000 | pause for rendering |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 15000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 15000 |
+| wait_for_element_visible_ok | st-save-button-link | 15000 |
 | st-page-save |  |  |
 
 | *Comment* | Test Case: Link Interface. Save the page again and re-open for editing |  |
-| wait_for_element_visible_ok | st-edit-button-link | 30000 |
 | click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| wait_for_text_present_ok | Editing: | 10000 |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 15000 |
+| wait_for_text_present_ok | Signal this edit | 15000 |
 
 | *Comment* | Test Case: Link Interface. verify section link rendered correctly |  |
-| verifyValue | wikiwyg_wikitext_textarea | `{link: a section link}` |
+| verifyValue | //textarea[contains(@class,"cke_source")] | `{link: a section link}` |
+| *Comment* | Test Case: Link Interface. Save the page again to avoid alerts |  |
+| st-page-save |  |  |
+
+| *Comment* | Test Case: Link Interface get a fresh page for Web Link |  |
+| open_ok | /%%workspace%%/?action=new_page |  |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
+| type_ok | st-newpage-pagename-edit | Link Interface Web Link %%start_time%% |
+| include | [Test Case: Link Interface Web Link] |  |
 
 | *Comment* | Text Case: Link Interface TEARDOWN |  |
 | st-process-jobs |  |  |

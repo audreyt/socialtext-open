@@ -1,0 +1,63 @@
+[%# vim: set et sts=2 sw=2: -%]
+[%- USE html_encode -%]
+[%- USE decorate -%]
+[%- USE label_ellipsis -%]
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    [% IF firebug %]
+    <script type='text/javascript' src='http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js'></script>
+    [% END %]
+    [% FILTER decorate "head" %]
+    <title>[% title || display_title %][% IF workspace_present AND wiki.title %] / [% wiki.title %][% END %]</title>
+    [% FILTER decorate "head_css" %]
+    [% PROCESS element/css_links %]
+    [% IF css_template; INCLUDE $css_template; END %]
+    [% END %]
+    [% IF feeds %]
+      [% IF feeds.rss %]
+        [% FOREACH feed IN feeds.rss %]
+    <link rel="alternate" type="application/rss+xml" title="[% feed.value.title | html_encode %]" href="[% feed.value.url %]" />
+        [% END %]
+      [% END %]
+
+      [% IF feeds.atom %]
+        [% FOREACH feed IN feeds.atom %]
+    <link rel="alternate" type="application/atom+xml" title="[% feed.value.title | html_encode %]" href="[% feed.value.url %]" />
+        [% END %]
+      [% END %]
+    [% END %]
+
+    [% IF loc_lang != 'en' %]
+    <script type="text/javascript" charset="utf-8"
+      src="[% wiki.skin_uri('s2') %]/javascript/l10ns.js.gz">
+    </script>
+    [% END %]
+
+    <script type="text/javascript" charset="utf-8" src="[% wiki.skin_uri('s3') %]/javascript/socialtext-s3.js.gz"> </script>
+
+    [% IF head_template %]
+      [% INCLUDE $head_template %]
+    [% END %]
+
+    [% INCLUDE "element/wiki/js-bootstrap" %]
+    [% IF customjs %]
+    <script type="text/javascript" charset="utf-8" src="[% customjs %]"></script>
+    [% END %]
+
+    <meta name="keywords" content="[% loc('about.keywords') %]"/>
+    [% END %]
+  </head>
+
+  <body id="[% id || 'socialtext-wiki' %]" onload="if (typeof Socialtext != 'undefined') Socialtext.body_loaded = true">
+    <div id="mainWrap">
+      <div id="header" class="st-wiki-nav"/>
+      <div id="contentContainer">    
+        [% content %]
+        <div id="footer"/>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -17,26 +17,29 @@
 | *Comment* | Test Case: Activities Widget with REAL Popout At Dashboard with widget |  |
 | st_single_widget_in_dashboard | gallery-widget-Activities |  |
 | wait_for_text_present_ok | Activities | 30000 |
-| st-name-widget | 1 | activities_widget |
-| st-widget-title-like | activities_widget | Activities |
-| st_verify_text_within_activities_widget | What would you do %%start_time%% |  |
+| st-widget-title | ignore | Activities |
+| wait_for_text_present_ok | What would you do %%start_time%% | 30000 |
+| st-verify-text-in-activities-widget | What would you do %%start_time%% |  |
 
 | *Comment* | Test Case: Activities Widget with REAL Popout At Dashboard pop it out |  |
 | wait_for_element_visible_ok | //a[@class='pop_out'] | 10000 |
 | click_ok | //a[@class='pop_out'] |  |
 
 | *Comment* | Test Case: Activities Widget with REAL Popout At Dashboard Wait for popout, then Select it |  |
-| pause | 10000 |
+| pause | 10000 |  |
 | selectWindow | Socialtext Activities |  |
 
 | *Comment* | Test Case: Activities Widget with REAL Popout Examine Popout Page |  |
-| st_verify_text_within_activities_widget | What would you do %%start_time%% |  |
-| st_verify_text_within_activities_widget | If I sang out of tune %%start_time%% |  |
-| st_verify_text_within_activities_widget | Would you stand up and walk out on me %%start_time%% |  |
-| st_verify_text_within_activities_widget | Lend me your ears and I'll sing you a song %%start_time%% |  |
+| st_verify_text_in_activities_widget | What would you do %%start_time%% |  |
+| st_verify_text_in_activities_widget | If I sang out of tune %%start_time%% |  |
+| st_verify_text_in_activities_widget | Would you stand up and walk out on me %%start_time%% |  |
+| st_verify_text_in_activities_widget | Lend me your ears and I'll sing you a song %%start_time%% |  |
 
-| st_send_signal_in_activities_widget | And I'll try not to sing out of key %%start_time%% |  |
-| st_verify_text_within_activities_widget | And I'll try not to sing out of key %%start_time%% |  |
+| st_prepare_signal_within_activities_widget | And I'll try not to sing out of key %%start_time%% |  |
+| wait_for_element_visible_ok | activities_post | 10000 |
+| click_ok | activities_post |  |
+
+| st_verify_text_in_activities_widget | And I'll try not to sing out of key %%start_time%% |  |
 
 TODO: send signals, send replies, etc.
 

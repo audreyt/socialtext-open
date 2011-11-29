@@ -1,0 +1,30 @@
+[% USE html_encode %]
+<html>
+    <head>
+        <base target="_top" /> <!-- iframe widgets open in the main window -->
+
+        [% FOR script = features %]
+            <script src="/js/[% app_version %]/[% script %]"></script>
+        [% END %]
+        [% INCLUDE widget/syndicator %]
+  
+        [%- FOREACH css_file IN css.widget -%]
+            <link rel="stylesheet" type="text/css" href="[% css_file %]"/>
+        [% END %]
+
+        <script>
+            var msgs = [% as_json(messages) %];
+            gadgets.io.preloaded_ = {};
+            [% FOR preload = preloads %]
+                gadgets.io.preloaded_["[% preload.href %]"] = [% preload.data %];
+            [% END %]
+        </script>
+        [% IF firebug %]
+        <script type='text/javascript' src='http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js'></script>
+        [% END %]
+    </head>
+    <body>
+        [% content %]
+        <script>gadgets.util.runOnLoadHandlers();</script>
+    </body>
+</html>

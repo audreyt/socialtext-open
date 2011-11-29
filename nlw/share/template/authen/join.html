@@ -1,7 +1,7 @@
 [%# @COPYRIGHT@ -%]
 [%# vim: set et sts=2 sw=2: %]
 [% WRAPPER layout/html id="loginPage" title=loc("login.login") %]
-<div id="st-display-mode-container" class="authentication">
+<div id="st-display-mode-container" class="authentication" style="padding: 5px 25px 25px 25px">
   <div id="controls">
     <div id="st-editing-tools-edit">
         <h2 id="st-page-titletext" class="tableTitle">[% loc('login.join=wiki', target_workspace.title) %]</h2>
@@ -20,6 +20,7 @@
         [% INCLUDE 'authen/element/login_form' %]
         [% INCLUDE 'authen/element/forgot_password_link' %]
       </div>
+      <hr />
       <div id="contentRight">
         [% IF login_message %]
           <div id="login-message">[% login_message %]</div>

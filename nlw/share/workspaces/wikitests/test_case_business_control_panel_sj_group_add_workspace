@@ -20,7 +20,7 @@
 | wait_for_element_visible_ok | st-groupname | 30000 |
 | wait_for_element_visible_ok | st-group-create-submit | 30000 |
 | type_ok | st-groupname | %%group_name%% |
-| pause | 5000 |  |
+| pause | 15000 |  |
 | click_and_wait | st-group-create-submit |  |
 | wait_for_element_visible_ok | //input[@id='addToAccountLookahead'] | 30000 |
 | text_like | //body | Created By: %%short_username%% |
@@ -38,11 +38,11 @@
 | *Comment* | Test Case: Business Control Panel SJ Group Add Workspace Add a workspace - See permission set enabled |  |
 | wait_for_element_visible_ok | st-group-permission-set-selector | 30000 |
 | wait_for_element_visible_ok | st-group-permission-set-submit | 30000 |
-| pause | 5000 |  |
+| pause | 15000 |  |
 | is_editable | st-group-permission-set-selector |  |
 | is_editable | st-group-permission-set-submit |  |
 
-| *Comment* | Test Case: Business Control Panel SJ Group Add Workspace different permission set/error |
+| *Comment* | Test Case: Business Control Panel SJ Group Add Workspace different permission set/error |  |
 | click_and_wait | add-workspace |  |
 | wait_for_text_present_ok | Add Group to Workspace | 30000 |
 | wait_for_text_present_ok | Send invitation email | 30000 |
@@ -51,7 +51,7 @@
 | wait_for_element_visible_ok | st-assign-to-workspace | 30000 |
 | type_ok | st-assign-to-workspace | %%workspace%% |
 | click-and-wait | //input[@value='Add to Workspace'] |  |
-| wait_for_text_present_ok | group and workspace do not have compatible permission sets | 30000 |
+| wait_for_text_present_ok | group and workspace do not have compatible permission sets | 10000 |
 | wait_for_text_present_ok | Workspaces (0) | 30000 |
 
 | *Comment* | Test Case: Business Control Panel SJ Group Add Workspace Non existant WS |  |
@@ -61,7 +61,7 @@
 | wait_for_element_visible_ok | st-assign-to-workspace | 30000 |
 | type_ok | st-assign-to-workspace | %%fake_ws%% |
 | click-and-wait | //input[@value='Add to Workspace'] |  |
-| wait_for_text_present_ok | No Workspace identified by %%fake_ws%% | 30000 |
+| wait_for_text_present_ok | No Workspace identified by %%fake_ws%% | 10000 |
 | wait_for_text_present_ok | Workspaces (0) | 30000 |
 
 | *Comment* | Test Case: Business Control Panel SJ Group Add Workspace Add new workspace - Correct Permission Set |  |
@@ -71,7 +71,7 @@
 | wait_for_element_visible_ok | workspace_id | 30000 |
 | select_ok | workspace_id | label=%%ws_to_add%% |
 | click-and-wait | //input[@value='Add to Workspace'] |  |
-| wait_for_text_present_ok | Group '%%group_name%%' now has the role of member in the %%ws_to_add%% Workspace | 30000 |
+| wait_for_text_present_ok | Group '%%group_name%%' now has the role of member in the %%ws_to_add%% Workspace | 10000 |
 | wait_for_text_present_ok | Workspaces (1) | 30000 |
 
 | *Comment* | Test Case: Business Control Panel SJ Group Add Workspace Give Admin privileges |  |
@@ -84,7 +84,7 @@
 | check_ok | invite-as-admins |  |
 | is_checked_ok | invite-as-admins |  |
 | click-and-wait | //input[@value='Add to Workspace'] |  |
-| wait_for_text_present_ok | Group '%%group_name%%' now has the role of admin in the %%add_ws_two%% Workspace | 30000 |
+| wait_for_text_present_ok | Group '%%group_name%%' now has the role of admin in the %%add_ws_two%% Workspace | 10000 |
 | wait_for_text_present_ok | Workspaces (2) | 30000 |
 
 | *Comment* | Test Case: Business Control Panel SJ Group Add Workspace Confirm Admin privileges |  |
@@ -95,7 +95,7 @@
 | refresh |  |  |
 | wait_for_element_visible_ok | st-group-permission-set-selector | 30000 |
 | wait_for_element_visible_ok | st-group-permission-set-submit | 30000 |
-| pause | 5000 |  |
+| pause | 15000 |  |
 | st_uneditable_ok | st-group-permission-set-selector |  |
 | st_uneditable_ok | st-group-permission-set-submit |  |
 
@@ -104,7 +104,7 @@
 | refresh |  |  |
 | wait_for_element_visible_ok | st-group-permission-set-selector | 30000 |
 | wait_for_element_visible_ok | st-group-permission-set-submit | 30000 |
-| pause | 5000 |  |
+| pause | 15000 |  |
 | is_editable | st-group-permission-set-selector |  |
 | is_editable | st-group-permission-set-submit |  |
 

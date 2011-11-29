@@ -1,6 +1,15 @@
-| *Comment* | Test Case: Fail Now. A test case that always fails |  |
+| wait_for_element_visible_ok | link=Add Tag | 15000 |
+| click_ok | link=Add Tag |  |
 
-| is_text_present_ok | antidisestablishmentarianism |  |
-| wait_for_element_not_present_ok | antidisestablishmentarianism | 5000 |
+| setSpeed | 15000 |  |
 
-| *Comment* | Test Case: Fail Now. COMPLETED |  |
+| wait_for_element_visible_ok | st-tags-field | 15000 |
+| type_ok | st-tags-field | carro |
+| keyPress | st-tags-field | \008 |
+| wait_for_element_visible_ok | //a[contains(text(),'carroll')] | 15000 |
+
+| click_ok | //a[contains(text(),'carroll')] |  |
+
+| Comment | duh |  |
+
+| pause | 10000 |  |

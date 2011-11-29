@@ -1,0 +1,22 @@
+[% overflow = "hidden" %]
+[% scrolling = "no" %]
+[% height = gadget.height || 180 %]
+[% IF gadget.scrolling == "true" %]
+    [% overflow = "auto" %]
+    [% scrolling = "yes" %]
+[% END %]
+<iframe src="[% gadget.href %]"
+        name="widget_[% num %]"
+        class="widgetWindow"
+        noresize="noresize"
+        frameborder="0"
+        border="0"
+        [% "width=\"$width\"" IF width %]
+        cellspacing="0"
+        scrolling="[% scrolling %]"
+        marginwidth="0"
+        marginheight="0" 
+        allowtransparency="true"
+        id="[% gadget.instance_id %]-iframe"
+        style="overflow:[% overflow %];height:[% height %]px;width: 100%">
+</iframe>

@@ -1,0 +1,88 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[% USE decorate %]
+
+[% WRAPPER $frame_name buttons=buttons id="revisions" title="${display_title}: ${display_title_decorator}" %]
+
+<div class="grid_24">
+  <div id="revision-tools">
+    <ul>
+      <li>
+        <a href="[% "${script_name}?${page_uri}" %]">
+          [% loc('revision.current') %]
+        </a>
+      </li>
+      <li>&#166;</li>
+      <li><a href="[% script_name %]?action=revision_list;page_id=[% page_uri %]">[% loc('revision.all') %]</a></li>
+      <li>&#166;</li>
+      <li>
+        <a href="[% script_name %]?action=revision_compare;page_name=[% page_uri %];new_revision_id=[% new_revision_id %];old_revision_id=[% prev_id %];mode=[%mode%]">
+          [% loc('revision.previous-compare') %]
+        </a>
+      </li>
+      <li>&#166;</li>
+      <li>
+        [% IF mode != 'html' %]
+          <a href="[% script_name %]?action=revision_compare;page_name=[% page_uri %];new_revision_id=[% new_revision_id %];old_revision_id=[% old_revision_id %];mode=html">
+        [% END %]
+        [% loc('diff.highlight') %]
+        [% IF mode != 'html' %]</a>[% END %]
+      </li>
+      <li>&#166;</li>
+      <li>
+        [% IF mode != 'wikitext' %]
+          <a href="[% script_name %]?action=revision_compare;page_name=[% page_uri %];new_revision_id=[% new_revision_id %];old_revision_id=[% old_revision_id %];mode=wikitext">
+        [% END %]
+        [% loc('diff.wikitext') %]
+        [% IF mode != 'wikitext' %]</a>[% END %]
+      </li>
+      <li>&#166;</li>
+      <li>
+        [% IF mode != 'view' %]
+          <a href="[% script_name %]?action=revision_compare;page_name=[% page_uri %];new_revision_id=[% new_revision_id %];old_revision_id=[% old_revision_id %];mode=view">
+        [% END %]
+        [% loc('diff.view') %]
+        [% IF mode != 'view' %]</a>[% END %]
+      </li>
+      <li>&#166;</li>
+      <li><a href="[% script_name %]?action=revision_compare;page_name=[% page_uri %];new_revision_id=[% new_revision_id %];old_revision_id=[% next_id %];mode=[%mode%]">[% loc('revision.next-compare') %]</a></li>
+    </ul>
+  </div>
+</div>
+<div class="clear"></div>
+
+<div class="grid_24 widget">
+  <h1 title="[% display_title %]">[% display_title %] : <span class="st-page-title-decorator">[% loc('revision.compare') %]</h1>
+
+  [% FOR col IN header %]
+    <div class="grid_12 [% IF col.first %]alpha[% ELSE %]omega[% END %]">
+      <h2 title="[% display_title %]">[% col.link %]</h2>
+      <div class="st-revision-tags">
+        [% loc('revision.tags:') %]&nbsp;[% col.tags %]
+      </div>
+      <div class="st-revision-attribution">
+        [% loc('revision.by:') %]&nbsp;[% col.editor | decorate('user_avatar') %] 
+        [% loc('info.on') %] [% col.date %]
+        [% IF col.summary %]
+          [% loc('revision.begin-quote') %][% col.summary | html %][% loc('revision.end-quote') %]
+        [% END %]
+      </div>
+    </div>
+  [% END %]
+
+  <div class="clear"></div>
+
+  <div class="content">
+    [% FOR row IN diff_rows %]
+      <div class="grid_12 alpha">[% row.before %]</div>
+      <div class="grid_12 omega">[% row.after %]</div>
+      <div class="clear"></div>
+    [% END %]
+  </div>
+</div>
+<div class="clear"></div>
+
+<script>
+</script>
+
+[% END %]

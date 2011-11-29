@@ -1,174 +1,26 @@
 | *Comment* | STARTING Test Case: Insert Menu |  |
 
-| *Comment* | Test Case: Insert Menu make a test page |  |
-| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | foo |
+* Fixture: SocialWidgets
+The Insert Menu no longer works in WIKI TEXT mode.
+Nothing but typing does.
+So type in a bunch of wikitext and see what happens.
 
-| *Comment* | Test Case: Insert Menu table |  |
+TUXTODO: add more wikitext. Use the method call after it is fixed to take newlines in content.
+Verify what is seen in the page after Save.
 
-| click_ok | wikiwyg_button_table |  |
-| answerOnNextPrompt | 3 |  |
-| verifyPrompt | Please enter the number of table rows: |  |
+| set | new_title | Insert Menu %%start_time%% |  |
+| set | content | `----\n{link: Foobar}\n^^ Foobar\n[%%title%%]` |  |
 
-| click_ok | link=Table |  |
-| answerOnNextPrompt | 3 |  |
-| verifyPrompt | Please enter the number of table rows: |  |
+| *Comment* | Test Case: Insert Menu. Insert some content in WIKITEXT mode. Save. |  |
+| open_ok | /%%workspace%%/?action=new_page |  |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
+| wait_for_element_present_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+| wait_for_element_present_ok | //textarea[contains(@class,"cke_source")] | 15000 |
+| type_ok | //textarea[contains(@class,"cke_source")] | %%content%% |
+| type_ok | st-newpage-pagename-edit | %%new_title%% |
+| st_page_save |  |  |
 
-| *Comment* | Test Case: Insert Menu add HR which will become content of WAFLs |  |
-| click_ok | link=Horizontal Line |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| *Comment* | Test Case: Insert Menu wiki Link button |  |
-| click_ok | wikiwyg_button_link |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+[----]/s` |
-| click_ok | wikiwyg_button_link |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| *Comment* | Test Case: Insert Menu Image button |  |
-| click_ok | wikiwyg_button_image |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+{image: ----}/s` |
-| click_ok | wikiwyg_button_image |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| *Comment* | Test Case: Insert Menu Image link |  |
-| click_ok | link=Image |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+{image: ----}/s` |
-| click_ok | link=Image |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| *Comment* | Test Case: Insert Menu Video button |  |
-| click_ok | wikiwyg_button_video |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+{video: ----}/s` |
-| click_ok | wikiwyg_button_video |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| *Comment* | Test Case: Insert Menu Video link |  |
-| click_ok | link=Video |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+{video: ----}/s` |
-| click_ok | link=Video |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| *Comment* | Test Case: Insert Menu "A Link To..." |  |
-| click_ok | link=A Different Wiki Page |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+{link: ----}/s` |
-| click_ok | link=A Different Wiki Page |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| click_ok | link=A Page on The Web |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+<http:\/\/---->/s` |
-| click_ok | link=A Page on The Web |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| click_ok | link=A Section in This Page |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+{link: ----}/s` |
-| click_ok | link=A Section in This Page |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| click_ok | link=Pages Related to a Tag |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+{tag: ----}/s` |
-| click_ok | link=Pages Related to a Tag |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| click_ok | link=A Person's Blog |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+{blog: ----}/s` |
-| click_ok | link=A Person's Blog |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| click_ok | link=A File Attached to This Page |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+{file: ----}/s` |
-| click_ok | link=A File Attached to This Page |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| *Comment* | Test Case: Insert Menu "From workspaces..." |  |
-| click_ok | link=A Page Include |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+{include: ----}/s` |
-| click_ok | link=A Page Include |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| click_ok | link=Recent Changes |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+{recent_changes: ----}/s` |
-| click_ok | link=Recent Changes |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| click_ok | link=Blog Postings |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+{blog_list: ----}/s` |
-| click_ok | link=Blog Postings |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| click_ok | link=Tagged Pages |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+{tag_list: ----}/s` |
-| click_ok | link=Tagged Pages |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| click_ok | link=Wiki Search Results |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+{search: ----}/s` |
-| click_ok | link=Wiki Search Results |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| *Comment* | Test Case: Insert Menu "Organizing Your Page..." |  |
-| click_ok | link=Table of Contents |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+{toc: ----}/s` |
-| click_ok | link=Table of Contents |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| click_ok | link=Section Marker |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+{section: ----}/s` |
-| click_ok | link=Section Marker |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| *Comment* | Test Case: Insert Menu "From the web..." |  |
-| click_ok | link=Google Search Results |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+{googlesearch: ----}/s` |
-| click_ok | link=Google Search Results |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| click_ok | link=RSS Feed Items |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+{fetchrss: ----}/s` |
-| click_ok | link=RSS Feed Items |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| click_ok | link=Atom Feed Items |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+{fetchatom: ----}/s` |
-| click_ok | link=Atom Feed Items |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| *Comment* | Test Case: Insert Menu "Communicating..." |  |
-| click_ok | link=AIM Link |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+aim:----/s` |
-| click_ok | link=AIM Link |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| click_ok | link=Yahoo! Messenger Link |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+yahoo:----/s` |
-| click_ok | link=Yahoo! Messenger Link |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| click_ok | link=Skype Link |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+skype:----/s` |
-| click_ok | link=Skype Link |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| *Comment* | Test Case: Insert Menu "Name and Date..." |  |
-| click_ok | link=User Name |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+{user: ----}/s` |
-| click_ok | link=User Name |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| click_ok | link=Local Date & Time |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+{date: ----}/s` |
-| click_ok | link=Local Date & Time |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| *Comment* | Test Case: Insert Menu "Unformatted text..." |  |
-| click_ok | link=Unformatted Text... |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo.+{{----}}/s` |
-| click_ok | link=Unformatted Text... |  |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/foo\s+----/sm` |
-
-| *Comment* | Test Case: Insert Menu clear Untitled Page from new page |  |
-| click_ok | st-newpage-pagename-edit |  |
+| wait_for_element_present_ok | link=%%title%% | 10000 |
 
 | *Comment* | Test Case: Insert Menu COMPLETED |  |

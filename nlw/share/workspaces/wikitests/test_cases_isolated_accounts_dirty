@@ -1,4 +1,4 @@
-| *Comment* | Test Case: Isolated Accounts Dirty |
+| *Comment* | Test Case: Isolated Accounts Dirty |  |
 
 * Fixture: SocialWidgets
 
@@ -24,7 +24,7 @@
 | click_ok | link=Add Tag |  |
 | wait_for_element_visible_ok | st-tags-field | 30000 |
 | type_ok | st-tags-field | Tag 2 %%start_time%% |
-| click_ok | st-tags-plusbutton-link |
+| click_ok | st-tags-plusbutton-link |  |
 | wait_for_element_visible_ok | link=Tag 2 %%start_time%% | 30000 |
 
 | *Comment* | Test Case: Isolated Accounts Dirty Tag 3 a page |  |
@@ -54,9 +54,9 @@
 | wait_for_element_visible_ok | link=%%tag_one%% | 30000 |
 | text_like | link=%%tag_one%% | %%tag_one%% |
 
-| *Comment* | Test Case: Isolated Accounts Dirty Comment on Pages |  |
-| st-comment-on-page | /%%ws_one%%/?%%page_one%% | comment one |
-| st-comment-on-page | /%%ws_one%%/?%%page_one%% | comment two |
-| st-comment-on-page | /%%ws_one%%/?%%page_one%% | comment three |
+| *Comment* | Test Case: Isolated Accounts Dirty Comment on Pages |  |  |  |
+| call | [st-comment-on-page] | ws=%%ws_one%% | page=%%page_one%% | comment=comment one |
+| call | [st-comment-on-page] | ws=%%ws_one%% | page=%%page_one%% | comment=comment two |
+| call | [st-comment-on-page] | ws=%%ws_one%% | page=%%page_one%% | comment=comment three |
 
-| *Comment* | Test Case: Isolated Accounts Dirty COMPLETED |  |
+| *Comment* | Test Case: Isolated Accounts Dirty COMPLETED |  |  |  |

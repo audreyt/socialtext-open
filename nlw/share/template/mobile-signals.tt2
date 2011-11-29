@@ -1,0 +1,137 @@
+[% USE decorate %]
+<html>
+    <head>
+        [% IF signal_id %]
+        <title>[% loc('activities.signals-permalink') %]</title>
+        [% ELSE %]
+        <title>[% loc('nav.signals') %]</title>
+        [% END %]
+        <link rel="apple-touch-icon" href="/static/[% app_version %]/images/apple-touch-icon.png"/>
+        <meta name = "viewport" content = "width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/data/accounts/[% user.primary_account_id %]/theme/style.css?[% app_version %]" />
+        <link rel="stylesheet" href="/data/accounts/[% user.primary_account_id %]/theme/mobile.css?[% app_version %]" />
+
+        [% INCLUDE 'element/js-adapt-fullscreen' %]
+        <script type="text/javascript" charset="utf-8" src="/js/[% app_version %]/socialtext-starfish.jgz"></script>
+        <script type="text/javascript" charset="utf-8" src="/js/[% app_version %]/l10n-[% loc_lang %].jgz"></script>
+
+        [% INCLUDE widget/syndicator %]
+        [% INCLUDE 'element/wiki/js-bootstrap' %]
+
+        <script>
+            $(function() {
+                [% FILTER decorate('socialtext_js_vars') %]
+                window.Socialtext = window.Socialtext || {};
+                Socialtext.loc_lang = '[% loc_lang %]';
+                Socialtext.userid = "[% user.userid %]";
+                [% END %]
+
+                $.mobile = $.mobile || {
+                    silentScroll: function(){
+                        setTimeout(function(){ window.scrollTo(0,0); }, 500);
+                    }
+                };
+                var activities = new Activities.Widget({
+                    [% IF link_dictionary;
+                        "link_dictionary: '$link_dictionary',";
+                       END
+                    %]
+                    [% IF signal_id %]
+                        signal_id: '[% signal_id %]',
+                        ui_template: 'ui.permalink.tt2',
+                        [% IF reply_id %]
+                            reply_id: '[% reply_id %]',
+                        [% END %]
+                    [% ELSE %]
+                        ui_template: 'ui.mobile-signals.tt2',
+                    [% END %]
+                    poll_interval: (5 * 1000),
+                    instance_id: Number([% id %]),
+                    node: $('#content').get(0),
+                    prefix: "[% prefix %]",
+                    base_uri: st.workspace.web_uri.replace(/\/$/,''),
+                    share: "[% share %]",
+                    static_path: "[% static_path %]",
+                    viewer: "[% user.userid %]",
+                    viewer_id: [% user.id %],
+                    viewer_name: "[% user.username %]",
+                    owner: "[% user.userid %]",
+                    owner_id: [% user.id %],
+                    owner_name: "[% user.username %]",
+                    display_limit: 20,
+                    fixed_action: 'action-signals',
+                    signals_only: true,
+                    mention_user_id: "",
+                    initial_text: ' ',
+                    mention_user_name: ""
+                });
+                activities.start();
+            });
+        </script>
+    </head>
+    <body class="mobile">
+        [% FILTER decorate('body_begin') %]
+        [% END %]
+        <div class="topnav ui-body-c ui-page-active">
+            <div data-role="header" class="ui-header ui-bar-a" role="banner">
+                <div data-role="navbar" class="ui-navbar ui-navbar-noicons" style="min-height: 34px" role="navigation"><ul class="ui-grid-d">
+                    <li class="ui-block-a">
+<div style="background: [% skin_info.mobile.logo.backgroundColor || '#17417F' %]; height: 34px; text-align: center"><table border=0 height="34" width="100%"><tr><td valign="middle" style="vertical-align: middle !important; text-align: center">
+        <img src="/static/[% app_version %]/images/miki-logo.png" style="max-width: 98%; max-height: 26px;"/>
+</td></tr></table></div></li>
+                    [% INCLUDE globalnav %]
+                </ul></div>
+            </div>
+        </div>
+
+        <div class="container_24 inlineWidget" style="margin-top: 38px; margin-bottom: 20px">
+            <div class="grid_24">
+                <div id="content" class="activitiesWidget">
+                    <div style="text-align: center">
+                        <img id="spinner" src="[% static_path %]/images/ajax-loader.gif"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="topnav bottom">
+            <div data-role="footer" class="ui-bar-a ui-footer" role="banner">
+                <div data-role="navbar" class="ui-navbar ui-navbar-noicons" role="navigation"><ul class="ui-grid-d">
+<li class="ui-block-a">
+<a href="/nlw/submit/logout?redirect_to=/m/login" rel="external" id="mobile-logout" data-theme="a" class="ui-btn ui-btn-up-a"><span class="ui-btn-inner"><span class="ui-btn-text">[% loc('nav.logout') %]</span></span></a>
+    
+</li>
+                    [% INCLUDE globalnav %]
+                </ul></div>
+            </div>
+        </div>
+<!-- <div><em>[% version_tag %]</em></div> -->
+    [% FILTER decorate('body_end') %]
+    [% END %]
+    </body>
+</html>
+
+[% BLOCK globalnav %]
+
+
+    [% IF signal_id %]
+        <li class="ui-block-b"><a href="/m/signals" class="ui-btn ui-btn-up-a" data-theme="a"><span class="ui-btn-inner"><span class="ui-btn-text">[% loc('nav.signals') %]</span></span></a></li>
+    [% ELSE %]
+        <li class="ui-block-b"><a class="ui-btn-active current ui-btn ui-btn-up-a" data-theme="a"><span class="ui-btn-inner"><span class="ui-btn-text">[% loc('nav.signals') %]</span></span></a></li>
+    [% END %]
+
+        <li class="ui-block-c"><a href="/m/people" id="mobile-people" data-theme="a" class="ui-btn ui-btn-up-a"><span class="ui-btn-inner"><span class="ui-btn-text">[% loc('nav.people') %]</span></span></a></li>
+    
+<li class="ui-block-d">
+    
+        <a href="/m/activities" id="mobile-activities" data-theme="a" class="ui-btn ui-btn-up-a"><span class="ui-btn-inner"><span class="ui-btn-text">[% loc('nav.activity') %]</span></span></a>
+    
+</li>
+
+<li class="ui-block-e">
+    
+<a href="/m/workspace_list" rel="external" id="mobile-workspace_list" data-theme="a" class="ui-btn ui-btn-up-a"><span class="ui-btn-inner"><span class="ui-btn-text">[% loc('nav.wikis') %]</span></span></a>
+    
+</li>
+
+[% END %]

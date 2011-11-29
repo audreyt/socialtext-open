@@ -6,19 +6,23 @@
 | *Comment* | Test Case: Groups UI AddRemove Members From Group: Emails cannot have dashes due to {bz: 3037} : Page lookahead fails on punctuation |  |  |
 | st-setup-a-group | 1 | 1 | 1 |
 | enable-acct-plugin | signals | %%group_acct%% |  |
+
+| *Comment* | Test Case: Groups UI AddRemove Members From Group: set values |  |  |
 | set | short_grp_mbr | guimbr%%start_time%% |  |
 | set | grp_mbr_prefix | guimbr |  |
 | set | grp_mbr_suffix | %%start_time%% |  |
-| set | grp_mbr | %%short_grp_mbr%%@matt.socialtext.net |  |
+| set | grp_mbr | `%%short_grp_mbr%%@matt.socialtext.net` |  |
 | set | short_non_grp_mbr | guinonmbr%%start_time%% |  |
 | set | non_grp_mbr_prefix | guinonmbr |  |
 | set | non_grp_mbr_suffix | %%start_time%% |  |
-| set | non_grp_mbr | %%short_non_grp_mbr%%@matt.socialtext.net |  |
+| set | non_grp_mbr | `%%short_non_grp_mbr%%@matt.socialtext.net` |  |
 | set | email_ws | emailws%%start_time%% |  |
-| set | email_user | %%email_ws%%@%%wikiemail%% |  |
+| set | email_user | `%%email_ws%%@%%wikiemail%%` |  |
 | set | email_user_prefix | emailws |  |
 | set | email_user_suffix | %%start_time%% |  |
 | set | invite | invitation_text_%%start_time%% |  |
+
+| *Comment* | Test Case: Groups UI AddRemove Members From Group: create users and ws |  |  |
 | create-user | %%email_user%% | %%password%% | %%group_acct%% |
 | st-admin | create-workspace --empty --name %%email_ws%% --title "%%email_ws%%" --account "%%group_acct%%" | created |  |
 | st-admin | add-permission --w %%email_ws%% --role guest --p email_in | has been granted |  |
@@ -32,134 +36,115 @@
 | *Comment* | Test Case: Groups UI AddRemove Members From Group. Check member box for %%group_user%% and %%grp_mbr%% |  |
 | st-admin | add-group-admin --e %%username%% --g %%group_id%% |  |
 | open_ok | /?group/%%group_id%%/ |  |
+| wait_for_text_present_ok | Members | 30000 |
 | st-name-widget | 3 | members_widget |
-| st-widget-title-like | members_widget | Membership |
+| st-widget-title | members_widget | Membership |
 | st-select-widget-frame | members_widget |  |
-| wait_for_element_visible_ok | link=%%short_username%% | 30000 |
-| wait_for_element_visible_ok | link=%%short_grp_mbr%% | 30000 |
-| wait_for_element_visible_ok | link=%%group_user_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%short_username%% | 15000 |
+| wait_for_element_visible_ok | link=%%short_grp_mbr%% | 15000 |
+| wait_for_element_visible_ok | link=%%group_user_short%% | 15000 |
 | select-frame | relative=parent |  |
 
 | *Comment* | Test Case: Groups UI AddRemove Members From Group. Click Trash Can for %%grp_mbr%%, user is gone |  |
 | open_ok | /st/edit_group/%%group_id%% |  |
-| wait_for_text_present_ok | Edit Group |  |
 | wait_for_element_visible_ok | create-group | 30000 |
-| pause | 5000 |  |
+| wait_for_text_present_ok | Members | 15000 |
 | st-name-widget | 3 | membership_widget |
-| st-widget-title-like | membership_widget | Members |
+| st-widget-title | membership_widget | Members |
 | st-select-widget-frame | membership_widget |  |
-| wait_for_element_visible_ok | link=%%short_username%% | 30000 |
+| wait_for_element_visible_ok | link=%%short_username%% | 15000 |
 | text_like | //body | %%short_username%% |
-| wait_for_element_visible_ok | link=%%short_grp_mbr%% | 30000 |
-| wait_for_element_visible_ok | link=%%group_user_short%% | 30000 |
-| wait_for_element_visible_ok | %%mbr_user_id%% | 30000 |
+| wait_for_element_visible_ok | link=%%short_grp_mbr%% | 15000 |
+| wait_for_element_visible_ok | link=%%group_user_short%% | 15000 |
+| wait_for_element_visible_ok | %%mbr_user_id%% | 15000 |
 | click_ok | %%mbr_user_id%% |  |
 
-| *Comment* | Test Case: Groups UI AddRemove Members From Group. Find element after typeahead |  |
-| wait_for_element_visible_ok | lookahead | 30000 |
-| type_lookahead_ok | lookahead | %%non_grp_mbr_prefix%% |
-| select-frame | relative=parent |  |
-| wait_for_element_present_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%non_grp_mbr_suffix%%')] | 30000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%non_grp_mbr_suffix%%')] | 10000 |
-| st-select-widget-frame | membership_widget |  |
-| wait_for_element_visible_ok | link=%%short_non_grp_mbr%% | 30000 |
-| wait_for_element_visible_ok | %%non_mbr_user_id%% | 30000 |
+| *Comment* | Test Case: Groups UI AddRemove Members From Group. Find element after typeahead |  |  |
+| wait_for_element_visible_ok | lookahead | 15000 |  |
+| select-autocompleted-option-ok | lookahead | %%non_grp_mbr_prefix%% | %%short_non_grp_mbr%% |
+| wait_for_element_visible_ok | link=%%short_non_grp_mbr%% | 15000 |  |
+| wait_for_element_visible_ok | %%non_mbr_user_id%% | 15000 |  |
 
 | *Comment* | Test Case: Groups UI AddRemove Members From Group. Click save, inspect for changes |  |
 | select-frame | relative=parent |  |
-| wait_for_element_visible_ok | create-group | 30000 |
-| wait_for_element_visible_ok | st-cancel-create-group | 30000 |
+| wait_for_element_visible_ok | create-group | 15000 |
+| wait_for_element_visible_ok | st-cancel-create-group | 15000 |
 | click_and_wait | create-group |  |
 
 | *Comment* | Test Case: Groups UI AddRemove Members From Group Confirm |  |
+| wait_for_text_present_ok | Members | 30000 |
 | st-name-widget | 3 | members_widget |
-| st-widget-title-like | members_widget | Membership |
+| st-widget-title | members_widget | Membership |
 | st-select-widget-frame | members_widget |  |
-| wait_for_element_visible_ok | link=%%short_non_grp_mbr%% | 30000 |
-| wait_for_element_visible_ok | link=%%group_user_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%short_non_grp_mbr%% | 15000 |
+| wait_for_element_visible_ok | link=%%group_user_short%% | 15000 |
 | text_unlike | //body | %%grp_mbr%% |
 | select-frame | relative=parent |  |
 
 | *Comment* | Test Case: Groups UI AddRemove Members From Group. Flip Changes - remove %%non_grp_mbr%%, add %%grp_mbr%% |  |
 | open_ok | /st/edit_group/%%group_id%% |  |
-| wait_for_text_present_ok | Edit Group |  |
 | wait_for_element_visible_ok | create-group | 30000 |
-| pause | 5000 |  |
+| wait_for_text_present_ok | Members | 30000 |
 | st-name-widget | 3 | membership_widget |
-| st-widget-title-like | membership_widget | Members |
+| st-widget-title | membership_widget | Members |
 | st-select-widget-frame | membership_widget |  |
-| wait_for_element_visible_ok | link=%%short_username%% | 30000 |
+| wait_for_element_visible_ok | link=%%short_username%% | 15000 |
 | text_like | //body | %%short_username%% |
-| wait_for_element_visible_ok | link=%%short_non_grp_mbr%% | 30000 |
-| wait_for_element_visible_ok | link=%%group_user_short%% | 30000 |
-| wait_for_element_visible_ok | %%non_mbr_user_id%% | 30000 |
+| wait_for_element_visible_ok | link=%%short_non_grp_mbr%% | 15000 |
+| wait_for_element_visible_ok | link=%%group_user_short%% | 15000 |
+| wait_for_element_visible_ok | %%non_mbr_user_id%% | 15000 |
 | click_ok | %%non_mbr_user_id%% |  |
 
-| *Comment* | Test Case: Groups UI AddRemove Members From Group. Find element after typeahead |  |
-| wait_for_element_visible_ok | lookahead | 30000 |
-| type_lookahead_ok | lookahead | %%grp_mbr_prefix%% |
-| select-frame | relative=parent |  |
-| wait_for_element_present_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%grp_mbr_suffix%%')] | 30000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%grp_mbr_suffix%%')] | 10000 |
-| st-select-widget-frame | membership_widget |  |
-| wait_for_element_visible_ok | link=%%short_grp_mbr%% | 30000 |
-| wait_for_element_visible_ok | %%mbr_user_id%% | 30000 |
+| *Comment* | Test Case: Groups UI AddRemove Members From Group. Find element after typeahead |  |  |
+| wait_for_element_visible_ok | lookahead | 15000 |  |
+| select-autocompleted-option-ok | lookahead | %%grp_mbr_prefix%% | %%short_grp_mbr%% |
+| wait_for_element_visible_ok | link=%%short_grp_mbr%% | 15000 |  |
+| wait_for_element_visible_ok | %%mbr_user_id%% | 15000 |  |
 
 | *Comment* | Test Case: Groups UI AddRemove Members From Group. Click CANCEL |  |
 | select-frame | relative=parent |  |
-| wait_for_element_visible_ok | create-group | 30000 |
-| wait_for_element_visible_ok | st-cancel-create-group | 30000 |
+| wait_for_element_visible_ok | create-group | 15000 |
+| wait_for_element_visible_ok | st-cancel-create-group | 15000 |
 | click_and_wait | st-cancel-create-group |  |
 
 | *Comment* | Test Case: Groups UI AddRemove Members From Group. Inspect; DO NOT see changes |  |
 | st-name-widget | 3 | members_widget |
-| st-widget-title-like | members_widget | Membership |
+| st-widget-title | members_widget | Membership |
 | st-select-widget-frame | members_widget |  |
-| wait_for_element_visible_ok | link=%%short_non_grp_mbr%% | 30000 |
-| wait_for_element_visible_ok | link=%%group_user_short%% | 30000 |
+| wait_for_element_visible_ok | link=%%short_non_grp_mbr%% | 15000 |
+| wait_for_element_visible_ok | link=%%group_user_short%% | 15000 |
 | text_unlike | //body | %%grp_mbr%% |
 | select-frame | relative=parent |  |
 
-| *Comment* | Test Case: Groups UI AddRemove Members From Group Invite %%email_user%% with custom message |  |
-| open_ok | /st/edit_group/%%group_id%% |  |
-| wait_for_text_present_ok | Edit Group |  |
-| wait_for_element_visible_ok | create-group | 30000 |
-| pause | 5000 |  |
-| st-name-widget | 3 | membership_widget |
-| st-widget-title-like | membership_widget | Members |
-| st-select-widget-frame | membership_widget |  |
-| wait_for_element_visible_ok | lookahead | 30000 |
-| type_lookahead_ok | lookahead | %%email_user_prefix%% |
-| select-frame | relative=parent |  |
-| wait_for_element_present_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%email_user_suffix%%')] | 30000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%email_user_suffix%%')] | 10000 |
-| st-select-widget-frame | membership_widget |  |
-| wait_for_element_visible_ok | //*[@id='message'] | 30000 |
-| type_ok | //*[@id='message'] | %%invite%% |
-| wait_for_element_visible_ok | link=%%email_ws%% | 30000 |
-| select-frame | relative=parent |  |
-| wait_for_element_visible_ok | create-group | 30000 |
-| wait_for_element_visible_ok | st-cancel-create-group | 30000 |
-| click_and_wait | create-group |  |
+| *Comment* | Test Case: Groups UI AddRemove Members From Group Invite %%email_user%% with custom message |  |  |
+| open_ok | /st/edit_group/%%group_id%% |  |  |
+| wait_for_element_visible_ok | create-group | 30000 |  |
+| wait_for_text_present_ok | Members | 15000 |  |
+| st-name-widget | 3 | membership_widget |  |
+| st-widget-title | membership_widget | Members |  |
+| st-select-widget-frame | membership_widget |  |  |
+| select-autocompleted-option-ok | lookahead | %%email_user_prefix%% | %%email_ws%% |
+| wait_for_element_visible_ok | message | 15000 |  |
+| type_ok | message | %%invite%% |  |
+| wait_for_element_visible_ok | link=%%email_ws%% | 15000 |  |
+| select-frame | relative=parent |  |  |
+| wait_for_element_visible_ok | create-group | 30000 |  |
+| wait_for_element_visible_ok | st-cancel-create-group | 15000 |  |
+| click_and_wait | create-group |  |  |
 
 | *Comment* | Wait 90 seconds for the confirmation email to arrive |  |
 | pause | 90000 |  |
 
 | *Comment* | Test Case: Groups UI AddRemove Members From Group view custom invite in %%email_ws%% workspace |  |
-| open_ok | /%%email_ws%%/ |  |
-| wait_for_element_visible_ok | //*[@id='st-create-content-cancellink'] | 30000 |
-| click_ok | //*[@id='st-create-content-cancellink'] |  |
-| text_like | workspaceName | %%email_ws%% |
-| wait_for_element_visible_ok | link=What's New | 30000 |
-| click_and_wait | link=What's New |  |
+| open_ok | /%%email_ws%%/?action=recent_changes |  |
 | wait_for_element_visible_ok | link=I'm inviting you into the %%group_name%% group | 30000 |
 | click_and_wait | link=I'm inviting you into the %%group_name%% group |  |
 | wait_for_text_present_ok | has added you to the group: %%group_name%% | 30000 |
-| wait_for_text_present_ok | %%invite%% | 5000 |
-| wait_for_element_present_ok | //a[contains(text(),'/st/group/%%group_id%%')] | 5000 |
-| wait_for_text_present_ok | %%group_name%% is a group on %%hostname%% | 5000 |
-| wait_for_text_present_ok | If you have questions about this email, contact support at http://www.socialtext.com/customers/support_request.php | 5000 |
-| wait_for_text_present_ok | Go to the %%group_name%% Home Page | 5000 |
+| wait_for_text_present_ok | %%invite%% | 15000 |
+| wait_for_element_present_ok | //a[contains(text(),'/st/group/%%group_id%%')] | 15000 |
+| wait_for_text_present_ok | %%group_name%% is a group on %%hostname%% | 15000 |
+| wait_for_text_present_ok | If you have questions about this email, contact support at http://www.socialtext.com/customers/support_request.php | 15000 |
+| wait_for_text_present_ok | Go to the %%group_name%% Home Page | 15000 |
 
 | *Comment* | Test Case: Groups UI AddRemove Members From Group. TEARDOWN |  |
 | st-process-jobs |  |  |
@@ -169,4 +154,4 @@
 | st-admin | deactivate-user --e %%group_user%% |  |
 | delete-account | %%group_acct%% |  |
 
-| *Comment* | Test Case: Groups UI AddRemove Members From Group. COMPLETED |
+| *Comment* | Test Case: Groups UI AddRemove Members From Group. COMPLETED |  |

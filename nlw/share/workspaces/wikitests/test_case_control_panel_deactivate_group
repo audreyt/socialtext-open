@@ -30,7 +30,8 @@
 
 | *Comment* | Test Case: Control Panel Deactivate Group Inspect and Confirm |  |
 | open_ok | /nlw/control/group/%%deac_id%% |  |
-| wait_for_text_present_ok | You must provide a valid group_id to this URI | 30000 |
+| wait_for_text_present_ok | rows selected | 30000 |
+| location_like | /nlw/control/group |  |
 
 | *Comment* | Test Case: Control Panel Deactivate Group Deactivate but Click Cancel |  |
 | open_ok | /nlw/control/group/%%deac_two_id%% |  |

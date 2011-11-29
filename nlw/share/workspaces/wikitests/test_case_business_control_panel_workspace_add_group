@@ -1,3 +1,5 @@
+TUXTODO: restore Workspace admin messages after "unknown error" bug is fixed.
+
 | *Comment* | Test Case: Business Control Panel Workspace Add Group |  |
 
 | *Comment* | Test Case: Business Control Panel Workspace Add Group SETUP |  |  |
@@ -37,7 +39,7 @@
 | wait_for_text_present_ok | Group '%%group%%' now has the role of member in the %%ws%% | 30000 |
 | wait_for_text_present_ok | Groups (1) | 30000 |
 | wait_for_text_present_ok | Users (0) | 30000 |
-| wait_for_element_visible_ok | link=%%group%% | 30000 |
+| wait_for_element_visible_ok | //a[@href='/nlw/control/group/%%group_id%%'] | 30000 |
 | st-admin | list-groups -w %%ws%% | %%group%% |
 
 | *Comment* | Test Case: Business Control Panel Workspace Add Group - try to remove it |  |
@@ -46,7 +48,8 @@
 | wait_for_element_visible_ok | //input[@id='groupTable-action-0' and @value="Remove from Workspace"] | 30000 |
 | click_ok | //input[@id='groupTable-action-0' and @value="Remove from Workspace"] |  |
 | confirmation_like | qr/Remove the selected.+group/ism |  |
-| wait_for_text_present_ok | Workspaces need to include at least one admin | 30000 |
+
+wait_for_text_present_ok | Workspaces need to include at least one admin | 30000 |
 
 | *Comment* | Test Case: Business Control Panel Workspace Add Group - give WS admin so group can be removed |  |
 | st-admin | add-workspace-admin --w %%ws%% --u %%username%% | now has the role of 'admin' |

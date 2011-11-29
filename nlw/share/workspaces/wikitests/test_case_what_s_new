@@ -10,14 +10,13 @@
 | st-admin | add-member --w %%wn_ws%% --e %%wnemail%% | now has the role |
 | st-admin | add-member --w %%wn_ws%% --e %%anemail%% | now has the role |
 
-
 | st-admin | update-page --email %%wnemail%% --workspace %%wn_ws%% --page "hey whats new %%start_time%% 0001" < %%wikitest_client_files%%wikitest.txt | The "hey whats new %%start_time%% 0001" page has been created. |
 | st-admin | update-page --email %%wnemail%% --workspace %%wn_ws%% --page "hey whats new %%start_time%% 0002" < %%wikitest_client_files%%wikitest.txt | The "hey whats new %%start_time%% 0002" page has been created. |
 | st-admin | update-page --email %%wnemail%% --workspace %%wn_ws%% --page "hey whats new %%start_time%% 0003" < %%wikitest_client_files%%wikitest.txt | The "hey whats new %%start_time%% 0003" page has been created. |
 | st-admin | update-page --email %%wnemail%% --workspace %%wn_ws%% --page "hey whats new %%start_time%% 0004" < %%wikitest_client_files%%wikitest.txt | The "hey whats new %%start_time%% 0004" page has been created. |
 
 | *Comment* | Test Case: What's New displays All Pages in old %%workspace%% |  |
-| click_and_wait | link=What's New |  |
+| select_and_wait | st-jump-to | label=What's New |
 | text_like | Changes in Last |  |
 
 | *Comment* | Test Case: What's New sort %%workspace%% Title asc |  |
@@ -36,15 +35,15 @@
 
 | *Comment* | Test Case: What's New sort Title asc |  |
 | select_and_wait | sort-picker | label=Title |
-| text_like | contentContainer | qr/hey whats new %%start_time%% 0001.+hey whats new %%start_time%% 0004/ |
+| text_like | content | qr/hey whats new %%start_time%% 0001.+hey whats new %%start_time%% 0004/ |
 
 | *Comment* | Test Case: What's New sort Title desc |  |
 | select_and_wait | sort-picker | label=Title (↓) |
-| text_like | contentContainer | qr/hey whats new %%start_time%% 0004.+hey whats new %%start_time%% 0001/ |
+| text_like | content | qr/hey whats new %%start_time%% 0004.+hey whats new %%start_time%% 0001/ |
 
 | *Comment* | Test Case: What's New sort Title asc |  |
 | select_and_wait | sort-picker | label=Title (↑) |
-| text_like | contentContainer | qr/hey whats new %%start_time%% 0001.+hey whats new %%start_time%% 0004/ |
+| text_like | content | qr/hey whats new %%start_time%% 0001.+hey whats new %%start_time%% 0004/ |
 
 | *Comment* | Test Case: What's New add a new page |  |
 | st-admin | update-page --email %%wnemail%% --workspace %%wn_ws%% --page "hey whats new %%start_time%% 0005" < %%wikitest_client_files%%wikitest.txt | The "hey whats new %%start_time%% 0005" page has been created. |
@@ -54,15 +53,15 @@
 
 | *Comment* | Test Case: What's New sort Date desc |  |
 | select_and_wait | sort-picker | label=Date Last Edited |
-| text_like | contentContainer | qr/hey whats new %%start_time%% 0004.+hey whats new %%start_time%% 0001/ |
+| text_like | content | qr/hey whats new %%start_time%% 0004.+hey whats new %%start_time%% 0001/ |
 
 | *Comment* | Test Case: What's New sort Date asc |  |
 | select_and_wait | sort-picker | label=Date Last Edited (↑) |
-| text_like | contentContainer | qr/hey whats new %%start_time%% 0002.+hey whats new %%start_time%% 0003/ |
+| text_like | content | qr/hey whats new %%start_time%% 0002.+hey whats new %%start_time%% 0003/ |
 
 | *Comment* | Test Case: What's New sort Date desc |  |
 | select_and_wait | sort-picker | label=Date Last Edited (↓) |
-| text_like | contentContainer | qr/hey whats new %%start_time%% 0004.+hey whats new %%start_time%% 0001/ |
+| text_like | content | qr/hey whats new %%start_time%% 0004.+hey whats new %%start_time%% 0001/ |
 
 | *Comment* | Test Case: What's New create Rev 2 |  |
 | st-admin | update-page --email %%wnemail%% --workspace %%wn_ws%% --page "hey whats new %%start_time%% 0005" < %%wikitest_client_files%%wikitest.txt | The "hey whats new %%start_time%% 0005" page has been updated. |
@@ -70,47 +69,47 @@
 
 | *Comment* | Create Date, should start descending |  |
 | select_and_wait | sort-picker | label=Date Created |
-| text_like | contentContainer | qr/hey whats new %%start_time%% 0005.+hey whats new %%start_time%% 0001/ |
+| text_like | content | qr/hey whats new %%start_time%% 0005.+hey whats new %%start_time%% 0001/ |
 | select_and_wait | sort-picker | label=Date Created (↑) |
-| text_like | contentContainer | qr/hey whats new %%start_time%% 0001.+hey whats new %%start_time%% 0005/ |
+| text_like | content | qr/hey whats new %%start_time%% 0001.+hey whats new %%start_time%% 0005/ |
 
 | *Comment* | Test Case: What's New sort Revisions desc |  |
 | select_and_wait | sort-picker | label=Revisions |
-| text_like | contentContainer | qr/hey whats new %%start_time%% 0005.+hey whats new %%start_time%% 0004/ |
+| text_like | content | qr/hey whats new %%start_time%% 0005.+hey whats new %%start_time%% 0004/ |
 
 | *Comment* | Test Case: What's New sort Revisions asc |  |
 | select_and_wait | sort-picker | label=Revisions (↑) |
-| text_like | contentContainer | qr/hey whats new %%start_time%% 0004.+hey whats new %%start_time%% 0005/ |
+| text_like | content | qr/hey whats new %%start_time%% 0004.+hey whats new %%start_time%% 0005/ |
 
 | *Comment* | Test Case: What's New sort Revisions desc |  |
 | select_and_wait | sort-picker | label=Revisions (↓) |
-| text_like | contentContainer | qr/hey whats new %%start_time%% 0005.+hey whats new %%start_time%% 0004/ |
+| text_like | content | qr/hey whats new %%start_time%% 0005.+hey whats new %%start_time%% 0004/ |
 
 | *Comment* | Test Case: What's New create edit by %%anemail%% |  |
 | st-admin | update-page --email %%anemail%% --workspace %%wn_ws%% --page "hey whats new %%start_time%% 0003" < %%wikitest_client_files%%wikitest.txt | The "hey whats new %%start_time%% 0003" page has been updated. |
 
 | *Comment* | Test Case: What's New sort Last Edited By asc |  |
 | select_and_wait | sort-picker | label=Last Edited By |
-| text_like | contentContainer | qr/hey whats new %%start_time%% 0003.+hey whats new %%start_time%% 0001/ |
+| text_like | content | qr/hey whats new %%start_time%% 0003.+hey whats new %%start_time%% 0001/ |
 
 | *Comment* | Test Case: What's New sort Last Edited By desc |  |
 | select_and_wait | sort-picker | label=Last Edited By (↓) |
-| text_like | contentContainer | qr/hey whats new %%start_time%% 0001.+hey whats new %%start_time%% 0003/ |
+| text_like | content | qr/hey whats new %%start_time%% 0001.+hey whats new %%start_time%% 0003/ |
 
 | *Comment* | Test Case: What's New sort Last Edited By asc |  |
 | select_and_wait | sort-picker | label=Last Edited By (↑) |
-| text_like | contentContainer | qr/hey whats new %%start_time%% 0003.+hey whats new %%start_time%% 0001/ |
+| text_like | content | qr/hey whats new %%start_time%% 0003.+hey whats new %%start_time%% 0001/ |
 
 | *Comment* | Test Case: What's New delete page |  |
 | st-admin | purge-page --w %%wn_ws%% --p hey_whats_new_%%start_time%%_0004 | was purged |
 
 | open_ok | /%%wn_ws%%/index.cgi?action=recent_changes |  |
-| text_unlike | contentContainer | hey whats new %%start_time%% 0004 |
+| text_unlike | content | hey whats new %%start_time%% 0004 |
 
 | open_ok | /%%wn_ws%%/index.cgi?action=revision_list;page_name=hey_whats_new_%%start_time%%_0005 |  |
-| text_like | contentContainer | Revision 2 |
-| text_like | contentContainer | Revision 1 |
-| text_unlike | contentContainer | Revision 3 |
+| text_like | content | Revision 2 |
+| text_like | content | Revision 1 |
+| text_unlike | content | Revision 3 |
 
 | *Comment* | Test Case: What's New TEARDOWN |  |
 

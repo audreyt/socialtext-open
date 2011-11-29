@@ -6,7 +6,6 @@ etc/init.d/st-apache
 lib/Socialtext/Build/ConfigureValues.pm
 tmp/
 build/tmp/
-share/skin/.gitignore
 share/html/502.html
 t/test-data/ja/mecabif
 t/share/plugin
@@ -20,7 +19,9 @@ share/l10n/mecab/rewrite.def
 share/l10n/mecab/right-id.def
 share/l10n/mecab/sys.dic
 share/l10n/mecab/unk.dic
+share/l10n/*.po
 share/workspaces/wikitests/wikitests.1.tar.gz
+share/javascript/l10n
 messages.mo
 nlw-en.po
 lib/Socialtext/Handler/ControlPanel.pm
@@ -491,7 +492,6 @@ lib/Socialtext/Signal/Tag.pm
 t/Socialtext/Signal/Tag.t
 lib/Socialtext/Gadgets/Container/SignalsPopOut.pm
 lib/Socialtext/Handler/Container/SignalsPopOut.pm
-share/skin/wikiwyg/javascript/jemplate_wikiwyg_edit.js
 t/widget/todo.xml
 lib/Socialtext/Gadgets/Container/ForbiddenProfile.pm
 t/wikitests/webhooks/signals.wiki
@@ -576,7 +576,6 @@ t/Socialtext/Gadgets/Gadget-views.t
 t/widget/views-html-good.xml
 t/widget/views-url.xml
 t/wikitests/control/user_restrictions.wiki
-share/skin/s3/javascript/l10n-*.js
 ssl/
 t/js/empty.html
 t/js/activities-eventlist.t.js
@@ -654,5 +653,15 @@ lib/Socialtext/Rest/Signals/Likes.pm
 t/wikitests/like/signal.wiki
 t/Socialtext/People/Profile-listing.t
 t/wikitests/frontend/http-keep-alive.wiki.orig
+lib/Socialtext/Rest/AccountGadgets.pm
+lib/Socialtext/XHTML.pm
+lib/Socialtext/Pluggable/Plugin/CKEditor.pm
+lib/Socialtext/XHTML/Cell.pm
+lib/Socialtext/XHTML/Renderer.pm
 lib/Socialtext/Job/SignalMentionNotify.pm
 etc/socialtext/socialradar.conf
+.sass-cache/
+share/node_modules/*.js
+lib/Socialtext/Pluggable/Plugin/SocialRadar.pm
+lib/Socialtext/Gadgets/Container/SocialRadar/People.pm
+lib/Socialtext/Handler/Container/SocialRadar/People.pm

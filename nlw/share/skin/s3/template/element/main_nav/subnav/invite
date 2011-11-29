@@ -1,3 +1,0 @@
-[% IF invite_url %]
-<li><a class="nodropdown" id="st-wiki-subnav-link-invite" href="[% invite_url %]">[% loc("nav.invite!") %]</a>
-[% END %]

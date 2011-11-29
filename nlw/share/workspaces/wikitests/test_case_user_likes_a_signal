@@ -44,7 +44,6 @@
 | wait_for_text_present_ok | %%acct%% | 60000 |
 | pause_ok | 8000 | Waited for all the edit events to post before posting signals |
 
-
 | http-user-pass | %%user1%% | %%password%% |
 | post-signal | ULS Signal %%start_time%% |  |
 | set | uls_signal_id | %%last_signal_id%% |
@@ -80,10 +79,10 @@
 
 | *Comment* | Test Case: User Likes a Signal follow user 1, then check mouseover bubble for colleague list |  |
 | open_ok | /st/profile/%%user1_id%% |  |
-| wait_for_element_visible_ok | link=Follow this person | 30000 |
-| pause_ok | 5000 | needed for IE7 |
-| click_ok | link=Follow this person |  |
-| wait_for_element_visible_ok | link=Stop following this person | 30000 |
+| wait_for_element_visible_ok | st-watchperson-indicator | 30000 |
+| pause_ok | 15000 | needed for IE7 |
+| click_ok | st-watchperson-indicator |  |
+| wait_for_element_visible_ok | //button[@title='Stop following this person'] | 30000 |
 | open_ok | /st/signals |  |
 | wait_for_element_visible_ok | //a[contains(@class,'like-indicator me others')] | 30000 |
 | mouse_over_ok | //a[contains(@class,'like-indicator me others')] |  |
@@ -92,10 +91,10 @@
 
 | *Comment* | Test Case: User Likes a Signal unfollow user 1, then check mouseover bubble for lack of colleague list |  |
 | open_ok | /st/profile/%%user1_id%% |  |
-| wait_for_element_visible_ok | link=Stop following this person | 30000 |
-| pause_ok | 5000 | needed for IE7 |
-| click_ok | link=Stop following this person |  |
-| wait_for_element_visible_ok | link=Follow this person | 30000 |
+| wait_for_element_visible_ok | st-watchperson-indicator | 30000 |
+| pause_ok | 15000 | needed for IE7 |
+| click_ok | st-watchperson-indicator |  |
+| wait_for_element_visible_ok | //button[@title='Follow this person'] | 30000 |
 | open_ok | /st/signals |  |
 | wait_for_element_visible_ok | //a[contains(@class,'like-indicator me others')] | 30000 |
 | mouse_over_ok | //a[contains(@class,'like-indicator me others')] |  |
@@ -165,15 +164,15 @@
 | wait_for_element_visible_ok | st-search-term |  |
 | type_ok | st-search-term | ULS |
 | click_and_wait | st-search-submit |  |
-| wait_for_text_present_ok | ULS Signal %%start_time%% |
-| wait_for_text_present_ok | ULS Signal 2 %%start_time%% |
-| text_like | contentContainer | qr/1 like.+ULS Signal 2 %%start_time%%.+11 likes.+ULS Signal %%start_time%%/ |
+| wait_for_text_present_ok | ULS Signal %%start_time%% |  |
+| wait_for_text_present_ok | ULS Signal 2 %%start_time%% |  |
+| text_like | content | qr/1 like.+ULS Signal 2 %%start_time%%.+11 likes.+ULS Signal %%start_time%%/ |
 
 | *Comment* | Test Case: User Likes a Signal change the sort order to sort by likes, verify |  |
 | select_and_wait | sort-picker | label=Likes |
-| wait_for_text_present_ok | ULS Signal %%start_time%% |
-| wait_for_text_present_ok | ULS Signal 2 %%start_time%% |
-| text_like | contentContainer | qr/11 likes.+ULS Signal %%start_time%%.+1 like.+ULS Signal 2 %%start_time%%/ |
+| wait_for_text_present_ok | ULS Signal %%start_time%% |  |
+| wait_for_text_present_ok | ULS Signal 2 %%start_time%% |  |
+| text_like | content | qr/11 likes.+ULS Signal %%start_time%%.+1 like.+ULS Signal 2 %%start_time%%/ |
 
 | *Comment* | Test Case: User Likes a Signal check dashboard widget for liked signal |  |
 | open_ok | /st/dashboard |  |

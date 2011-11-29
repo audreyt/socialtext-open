@@ -1,3 +1,4 @@
+tuxhold until SAVE of GA values works
 
 | *Comment* | Test case: Business Control Panel Account Google Analytics |  |
 
@@ -5,79 +6,84 @@
 | st-admin | give-accounts-admin --email %%email%% | %%username%% now has accounts admin access |
 
 | set | acct | GAacct%%start_time%% |
-| st-admin | create-account --name %%acct%% | A new account named "%%acct%%" was created |
+| create-account | %%acct%% |  |
 | set | gaid | UA-20106506-1 |
 
 | *Comment* | Test case: Business Control Panel Account Account Google Analytics Create Account |  |
 | set | cmdlineacct | GACMDacct%%start_time%% |
-| st-admin | create-account --name %%cmdlineacct%% | A new account named "%%cmdlineacct%%" was created |
+| create-account | %%cmdlineacct%% |  |
 | st-admin | disable-plugin --plugin analytics --account %%acct%% |  |
 
 | *Comment* | Test case: Business Control Panel Account Account NOW do it all through CP |  |
 | open_ok | /nlw/control/account |  |
 | wait_for_element_visible_ok | st-search-by-name | 30000 |
 | type_ok | st-search-by-name | %%acct%% |
-| wait_for_element_visible_ok | st-submit-search-by-name | 30000 |
+| wait_for_element_visible_ok | st-submit-search-by-name | 15000 |
 | click_and_wait | st-submit-search-by-name |  |
 | wait_for_element_visible_ok | link=%%acct%% | 30000 |
 | click_and_wait | link=%%acct%% |  |
 
 | *Comment* | Test case: Business Control Panel Account Account Google Analytics See initially disabled |  |
-| wait_for_element_not_present_ok | ga_id | 30000 |
-| wait_for_element_not_present_ok | analytics-prefs-submit | 30000 |
-| wait_for_element_not_present_ok | ga_domains | 30000 |
+| wait_for_element_not_present_ok | ga_id | 15000 |
+| wait_for_element_not_present_ok | analytics-prefs-submit | 15000 |
+| wait_for_element_not_present_ok | ga_domains | 15000 |
 | text_like | Google Analytics (click to enable) |  |
-| wait_for_element_visible_ok | toggle_plugin_analytics | 30000 |
+| wait_for_element_visible_ok | toggle_plugin_analytics | 15000 |
 
 | *Comment* | Test case: Business Control Panel Account Account Google Analytics Enable the plugin |  |
 | click_ok | toggle_plugin_analytics |  |
 | wait_for_element_visible_ok | ga_id | 30000 |
-| wait_for_element_visible_ok | analytics-prefs-submit | 30000 |
-| wait_for_element_visible_ok | ga_domains | 30000 |
-| wait_for_element_visible_ok | st-multiple-domains | 30000 |
-| wait_for_element_visible_ok | st-single-domain | 30000 |
-| wait_for_element_visible_ok | st-multiple-domains | 30000 |
+| wait_for_element_visible_ok | analytics-prefs-submit | 15000 |
+| wait_for_element_visible_ok | ga_domains | 15000 |
+| wait_for_element_visible_ok | st-multiple-domains | 15000 |
+| wait_for_element_visible_ok | st-single-domain | 15000 |
+| wait_for_element_visible_ok | st-multiple-domains | 15000 |
 | type_ok | ga_id | %%gaid%% |
-|  pause_ok |  5000 |  wait before clicking multiple subdomains |
+| pause_ok | 15000 | wait before clicking multiple subdomains |
 | click_ok | st-multiple-subdomains |  |
-|  is_checked_ok |  st-multiple-subdomains |  |
+| is_checked_ok | st-multiple-subdomains |  |
 | is_checked_ok | st-mask-analytics |  |
 | uncheck_ok | st-mask-analytics |  |
 | click_ok | analytics-prefs-submit |  |
+
 | wait_for_text_present_ok | Done | 45000 |
-| wait_for_text_present_ok | Google Analytics (click to disable) | 45000 |
+
+| wait_for_text_present_ok | Google Analytics (click to disable) | 15000 |
 
 | *Comment* | Test case: Business Control Panel Account Account Google Analytics Re-Find Account, Confirm Values |  |
 | open_ok | /nlw/control/account |  |
 | wait_for_element_visible_ok | st-search-by-name | 30000 |
 | type_ok | st-search-by-name | %%acct%% |
-| wait_for_element_visible_ok | st-submit-search-by-name | 30000 |
+| wait_for_element_visible_ok | st-submit-search-by-name | 15000 |
 | click_and_wait | st-submit-search-by-name |  |
 | wait_for_element_visible_ok | link=%%acct%% | 30000 |
 | click_and_wait | link=%%acct%% |  |
 | wait_for_element_visible_ok | analytics-prefs-submit | 30000 |
-| wait_for_element_visible_ok | ga_id | 30000 |
+| wait_for_element_visible_ok | ga_id | 15000 |
 | verifyValue | ga_id | %%gaid%% |
-| wait_for_element_visible_ok | st-multiple-domains | 30000 |
-| wait_for_element_visible_ok | st-multiple-subdomains | 30000 |
-| wait_for_element_visible_ok | st-single-domain | 30000 |
+| wait_for_element_visible_ok | st-multiple-domains | 15000 |
+| wait_for_element_visible_ok | st-multiple-subdomains | 15000 |
+| wait_for_element_visible_ok | st-single-domain | 15000 |
 | is_checked_ok | st-multiple-subdomains |  |
-| pause | 15000 |  |
 | st_unchecked_ok | st-mask-analytics |  |
 | wait_for_text_present_ok | Google Analytics (click to disable) | 30000 |
 
 | *Comment* | Test case: Business Control Panel Account Account Google Analytics Disable analytics, refresh, see disabled |  |
-| wait_for_element_visible_ok | toggle_plugin_analytics | 30000 |
+| wait_for_element_visible_ok | toggle_plugin_analytics | 15000 |
 | click_ok | toggle_plugin_analytics |  |
-| wait_for_text_present_ok | Google Analytics (click to enable) | 30000 |
+| wait_for_text_present_ok | Google Analytics (click to enable) | 10000 |
 | open_ok | /nlw/control/account |  |
 | wait_for_element_visible_ok | st-search-by-name | 30000 |
 | type_ok | st-search-by-name | %%acct%% |
-| wait_for_element_visible_ok | st-submit-search-by-name | 30000 |
+| wait_for_element_visible_ok | st-submit-search-by-name | 15000 |
 | click_and_wait | st-submit-search-by-name |  |
 | wait_for_element_visible_ok | link=%%acct%% | 30000 |
 | click_and_wait | link=%%acct%% |  |
-| wait_for_element_not_present_ok | ga_id | 30000 |
-| wait_for_element_not_present_ok | analytics-prefs-submit | 30000 |
+| wait_for_element_not_present_ok | ga_id | 10000 |
+| wait_for_element_not_present_ok | analytics-prefs-submit | 10000 |
+
+| *Comment* | Test case: Business Control Panel Account Account Google Analytics TEARDOWN |  |
+| delete_account | %%acct%% |  |
+| delete_account | %%cmdlineacct%% |  |
 
 | *Comment* | Test case: Business Control Panel Account Account Google Analytics COMPLETED |  |

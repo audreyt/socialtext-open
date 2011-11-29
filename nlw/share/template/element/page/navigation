@@ -1,0 +1,77 @@
+[%# vim: set et sts=2 sw=2: %]
+
+[% MACRO jump_option(option_action, text, suffix) BLOCK %]
+  <option [% IF action == option_action %]selected="selected"[% END %] value="/[% wiki.name %][% option_action ? "?action=$option_action" : "" %][% suffix %]">[% text %]</option>
+[% END %]
+
+[% BLOCK workspace_selector %]
+<select id="st-workspace-list" style="visibility: hidden">
+  [% FOR ws = workspaceslist %]
+    <option value="/[% ws.name %]" [% IF ws.name == wiki.name %]selected="selected"[% END %]>[% ws.label %]</option>
+  [% END %]
+</select>
+<script>
+$(function(){
+  $('#st-workspace-list')
+    .dropdown({
+      select: function(ui, option) {
+        document.location = option.value;
+      }
+    });
+  $('#st-workspace-list').css('visibility', 'visible');
+});
+</script>
+[% END %]
+
+[% MACRO jump_menu BLOCK %]
+<select id="st-jump-to" style="visibility: hidden">
+  <option selected value="">[% loc('nav.select-prompt') %]</option>
+  [% jump_option("", loc('[_1] Home Page', wiki.title)) %]
+  [% jump_option("recent_changes", loc('nav.news')) %]
+  [% jump_option("display_watchlist", loc('nav.watchlist')) %]
+  [% jump_option("breadcrumbs_list", loc('nav.recently-viewed')) %]
+  [% jump_option("blog_display", loc('blog.blogs')) %]
+  [% jump_option("my_likes", loc('like.my-likes')) %]
+  [% jump_option("all_likes", loc('like.all-likes')) %]
+  [% jump_option("changes", loc('page.all'), "&changes=all") %]
+  [% jump_option("orphans_list", loc('page.orphaned')) %]
+  [% jump_option("category_list", loc('tag.all')) %]
+  [% jump_option("attachments_listall", loc('file.all')) %]
+  [% jump_option("workspace_membership", loc('wiki.membership')) %]
+</select>
+<script>
+$(function(){
+  $('#st-jump-to')
+    .dropdown({
+      select: function(ui, option) {
+        if (option.value.length) location = option.value;
+      }
+    });
+  $('#st-jump-to').css('visibility', 'visible');
+});
+</script>
+[% END %]
+
+<div class="workspaceNav">
+  <div class="grid_18 breadcrumb">
+    <a href="/?action=workspaces_listall" class="spaces">[% loc('nav.wikis') %]</a>
+    <span class="arrow">&gt;</span>
+
+    [% INCLUDE workspace_selector %]
+
+    <span class="arrow">&gt;</span>
+    <span class="jump_to">[% loc('nav.jump-to=menu', jump_menu) %]</a>
+
+    [% extra %]
+
+  </div>
+  <div class="grid_6 right">
+    [% IF create_button %]
+      [% create_button %]
+    [% ELSIF checker.check_permission('edit') %]
+      <a id="st-create-content-link">+ [% loc('page.new') %]</a>
+    [% END %]
+  </div>
+</div>
+
+<div class="clear"></div>

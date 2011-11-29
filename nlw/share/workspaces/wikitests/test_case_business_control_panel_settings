@@ -1,8 +1,13 @@
 | *Comment* | Test Case: Business Control Panel Settings |
 
-| set | new_user | `new-user-%%start_time%%@matt.socialtext.net` |
+| set | new_user | new-user-%%start_time%%@matt.socialtext.net |
 | set | new_acct | new-acct-%%start_time%% |
-| set | admin_user | `acct_admin-%%start_time%%@matt.socialtext.net` |
+| set | admin_user | acct_admin-%%start_time%%@matt.socialtext.net |
+
+| set | self_join_button | //input[@type="radio" and @name="self_join" and @value="1"] |
+| set | private_button | //input[@type="radio" and @name="self_join" and @value="0"] |
+| set | any_member_button | //input[@type="radio" and @name="group_create" and @value="1"] |
+| set | only_admin_button | //input[@type="radio" and @name="group_create" and @value="0"] |
 
 | st-admin | create-account --name %%new_acct%% | was created |
 | st-admin | create-user --e %%admin_user%% --p %%password%% --account %%new_acct%% | was created |
@@ -13,32 +18,35 @@
 | *Comment* | Test Case: Business Control Panel Settings - Check the page as non-accounts-admin, see warnin' |  |
 | st-logoutin | %%admin_user%% | %%password%% |
 | open_ok | /nlw/control/settings |  |
-| wait_for_text_present_ok | You must have admin privileges to access this URI | 30000 |
+| wait_for_text_present_ok | You must have admin privileges to access this URI | 10000 |
 | text_like | //body | Error |
 
 | *Comment* | Test Case: Business Control Panel Settings - Check the page as accounts-admin verify text FTW |  |
 | st-admin | give-accounts-admin --u %%admin_user%% | now has accounts admin access |
+| *Comment* | Navigate away, come back |  |
+| open_ok | / |  |
 | open_ok | /nlw/control/settings |  |
-| wait_for_element_visible_ok | self_join_update | 30000 |
+| wait_for_element_visible_ok | self_join_update | 10000 |
 | text_like | //body | Accounts on this system are "self-join". Any user who can access the Socialtext application can join the default account, create a profile, and participate in the account's Signals channels. Users can invite other users into their account. |
 | text_like | //body | Accounts on this system are "private". Users must be invited to accounts by an administrator. |
 
 | *Comment* | Test Case: Business Control Panel Settings - Set accounts on the server to private |  |
-| check_ok | document.forms[0].self_join[1] |  |
+| wait_for_element_visible_ok | %%private_button%% | 10000 |
+| check_ok | %%private_button%% |  |
 | click_and_wait | self_join_update |  |
-| wait_for_element_visible_ok | self_join_update | 30000 |
-| is_checked_ok | document.forms[0].self_join[1] |  |
+| wait_for_element_visible_ok | %%private_button%% | 30000 |
+| is_checked_ok | %%private_button%% |  |
 
 | *Comment* | Test Case: Business Control Panel Settings - Logout, see no register, attempt to register, FAIL |  |
 | open_ok | /nlw/submit/logout |  |
-| wait_for_text_present_ok | Log in to Socialtext | 30000 |
+| wait_for_text_present_ok | Log in | 10000 |
 | text_unlike | //body | Register |
 
 | open_ok | /nlw/register.html |  |
 | wait_for_element_visible_ok | email_address | 30000 |
-| wait_for_element_visible_ok | register_password | 30000 |
-| wait_for_element_visible_ok | register_password2 | 30000 |
-| wait_for_element_visible_ok | register_btn | 30000 |
+| wait_for_element_visible_ok | register_password | 15000 |
+| wait_for_element_visible_ok | register_password2 | 15000 |
+| wait_for_element_visible_ok | register_btn | 15000 |
 | type_ok | email_address | %%new_user%% |
 | type_ok | register_password | password |
 | type_ok | register_password2 | password |
@@ -49,18 +57,14 @@
 | st-admin | remove-accounts-admin --u %%admin_user%% | no longer has |
 | st-admin | remove-account-admin --e %%admin_user%% --account %%new_acct%% |  |
 
-| open_ok | /nlw/submit/login |  |
-| st-login | %%admin_user%% | %%password%% |
-| open_ok | /?action=workspace_list |  |
-| wait_for_element_visible_ok | link=Groups | 30000 |
-| text_like | You have free access |  |
-| wait_for_element_not_present_ok | link=Invite! | 10000 |
+| st-logoutin | %%admin_user%% | %%password%% |
+| wait_for_element_not_present_ok | st-wiki-subnav-link-invite | 15000 |
 | text_unlike | //body | Invite! |
 
 | *Comment* | Test Case: Business Control Panel Settings - verify Invite! present for account admin |  |
 | st-admin | add-account-admin --e %%admin_user%% --account %%new_acct%% |  |
-| open_ok | /?action=workspace_list |  |
-| wait_for_element_present_ok | link=Invite! | 10000 |
+| open_ok | /st/groups |  |
+| wait_for_element_present_ok | st-wiki-subnav-link-invite | 30000 |
 | text_like | //body | Invite! |
 
 | *Comment* | Test Case: Business Control Panel Settings - Set accounts on the server to public |  |
@@ -68,21 +72,22 @@
 | st-admin | give-accounts-admin --u %%admin_user%% | now has accounts admin access |
 
 | open_ok | /nlw/control/settings |  |
-| wait_for_element_visible_ok | self_join_update |  |
-| check_ok | document.forms[0].self_join[0] |  |
-| click_and_wait | self_join_update |  |
 | wait_for_element_visible_ok | self_join_update | 30000 |
-| is_checked_ok | document.forms[0].self_join[0] |  |
+| wait_for_element_visible_ok | %%self_join_button%% |  |
+| check_ok | %%self_join_button%% |  |
+| click_and_wait | self_join_update |  |
+| wait_for_element_visible_ok | %%self_join_button%% | 30000 |
+| is_checked_ok | %%self_join_button%% |  |
 
 | *Comment* | Test Case: Business Control Panel Settings - Logout, see register link, login |  |
 | st-appliance-config | set captcha_enabled 0 | UNDEF |
-| open_ok | /nlw/submit/logout |
+| open_ok | /nlw/submit/logout |  |
 | wait_for_element_visible_ok | link=Register | 30000 |
 | click_and_wait | link=Register |  |
 | wait_for_element_visible_ok | email_address | 30000 |
-| wait_for_element_visible_ok | register_password | 30000 |
-| wait_for_element_visible_ok | register_password2 | 30000 |
-| wait_for_element_visible_ok | register_btn | 30000 |
+| wait_for_element_visible_ok | register_password | 15000 |
+| wait_for_element_visible_ok | register_password2 | 15000 |
+| wait_for_element_visible_ok | register_btn | 15000 |
 | type_ok | email_address | %%new_user%% |
 | type_ok | register_password | %%password%% |
 | type_ok | register_password2 | %%password%% |
@@ -91,53 +96,50 @@
 
 | *Comment* | Test Case: Business Control Panel Settings - login as %%username%% |  |
 | st-admin | give-accounts-admin --u %%username%% | %%username%% now has accounts admin access |
-| open_ok | /nlw/submit/login |  |
-| st-login |  |  |
+| st-logoutin |  |  |
 
 | *Comment* | Test Case: Business Control Panel Settings - Set Group Create to only account admins |  |
 | open_ok | /nlw/control/settings |  |
 | text_like | //body | Any member in an account can create a group, and become the group's administrator. As the group administrator, that user can create a workspace for that group. |
 | text_like | //body | Only account administrators can create groups and workspaces. |
 | wait_for_element_visible_ok | group_create_update | 30000 |
-| check_ok | document.forms[1].group_create[1] |  |
+| wait_for_element_visible_ok | %%only_admin_button%% | 30000 |
+| check_ok | %%only_admin_button%% |  |
 | click_and_wait | group_create_update |  |
-| wait_for_element_visible_ok | group_create_update | 30000 |
-| is_checked_ok | document.forms[1].group_create[1] |  |
+| wait_for_element_visible_ok | %%only_admin_button%% | 30000 |
+| is_checked_ok | %%only_admin_button%% |  |
 
 | *Comment* | Test Case: Business Control Panel Settings - Remove Account Admin, cannot create group |  |
 | st-admin | remove-accounts-admin --u %%admin_user%% | no longer has |
 | st-admin | remove-account-admin --e %%admin_user%% --account %%new_acct%% |  |
-| open_ok | /nlw/submit/logout |  |
-| st-login | %%admin_user%% | %%password%% |
-| open_ok | /?action=workspace_list |  |
-| wait_for_element_not_present_ok | link=Create Group... | 10000 |
+| st-logoutin | %%admin_user%% | %%password%% |
+| open_ok | /st/signals |  |
+| wait_for_element_not_present_ok | link=Create Group... | 30000 |
 
 | *Comment* | Test Case: Business Control Panel Settings - Add Account Admin, can create group |  |
 | st-admin | add-account-admin --e %%admin_user%% --account %%new_acct%% | now has the role of 'admin' |
-| open_ok | /?action=workspace_list |  |
-| wait_for_element_visible_ok | link=Groups | 30000 |
-| text_like | You have free access |  |
-| wait_for_element_present_ok | link=Create Group... | 30000 |
+| open_ok | /st/signals |  |
+| wait_for_element_present_ok | link=Create Group... | 15000 |
 
 | *Comment* | Test Case: Business Control Panel Settings - Set Group Create to anybody |  |
 | st-logoutin |  |  |
 | open_ok | /nlw/control/settings/ |  |
 | wait_for_element_visible_ok | group_create_update | 30000 |
-| check_ok | document.forms[1].group_create[0] |  |
+| wait_for_element_visible_ok | %%any_member_button%% | 15000 |
+| check_ok | %%any_member_button%% |  |
 | click_and_wait | group_create_update |  |
-| wait_for_element_visible_ok | group_create_update | 30000 |
-| is_checked_ok | document.forms[1].group_create[0] |  |
+| wait_for_element_visible_ok | %%any_member_button%% | 30000 |
+| is_checked_ok | %%any_member_button%% |  |
 
 | *Comment* | Test Case: Business Control Panel Settings - Remove Account Admin BUT anyone can create group |  |
 | st-admin | remove-account-admin --e %%admin_user%% --account %%new_acct%% | no longer has the role of 'admin' |
-| open_ok | /nlw/submit/logout |  |
-| st-login | %%admin_user%% | %%password%% |
-| open_ok | /?action=workspace_list |  |
+| st-logoutin | %%admin_user%% | %%password%% |
+| open_ok | /st/signals |  |
 | wait_for_element_present_ok | link=Create Group... | 10000 |
 
 | *Comment* | Test Case: Business Control Panel Settings - Add Account Admin still can create group |  |
 | st-admin | add-account-admin --e %%admin_user%% --account %%new_acct%% | now has the role of 'admin' |
-| open_ok | /?action=workspace_list |  |
+| open_ok | /st/signals |  |
 | wait_for_element_present_ok | link=Create Group... | 10000 |
 
-| *Comment* | Test Case: Business Control Panel Settings COMPLETED |
+| *Comment* | Test Case: Business Control Panel Settings COMPLETED |  |

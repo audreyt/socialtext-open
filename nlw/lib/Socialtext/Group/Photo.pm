@@ -9,7 +9,6 @@ use constant ROLES => ('Socialtext::Avatar', 'Socialtext::Avatar::Common');
 # Required by Socialtext::Avatar:
 use constant cache         => 'group-photo';
 use constant default_large => 'groupLarge.png';
-use constant default_skin  => 'common';
 use constant default_small => 'groupSmall.png';
 use constant id_column     => 'group_id';
 use constant resize_spec   => 'group';

@@ -9,7 +9,7 @@ use File::Find qw(find);
 use Socialtext::TT2::Renderer;
 use Socialtext::File qw(get_contents);
 
-my $template_dir = 'share/skin/s3/template';
+my $template_dir = 'share/template';
 my @templates;
 find( sub { push @templates, $File::Find::name if -f }, $template_dir );
 @templates = grep { !m{\.swp$} && s{^$template_dir/}{} } @templates;

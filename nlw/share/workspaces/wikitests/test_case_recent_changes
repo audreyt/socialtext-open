@@ -3,64 +3,29 @@
 | set | newspace | recent-%%start_time%% |
 | set | newtitle | recent %%start_time%% |
 
-| *Comment* | Test Case: Recent Changes. Create a target workspace |  |
-| st-admin | create-workspace --empty --name %%newspace%% --title "%%newtitle%%" --empty | A new workspace named "%%newspace%%" was created. |
-| st-admin | add-member --email %%email%% --workspace %%newspace%% | qr/%%username%% now has the role of 'member' in the %%newspace%% Workspace/ism |
+| *Comment* | Test Case: Recent Changes. Create a target workspace |  |  |  |
+| st-admin | create-workspace --empty --name %%newspace%% --title "%%newtitle%%" --empty | A new workspace named "%%newspace%%" was created. |  |  |
+| st-admin | add-member --email %%email%% --workspace %%newspace%% | qr/%%username%% now has the role of 'member' in the %%newspace%% Workspace/ism |  |  |
 
-| *Comment* | Test Case: Recent Changes. Create a page |  |
-| open_ok | /%%newspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_present_ok | st-newpage-pagename-edit | 30000 |
-| wait_for_element_present_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | st-newpage-pagename-edit | Created Page 1 |
-| type_ok | wikiwyg_wikitext_textarea | I have created a page called Created Page 1. woot. |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+| *Comment* | Test Case: Recent Changes. Create a page |  |  |  |
 
-| *Comment* | Test Case: Recent Changes. Create page 2 |  |
-| open_ok | /%%newspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_present_ok | st-newpage-pagename-edit |  |
-| wait_for_element_present_ok | wikiwyg_wikitext_textarea |  |
-| type_ok | st-newpage-pagename-edit | Created Page 2 |
-| type_ok | wikiwyg_wikitext_textarea | I have created a page called Created Page 2. woot. |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+| call | st-edit-new-page | ws=%%newspace%% | title=Created Page 1 | content=I have created a page called Created Page 1. woot. |
 
-| *Comment* | Test Case: Recent Changes. Create page 3 |  |
-| open_ok | /%%newspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_present_ok | st-newpage-pagename-edit |  |
-| wait_for_element_present_ok | wikiwyg_wikitext_textarea |  |
-| type_ok | st-newpage-pagename-edit | Created Page 3 |
-| type_ok | wikiwyg_wikitext_textarea | I have created a page called Created Page 3. woot. |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+| *Comment* | Test Case: Recent Changes. Create page 2 |  |  |  |
 
-| *Comment* | Test Case: Recent Changes. Create page 4 |  |
-| open_ok | /%%newspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_present_ok | st-newpage-pagename-edit |  |
-| wait_for_element_present_ok | wikiwyg_wikitext_textarea |  |
-| type_ok | st-newpage-pagename-edit | Created Page 4 |
-| type_ok | wikiwyg_wikitext_textarea | I have created a page called Created Page 4. woot. |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+| call | st-edit-new-page | ws=%%newspace%% | title=Created Page 2 | content=I have created a page called Created Page 2. woot. |
 
-| *Comment* | Test Case: Recent Changes. Create page 5 |  |
-| open_ok | /%%newspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_present_ok | st-newpage-pagename-edit |  |
-| wait_for_element_present_ok | wikiwyg_wikitext_textarea |  |
-| type_ok | st-newpage-pagename-edit | Created Page 5 |
-| type_ok | wikiwyg_wikitext_textarea | I have created a page called Created Page 5. woot. |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+| *Comment* | Test Case: Recent Changes. Create page 3 |  |  |  |
+
+| call | st-edit-new-page | ws=%%newspace%% | title=Created Page 3 | content=I have created a page called Created Page 3. woot. |
+
+| *Comment* | Test Case: Recent Changes. Create page 4 |  |  |  |
+
+| call | st-edit-new-page | ws=%%newspace%% | title=Created Page 4 | content=I have created a page called Created Page 4. woot. |
+
+| *Comment* | Test Case: Recent Changes. Create page 5 |  |  |  |
+
+| call | st-edit-new-page | ws=%%newspace%% | title=Created Page 5 | content=I have created a page called Created Page 5. woot. |
 
 | *comment* | Test Case: Recent Changes Comment on a page |  |
 | wait_for_element_visible_ok | link=Comment | 30000 |
@@ -68,7 +33,7 @@
 | wait_for_element_visible_ok | comment | 30000 |
 | type_ok | comment | see, I commented |
 | wait_for_element_visible_ok | link=Save | 30000 |
-| st_click_pause | link=Save | 5000 |
+| st_click_pause | link=Save | 15000 |
 
 | *comment* | Test Case: Recent Changes check |  |
 | open_ok | /%%newspace%%/?action=recent_changes |  |
@@ -88,7 +53,7 @@
 | wait_for_element_visible_ok | comment | 30000 |
 | type_ok | comment | see, I commented |
 | wait_for_element_visible_ok | link=Save | 30000 |
-| st_click_pause | link=Save | 5000 |
+| st_click_pause | link=Save | 15000 |
 
 | *comment* | Test Case: Recent Changes check answers again |  |
 | open_ok | /%%newspace%%/?action=recent_changes |  |
@@ -98,4 +63,4 @@
 | st-process-jobs | PageIndex | %%newspace%% |
 | st-admin | delete-workspace --workspace %%newspace%% --no-export | has been deleted |
 
-| *Comment* | Test Case: Recent Changes COMPLETED |
+| *Comment* | Test Case: Recent Changes COMPLETED |  |

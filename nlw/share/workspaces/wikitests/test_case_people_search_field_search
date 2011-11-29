@@ -1,27 +1,29 @@
 * Fixture: SocialWidgets
 
-| *Comment* | Test Case: People Search Field Search. Use these lines for stand-alone development |  |
-| set_default | userfive | user-five%%start_time%% |
-| set_default | euserfive | `%%userfive%%@ken.socialtext.net` |
-| set_default | current_user | %%euserfive%% |
-| set_default | first | Joe |
-| set_default | last | Harter |
-| set_default | default_field | default-five |
-| set_default | location | Oshkosh, WI |
-| set_default | diffacct | diff-acct%%start_time%% |
-| set_default | diffws | diff-ws%%start_time%% |
+| *Comment* | Test Case: People Search Field Search. Use these lines for stand-alone development |  |  |
+| set_default | userfive | user-five%%start_time%% |  |
+| set_default | euserfive | `%%userfive%%@ken.socialtext.net` |  |
+| set_default | current_user | %%euserfive%% |  |
+| set_default | first | Joe |  |
+| set_default | middle | JH |  |
+| set_default | last | Harter |  |
+| set_default | default_field | default-five |  |
+| set_default | location | Oshkosh, WI |  |
+| set_default | diffacct | diff-acct%%start_time%% |  |
+| set_default | diffws | diff-ws%%start_time%% |  |
 
+| set | names | %%first%% %%middle%% %%last%% |  |
 
-| *Comment* | Test Case: People Search Field Search. Restore these lines for stand-alone development |  |
+| *Comment* | Test Case: People Search Field Search. Restore these lines for stand-alone development |  |  |
 
-st-admin | create-account --name %%diffacct%% | |
-st-admin | create-user --e %%euserfive%% --p %%password%% --account %%diffacct%% | |
-st-admin | add-member --e %%euserfive%% --w %%diffws%% | |
+st-admin | create-account --name %%diffacct%% | | |
+st-admin | create-user --e %%euserfive%% --p %%password%% --account %%diffacct%% | | |
+st-admin | add-member --e %%euserfive%% --w %%diffws%% | | |
 st-logoutin | %%euserfive%% | %%password%% | |
-include | [Test Case: People Search Edit A Profile] | |
+include | [Test Case: People Search Edit A Profile] | | |
 
-| *Comment* | Test Case: People Search Field Search. Index %%first%% %%last%% profile |  |
-|  *Comment* |  This test behaves as if indexing is delayed, so process all jobs, not just index jobs |  |
+| *Comment* | Test Case: People Search Field Search. Index %%names%% profile |  |
+| *Comment* | This test behaves as if indexing is delayed, so process all jobs, not just index jobs |  |
 | st-process-jobs |  |  |
 
 | *Comment* | Test Case: People Search Field Search Access People. |  |
@@ -29,82 +31,82 @@ include | [Test Case: People Search Edit A Profile] | |
 | select_ok | st-search-action | label=Search People: |
 
 | *Comment* | Test Case: People Search Field Search. Search each field |  |
-| st-search | name:"%%first%% %%last%%" | Showing 1 - 1 of 1 total |
-| text_like | %%first%% %%last%% |  |
+| st-search | name:"%%names%%" | Showing 1 - 1 of 1 total |
+| text_like | %%names%% |  |
 | st-search | NoSuch | Showing 1 - 0 of 0 total |
 
 | st-search | first_name:%%first%% | Showing 1 - |
-| text_like | %%first%% %%last%% |  |
+| text_like | %%names%% |  |
 | st-search | NoSuch | Showing 1 - 0 of 0 total |
 
 | st-search | last_name:%%last%% | Showing 1 - 1 of 1 total |
-| text_like | %%first%% %%last%% |  |
+| text_like | %%names%% |  |
 | st-search | NoSuch | Showing 1 - 0 of 0 total |
 
 | *Comment* | Test Case: People Search Field Search. Use double quoted exact phrase matching or could get false hits |  |
 
 | st-search | position:"%%default_field%% position" | Showing 1 - 1 of 1 total |
-| text_like | %%first%% %%last%% |  |
+| text_like | %%names%% |  |
 | st-search | NoSuch | Showing 1 - 0 of 0 total |
 
 | st-search | company:"%%default_field%% company" | Showing 1 - 1 of 1 total |
-| text_like | %%first%% %%last%% |  |
+| text_like | %%names%% |  |
 | st-search | NoSuch | Showing 1 - 0 of 0 total |
 
 | st-search | location:"%%location%%" | Showing 1 - 1 of 1 total |
-| text_like | %%first%% %%last%% |  |
+| text_like | %%names%% |  |
 | st-search | NoSuch | Showing 1 - 0 of 0 total |
 
 | st-search | work_phone:"%%default_field%% work" | Showing 1 - 1 of 1 total |
-| text_like | %%first%% %%last%% |  |
+| text_like | %%names%% |  |
 | st-search | NoSuch | Showing 1 - 0 of 0 total |
 
 | st-search | mobile_phone:"%%default_field%% mobile" | Showing 1 - 1 of 1 total |
-| text_like | %%first%% %%last%% |  |
+| text_like | %%names%% |  |
 | st-search | NoSuch | Showing 1 - 0 of 0 total |
 
 | st-search | home_phone:"%%default_field%% home" | Showing 1 - 1 of 1 total |
-| text_like | %%first%% %%last%% |  |
+| text_like | %%names%% |  |
 | st-search | NoSuch | Showing 1 - 0 of 0 total |
 
 | st-search | aol:"%%default_field%% aol" | Showing 1 - 1 of 1 total |
-| text_like | %%first%% %%last%% |  |
+| text_like | %%names%% |  |
 | st-search | NoSuch | Showing 1 - 0 of 0 total |
 
-| st-search | yahoo:"%%default_field%% yahoo" | Showing 1 - 1 of 1 total |
-| text_like | %%first%% %%last%% |  |
+| st-search | `yahoo:"%%default_field%% yahoo"` | Showing 1 - 1 of 1 total |
+| text_like | %%names%% |  |
 | st-search | NoSuch | Showing 1 - 0 of 0 total |
 
 | st-search | gtalk:"%%default_field%% gtalk" | Showing 1 - 1 of 1 total |
-| text_like | %%first%% %%last%% |  |
+| text_like | %%names%% |  |
 | st-search | NoSuch | Showing 1 - 0 of 0 total |
 
-| st-search | skype:"%%default_field%% skype" | Showing 1 - 1 of 1 total |
-| text_like | %%first%% %%last%% |  |
+| st-search | `skype:"%%default_field%% skype"` | Showing 1 - 1 of 1 total |
+| text_like | %%names%% |  |
 | st-search | NoSuch | Showing 1 - 0 of 0 total |
 
 | st-search | sametime:"%%default_field%% sametime" | Showing 1 - 1 of 1 total |
-| text_like | %%first%% %%last%% |  |
+| text_like | %%names%% |  |
 | st-search | NoSuch | Showing 1 - 0 of 0 total |
 
 | st-search | twitter:"%%default_field%% twitter" | Showing 1 - 1 of 1 total |
-| text_like | %%first%% %%last%% |  |
+| text_like | %%names%% |  |
 | st-search | NoSuch | Showing 1 - 0 of 0 total |
 
 | st-search | blog:"%%default_field%% blog" | Showing 1 - 1 of 1 total |
-| text_like | %%first%% %%last%% |  |
+| text_like | %%names%% |  |
 | st-search | NoSuch | Showing 1 - 0 of 0 total |
 
 | st-search | personal_url:"%%default_field%% personal" | Showing 1 - 1 of 1 total |
-| text_like | %%first%% %%last%% |  |
+| text_like | %%names%% |  |
 | st-search | NoSuch | Showing 1 - 0 of 0 total |
 
 | st-search | linkedin:"%%default_field%% linkedin" | Showing 1 - 1 of 1 total |
-| text_like | %%first%% %%last%% |  |
+| text_like | %%names%% |  |
 | st-search | NoSuch | Showing 1 - 0 of 0 total |
 
 | st-search | facebook:"%%default_field%% facebook" | Showing 1 - 1 of 1 total |
-| text_like | %%first%% %%last%% |  |
+| text_like | %%names%% |  |
 | st-search | NoSuch | Showing 1 - 0 of 0 total |
 
 | *Comment* | Test Case: People Search Field Search COMPLETED |  |

@@ -1,0 +1,44 @@
+| *Comment* | Test Case: Edit Summary: make a page with an edit summary |  |  |  |
+
+| call | [st-edit-no-save] | ws=%%workspace%% | page=test case Edit Summary %%start_time%% | content=Edit Summary content %%start_time%% |
+
+| wait_for_element_visible_ok | st-edit-summary-text-area | 15000 |
+| wait_for_element_visible_ok | st-save-button-link | 15000 |
+
+| *Comment* | Test Case: Edit Summary: this click_ok before the type_ok makes the test work |  |
+| click_ok | st-edit-summary-text-area |  |
+| type_ok | st-edit-summary-text-area | ThisIsTheEditSummary%%start_time%% |
+| click_and_wait | st-save-button-link |  |
+
+| wait_for_element_visible_ok | st-page-titletext | 10000 |
+| text_like | st-page-titletext | Edit Summary %%start_time%% |
+| text_like | content | Edit Summary content %%start_time%% |
+
+| *Comment* | Test Case: Edit Summary: Check for edit summary in revision list |  |  |  |
+| wait_for_element_visible_ok | //a[contains(@href,'action=revision_list')] | 15000 |  |  |
+| click_and_wait | //a[contains(@href,'action=revision_list')] |  |  |  |
+| wait_for_text_present_ok | ThisIsTheEditSummary%%start_time%% | 15000 |  |  |
+
+| *Comment* | Test Case: Edit Summary: Check for edit summary in revision view |  |  |  |
+
+| call | [st-edit-this-page] | ws=%%workspace%% | thispage=test case Edit Summary %%start_time%% | content=New Edit Summary content %%start_time%% |
+
+| wait_for_element_visible_ok | st-page-titletext | 10000 |
+| text_like | st-page-titletext | Edit Summary %%start_time%% |
+
+| *Comment* | Test Case: Edit Summary: Check for edit summary in revision list |  |
+| wait_for_element_visible_ok | //a[contains(@href,'action=revision_list')] | 15000 |
+| click_and_wait | //a[contains(@href,'action=revision_list')] |  |
+| wait_for_text_present_ok | ThisIsTheEditSummary%%start_time%% | 15000 |
+| click_and_wait | st-revision-compare |  |
+| wait_for_text_present_ok | saying "ThisIsTheEditSummary%%start_time%%" | 10000 |
+
+| *Comment* | Test Case: Edit Summary: Check for edit summary in revision display |  |
+| click_and_wait | //strong |  |
+| wait_for_text_present_ok | "ThisIsTheEditSummary%%start_time%%" | 10000 |
+
+| *Comment* | Test Case: Edit Summary: TEARDOWN |  |
+| st-process-jobs |  |  |
+| st-admin | purge-page --w %%workspace%% --p test_case_edit_summary_%%start_time%% | was purged |
+
+| *Comment* | Test Case: Edit Summary: COMPLETED |  |

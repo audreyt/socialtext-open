@@ -1,0 +1,80 @@
+body
+  min-width: $width
+  visibility: visible !important
+
+.grid_1, .grid_2, .grid_3, .grid_4, .grid_5, .grid_6, .grid_7, .grid_8, .grid_9, .grid_10, .grid_11, .grid_12, .grid_13, .grid_14, .grid_15, .grid_16, .grid_17, .grid_18, .grid_19, .grid_20, .grid_21, .grid_22, .grid_23, .grid_24, .grid_minus_0, .grid_minus_1, .grid_minus_2, .grid_minus_3, .grid_minus_4, .grid_minus_5, .grid_minus_6, .grid_minus_7, .grid_minus_8, .grid_minus_9, .grid_minus_10, .grid_minus_11, .grid_minus_12, .grid_minus_13, .grid_minus_14, .grid_minus_15, .grid_minus_16, .grid_minus_17, .grid_minus_18, .grid_minus_19, .grid_minus_20, .grid_minus_21, .grid_minus_22, .grid_minus_23, .grid_minus_24
+  display: inline
+  float: left
+  margin-left: $margin
+  margin-right: $margin
+
+.push_1, .push_2, .push_3, .push_4, .push_5, .push_6, .push_7, .push_8, .push_9, .push_10, .push_11, .push_12, .push_13, .push_14, .push_15, .push_16, .push_17, .push_18, .push_19, .push_20, .push_21, .push_22, .push_23, .push_24 .pull_0, .pull_1, .pull_2, .pull_3, .pull_4, .pull_5, .pull_6, .pull_7, .pull_8, .pull_9, .pull_10, .pull_11, .pull_12, .pull_13, .pull_14, .pull_15, .pull_16, .pull_17, .pull_18, .pull_19, .pull_20, .pull_21, .pull_22, .pull_23, .pull_24
+  position: relative
+
+.alpha
+  margin-left: 0
+
+.omega
+  margin-right: 0
+
+@each $columns in $containers
+  .container_#{$columns}
+    margin-left: auto
+    margin-right: auto
+    width: $width
+    zoom: 1
+    &:before, &:after
+      content: '.'
+      display: block
+      overflow: hidden
+      visibility: hidden
+      font-size: 0
+      line-height: 0
+      width: 0
+      height: 0
+    &:after
+      clear: both
+    @for $g from 1 through $columns
+      .grid_#{$g}
+        width: $g*($width/$columns) - 2*$margin
+      .prefix_#{$g}
+        padding-left: $g*($width/$columns)
+      .suffix_#{$g}
+        padding-right: $g*($width/$columns)
+      .push_#{$g}
+        left: $g*($width/$columns)
+      .pull_#{$g}
+        right: $g*($width/$columns)
+
+/* Grid minus */
+@each $columns in $containers
+  @for $outer from 2 to $columns
+    @for $minus from 1 to $outer
+      $equivalent: $outer - $minus
+      .grid_#{$outer} .grid_minus_#{$minus}
+        width: $equivalent*($width/$columns) - 2*$margin
+
+/* Clear Floated Elements
+ * http://sonspring.com/journal/clearing-floats
+ */
+
+.clear
+  clear: both
+  display: block
+  overflow: hidden
+  visibility: hidden
+  width: 0
+  height: 0
+
+.clearfix
+  zoom: 1
+  &:before, &:after
+    content: '.'
+    display: block
+    overflow: hidden
+    visibility: hidden
+    font-size: 0
+    line-height: 0
+    width: 0
+    height: 0
+    clear: both

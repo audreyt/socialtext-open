@@ -1,0 +1,14 @@
+<div id="[% id('label-insert') %]" class="insert omega grid_sub_24">
+[% IF showDirect %]
+    <span>[% loc('signals.private') %]</span>
+    <a id="[% id('startPrivate') %]" title="[% loc('activities.send-private-message') %]" class="setupWikiwyg startPrivate icon" href="#"></a>
+[% END %]
+    <span>[% loc('do.insert') %]</span>
+    <a id="[% id('mainInsertMention') %]" title="[% loc('activities.mention-user') %]" class="setupWikiwyg icon insertMention hideOnBlur" href="#"></a>
+    <a id="[% id('mainInsertFile') %]" title="[% loc('activities.attach-file') %]" class="setupWikiwyg icon insertFile hideOnBlur" href="#"></a>
+    <a id="[% id('mainInsertTag') %]" title="[% loc('activities.add-tag') %]" class="setupWikiwyg icon insertTag hideOnBlur" href="#"></a>
+    <a id="[% id('mainInsertLink') %]" title="[% loc('do.insert-link') %]" class="setupWikiwyg icon insertLink hideOnBlur" href="#"></a>
+    <a id="[% id('mainInsertVideo') %]" title="[% loc('activities.add-video-link') %]" class="setupWikiwyg icon insertVideo hideOnBlur" href="#"></a>
+</div>
+
+<div class="clear"></div>

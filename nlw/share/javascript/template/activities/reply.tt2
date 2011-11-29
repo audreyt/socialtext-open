@@ -1,0 +1,22 @@
+<div class="top_line"></div>
+<div class="clear"></div>
+
+<div class="avatar">
+    <a target="_blank" href="/st/profile/[% event.actor.id %]">
+        <img class="actor_photo"
+            src="[% this.base_uri %]/data/people/[% event.actor.id %]/photo"/>
+    </a>
+</div>
+
+<div class="indented [% this.signalClass(event) %]" [% IF event.context.annotations_pretty %]title="[% event.context.annotations_pretty | html %]"[% END %]>
+    [% INCLUDE "activities/event/signal.tt2" %]
+    [% IF event.context.annotations.link %]
+        <div class="links">
+            <h3 class="title">Link</h3>
+            <div class="link">
+                [% event.context.annotations.link.html %]
+            </div>
+        </div>
+    [% END %]
+</div>
+<div class="clear"></div>

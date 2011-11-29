@@ -12,47 +12,23 @@
 | wait_for_element_visible_ok | st-page-titletext | 30000 |
 
 | *Comment* | Test Case: Public Read Only. Verify buttons and links page top |  |
-| wait_for_element_not_present_ok | link=Edit | 30000 |
-| wait_for_element_not_present_ok | link=Comment | 30000 |
-| wait_for_element_not_present_ok | link=Add Tag | 30000 |
-| wait_for_element_not_present_ok | link=Upload Files | 30000 |
-| wait_for_element_visible_ok | link=Log in | 30000 |
-| text_like | globalNav | Log in |
-| wait_for_element_visible_ok | link=Register | 30000 |
-| text_like | globalNav | Register |
+| wait_for_element_not_present_ok | link=Edit | 15000 |
+| wait_for_element_not_present_ok | link=Comment | 15000 |
+| wait_for_element_not_present_ok | link=Add Tag | 15000 |
+| wait_for_element_not_present_ok | link=Upload Files | 15000 |
+| wait_for_element_visible_ok | link=Log in | 15000 |
+| wait_for_element_visible_ok | //a[@href='/nlw/register.html?redirect_to='] | 15000 |
 
-| *Comment* | Test Case: Public Read Only. Verify buttons and links page bottom |  |
-| text_like | footerGlobal | Log in |
-| text_like | footerGlobal | Register |
-| text_unlike | bottomButtons | Edit |
-| text_unlike | bottomButtons | Comment |
-
+| *Comment* | Test Case: Public Read Only. create user, login. |  |
+| st-admin | create-user --email user_%%start_time%%@ken.socialtext.net --password %%password%% |  |
+| st-login | user_%%start_time%%@ken.socialtext.net | %%password%% |
+| wait_for_element_visible_ok | link=Settings | 15000 |
 | click_and_wait | link=Settings |  |
-| text_like | errors-and-messages | To set your preferences for a workspace, you must be logged in. |
-| st-admin | create-user --email user_%%start_time%%@ken.socialtext.net --password 123456 |  |
-| type_ok | username | user_%%start_time%%@ken.socialtext.net |
-| type_ok | password | 123456 |
-| click_and_wait | login_btn |  |
+| text_like | Global Settings |  |
 
-| text_like | contentLeft | My Settings |
-| text_like | contentLeft | List All Users |
-| text_like | contentLeft | My Workspaces |
-| text_like | contentLeft | Page Editing |
-| text_like | contentLeft | Screen Layout |
-| text_like | contentLeft | Your Notepad |
-| text_like | contentLeft | What's New |
-| text_like | contentLeft | Syndicate |
-| text_like | contentLeft | Watchlist |
-| text_like | contentLeft | Blogs |
-| text_unlike | contentLeft | Manage All Users |
-| text_unlike | contentLeft | Invite New Users |
-| text_unlike | contentLeft | Create New Blog |
-
-| *Comment* | Test Case: Public Read Only apparently we allow Unsubscribe from any workspace |  |
-| text_like | contentLeft | Unsubscribe |
-
-| *Comment* | Test Case: Public Read Only Teardown |  |
+| *Comment* | Test Case: Public Read Only TEARDOWN |  |
 | st-process-jobs |  |  |
-| st-admin | delete-workspace --workspace %%auth_w%% --no-export | has been deleted |
+| st-admin | deactivate-user --e user_%%start_time%%@ken.socialtext.net |  |
+| delete-workspace | %%auth_w%% |  |
 
-| *Comment* | Test Case: Public Read Only COMPLETED |
+| *Comment* | Test Case: Public Read Only COMPLETED |  |

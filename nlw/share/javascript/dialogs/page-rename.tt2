@@ -1,0 +1,21 @@
+[%# vim: set et sts=2 sw=2: %]
+<div class="lightbox" id="st-rename-lightbox">
+  <form id="st-rename-form">
+    <input type="hidden" name="action" value="rename_page" />
+    <input type="hidden" name="json" value="1" />
+    <input type="hidden" name="page_name" value="[% page.title | html_encode %]" />
+    [% loc('page.new-name') %]:
+    <input type="text" id="st-rename-newname" name="new_title" size="34" />
+    <br/>
+
+    [% loc('tag.keep') %]:
+    <input type="checkbox" name="keep_categories" value="1" checked="true" />
+    <br />
+
+    [% loc('file.keep') %]:
+    <input type="checkbox" name="keep_attachments" value="1" checked="true" />
+
+    <div class="error" id="st-rename-error">&nbsp;</div>
+  </form>
+</div>
+

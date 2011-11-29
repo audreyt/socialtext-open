@@ -3,7 +3,7 @@
 | *Comment* | Test Case: Add Remove Gallery Widgets create a fresh account |  |
 | set | acct | MWG %%start_time%% |
 | set | mwgmail | mwg-%%start_time%%@ken.socialtext.net |
-| st-admin | create-account --name "%%acct%%" | created |
+| create-account | %%acct%% |  |
 | st-admin | enable-plugin --account "%%acct%%" --plugin dashboard |  |
 | st-admin | enable-plugin --account "%%acct%%" --plugin signals |  |
 | st-admin | create-user --e %%mwgmail%% --p %%password%% --account "%%acct%%" | created |
@@ -11,151 +11,96 @@
 
 | *Comment* | Test Case: Add Remove Gallery Widgets login as fresh user |  |
 | st-logoutin | %%mwgmail%% | %%password%% |
-| open_ok | /?dashboard | 60000 |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-
-| wait_for_element_visible_ok | link=Manage Gallery for Accounts | 30000 |
-| click_ok | link=Manage Gallery for Accounts |  |
 
 | *Comment* | Test Case: Add Remove Gallery Widgets - Add Cheeky Quote via URL |  |
-| wait_for_element_visible_ok | link=Add Widget to Gallery | 60000 |
-| click_ok | link=Add Widget to Gallery |  |
+| open_ok | /nlw/control/account/%%account_id%% |  |
+| wait_for_element_visible_ok | st-gallery-add-widget | 60000 |
+| click_ok | st-gallery-add-widget |  |
 | wait_for_element_visible_ok | widget-url | 60000 |
 | wait_for_element_visible_ok | st-add-widget | 30000 |
 | click_ok | widget-url | seems to be needed |
 | type_ok | widget-url | `http://hosting.gmodules.com/ig/gadgets/file/112764733758979090903/CheekyQuote.xml` |
+| click_and_wait | st-add-widget |  |
+| wait_for_text_present_ok | Get random funny quotes | 30000 |
+
+| *Comment* | Test Case: Add Remove Gallery Widgets hide a 3rd party widget |  |
+| wait_for_element_visible_ok | gallery-table-page-2 | 30000 |
+| click_ok | gallery-table-page-2 |  |
+| wait_for_element_visible_ok | gallery-table-dropdown-2-10 | 30000 |
+| select_ok | gallery-table-dropdown-2-10 | label=Hidden |
+| pause_ok | 15000 | nothing to wait for |
+
+| *Comment* | Test Case: Add Remove Gallery Widgets hid a 3rd party widget, added Quotes |  |
+| open_ok | /st/dashboard | 60000 |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
 | click_ok | st-add-widget |  |
-| wait_for_text_present_ok | Successfully added your widget | 30000 |
-| wait_for_element_visible_ok | link=Close | 30000 |
-| click_ok | link=Close |  |
-
-| *Comment* | Test Case: Add Remove Gallery Widgets remove a 3rd party widget |  |
-| open_ok | /?dashboard | 60000 |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | link=Manage Gallery for Accounts | 30000 |
-| click_and_wait | link=Manage Gallery for Accounts |  |
-| wait_for_element_visible_ok | //a[@id='gallery-remove-Google Calendar'] | 60000 |
-| text_like | //a[@id='gallery-remove-Google Calendar'] | `(remove)` |
-| click_ok | //a[@id='gallery-remove-Google Calendar'] |  |
-| wait_for_text_present_ok | Are you sure | 30000 |
-| text_like | qr/Are you sure you want to remove the.+Google Calendar.+widget?/ |  |
-| wait_for_element_visible_ok | link=Yes | 30000 |
-| click_ok | link=Yes |  |
-
-| *Comment* | Test Case: Add Remove Gallery Widgets removed a 3rd party widget |  |
-| open_ok | /?dashboard | 60000 |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | link=Manage Gallery for Accounts | 30000 |
-| click_and_wait | link=Manage Gallery for Accounts |  |
-| wait_for_element_visible_ok | //a[@id='gallery-restore-Google Calendar'] | 60000 |
-| wait_for_element_not_present_ok | //a[@id='gallery-remove-Google Calendar'] | 30000 |
-| text_like | //a[@id='gallery-restore-Google Calendar'] | `(restore)` |
+| wait_for_element_visible_ok | st-widget-opensocial-gallery-widgets | 30000 |
+| wait_for_element_visible_ok | gallery-widget-Cheeky Quotes | 30000 |
+| wait_for_element_not_present_ok | gallery-widget-Google Calendar | 30000 |
+| wait_for_text_not_present_ok | Google Calendar | 30000 |
 
 | *Comment* | Test Case: Add Remove Gallery Widgets restore a 3rd party widget |  |
-| click_ok | //a[@id='gallery-restore-Google Calendar'] |  |
-| wait_for_text_present_ok | Are you sure | 30000 |
-| text_like | qr/Are you sure you want to restore the.+Google Calendar.+widget?/ |  |
-| wait_for_element_visible_ok | link=Yes | 30000 |
-| click_ok | link=Yes |  |
+| open_ok | /nlw/control/account/%%account_id%% |  |
+| wait_for_element_visible_ok | gallery-table-page-2 | 30000 |
+| click_ok | gallery-table-page-2 |  |
+| wait_for_element_visible_ok | gallery-table-dropdown-2-10 | 30000 |
+| select_ok | gallery-table-dropdown-2-10 | label=Visible |
+| pause_ok | 15000 | nothing to wait for |
 
 | *Comment* | Test Case: Add Remove Gallery Widgets restored a 3rd party widget |  |
-| open_ok | /?dashboard | 60000 |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | link=Manage Gallery for Accounts | 30000 |
-| click_and_wait | link=Manage Gallery for Accounts |  |
-| wait_for_element_visible_ok | //a[@id='gallery-remove-Google Calendar'] | 60000 |
-| wait_for_element_not_present_ok | //a[@id='gallery-restore-Google Calendar'] | 30000 |
-| text_like | //a[@id='gallery-remove-Google Calendar'] | `(remove)` |
+| open_ok | /st/dashboard | 60000 |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+| click_ok | st-add-widget |  |
+| wait_for_element_visible_ok | st-widget-opensocial-gallery-widgets | 30000 |
+| wait_for_element_visible_ok | gallery-widget-Google Calendar | 30000 |
+| wait_for_text_present_ok | Google Calendar | 30000 |
 
-| *Comment* | Test Case: Add Remove Gallery Widgets remove an uploaded widget |  |
-| open_ok | /?dashboard | 60000 |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | link=Manage Gallery for Accounts | 30000 |
-| click_and_wait | link=Manage Gallery for Accounts |  |
-| wait_for_element_visible_ok | //a[contains(@id,'gallery-remove-Cheeky')] | 60000 |
-| text_like | //a[contains(@id,'gallery-remove-Cheeky')] | `(remove)` |
-| click_ok | //a[contains(@id,'gallery-remove-Cheeky')] |  |
-| wait_for_text_present_ok | Are you sure | 30000 |
-| text_like | qr/Are you sure you want to remove the.+Cheeky.+widget?/ |  |
-| wait_for_element_visible_ok | link=Yes | 30000 |
-| click_ok | link=Yes |  |
+| *Comment* | Test Case: Add Remove Gallery Widgets hide an uploaded widget |  |
+| open_ok | /nlw/control/account/%%account_id%% |  |
+| wait_for_element_visible_ok | gallery-table-dropdown-2-4 | 30000 |
+| select_ok | gallery-table-dropdown-2-4 | label=Hidden |
+| pause_ok | 15000 | nothing to wait for |
 
-| *Comment* | Test Case: Add Remove Gallery Widgets removed an uploaded widget |  |
-| open_ok | /?dashboard | 60000 |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | link=Manage Gallery for Accounts | 30000 |
-| click_and_wait | link=Manage Gallery for Accounts |  |
-| wait_for_element_visible_ok | //a[contains(@id,'gallery-restore-Cheeky')] | 60000 |
-| text_like | //a[contains(@id,'gallery-restore-Cheeky')] | `(restore)` |
-| wait_for_element_not_present_ok | //a[contains(@id,'gallery-remove-Cheeky')] | 30000 |
+| *Comment* | Test Case: Add Remove Gallery Widgets hid an uploaded widget |  |
+| open_ok | /st/dashboard | 60000 |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+| click_ok | st-add-widget |  |
+| wait_for_element_visible_ok | st-widget-opensocial-gallery-widgets | 30000 |
+| wait_for_element_not_present_ok | gallery-widget-Cheeky Quotes | 30000 |
 
 | *Comment* | Test Case: Add Remove Gallery Widgets restore an uploaded widget |  |
-| click_ok | //a[contains(@id,'gallery-restore-Cheeky')] |  |
-| wait_for_text_present_ok | Are you sure | 30000 |
-| text_like | qr/Are you sure you want to restore the.+Cheeky.+widget?/ |  |
-| wait_for_element_visible_ok | link=Yes | 30000 |
-| click_ok | link=Yes |  |
+| open_ok | /nlw/control/account/%%account_id%% |  |
+| wait_for_element_visible_ok | gallery-table-dropdown-2-4 | 30000 |
+| select_ok | gallery-table-dropdown-2-4 | label=Visible |
+| pause_ok | 15000 | nothing to wait for |
 
 | *Comment* | Test Case: Add Remove Gallery Widgets restored an uploaded widget |  |
-| open_ok | /?dashboard | 60000 |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | link=Manage Gallery for Accounts | 30000 |
-| click_and_wait | link=Manage Gallery for Accounts |  |
-| wait_for_element_visible_ok | //a[contains(@id,'gallery-remove-Cheeky')] | 60000 |
-| text_like | //a[contains(@id,'gallery-remove-Cheeky')] | `(remove)` |
-| text_like | //a[contains(@id,'gallery-update-Cheeky')] | `(update)` |
-| text_unlike | contentContainer | `(restore)` |
+| open_ok | /st/dashboard | 60000 |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+| click_ok | st-add-widget |  |
+| wait_for_element_visible_ok | st-widget-opensocial-gallery-widgets | 30000 |
+| wait_for_element_visible_ok | gallery-widget-Cheeky Quotes | 30000 |
+| wait_for_text_present_ok | Cheeky Quotes | 30000 |
 
-| *Comment* | Test Case: Add Remove Gallery Widgets remove for delete an uploaded widget |  |
-| open_ok | /?dashboard | 60000 |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | link=Manage Gallery for Accounts | 30000 |
-| click_and_wait | link=Manage Gallery for Accounts |  |
-| wait_for_element_visible_ok | //a[contains(@id,'gallery-remove-Cheeky')] | 60000 |
-| text_like | //a[contains(@id,'gallery-remove-Cheeky')] | `(remove)` |
-| click_ok | //a[contains(@id,'gallery-remove-Cheeky')] |  |
-| wait_for_text_present_ok | Are you sure | 30000 |
-| text_like | qr/Are you sure you want to remove the.+Cheeky.+widget?/ |  |
-| wait_for_element_visible_ok | link=Yes | 30000 |
-| click_ok | link=Yes |  |
-
-| *Comment* | Test Case: Add Remove Gallery Widgets delete a removed uploaded widget |  |
-| open_ok | /?dashboard | 60000 |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | link=Manage Gallery for Accounts | 30000 |
-| click_and_wait | link=Manage Gallery for Accounts |  |
-| wait_for_element_visible_ok | //a[contains(@id,'gallery-restore-Cheeky')] | 60000 |
-| wait_for_element_visible_ok | //a[contains(@id,'gallery-delete-Cheeky')] | 30000 |
-| wait_for_element_not_present_ok | //a[contains(@id,'gallery-remove-Cheeky')] | 30000 |
-| text_like | //a[contains(@id,'gallery-restore-Cheeky')] | `(restore)` |
-| text_like | //a[contains(@id,'gallery-delete-Cheeky')] | `(delete)` |
-| click_ok | //a[contains(@id,'gallery-delete-Cheeky')] |  |
-| wait_for_text_present_ok | Are you sure | 30000 |
-| text_like | qr/Are you sure you want to permanently remove the.+Cheeky.+widget?/ |  |
-| wait_for_element_visible_ok | link=Yes | 30000 |
-| click_ok | link=Yes |  |
+| *Comment* | Test Case: Add Remove Gallery Widgets delete an uploaded widget |  |
+| open_ok | /nlw/control/account/%%account_id%% |  |
+| wait_for_element_visible_ok | gallery-table-column-6 | 30000 |
+| click_ok | gallery-table-column-6 | 30000 |
+| wait_for_text_present_ok | Are you sure you want to permanently remove the "Cheeky Quotes" widget? | 30000 |
+| wait_for_element_visible_ok | st-confirm-yes | 30000 |
+| click_ok | st-confirm-yes |  |
+| wait_for_text_not_present_ok | Cheeky Quotes | 30000 |
 
 | *Comment* | Test Case: Add Remove Gallery Widgets deleted an uploaded widget |  |
-| open_ok | /?dashboard | 60000 |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | link=Manage Gallery for Accounts | 30000 |
-| click_and_wait | link=Manage Gallery for Accounts |  |
-| text-unlike | //body | Cheeky Quote |
-| text-like | Google Calendar |  |
+| open_ok | /st/dashboard | 60000 |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
+| click_ok | st-add-widget |  |
+| wait_for_element_visible_ok | st-widget-opensocial-gallery-widgets | 30000 |
+| wait_for_element_not_present_ok | gallery-widget-Cheeky Quotes | 30000 |
 
 | *Comment* | Test Case: Add Remove Gallery Widgets TEARDOWN |  |
 | st-process-jobs |  |  |
 | deactivate-user | %%mwgmail%% |  |
 | delete-account | %%acct%% |  |
 
-| *Comment* | Test Case: Add Remove Gallery Widgets COMPLETED |
+| *Comment* | Test Case: Add Remove Gallery Widgets COMPLETED |  |

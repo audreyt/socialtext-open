@@ -1,0 +1,9 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use Socialtext::SQL qw(sql_execute);
+
+sql_execute(q{
+    UPDATE attachment SET is_temporary = false WHERE is_temporary = true
+});

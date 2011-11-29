@@ -1,0 +1,43 @@
+| *Comment* | Test Case: Tools: Duplicate Page |  |
+| *Comment* | Test Case: Tools: Duplicate Page Create test page |  |
+
+| set | dupe_ws | duplicate_workspace |  |  |
+| set | this_title | Duplicate This Page |  |  |
+| set | this_id | duplicate_this_page |  |  |
+| set | new_title | Page_Duplicated |  |  |
+| set | new_id | Page_Duplicated |  |  |
+| set | this_content | Duplicate This Page content |  |  |
+| set | new_content | Duplicate This Page NEW content |  |  |
+| set | this_tag | Duplicate This Tag |  |  |
+
+| delete-workspace | %%dupe_ws%% |  |  |  |
+| st-process-jobs |  |  |  |  |
+| create-workspace | %%dupe_ws%% |  |  |  |
+| st-admin | add-member --workspace %%dupe_ws%% --email %%username%% | now has the role |  |  |
+| st-process-jobs |  |  |  |  |
+
+| call | [st-edit-fill-page] | ws=%%dupe_ws%% | title=%%this_title%% | content=%%this_content%% |
+
+| *Comment* | Test Case: Tools: Duplicate Page Create test tag in Edit mode |  |
+| click_and_pause | //a[contains(@class,"cke_button_wysiwyg")] | 2000 |
+| MouseOver_ok | //a[contains(@class,"cke_button_st_add_tags")] |  |
+| click_ok | //a[contains(@class,"cke_button_st_add_tags")] |  |
+
+| wait_for_element_visible_ok | st-tagqueue-field | 30000 |
+| type_ok | st-tagqueue-field | %%this_tag%% |
+| click_ok | st-tagqueue-addbutton |  |
+| click_ok | st-tagqueue-close |  |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| st-page-save |  |  |
+| wait_for_element_visible_ok | link=%%this_tag%% | 30000 |
+| st_upload_if_highperms | wikitest.jpg |  |
+
+| *Comment* | Test Case: Tools: Duplicate Page. Duplicate the page |  |
+| click_ok | link=Duplicate Page |  |
+| wait_for_element_visible_ok | st-duplicate-form | 30000 |
+| wait_for_element_visible_ok | st-duplicate-newname | 30000 |
+
+| *Comment* | Deliberately use non-space containing pagename for location_like_ok test |  |
+| type_ok | st-duplicate-newname | %%new_title%% |
+| st-pause-click | 4000 | st-duplicate-savelink |
+| pause_ok | 3000 |  |

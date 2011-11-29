@@ -1,21 +1,25 @@
+TUXTODO: when blogs are working, retest and remove skip.all
+
 TODO: try automating email to weblog using Email This Page with the right address to create a weblog entry
 
 RSS feeds are tested in a separate test
 
 | *Comment* | Test Case: Weblogs |  |
 
-| *Comment* | Test Case: Weblogs Create test weblog |  |
-| open_ok | /%%workspace%%/?action=users_settings |  |
+| set | wb_wiki | wb_wiki_%%start_time%% |
+| create-workspace | %%wb_wiki%% |  |
+| st-admin | add-member --workspace %%wb_wiki%% --email %%username%% | now has the role |
 
-| wait_for_element_visible_ok | link=Create New Blog | 30000 |
-| click_and_wait | link=Create New Blog |  |
-| wait_for_element_visible_ok | weblog_title | 30000 |
-| type_ok | weblog_title | Test %%start_time%% Blog |
+| *Comment* | Test Case: Weblogs Create test weblog |  |
+| open_ok | /st/settings/%%workspace_id%%/prefs/blog |  |
+
+| wait_for_element_visible_ok | workspace.do.create_blog | 30000 |
+| type_ok | workspace.do.create_blog | Test %%start_time%% Blog |
 | click_and_wait | link=Save |  |
 
 | *Comment* | Test Case: Weblogs Test Weblog pulldown |  |
 | *Comment* | reliably open Recent Changes, navigate away then revisit it |  |
-| open_ok | /%%workspace%%/index.cgi?action=weblog_display&category=recent+changes |  |
+| open_ok | /%%wb_wiki%%/index.cgi?action=blog_display&category=recent+changes |  |
 | wait_for_element_visible_ok | page-control-category-selector | 30000 |
 | select_and_wait | page-control-category-selector | Test %%start_time%% Blog |
 | text_like | Blog: Test %%start_time%% Blog |  |
@@ -30,44 +34,41 @@ text_like | feedSubscribeLine | Subscribe to this feed |
 text_like | feedBody | This is the first post in test_%%start_time%%_blog |
 open_ok | /%%workspace%%/index.cgi?action=weblog_display&category=test_%%start_time%%_blog | |
 
-| *Comment* | Test Case: Weblogs new post |  |
-| click_and_wait | st-weblog-newpost-button |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| type_ok | st-newpage-pagename-edit | Post 1 %%start_time%% |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | Post 1 Content %%start_time%% |
-| wait_for_element_visible_ok | st-save-button-link |  |
-| st-pause-click | 2000 | st-save-button-link |
+| *Comment* | Test Case: Weblogs new post |  |  |
+| click_and_wait | st-weblog-newpost-button |  |  |
+| call | [st-fill-editor] | title=Post 1 %%start_time%% | content=Post 1 Content %%start_time%% |
+| *Comment* | Can't fold this because returning to blog view |  |  |
+| st-pause-click | 2000 | st-save-button-link |  |
 
 | wait_for_text_present_ok | Permalink | 30000 |
-| text_like | contentContainer | qr/Post 1 %%start_time%%.+Post 1 Content %%start_time%%.+Comment.+Edit this post.+Permalink/smi |
+| text_like | content | qr/Post 1 %%start_time%%.+Post 1 Content %%start_time%%.+Comment.+Edit this post.+Permalink/smi |
 
 | *Comment* | Test Case: Weblogs add comment |  |
 | click_ok | link=Comment |  |
 | wait_for_element_visible_ok | comment | 30000 |
 | type_ok | comment | Comment 1 %%start_time%% |
 | wait_for_element_visible_ok | link=Save | 30000 |
-| st_click_pause | link=Save | 5000 |
+| st-click-pause | link=Save | 15000 |
 
 | *Comment* | Just SAVED comment |  |
 | wait_for_text_present_ok | Comment 1 %%start_time%% | 30000 |
 | click_and_wait | link=Edit this post |  |
+
 | wait_for_element_visible_ok | link=Wiki Text | 30000 |
 | click_ok | link=Wiki Text |  |
 | wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
 | type_ok | wikiwyg_wikitext_textarea | Edit 1 %%start_time%% |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
+| *Comment* | Can't fold this because returning to blog view |  |
 | st-pause-click | 2000 | st-save-button-link |
 
 | pause | 10000 |  |
 
 | wait_for_element_visible_ok | link=Permalink | 30000 |
-| text_like | contentContainer | Edit 1 %%start_time%% |
+| text_like | content | Edit 1 %%start_time%% |
 | click_and_wait | link=Permalink |  |
 | wait_for_text_present_ok | Edit 1 %%start_time%% | 30000 |
-| text_like | contentContainer | Edit 1 %%start_time%% |
+| text_like | content | Edit 1 %%start_time%% |
 
 | *Comment* | Test Case: Weblogs weblogs that differ only by square brackets cause error |  |
 | click_and_wait | link=Settings |  |
@@ -142,7 +143,7 @@ open_ok | /%%workspace%%/index.cgi?action=weblog_display&category=test_%%start_t
 | wait_for_element_visible_ok | weblog_title | 30000 |
 | type_ok | weblog_title | Z%%start_time%% Blog |
 | click_and_wait | link=Save |  |
-| text_like | contentRight | error: There is already a 'Z%%start_time%% Blog' blog. |
+| text_like | st-display-mode-widgets | error: There is already a 'Z%%start_time%% Blog' blog. |
 
 | *Comment* | Test Case: Weblogs Duplicate Names Weblog |  |
 | click_and_wait | link=Settings |  |
@@ -165,8 +166,7 @@ open_ok | /%%workspace%%/index.cgi?action=weblog_display&category=test_%%start_t
 | wait_for_element_visible_ok | weblog_title | 30000 |
 | type_ok | weblog_title | A%%start_time%% Weblog |
 | click_and_wait | link=Save |  |
-| text_like | contentRight | error: There is already a 'A%%start_time%% Weblog' blog. |
-
+| text_like | st-display-mode-widgets | error: There is already a 'A%%start_time%% Weblog' blog. |
 
 removed weblog name length test. There is no reason to limit weblog names to 28 chars
 
@@ -180,4 +180,4 @@ removed weblog name length test. There is no reason to limit weblog names to 28 
 | st-admin | purge-page --w %%workspace%% --page first_post_in_z%%start_time%%_blog | was purged |
 | st-admin | purge-page --w %%workspace%% --page first_post_in_a%%start_time%%_weblog | was purged |
 
-| *Comment* | Test Case: Weblogs COMPLETED |
+| *Comment* | Test Case: Weblogs COMPLETED |  |

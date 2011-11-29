@@ -1,0 +1,48 @@
+| *Comment* | Test Case: Tools: Duplicate Page |  |  |  |
+| set | dupe_ws | duplicate_workspace |  |  |
+| set | this_title | Duplicate This Page |  |  |
+| set | this_id | duplicate_this_page |  |  |
+| set | new_title | Page_Duplicated |  |  |
+| set | new_id | Page_Duplicated |  |  |
+| set | this_content | Duplicate This Page content |  |  |
+| set | new_content | Duplicate This Page NEW content |  |  |
+| set | this_tag | Duplicate This Tag |  |  |
+
+| *Comment* | Test Case: Tools: Duplicate Page. verify duplicate |  |  |  |
+| open_ok | /%%dupe_ws%%/%%new_id%% |  |  |  |
+| location_like | `/%%dupe_ws%%/%%new_id%%` |  |  |  |
+| wait_for_element_visible_ok | st-display-mode-widgets | 30000 |  |  |
+| text_like | st-display-mode-widgets | %%this_tag%% |  |  |
+| wait_for_element_visible_ok | link=%%this_tag%% | 30000 |  |  |
+| text_like | st-page-titletext | %%new_title%% |  |  |
+| st_check_files_if_highperms | wikitest.jpg |  |  |  |
+
+| *Comment* | Test Case: Tools: Duplicate Page. Edit the original the page |  |  |  |
+
+| call | [st-edit-this-page] | ws=%%dupe_ws%% | thispage=%%this_title%% | content=%%new_content%% |
+
+| *Comment* | Test Case: Tools: Duplicate Page. Duplicate the edited page and Cancel |  |
+| click_ok | link=Duplicate Page |  |
+| wait_for_element_visible_ok | st-duplicate-form | 30000 |
+| wait_for_element_visible_ok | st-duplicate-newname | 30000 |
+| type_ok | st-duplicate-newname | Untitled Page |
+| click_ok | st-duplicate-savelink |  |
+| wait_for_element_visible_ok | st-duplicate-error | 30000 |
+| text_like | st-duplicate-error | The page name you selected, "Untitled Page", is not allowed. Please enter or change the page name. |
+| st-click-pause | st-duplicate-cancellink | 15000 |
+| location_like | `/%%dupe_ws%%/%%this_id%%` |  |
+
+| *Comment* | Test Case: Tools: Duplicate Page. Duplicate the edited page. navigate away and back |  |
+| click_and_wait | link=Workspaces |  |
+| open_ok | /%%dupe_ws%%/%%this_title%% |  |
+| click_ok | link=Duplicate Page |  |
+| wait_for_element_visible_ok | st-duplicate-savelink | 30000 |
+| wait_for_element_visible_ok | st-duplicate-newname | 30000 |
+| type_ok | st-duplicate-newname | %%new_title%% |
+| click_and_pause | st-duplicate-savelink | 3000 |
+| wait_for_element_visible_ok | st-duplicate-error | 30000 |
+| text_like | st-duplicate-error | The new page name you selected, "%%new_title%%", is already in use |
+
+| *Comment* | Test Case: Tools: Duplicate Page. Force duplication |  |
+| click_ok | st-duplicate-savelink |  |
+| pause_ok | 3000 |  |

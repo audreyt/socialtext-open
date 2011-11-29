@@ -4,8 +4,6 @@ package Socialtext::Exceptions;
 use warnings;
 use strict;
 
-our $VERSION = 0.01;
-
 use Scalar::Util ();
 
 my %e;
@@ -52,6 +50,18 @@ BEGIN {
             alias       => 'data_validation_error',
             fields      => [qw( errors )],
             description => 'Data validation error'
+        },
+
+        'Socialtext::Exception::EmailAddress' => {
+            isa         => 'Socialtext::Exception::DataValidation',
+            alias       => 'email_address_exception',
+            fields      => [qw( email_address )],
+        },
+
+        'Socialtext::Exception::User' => {
+            isa         => 'Socialtext::Exception',
+            alias       => 'user_exception',
+            fields      => [qw( username user )],
         },
 
         'Socialtext::Exception::TooManyResults' => {

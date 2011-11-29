@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Socialtext i18n\n"
-"PO-Revision-Date: 2011-06-17 01:14-0700\n"
+"PO-Revision-Date: 2011-09-20 01:58+0800\n"
 "Last-Translator: Socialtext i18n team\n"
 "Language-Team: Socialtext i18n team\n"
 "MIME-Version: 1.0\n"
@@ -13,18 +13,11 @@ msgstr ""
 msgid "do.bold"
 msgstr "加粗"
 
-#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:751
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:20
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:467
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:493
+#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:751 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:20 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:467 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:493
 msgid "do.cancel"
 msgstr "取消"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:176
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:316
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:356
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:373
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:195
+#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:176 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:316 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:356 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:373 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:195
 msgid "do.done"
 msgstr "完成"
 
@@ -32,8 +25,7 @@ msgstr "完成"
 msgid "do.italic"
 msgstr "斜体"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:14
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:444
+#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:14 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:444
 msgid "do.save"
 msgstr "保存"
 
@@ -51,7 +43,7 @@ msgstr "无法载入修订。"
 
 #: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2171
 msgid "error.new-sheet-name-required"
-msgstr "请提供一个新的电子表格的名称。"
+msgstr "请提供一个新的页面名称。"
 
 #: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:1346
 msgid "error.no-data-to-sum"
@@ -62,19 +54,17 @@ msgid "error.page-name-required"
 msgstr "请明确页面的名称。"
 
 #. (page_name)
-#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2092
-#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2175
+#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2092 share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2175
 msgid "error.reserved-sheet-name=name"
 msgstr "\"%1\"是保留的页面名称。请选择一个不同的名字 。"
 
-#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2194
-#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2341
+#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2194 share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2341
 msgid "error.select-option-or-click-cancel"
 msgstr "请选择其中一个选项，或点击取消。"
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:479
 msgid "error.sheet-contention:"
-msgstr "当您编辑的时候，<span style=\"font-weight: bold\" id=\"st-contention-user\">XXX</span> 保存了电子表格的一个版本，并且我们无法调和这个变化。您想："
+msgstr "当您编辑的时候，<span style=\"font-weight: bold\" id=\"st-contention-user\">XXX</span> 保存了此页面的另一个版本，并且我们无法调和这个变化。您想："
 
 #: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2183
 msgid "error.sheet-name-exists"
@@ -84,10 +74,9 @@ msgstr "该名字已被使用，请输入一个不同的名称。"
 msgid "error.sheet-name-exists:"
 msgstr "<a id=\"st-newspreadsheet-duplicate-link\" href=\"#\" target=\"\">XXX</a>  <span id=\"st-newspreadsheet-duplicate-emphasis\">已经被占用</span>。您想："
 
-#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2098
-#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2179
+#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2098 share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2179
 msgid "error.sheet-title-too-long"
-msgstr "电子表格名称太长。请缩短名称，再试一次。"
+msgstr "页面名称太长。请缩短名称，再试一次。"
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:41
 msgid "page.edit"
@@ -97,8 +86,7 @@ msgstr "编辑"
 msgid "sc.add-tags"
 msgstr "添加标签..."
 
-#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:1024
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:144
+#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:1024 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:144
 msgid "sc.advanced-formatting"
 msgstr "高级格式"
 
@@ -106,20 +94,15 @@ msgstr "高级格式"
 msgid "sc.align"
 msgstr "对齐"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:131
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:111
+#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:131 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:111
 msgid "sc.alignment"
 msgstr "对齐"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:175
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:355
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:372
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:194
+#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:175 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:355 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:372 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:194
 msgid "sc.apply"
 msgstr "应用"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:176
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:195
+#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:176 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:195
 msgid "sc.apply-and-close-dialog"
 msgstr "应用设置并且关闭当前对话框"
 
@@ -143,8 +126,7 @@ msgstr "稽核"
 msgid "sc.audit-trail:"
 msgstr "本次编辑的稽核纪录"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:73
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:64
+#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:73 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:64
 msgid "sc.background"
 msgstr "背景"
 
@@ -160,9 +142,7 @@ msgstr "边界"
 msgid "sc.borders-on-off"
 msgstr "边界 开/关"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:93
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:163
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:83
+#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:93 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:163 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:83
 msgid "sc.bottom"
 msgstr "置底"
 
@@ -174,20 +154,18 @@ msgstr "上传者："
 msgid "sc.cancel-edit"
 msgstr "取消编辑"
 
-#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:1014
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:218
+#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:1014 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:218
 msgid "sc.cell-comment"
 msgstr "单元格批注"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:142
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:154
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:123
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:152
+#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:142 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:154 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:123 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:152
 msgid "sc.center"
 msgstr "中心"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:68
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:59
+msgid "sc.checking-for-edit-contention"
+msgstr "检查其他人对此页面的更改"
+
+#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:68 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:59
 msgid "sc.color"
 msgstr "颜色"
 
@@ -229,15 +207,13 @@ msgstr "删除行"
 msgid "sc.description"
 msgstr "描述"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:290
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:299
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:308
+#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:290 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:299 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:308
 msgid "sc.down"
 msgstr "向下"
 
 #: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2527
 msgid "sc.edit-more"
-msgstr "编辑更多"
+msgstr "继续编辑"
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:254
 msgid "sc.edit-revision"
@@ -253,11 +229,11 @@ msgstr "编辑："
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:439
 msgid "sc.enter-sheet-name"
-msgstr "输入新的电子表格的名称"
+msgstr "输入新的页面名称"
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:440
 msgid "sc.enter-sheet-title"
-msgstr "为您的电子表格输入一个有意义的和独特的名称。"
+msgstr "为您的页面输入一个有意义的和独特的名称。"
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:56
 msgid "sc.erase"
@@ -283,21 +259,15 @@ msgstr "向下填充"
 msgid "sc.fill-right"
 msgstr "向右填充"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:50
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:90
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:41
+#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:50 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:90 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:41
 msgid "sc.font"
 msgstr "字型"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:55
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:46
+#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:55 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:46
 msgid "sc.font-family"
 msgstr "字体"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:28
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:63
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:96
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:19
+#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:28 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:63 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:96 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:19
 msgid "sc.format"
 msgstr "格式"
 
@@ -308,6 +278,9 @@ msgstr "以上格式会<b>应用</b>为所有单元格的<b>默认值</b>。"
 #: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:170
 msgid "sc.formats-will-apply-to"
 msgstr "以上格式会<b>应用</b>到"
+
+msgid "sc.generating-sheet-content"
+msgstr "产生电子表格内容"
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:119
 msgid "sc.hidden"
@@ -321,8 +294,7 @@ msgstr "在左侧插入一栏"
 msgid "sc.insert-column-right"
 msgstr "在右侧插入一栏"
 
-#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:1004
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:216
+#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:1004 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:216
 msgid "sc.insert-formula"
 msgstr "插入公式"
 
@@ -334,25 +306,15 @@ msgstr "在上方插入一行"
 msgid "sc.insert-row-below"
 msgstr "在下方插入一行"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:146
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:156
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:127
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:156
+#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:146 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:156 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:127 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:156
 msgid "sc.justify"
 msgstr "校正"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:139
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:92
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:153
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:120
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:149
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:82
+#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:139 share/plugin/socialcalc/share/javascript/jemplate/advanced_format:92 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:153 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:120 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:149 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:82
 msgid "sc.left"
 msgstr "置左"
 
-#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2916
-#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2939
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:65
+#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2916 share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2939 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:65
 msgid "sc.loading"
 msgstr "加载中..."
 
@@ -404,8 +366,7 @@ msgstr "显示多行输入"
 msgid "sc.name"
 msgstr "名称"
 
-#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:1009
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:217
+#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:1009 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:217
 msgid "sc.named-ranges"
 msgstr "命名范围"
 
@@ -413,8 +374,7 @@ msgstr "命名范围"
 msgid "sc.new-name"
 msgstr "[新建]"
 
-#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:833
-#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:834
+#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:833 share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:834
 msgid "sc.none"
 msgstr "（无）"
 
@@ -434,13 +394,11 @@ msgstr "普通视图"
 msgid "sc.now"
 msgstr "现在"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:34
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:25
+#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:34 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:25
 msgid "sc.number"
 msgstr "数字"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:460
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:486
+#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:460 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:486
 msgid "sc.ok"
 msgstr "好的"
 
@@ -452,8 +410,7 @@ msgstr "按确定继续，或取消停留在当前页面。"
 msgid "sc.on:"
 msgstr "时间："
 
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:86
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:76
+#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:86 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:76
 msgid "sc.padding"
 msgstr "填充"
 
@@ -466,9 +423,7 @@ msgstr "粘贴"
 msgid "sc.paste=hotkey"
 msgstr "粘贴（按 %1-V 来从其它应用程序粘贴）"
 
-#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2617
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:16
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:42
+#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2617 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:16 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:42
 msgid "sc.preview"
 msgstr "预览"
 
@@ -508,23 +463,15 @@ msgstr "还原修订"
 msgid "sc.richtext-mode"
 msgstr "丰富文本"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:144
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:94
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:155
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:125
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:154
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:84
+#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:144 share/plugin/socialcalc/share/javascript/jemplate/advanced_format:94 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:155 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:125 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:154 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:84
 msgid "sc.right"
 msgstr "置右"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:13
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:13
+#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:13 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:13
 msgid "sc.sample"
 msgstr "样本"
 
-#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:107
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:5
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:5
+#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:107 share/plugin/socialcalc/share/javascript/jemplate/advanced_format:5 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:5
 msgid "sc.sample-lines"
 msgstr "这是一个<br />样本"
 
@@ -542,7 +489,7 @@ msgstr "另存为..."
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:480
 msgid "sc.save-as-new-revision"
-msgstr "作为一个新的版本保存在当前电子表格"
+msgstr "作为一个新的版本保存在当前页面"
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:14
 msgid "sc.save-changes"
@@ -562,20 +509,25 @@ msgstr "保存一个新的名称："
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:455
 msgid "sc.save-with-suggested-name"
-msgstr "保存电子表格名称为 \"<span id=\"st-newspreadsheet-duplicate-suggest\">XXX</span>\""
+msgstr "保存页面名称为 \"<span id=\"st-newspreadsheet-duplicate-suggest\">XXX</span>\""
+
+msgid "sc.saving-sheet-content-kb"
+msgstr "正在保存电子表格 (<span id=\"st-spreadsheet-save-progress-size\">?</span> kB)"
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:451
 msgid "sc.sheet-already-exists"
-msgstr "电子表格已经存在"
+msgstr "页面已经存在"
 
-#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:1029
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:214
+msgid "sc.sheet-save-progress"
+msgstr "电子表格保存进度"
+
+#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:1029 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:214
 msgid "sc.sheet-settings"
 msgstr "电子表格设置"
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:442
 msgid "sc.sheet-title:"
-msgstr "电子表格名称："
+msgstr "页面名称："
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:16
 msgid "sc.show-preview"
@@ -585,14 +537,11 @@ msgstr "显示预览"
 msgid "sc.single-line-input"
 msgstr "显示单行输入"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:61
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:93
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:52
+#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:61 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:93 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:52
 msgid "sc.size"
 msgstr "大小"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:219
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:315
+#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:219 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:315
 msgid "sc.sort"
 msgstr "排序"
 
@@ -624,13 +573,11 @@ msgstr "交换前景色和背景色"
 msgid "sc.target-cell"
 msgstr "单元格"
 
-#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:289
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:171
+#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:289 share/plugin/socialcalc/share/javascript/jemplate/advanced_format:171
 msgid "sc.target-range"
 msgstr "范围"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:40
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:31
+#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:40 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:31
 msgid "sc.text"
 msgstr "文本"
 
@@ -642,9 +589,7 @@ msgstr "文本颜色"
 msgid "sc.this"
 msgstr "本次编辑"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:91
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:161
-#: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:81
+#: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:91 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:161 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:81
 msgid "sc.top"
 msgstr "置顶"
 
@@ -656,14 +601,11 @@ msgstr "还原"
 msgid "sc.undone-steps:"
 msgstr "已还原步骤:"
 
-#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2568
-#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:3043
+#: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2568 share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:3043
 msgid "sc.unsaved-changes"
 msgstr "您有未保存的变更。"
 
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:289
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:298
-#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:307
+#: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:289 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:298 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:307
 msgid "sc.up"
 msgstr "向上"
 

@@ -1,66 +1,58 @@
 | *Comment* | START Test Case: Calc Orphans List |  |
 
- Find or create several sheets that have no incoming links. This creates orphan sheets. | sheets are created
+Find or create several sheets that have no incoming links. This creates orphan sheets. | sheets are created
 
 | *Comment* | Test Case: Calc Orphans List. Create an orphan sheet. |  |
 | open_ok | %%workspace%%/index.cgi?action=display;page_type=spreadsheet;page_name=orphan%20sheet%201%20%%start_time%%#edit |  |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
-| pause | 5000 | I hate pause; needed for entire page load |
+| pause | 15000 | I hate pause; needed for entire page load |
 | st-page-save |  |  |
 
 | *Comment* | Test Case: Calc Orphans List. Create another orphan sheet. |  |
 | open_ok | %%workspace%%/index.cgi?action=display;page_type=spreadsheet;page_name=orphan%20sheet%202%20%%start_time%%#edit |  |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
-| pause | 5000 | I hate pause; needed for entire page load |
+| pause | 15000 | I hate pause; needed for entire page load |
 | st-page-save |  |  |
 
-"What's New -> Orphans List"<http://...> | list of links to orphan sheets appears
+"What's New -> Orphans List"<http://>...> | list of links to orphan sheets appears
 
 | *Comment* | Test Case: Calc Orphans List. Orphan sheet list |  |
-| open_ok | /%%workspace%%/?action=recent_changes |  |
-| click_and_wait | link=Orphaned Pages |  |
+| select_and_wait | st-jump-to | label=Orphan Pages |
 | text_like | link=orphan sheet 1 %%start_time%% | orphan sheet 1 %%start_time%% |
 | text_like | link=orphan sheet 2 %%start_time%% | orphan sheet 2 %%start_time%% |
 
- click on several links | correct sheet appear
+click on several links | correct sheet appear
 
 | *Comment* | Test Case: Calc Orphans List. Orphan sheet links work |  |
 | click_and_wait | link=orphan sheet 1 %%start_time%% |  |
 | text_like | st-page-titletext | orphan sheet 1 %%start_time%% |
-| open_ok | /%%workspace%%/?action=recent_changes |  |
-| click_and_wait | link=Orphaned Pages |  |
+| select_and_wait | st-jump-to | label=Orphan Pages |
 | click_and_wait | link=orphan sheet 2 %%start_time%% |  |
 | text_like | st-page-titletext | orphan sheet 2 %%start_time%% |
 
- observe Incoming Links in sidepanel | there are no Incoming Links for any orphan sheet
+observe Incoming Links in sidepanel | there are no Incoming Links for any orphan sheet
 
-| *Comment* | Test Case: Calc Orphans List. Orphan sheet has no incoming links |  |
-| text_like | //p | There are no pages that link to this page yet |
-| open | /%%workspace%%/index.cgi?orphan_sheet_1_%%start_time%% |  |
-| text_like | //p | There are no pages that link to this page yet |
+| *Comment* | Test Case: Calc Orphans List. Orphan sheet has no incoming links |  |  |  |
+| text_like | st-display-mode-widgets | There are no pages that link to this page yet |  |  |
+| open | /%%workspace%%/index.cgi?orphan_sheet_1_%%start_time%% |  |  |  |
+| text_like | st-display-mode-widgets | There are no pages that link to this page yet |  |  |
 
 edit a page to include a link to an orphan sheet | link appears in page
 
-| *Comment* | Test Case: Calc Orphans List. Create a link to the second orphan sheet |  |
-| open_ok | /%%workspace%%/index.cgi?orphan page 1 %%start_time%% |  |
-| wait_for_element_visible_ok | st-create-content-savelink |  |
-| click_ok | st-create-content-savelink |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | `[orphan sheet 2 %%start_time%%]` |
-| click_and_wait | link=Save |  |
+| *Comment* | Test Case: Calc Orphans List. Create a link to the second orphan sheet |  |  |  |
 
- "What's New -> Orphaned Pages"<http://.../> | linked sheet no longer in orphans list
+| call | [st-edit-new-page] | ws=%%workspace%% | title=orphan page 1 %%start_time%% | content=`[orphan sheet 2 %%start_time%%]` |
+
+"What's New -> Orphaned Pages"<http://.../> | linked sheet no longer in orphans list
 
 | *Comment* | Test Case: Calc Orphans List. second sheet should no longer be orphan |  |
-| open_ok | /%%workspace%%/?action=recent_changes |  |
-| click_and_wait | link=Orphaned Pages |  |
-| text_unlike | contentContainer | orphan sheet 2 %%start_time%% |
-| text_like | contentContainer | orphan sheet 1 %%start_time%% |
+| st-process-jobs |  |  |
+| select_and_wait | st-jump-to | label=Orphan Pages |
+| text_unlike | content | orphan sheet 2 %%start_time%% |
+| text_like | content | orphan sheet 1 %%start_time%% |
 
-| *Comment* | Test Case: Calc Orphans List. Teardown |  |
-
+| *Comment* | Test Case: Calc Orphans List. TEARDOWN |  |
+| st-process-jobs |  |  |
 | st-admin | purge-page --w %%workspace%% --p orphan_page_1_%%start_time%% | was purged |
 | st-admin | purge-page --w %%workspace%% --p orphan_sheet_1_%%start_time%% | was purged |
 | st-admin | purge-page --w %%workspace%% --p orphan_sheet_2_%%start_time%% | was purged |

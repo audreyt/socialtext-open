@@ -1,0 +1,333 @@
+@import mixins.sass
+@import colors.sass
+
+.visible
+  display: block
+
+.hidden
+  display: none
+
+div.myContent h4 a
+  color: $primary_color
+  font-weight: normal
+  font-size: 12px
+
+/* 
+ *Site: Socialtext Wiki
+ *Author: Mark Schuber :: Aracuaria Design
+ *Date: March 13, 2008
+
+/* CSS Style Reset Start
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td
+  margin: 0
+  padding: 0
+  border: 0
+  outline: 0
+  font-size: 100%
+  background: transparent
+
+ol, ul
+  list-style: auto
+
+blockquote, q
+  quotes: none
+
+/* remember to define focus styles!
+
+\:focus
+  outline: 0
+
+/* remember to highlight inserts somehow!
+
+ins
+  text-decoration: none
+
+del
+  text-decoration: line-through
+
+/* tables still need 'cellspacing="0"' in the markup
+
+table
+  border-collapse: collapse
+  border-spacing: 0
+
+/* CSS Style Reset End
+
+body
+  font-size: 11px
+  font-family: $body_font
+  color: $darker
+
+a
+  color: $primary_color
+  text-decoration: none
+  &:hover
+    text-decoration: underline
+
+p
+  margin: 0.5em 0
+
+h1
+  font-size: 125%
+  margin: 1em 0
+
+h2
+  font-size: 120%
+  margin: 0.75em 0
+
+h3
+  font-size: 110%
+  margin: 0.5em 0
+
+h4, h5, h6
+  font-size: 100%
+  margin: 0.5em 0
+
+hr
+  color: $grey
+  height: 1px
+
+ol, ul
+  padding-left: 2em
+
+pre
+  background: $lighter
+  padding: 0.25em
+  margin: 0.5em 0
+
+blockquote
+  margin: 0.5em 0
+  padding-left: 1em
+
+/* Gadget content
+
+img
+  &.avatar
+    width: 27px
+    height: 27px
+  &.bigAvatar
+    width: 62px
+    height: 62px
+    float: left
+
+div
+  &.border
+    border-bottom: $light 1px dotted
+    clear: both
+    margin: 0 auto 10px
+    height: 10px
+  &.clear, &#bigWidgetContent div.clear
+    clear: both
+  &.profile
+    margin: 0 auto
+    text-align: left
+    color: #666
+  &.myContent
+    margin: 0 auto
+    text-align: left
+    h4
+      color: $primary_color
+      font-weight: normal
+      font-size: 12px
+    div.commentInfo
+      margin-top: 10px
+      img
+        float: left
+      ul
+        float: left
+        margin-left: 10px
+        li.time
+          font-style: italic
+  &#calendarControl
+    margin: 0 auto
+    text-align: left
+    ul
+      width: 100%
+      float: left
+      li
+        &.previous
+          float: left
+          a
+            background: url(../images/previousArrow.png) no-repeat center left
+            padding-left: 15px
+        &.next
+          float: right
+          a
+            background: url(../images/nextArrow.png) no-repeat center right
+            padding-right: 15px
+  &.calendarList
+    margin: 0 auto
+    text-align: left
+    color: $primary_color
+    table
+      width: 100%
+      tr
+        td, th
+          font-weight: normal
+          text-indent: 17px
+        &.oddRow
+          td, th
+            background: $tertiary_color
+  &#peopleList, &#bigWidgetContent div#peopleList
+    text-align: left
+    margin: 0 auto
+  &#peopleList ul
+    width: 100%
+    li
+      width: 100%
+      color: $primary_color
+      &.oddRow
+        background-color: $tertiary_color
+      img
+        margin-left: 14px
+        padding-top: 5px
+        vertical-align: middle
+      a
+        margin-left: 14px
+    input
+      margin-left: 17px
+  &#widgetContent div#activityList, &#bigWidgetContent div#activityList
+    text-align: left
+    margin: 0 auto
+  &#activityList ul
+    width: 100%
+    li
+      width: 100%
+      color: $primary_color
+      /* margin-top: 10px;
+       *margin-bottom: 10px;
+      text-align: left
+      margin: 10px
+      &.oddRow
+        background: $tertiary_color
+      img
+        margin-left: 14px
+        position: relative
+        top: 9px
+      a
+        /* margin-left: 14px;
+    input
+      margin-left: 17px
+  &#workList
+    text-align: left
+    margin: 0 auto
+    ul
+      width: 100%
+      li
+        width: 100%
+        color: $primary_color
+        text-indent: 14px
+        &.oddRow
+          background: $tertiary_color
+  &#tagWidget
+    text-align: left
+    margin: 0 auto
+    a
+      text-decoration: none
+      &.cloudOne
+        font-size: 10px
+      &.cloudTwo
+        font-size: 14px
+      &.cloudThree
+        font-size: 20px
+      &.cloudFour
+        font-size: 26px
+  &.tablib_content_container
+    margin: 5pt
+
+.error, .row_error
+  display: none
+  color: $red
+
+.widgetTitle
+  color: $darker
+
+#lookahead, #message
+  border: 1px solid $grey
+
+.lookahead-prompt
+  color: $darkest
+
+/* widget Styles Start
+
+/* groups widgets Start
+
+span.typeChange
+  color: $primary_color
+  text-decoration: underline
+  &:hover
+    cursor: pointer
+
+#group-membership
+  .icon div.removeIcon
+    background-image: url(#{$static}/images/icons/close-darker-8.png)
+  li.deleted .icon div.removeIcon
+    background-image: url(#{$static}/images/icons/close-gray-8.png)
+  a.icon span
+    background-color: $tertiary_color
+    border: 1px solid $darker
+  .empty_message
+    background-color: $tertiary_color
+    color: $darker
+  .note_message
+    background-color: $tertiary_color
+
+/* groups widgets End
+
+
+/* my content widget Start
+
+/* my content widget End
+
+/* calendar widget End
+
+/* calendar widget End
+
+/* people list widget Start
+
+/* people list widget End
+
+/* activity list widget Start
+
+/* activity list widget End
+
+/* workspaces list widget Start
+
+/* workspaces list widget End
+
+/* tag widget Start
+
+/* tag widget End
+
+.tablib_selected, .tablib_unselected
+  color: $primary_color
+  -moz-border-radius-topright: 5px
+  -webkit-border-top-right-radius: 5px
+  -moz-border-radius-topleft: 5px
+  -webkit-border-top-left-radius: 5px
+  border-top-radius: 5px
+
+.dropdown
+  position: relative
+  .value
+    white-space: nowrap
+  .fakeLink
+    color: $primary_color
+    text-decoration: underline
+    z-index: 1000
+  select
+    position: absolute
+    height: 5px
+    right: 0
+    top: 0
+    opacity: 0
+    z-index: 2000
+
+/* for mobile browsers: make the span look like a link but not be clickable
+
+@import jquery-ui.sass
+@import jquery-mobile.sass
+@import jquery-ui-selectmenu.sass
+@import jqm.sass
+@import autocomplete.sass

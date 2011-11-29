@@ -1,0 +1,84 @@
+| *Comment* | Test Case: Custom Desktop Theme |  |
+
+| set | user | csui_user_%%start_time%%@david.socialtext.net |
+| set | acct | csui_account_%%start_time%% |
+| set | wiki | csui-wiki-%%start_time%% |
+
+| create-account | %%acct%% |  |  |
+| create-workspace | %%wiki%% | %%acct%% |  |
+| create-user | %%user%% | %%password%% | %%acct%% |
+| st-admin | add-member --email %%user%% --workspace %%wiki%% | now has the role |  |
+| st-admin | give-accounts-admin --email %%user%% | now has accounts |  |
+
+| *Comment* | Test Case: Custom Desktop Theme check the contents of the control panel |  |
+| st-logoutin | %%user%% | %%password%% |
+| open_ok | /nlw/control/account/%%account_id%%/desktop |  |
+| wait_for_text_present_ok | %%acct%% account | 30000 |
+| wait_for_text_present_ok | Logo URI | 30000 |
+| wait_for_text_present_ok | Header Gradient (top) | 30000 |
+| wait_for_text_present_ok | Header Gradient (bottom) | 30000 |
+| wait_for_text_present_ok | Background color | 30000 |
+| wait_for_text_present_ok | Secondary background color | 30000 |
+| wait_for_text_present_ok | Text color | 30000 |
+| wait_for_text_present_ok | Link color | 30000 |
+| wait_for_text_present_ok | Highlight color | 30000 |
+| wait_for_text_present_ok | Socialtext Desktop's logo (automatically scaled to 240 x 34 pixels) | 30000 |
+| wait_for_text_present_ok | The bottom color of the header's gradient. Choose the same color as the top value to create a solid background instead | 30000 |
+| wait_for_text_present_ok | Used as the background for forms, settings headers and un-selected tabs | 30000 |
+| wait_for_text_present_ok | The color applied to links. Most applications use a shade of blue | 30000 |
+| wait_for_text_present_ok | The color applied to highlighted elements, such as the background of the Post button | 30000 |
+
+| *Comment* | Test Case: Custom Desktop Theme check the default color values |  |
+| verifyValue | desktop_logo_uri | /static/skin/common/images/sd-logo.png |
+| verifyValue | desktop_header_gradient_top | #4C739B |
+| verifyValue | desktop_header_gradient_bottom | #506481 |
+| verifyValue | desktop_bg_color | #FFFFFF |
+| verifyValue | desktop_2nd_bg_color | #F2F2F2 |
+| verifyValue | desktop_text_color | #000000 |
+| verifyValue | desktop_link_color | #0081F8 |
+| verifyValue | desktop_highlight_color | #FFFDD3 |
+
+| *Comment* | Test Case: Custom Desktop Theme assign new values |  |
+| type_ok | desktop_logo_uri | newlogo |
+| type_ok | desktop_header_gradient_top | #111111 |
+| type_ok | desktop_header_gradient_bottom | #222222 |
+| type_ok | desktop_bg_color | #333333 |
+| type_ok | desktop_2nd_bg_color | #444444 |
+| type_ok | desktop_text_color | #555555 |
+| type_ok | desktop_link_color | #666666 |
+| type_ok | desktop_highlight_color | #777777 |
+| click_and_wait | //input[@value='Submit'] |  |
+| wait_for_text_present_ok | Settings have been saved. Desktop users need to logout and login again to apply the new skin. | 30000 |
+
+| *Comment* | Test Case: Custom Desktop Theme check that new values have been saved |  |
+| open_ok | /nlw/control/account/%%account_id%%/desktop |  |
+| verifyValue | desktop_logo_uri | newlogo |
+| verifyValue | desktop_header_gradient_top | #111111 |
+| verifyValue | desktop_header_gradient_bottom | #222222 |
+| verifyValue | desktop_bg_color | #333333 |
+| verifyValue | desktop_2nd_bg_color | #444444 |
+| verifyValue | desktop_text_color | #555555 |
+| verifyValue | desktop_link_color | #666666 |
+| verifyValue | desktop_highlight_color | #777777 |
+
+| *Comment* | Test Case: Custom Desktop Theme reset values to default, check |  |
+| wait_for_element_visible_ok | //input[@value='Reset to Default'] | 30000 |
+| click_ok | //input[@value='Reset to Default'] |  |
+| verifyConfirmation | The values have been reset to default. Do you want to apply them now? |  |
+| wait_for_text_present_ok | Settings have been saved. Desktop users need to logout and login again to apply the new skin. | 30000 |
+| verifyValue | desktop_logo_uri | /static/skin/common/images/sd-logo.png |
+| verifyValue | desktop_header_gradient_top | #4C739B |
+| verifyValue | desktop_header_gradient_bottom | #506481 |
+| verifyValue | desktop_bg_color | #FFFFFF |
+| verifyValue | desktop_2nd_bg_color | #F2F2F2 |
+| verifyValue | desktop_text_color | #000000 |
+| verifyValue | desktop_link_color | #0081F8 |
+| verifyValue | desktop_highlight_color | #FFFDD3 |
+
+| *Comment* | Test Case: Custom Desktop Theme TEARDOWN |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%user%% |  |
+| delete-workspace | %%wiki%% | Recklessly deleting |
+| delete-account | %%acct%% | Recklessly deleting |
+
+| *Comment* | Test Case: Custom Desktop Theme COMPLETED |  |

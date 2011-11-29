@@ -1,0 +1,10 @@
+[%# vim: set et sts=2 sw=2: %]
+
+<h3>[% loc('loc.language') %]</h3>
+
+[% INCLUDE element/settings/setting_select
+  pref="plugin.locales.locale"
+  option=plugin.locales.locale
+%]
+
+<hr />

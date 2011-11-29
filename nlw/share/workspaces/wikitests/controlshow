@@ -7,7 +7,7 @@ This test case is an aid to visually observing each screen type in the applicati
 
 | set_default | wiki | %%workspace%% | defaults to the test workspace |
 | set_default | wikititle | %%title%% | defaults to the test workspace |
-| set_default | pt | 5000 | defaults to five seconds |
+| set_default | pt | 15000 | defaults to five seconds |
 
 | st-admin | give-accounts-admin --e %%username%% |  |
 | st-admin | give-system-admin --e %%username%% |  |

@@ -4,7 +4,7 @@
 | set | reply_signal | %%reply_prefix%%-%%i%% |
 
 | *Comment* | Test Case: Replies Include. Signal %%reply_signal%% |  |
-| st-send-reply | %%reply_signal%% |  |
+| st-send-reply | %%reply_signal%% | %%addToConversation%% |
 
 | *Comment* | Test Case: Replies Include. Wait for the reply to appear |  |
 | wait_for_text_present_ok | %%reply_signal%% | 30000 |

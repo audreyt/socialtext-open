@@ -3,6 +3,7 @@
 
 use strict;
 use warnings;
+use mocked 'Socialtext::Log', qw(:tests);
 use Socialtext::LDAP;
 use Socialtext::User;
 use Socialtext::User::Default::Factory;
@@ -146,7 +147,7 @@ deactivate_an_ldap_user: {
     my $user = Socialtext::User->new(username => 'Ray Parker');
     isa_ok $user, 'Socialtext::User', 'got a user';
 
-    warnings_like { $user->deactivate }
+    warnings_exist { $user->deactivate }
         [
             qr/The user has been removed from workspaces and directories/,
             qr/Login information is controlled by the LDAP directory administrator./

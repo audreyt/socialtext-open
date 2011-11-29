@@ -1,0 +1,4 @@
+#!/bin/sh
+DIRNAME=$(dirname $0)
+export NODE_PATH="$DIRNAME/../share/node_modules:/usr/share/nlw/node_modules:/usr/lib/node_modules"
+exec node ${1+"$@"}

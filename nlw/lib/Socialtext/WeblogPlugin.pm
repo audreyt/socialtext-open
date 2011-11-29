@@ -36,29 +36,51 @@ sub register {
     $registry->add(action => 'blog_html' => 'weblog_html');
     $registry->add(action => 'weblog_redirect');
     $registry->add(action => 'blog_redirect' => 'weblog_redirect');
-    $registry->add(preference => $self->weblog_depth);
     $registry->add(wafl => weblog_list => 'Socialtext::Category::Wafl' );
     $registry->add(wafl => blog_list => 'Socialtext::Category::Wafl' );
     $registry->add(wafl => weblog_list_full => 'Socialtext::Category::Wafl' );
     $registry->add(wafl => blog_list_full => 'Socialtext::Category::Wafl' );
+
+    $self->_register_prefs($registry);
+}
+
+sub pref_names {
+    return qw(weblog_depth);
+}
+
+sub weblog_depth_data {
+    my $self = shift;
+
+    return {
+        title => loc('blog.number-of-posts-to-show'),
+        default_setting => $self->default_weblog_depth,
+        options => [
+            map { {setting => $_, display => $_ } } qw(5 10 15 20 25 50)
+        ],
+    };
 }
 
 sub weblog_depth {
     my $self = shift;
+
+    my $data = $self->weblog_depth_data;
     my $p = $self->new_preference('weblog_depth');
-    $p->query(__('blog.number-of-posts?'));
+
+    $p->query($data->{title});
     $p->type('pulldown');
-    my $choices = [
-        5 => '5',
-        10 => '10',
-        15 => '15',
-        20 => '20',
-        25 => '25',
-        50 => '50',
-    ];
-    $p->choices($choices);
-    $p->default($self->default_weblog_depth);
+    $p->choices($self->_choices($data));
+    $p->default($data->{default_setting});
+
     return $p;
+}
+
+sub weblog_url {
+    my $self = shift;
+    my $tag = shift;
+    my $encoded = $self->hub->pages->title_to_uri($tag);
+
+    return '/'.$self->hub->current_workspace->name
+        .'/?action=blog_display;tag='.$encoded;
 }
 
 sub weblogs_create {
@@ -148,6 +170,7 @@ sub create_weblog {
     my $blog_tag = shift;
 
     $blog_tag =~ s/^\s+|\s+$//g;
+    $blog_tag = Socialtext::Encode::ensure_is_utf8($blog_tag);
 
     # reset errors to get around the fact that errors is effectively 
     # class level because all the object methods in plugins aren't 
@@ -183,7 +206,6 @@ sub create_weblog {
     my $content = loc("blog.first-post-body=tag", $blog_tag);
     $rev->body_ref(\$content);
     $first_post->store( user => $self->hub->current_user );
-
     return $blog_tag;
 }
 

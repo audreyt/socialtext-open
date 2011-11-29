@@ -3,6 +3,7 @@
 use warnings;
 use strict;
 use Test::Socialtext;
+use Module::Load;
 use lib "$ENV{ST_SRC_BASE}/current/socialtext-reports/lib";
 
 my @modules = all_modules();
@@ -15,7 +16,12 @@ sub main {
     for (@modules) {
         SKIP: {
             skip "$_ Doesn't compile.", 1 if module_doesnt_compile();
-            use_ok($_);
+            if (eval { load $_; 1 }) {
+                pass "$_ loaded";
+            }
+            else {
+                like(`$^X -Ilib -m$_ -e 'print q[OK]'`, qr/OK/, "use $_");
+            }
         }
     }
 }

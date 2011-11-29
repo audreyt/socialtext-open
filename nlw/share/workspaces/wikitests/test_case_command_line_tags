@@ -1,69 +1,33 @@
 | *Comment* | STARTING Test Case: Command Line TAGS |  |
 
-| *Comment* | Test Case: Command Line TAGS Setup |  |
-| set | cmd_tag_workspace | c_tag_ws_%%start_time%% |
-| st-admin | create-workspace --empty --name %%cmd_tag_workspace%% --title %%cmd_tag_workspace%% --empty | A new workspace named "%%cmd_tag_workspace%%" was created |
-| st-admin | add-member --email %%email%% --workspace %%cmd_tag_workspace%% | qr/now has the role of 'member' in the %%cmd_tag_workspace%% workspace/ism |
+| *Comment* | Test Case: Command Line TAGS Setup |  |  |  |
+| set | cmd_tag_workspace | c_tag_ws_%%start_time%% |  |  |
+| st-admin | create-workspace --empty --name %%cmd_tag_workspace%% --title %%cmd_tag_workspace%% --empty | A new workspace named "%%cmd_tag_workspace%%" was created |  |  |
+| st-admin | add-member --email %%email%% --workspace %%cmd_tag_workspace%% | qr/now has the role of 'member' in the %%cmd_tag_workspace%% workspace/ism |  |  |
 
-| *Comment* | Test Case: Command Line TAGS Create Page 1 |  |
-| open_ok | /%%cmd_tag_workspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | st-newpage-pagename-edit | Command Line Tag 1 %%start_time%% |
-| type_ok | wikiwyg_wikitext_textarea | Tag 1 Content Page %%start_time%% |
+| *Comment* | Test Case: Command Line TAGS Create Page 1 |  |  |  |
 
-| *Comment* | Test Case: Command Line TAGS Tag Page 1 in edit mode three times |  |
-| wait_for_element_visible_ok | st-edit-mode-tagbutton | 30000 |
-| click_ok | st-edit-mode-tagbutton |  |
-| wait_for_element_visible_ok | st-tagqueue-field | 30000 |
-| type_ok | st-tagqueue-field | Tag 1 %%start_time%% |
-| wait_for_element_visible_ok | st-tagqueue-addbutton | 30000 |
-| click_ok | st-tagqueue-addbutton |  |
-| type_ok | st-tagqueue-field | Super Tag %%start_time%% |
-| click_ok | st-tagqueue-addbutton |  |
-| type_ok | st-tagqueue-field | TagYoYoYo %%start_time%% |
-| click_ok | st-tagqueue-addbutton |  |
-| click_ok | st-tagqueue-close |  |
+| st-create-page | %%cmd_tag_workspace%% | Command Line Tag 1 %%start_time%% | Tag 1 Content Page %%start_time%% |  |
+| st-process-jobs |  |  |  |  |
+| open_ok | /%%cmd_tag_workspace%%/Command_Line_Tag_1_%%start_time%% |  |  |  |
+| call | [st-tag-page] | tag_to_apply=Tag 1 %%start_time%% |  |  |
+| call | [st-tag-page] | tag_to_apply=Super Tag %%start_time%% |  |  |
+| call | [st-tag-page] | tag_to_apply=TagYoYoYo %%start_time%% |  |  |
 
-| *Comment* | Test Case: Command Line TAGS Tag save Page 1 |  |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| clickAndWait | st-save-button-link |  |
-| wait_for_element_present_ok | st-edit-button-link |  |
+| *Comment* | Test Case: Command Line: TAGS Create Page 2 |  |  |  |
 
-| *Comment* | Test Case: Command Line: TAGS Create Page 2 |  |
-| open_ok | /%%cmd_tag_workspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | st-newpage-pagename-edit | Command Line Tag 2 %%start_time%% |
-| type_ok | wikiwyg_wikitext_textarea | Tag 2 Content Page %%start_time%% |
-
-| *Comment* | Test Case: Command Line TAGS Tag Page 2 in edit mode three times |  |
-| wait_for_element_visible_ok | st-edit-mode-tagbutton | 30000 |
-| click_ok | st-edit-mode-tagbutton |  |
-| wait_for_element_visible_ok | st-tagqueue-field | 30000 |
-| type_ok | st-tagqueue-field | Tag 2 %%start_time%% |
-| wait_for_element_visible_ok | st-tagqueue-addbutton | 30000 |
-| click_ok | st-tagqueue-addbutton |  |
-| type_ok | st-tagqueue-field | indeed %%start_time%% |
-| click_ok | st-tagqueue-addbutton |  |
-| type_ok | st-tagqueue-field | tambourine %%start_time%% |
-| click_ok | st-tagqueue-addbutton |  |
-| click_ok | st-tagqueue-close |  |
-
-| *Comment* | Test Case: Command Line TAGS Tag save Page 2 |  |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| clickAndWait | st-save-button-link |  |
-| wait_for_element_present_ok | st-edit-button-link |  |
+| st-create-page | %%cmd_tag_workspace%% | Command Line Tag 2 %%start_time%% | Tag 2 Content Page %%start_time%% |  |
+| st-process-jobs |  |  |  |  |
+| open_ok | /%%cmd_tag_workspace%%/command_line_tag_2_%%start_time%% |  |  |  |
+| call | [st-tag-page] | tag_to_apply=Tag 2 %%start_time%% |  |  |
+| call | [st-tag-page] | tag_to_apply=indeed %%start_time%% |  |  |
+| call | [st-tag-page] | tag_to_apply=tambourine %%start_time%% |  |  |
 
 delete-tag
 tag-search
 
 | *Comment* | Test Case: Command Line: TAGS process all jobs, then teardown |  |
-| st-process-jobs | |  |
+| st-process-jobs |  |  |
 
 | *Comment* | Test Case: Command Line: TAGS tag-search 1 |  |
 | st-admin | search-tags --workspace %%cmd_tag_workspace%% --tag "Tag 2 %%start_time%%" | Tag 2 %%start_time%% |

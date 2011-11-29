@@ -19,7 +19,7 @@ DATA_URL_DOEST_NOT_MATCH_INCORRECT_THINGS: {
 }
 
 DATA_URL_DOEST_NOT_MATCH_INCORRECT_THINGS2: {
-    my $req = FakeRequest->new( uri => "/i/love/datacow/index.cgi" );
+    my $req = FakeRequest->new( uri => "/st/love/datacow/index.cgi" );
     my $ra = Socialtext::Handler::REST->new( request => 1 );
     $ra->loadResource( $req->uri );
     my %headers = $ra->header;

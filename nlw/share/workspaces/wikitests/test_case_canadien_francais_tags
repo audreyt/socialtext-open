@@ -2,7 +2,6 @@
 
 * Fixture: SocialWidgets
 
-
 | *Comment* | Test Case: Canadien Francais Tags - Create ws, user, acct |  |
 | set | acct | cfpages%%start_time%% |
 | set | ws | cfpages%%start_time%% |
@@ -21,7 +20,6 @@
 | set | tagN | nunmanuma%%start_time%% |
 | set | tagX | Xylophone%%start_time%% |
 | set | user | cfuser%%start_time%%@matt.socialtext.net |
-
 
 | *Comment* | Test Case: Canadien Francais Tags - Login, go to %%ws%%, add tags |  |
 | st-logoutin | %%user%% | %%password%% |
@@ -48,7 +46,6 @@
 | st-process-jobs |  |  |
 | setSpeed | 0 |  |
 
-
 | *Comment* | Test Case: Canadien Francais Tags - see tags in order on the page |  |
 | open_ok | /%%ws%% |  |
 | wait_for_element_visible_ok | link=%%tagA%% | 30000 |
@@ -56,30 +53,23 @@
 
 | *Comment* | Test Case: Canadien Francais Tags Test Sorting for Page in All Tags |  |
 | open_ok | /%%ws%%/?action=category_list |  |
-| wait_for_element_visible_ok | link=%%tagA%% | 30000 |
-| text_like | //body | qr/%%tagAA%%.+%%tagA%%.+%%tagL%%.+%%tagM%%.+%%tagN%%.+%%tagX%%/ |
-
-| wait_for_element_visible_ok | link=What's New | 30000 |
-| click_and_wait | link=What's New |  |
-| wait_for_element_visible_ok | link=All Tags | 30000 |
-| click_and_wait | link=All Tags |  |
-| wait_for_element_visible_ok | link=%%tagA%% | 30000 |
-| wait_for_element_visible_ok | link=%%tagL%% | 30000 |
+| wait_for_element_visible_ok | link=%%tagA%% | 15000 |
+| wait_for_element_visible_ok | link=%%tagL%% | 15000 |
 | text_like | //body | qr/%%tagAA%%.+%%tagA%%.+%%tagL%%.+%%tagM%%.+%%tagN%%.+%%tagX%%/ |
 
 | *Comment* | Test Case: Canadien Francais Tags Now Tag /me/ |  |  |
 | call | [st-tag-user] | find_user_short=%%user_short%% | tag_to_apply=%%tagX%% |
-| pause | 3000 |  |
+| pause | 3000 |  |  |
 | call | [st-tag-user] | find_user_short=%%user_short%% | tag_to_apply=%%tagM%% |
-| pause | 3000 |  |
+| pause | 3000 |  |  |
 | call | [st-tag-user] | find_user_short=%%user_short%% | tag_to_apply=%%tagL%% |
-| pause | 3000 |  |
+| pause | 3000 |  |  |
 | call | [st-tag-user] | find_user_short=%%user_short%% | tag_to_apply=%%tagN%% |
-| pause | 3000 |  |
+| pause | 3000 |  |  |
 | call | [st-tag-user] | find_user_short=%%user_short%% | tag_to_apply=%%tagA%% |
-| pause | 3000 |  |
+| pause | 3000 |  |  |
 | call | [st-tag-user] | find_user_short=%%user_short%% | tag_to_apply=%%tagAA%% |
-| pause | 3000 |  |
+| pause | 3000 |  |  |
 
 | *Comment* | Test Case: Canadien Francais Tags Tag Order on my profile |  |
 | st-process-jobs |  |  |
@@ -94,4 +84,4 @@
 | st-admin | delete-workspace --no-export -w %%ws%% | has been deleted |
 | delete-account | %%acct%% |  |
 
-| *Comment* | Test Case: Canadien Francais Tags COMPLETED |
+| *Comment* | Test Case: Canadien Francais Tags COMPLETED |  |

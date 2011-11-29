@@ -8,10 +8,10 @@
 | type_ok | signals_size_limit | 400 |
 | click_and_wait | set_signals_size_limit |  |
 
-| *Comment* | Test Case: Change Signal Limit Create two accounts and two users |  |
+| *Comment* | Test Case: Change Signal Limit Create two accounts and one user |  |
 | set | onehundredlimit | one-hundred-limit-%%start_time%% |
 | set | twohundredlimit | twohundred-limit-%%start_time%% |
-| set | onehundreduser | `onehundreduser-%%start_time%%@ken.socialtext.net` |
+| set | onehundreduser | onehundreduser-%%start_time%%@ken.socialtext.net |
 
 | set | onehundredsignal | 3 5 7 9 12 15 18 21 24 27 30 33 36 39 42 45 48 51 54 57 60 63 66 69 72 75 78 81 84 87 90 93 96 |
 
@@ -32,12 +32,14 @@
 | st-admin | give-accounts-admin --email %%onehundreduser%% |  |
 
 | st_single_widget_in_dashboard | gallery-widget-Activities |  |
-| wait_for_text_present_ok | 400 | 20000 |
+| wait_for_element_present_ok | //div[@class="setupWikiwyg wikiwyg"] | 5000 |
+| click_ok | //div[@class="setupWikiwyg wikiwyg"] |  |
+| wait_for_text_present_ok | 400 | 5000 |
 | text_like | //div[@class='activitiesWidget']//div[@class='count'] | 400 |
 
 | *Comment* | Test Case: Change Signal Limit Send 200 and 440 char signals |  |
 | st-send-signal-in-activities-widget | %%twohundredsignal%% |  |
-| st-verify-text-within-activities-widget | %%twohundredsignal%% |  |
+| st-verify-text-in-activities-widget | %%twohundredsignal%% |  |
 | open_ok | /st/dashboard |  |
 | st-send-signal-in-activities-widget | %%fourfortysignal%% |  |
 
@@ -56,6 +58,8 @@
 | click_and_wait | set_signals_size_limit |  |
 
 | open_ok | /st/dashboard |  |
+| wait_for_element_present_ok | //div[@class="setupWikiwyg wikiwyg"] | 5000 |
+| click_ok | //div[@class="setupWikiwyg wikiwyg"] |  |
 | wait_for_text_present_ok | 300 | 20000 |
 | text_like | //div[@class='activitiesWidget']//div[@class='count'] | 300 |
 
@@ -79,6 +83,8 @@
 
 | *Comment* | Test Case: Change Signal Limit Verify limit is MIN(server, account) limit |  |
 | open_ok | /st/dashboard |  |
+| wait_for_element_present_ok | //div[@class="setupWikiwyg wikiwyg"] | 5000 |
+| click_ok | //div[@class="setupWikiwyg wikiwyg"] |  |
 | wait_for_text_present_ok | 100 | 20000 |
 | text_like | //div[@class='activitiesWidget']//div[@class='count'] | 100 |
 
@@ -90,6 +96,8 @@
 | click_and_wait | set_signals_size_limit |  |
 
 | open_ok | /st/dashboard |  |
+| wait_for_element_present_ok | //div[@class="setupWikiwyg wikiwyg"] | 5000 |
+| click_ok | //div[@class="setupWikiwyg wikiwyg"] |  |
 | wait_for_text_present_ok | 400 | 20000 |
 | text_like | //div[@class='activitiesWidget']//div[@class='count'] | 400 |
 
@@ -133,73 +141,29 @@
 | st-login | %%onehundreduser%% | %%password%% |
 
 | open_ok | /st/dashboard |  |
+| wait_for_element_present_ok | //div[@class="setupWikiwyg wikiwyg"] | 5000 |
+| click_ok | //div[@class="setupWikiwyg wikiwyg"] |  |
 | wait_for_text_present_ok | 100 | 20000 |
 | text_like | //div[@class='activitiesWidget']//div[@class='count'] | 100 |
 
-| st-send-signal-via-activities-widget | activities_widget | %%onehundredsignal%% |
-| st-verify-text-in-activities-widget | activities_widget | %%onehundredsignal%% |
 | open_ok | /st/dashboard |  |
-| st-send-signal-via-activities-widget | activities_widget | %%twohundredsignal%% |
+| st-send-signal-in-activities-widget | %%onehundredsignal%% |  |
+| st-verify-text-in-activities-widget | %%onehundredsignal%% |  |
 | open_ok | /st/dashboard |  |
-| st-send-signal-via-activities-widget | activities_widget | def 456 to get two hundred out of input box |
+| st-send-signal-in-activities-widget | %%twohundredsignal%% |  |
+| open_ok | /st/dashboard |  |
+| st-send-signal-in-activities-widget | def 456 to get two hundred out of input box |  |
 | st-text-unlike-in-activities-widget | activities_widget | %%twohundredsignal%% |
 | open_ok | /st/dashboard |  |
-| st-send-signal-via-activities-widget | activities_widget | %%twohundredsignal%% |
-| st-select-widget-frame | activities_widget |  |
+| st-send-signal-in-activities-widget | %%twohundredsignal%% |  |
 | wait_for_text_present_ok | Signal length limit is 100 | 20000 |
-| select-frame | relative=parent |  |
 
 | *Comment* | Test Case: Change Signal Limit On signals page, toggling account toggles limits |  |
 
-| *Comment* | Test Case: Change Signal Limit. Limit 100 in All Groups |  |
-| open_ok | /st/signals |  |
-| text_like | st-editing-tools-edit | Signals |
-
-| wait_for_element_present_ok | //ul[@id='st-dropdown-2-list']/li[1]/a | 20000 |
-| click_ok | //ul[@id='st-dropdown-2-list']/li[1]/a | 20000 |
-
-| open_ok | /?action=invite |  |
-| open_ok | /st/signals |  |
-
-| *Comment* | Test Case: Change Signal Limit. Test Limit 100 in All Groups |  |
-
-| wait_for_text_present_ok | 100 | 20000 |
-| text_like | //div[@class='activitiesWidget']//div[@class='count'] | 100 |
-
-| *Comment* | Test Case: Change Signal Limit. Limit 100 in %%onehundredlimit%% |  |
-
-| wait_for_element_present_ok | //ul[@id='st-dropdown-2-list']/li[2]/a | 20000 |
-| click_ok | //ul[@id='st-dropdown-2-list']/li[2]/a | 20000 |
-
-| open_ok | /?action=invite |  |
-| open_ok | /st/signals |  |
-
-| *Comment* | Test Case: Change Signal Limit. Test Limit 100 in %%onehundredlimit%% |  |
-| wait_for_text_present_ok | 100 | 20000 |
-| text_like | //div[@class='activitiesWidget']//div[@class='count'] | 100 |
-
-| *Comment* | Test Case: Change Signal Limit. Limit 200 in %%twohundredlimit%% |  |
-
-| wait_for_element_present_ok | //ul[@id='st-dropdown-2-list']/li[3]/a | 20000 |
-| click_ok | //ul[@id='st-dropdown-2-list']/li[3]/a | 20000 |
-
-| open_ok | /?action=invite |  |
-| open_ok | /st/signals |  |
-
-| *Comment* | Test Case: Change Signal Limit. Limit 200 in %%twohundredlimit%% |  |
-| wait_for_text_present_ok | 200 | 20000 |
-| text_like | //div[@class='activitiesWidget']//div[@class='count'] | 200 |
-
-| *Comment* | Test Case: Change Signal Limit. Test Limit 200 in %%twohundredlimit%% |  |
-| st-send-signal-via-activities-widget | signals_widget | %%onehundred_two%% |
-| text_unlike | //div[@class='activitiesWidget'] | Signal length limit is 100, please edit your Signal |
-
-| open_ok | /st/signals |  |
-| st-send-signal-via-activities-widget | signals_widget | %%fourfortysignal%% |
-| wait_for_text_present_ok | Signal length limit is 200 | 20000 |
-
 | *Comment* | Test Case: Change Signal Limit TEARDOWN |  |
-
-| st-admin | remove-system-admin --email %%username%% |  |
+| st-process-jobs |  |  |
+| deactivate-user | %%onehundreduser%% |  |
+| delete-account | %%onehundredlimit%% |  |
+| delete-account | %%twohundredlimit%% |  |
 
 | *Comment* | Test Case: Change Signal Limit COMPLETED |  |

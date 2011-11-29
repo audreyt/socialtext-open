@@ -1,3 +1,5 @@
+*On hold until a stopped server produces an error message when saving*
+
 | *Comment* | Test Case: Save Race Conditions |
 
 | *Comment* | Test Case: Save Race Conditions Variables |  |
@@ -12,28 +14,20 @@
 | st-admin | add-member --e %%lockuser%% --w %%ws%% | now has the role of 'member' in the |
 | st-admin | add-workspace-admin --e %%username%% --w %%ws%% | now has the role of 'admin' |
 
-| *Comment* | Test Case: Save Race Conditions Create pages |  |
-| st-admin | update-page --w %%ws%% --e %%username%% --p "%%pageone%%" < %%wikitest_client_files%%wikitest.txt | has been created |
-| st-admin | update-page --w %%ws%% --e %%username%% --p "%%lockmepage%%" < %%wikitest_client_files%%wikitest.txt | has been created |
+| *Comment* | Test Case: Save Race Conditions Create pages |  |  |  |
+| st-admin | update-page --w %%ws%% --e %%username%% --p "%%pageone%%" < %%wikitest_client_files%%wikitest.txt | has been created |  |  |
+| st-admin | update-page --w %%ws%% --e %%username%% --p "%%lockmepage%%" < %%wikitest_client_files%%wikitest.txt | has been created |  |  |
 
-| *Comment* | Test Case: Save Race Conditions - Save Button but webserver is down Wiki Page |  |
-| open_ok | /%%ws%%/?%%pageone%% |  |
-| wait_for_element_visible_ok | st-edit-button-link | 30000 |
-| click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | inserting some text |
+| *Comment* | Test Case: Save Race Conditions - Save Button but webserver is down Wiki Page |  |  |  |
+
+| call | [st-edit-no-save] | ws=%%ws%% | page=%%pageone%% | content=inserting some text |
 
 | st-stop-webserver |  |  |
 | click_ok | st-save-button-link |  |
 | pause | 10000 | needed to make sure alert pops up |
 | verifyAlert | Operation failed due to server error; please try again later. |  |
 | st-start-webserver |  |  |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| click_and_wait | st-save-button-link |  |
-| wait_for_element_visible_ok | st-edit-button-link | 30000 |
+| st-page-save |  |  |
 | wait_for_text_present_ok | inserting some text | 30000 |
 
 | *Comment* | Test Case: Save Race Conditions - Save Button, webserver is down SocialCalc Page |  |
@@ -58,16 +52,11 @@
 | click_and_wait | -savelink |
 | text_like | Page locking is enabled. |
 
-| *Comment* | Test Case: Save Race Conditions - Now try to save a locked page |  |
-| st-logoutin | %%lockuser%% | %%password%% |
-| open_ok | /%%ws%%/?%%lockmepage%% |  |
-| wait_for_element_visible_ok | st-edit-button-link | 30000 |
-| click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | some new text |
+| *Comment* | Test Case: Save Race Conditions - Now try to save a locked page |  |  |  |
+| st-logoutin | %%lockuser%% | %%password%% |  |  |
+
+| call | [st-edit-no-save] | ws=%%ws%% | page=%%lockmepage%% | content=some new text |
+
 | st-admin | lock-page --workspace %%ws%% --page %%lockmepage%% | Page '%%lockmepage%%' in workspace '%%ws%%' has been locked. |
 | click_ok | st-save-button-link |  |
 | pause | 10000 | needed to make sure alert pops up |
@@ -80,4 +69,4 @@ Please copy your changes, and click Cancel to return to the page. |  |
 | st-process-jobs | PageIndex | %%ws%% |
 | st-admin | delete-workspace --w %%ws%% --no-export | has been deleted |
 
-| *Comment* | Test Case: Save Race Conditions COMPLETED |
+| *Comment* | Test Case: Save Race Conditions COMPLETED |  |

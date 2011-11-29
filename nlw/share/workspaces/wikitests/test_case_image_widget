@@ -5,7 +5,7 @@
 
 | *Comment* | Test Case: Image Widget. Configure the widget |  |
 | st-name-widget | 1 | image |
-| st-widget-title-like | image | Image |
+| st-widget-title | image | Image |
 | st-widget-settings | image |  |
 | wait_for_element_visible_ok | //input[@name='src'] | 30000 |
 | type_ok | //input[@name='src'] | `http://sites.google.com/site/kenpier/_/rsrc/1227943334702/Home/ken_21_square.jpg` |
@@ -17,7 +17,7 @@
 
 | *Comment* | Test Case: Image Widget. Verify the widget |  |
 | wait_for_text_present_ok | Ken 21-%%start_time%% | 30000 |
-| st-widget-title-like | image | Ken 21-%%start_time%% |
+| st-widget-title | image | Ken 21-%%start_time%% |
 | wait_for_element_visible_ok | `//img[@src='http://sites.google.com/site/kenpier/_/rsrc/1227943334702/Home/ken_21_square.jpg']` | 10000 |
 
 | *Comment* | Test Case: Image Widget COMPLETED |  |

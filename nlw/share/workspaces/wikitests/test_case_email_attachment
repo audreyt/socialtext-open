@@ -1,76 +1,52 @@
 | *Comment* | Test Case: Email attachment |  |
 
-| st-admin | set-account-config --acc %%defaultaccount%% --index timezone date_display_format mmm_d_yyyy | Updated |
+* Fixture: SocialWidgets
 
-| open_ok | /%%workspace%%/?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | Original content %%start_time%% |
-| type_ok | st-newpage-pagename-edit | Email subject %%start_time%% |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+| st-admin | set-account-config --acc %%defaultaccount%% --index timezone date_display_format mmm_d_yyyy | Updated |  |
+| set | emtitle | EM Subject %%start_time%% |  |
+| set | emid | em_subject_%%start_time%% |  |
+| set | zip | wikitestzip.zip |  |
+| set | doc | wikitest.doc |  |
 
-| *Comment* | Test Case: Email attachment attach two things to the page |  |
-| wait_for_element_visible_ok | st-attachments-uploadbutton | 30000 |
-| click_ok | st-attachments-uploadbutton |  |
-| wait_for_text_present_ok | Upload Files | 30000 |
-| wait_for_text_present_ok | Maximum file size: 50MB | 30000 |
-| wait_for_element_visible_ok | st-attachments-attach-filename |  |
-| pause | 5000 |  |
-| type_ok | st-attachments-attach-filename | %%wikitest_files%%wikitestzip.zip |
-| wait_for_text_present_ok | Uploaded files: wikitestzip.zip | 30000 |
-| pause | 5000 |  |
-| type_ok | st-attachments-attach-filename | %%wikitest_files%%wikitest.doc |
-| wait_for_text_present_ok | Uploaded files: wikitestzip.zip, | 30000 |
-| wait_for_text_present_ok | wikitestzip.zip, wikitest.doc | 30000 |
-| wait_for_element_visible_ok | st-attachments-attach-closebutton | 120000 |
-| click_and_wait | st-attachments-attach-closebutton |  |
-| wait_for_element_visible_ok | st-attachment-listing | 30000 |
-| wait_for_element_visible_ok | //a[contains(@href,'original/wikitestzip.zip')] | 30000 |
-| text_like | //a[contains(@href,'original/wikitestzip.zip')] | wikitestzip.zip |
-| text_like | contentRight | qr/wikitestzip.zip.+\w\w\w\s+\d+,\s+\d+\s+\d+\:\d\d[ap]m by %%short_username%%/ |
-| wait_for_element_visible_ok | //a[contains(@href,'original/wikitest.doc')] | 30000 |
-| text_like | //a[contains(@href,'original/wikitest.doc')] | wikitest.doc |
-| text_like | contentRight | qr/wikitest.doc.+\w\w\w\s+\d+,\s+\d+\s+\d+\:\d\d[ap]m by %%short_username%%/ |
+| st-admin | update-page --email %%username%% --workspace %%workspace%% --page "%%emtitle%%" < %%wikitest_client_files%%wikitest.txt |  |  |
+
+| *Comment* |  | Test Case: Email attachment attach two things to the page |  |  |
+| call | [st-attach-file] | ws=%%workspace%% | title=%%emtitle%% | file=%%zip%% |
+| call | [st-attach-file] | ws=%%workspace%% | title=%%emtitle%% | file=%%doc%% |
+| text_like | st-display-mode-widgets | qr/%%zip%%.+\w\w\w\s+\d+,\s+\d+\s+\d+\:\d\d[ap]m\s+%%short_username%%/ |  |  |
+| text_like | st-display-mode-widgets | qr/%%doc%%.+\w\w\w\s+\d+,\s+\d+\s+\d+\:\d\d[ap]m\s+%%short_username%%/ |  |  |
 
 | *Comment* | Test Case: Email attachment overwrite the page content |  |
 | *Comment* | This must be done because attaching a file also places a link to it in the page content. When the page is emailed, this causes the file to be attached twice. |  |
 | click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | New content %%start_time%% |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+
+| call | [st-save-page] | content=EM New content %%start_time%% |
+
+| pause_ok | 10000 |  |
 
 | *Comment* | Test Case: Email attachment open the email-page |  |
-| wait_for_element_visible_ok | link=Email | 30000 |
-| click_ok | link=Email |  |
+| click_ok | //a[contains(@title,"Email this page")] |  |
 
-| *Comment* | Test Case: Email attachment test recipient lookahead, add receipients |  |
-| wait_for_element_visible_ok | email_recipient | 30000 |
-| type_lookahead_ok | email_recipient | %%short_username%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem'] | 30000 |
-| type_ok | email_recipient | %%workspace%%@%%wikiemail%% |
-| wait_for_element_visible_ok | email_add | 30000 |
-| click_ok | email_add |  |
-| text_like | email_page_user_choices | %%workspace%%@%%wikiemail%% |
+| *Comment* | Test Case: Email attachment test recipient lookahead, add receipients |  |  |
+| wait_for_element_visible_ok | email_recipient | 30000 |  |
+| type_ok | email_recipient | %%workspace%%@%%wikiemail%% |  |
+| wait_for_element_visible_ok | email_add | 15000 |  |
+| click_ok | email_add |  |  |
+| text_like | email_page_user_choices | %%workspace%%@%%wikiemail%% |  |
 
 | *Comment* | Test Case: Email attachment Email Note, Attachments, and Subject |  |
 | text_like | email_page_add_note | Hello, this is a page from the workspace that I wanted you to see. This page is also available for viewing or editing on the web at: |
-| text_like | email_page_add_note | /%%workspace%%/email_subject_%%start_time%% |
-| wait_for_element_visible_ok | email_page_add_note | 30000 |
-| type_ok | email_page_add_note | Note %%start_time%% from Test Case: Email attachment |
-| wait_for_element_visible_ok | //input[@name='email_page_subject'] | 30000 |
+| text_like | email_page_add_note | /%%workspace%%/%%emid%% |
+| wait_for_element_visible_ok | email_page_add_note | 15000 |
+| type_ok | email_page_add_note | Added Note %%start_time%% from Test Case: Email Attachment |
+| wait_for_element_visible_ok | //input[@name='email_page_subject'] | 15000 |
 | type_ok | //input[@name='email_page_subject'] | emailed page %%start_time%% |
-| wait_for_element_visible_ok | email_page_keep_attachments | 30000 |
+| wait_for_element_visible_ok | email_page_keep_attachments | 15000 |
 | check_ok | email_page_keep_attachments |  |
 | is_checked_ok | email_page_keep_attachments |  |
 
 | *Comment* | Test Case: Email attachment email sending page to %%workspace%%@%%wikiemail%% |  |
-| wait_for_element_visible_ok | email_send | 30000 |
+| wait_for_element_visible_ok | email_send | 15000 |
 | click_ok | email_send |  |
 
 | *Comment* | Pausing 90 seconds for email delivery, then index page |  |
@@ -78,43 +54,39 @@
 | st-admin | index-page --workspace %%workspace%% --page emailed_page_%%start_time%% |  |
 
 | *Comment* | Test Case: Email attachment email Check Reception with HTML attachment and two other attachments |  |
-| open_ok | /%%workspace%%/index.cgi?emailed page %%start_time%% |  |
+| open_ok | /%%workspace%%/emailed page %%start_time%% |  |
 | text_like | st-page-titletext | emailed page %%start_time%% |
-| text_like | contentContainer | Note %%start_time%% from Test Case: Email |
-| wait_for_element_visible_ok | link=wikitestzip.zip | 30000 |
-| wait_for_element_visible_ok | link=wikitest.doc | 30000 |
-| text_like | st-attachment-listing | wikitestzip.zip |
-| text_like | st-attachment-listing | wikitest.doc |
-| type_ok | st-search-term | "Note %%start_time%%" |
+| text_like | content | Added Note %%start_time%% from Test Case: Email Attachment |
+| wait_for_element_visible_ok | link=%%zip%% | 15000 |
+| wait_for_element_visible_ok | link=%%doc%% | 15000 |
+| type_ok | st-search-term | "Added Note %%start_time%%" |
 | click_and_wait | st-search-submit |  |
-| text_like | contentContainer | qr/emailed\s*page\s*%%start_time%%\s*in\s*%%title%%/ |
-| text_like | contentContainer | qr/attached\s*to\s*page\s*emailed\s*page\s*%%start_time%%/i |
-| pause | 10000 |  |
+| text_like | content | qr/emailed\s*page\s*%%start_time%%\s*in\s*%%title%%/ |
+| text_like | content | qr/attached\s*to\s*page\s*emailed\s*page\s*%%start_time%%/i |
 
 | *Comment* | Test Case: Email attachment Deleting zip attachment |  |
-| open_ok | /%%workspace%%/index.cgi?emailed page %%start_time%% |  |
-| click_ok | //a[contains(@title,'Delete this attachment')] |  |
-| wait_for_element_visible_ok | link=Delete | 30000 |
-| click_ok | link=Delete |  |
-| wait_for_element_not_visible_ok | link=Delete | 30000 |
+| open_ok | /%%workspace%%/emailed page %%start_time%% |  |
+| wait_for_element_visible_ok | //a[contains(@href,'%%zip%%') and contains(@class,"delete_icon")] | 10000 |
+| click_ok | //a[contains(@href,'%%zip%%') and contains(@class,"delete_icon")] |  |
+| wait_for_element_visible_ok | st-attachment-delete | 10000 |
+| click_ok | st-attachment-delete |  |
+| wait_for_element_not_present_ok | st-attachment-delete | 10000 |
 
 | *Comment* | Test Case: Email attachment Search for attachment page and verify no attachment |  |
 | *Comment* | Test Case: Email attachment Process jobs |  |
 | st-process-jobs |  |  |
 
-| wait_for_element_visible_ok | st-search-action | 30000 |
-| select_ok | st-search-action | label=Search This Workspace: |
-| wait_for_element_visible_ok | st-search-term | 30000 |
-| wait_for_element_visible_ok | st-search-submit | 30000 |
-| type_ok | st-search-term | "wikitestzip.zip" |
+| wait_for_element_visible_ok | st-search-term | 15000 |
+| wait_for_element_visible_ok | st-search-submit | 15000 |
+| type_ok | st-search-term | %%zip%% |
 | click_and_wait | st-search-submit |  |
-| wait_for_text_present_ok | Pages matching '"wikitestzip.zip"' | 30000 |
-| text_like | contentContainer | Email subject %%start_time%% |
-| text_unlike | contentContainer | emailed page %%start_time%% |
+| wait_for_text_present_ok | Pages matching '%%zip%%' | 30000 |
+| text_like | content | EM Subject %%start_time%% |
+| text_unlike | content | emailed page %%start_time%% |
 
 | *Comment* | Test Case: Email attachment TEARDOWN |  |
 | st-process-jobs |  |  |
-| st-admin | purge-page --w %%workspace%% --page email_subject_%%start_time%% | was purged |
+| st-admin | purge-page --w %%workspace%% --page em_subject_%%start_time%% | was purged |
 | st-admin | purge-page --w %%workspace%% --page emailed_page_%%start_time%% | was purged |
 
-| *Comment* | Test Case: Email attachment COMPLETED |
+| *Comment* | Test Case: Email attachment COMPLETED |  |

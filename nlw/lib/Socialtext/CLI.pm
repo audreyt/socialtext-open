@@ -1685,7 +1685,17 @@ sub remove_workspace_admin {
         }
     );
     my $type = $self->_type_of_entity_collection_operation(keys %jump);
-    return $jump{$type}->();
+    my $rv = eval { $jump{$type}->() };
+
+    if ( my $e = Exception::Class->caught('Socialtext::Exception::User') ) {
+        if ($e->error eq 'ADMIN_REQUIRED') {
+            my $user = $self->_require_user();
+            return $self->_error(loc('error.removing-last-wiki-admin=user', $user->username));
+        };
+        return $self->_error($e);
+    }
+
+    return $rv;
 }
 
 sub add_account_admin {
@@ -2280,6 +2290,29 @@ sub set_account_config {
         'The account config for ' . $account->name() . ' has been updated.' );
 }
 
+sub set_account_theme {
+    my $self = shift;
+    my $account = $self->_require_account;
+    my $updates = {};
+
+    # This block (including the remove_tree one) may belong to
+    # Socialtext::Account as an ->update_theme method...
+    require Socialtext::Theme;
+    while ( my ($key, $value) = splice @{ $self->{argv} }, 0, 2 ) {
+        $updates->{$key} = $value;
+        unless (Socialtext::Theme->ValidSettings($updates)) {
+            my $error = "Invalid theme setting: $key = $value";
+            if (my @values = Socialtext::Theme->ValidValuesForKey($key)) {
+                $error .= "\nValid values:\n\n" . join("\n", map { "    $_" } @values);
+            }
+            return $self->_error($error);
+        }
+    }
+    $account->update_theme_prefs($updates);
+    $self->_success(
+        'The account theme for ' . $account->name() . ' has been updated.' );
+}
+
 sub _update_account_prefs {
     my $self = shift;
     my $account = shift;
@@ -2288,7 +2321,7 @@ sub _update_account_prefs {
     my $prefs = $account->prefs->all_prefs->{$index};
 
     while (my ($key,$value) = splice(@{$self->{argv}}, 0, 2)) {
-        $prefs->{$key} = $value;
+        $prefs->{$key} = $value eq '-null-' ? undef : $value;
     }
 
     if ($index eq 'theme') {
@@ -3403,11 +3436,6 @@ sub invite_user {
     $self->_error('You must specify an invitee email address')
         if (!$opts{email});
 
-    $self->_ensure_email_passes_filters(
-        $opts{email},
-        { account => $workspace->account, workspace => $workspace },
-    );
-
     $self->_error('You must specify an inviter email address')
         if (!$opts{from});
 
@@ -3426,16 +3454,33 @@ sub invite_user {
         );
     }
 
-    require Socialtext::WorkspaceInvitation;
+    eval {
+        require Socialtext::WorkspaceInvitation;
 
-    my $invitation = Socialtext::WorkspaceInvitation->new(
-        workspace => $workspace,
-        from_user => $from_user,
-        invitee   => $opts{email},
-        extra_text => '',
-        viewer => undef
-    );
-    $invitation->send();
+        my $invitation = Socialtext::WorkspaceInvitation->new(
+            workspace => $workspace,
+            from_user => $from_user,
+            invitee   => $opts{email},
+            extra_text => '',
+            viewer => undef
+        );
+
+        $invitation->send();
+    };
+    if (my $e = $@) {
+        my $message = 'Invite failed for email address [_1] : [_2]';
+        my $reason = '';
+        if (Exception::Class->caught('Socialtext::Exception::User')) {
+            $reason = 'DELETED USER';
+        }
+        elsif (Exception::Class->caught('Socialtext::Exception::EmailAddress')) {
+            $reason = $e->message;
+        }
+        else {
+            $reason = $e;
+        }
+        $self->_error( loc($message, $opts{email}, $reason));
+    }
 
     $self->_success(
         'An invite has been sent to "' . $opts{email}
@@ -4206,6 +4251,7 @@ Socialtext::CLI - Provides the implementation for the st-admin CLI script
   import-account --directory [--name] [--noindex]
   set-account-config --account <key> <value>
   show-account-config --account
+  set-account-theme --account <key> <value>
   reset-account-skin --account <account> --skin <skin>
 
   PLUGINS
@@ -4816,6 +4862,13 @@ the command line.
 
 Given a valid account, this shows all key/value pair combinations for
 that account.
+
+=head2 set-account-theme --account <key> <value>
+
+Given a valid theme preference key, this sets the value of the
+key for the specified account's theme.
+
+You can pass multiple key value pairs on the command line.
 
 =head2 reset-account-skin --account --skin <skin>
 

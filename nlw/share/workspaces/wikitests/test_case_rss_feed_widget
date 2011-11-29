@@ -7,39 +7,41 @@
 
 | *Comment* | Test Case: RSS Feed Widget. Set the widget |  |
 | st-name-widget | 1 | rss_feed |
-| st-widget-title-like | rss_feed | Enterprise Social Software Blog |
+| st-widget-title | rss_feed | Enterprise Social Software Blog |
 | st-widget-settings | rss_feed |  |
 | wait_for_element_visible_ok | rss_feed | 30000 |
 | type_ok | rss_feed | http://use.perl.org/~heusserm/journal/rss |
-| wait_for_element_visible_ok | st-savebutton-%%rss_feed%% | 30000 |
+| wait_for_element_visible_ok | st-savebutton-%%rss_feed%% | 15000 |
 | click_ok | st-savebutton-%%rss_feed%% |  |
-| wait_for_element_not_visible_ok | st-savebutton-%%rss_feed%% | 30000 |
+| wait_for_element_not_visible_ok | st-savebutton-%%rss_feed%% | 15000 |
 
 | *Comment* | Test Case: RSS Feed Widget. View the widget |  |
+| open_ok | /st/dashboard |  |
 | wait_for_text_present_ok | heusserm's Journal | 30000 |
-| st-widget-title-like | rss_feed | heusserm's Journal |
+| st-name-widget | 1 | rss_feed |
+| is_element_present_ok | //div[@class='widgetTitle']/h1[contains(text(),"heusserm's Journal")] |  |
 | st-select-widget-frame | rss_feed |  |
 | wait_for_element_visible_ok | link=Agile Project Management | 30000 |
-| wait_for_element_visible_ok | link=Emerson | 3000 |
-| wait_for_element_visible_ok | link=... | 3000 |
-| wait_for_text_present_ok | the new Highsmith book | 30000 |
+| wait_for_element_visible_ok | link=Emerson | 15000 |
+| wait_for_element_visible_ok | link=... | 15000 |
+| wait_for_text_present_ok | the new Highsmith book | 15000 |
 | text_unlike | //body | the book is best framed as an introduction |
 | select-frame | relative=parent |  |
 
 | *Comment* | Test Case: RSS Feed Widget. Unlimited view |  |
 | st-widget-settings | rss_feed |  |
-| wait_for_element_visible_ok | max_desc | 30000 |
+| wait_for_element_visible_ok | max_desc | 15000 |
 | select_ok | max_desc | Unlimited |
-| wait_for_element_visible_ok | st-savebutton-%%rss_feed%% | 30000 |
+| wait_for_element_visible_ok | st-savebutton-%%rss_feed%% | 15000 |
 | click_ok | st-savebutton-%%rss_feed%% |  |
-| wait_for_element_not_visible_ok | st-savebutton-%%rss_feed%% | 30000 |
+| wait_for_element_not_visible_ok | st-savebutton-%%rss_feed%% | 15000 |
 
 | *Comment* | Test Case: RSS Feed Widget. See unlimited view |  |
 | st-select-widget-frame | rss_feed |  |
 | wait_for_element_visible_ok | link=Agile Project Management | 30000 |
-| wait_for_element_visible_ok | link=Emerson | 30000 |
-| wait_for_text_present_ok | the new Highsmith book | 30000 |
-| wait_for_text_present_ok | the book is best framed as an introduction | 30000 |
+| wait_for_element_visible_ok | link=Emerson | 15000 |
+| wait_for_text_present_ok | the new Highsmith book | 15000 |
+| wait_for_text_present_ok | the book is best framed as an introduction | 15000 |
 | select-frame | relative=parent |  |
 
-| *Comment* | Test Case: RSS Feed Widget COMPLETED |
+| *Comment* | Test Case: RSS Feed Widget COMPLETED |  |

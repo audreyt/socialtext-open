@@ -1,0 +1,18 @@
+#!/opt/perl/5.12.2/bin/perl
+
+use strict;
+use warnings;
+
+use Socialtext::JavaScript::Builder;
+use Socialtext::Paths;
+use File::Path qw(remove_tree);
+
+
+# Rebuild Javascript
+my $b = Socialtext::JavaScript::Builder->new(verbose => 1);
+$b->clean();
+$b->build();
+
+# Clean out themes cache
+my $theme_dir = Socialtext::Paths::cache_directory('theme');
+remove_tree($theme_dir, {verbose => 1, keep_root => 1});

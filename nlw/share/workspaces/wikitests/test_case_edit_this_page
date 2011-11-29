@@ -1,251 +1,217 @@
-
 | *Comment* | Starting Test Case: Edit This Page |  |
-| *Comment* | %%username%% - %%email%% - %%short_username%% |  |
-
-
-
-
 
 | *Comment* | Test Case: Edit This Page wants Dashboard |  |
 | st-admin | enable-plugin --account %%hostname%% --p dashboard |  |
 
-| *Comment* | Test Case: Edit This Page content |  |
-| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | st-newpage-pagename-edit | Edit This Page %%start_time%% |
-| type_ok | wikiwyg_wikitext_textarea | Edit This Page content %%start_time%% |
+| set | epause | 3000 |
 
-| *Comment* | Test Case: Edit This Page Expand/Normal test |  |
-| wait_for_element_visible_ok | link=Expand | 30000 |
-| click_ok | link=Expand |  |
-| wait_for_element_visible_ok | link=Normal | 10000 |
-| click_ok | link=Normal |  |
-| wait_for_element_visible_ok | link=Expand | 10000 |
+| *Comment* | Test Case: Edit This Page cancel edit WIKI mode |  |
 
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
-
-| *Comment* | Test Case: Edit This Page verify editing buttons |  |
-| wait_for_element_visible_ok | st-edit-button-link | 30000 |
-| click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| text_like | st-save-button-link | Save |
-| text_like | st-preview-button-link | Preview |
-| text_like | st-cancel-button-link | Cancel |
-| text_like | st-mode-wysiwyg-button | Rich Text |
-| text_like | st-mode-wikitext-button | Wiki Text |
-| text_like | st-edit-tips | (?) |
-| verify_value | wikiwyg_wikitext_textarea | Edit This Page content %%start_time%% |
-
-| *Comment* | Edit This Page Checking Preview/Edit |  |
-| text_like | st-preview-button-link | Preview |
-| click_ok | st-preview-button-link |  |
-| wait_for_element_visible_ok | st-page-preview | 30000 |
-| text_like | st-page-preview | Edit This Page content %%start_time%% |
-| text_like | st-preview-button-link | Edit More |
-| click_ok | st-preview-button-link |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| verify_value | wikiwyg_wikitext_textarea | Edit This Page content %%start_time%% |
-| text_like | st-preview-button-link | Preview |
-
-| *Comment* | Test Case: Edit This Page from Preview to Simple |  |
-| click_ok | st-preview-button-link |  |
-| wait_for_element_visible_ok | st-page-preview | 30000 |
-| text_like | st-preview-button-link | Edit More |
-| click_ok | link=Rich Text |  |
-
-| *Comment* | Test Case: Edit This Page. No choice but to wait for Rich Text mode to render |  |
-| pause | 5000 | Don't take this out or IE will fail |
-| wait_for_element_visible_ok | st-page-editing-toolbar | 30000 |
-
-| *Comment* | Test Case: Edit This Page from Preview to Advanced |  |
-| text_like | st-preview-button-link | Preview |
-| click_ok | st-preview-button-link |  |
-| wait_for_element_visible_ok | st-page-preview | 30000 |
-| text_like | st-preview-button-link | Edit More |
-| click_ok | link=Wiki Text |  |
-
-| *Comment* | Test Case: Edit This Page. No choice but to wait for Wiki Text mode to render |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| pause | 5000 | Don't take this out or IE will fail |
-| verify_value | wikiwyg_wikitext_textarea | Edit This Page content %%start_time%% |
-| text_like | st-preview-button-link | Preview |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
-
-| *Comment* | Test Case: Edit This Page cancel edit Advanced mode |  |
-| wait_for_element_visible_ok | st-edit-button-link | 30000 |
-| click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | abcdefg |
+| call | [st-edit-new-page] | ws=%%workspace%% | title=New Page %%start_time%% | content=Edit This Page content %%start_time%% |
+| open_ok | /?action=workspaces_listall |  |  |  |
+| call | [st-edit-no-save] | ws=%%workspace%% | page=New Page %%start_time%% | content=abcdefg |
 
 | *Comment* | JUST TYPED abcdefg |  |
-| pause | 5000 |  |
 | chooseCancelOnNextConfirmation |  |  |
 | click_ok | st-cancel-button-link |  |
 
 | *Comment* | Test Case: Edit This Page Cancel and keep unsaved edits |  |
 | *Comment* | NOTE: in order cancel a Confirmation popup, acknowledge it with "confirmation_is" |  |
-| confirmation_is | Are you sure you want to cancel?\n\nYou have unsaved changes.\n\nPress OK to continue, or Cancel to stay on the current page. |  |
+| confirmation_is | Are you sure you want to navigate away from this page?\n\nYou have unsaved changes.\n\nPress OK to continue, or Cancel to stay on the current page. |  |
 
 | *Comment* | Test Case: Edit This Page verify edit buffer not lost |  |
-| verifyValue | wikiwyg_wikitext_textarea | abcdefg |
+| verifyValue | //textarea[contains(@class,"cke_source")] | abcdefg |
 
 | *Comment* | Test Case: Edit This Page Cancel and lose unsaved edits |  |
 | click_ok | st-cancel-button-link |  |
-| verifyConfirmation | Are you sure you want to cancel?\n\nYou have unsaved changes.\n\nPress OK to continue, or Cancel to stay on the current page. |  |
+| verifyConfirmation | Are you sure you want to navigate away from this page?\n\nYou have unsaved changes.\n\nPress OK to continue, or Cancel to stay on the current page. |  |
 
 | *Comment* | Test Case: Edit This Page verify edit canceled |  |
 | wait_for_element_visible_ok | st-page-content | 30000 |
-| text_like | st-page-content | Edit This Page content %%start_time%% |
+| wait_for_text_present_ok | Edit This Page content %%start_time%% | 10000 |
+
+| *Comment* | Test Case: Edit This Page content |  |  |  |
+| call | [st-edit-fill-page] | ws=%%workspace%% | title=Edit This Page %%start_time%% | content=Edit This Page content %%start_time%% |
+
+| *Comment* | Test Case: Edit This Page Expand/Normal test |  |  |  |
+| wait_for_element_visible_ok | st-edit-pagetools-expand | 30000 |  |  |
+| click_ok | st-edit-pagetools-expand |  |  |  |
+| wait_for_element_visible_ok | link=Normal | %%epause%% |  |  |
+| click_ok | link=Normal |  |  |  |
+| wait_for_element_visible_ok | link=Expand | %%epause%% |  |  |
+| wait_for_element_visible_ok | st-save-button-link | %%epause%% |  |  |
+
+| st-page-save |  |  |  |  |
+
+| wait_for_text_present_ok | Edit This Page content %%start_time%% | 30000 |  |  |
+
+| *Comment* | Test Case: Edit This Page verify editing buttons |  |
+| wait_for_element_visible_ok | st-edit-button-link | 30000 |
+| click_ok | st-edit-button-link |  |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| text_like | st-save-button-link | Save |
+| text_like | st-preview-button-link | Preview |
+| text_like | st-cancel-button-link | Cancel |
+| wait_for_element_present_ok | //a[contains(@class,"cke_button_wikitext")] | %%epause%% |
+| click_and_pause | //a[contains(@class,"cke_button_wikitext")] | %%epause%% |
+| wait_for_element_present_ok | //textarea[contains(@class,"cke_source")] | %%epause%% |
+| verify_value | //textarea[contains(@class,"cke_source")] | Edit This Page content %%start_time%% |
+
+| *Comment* | Edit This Page Checking Preview/Edit |  |
+| text_like | st-preview-button-link | Preview |
+| click_and_pause | st-preview-button-link | %%epause%% |
+| wait_for_element_visible_ok | st-xhtml-preview | 10000 |
+| text_like | st-xhtml-preview | Edit This Page content %%start_time%% |
+| text_like | st-preview-button-link | Edit More |
+| click_and_pause | st-preview-button-link | %%epause%% |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 10000 |
+| verify_value | //textarea[contains(@class,"cke_source")] | Edit This Page content %%start_time%% |
+| text_like | st-preview-button-link | Preview |
+
+| *Comment* | Test Case: Edit This Page from Preview to RICH |  |
+| click_and_pause | st-preview-button-link | %%epause%% |
+| wait_for_element_visible_ok | st-xhtml-preview | 10000 |
+| text_like | st-preview-button-link | Edit More |
+| click_and_pause | st-preview-button-link | %%epause%% |
+| wait_for_element_present_ok | //a[contains(@class,"cke_button_wysiwyg")] | 15000 |
+| click_and_pause | //a[contains(@class,"cke_button_wysiwyg")] | %%epause%% |
+
+| *Comment* | Test Case: Edit This Page from Preview to WIKI |  |
+| text_like | st-preview-button-link | Preview |
+| click_and_pause | st-preview-button-link | %%epause%% |
+| wait_for_element_visible_ok | st-xhtml-preview | 10000 |
+| text_like | st-preview-button-link | Edit More |
+| click_and_pause | st-preview-button-link | %%epause%% |
+| wait_for_element_present_ok | //a[contains(@class,"cke_button_wikitext")] | %%epause%% |
+| click_and_pause | //a[contains(@class,"cke_button_wikitext")] | %%epause%% |
+
+| *Comment* | Test Case: Edit This Page. |  |
+| wait_for_element_present_ok | //textarea[contains(@class,"cke_source")] | %%epause%% |
+| verify_value | //textarea[contains(@class,"cke_source")] | Edit This Page content %%start_time%% |
+| text_like | st-preview-button-link | Preview |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| st-page-save |  |  |
 
 | *Comment* | Test Case: Edit This Page navigate away and back |  |
 | open_ok | /%%workspace%% |  |
-| open_ok | /%%workspace%%/?Edit This Page %%start_time%% |  |
-| pause | 8000 |  |
+| open_ok | /%%workspace%%/?Edit_This_Page_%%start_time%% |  |
 
 | *Comment* | Test Case: Edit This Page navigate away Advanced mode |  |
 | wait_for_element_visible_ok | st-edit-button-link | 30000 |
 | click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 30000 |
 
-| type_ok | wikiwyg_wikitext_textarea | hijklmno |
+| type_ok | //textarea[contains(@class,"cke_source")] | hijklmno |
+
 | chooseCancelOnNextConfirmation |  |  |
 
-| *Comment* | Use the Home link to navigate away. |  |
-
-| click_ok | st-home-link |  |
+| *Comment* | Use the Cancel button to navigate away. |  |
+| click_ok | st-cancel-button-link |  |
 
 | *Comment* | Test Case: Edit This Page Cancel navigate away and keep unsaved edits |  |
-
 | confirmation_is | Are you sure you want to navigate away from this page?\n\nYou have unsaved changes.\n\nPress OK to continue, or Cancel to stay on the current page. |  |
-| verifyValue | wikiwyg_wikitext_textarea | hijklmno |
+| verifyValue | //textarea[contains(@class,"cke_source")] | hijklmno |
 
-| *Comment* | Test Case: Edit This Page confirm Navigate away Advanced mode. Go HOME. |  |
+| *Comment* | Test Case: Edit This Page confirm Navigate away Advanced mode. |  |
 
-| click_ok | st-home-link |  |
+| click_ok | st-cancel-button-link |  |
 | verifyConfirmation | Are you sure you want to navigate away from this page?\n\nYou have unsaved changes.\n\nPress OK to continue, or Cancel to stay on the current page. |  |
-
-| *Comment* | Test Case: Edit This Page can it see HOME? |  |
-
-| wait_for_text_present_ok | Welcome | 30000 |
+| wait_for_element_visible_ok | st-edit-button-link | 30000 |
 
 | *Comment* | Test Case: Edit This Page navigate away and back |  |
 | open_ok | /%%workspace%% |  |
-| open_ok | /%%workspace%%/?Edit This Page %%start_time%% |  |
-| pause | 8000 |  |
+| open_ok | /%%workspace%%/?Edit_This_Page_%%start_time%% |  |
 
 | *Comment* | Test Case: Edit This Page Cancel Edit then keep Simple mode edits |  |
 | wait_for_element_visible_ok | st-edit-button-link | 30000 |
 | click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | Edit This Page Simple mode |
-| verifyValue | wikiwyg_wikitext_textarea | Edit This Page Simple mode |
-| click_ok | link=Rich Text |  |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 30000 |
+| type_ok | //textarea[contains(@class,"cke_source")] | Edit This Page Simple mode |
+| verifyValue | //textarea[contains(@class,"cke_source")] | Edit This Page Simple mode |
+| click_ok | //a[contains(@class,"cke_button_wysiwyg")] |  |
 | pause | 6000 | wait for Rich Text editor |
 | chooseCancelOnNextConfirmation |  |  |
 | click_ok | st-cancel-button-link |  |
 
 | *Comment* | Test Case: Edit This Page verify edit buffer kept in Simple mode |  |
 | *Comment* | NOTE: in order click Cancel on a Confirmation popup, acknowledge it with "confirmation_is" |  |
-| confirmation_is | Are you sure you want to cancel?\n\nYou have unsaved changes.\n\nPress OK to continue, or Cancel to stay on the current page. |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| verifyValue | wikiwyg_wikitext_textarea | Edit This Page Simple mode |
+| confirmation_is | Are you sure you want to navigate away from this page?\n\nYou have unsaved changes.\n\nPress OK to continue, or Cancel to stay on the current page. |  |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 30000 |
+| verifyValue | //textarea[contains(@class,"cke_source")] | Edit This Page Simple mode |
 
 | *Comment* | Test Case: Edit This Page cancel Simple mode edit and accept cancel |  |
-| click_ok | link=Rich Text |  |
+| click_ok | //a[contains(@class,"cke_button_wysiwyg")] |  |
 | pause | 6000 | wait for Rich Text editor |
 | click_ok | st-cancel-button-link |  |
-| verifyConfirmation | Are you sure you want to cancel?\n\nYou have unsaved changes.\n\nPress OK to continue, or Cancel to stay on the current page. |  |
+| verifyConfirmation | Are you sure you want to navigate away from this page?\n\nYou have unsaved changes.\n\nPress OK to continue, or Cancel to stay on the current page. |  |
 | wait_for_element_visible_ok | st-page-content | 30000 |
 | text_like | st-page-content | Edit This Page content %%start_time%% |
 
 | *Comment* | Test Case: Edit This Page navigate away and back |  |
 | open_ok | /%%workspace%% |  |
-| open_ok | /%%workspace%%/?Edit This Page %%start_time%% |  |
-| pause | 8000 |  |
+| open_ok | /%%workspace%%/?Edit_This_Page_%%start_time%% |  |
 
 | *Comment* | Test Case: Edit This Page navigate away Simple mode and cancel |  |
+| wait_for_element_visible_ok | st-edit-button-link | 30000 |
 | click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 30000 |
 
-| type_ok | wikiwyg_wikitext_textarea | Edit This Page Simple mode |
-| verifyValue | wikiwyg_wikitext_textarea | Edit This Page Simple mode |
-| click_ok | link=Rich Text |  |
+| type_ok | //textarea[contains(@class,"cke_source")] | Edit This Page Simple mode |
+| verifyValue | //textarea[contains(@class,"cke_source")] | Edit This Page Simple mode |
+| click_ok | //a[contains(@class,"cke_button_wysiwyg")] |  |
 | pause | 6000 | wait for Rich Text editor |
 
 | chooseCancelOnNextConfirmation |  |  |
-| click_ok | st-home-link |  |
+| click_ok | st-cancel-button-link |  |
 
 | *Comment* | Simple Mode: Cancel navigate away and keep unsaved edits |  |
 
 | confirmation_is | Are you sure you want to navigate away from this page?\n\nYou have unsaved changes.\n\nPress OK to continue, or Cancel to stay on the current page. |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| verifyValue | wikiwyg_wikitext_textarea | Edit This Page Simple mode |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 30000 |
+| verifyValue | //textarea[contains(@class,"cke_source")] | Edit This Page Simple mode |
 
 | *Comment* | Navigate away in Simple mode and lose unsaved edits |  |
 
-| click_ok | st-home-link |  |
+| click_ok | st-cancel-button-link |  |
 | verifyConfirmation | Are you sure you want to navigate away from this page?\n\nYou have unsaved changes.\n\nPress OK to continue, or Cancel to stay on the current page. |  |
+| wait_for_element_visible_ok | st-edit-button-link | 30000 |
 
-| *Comment* | Test Case: Edit This Page can it see HOME Again? |  |
-
-| wait_for_text_present_ok | Welcome | 30000 |
-
-| open_ok | /%%workspace%%/?Edit This Page %%start_time%% |  |
-| pause | 8000 |  |
+| open_ok | /%%workspace%%/?Edit_This_Page_%%start_time%% |  |
 | wait_for_element_visible_ok | st-page-content | 30000 |
 | text_like | st-page-content | Edit This Page content %%start_time%% |
 
-| *Comment* | Test Case: Edit This Page lower left edit link |  |
-| text_like | bottomButtons | Edit |
-| click_ok | link=Edit | index=1 |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | Edit This Page %%start_time%% |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
-| wait_for_text_present_ok | Edit This Page %%start_time%% | 30000 |
+TUXTODO: Is Edit Tips back?
 
-| *Comment* | Test Case: Edit This Page edit tips |  |
-| wait_for_element_visible_ok | st-edit-button-link | 30000 |
-| click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| wait_for_element_visible_ok | link=(?) | 30000 |
-| wait_for_element_visible_ok | link=Rich Text | 30000 |
-| click_ok | link=Rich Text |  |
-| wait_for_element_visible_ok | link=(?) | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| wait_for_element_visible_ok | link=(?) | 30000 |
+*Comment* | Test Case: Edit This Page edit tips | |
+wait_for_element_visible_ok | st-edit-button-link | 30000 |
+click_ok | st-edit-button-link | |
+wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |
+click_ok | //a[contains(@class,"cke_button_wikitext")] | |
+wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 30000 |
+wait_for_element_visible_ok | link=(?) | 30000 |
+wait_for_element_visible_ok | //a[contains(@class,"cke_button_wysiwyg")] | 30000 |
+click_ok | //a[contains(@class,"cke_button_wysiwyg")] | |
+wait_for_element_visible_ok | link=(?) | 30000 |
+click_ok | //a[contains(@class,"cke_button_wikitext")] | |
+wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 30000 |
+wait_for_element_visible_ok | link=(?) | 30000 |
 
-| *Comment* | Edit Tips lightbox |  |
-| text-like | st-edit-tips | (?) |
-| click_ok | st-edit-tips |  |
-| wait_for_element_visible_ok | st-ref-card-close | 30000 |
-| text_like | qr/To Get This.+Type This/ |  |
-| click_ok | st-ref-card-close |  |
+*Comment* | Edit Tips lightbox | |
+text-like | st-edit-tips | (?) |
+click_ok | st-edit-tips | |
+wait_for_element_visible_ok | st-ref-card-close | 30000 |
+text_like | qr/To Get This.+Type This/ | |
+click_ok | st-ref-card-close | |
 
 | *Comment* | Test Case: Edit This Page teardown |  |
 | st-admin | purge-page --workspace %%workspace%% --page edit_this_page_%%start_time%% | was purged |

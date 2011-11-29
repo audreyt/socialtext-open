@@ -1,5 +1,7 @@
 * Fixture: EmailJob
 
+# NEEDS UPDATES FOR NEW /st/settings API
+
 | standard-test-setup |
 | st-clear-jobs       |
 | clear-email         |
@@ -11,7 +13,6 @@
 | Comment | Turn off regular email notify to simplify testing |
 | post-form | /%%workspace%%/index.cgi | action=preferences_settings&preferences_class_id=email_notify&email_notify__notify_frequency=0&email_notify__links_only=condensed&email_notify__sort_order=name&Button=save |
 | code-is   | 200               |
-| body-like | Preferences saved |
 
 | set | pref_prefix | action=preferences_settings&preferences_class_id=watchlist&Button=save&watchlist__watchlist_notify_frequency |
 
@@ -94,7 +95,6 @@ This also tests the email notify sort order and the display details prefs.
 
 | post-form  | /%%workspace%%/index.cgi | %%pref_prefix%%=0 |
 | code-is    | 200                      |                   |
-| body-like  | Preferences saved        |                   |
 | job-count  | WatchlistNotifyUser      | 0                 |
 | email-like | __NO CONTENT!__          |                   |
 
@@ -102,7 +102,6 @@ This also tests the email notify sort order and the display details prefs.
 
 | post-form | /%%workspace%%/index.cgi | %%pref_prefix%%=1440 |
 | code-is   | 200                      |                      |
-| body-like | Preferences saved        |                      |
 
 
 
@@ -123,7 +122,6 @@ This also tests the email notify sort order and the display details prefs.
 
 | post-form  | /%%workspace%%/index.cgi | %%pref_prefix%%=4320 |
 | code-is    | 200                      |                      |
-| body-like  | Preferences saved        |                      |
 | job-count  | WatchlistNotifyUser      | 1                    |
 | email-like | __NO CONTENT!__          |                      |
 
@@ -157,7 +155,6 @@ Set things back to "normal"
 
 | post-form | /%%workspace%%/index.cgi | %%pref_prefix%%=1440 |
 | code-is   | 200                      |                      |
-| body-like | Preferences saved        |                      |
 
 
 
@@ -176,7 +173,6 @@ Set things back to "normal"
 
 | post-form  | /%%workspace%%/index.cgi | %%pref_prefix%%=15 |
 | code-is    | 200                      |                   |
-| body-like  | Preferences saved        |                   |
 | job-count  | WatchlistNotifyUser      | 1                 |
 | email-like | __NO CONTENT!__          |                   |
 
@@ -208,4 +204,3 @@ Set things back to "normal"
 
 | post-form | /%%workspace%%/index.cgi | %%pref_prefix%%=1440 |
 | code-is   | 200                      |                      |
-| body-like | Preferences saved        |                      |

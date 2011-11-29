@@ -2,8 +2,8 @@
 
 | *Comment* | Test Case: Untitled Page new page |  |
 | open_ok | /%%workspace%%/?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
 | wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
 | verifyValue | st-newpage-pagename-edit | Untitled Page |
 | click_ok | st-newpage-pagename-edit |  |
@@ -13,15 +13,13 @@
 | *Comment* | Test Case: Untitled Page title field is empty after focus |  |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
 | click_ok | st-save-button-link |  |
-| wait_for_element_visible_ok | st-newpage-save-pagename | 5000 |
-| click_ok | st-newpage-save-cancelbutton |  |
-| wait_for_element_not_visible_ok | st-newpage-save-pagename | 5000 |
+| verifyAlert | Please specify a page name. |  |
 
 | *Comment* | Test Case: Untitled Page try bad title |  |
 | type_ok | st-newpage-pagename-edit | `Untitled ---------- &&&&& ---- PaGe` |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| click_ok | wikiwyg_wikitext_textarea |  |
-| type_ok | wikiwyg_wikitext_textarea | untitled page %%start_time%% content |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 30000 |
+| click_ok | //textarea[contains(@class,"cke_source")] |  |
+| type_ok | //textarea[contains(@class,"cke_source")] | untitled page %%start_time%% content |
 | click_ok | st-newpage-pagename-edit |  |
 
 | *Comment* | Test Case: Untitled Page title field is empty after focus back |  |
@@ -31,16 +29,16 @@
 | type_ok | st-newpage-pagename-edit | `Untitled ---------- &&&&& ---- PaGe` |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
 | click_ok | st-save-button-link |  |
-| wait_for_element_visible_ok | st-newpage-save-pagename | 5000 |
+| verifyAlert | "Untitled ---------- &&&&& ---- PaGe" is a reserved page name. Please use a different name. |  |
 
 | *Comment* | Test Case: Untitled Page save attempt using "Untitled Page" |  |
-| type_ok | st-newpage-save-pagename | untitled page |
-| click_ok | st-newpage-save-savebutton |  |
-| verifyAlert | "untitled page" is a reserved page name. Please use a different name |  |
+| type_ok | st-newpage-pagename-edit | untitled page |
+| click_ok | st-save-button-link |  |
+| verifyAlert | "untitled page" is a reserved page name. Please use a different name. |  |
 
 | *Comment* | Test Case: Untitled Page save attempt using legal title |  |
-| type_ok | st-newpage-save-pagename | untitled page %%start_time%% |
-| click_and_wait | st-newpage-save-savebutton |  |
+| type_ok | st-newpage-pagename-edit | untitled page %%start_time%% |
+| st-page-save |  |  |
 | wait_for_text_present_ok | untitled page %%start_time%% content | 30000 |
 
 | *Comment* | Test Case: Untitled Page verify page title clears in non-IE browsers |  |

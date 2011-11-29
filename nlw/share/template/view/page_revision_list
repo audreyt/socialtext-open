@@ -1,0 +1,99 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[% USE decorate %]
+[% USE label_ellipsis %]
+
+[% WRAPPER $frame_name id="contentPage" title = loc("revision.all=page", display_title) %]
+<script language="javascript"><!--
+    function revisionCompare() {
+      var old_rev = jQuery('input[name=old_revision_id]:checked').val();
+      var new_rev = jQuery('input[name=new_revision_id]:checked').val();
+      if (old_rev == new_rev) {
+        alert(loc("error.same-revision"));
+      }
+      else {
+        document.getElementById('compare_revisions').submit();
+      }
+      return false;
+    };
+
+    function preventSameRevisionCompare () {
+        var newVal = $('input[name=new_revision_id]:checked:first').val();
+        var oldVal = $('input[name=old_revision_id]:checked:first').val();
+        if (newVal == oldVal) {
+            $('a.compareRevisions').hide();
+        }
+        else {
+            $('a.compareRevisions').show();
+        }
+    };
+    $(preventSameRevisionCompare);
+--></script>
+
+<form class="listView" name='revisions' id="compare_revisions" onsubmit="return check_revisions(this);">
+
+[% IF page.page_type != 'spreadsheet' %]
+  <div class="grid_24">
+    <ul id="revision-tools">
+      <li>
+        <a href="[% "${script_name}?${page_uri}" %]">
+          [% loc('revision.current') %]
+        </a>
+      </li>
+      <li>&#166;</li>
+      <li>
+        <a href="#" onclick="return revisionCompare();">
+          [% loc('do.compare-revisions') %]
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="clear"></div>
+[% END %]
+
+<div class="widget">
+  <h1 class="grid_24" title="[% display_title %]">[% display_title %]</h1>
+  <div class="clear"></div>
+
+  <input type="hidden" name="action" value="revision_compare" />
+  <input type="hidden" name="page_name" value="[% page_uri %]" />
+  <input type="hidden" name="mode" value="html" />
+
+  <div class="content">
+
+    [%# Header %]
+    <div class="header">
+      <div class="grid_2">[% loc("nav.select") %]</div>
+      <div class="grid_2">[% loc("page.revision") %]</div>
+      <div class="grid_4">[% loc("revision.edited-by") %]</div>
+      <div class="grid_3">[% loc("revision.date") %]</div>
+      <div class="grid_13">
+        [% FILTER decorate('revision-edit-summary-header') %]
+          [% loc("revision.summary") %]
+        [% END %]
+      </div>
+    </div>
+    <div class="clear"></div>
+
+    [%# Body %]
+    [% FOREACH row IN rows %]
+      <div class="listRow [% IF loop.even %]even[% ELSE %]odd[% END %]">
+        [% INCLUDE element/page/revision_row 
+              id           = row.id,
+              even         = loop.count % 2,
+              check_old    = loop.index == 1,
+              check_new    = loop.index == 0,
+              revision     = row.number,
+              from         = row.from,
+              date         = row.date,
+              is_deleted   = row.is_deleted,
+              edit_summary = row.edit_summary
+         %]
+      </div>
+    [% END %]
+  </div>
+</div>
+
+</form>
+[% END %]
+

@@ -1,0 +1,47 @@
+  
+/*
+ * Sub grids
+ *
+.grid_sub_1,
+.grid_sub_2,
+.grid_sub_3,
+.grid_sub_4,
+.grid_sub_5,
+.grid_sub_6,
+.grid_sub_7,
+.grid_sub_8,
+.grid_sub_9,
+.grid_sub_10,
+.grid_sub_11,
+.grid_sub_12,
+.grid_sub_13,
+.grid_sub_14,
+.grid_sub_15,
+.grid_sub_16,
+.grid_sub_17,
+.grid_sub_18,
+.grid_sub_19,
+.grid_sub_20,
+.grid_sub_21,
+.grid_sub_22,
+.grid_sub_23,
+.grid_sub_24
+  display: inline
+  float: left
+  margin-left: 0
+  margin-right: 0
+
+.sub_alpha
+  margin-right: 1%
+.sub_omega
+  margin-left: 1%
+.sub_middle
+  margin-left: 1%
+  margin-right: 1%
+
+.container_24
+  @for $g from 1 through 24
+    .grid_sub_#{$g}
+      $last: $g - 1
+      width: 2.25% + $last * 4.25%
+

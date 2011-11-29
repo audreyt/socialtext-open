@@ -1,0 +1,348 @@
+@import colors.sass
+
+body
+  font-family: $body_font
+  margin: 0
+  padding: 0
+
+form
+  margin: 0
+  padding: 0
+
+div.clear
+  clear: both
+
+.content
+  margin: 0 5px
+
+.search
+  margin: 5px
+
+.bold
+  font-weight: bold
+
+.logo
+  background: $header_color
+  padding: 5px
+
+.globalnav
+  background-color: $background_color
+  border-bottom: 1px solid $darker
+  padding: 3px 2px
+  color: $foreground_color
+
+.bottom
+  border-top: 1px solid $darker
+
+.subnav
+  background-color: $light
+  padding: 3px 2px
+  border-bottom: 1px solid $darker
+
+.paging
+  border-top: 1px solid $darker
+  background-color: $light
+  padding: 3px 2px
+
+.tabs
+  border-bottom: 1px solid $darker
+  background-color: $light
+  padding: 3px 2px
+
+.ui-mobile-viewport .tabs
+  padding: 0
+
+.tabs .letter_set
+  white-space: normal
+
+.globalnav a
+  white-space: nowrap
+
+.tabs
+  a
+    white-space: nowrap
+  .current
+    font-weight: bold
+
+.globalnav .current, .subnav .current
+  font-weight: bold
+
+.feeds
+  padding: 3px 2px
+
+.pageinfo
+  padding: 3px 2px
+  border-top: 1px solid $darker
+  background-color: $light
+  padding-bottom: 5px
+  ul, p
+    margin: 0
+
+#errors-and-messages
+  background-color: $tertiary_color
+  border: 1px solid $red
+  padding: 5px
+  font-weight: bold
+
+.signal_error
+  color: $red
+  font-weight: bold
+  padding: 10px 0 5px 5px
+
+.people_list
+  width: 100%
+  margin: 5px 0
+  border-collapse: collapse
+  list-style: none
+  padding: 0
+
+.event_list
+  width: 100%
+  margin: 5px 0
+  border-collapse: collapse
+  list-style: none
+  padding: 0
+  li
+    border-top: 1px solid $darker
+    margin-left: 5px
+    padding: 5px 0 3px 0
+    clear: all
+
+.people_list li
+  border-top: 1px solid $darker
+  margin-left: 5px
+  padding: 5px 0 3px 0
+  clear: all
+
+.event_list li.first, .people_list li.first
+  border-top: none
+
+.event_list
+  img.avatar
+    float: left
+    border: 1px solid $darker !important
+  .mainSection
+    float: left
+    margin-left: 5px
+
+.people_list .mainSection
+  float: left
+  margin-left: 5px
+
+.event_list
+  .mainSection
+    padding-left: 4px
+    width: 85%
+  img.asset-icon
+    float: right
+  li
+    position: relative
+
+.ago_text
+  font-style: italic
+  color: $darker
+  width: 100%
+  white-space: nowrap !important
+
+.destinationNetworks
+  font-weight: bold
+  white-space: nowrap !important
+
+.people_search
+  padding: 5px
+  border-bottom: 1px solid $darker
+  input
+    vertical-align: middle
+
+.postsignal
+  textarea
+    width: 90%
+    font-family: monaco, consolas, 'droid sans mono', monospace
+    &.ui-input-text
+      width: 90%
+      font-family: monaco, consolas, 'droid sans mono', monospace
+  h4
+    text-align: left
+    padding-left: 5px
+
+.ui-mobile-viewport
+  .nav-hint, .menu-padding
+    display: none
+  .permalink
+    text-decoration: underline
+
+.permalink
+  text-decoration: none
+
+.ui-mobile-viewport .postsignal
+  text-align: center
+
+.postsignal
+  padding: 5px
+  border-bottom: 1px solid $darker
+  form
+    padding: 0
+    margin: 0
+  textarea
+    width: 300px
+
+.profile
+  padding-top: 10px
+  img.avatar
+    float: left
+    margin-right: 5px
+    margin-left: 5px
+    border: 1px solid $darker !important
+  .info
+    padding-bottom: 10px
+    padding-left: 70px
+    min-height: 75px
+    border-bottom: 1px solid $darker
+  .section
+    border-top: 1px solid $darker
+    &.first
+      border-top: none
+    padding-bottom: 10px
+    padding-left: 5px
+    &.last
+      border-bottom: none
+    h3
+      text-transform: uppercase
+
+.people_list
+  padding: 5px 0
+  img
+    border: none
+    &.avatar
+      float: left
+      border: 1px solid $darker
+      vertical-align: middle
+      width: 27px !important
+  .user_link
+    margin-bottom: 5px
+
+.attachments .attachment
+  img
+    vertical-align: middle
+  font-size: 11px
+  white-space: nowrap
+
+.ui-mobile-viewport #st-login-form
+  dd
+    margin-left: 5%
+    input
+      width: 80%
+  .ui-checkbox
+    margin-left: 2%
+    width: 93%
+
+.tabs
+  ul, li
+    display: inline
+    padding-left: 3px
+    padding-right: 3px
+
+.subnav
+  ul, li
+    display: inline
+    padding-left: 3px
+    padding-right: 3px
+
+.paging a
+  display: inline
+  padding-left: 3px
+  padding-right: 3px
+
+.ui-mobile-viewport
+  .tabs
+    ul, li
+      padding-left: 0px
+      padding-right: 0px
+  .subnav
+    ul, li
+      padding-left: 0px
+      padding-right: 0px
+  .paging a
+    padding-left: 0px
+    padding-right: 0px
+
+h4
+  margin: 0
+
+li.divider
+  list-style: none
+  margin-left: -20px
+  font-weight: bold
+
+.ui-mobile-viewport
+  li.divider
+    margin-left: 0
+  #mobile-header .ui-btn-left
+    display: none
+
+.ui-li-count
+  display: none
+
+.ui-mobile-viewport .ui-li-count
+  display: inline
+
+/* Work around Mobile WebKit bug: {bz: 4717}
+
+.ui-btn-active
+  .ui-btn-inner
+    border: 0px
+    text-overflow: ellipsis
+    overflow: hidden
+    background: transparent
+  .ui-btn-text
+    border: 0px
+    text-overflow: ellipsis
+    overflow: hidden
+    display: inline-block
+    background: transparent
+  .ui-btn-up-c
+    background: transparent
+    height: 0px
+    border: 0px
+
+.edit_text_area
+  font-family: monaco, consolas, droid sans mono, monospace !important
+  width: 90% !important
+  height: 400px !important
+
+.comment_text_area
+  font-family: monaco, consolas, droid sans mono, monospace !important
+  width: 90% !important
+  height: 50px !important
+
+.wiki
+  .syntaxhighlighter .toolbar
+    display: none !important
+  ul.waflWidget
+    list-style: none outside none
+    margin: 0
+    padding: 0
+    .widgetHeaderButtons
+      display: none
+
+caption, th, td
+  font-weight: normal
+  text-align: left
+
+.wiki div.widget div.widgetHeaderTitle
+  img
+    display: none
+  font-size: 11px
+  font-weight: bold
+  padding-left: 12px
+  padding-top: 6px
+  white-space: nowrap
+
+.ui-icon-watch
+  background: url("/static/images/watchIcon-mobile.png") no-repeat rgba(0, 0, 0, 0.4)
+
+.ui-icon-watching
+  background: url("/static/images/watchingIcon-mobile.png") no-repeat rgba(0, 0, 0, 0.4)
+
+@import jquery-mobile.sass
+

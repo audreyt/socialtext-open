@@ -15,7 +15,7 @@ Test Case: Privacy Defaults can only succeed if it is the first test run by All 
 * [Test case: Business Control Panel Account Google Analytics]
 * [Test Case: Captcha]
 * [Test Case: Data Jobs]
-* [Test Case: Custom Skin UI]
+* [Test Case: Custom Desktop Theme]
 * [Test Case: Global Time Override]
 
 Keep these two authen renewal cases together
@@ -23,6 +23,6 @@ Keep these two authen renewal cases together
 * [Test Case: Authen Renewal]
 * [Test Case: Authen Renewal Reset]
 
-Save Race Conditions uses st-appliance-ctl stop/start
+Save Race Conditions uses st-stop/start-webserver
 
 * [Test Case: Save Race Conditions]

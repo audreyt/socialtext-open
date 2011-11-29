@@ -1,0 +1,159 @@
+/*
+ * Fluid24 Grid System
+ * http://fluid24.org/
+ *
+ * Inspiration, modifications and fixes made from:
+ * http://960.gs
+
+body
+  min-width: 960px
+
+/* fluid 24 99%
+
+.grid_1,
+.grid_2,
+.grid_3,
+.grid_4,
+.grid_5,
+.grid_6,
+.grid_7,
+.grid_8,
+.grid_9,
+.grid_10,
+.grid_11,
+.grid_12,
+.grid_13,
+.grid_14,
+.grid_15,
+.grid_16,
+.grid_17,
+.grid_18,
+.grid_19,
+.grid_20,
+.grid_21,
+.grid_22,
+.grid_23,
+.grid_24
+  display: inline
+  float: left
+  margin-left: $margin
+  margin-right: $margin
+
+.push_1, .pull_1,
+.push_2, .pull_2,
+.push_3, .pull_3,
+.push_4, .pull_4,
+.push_5, .pull_5,
+.push_6, .pull_6,
+.push_7, .pull_7,
+.push_8, .pull_8,
+.push_9, .pull_9,
+.push_10, .pull_10,
+.push_11, .pull_11,
+.push_12, .pull_12,
+.push_13, .pull_13,
+.push_14, .pull_14,
+.push_15, .pull_15,
+.push_16, .pull_16,
+.push_17, .pull_17,
+.push_18, .pull_18,
+.push_19, .pull_19,
+.push_20, .pull_20,
+.push_21, .pull_21,
+.push_22, .pull_22,
+.push_23, .pull_23
+  position: relative
+
+/* (Alpha ~ First, Omega ~ Last)
+.alpha
+  margin-left: 0
+
+.omega
+  margin-right: 0
+
+/* fgrid 24 Columns 100/24 -1
+
+@each $columns in $containers
+  .container_#{$columns}
+    width: 95%
+    margin-left: 2.5%
+    @for $g from 1 through $columns
+      .grid_#{$g}
+        width: 100% / $columns * $g - 1%
+      .prefix_#{$g}
+        padding-left: 100% / $columns * $g
+      .suffix_#{$g}
+        padding-right: 100% / $columns * $g
+      .push_#{$g}
+        left: 100% / $columns * $g
+      .pull_#{$g}
+        right: 100% / $columns * $g
+      .grid_sub_#{$g}
+        $last: $g - 1
+        width: 2.25% + $last * 4.25%
+
+/*
+ * Sub grids
+ *
+.grid_sub_1,
+.grid_sub_2,
+.grid_sub_3,
+.grid_sub_4,
+.grid_sub_5,
+.grid_sub_6,
+.grid_sub_7,
+.grid_sub_8,
+.grid_sub_9,
+.grid_sub_10,
+.grid_sub_11,
+.grid_sub_12,
+.grid_sub_13,
+.grid_sub_14,
+.grid_sub_15,
+.grid_sub_16,
+.grid_sub_17,
+.grid_sub_18,
+.grid_sub_19,
+.grid_sub_20,
+.grid_sub_21,
+.grid_sub_22,
+.grid_sub_23,
+.grid_sub_24
+  display: inline
+  float: left
+  margin-left: 0
+  margin-right: 0
+
+.sub_alpha
+  margin-right: 1%
+.sub_omega
+  margin-left: 1%
+.sub_middle
+  margin-left: 1%
+  margin-right: 1%
+
+/* Clear
+
+.clear
+  clear: both
+  display: block
+  overflow: hidden
+  visibility: hidden
+  width: 0
+  height: 0
+
+/* http://perishablepress.com/press/2009/12/06/new-clearfix-hack
+
+.clearfix:after
+  visibility: hidden
+  display: block
+  font-size: 0
+  content: " "
+  clear: both
+  height: 0
+
+/* IE6
+/* IE7
+*
+  html .clearfix, &:first-child+html .clearfix
+    zoom: 1

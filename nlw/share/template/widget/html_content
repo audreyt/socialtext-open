@@ -1,0 +1,25 @@
+[% USE minify %]
+[% USE coffee %]
+<link rel="stylesheet" type="text/css" href="/data/accounts/__ENV_primary_account_id__/theme/widget.css?[% app_version %]" media="screen" />
+
+[% FOR js IN ['socialtext-gadget.jgz', 'l10n-__MSG_LANG__.jgz'] %]
+    <script type="text/javascript" charset="utf-8" src="/js/[% app_version %]/[% js %]"></script>
+[% END %]
+
+<style> 
+[% PROCESS styles.css IF file_exists('styles.css') %]
+</style>
+
+[% PROCESS widget.html IF file_exists('widget.html') %]
+
+<script charset="utf-8" type="text/javascript">
+    (function(){
+[% jemplate %];
+[% IF file_exists('widget.coffee') %]
+    [% PROCESS widget.coffee | coffee | minify %]
+[% ELSIF file_exists('widget.js') %]
+    [% PROCESS widget.js | minify %]
+[% END %]
+    })();
+    loc.all_widgets();
+</script>

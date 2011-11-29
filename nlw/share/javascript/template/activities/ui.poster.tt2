@@ -1,0 +1,16 @@
+[% PROCESS activities/blocks.tt2 %]
+
+<style>
+    .expanded { background-color: #FFFFFF !important }
+    #messages .message { border-top: 1px solid #999 }
+</style>
+
+<div id='outer'>
+    <div id="signals">[% INCLUDE signals %]</div>
+    <div style="display:none">[% INCLUDE filters %] </div>
+
+    <div id="main">
+        <div id='messages'></div>
+        [% INCLUDE desktop_download %]
+    </div>
+</div>

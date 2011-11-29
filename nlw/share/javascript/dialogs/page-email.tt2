@@ -1,0 +1,67 @@
+[%# vim: set et sts=2 sw=2: %]
+<form id="st-email-form">
+  <input type="hidden" name="email_page_from" value="[% viewer.user_id %]" />
+  <input type="hidden" name="action" value="email_page" />
+  <input type="hidden" name="json" value="1" />
+  <input type="hidden" name="page_name" value="[% page.title | html_encode %]" />
+  <table>
+    <tr>
+      <th width="15%">[% loc('email.from') %]</th>
+      <td colspan="2" id="email_from">
+        [% viewer.guess_real_name %] &lt;[% viewer.email_address %]&gt;
+      </td>
+    </tr>
+    <tr>
+      <th>[% loc('email.subject') %]</th>
+      <td colspan="2">
+        <input class="email_input" name="email_page_subject" type="text" size="60" value="[% page.title | html_encode %]" />
+      </td>
+    </tr>
+    <tr>
+      <th>[% loc('email.recipients') %]</th>
+      <td>
+        <input class="email_input initial" name="email_recipient" type="text" size="60" value="[% loc("email.address-or-name") %]" id="email_recipient" />
+      </td>
+      <td>
+        <a href="#" class="button" id="email_add">[% loc('do.add') %]</a>
+        <br/>
+        <br/>
+      </td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>
+        <select id="email_dest" class="email_input initial" multiple name="email_page_user_choices" size="14">
+        <option>[% loc("email.recipient-box") %]</option>
+        <option>[% loc("email.recipient-box-continued") %]</option>
+        </select>
+      </td>
+      <td>
+        <a class="button" id="email_all">[% loc('email.add-all') %]</a>
+        <br/>
+        <br/>
+        <a class="button" id="email_remove">[% loc('do.remove') %]</a>
+        <br/>
+        <br/>
+        <a class="button" id="email_none">[% loc('do.remove-all') %]</a>
+      </td>
+    </tr>
+    <tr>
+      <th valign="top">[% loc('email.message') %]</th>
+      <td colspan="2">
+        <input id="email_page_add_note_check" name="email_page_add_note_check" class="email_input_checkbox" type="checkbox"  value="1" checked="checked" />
+        <label for="email_page_add_note_check">[% loc('email.add-note?') %] <i>[% loc('email.customize') %]</i></label>
+        <textarea class="email_input_textarea" name="email_page_add_note" rows="5" cols="40">[% loc("email.page-link:") %]
+
+[% full_uri %]</textarea>
+        <br />
+        <input id="email_page_keep_attachments" name="email_page_keep_attachments" class="email_input_checkbox" type="checkbox" value="1" />
+        <label for="email_page_keep_attachments">[% loc('file.keep?') %]</label>
+        <br />
+        <input id="email_page_send_copy" name="email_page_send_copy" class="email_input_checkbox" type="checkbox" value="1" checked="checked"/>
+        <label for="email_page_send_copy">[% loc('email.copy-self?') %]</label>
+      </td>
+    </tr>
+  </table>
+  <div class="error"></div>
+</form>

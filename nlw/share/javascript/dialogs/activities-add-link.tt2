@@ -1,0 +1,75 @@
+[% BLOCK fieldHeader %]
+    <div class="fieldHeader vpad15">
+        <input type="radio" class="[% name %] editfield"
+            [% IF checked %]checked="checked"[% END %]
+            name="add-link-type" id="[% name %]" />
+        <label for="[% name %]" class="label">[% title %]</label>
+    </div>
+[% END %]
+
+[% BLOCK field %]
+    <label for="[% name %]" class="fieldTitle">
+        [% title %][% '*' IF required %]
+    </label>
+    <div class="field">
+         <input type="text" size="25" id="[% name %]" class="[% name %] [% class %]" value="[% value %]" />
+    </div>
+    <div class="clear"></div>
+[% END %]
+
+<div class="activitiesAddLink">
+    <form id="add-a-link-form">
+
+    <p class="heads-up">[% loc('link.mandatory-indicator') %] <span class="heads-up-indicator">*</span></p>
+
+    [% INCLUDE fieldHeader
+        name="wiki-option"
+        title=loc('link.wiki-link')
+        checked=1
+    %]
+    [% INCLUDE field
+        name="wiki-link-label"
+        title=loc('link.text:')
+        class="wikiField"
+        value=params.label || selectionText
+    %]
+    [% INCLUDE field
+        name="wiki-link-workspace"
+        title=loc('link.wiki:')
+        class="wikiField"
+        value=params.workspace
+    %]
+    [% INCLUDE field
+        name="wiki-link-page"
+        title=loc('link.page:')
+        required=1
+        class="wikiField"
+        value=params.page
+    %]
+    [% INCLUDE field
+        name="wiki-link-section"
+        title=loc('link.section:')
+        class="wikiField"
+        value=params.section
+    %]
+
+    [% INCLUDE fieldHeader
+        name="web-option"
+        title=loc('link.web-link')
+    %]
+    [% INCLUDE field
+        name="web-link-label"
+        title=loc('link.text:')
+        class="webField"
+        value=selectionText
+    %]
+    [% INCLUDE field
+        name="web-link-destination"
+        title=loc('link.destination:')
+        class="webField"
+    %]
+
+    <div id="add-a-link-error" class="error"></div>
+    <input type="submit" class="hidden"/>
+    </form>
+</div>

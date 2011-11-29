@@ -27,16 +27,16 @@
 | get                | /                                                                                          |                 |
 | code-is            | 302                                                                                        |                 |
 | header-is          | Location                                                                                   | /%%workspace%%  |
-| get                | /%%workspace%%/%%workspace%%                                                     |                 |
+| get                | /%%workspace%%/%%workspace%%                                                               |                 |
 | code-is            | 302                                                                                        |                 |
 | header-like        | Location                                                                                   | /nlw/login.html |
 | http-user-pass     | %%username%%                                                                               | password        |
-| get                | /%%workspace%%/%%workspace%%                                                     |                 |
+| get                | /%%workspace%%/%%workspace%%                                                               |                 |
 | code-is            | 200                                                                                        |                 |
 
-| Comment     | ... user clicks "home" - they navigate to dashboard |             |
-| get         | /st/dashboard                                         |             |
-| code-is     | 200                                                 |             |
+| Comment | ... user clicks "home" - they navigate to dashboard |
+| get     | /st/dashboard                                       |
+| code-is | 200                                                 |
 
 | Comment            | User's primary account has dashboard disabled.                                                                |                   |
 | st-admin           | disable-plugin --plugin dashboard --account %%account%%                                                       |                   |
@@ -52,15 +52,15 @@
 | get                | /                                                                                          |                 |
 | code-is            | 302                                                                                        |                 |
 | header-is          | Location                                                                                   | /%%workspace%%  |
-| get                | /%%workspace%%/%%workspace%%                                                     |                 |
+| get                | /%%workspace%%/%%workspace%%                                                               |                 |
 | code-is            | 302                                                                                        |                 |
 | header-like        | Location                                                                                   | /nlw/login.html |
 | http-user-pass     | %%username%%                                                                               | password        |
-| get                | /%%workspace%%/%%workspace%%                                                     |                 |
+| get                | /%%workspace%%/%%workspace%%                                                               |                 |
 | code-is            | 200                                                                                        |                 |
 
 | Comment   | ... user clicks home. they navigate to the default workspace |                |
-| body-like | <a id="st-home-link" href="/">Dashboard</a>              |                |
+| body-like | <a class="dashboard" href="/st/dashboard">Dashboard</a>      |                |
 | get       | /                                                            |                |
 | code-is   | 302                                                          |                |
 | header-is | Location                                                     | /%%workspace%% |
@@ -72,28 +72,28 @@
 | Comment  | Dashboard is disabled.                                  |
 | st-admin | disable-plugin --plugin dashboard --account %%account%% |
 
-| Comment     | bad workspace: User sent to workspace list upon login. |                              |
-| get         | /%%bad_wksp%%/                                |                              |
-| code-is     | 302                                                    |                              |
-| header-like | Location                                               | qr/\?action=workspace_list$/ |
+| Comment     | bad workspace: User sent to workspace list upon login. |                                  |
+| get         | /%%bad_wksp%%/                                         |                                  |
+| code-is     | 302                                                    |                                  |
+| header-like | Location                                               | qr/\?action=workspaces_listall$/ |
 
-| Comment     | root: user sent to workspace list |                              |
-| get         | /                                 |                              |
-| code-is     | 302                               |                              |
-| header-like | Location                          | qr/\?action=workspace_list$/ |
+| Comment     | root: user sent to workspace list |                                  |
+| get         | /                                 |                                  |
+| code-is     | 302                               |                                  |
+| header-like | Location                          | qr/\?action=workspaces_listall$/ |
 
 | Comment  | Dashboard is enabled.                                  |
 | st-admin | enable-plugin --plugin dashboard --account %%account%% |
 
-| Comment     | bad workspace: user sent to workspace list |                              |
-| get         | /%%bad_wksp%%/                    |                              |
-| code-is     | 302                                        |                              |
-| header-like | Location                                   | qr/\?action=workspace_list$/ |
+| Comment     | bad workspace: user sent to workspace list |                                  |
+| get         | /%%bad_wksp%%/                             |                                  |
+| code-is     | 302                                        |                                  |
+| header-like | Location                                   | qr/\?action=workspaces_listall$/ |
 
-| Comment | root: user sent to dashboard, no default workspace redirect |
-| get     | /                                                           |
-| code-is | 302                                                         |
-| header-is | Location                                   | /st/dashboard |
+| Comment   | root: user sent to dashboard, no default workspace redirect |               |
+| get       | /                                                           |               |
+| code-is   | 302                                                         |               |
+| header-is | Location                                                    | /st/dashboard |
 
 | Comment   | CLEANUP: un-set `default_workspace` |
 | st-config | set default_workspace ''            |

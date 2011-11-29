@@ -1,51 +1,48 @@
 | *Comment* | STARTING Test Case: Video In Pages |  |
 
 | open_ok | /%%workspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | link=Rich Text | 30000 |
-| click_ok | link=Rich Text |  |
-| pause | 5000 | wait for the Rich Text editor to load |
+| pause | 15000 | wait for the Rich Text editor to load |
+| wait_for_element_visible_ok | //a[@title='Insert a Video'] | 30000 |
 
 | *Comment* | Test Case: Video In Pages enter good video URL |  |
-| click_ok | wikiwyg_button_video | 30000 |
+| click_ok | //a[@title='Insert a Video'] | 30000 |
 | wait_for_element_visible_ok | st-widget-video_url | 30000 |
 | type_ok | st-widget-video_url | http://www.youtube.com/watch?v=lH4lcrxP8mo |
 | is_checked_ok | //input[@value='original'] |  |
 | wait_for_element_visible_ok | st-widget-savebutton | 30000 |
 | wait_for_element_visible_ok | st-widget-cancelbutton | 30000 |
-| pause | 5000 | not too fast after typing |
+| pause | 15000 | not too fast after typing |
 | click_ok | st-widget-savebutton |  |
-| wait_for_element_not_visible_ok | st-widget-cancelbutton | 5000 |
+| wait_for_element_not_present_ok | st-widget-cancelbutton | 15000 |
 
 | *Comment* | Test Case: Video In Pages verify good video URL |  |
-| pause | 5000 | wait for insert |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| pause | 5000 | wait for text to be populated |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/{video: http:\/\/www.youtube.com\/watch\?v=lH4lcrxP8mo size=original}/s` |
+| pause | 15000 | wait for insert |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 30000 |
+| pause | 15000 | wait for text to be populated |
+| verifyValue | //textarea[contains(@class,"cke_source")] | `qr/{video: http:\/\/www.youtube.com\/watch\?v=lH4lcrxP8mo size=original}/s` |
 
 | *Comment* | Test Case: Video In Pages - Check Cancel Button |  |
-| click_ok | link=Rich Text |  |
-| pause | 5000 | wait for the Rich Text editor to load |
-| wait_for_element_visible_ok | wikiwyg_button_video | 30000 |
-| click_ok | wikiwyg_button_video | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wysiwyg")] |  |
+| pause | 15000 | wait for the Rich Text editor to load |
+| wait_for_element_visible_ok | //a[@title='Insert a Video'] | 30000 |
+| click_ok | //a[@title='Insert a Video'] | 30000 |
 | wait_for_element_visible_ok | st-widget-video_url | 30000 |
 | wait_for_element_visible_ok | st-widget-savebutton | 30000 |
 | wait_for_element_visible_ok | st-widget-cancelbutton | 30000 |
 | type_ok | st-widget-video_url | original content %%start_time%% |
 | click_ok | st-widget-cancelbutton |  |
-| wait_for_element_not_visible_ok | st-widget-cancelbutton | 5000 |
+| wait_for_element_not_present_ok | st-widget-cancelbutton | 15000 |
 
-| *Comment* | Test Case: Video In Pages - Check original content |  |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/{video: http:\/\/www.youtube.com\/watch\?v=lH4lcrxP8mo size=original}/s` |  |
+| *Comment* | Test Case: Video In Pages - Check original content |  |  |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |  |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 30000 |  |
+| verifyValue | //textarea[contains(@class,"cke_source")] | `qr/{video: http:\/\/www.youtube.com\/watch\?v=lH4lcrxP8mo size=original}/s` |  |
 
 | *Comment* | Test Case: Video In Pages Bad URL |  |
-| click_ok | link=Rich Text |  |
-| pause | 5000 | wait for the Rich Text editor to load |
-| click_ok | wikiwyg_button_video | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wysiwyg")] |  |
+| pause | 15000 | wait for the Rich Text editor to load |
+| click_ok | //a[@title='Insert a Video'] | 30000 |
 | wait_for_element_visible_ok | st-widget-video_url | 30000 |
 | wait_for_element_visible_ok | st-widget-savebutton | 30000 |
 | wait_for_element_visible_ok | st-widget-cancelbutton | 30000 |
@@ -58,10 +55,10 @@
 | wait_for_element_visible_ok | st-widget-savebutton | 30000 |
 | wait_for_element_visible_ok | st-widget-cancelbutton | 30000 |
 | click_ok | st-widget-cancelbutton |  |
-| wait_for_element_not_visible_ok | st-widget-cancelbutton | 5000 |
+| wait_for_element_not_present_ok | st-widget-cancelbutton | 15000 |
 
 | *Comment* | Test Case: Video In Pages Non-Video URL |  |
-| click_ok | wikiwyg_button_video | 30000 |
+| click_ok | //a[@title='Insert a Video'] | 30000 |
 | wait_for_element_visible_ok | st-widget-video_url | 30000 |
 | wait_for_element_visible_ok | st-widget-savebutton | 30000 |
 | wait_for_element_visible_ok | st-widget-cancelbutton | 30000 |
@@ -69,40 +66,38 @@
 | click_ok | st-widget-savebutton |  |
 | wait_for_text_present_ok | Sorry, this URL is not hosted on any of our supported services (GoogleVideo, SlideShare, Vimeo, YouTube) | 30000 |
 | click_ok | st-widget-cancelbutton |  |
-| wait_for_element_not_visible_ok | st-widget-cancelbutton | 5000 |
+| wait_for_element_not_present_ok | st-widget-cancelbutton | 15000 |
 
 | *Comment* | Test Case: Video In Pages clear and abandon page |  |
-| click_ok | st-newpage-pagename-edit |  |
-
-| *Comment* | Test Case: Video In Pages Different Size - create page |  |
-| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | original content %%start_time%% |
-| wait_for_element_visible_ok | link=Rich Text | 30000 |
-| click_ok | link=Rich Text |  |
-| pause | 5000 | wait for the Rich Text editor to load |
+| click_ok | st-cancel-button-link |  |
+| verifyConfirmation | Are you sure you want to navigate away from this page?\n\nYou have unsaved changes.\n\nPress OK to continue, or Cancel to stay on the current page. |  |
+| wait_for_element_visible_ok | st-page-content |  |
 
 | *Comment* | Test Case: Video In Pages Different Size - insert Slideshare small |  |
-| wait_for_element_visible_ok | wikiwyg_button_video | 30000 |
-| click_ok | wikiwyg_button_video | 30000 |
+| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
+| pause | 15000 | wait for the Rich Text editor to load |
+| wait_for_element_visible_ok | //a[@title='Insert a Video'] | 30000 |
+
+| *Comment* | Test Case: Video In Pages enter Slideshare video URL |  |
+| click_ok | //a[@title='Insert a Video'] | 30000 |
 | wait_for_element_visible_ok | st-widget-video_url | 30000 |
+| type_ok | st-widget-video_url | http://www.slideshare.net/alikhan_nazeer80/better-software-classic-testing-mistakes-presentation |
+| is_checked_ok | //input[@value='original'] |  |
 | wait_for_element_visible_ok | st-widget-savebutton | 30000 |
 | wait_for_element_visible_ok | st-widget-cancelbutton | 30000 |
-| type_ok | st-widget-video_url | http://www.slideshare.net/alikhan_nazeer80/better-software-classic-testing-mistakes-presentation |
-| click_ok | //input[@value="small" and @name="size"] |  |
+| pause | 15000 | not too fast after typing |
 | click_ok | st-widget-savebutton |  |
-| wait_for_element_not_visible_ok | st-widget-cancelbutton | 5000 |
-| pause | 5000 | wait for insert |
+| wait_for_element_not_present_ok | st-widget-cancelbutton | 15000 |
 
-| *Comment* | Test Case: Video In Pages Different Size - verify Slideshare small |  |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| pause | 5000 | wait for insert |
-| verifyValue | wikiwyg_wikitext_textarea | `qr/{video: http:\/\/www.slideshare.net\/alikhan_nazeer80\/better\-software\-classic\-testing\-mistakes\-presentation.+size\=small}/s` |
+| *Comment* | Test Case: Video In Pages Different Size - verify Slideshare |  |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 30000 |
+| pause | 15000 | wait for insert |
+| verifyValue | //textarea[contains(@class,"cke_source")] | `qr/{video: http:\/\/www.slideshare.net\/alikhan_nazeer80\/better\-software\-classic\-testing\-mistakes\-presentation size=original}/s` |
 
 | *Comment* | Test Case: Video In Pages clear and abandon page again |  |
-| click_ok | st-newpage-pagename-edit |  |
+| click_ok | st-cancel-button-link |  |
+| verifyConfirmation | Are you sure you want to navigate away from this page?\n\nYou have unsaved changes.\n\nPress OK to continue, or Cancel to stay on the current page. |  |
+| wait_for_element_visible_ok | st-page-content |  |
 
 | *Comment* | Test Case: Video In Pages COMPLETED |  |

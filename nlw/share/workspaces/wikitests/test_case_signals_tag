@@ -8,36 +8,32 @@
 | set | tag_suffix | TAG%%start_time%% |  |
 | create_account | %%tag_acct%% |  |  |
 | create_user | %%tag_user%% | %%password%% | %%tag_acct%% |
+| st-admin | add-member --account %%tag_acct%% --email %%username%% | now has the role |  |
 
 | *Comment* | Test Case: Signals Tag post a tagged signal first to test for lookahead later |  |
-| st-logoutin | %%tag_user%% | %%password%% |
-| http-user-pass | %%tag_user%% | %%password%% |
+| http-user-pass | %%username%% | %%password%% |
 | post-signal | #%%tag%% |  |
 | st-process-jobs |  |  |
-| pause | 60000 |  |
+| st-logoutin | %%tag_user%% | %%password%% |
 
 | *Comment* | Test Case: Signals Tag button is present |  |
 | open_ok | /st/signals |  |
-| wait_for_element_visible_ok | //a[@class='setupWikiwyg insertTag'] | 30000 |
+| wait_for_element_visible_ok | //a[@title='Add a tag'] | 30000 |
 
 | *Comment* | Test Case: Signals click Tag |  |
-| click_ok | //a[@class='setupWikiwyg insertTag'] |  |
+| click_ok | //a[@title='Add a tag'] |  |
 
-| *Comment* | Test Case: Signals Tag setSpeed 3000 to allow for lookahead, test it |  |
-| set_Speed | 3000 |  |
-| type-lookahead-ok | //input[@class='lookahead-prompt'] | %%tag_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag_suffix%%')] | 30000 |
-| wait_for_element_visible_ok | //a[@class='insert btn'] | 30000 |
-| wait_for_element_visible_ok | //a[@class='cancel btn'] | 30000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%tag_suffix%%')] |  |
-| wait_for_element_not_visible_ok | //input[@class='lookahead-prompt'] | 5000 |
+| *Comment* | Test Case: Signals Tag setSpeed 3000 to allow for lookahead, test it |  |  |
+| wait_for_element_visible_ok | //a[@class='insert button ui-button ui-widget ui-state-default ui-button-text-only ui-corner-left'] | 30000 |  |
+| wait_for_element_visible_ok | //a[@class='cancel button ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right'] | 30000 |  |
+| select-autocompleted-option-ok | //input[@role='textbox'] | %%tag_prefix%% | %%tag%% |
+| wait_for_element_not_visible_ok | //input[@role='textbox'] | 15000 |  |
 
 | *Comment* | Test Case: Signals Tag setSpeed zero |  |
-| set_Speed | 0 |  |
-| wait_for_element_visible_ok | link=Post | 30000 |
+| wait_for_element_visible_ok | //a[contains(@id,"widget") and contains(@id,"post")] | 30000 |
 | pause | 3000 |  |
-| click_ok | link=Post |  |
-| wait_for_text_present_ok | less than a minute ago | 30000 |
+| click_ok | //a[contains(@id,"widget") and contains(@id,"post")] |  |
+| wait_for_text_present_ok | By you | 30000 |
 | text_like | qr/#%%tag%%.+#%%tag%%/ |  |
 
 | *Comment* | Test Case: Signals Tag TEARDOWN |  |
@@ -45,4 +41,4 @@
 | st-admin | deactivate-user --email %%tag_user%% |  |
 | delete-account | %%tag_acct%% |  |
 
-| *Comment* | Test Case: Signals Tag COMPLETED |
+| *Comment* | Test Case: Signals Tag COMPLETED |  |

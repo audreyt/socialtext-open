@@ -2,11 +2,11 @@
 | *Comment* | MobileShow expects to already be logged in |  |
 | *Comment* | URL is %%browser_url%% |  |
 
-| set_default | pt | 5000 | defaults to five seconds |
+| set_default | pt | 15000 | defaults to five seconds |
 
 | open_ok | http://iphonetester.com/ |  |
 
-| wait_for_element_visible_ok | link=Change Orientation | 5000 |
+| wait_for_element_visible_ok | link=Change Orientation | 15000 |
 | click_ok | link=Change Orientation |  |
 
 | wait_for_element_visible_ok | id=url | 30000 |

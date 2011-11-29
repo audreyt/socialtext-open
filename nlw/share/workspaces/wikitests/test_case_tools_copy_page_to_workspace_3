@@ -1,0 +1,31 @@
+| set | newspace | cptw_newspace |
+| set | this_id | copy_this_page |
+| set | this_content | Copy This Page content |
+| set | new_content | Copy This Page NEW content |
+| set | this_tag | Copy This Tag |
+| set | copy_title | Page Copied |
+| set | copy_id | page_copied |
+| set | oldspace | cptw_oldspace |
+
+| *Comment* | Test Case: Tools: Copy Page to Workspace. verify copy of edited page |  |
+| open_ok | /%%newspace%%/%%copy_id%% |  |
+| location_like | /%%newspace%%/%%copy_id%% |  |
+| wait_for_element_visible_ok | link=Copy This Tag |  |
+| st_check_files_if_highperms | wikitest.jpg |  |
+
+| open_ok | /%%newspace%%/index.cgi?action=revision_list;page_name=%%copy_id%% |  |
+| click_and_wait | link=Compare Revisions |  |
+| text_like | content | %%this_content%% |
+| text_like | content | %%new_content%% |
+
+| *Comment* | Test Case: Tools: Copy Page to Workspace. verify tag copied |  |
+| click_and_wait | link=Back To Current Revision |  |
+| wait_for_element_visible_ok | link=%%this_tag%% | 10000 |
+
+| *Comment* | Test Case: Tools: Copy Page to Workspace TEARDOWN |  |
+
+| st-process-jobs |  |  |
+| delete-workspace | %%oldspace%% |  |
+| delete-workspace | %%newspace%% |  |
+
+| *Comment* | Test Case: Tools: Copy Page to Workspace COMPLETED |  |

@@ -43,7 +43,7 @@ that follow it. So we do this test in a scratch workspace instead
 | location_like | /m/page/%%miki_space%% |  |
 | text_like | link=Edit | Edit |
 | click_and_wait | link=Edit |  |
-| text_like | link=Cancel | Cancel |
+| text_like | //a[@data-icon='back'] | Cancel |
 | text_like | link=Log out | Log out |
 | text_unlike | //a[contains(@href,'/nlw/submit/logout')] | Log in |
 | click_and_wait | link=Log out |  |
@@ -72,7 +72,7 @@ that follow it. So we do this test in a scratch workspace instead
 | text_like | link=Activity | Activity |
 | text_like | link=Edit | Edit |
 | click_and_wait | link=Edit |  |
-| text_like | link=Cancel | Cancel |
+| text_like | //a[@data-icon='back'] | Cancel |
 | text_like | link=Log out | Log out |
 
 | click_and_wait | link=Log out |  |

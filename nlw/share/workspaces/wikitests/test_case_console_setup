@@ -37,27 +37,24 @@
 | is_element_present_ok | setup-login-message |  |
 | is_element_present_ok | desktop_update_enabled |  |
 | is_element_present_ok | login_message |  |
-| wait_for_element_visible_ok | setup-login-message | 30000 |
+| wait_for_element_visible_ok | setup-login-message | 15000 |
 
 | *Comment* | Test Case: Console Setup. Set the server signal limit |  |
-| wait_for_element_visible_ok | signals_size_limit | 30000 |
-| wait_for_element_visible_ok | set_signals_size_limit | 30000 |
+| wait_for_element_visible_ok | signals_size_limit | 15000 |
+| wait_for_element_visible_ok | set_signals_size_limit | 15000 |
 | type_ok | signals_size_limit | -25 |
-| click_ok | set_signals_size_limit |  |
-| wait_for_page_to_load_ok | 30000 |  |
-| wait_for_text_present_ok | Signals maximum size must be an positive integer | 30000 |
-| text_unlike | //body | -25 |
+| click_and_wait | set_signals_size_limit |  |
 | wait_for_element_visible_ok | signals_size_limit | 30000 |
 | wait_for_element_visible_ok | set_signals_size_limit | 30000 |
+| wait_for_text_present_ok | Signals maximum size must be an positive integer | 30000 |
+| verifyValue | signals_size_limit | 1000 |
 | type_ok | signals_size_limit | 0 |
-| click_ok | set_signals_size_limit |  |
-| wait_for_page_to_load_ok | 30000 |  |
+| click_and_wait | set_signals_size_limit |  |
 | wait_for_text_present_ok | Signals maximum size must be an positive integer | 30000 |
 | wait_for_element_visible_ok | signals_size_limit | 30000 |
 | wait_for_element_visible_ok | set_signals_size_limit | 30000 |
 | type_ok | signals_size_limit | 300 |
-| click_ok | set_signals_size_limit |  |
-| wait_for_page_to_load_ok | 30000 |  |
+| click_and_wait | set_signals_size_limit |  |
 | text_unlike | //body | Signals maximum size must be an positive integer |
 | verifyValue | signals_size_limit | 300 |
 
@@ -78,8 +75,7 @@
 | click_and_wait | setup-st-auto-update |  |
 | open_ok | /console |  |
 | wait_for_element_visible_ok | link=Setup | 30000 |
-| click_ok | link=Setup |  |
-| wait_for_page_to_load_ok | 30000 |  |
+| click_and_wait | link=Setup |  |
 | config_is | desktop_update_enabled | 1 |
 
 | *Comment* | Test Case: Console Setup. Time server and Apache Logs |  |
@@ -138,10 +134,10 @@
 | is_text_present_ok | Synchronized time with ntp.ubuntu.com |  |
 
 | *Comment* | Set Login Message |  |
-| wait_for_element_visible_ok | login_message | 30000 |
+| wait_for_element_visible_ok | login_message | 10000 |
 | set | message | Display this before login ( %%start_time%% ) |
 | type_ok | login_message | %%message%% |
-| wait_for_element_visible_ok | setup-login-message | 30000 |
+| wait_for_element_visible_ok | setup-login-message | 10000 |
 | click_and_wait | setup-login-message |  |
 
 | *Comment* | Test Case: Console Setup. TEARDOWN |  |
@@ -155,9 +151,7 @@
 | value_is | timeserver | ntp.ubuntu.com |
 
 | *Comment* | Test Case: Console Setup. Test Login Message. |  |
-| open_ok | /st/dashboard |  |
 | st-logout |  |  |
-| refresh |  |  |
-| wait_for_text_present_ok | %%message%% | 30000 |
+| wait_for_text_present_ok | %%message%% | 10000 |
 
 | *Comment* | Test Case: Console Setup COMPLETED |  |

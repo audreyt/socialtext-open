@@ -1,8 +1,9 @@
 # @COPYRIGHT@
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Socialtext i18n\n"
-"PO-Revision-Date: 2011-02-20 10:43+0800\n"
+"PO-Revision-Date: 2011-11-04 17:45+0800\n"
 "Last-Translator: Socialtext i18n team\n"
 "Language-Team: Socialtext i18n team\n"
 "MIME-Version: 1.0\n"
@@ -94,6 +95,10 @@ msgstr "Try Again"
 
 msgid "badge.upgrade"
 msgstr "Click to Upgrade"
+
+#: share/template/element/settings/blog:3
+msgid "blog.name"
+msgstr "Blog Name"
 
 #: share/template/bugs_content.html:5
 msgid "bug.application-error"
@@ -408,6 +413,10 @@ msgstr "The leader in Enterprise 2.0 Social Software"
 msgid "email.login-with-email-address:"
 msgstr "Log in with your email address:"
 
+#: share/template/element/settings/manage:101
+msgid "email.lookahead-prompt"
+msgstr "begin typing email here..."
+
 #: share/template/email/st/account-invitation.txt:10 share/template/email/st/group-invitation-body.html:23 share/template/email/st/group-invitation.txt:13 share/template/email/st/workspace-invitation-body.html:26 share/template/email/st/workspace-invitation.txt:10
 msgid "email.once-confirmed-you-will-receive-second-email-with-login-details"
 msgstr "Once you have confirmed your account, you will receive a second email with login details."
@@ -500,6 +509,10 @@ msgstr "Thank you for joining your company's collaboration group, hosted by Soci
 msgid "email.thanks"
 msgstr "Thanks,"
 
+#: share/template/element/page/display/tools:86 share/template/element/page/display/tools:90
+msgid "email.this-page"
+msgstr "... this page"
+
 #: share/template/email/email-address-confirmation-completed.html:19 share/template/email/email-address-confirmation-completed.txt:23 share/template/email/email-address-confirmation-completed.txt:6
 msgid "email.to-do-so-go-to-this-web-address:"
 msgstr "To do so, go to this web address:"
@@ -519,6 +532,14 @@ msgstr "By clicking the above link, you can immediately start sharing &quot;Twit
 #: share/template/email/free50/account-invitation.txt:7
 msgid "email.to-start-click-above-link"
 msgstr "By clicking the above link, you can immediately start sharing \"Twitter-like\" messages privately with your co-workers, and find a better way to work using social networking and wiki workspaces. You also get your own personal home page."
+
+#: share/template/element/page/display/tools:0 share/template/element/page/display/tools:109 share/template/element/page/display/tools:117
+msgid "email.to-this-page"
+msgstr "... to this page"
+
+#: share/template/element/page/display/tools:0 share/template/element/page/display/tools:100
+msgid "email.to-this-wiki"
+msgstr "... to this Workspace"
 
 #. (escaped_timestamp)
 #: share/template/email/page-details.html:9 share/template/email/page-details.txt:9
@@ -626,6 +647,37 @@ msgstr "You need to have an External ID set in order to activate this account."
 msgid "error.for-more-info-contact-sysadmin"
 msgstr "For more information, please contact your system administrator."
 
+#: share/template/element/settings/manage:78
+msgid "error.invalid-email-addresses"
+msgstr "The following email addresses are not valid."
+
+#: share/template/element/settings/manage:74
+msgid "error.invite-users-deleted"
+msgstr "The following users were not invited because they have been deleted. If you wish to invite the users you first need to undelete them."
+
+#: share/template/element/settings/manage:76
+msgid "error.invite-users-unregistered"
+msgstr "The following users were not invited because they are not registered users of Socialtext."
+
+#. (space.domain_restriction)
+#: share/template/element/settings/manage:70
+msgid "error.invite-users=domain-restriction"
+msgstr "The following users were not invited because their email domain does not match %1."
+
+#. (space.invitation_filter)
+#: share/template/element/settings/manage:72
+msgid "error.invite-users=invitation-filter"
+msgstr "The following users were not invited because their email address does not match the workspace invite filter \"%1\"."
+
+#. (error)
+#: share/template/element/settings/manage:80
+msgid "error.invite-users=message"
+msgstr "The following users generated a %1 error when attempting to invite."
+
+#: share/template/element/settings/manage:65
+msgid "error.inviting-users"
+msgstr "There were errors inviting the following users."
+
 #. (workspace_name)
 #: share/template/errors/login_to_edit:3
 msgid "error.login-to-edit=wiki"
@@ -656,6 +708,10 @@ msgstr "Resend Change of Password"
 #: share/template/errors/requires_confirmation:10
 msgid "error.resend-confirmation"
 msgstr "Resend confirmation"
+
+#: share/template/element/settings/list_skipped_files:4
+msgid "error.these-files-were-not-imported:"
+msgstr "These files were not imported:"
 
 #: share/template/errors/unauthorized_workspace:3
 msgid "error.you-are-not-authorized-to-view-this-wiki"
@@ -783,6 +839,78 @@ msgstr "stopped watching %1."
 #: share/template/data/events/page:23
 msgid "event.watch=page"
 msgstr "started watching %1."
+
+#: share/template/search_help_field.html:16
+msgid "example.hello"
+msgstr "hello"
+
+#: share/template/search_help_field.html:17
+msgid "example.help"
+msgstr "help"
+
+#: share/template/search_help_field.html:8
+msgid "heading.category"
+msgstr "category"
+
+#. (space.auw_for)
+#: share/template/element/settings/manage:112
+msgid "info.all-user-wiki=account"
+msgstr "Note: All users of the %1 account are members of this workspace."
+
+#: share/template/search_help_field.html:3
+msgid "info.available-search-fields:"
+msgstr "It looks like you are trying to search on a field in the search index. At this time the fields available are:"
+
+#: share/template/element/search_box_snippet:6
+msgid "info.click-to-search"
+msgstr "Click this button to perform your search"
+
+#: share/template/element/settings/blog:9
+msgid "info.creating-blog"
+msgstr "If the name you provide does not end with \"Blog\", the system will add \"Blog\" to the name you provide. After clicking Save, you will be taken right to the blog."
+
+#: share/template/search_help_field.html:29
+msgid "info.improving-search"
+msgstr "As we continue to develop the search system, the options you will have and the interface you have to make use of them will improve."
+
+#: share/template/search_help_field.html:21
+msgid "info.invalid-search-field"
+msgstr "If you try to search on a field that does not exist (<tt>link:hello</tt>) or without a query (<tt>link:</tt>) you will see this message."
+
+#: share/template/element/settings/manage:94
+msgid "info.invite-users"
+msgstr "Use the field below to search for users to add to this workspace. Then, click Save to add them. Each user will be notified via email."
+
+#: share/template/element/settings/global:27
+msgid "info.reset-password-and-relogin"
+msgstr "New passwords must be at least 6 characters long. Use your email address and new password to log in again."
+
+#: share/template/search_help_field.html:12
+msgid "info.search-field-syntax"
+msgstr "You may search on a field by separating the field name from the query with a colon, like this:"
+
+#: share/template/element/settings/list_skipped_files:3
+msgid "info.skipped-import-files"
+msgstr "Files are imported only from ZIP/TGZ javascript/, css/ and images/ paths. Files with other paths are not imported."
+
+#. (wlink)
+#: share/template/view/empty_watchlist:6
+msgid "info.watch-page=link"
+msgstr "Look for %1 on a page you want to watch and then click on it to add the page to your Watchlist."
+
+#: share/template/element/settings/manage:88
+msgid "info.wiki-requires-registered"
+msgstr "Only registered Socialtext users may be invited to this workspace."
+
+#. (space.domain_restriction)
+#: share/template/element/settings/manage:92
+msgid "info.wiki=domain-restriction"
+msgstr "Only users whose email address is in the \"%1\" domain may be invited to this workspace."
+
+#. (space.invitation_filter)
+#: share/template/element/settings/manage:90
+msgid "info.wiki=invitation-filter"
+msgstr "Only users whose email address matches the pattern \"%1\" may be invited to this workspace."
 
 #. (confirm_uri)
 #: share/template/email/st/account-invitation-body.html:22
@@ -1055,11 +1183,146 @@ msgstr "You have joined the %1 Workspace in the %2 Group. Click"
 msgid "login.you-have-logged-out-of-socialtext"
 msgstr "You have logged out of Socialtext."
 
+#: share/template/layout/html:156
+msgid "nav.enterprise-social-software"
+msgstr "Enterprise Social Software"
+
+#. (jump_menu)
+#: share/template/element/page/navigation:39
+msgid "nav.jump-to=menu"
+msgstr "Jump to: %1"
+
+#: share/template/element/page/display/tools:77
+msgid "nav.page-tools"
+msgstr "Tools..."
+
+msgid "nav.register"
+msgstr "Register"
+
+#: share/template/element/page/navigation:10
+msgid "nav.select-prompt"
+msgstr "Select..."
+
+#: share/template/layout/html:156
+msgid "nav.socialtext-logo"
+msgstr "Socialtext Logo"
+
+#. (user.userid, user.username)
+#: share/template/layout/html:92
+msgid "nav.welcome=id,name"
+msgstr "Welcome <a href=\"/st/profile/%1\">%2</a>"
+
+#: share/template/element/page/display/edit-button:3 share/template/element/page/display/tools:0 share/template/element/page/display/tools:51
+msgid "page.locked"
+msgstr "Locked"
+
+#: share/template/element/page/display/tools:0 share/template/element/page/display/tools:57
+msgid "page.unlocked"
+msgstr "Unlocked"
+
 #: share/template/authen/element/choose_password_form:20
 msgid "password.choose:"
 msgstr "Choose Password:"
+
+#: share/template/element/settings/global:30
+msgid "password.current"
+msgstr "Current Password"
+
+#: share/template/element/settings/global:36
+msgid "password.new"
+msgstr "New Password"
+
+#: share/template/element/settings/global:42
+msgid "password.retype"
+msgstr "Retype New Password"
+
+#: share/template/fetchrss.html:35
+msgid "rss.error:"
+msgstr "There was an error:"
+
+#: share/template/element/search_box_snippet:3
+msgid "search.new"
+msgstr "New search"
+
+#. (self.cgi.search_term)
+#: share/template/search_help_field.html:25
+msgid "search.your-query-was=term"
+msgstr "Your query was \"%1\""
+
+#: share/template/element/settings/features:17
+msgid "settings.appearance"
+msgstr "Appearance"
+
+#: share/template/element/settings/features:40
+msgid "settings.features"
+msgstr "Features"
+
+#: share/template/view/settings:31 share/template/view/settings:33
+msgid "settings.global-settings"
+msgstr "Global Settings"
+
+#: share/template/element/settings/features:59
+msgid "settings.privacy"
+msgstr "Privacy"
+
+#: share/template/element/settings/preferences:53
+msgid "settings.rss"
+msgstr "RSS"
+
+#: share/template/view/settings:1
+msgid "settings.user-settings"
+msgstr "User Settings"
+
+#: share/template/view/workspace_membership:57
+msgid "time.at"
+msgstr "@"
+
+#: share/template/view/workspace_membership:17
+msgid "user.last-edit"
+msgstr "Last Edit"
+
+#. (hub.current_workspace.title)
+#: share/template/view/empty_watchlist:5
+msgid "watch.empty=wiki"
+msgstr "Your Watchlist in %1 is empty."
+
+#: share/template/element/settings/manage:96
+msgid "wiki.email-address-to-invite"
+msgstr "Email address to invite"
+
+#: share/template/view/user_workspacelist:11 share/template/view/workspace_membership:30
+msgid "wiki.groups"
+msgstr "Groups"
+
+#: share/template/element/settings/manage:164
+msgid "wiki.member-groups"
+msgstr "Member Groups"
+
+#: share/template/view/workspace_membership:12
+msgid "wiki.member-users"
+msgstr "Members"
+
+#: share/template/element/page/navigation:22
+msgid "wiki.membership"
+msgstr "Membership"
+
+#: share/template/view/workspace_membership:32
+msgid "wiki.no-member-groups"
+msgstr "No groups are members of this workspace"
+
+#: share/template/element/settings/unsubscribe:4
+msgid "wiki.unsubscribe-this"
+msgstr "Unsubscribe from this Workspace"
+
+#: share/template/view/user_workspacelist:10
+msgid "wiki.users"
+msgstr "Users"
 
 #. (workspace_title)
 #: share/template/email/st/workspace-admin-invitation.txt:16
 msgid "wiki.visit-later=wiki"
 msgstr "Or you may continue to work in this workspace, and visit \"%1\" later."
+
+#: share/template/view/user_workspacelist:9
+msgid "wiki.wiki-title"
+msgstr "Title"

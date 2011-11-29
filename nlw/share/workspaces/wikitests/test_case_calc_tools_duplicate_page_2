@@ -1,0 +1,15 @@
+| set | cdp_wiki | cdp_wiki |
+
+| open_ok | /%%cdp_wiki%%/index.cgi?duplicate_of_dupe_spreadsheet |  |
+| wait_for_element_visible_ok | st-page-titletext |  |
+| text_like | st-page-titletext | Duplicate of Dupe Spreadsheet |
+
+| *Comment* | Test Case: Calc Tools: Duplicate Page Edit first page, save over second page |  |
+| open_ok | /%%cdp_wiki%%/index.cgi?dupe_spreadsheet |  |
+| click_ok | link=Duplicate Page |  |
+| wait_for_element_visible_ok | st-duplicate-savelink | 30000 |
+| click_ok | st-duplicate-savelink |  |
+| wait_for_element_visible_ok | st-duplicate-error | 30000 |
+| text_like | st-duplicate-error | The new page name you selected, "Duplicate of Dupe Spreadsheet", is already in use. Please choose a different name. |
+| click_ok | st-duplicate-savelink |  |
+| pause_ok | 3000 |  |

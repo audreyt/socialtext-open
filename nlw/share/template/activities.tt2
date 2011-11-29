@@ -1,0 +1,56 @@
+<html>
+    <head>
+        <title>[% loc('activities.socialtext-activities') %]</title>
+        <meta name="viewport" content="width=240" />
+        <link rel="stylesheet" type="text/css" href="/data/accounts/[% user.primary_account_id %]/theme/style.css?[% app_version %]" />
+        [% INCLUDE 'element/js-adapt-fullscreen' %]
+        <script type="text/javascript" charset="utf-8" src="/js/[% app_version %]/socialtext-starfish.jgz"></script>
+        <script type="text/javascript" charset="utf-8" src="/js/[% app_version %]/l10n-[% loc_lang %].jgz"></script>
+        [% INCLUDE widget/syndicator %]
+        [% INCLUDE 'element/wiki/js-bootstrap' %]
+        <style>
+          body, .container_24 {
+            min-width: 200px;
+            background: #fff;
+            margin: 0;
+            width: 100%
+          }
+        </style>
+        <script>
+            $(function() {
+                var activities = new Activities.Widget({
+                    [% IF link_dictionary %]
+                        link_dictionary: [% link_dictionary %]
+                    [% END %]
+                    [% IF signals_only %]
+                        fixed_action: 'action-signals',
+                        signals_only: true,
+                    [% END %]
+                    show_direct: 1,
+                    ui_template: 'ui.activities.tt2',
+                    instance_id: Number([% id %]),
+                    node: $('#content').get(0),
+                    prefix: "[% prefix %]",
+                    base_uri: st.workspace.web_uri.replace(/\/$/,''),
+                    share: "[% share %]",
+                    static_path: "[% static_path %]",
+                    viewer: "[% user.userid %]",
+                    viewer_id: [% user.id %],
+                    viewer_name: "[% user.username %]",
+                    owner: "[% user.userid %]",
+                    owner_id: [% user.id %],
+                    owner_name: "[% user.username %]",
+                    display_limit: 20,
+                    mention_user_id: "",
+                    mention_user_name: ""
+                });
+                activities.start();
+            });
+        </script>
+    </head>
+    <body class="container_24">
+        <div class="grid_24">
+            <div id="content" class="activitiesWidget"></div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,14 @@
+<ul>
+[% FOR tag = tags.sorted_tags %]
+  <li>
+    <a href="?action=category_display;category=[% tag.name | uri %]" class="tag_name" title="[% tag.name | html %]">[% tag.name | html %]</a>
+  [% IF !page_locked_for_user %]
+    <a href="#" class="delete_icon" title="[% loc('page.delete-tag') %]"></a>
+  [% END %]
+  </li>
+[% END %]
+</ul>
+<div class="vpad5 clear"></div>
+[% IF tags.tags.size == 0 %]
+<div id="st-no-tags-placeholder">[% loc('page.no-tags') %]</div>
+[% END %]

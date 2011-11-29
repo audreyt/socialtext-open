@@ -9,6 +9,7 @@ use Socialtext::Session;
 use Socialtext::l10n qw/loc_lang loc/;
 use Socialtext::JSON qw(encode_json decode_json);
 use Socialtext::AppConfig;
+use Try::Tiny;
 use namespace::clean -except => 'meta';
 
 requires 'get_html';
@@ -66,24 +67,30 @@ sub render_template {
     );
 }
 
+around 'GET' => \&wrap_get;
 sub GET {
-    my ($self, $rest) = @_;
+    my $self = shift;
+    my $rest = shift;
 
-    my $res;
+    $self->rest->header('Content-Type' => 'text/html; charset=utf-8');
+    return $self->get_html;
+}
 
-    eval {
-        loc_lang( $self->hub->best_locale );
-        $res = $self->if_authorized_to_view(sub {
-            $self->rest->header('Content-Type' => 'text/html; charset=utf-8');
-            return $self->get_html;
-        });
-    };
-    if ($@) {
-        warn $@;
-        return $self->error(loc("error.display-page", Socialtext::AppConfig->support_address));
+sub wrap_get {
+    my $orig = shift;
+    my $self = shift;
+    my @args = @_;
+
+    try {
+        loc_lang($self->hub->best_locale);
+        return $self->if_authorized_to_view(sub { $orig->($self, @args) });
     }
-
-    return $res;
+    catch {
+        warn $_;
+        return $self->error(
+            loc("error.display-page", Socialtext::AppConfig->support_address)
+        );
+    };
 }
 
 has 'template_paths' => (

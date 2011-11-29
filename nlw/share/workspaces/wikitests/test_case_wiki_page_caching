@@ -1,13 +1,13 @@
 | *Comment* | Test Case: Wiki Page Caching |  |
 
 | *Comment* | Test Case: Wiki Page Caching Setup 1 - create a workspace |  |
-| set | ws | wpc-ws-%%start_time%% |
-| st-admin | create-workspace --empty --name %%ws%% --title %%ws%% -empty | was created |
-| st-admin | add-member --e %%username%% --w %%ws%% | now has |
+| set | wpc_ws | wpc-ws-%%start_time%% |
+| st-admin | create-workspace --empty --name %%wpc_ws%% --title %%wpc_ws%% -empty | was created |
+| st-admin | add-member --e %%username%% --w %%wpc_ws%% | now has |
 | set | pagename | wpc-%%start_time%% |
 
 | *Comment* | Test Case: Wiki Page Caching Create the page |  |
-| st-create-wikipage | %%ws%% | %%pagename%% |
+| st-create-wikipage | %%wpc_ws%% | %%pagename%% |
 
 | *Comment* | Test Case: Wiki Page Caching Create a second user, give rights |  |
 | set | short_user2 | wpc%%start_time%% |
@@ -19,24 +19,25 @@
 | st-admin | create-account --name %%newacct%% | was created |
 | st-admin | create-user --e %%user2%% -p %%password%% --account %%newacct%% | was created |
 | st-admin | create-workspace --empty --name %%newws%% --title %%newws%% --account %%newacct%% --empty | was created |
-| st-admin | add-member --e %%user2%% --w %%ws%% | now has |
+| st-admin | add-member --e %%user2%% --w %%wpc_ws%% | now has |
 | st-admin | add-member --e %%user2%% --w %%newws%% | now has |
 
 | *Comment* | Test Case: Wiki Page Caching Login as second user, comment |  |
 | st-process-jobs |  |  |
 | st-logoutin | %%user2%% | %%password%% |
 | st-create-wikipage | %%newws%% | %%pagetwo%% |
-| st-comment-on-page | /%%newws%%/?%%pagetwo%% | %%pagetwo%% Content |
-| st-comment-on-page | /%%ws%%/?%%pagename%% | "This is a link to newws"{link: %%newws%% [%%pagetwo%%]} |
+
+| call | [st-comment-on-page] | ws=%%newws%% | page=%%pagetwo%% | comment=%%pagetwo%% Content |
+| call | [st-comment-on-page] | ws=%%wpc_ws%% | page=%%pagename%% | `comment="This is a link to newws"{link: %%newws%% [%%pagetwo%%]}` |
 
 | *Comment* | Test Case: Wiki Page Caching Login as user1 |  |
 | st-process-jobs |  |  |
 | st-logoutin | %%username%% | %%password%% |
-| open_ok | /%%ws%%/?%%pagename%% |  |
+| open_ok | /%%wpc_ws%%/?%%pagename%% |  |
 
 | *Comment* | Test Case: Wiki Page Caching. See link text, but not link. See attribution. |  |
 | wait_for_text_present_ok | This is a link to newws | 30000 |
-| wait_for_element_not_present_ok | link=This is a link to newws | 5000 |
+| wait_for_element_not_present_ok | link=This is a link to newws | 15000 |
 | wait_for_element_visible_ok | link=%%short_user2%% | 30000 |
 
 | *Comment* | Test Case: Wiki Page Caching Add %%short_username%% to %%newws%%, text becomes a link |  |
@@ -56,8 +57,8 @@
 | wait_for_element_not_present_ok | link=This is a link to newws | 30000 |
 | wait_for_element_visible_ok | link=%%short_user2%% | 30000 |
 
-| *Comment* | Test Case: Wiki Page Caching Remove %%short_user2%% from %%ws%%. %%short_username%% remains a link |  |
-| st-admin | remove-member -e %%user2%% --w %%ws%% | no longer has the role of |
+| *Comment* | Test Case: Wiki Page Caching Remove %%short_user2%% from %%wpc_ws%%. %%short_username%% remains a link |  |
+| st-admin | remove-member -e %%user2%% --w %%wpc_ws%% | no longer has the role of |
 | st-process-jobs |  |  |
 | pause | 10000 |  |
 | refresh |  |  |
@@ -68,13 +69,15 @@
 | wait_for_text_present_ok | %%short_user2%% | 30000 |
 | wait_for_element_visible_ok | link=%%short_user2%% | 3000 |
 | click_and_wait | link=%%short_user2%% |  |
-| wait_for_text_present_ok | NOTE: You do not share a group with this person and cannot view their profile information. | 30000 |
+| wait_for_element_not_present_ok | link=%%user2%% | 30000 |
 
-| *Comment* | Test Case: Wiki Page Caching Add %%username%% to %%newws%% and include a page |  |
-| st-admin | add-member --e %%username%% --w %%newws%% | now has the role |
-| open_ok | /%%ws%%/?%%pagename%% |  |
-| st-comment-on-page | /%%ws%%/?%%pagename%% | {include: %%newws%% [%%pagetwo%%]} |
-| wait_for_text_present_ok | %%pagetwo%% Content | 30000 |
+| *Comment* | Test Case: Wiki Page Caching Add %%username%% to %%newws%% and include a page |  |  |  |
+| st-admin | add-member --e %%username%% --w %%newws%% | now has the role |  |  |
+| open_ok | /%%wpc_ws%%/?%%pagename%% |  |  |  |
+
+| call | [st-comment-on-page] | ws=%%wpc_ws%% | page=%%pagename%% | `comment={include: %%newws%% [%%pagetwo%%]}` |
+
+| wait_for_text_present_ok | %%pagetwo%% Content | 30000 |  |  |
 
 | *Comment* | Test Case: Wiki Page Caching Remove %%username%% to %%newws%% and include a page |  |
 | st-admin | remove-member --e %%username%% --w %%newws%% | no longer has the role of |
@@ -86,7 +89,7 @@
 
 | *Comment* | Test Case: Wiki Page Caching TEARDOWN |  |
 | st-process-jobs |  |  |
-| st-admin | delete-workspace --w %%ws%% --no-export | has been deleted |
+| st-admin | delete-workspace --w %%wpc_ws%% --no-export | has been deleted |
 | st-admin | delete-workspace --w %%newws%% --no-export | has been deleted |
 | st-admin | deactivate-user --e %%user2%% |  |
 | delete-account | %%newacct%% |  |

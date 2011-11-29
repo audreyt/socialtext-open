@@ -32,6 +32,7 @@ has 'details'   => (is => 'ro', isa => 'HashRef', lazy_build => 1);
 
 my %valid_classes = map { $_ => 1 } (
     (map { "page.$_" } qw/create delete update tag watch unwatch */),
+    (map { "user.$_" } qw/create deactivate joinaccount leaveaccount activate */),
     qw/signal.create/,
 );
 

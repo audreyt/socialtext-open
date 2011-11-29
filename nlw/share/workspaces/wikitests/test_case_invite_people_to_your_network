@@ -24,27 +24,29 @@
 
 THIS TEST SHOULD NOT USE DASHBOARD
 
- st-admin | enable-plugin --account %%rest_acct%% --plugin dashboard | |
+st-admin | enable-plugin --account %%rest_acct%% --plugin dashboard | |
 
 | st-logoutin | %%emailok%% | %%password%% |
 | open_ok | / |  |
-| wait_for_element_visible_ok | link=Invite! | 30000 |
-| click_ok | link=Invite! |  |
+| wait_for_element_visible_ok | st-wiki-subnav-link-invite | 30000 |
+| click_and_wait | st-wiki-subnav-link-invite |  |
 | wait_for_element_present_ok | link=Cancel | 30000 |
 | wait_for_element_present_ok | link=Contact Support | 30000 |
 | text_like | You can only invite people who share the %%domain%% email domain with you. |  |
-| wait_for_element_present_ok | users_new_ids | 30000 |
-| type_ok | users_new_ids | %%emailok2%% |
-| click_ok | link=Invite |  |
-| wait_for_element_visible_ok | Link=Invite more people | 30000 |
+| wait_for_element_visible_ok | //textarea[@name="users_new_ids"] | 5000 |
+| click_ok | //textarea[@name="users_new_ids"] |  |
+| type_ok | //textarea[@name="users_new_ids"] | %%emailok2%% |
+| click_and_wait | link=Invite |  |
+| wait_for_element_visible_ok | link=Invite more people | 10000 |
 | text_like | qr/The following 1 user was successfully invited into this Group:\s+%%eemailok2%%/ |  |
-| click_ok | Link=Invite more people |  |
-| pause | 20000 |  |
-| wait_for_element_present_ok | link=Cancel | 30000 |
-| wait_for_element_present_ok | users_new_ids | 30000 |
-| type_ok | users_new_ids | %%emailbad%% |
-| click_ok | link=Invite |  |
-| wait_for_element_visible_ok | Link=Invite more people | 30000 |
+| click_ok | link=Invite more people |  |
+| pause_ok | 10000 |  |
+| wait_for_element_visible_ok | link=Cancel | 5000 |
+| wait_for_element_visible_ok | //textarea[@name="users_new_ids"] | 5000 |
+| click_ok | //textarea[@name="users_new_ids"] |  |
+| type_ok | //textarea[@name="users_new_ids"] | %%emailbad%% |
+| click_and_wait | link=Invite |  |
+| wait_for_element_visible_ok | link=Invite more people | 30000 |
 | text_like | qr/Sorry, the following 1 email address is not in the domain xndev.com\s+%%eemailbad%%/ |  |
 
 | st-logoutin | %%username%% | %%password%% |
@@ -71,18 +73,13 @@ THIS TEST SHOULD NOT USE DASHBOARD
 | st-admin | add-workspace-admin --w %%to_ws%% --e %%email%% |  |
 
 | *Comment* | Test Case: Invite people. Login as account user |  |
-| open-ok | /nlw/submit/logout |  |
-| wait_for_element_visible_ok | username | 30000 |
-| wait_for_element_visible_ok | password | 30000 |
-| type_ok | username | %%acct_user%% |
-| type_ok | password | %%password%% |
-| click_and_wait | login_btn |  |
+| st-logoutin | %%acct_user%% | %%password%% |
 
 | *Comment* | Test Case: Invite people. Disable People, verify cannot invite |  |
 | st-admin | disable-plugin --account "%%acct%%" --plugin people |  |
 | open_ok | / |  |
 | wait_for_element_visible_ok | link=Workspaces | 30000 |
-| wait_for_element_not_present_ok | st-wiki-subnav-link-invite | 30000 |
+| wait_for_element_not_present_ok | st-wiki-subnav-link-invite | 5000 |
 
 TODO: verify cannot actually issue invitations via URL
 
@@ -90,7 +87,7 @@ TODO: verify cannot actually issue invitations via URL
 | st-admin | enable-plugin --account "%%acct%%" --plugin people | is now enabled |
 | open_ok | / |  |
 | wait_for_element_visible_ok | link=Workspaces | 30000 |
-| wait_for_element_visible_ok | st-wiki-subnav-link-invite | 30000 |
+| wait_for_element_visible_ok | st-wiki-subnav-link-invite | 5000 |
 
 | *Comment* | Test Case: Invite people. Invite UI |  |
 | click_and_wait | st-wiki-subnav-link-invite |  |
@@ -100,7 +97,7 @@ TODO: verify cannot actually issue invitations via URL
 
 | *Comment* | Test Case: Invite people. Invite four users to this Group |  |
 | *Comment* | existing member, brand new user, %%email%% in another Group, and a malformed email addr |  |
-| type_ok | users_new_ids | %%acct_user%%\n%%to_ws_user%%\n%%social%%\nfoo2bar.com |
+| type_ok | //textarea[@name="users_new_ids"] | %%acct_user%%\n%%to_ws_user%%\n%%social%%\nfoo2bar.com |
 | check_ok | append_invitation |  |
 | type_ok | invitation_text | Here is an invitation from %%acct_user%% to join my %%acct%% Group. w00t! |
 | click_and_wait | link=Invite |  |
@@ -123,7 +120,7 @@ TODO: verify cannot actually issue invitations via URL
 | st-logoutin |  |  |
 
 | *Comment* | Test Case: Invite people. Pause 90 seconds for invitation email delivery |  |
-| pause | 90000 |  |
+| pause_ok | 90000 |  |
 
 | *Comment* | Test Case: Invite people. login as %%email%% so you can see the confirmation email |  |
 
@@ -138,7 +135,7 @@ TODO: verify cannot actually issue invitations via URL
 | click_ok | //a[contains(@href,'confirm_email')] |  |
 
 | *Comment* | Test Case: Invite people. Choose Password opens in new window |  |
-| pause | 15000 |  |
+| pause_ok | 10000 | Choose Password opens in new window |
 | selectWindow | Choose Password |  |
 
 | *Comment* | Test Case: Invite people. Choose a pwd and log in |  |
@@ -156,7 +153,7 @@ TODO: verify cannot actually issue invitations via URL
 | st-admin | set-account-config --account "%%acct%%" allow_invitation 0 | The account config for %%acct%% has been updated |
 | click_and_wait | link=Workspaces |  |
 | wait_for_element_visible_ok | link=Workspaces | 30000 |
-| wait_for_element_not_present_ok | st-wiki-subnav-link-invite | 5000 |
+| wait_for_element_not_present_ok | st-wiki-subnav-link-invite | 15000 |
 
 | *Comment* | Test Case: Invite people. Re-enable invitations |  |
 | st-admin | set-account-config --account "%%acct%%" allow_invitation 1 | The account config for %%acct%% has been updated |
@@ -171,7 +168,7 @@ TODO: verify cannot actually issue invitations via URL
 | is_selected_ok | object_id | index=0 |
 
 | *Comment* | Test Case: Invite people. Invite guest user |  |
-| type_ok | users_new_ids | guest@socialtext.net |
+| type_ok | //textarea[@name="users_new_ids"] | guest@socialtext.net |
 | type_ok | invitation_text | Here is an attempt to invite a system-created user which should fail |
 | click_and_wait | link=Invite |  |
 | text_like | Cannot give a role to a system-created user |  |

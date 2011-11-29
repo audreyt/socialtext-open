@@ -1,0 +1,91 @@
+<style>
+    div#contentContainer {
+        padding: 15px;
+    }
+    table.gallery_section {
+        border-bottom: 15px solid white;
+    }
+
+    table.gallery_section th {
+        font-weight: bold;
+        font-size: 120%;
+    }
+
+    table.gallery_section th.title {
+        padding: 0;
+        margin: 0;
+        padding-top: 10px;
+    }
+
+    table.gallery_section td {
+        padding-top: 5px;
+    }
+    
+    .widgetTitle {
+        float: left;
+        padding-top: 5px;
+    }
+
+    #add-update-content-lightbox .input {
+        width: 425px;
+    }
+</style>
+
+<!-- gallery_id=[% gallery.gallery_id || 0 %] -->
+
+[% IF user.is_business_admin %]
+<script>
+    function addUpdateWidget (widget_id, src, hasXml) {
+        get_plugin_lightbox('widgets', 'add-update-content', function () {
+            var lightbox = new ST.AddUpdateContent;
+            lightbox.showLightbox(
+                [% gallery.gallery_id || 0 %], widget_id, src, hasXml
+            );
+        });
+    }
+
+    function removeWidget (gadget_id, title) {
+        get_plugin_lightbox('widgets', 'remove-content', function () {
+            var lb = new ST.RemoveRestoreContent(
+                [% gallery.gallery_id || 0 %], gadget_id, title
+            );
+            lb.showRemoveLightbox();
+        });
+        return false;
+    }
+
+    function restoreWidget (gadget_id, title) {
+        get_plugin_lightbox('widgets', 'remove-content', function () {
+            var lb = new ST.RemoveRestoreContent(
+                [% gallery.gallery_id || 0 %], gadget_id, title
+            );
+            lb.showRestoreLightbox();
+        });
+        return false;
+    }
+
+    function deleteWidget (gadget_id, title) {
+        get_plugin_lightbox('widgets', 'remove-content', function () {
+            var lb = new ST.RemoveRestoreContent(
+                [% gallery.gallery_id || 0 %], gadget_id, title
+            );
+            lb.showDeleteLightbox();
+        });
+        return false;
+    }
+
+    jQuery(function () {
+        jQuery('.notice select').change(function() {
+            var loc = String(document.location).replace(/#.*$/,'');
+            if (loc.match(/account_id=\d+/)) {
+                loc = loc.replace(/account_id=\d+/, 'account_id=' + this.value);
+            }
+            else {
+                loc += ';account_id=' + this.value
+            }
+            loc = loc.replace(/gallery_id=\d+;/, '');
+            document.location = loc;
+        });
+    });
+</script>
+[% END %]

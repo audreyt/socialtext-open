@@ -1,0 +1,12 @@
+<div class="widget">
+    <h1>[% loc('info.files') %]</h1>
+    <div class="content" style="padding-top: 0">
+      <div id="dropbox">[% loc('file.drop-here-to-upload') %]</div>
+      <div id="st-attachment-listing"></div>
+      <div class="clear vpad3"></div>
+      [% IF checker.check_permission('attachments') AND !page_locked_for_user %]
+        <a id="st-attachments-uploadbutton" href="#">[% loc('file.upload') %]</a>
+      [% END %]
+      <div class="clear"></div>
+    </div>
+</div>

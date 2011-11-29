@@ -1,0 +1,46 @@
+<div class="vpad6 center expander">
+    <a id="[% id('expander') %]" href="#"></a>
+</div>
+
+<div class="clear"></div>
+
+<div id="[% id('filters') %]" class="filters">
+    <div class="scrolling">
+        <div class="grid_sub_8 vpad10 alpha">
+            <div class="filterHeading">[% loc('filter.activity-type') %]</div>
+            [% FOR action = this.appdata.actions %]
+                [% INCLUDE filterOption object=action type='action' %]
+            [% END %]
+        </div>
+        <div class="grid_sub_8 vpad10">
+            <div class="filterHeading">[% loc('filter.contributor') %]</div>
+            [% FOR feed = this.appdata.feeds %]
+                [% INCLUDE filterOption object=feed type='feed' %]
+            [% END %]
+        </div>
+        <div class="grid_sub_8 vpad10 omega">
+            <div class="filterHeading">[% loc('filter.group') %]</div>
+            [% FOR network = this.appdata.networks %]
+                [% INCLUDE filterOption object=network type='network' %]
+            [% END %]
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div class="close">
+        <a href="#" id="[% id('close') %]">[% loc('do.close') %]</a>
+    </div>
+</div>
+
+[% BLOCK filterOption %]
+    <div class="filterOption[% IF object.wrap %] wrap[% END %]">
+        <input type="radio"
+            class="[% type %]" value="[% object.value %]"
+            id="[% object.id %]" name="[% id('filter_' _ type) %]"
+            [% IF this.appdata.getValue(type) == object.value %]
+                checked="checked"
+            [% END %]
+            />
+        <label for="[% object.id %]">[% object.filterTitle || object.title %]</label>
+    </div>
+[% END %]
+

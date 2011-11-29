@@ -1,5 +1,10 @@
 | *Comment* | Test Case: Business Control Panel Create Workspace from Account |  |
 
+| set | bcp_user | bcp.user.%%start_time%%@david.socialtext.net |
+| set | bcp_user_prefix | bcp |
+| set | bcp_user_suffix | %%start_time%% |
+| set | bcp_user_short | bcp user %%start_time%% |
+
 | set | acct | acct-for-account-%%start_time%% |
 | set | wstitle | WS For Account %%start_time%% |
 | set | wsname | ws-for-account-%%start_time%% |
@@ -8,9 +13,10 @@
 | set | alttitle | Alt For Account %%start_time%% |
 | set | altname | differws-%%start_time%% |
 
-| *Comment* | Test Case: Business Control Panel Create Workspace from Account - create acct |  |
-| create-account | %%acct%% | was created |
-| create-account | %%altacct%% | was created |
+| *Comment* | Test Case: Business Control Panel Create Workspace from Account - create acct |  |  |
+| create-account | %%acct%% | was created |  |
+| create-account | %%altacct%% | was created |  |
+| create-user | %%bcp_user%% | %%password%% | %%acct%% |
 
 | *Comment* | Test Case: Business Control Panel Create Workspace from Account. find account by search |  |
 | open_ok | /nlw/control/account |  |
@@ -38,17 +44,14 @@
 | st-pause-click | 2000 | //input[@type='submit' and @value="Create Workspace"] |
 | wait_for_text_present_ok | You must add at least one workspace administrator. | 30000 |
 
-| *Comment* | Test Case: Business Control Panel Create Workspace from Account - a workspace admin |  |
-| wait_for_element_visible_ok | addUserLookahead | 30000 |
-| type-lookahead-ok | addUserLookahead | %%short_username%% |
-| wait_for_element_visible_ok | link=%%short_username%% | 5000 |
-| click_ok | link=%%short_username%% |  |
-| wait_for_element_visible_ok | link=%%username%% | 20000 |
-| wait_for_text_present_ok | Users (1) | 30000 |
-| wait_for_element_present_ok | userTable-dropdown-2-0 | 30000 |
-| select_ok | userTable-dropdown-2-0 | label=Admin |
-| pause | 10000 |  |
-| st-pause-click | 5000 | //input[@type='submit' and @value="Create Workspace"] |
+| *Comment* | Test Case: Business Control Panel Create Workspace from Account - a workspace admin |  |  |
+| wait_for_element_visible_ok | addUserLookahead | 30000 |  |
+| select-autocompleted-option-ok | addUserLookahead | %%bcp_user_prefix%% | %%bcp_user_short%% |
+| wait_for_element_visible_ok | link=%%bcp_user%% | 20000 |  |
+| wait_for_text_present_ok | Showing 1 - 1 of 1 | 30000 |  |
+| wait_for_element_present_ok | userTable-dropdown-2-0 | 30000 |  |
+| select_ok | userTable-dropdown-2-0 | label=Admin |  |
+| st-pause-click | 5000 | //input[@type='submit' and @value="Create Workspace"] |  |
 
 | *Comment* | Test Case: Business Control Panel from Create Workspace from Account. verify workspace created |  |
 | wait_for_text_present_ok | %%wsname%% workspace | 30000 |
@@ -69,20 +72,19 @@
 | wait_for_element_visible_ok | workspace_title | 30000 |
 | type_ok | workspace_title | %%altname%% |
 | wait_for_element_visible_ok | auto_name | 30000 |
-| pause | 10000 |  |
-| click_ok | link=change |  |
-| type_lookahead_ok | changeAccountLookahead | %%altacct%% |
-| wait_for_element_visible_ok | link=%%altacct%% | 30000 |
-| click_ok | link=%%altacct%% |  |
-| pause | 10000 |  |
-| wait_for_element_visible_ok | addUserLookahead | 30000 |
-| type-lookahead-ok | addUserLookahead | %%short_username%% |
-| wait_for_element_visible_ok | link=%%short_username%% | 5000 |
-| click_ok | link=%%short_username%% |  |
-| wait_for_element_visible_ok | link=%%username%% | 20000 |
-| wait_for_text_present_ok | Users (1) | 30000 |
+| st_pause_click | 10000 | link=change |
+| wait_for_element_visible_ok | changeAccountLookahead | 30000 |
+| select-autocompleted-option-ok | changeAccountLookahead | %%altacct%% |
+
+| pause_ok | 10000 |  |
+
+| wait_for_element_visible_ok | addUserLookahead | 30000 |  |
+| select-autocompleted-option-ok | addUserLookahead | %%bcp_user_prefix%% | %%bcp_user_short%% |
+
+| wait_for_element_visible_ok | link=%%bcp_user%% | 20000 |
+| wait_for_text_present_ok | Showing 1 - 1 of 1 | 30000 |
 | select_ok | userTable-dropdown-2-0 | label=Admin |
-| pause | 10000 |  |
+| is_selected_ok | userTable-dropdown-2-0 | label=Admin |
 | wait_for_element_visible_ok | create | 30000 |
 | st-pause-click | 5000 | create |
 
@@ -100,9 +102,10 @@ TODO: test the error conditions which were all buggy
 | *Comment* | Test Case: Business Control Panel Create Workspace from Account TEARDOWN |  |
 
 | st-process-jobs |  |  |
-| st-admin | delete-workspace --no-export --w %%wsname%% | has been deleted |
-| st-admin | delete-workspace --no-export --w %%altname%% | has been deleted |
-| delete-account | %%acct%% | has been deleted |
-| delete-account | %%altacct%% | has been deleted |
+| deactivate-user | %%bcp_user%% |  |
+| delete-workspace | %%wsname%% |  |
+| delete-workspace | %%altname%% |  |
+| delete-account | %%acct%% |  |
+| delete-account | %%altacct%% |  |
 
-| *Comment* | Test Case: Business Control Panel Create Workspace from Account COMPLETED |
+| *Comment* | Test Case: Business Control Panel Create Workspace from Account COMPLETED |  |

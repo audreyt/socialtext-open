@@ -29,13 +29,21 @@ my @plugins = map { basename($_) } grep { -d and (-d "$_/share" or -d "$_/templa
 my %Sections = (
     bin => 'bin',
     lib => 'lib',
-    wikiwyg => 'share/skin/wikiwyg/javascript',
+    wikiwyg => 'share/javascript/wikiwyg',
     appliance => ['../appliance/libsocialtext-appliance-perl/template', '../appliance/libsocialtext-appliance-perl/sbin'],
 #   s2 => ['share/skin/s2/template', 'share/skin/s2/javascript'],
-    s3 => ['share/skin/s3/template', 'share/skin/s3/javascript'],
-    template => 'share/template',
+#   s3 => ['share/skin/s3/template', 'share/skin/s3/javascript'],
+    template => [
+        'share/template',
+    ],
     reports => ['../socialtext-reports/template', '../socialtext-reports/lib'],
-    common => 'share/skin/common/javascript',
+    common => [
+        glob('share/javascript/*.js'),
+        'share/javascript/Socialtext',
+        'share/javascript/dialogs',
+        'share/javascript/activities',
+        'share/javascript/template',
+    ],
     map {
         $_ => [grep { -d and (join(',', glob("$_/*")) ne "$_/images") } glob("share/plugin/$_/{share,template}")]
     } @plugins
@@ -69,7 +77,6 @@ for my $key (sort keys %Sections) {
     if ($key eq 'wikiwyg' or $key eq 'lib') {
 #        shell_run('./dev-bin/l10n-widget-to-js');
         unlink 'lib/Socialtext/Widget_resource.pm';
-        unlink 'share/skin/wikiwyg/javascript/widget_resource.js';
     }
 
     shell_run(
@@ -88,10 +95,6 @@ for my $key (sort keys %Sections) {
         }
         system("mv $po.new $po");
         unlink $po unless -s $po;
-    }
-
-    if ($key eq 'wikiwyg' or $key eq 'lib') {
-        shell_run('git checkout share/skin/wikiwyg/javascript/widget_resource.js');
     }
 }
 

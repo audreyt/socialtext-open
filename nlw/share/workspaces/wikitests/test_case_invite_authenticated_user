@@ -1,0 +1,84 @@
+| *Comment* | Test Case: Invite Authenticated User Invite new users |  |
+
+| set | invite | `//input[contains(@class,'lookahead-prompt')]` |
+| set | userdotone | user.o |
+| set | userdottwo | user.t |
+| set | userone | user one |
+| set | usertwo | user two |
+| set | useroneE | user.one@ken.socialtext.net |
+| set | usertwoE | user.two@ken.socialtext.net |
+| set | useroneX | "user one".+user\.one\@ken\.socialtext\.net |
+| set | usertwoX | "user two".+user\.two\@ken\.socialtext\.net |
+| include | [Test Case: Preferences UI User Setup] |  |
+
+| *Comment* | Test Case: Invite Authenticated User non-admin not authorized to invite |  |
+| open_ok | /st/settings/%%ui_wiki_id%%/prefs/manage |  |
+| wait_for_text_present_ok | Not Authorized |  |
+
+| *Comment* | Test Case: Invite Authenticated User elevate to admin, add users to invite |  |
+| st-admin | add-workspace-admin --w %%new_ws%% --e %%new_user%% |  |
+| st-admin | add-member --account %%new_account%% --e %%useroneE%% | now has the role |
+| st-admin | add-member --account %%new_account%% --e %%usertwoE%% | now has the role |
+
+| *Comment* | Test Case: Invite Authenticated User re-open Manage UI |  |
+| open_ok | /st/settings/%%ui_wiki_id%%/prefs/manage |  |
+| wait_for_text_present_ok | Email address to invite | 30000 |
+| wait_for_element_visible_ok | %%invite%% | 30000 |
+
+| *Comment* | Test Case: Invite Authenticated User add %%userone%% and %%usertwo%% |  |
+| select-autocompleted-option-ok | %%invite%% | %%userdotone%% |
+| wait_for_text_present_ok | %%userone%% | 10000 |
+| select-autocompleted-option-ok | %%invite%% | %%userdottwo%% |
+| wait_for_text_present_ok | %%usertwo%% | 10000 |
+| click_and_wait | link=Save |  |
+| wait_for_text_present_ok | Saved | 10000 |
+
+| *Comment* | Test Case: Invite Authenticated User verify two users added |  |
+| wait_for_text_present_ok | %%userone%% | 10000 |
+| text_like | qr/%%useroneX%%/ism |  |
+| wait_for_text_present_ok | %%usertwo%% | 10000 |
+| text_like | qr/%%usertwoX%%/ism |  |
+
+| *Comment* | Test Case: Invite Authenticated User remove two users added |  |
+| st-admin | deactivate-user --e %%useroneE%% |  |
+| st-admin | deactivate-user --e %%usertwoE%% |  |
+
+| set | reset_user | admin_reset_%%start_time%%@ken.socialtext.net |
+| set | reset_bfn | admin reset %%start_time%% |
+| set | last_reset | //table/tbody/tr/td[contains(text(),"%%reset_user%%")]/../td[4]/input[@type='checkbox' and @name="workspace.do.reset_password"] |
+
+| *Comment* | Test Case: Invite Authenticated User create and add %%reset_user%% |  |
+| st-admin | create-user --account %%new_account%% --email %%reset_user%% --password %%password%% |  |
+| st-admin | add-member --email %%reset_user%% --workspace %%new_ws%% |  |
+| st-process-jobs |  |  |
+
+| *Comment* | Test Case: Invite Authenticated User re-open Manage UI to added %%reset_user%% |  |
+| open_ok | /st/settings/%%ui_wiki_id%%/prefs/manage |  |
+
+| *Comment* | Test Case: Invite Authenticated User check the last Reset Password checkbox |  |
+| wait_for_element_visible_ok | %%last_reset%% |  |
+| check_ok | %%last_reset%% |  |
+| is_checked_ok | %%last_reset%% |  |
+| click_ok | link=Save |  |
+| wait_for_text_present_ok | Saved | 10000 |
+
+| *Comment* | Test Case: Invite Authenticated User logoutin, check messages |  |
+| st-logoutin | %%reset_user%% | %%password%% |
+| wait_for_text_present_ok | Password: |  |
+| text_like | You need to set a new password for your account |  |
+| text_like | You should have received an email with a link |  |
+| is_element_present_ok | //input[@type="submit" and @value="Resend Change of Password"] |  |
+
+| *Comment* | Test Case: Invite Authenticated User actually change pwd and login |  |
+| st-open-change-password-uri | %%reset_user%% |  |
+| type_ok | password | password |
+| type_ok | password2 | password |
+| wait_for_element_visible_ok | regster_btn | 30000 |
+| click_and_wait | regster_btn |  |
+| wait_for_text_present_ok | Welcome %%reset_bfn%% | 30000 |
+
+| *Comment* | Test Case: Invite Authenticated User TEARDOWN |  |
+| st-admin | deactivate-user --e %%reset_user%% |  |
+| include | [Test Case: Preferences UI User Teardown] |  |
+
+| *Comment* | Test case: Invite Authenticated User COMPLETED |  |

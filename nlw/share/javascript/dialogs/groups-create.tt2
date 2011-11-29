@@ -1,0 +1,54 @@
+<style>
+    #create-group-lightbox .lookahead input {
+        width: 80%;
+        margin: 10px 0 10px 30px;
+    }
+    #create-group-lightbox .info {
+        margin: 8px 0;
+    }
+    #create-group-lightbox .radioOption {
+        margin: 5px 0;
+    }
+    #create-group-lightbox .radioOption input {
+        float: left;
+    }
+    #create-group-lightbox .radioOption .radioLabel {
+        float: left;
+        width: 450px;
+        margin-left: 5px;
+    }
+</style>
+<div id="create-group-lightbox">
+[% IF permission_set %]
+    <p>[% loc("groups.toggling-self-join-and-private") %]</p>
+[% ELSE %]
+    <div class="info">[% loc("groups.search-before-creating") %]</div>
+    <div class="lookahead">
+        <input class="initial" value="[% loc('groups.search-here') %]"/>
+    </div>
+[% END %]
+
+    <div class="info">[% loc("groups.choose-type-then-click-next") %]</div>
+    <div class="error"></div>
+    <div>
+      <div class="radioOption" id="create-self-join-group">
+        <input id="self-join-radio" type="radio" name="new-group-type" value="self-join"[% IF !permission_set OR permission_set == 'self-join' %] checked="checked"[% END %] />
+        <div class="radioLabel">
+            <label style="font-weight: bold" for="self-join-radio">[% loc('groups.self-join') %]</label>
+            <div>[% loc('groups.self-join-listed-in-directory') %]</div>
+        </div>
+        <div class="clear"></div>
+      </div>
+    </div>
+    <div>
+      <div class="radioOption" id="create-private-group">
+        <input id="private-radio" type="radio" name="new-group-type" value="private"[% IF permission_set == 'private' %] checked="checked"[% END %] />
+        <div class="radioLabel">
+            <label style="font-weight: bold" for="private-radio">[% loc('groups.private') %]</label>
+            <div>[% loc('groups.private-not-listed-in-directory') %]</div>
+      </div>
+      <div class="clear"></div>
+     <br/>
+     <div class="info">[% loc('groups.admin-can-change-setting-after-creation') %]</div>
+    </div>
+</div>

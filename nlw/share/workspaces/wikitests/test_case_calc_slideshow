@@ -3,14 +3,14 @@
 | *Comment* | Test Case: Calc Slideshow |  |
 
 | set_default | wiki | %%workspace%% | defaults to the test workspace |
-| set_default | pt | 5000 | defaults to five seconds |
+| set_default | pt | 15000 | defaults to five seconds |
 | set_default | popup | 8000 | cancel popups in 8 seconds |
 | set_default | wikititle | Canonical Test Data Set | defaults to the test workspace |
 
 | *Comment* | Test Case: Calc Slideshow - Create a forumla, a number, and some text |  |
 | open_ok | /%%workspace%%/index.cgi?action=display;page_type=spreadsheet;page_name=calc%20slideshow%20%%start_time%%#edit |  |
 | wait_for_element_visible_ok | st-save-button-link |  |
-| pause | 5000 | I hate pause; needed for entire page load |
+| pause | 15000 | I hate pause; needed for entire page load |
 
 * Populate a formula, number, and straight text
 
@@ -124,7 +124,7 @@
 | sc_right_cursor |  |  |
 | sc_left_cursor |  |  |
 
-| click_ok | st-comment-button-link |  |
+| click_ok | //li[@id="st-comment-button"]/a |  |
 | click_ok | st-spreadsheet-comment-input |  |
 | type_ok | st-spreadsheet-comment-input | I am leaving a comment |
 | click_ok | st-spreadsheet-comment-save |  |
@@ -202,7 +202,7 @@
 | pause | %%pt%% |  |
 
 | *Comment* | Test Case: Calc Slideshow - Save and re-edit |  |
-| pause | 5000 |  |
+| pause | 15000 |  |
 | st-page-save |  |  |
 | wait_for_element_visible_ok | st-edit-button-link |  |
 | click_ok | st-edit-button-link |  |

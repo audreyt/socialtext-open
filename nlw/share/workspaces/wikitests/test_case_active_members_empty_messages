@@ -15,7 +15,7 @@
 | *Comment* | Test Case: Active Members Empty Messages get an empty Active People widget |  |
 | st_single_widget_in_dashboard | gallery-widget-Active People |  |
 | st-name-widget | 1 | active_members |
-| st-widget-title-like | active_members | Active People |
+| st-widget-title | active_members | Active People |
 | st-widget-settings | active_members |  |
 | uncheck_ok | rotate |  |
 | click_ok | st-savebutton-%%active_members%% |  |
@@ -23,8 +23,6 @@
 
 | *Comment* | Test Case: Active Members Empty Messages set the empty People messages |  |
 | set | EmptyViews | The most frequently viewed profiles will be listed here. You can view your own profile or invite a colleague and help them get started. |
-
-| *Comment* | Test Case: Active Members Empty Messages fails due to {bz: 4356} |
 | set | EmptyReaders | The most active readers will be listed here. As you explore your new workspaces, your reader activity will grow. |
 | set | EmptyEdits | The most active editors will be listed here. As you begin to build and modify your new workspaces, your editor activity will grow. |
 | set | EmptySignals | The most active signalers will be listed here. Try sending a signal from this Dashboard! |
@@ -33,21 +31,19 @@
 | *Comment* | Test Case: Active Members Empty Messages clicks don't work if you go too fast |  |
 | set_speed_ok | 2000 |  |
 
-| wait_for_text_present_ok | Viewed | 30000 |
-| wait_for_text_present_ok | %%EmptyViews%% | 30000 |
+| wait_for_text_present_ok | Viewed | 15000 |
+| wait_for_text_present_ok | %%EmptyViews%% | 15000 |
 
-| wait_for_element_visible_ok | link=Readers | 30000 |
+| wait_for_element_visible_ok | link=Readers | 15000 |
 | click_ok | link=Readers |  |
-| wait_for_text_present_ok | %%EmptyReaders%% | 30000 |
+| wait_for_text_present_ok | %%EmptyReaders%% | 15000 |
 
-| wait_for_element_visible_ok | link=Edits | 30000 |
+| wait_for_element_visible_ok | link=Edits | 15000 |
 | click_ok | link=Edits |  |
-| wait_for_text_present_ok | %%EmptyEdits%% | 30000 |
+| wait_for_text_present_ok | %%EmptyEdits%% | 15000 |
 
-| wait_for_element_visible_ok | //li[@class='signals']//a | 30000 |
-| click_ok | //li[@class='signals']//a |  |
-
-| *Comment* | THIS TEST FAILS BECAUSE IT DISPLAYS A USER WITH a bar showing zero signals !! {bz: 5340} |  |
+| wait_for_element_visible_ok | //a[@class='signals'] | 15000 |
+| click_ok | //a[@class='signals'] |  |
 | wait_for_text_present_ok | %%EmptySignals%% | 30000 |
 
 | wait_for_element_visible_ok | link=Viewed | 30000 |

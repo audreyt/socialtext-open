@@ -22,9 +22,9 @@
 | open_ok | /st/signals |  |
 | wait_for_text_present_ok | %%user_sig%% | 30000 |
 | wait_for_text_present_ok | %%admin_sig%% | 30000 |
-| wait_for_element_visible_ok | //a[@class='hoverLink hideLink'][1] | 30000 |
-| wait_for_element_not_present_ok | //a[@class='hoverLink hideLink'][2] | 30000 |
-| click_ok | //a[@class='hoverLink hideLink'][1] |  |
+| wait_for_element_visible_ok | //a[@class='hideLink'][1] | 30000 |
+| wait_for_element_not_present_ok | //a[@class='hideLink'][2] | 30000 |
+| click_ok | //a[@class='hideLink'][1] |  |
 | verifyConfirmation | Are you sure you want to delete this Signal?\nYou cannot undelete it. |  |
 | wait_for_text_not_present_ok | %%user_sig%% | 30000 |
 
@@ -37,11 +37,11 @@
 | open_ok | /st/signals |  |
 | wait_for_text_present_ok | %%user_sig%% | 30000 |
 | wait_for_text_present_ok | %%admin_sig%% | 30000 |
-| wait_for_element_visible_ok | //a[@class='hoverLink hideLink'][1] | 30000 |
-| click_ok | //a[@class='hoverLink hideLink'][1] |  |
+| wait_for_element_visible_ok | //a[@class='hideLink'][1] | 30000 |
+| click_ok | //a[@class='hideLink'][1] |  |
 | verifyConfirmation | Are you sure you want to delete this Signal?\nYou cannot undelete it. |  |
 | wait_for_text_not_present_ok | %%user_sig%% | 30000 |
-| click_ok | //a[@class='hoverLink hideLink'][1] |  |
+| click_ok | //a[@class='hideLink'][1] |  |
 | verifyConfirmation | Are you sure you want to delete this Signal?\nYou cannot undelete it. |  |
 | wait_for_text_not_present_ok | %%admin_sig%% | 30000 |
 

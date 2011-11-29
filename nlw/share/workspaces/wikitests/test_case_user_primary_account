@@ -2,9 +2,9 @@
 
 | st-config | set self_registration 1 |  |
 | st-config | set allow_network_invitation 1 |  |
-| st-appliance-config | set captcha_enabled 0 | Set captcha_enabled to 'UNDEF' |
+| st-appliance-config-set | captcha_enabled 0 | Set captcha_enabled to 'UNDEF' |
 
-| set | join_acct | join_accout_%%start_time%% |
+| set | join_acct | ja_%%start_time%% |
 | set | join_admin | join_admin_%%start_time%%@david.socialtext.net |
 | set | join_wiki | join_wiki_%%start_time%% |
 | set | invite_user_1 | invite_user_1_%%start_time%%@david.socialtext.net |
@@ -12,9 +12,11 @@
 | set | invite_user_2 | invite_user_2_%%start_time%%@david.socialtext.net |
 | set | invite_user_2_short | invite user 2 %%start_time%% |
 | set | invite_user_3 | invite_user_3_%%start_time%%@david.socialtext.net |
-| set | invite_user_3_short | invite_user_3_%%start_time%% |
+| set | invite_user_3_short | invite user 3 %%start_time%% |
+| set | invite_user_3_escaped | invite_user_3_%%start_time%%\@david.socialtext.net |
 | set | invite_user_4 | invite_user_4_%%start_time%%@david.socialtext.net |
 | set | invite_user_4_short | invite user 4 %%start_time%% |
+| set | invite_prefix | invite |
 
 | *Comment* | Test Case: User: Primary Account create some stuff for users to join |  |  |
 | create_account | %%join_acct%% |  |  |
@@ -24,18 +26,48 @@
 | create_workspace | %%join_wiki%% | %%join_acct%% |  |
 | add_workspace_admin | %%join_admin%% | %%join_wiki%% |  |
 | set_ws_permissions | %%join_wiki%% | public-join-to-edit |  |
+| st-logoutin | %%join_admin%% | %%password%% |  |
+
+| *Comment* | Test Case: User: Primary Account invite user to wiki via wiki invite UI, check |  |  |
+| *Comment* | for some reason typing a full name into the invite box does not work in Se |  |  |
+| *Comment* | so we invite a registered user for now |  |  |
+| create_user | %%invite_user_3%% | %%password%% | %%join_acct%% |
+
+| call | [st-spaces-accordion] | index=1 | section=Manage Users |
+
+| wait_for_element_visible_ok | user | 30000 |  |
+| select-autocompleted-option-ok | user | %%invite_prefix%% | %%invite_user_3_short%% |
+
+| wait_for_text_present_ok | %%invite_user_3_short%% | 10000 |  |
+
+| click_and_wait | link=Save |  |
+| wait_for_text_present_ok | Saved | 10000 |
+| wait_for_text_present_ok | %%invite_user_3%% | 10000 |
+| text_like | content | %%invite_user_3%% |
+
+| open_ok | /nlw/control/account/%%join_acct_id%% |  |
+| wait_for_text_present_ok | %%invite_user_3_short%% | 30000 |
+| click_and_wait | link=%%invite_user_3_short%% <%%invite_user_3%%> |  |
+| wait_for_element_visible_ok | accountsCount | 30000 |
+| wait_for_text_present_ok | Accounts (1 | 10000 |
+| wait_for_text_present_ok | %%join_acct%% | 10000 |
+| wait_for_text_present_ok | Primary Account | 10000 |
+| text_like | accountTable | qr/%%join_acct%%.+Primary Account/ |
 
 | *Comment* | Test Case: User: Primary Account invite user to account through Invite! UI, check their account |  |
-| st-logoutin | %%join_admin%% | %%password%% |
 | open_ok | /?action=invite |  |
 | wait_for_element_visible_ok | //textarea[@name='users_new_ids'] | 30000 |
 | type_ok | //textarea[@name='users_new_ids'] | %%invite_user_1%% |
 | click_and_wait | link=Invite |  |
-| wait_for_text_present_ok | The following 1 user was successfully invited into this Group: | 30000 |
+| wait_for_text_present_ok | The following 1 user was successfully invited into this Group | 30000 |
+| st-process-jobs |  |  |
 | open_ok | /nlw/control/account/%%join_acct_id%% |  |
-| wait_for_text_present_ok | %%invite_user_1%% |  |
+| wait_for_text_present_ok | %%invite_user_1_short%% |  |
 | click_and_wait | link=%%invite_user_1_short%% <%%invite_user_1%%> |  |
-| wait_for_text_present_ok | Accounts (1) | 30000 |
+| wait_for_element_visible_ok | accountsCount | 30000 |
+| wait_for_text_present_ok | Accounts (1 | 10000 |
+| wait_for_text_present_ok | %%join_acct%% | 10000 |
+| wait_for_text_present_ok | Primary Account | 10000 |
 | text_like | accountTable | qr/%%join_acct%%.+Primary Account/ |
 
 | *Comment* | Test Case: User: Primary Account add single user to account via Control Panel, check |  |
@@ -45,25 +77,16 @@
 | click_and_wait | add_user |  |
 | wait_for_text_present_ok | Added user %%invite_user_2%% | 30000 |
 | open_ok | /nlw/control/account/%%join_acct_id%% |  |
-| wait_for_text_present_ok | %%invite_user_2%% |  |
+| wait_for_text_present_ok | %%invite_user_2%% | 30000 |
 | click_and_wait | link=%%invite_user_2_short%% <%%invite_user_2%%> |  |
-| wait_for_text_present_ok | Accounts (1) | 30000 |
+| wait_for_element_visible_ok | accountsCount | 30000 |
+| wait_for_text_present_ok | Accounts (1 | 10000 |
+| wait_for_text_present_ok | %%join_acct%% | 10000 |
+| wait_for_text_present_ok | Primary Account | 10000 |
 | text_like | accountTable | qr/%%join_acct%%.+Primary Account/ |
 
 | *Comment* | Test Case: User: Primary Account add multiple users to account via Control Panel, check |  |
 | *Comment* | *Needs CSV file* |  |
-
-| *Comment* | Test Case: User: Primary Account invite user to wiki via wiki invite UI, check |  |
-| open_ok | /%%join_wiki%%/?action=users_invitation |  |
-| wait_for_element_visible_ok | //textarea[@name='users_new_ids'] | 30000 |
-| type_ok | //textarea[@name='users_new_ids'] | %%invite_user_3%% |
-| click_and_wait | -savelink |  |
-| wait_for_text_present_ok | The following 1 user was invited into this Workspace: | 3000 |
-| open_ok | /nlw/control/account/%%join_acct_id%% |  |
-| wait_for_text_present_ok | %%invite_user_3%% |  |
-| click_and_wait | link=%%invite_user_3_short%% <%%invite_user_3%%> |  |
-| wait_for_text_present_ok | Accounts (1) | 30000 |
-| text_like | accountTable | qr/%%join_acct%%.+Primary Account/ |
 
 | *Comment* | Test Case: User: Primary Account new user self-joins the wiki, check |  |
 | st-logout |  |  |
@@ -76,9 +99,12 @@
 | wait_for_text_present_ok | An email confirming your registration has been sent to %%invite_user_4%%. | 30000 |
 | st-login | %%join_admin%% | %%password%% |
 | open_ok | /nlw/control/account/%%join_acct_id%% |  |
-| wait_for_text_present_ok | %%invite_user_4%% |  |
+| wait_for_text_present_ok | %%invite_user_4_short%% |  |
 | click_and_wait | link=%%invite_user_4_short%% <%%invite_user_4%%> |  |
-| wait_for_text_present_ok | Accounts (1) | 30000 |
+| wait_for_element_visible_ok | accountsCount | 30000 |
+| wait_for_text_present_ok | Accounts (1 | 10000 |
+| wait_for_text_present_ok | %%join_acct%% | 10000 |
+| wait_for_text_present_ok | Primary Account | 10000 |
 | text_like | accountTable | qr/%%join_acct%%.+Primary Account/ |
 
 | *Comment* | Test Case: User: Primary Account TEARDOWN |  |

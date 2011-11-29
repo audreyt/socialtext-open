@@ -14,7 +14,7 @@ BEGIN {
 
 my $hub       = new_hub('empty');
 my $yaml_path = Socialtext::AppConfig->code_base .
-                '/skin/wikiwyg/javascript/Widgets.yaml';
+                '/javascript/wikiwyg/Widgets.yaml';
 
 SET_FIELDS_with_search: {
     my $widget = {id => 'search'};

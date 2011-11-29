@@ -64,8 +64,8 @@ EDIT: {
     my $page = $hub->pages->new_from_name('revision page');
     @revision_ids = $page->all_revision_ids();
     is(scalar(@revision_ids), 2, '2 Revisions');
-    
-    ok($return =~ /Socialtext.start_in_edit_mode\s*=\s*true;/, 'Page returned with edit mode triggered');
+
+    ok($return =~ /"start_in_edit_mode":1,/, 'Page returned with edit mode triggered');
 }
 
 EDIT_CONTENT_contention: {

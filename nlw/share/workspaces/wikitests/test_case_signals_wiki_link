@@ -28,39 +28,32 @@
 | open_ok | /st/signals |  |
 
 | *Comment* | Test Case: Signals Wiki Link. Click Insert Wiki Link |  |
-| wait_for_element_visible_ok | //a[contains(@class,'insertWikilink')] | 30000 |
-| click_ok | //a[contains(@class,'insertWikilink')] |  |
+| wait_for_element_visible_ok | //a[contains(@class,'insertLink')] | 15000 |
+| click_ok | //a[contains(@class,'insertLink')] |  |
 
 | *Comment* | Test Case: Signals Wiki Link. Verify visible elements |  |
-| wait_for_element_visible_ok | //div[@class='wikilinkPopup'] | 30000 |
-| wait_for_element_visible_ok | //input[@name='label'] | 5000 |
-| wait_for_element_visible_ok | //input[@name='workspace'] | 5000 |
-| wait_for_element_visible_ok | //input[@name='page'] | 5000 |
-| wait_for_element_visible_ok | //input[@name='section'] | 5000 |
-| wait_for_element_visible_ok | //a[@class='btn done'] | 5000 |
-| wait_for_element_visible_ok | //a[@class='btn cancel'] | 5000 |
-| text_like | First, start typing a Workspace name, then choose a Workspace from the list that appears. Next, start typing a Page name, then choose a Page from the list that appears. Optionally, add Link text and a Page Section. |  |
+| wait_for_element_visible_ok | add-a-link-form | 30000 |
+| wait_for_element_visible_ok | wiki-link-label | 15000 |
+| wait_for_element_visible_ok | wiki-link-workspace | 15000 |
+| wait_for_element_visible_ok | activities-add-link-ok | 15000 |
+| text_like | Required fields are indicated by an * |  |
 
 | *Comment* | Test Case: Signals Wiki Link setSpeed 3000 to allow for type-in |  |
-| setSpeed | 3000 |  |
-| type_ok | //input[@name='label'] | %%link_text%% |
-| type_lookahead_ok | //input[@name='workspace'] | %%title_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%title_suffix%%')] | 30000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%title_suffix%%')] |  |
-| type_lookahead_ok | //input[@name='page'] | %%page_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%page_suffix%%')] | 30000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%page_suffix%%')] |  |
-| type_ok | //input[@name='section'] | %%section%% |
-| setSpeed | 0 |  |
+| type_ok | wiki-link-label | %%link_text%% |
+| select-autocompleted-option-ok | wiki-link-workspace | %%title_prefix%% |
+| wait_for_element_visible_ok | wiki-link-page | 30000 |
+| wait_for_element_visible_ok | wiki-link-section | 30000 |
+| select-autocompleted-option-ok | wiki-link-page | %%page_prefix%% |
+| type_ok | wiki-link-section | %%section%% |
 
 | *Comment* | Test Case: Signals Wiki Link setSpeed zero, click OK |  |
-| click_ok | //a[@class='btn done'] |  |
-| wait_for_element_not_visible_ok | //div[@class='wikilinkPopup'] | 5000 |
+| click_ok | activities-add-link-ok |  |
+| pause_ok | 15000 |  |
 
 | *Comment* | Test Case: Signals Wiki Link post signal the hard way |  |
-| wait_for_element_visible_ok | //a[@class='btn post'] | 5000 |
+| wait_for_element_visible_ok | //a[contains(@id,"widget") and contains(@id,"post")] | 15000 |
 | pause | 3000 |  |
-| click_ok | //a[@class='btn post'] |  |
+| click_ok | //a[contains(@id,"widget") and contains(@id,"post")] |  |
 | wait_for_element_visible_ok | link=%%link_text%% | 30000 |
 | wait_for_element_visible_ok | //a[contains(@href,'#%%section%%')] | 30000 |
 

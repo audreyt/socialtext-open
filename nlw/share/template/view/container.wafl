@@ -1,0 +1,18 @@
+[%- USE JSON -%]
+[%-#-%] <ul style="width: [% gadget.width || '600px' %]" class="waflWidget" id="waflgadget-[% gadget.instance_id %]"></ul>
+[%-#-%] <script>
+[%-#-%] if (window.gadgets && gadgets.container) {
+[%-#-%]     (function(container){
+[%-#-%]         container.setup({
+[%-#-%]             env: {},
+[%-#-%]             view: 'page',
+[%-#-%]             setPreferences: $.noop
+[%-#-%]         });
+[%-#-%]         container.renderGadget(
+[%-#-%]             [% gadget.json.replace('</script>', '</scr" + "ipt>') %], {},
+[%-#-%]             $('#waflgadget-[% gadget.instance_id %]').get(0)
+[%-#-%]         );
+[%-#-%]         $('#gadget-[% gadget.instance_id %]-preferences').hide();
+[%-#-%]     })($.extend({}, gadgets.container));
+[%-#-%] }
+[%-#-%] </script>

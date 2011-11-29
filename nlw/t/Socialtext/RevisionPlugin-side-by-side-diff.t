@@ -10,7 +10,7 @@ use Socialtext::RevisionPlugin;
 my @before_tags = qw( aaa bbb ccc );
 my @after_tags = qw( aaa ccc );
 
-my $diff = Socialtext::SideBySideDiff->new();
+my $diff = Socialtext::Revision::SideBySideDiff->new();
 
 my $text = $diff->_tag_diff(
     old_tags => \@before_tags,
@@ -33,7 +33,7 @@ run {
     my $case = shift;
 
     is(
-        Socialtext::WikitextSideBySideDiff->compare_chunk(
+        Socialtext::Revision::WikitextSideBySideDiff->compare_chunk(
             $case->before, $case->after, 'before'
         ),
         $case->left,
@@ -41,20 +41,20 @@ run {
     );
 
     is(
-        Socialtext::WikitextSideBySideDiff->compare_chunk(
+        Socialtext::Revision::WikitextSideBySideDiff->compare_chunk(
             $case->before, $case->after, 'after'
         ),
         $case->right,
         $case->name . ' - right'
     );
 
-    my $html = Socialtext::WikitextSideBySideDiff->compare(
+    my $html = Socialtext::Revision::WikitextSideBySideDiff->compare(
         $case->before,
         $case->after
     );
     ok $html ne '', "makes sure compare() is not totally dumb";
 
-    my @split = Socialtext::WikitextSideBySideDiff->split_into_diffable_divs(
+    my @split = Socialtext::Revision::WikitextSideBySideDiff->split_into_diffable_divs(
         $case->before,
         $case->after
     );

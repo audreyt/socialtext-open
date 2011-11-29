@@ -1,0 +1,6 @@
+| *Comment* | st-edit-this-page: ws=%%ws%% thispage=%%thispage%% content=%%content%% |  |
+
+| open_ok | /%%ws%%/%%thispage%% |  |
+| wait_for_element_visible_ok | st-edit-button-link | 30000 |
+| click_ok | st-edit-button-link |  |
+| call | [st-save-page] | content=%%content%% |

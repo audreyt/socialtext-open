@@ -29,7 +29,6 @@ sub gadget_vars {
     # Setup overrides and override preferences
     my %overrides = (
         instance_id => ((2 ** 30) + int(rand(2 ** 30))),
-        UP_workspace_name => $self->cgi->workspace_name || $self->hub->current_workspace->name,
     );
     for my $encoded_pref (split /\s+/, $encoded_prefs) {
         $encoded_pref =~ /^([^\s=]+)=(\S*)/ or next;
@@ -50,9 +49,21 @@ sub gadget_vars {
         # Backwards compat
         $overrides{"UP_$name"} = $overrides{$name} if defined $overrides{$name};
 
+        if ($pref->{datatype} eq 'workspace') {
+            $overrides{"UP_$name"} = $self->cgi->workspace_name
+                || $self->hub->current_workspace->name;
+        }
+
         my $overridden = $overrides{"UP_$name"} // next;
         $pref->{value} = $overridden; # This affects $gadget->requires_preferences
     }
+
+    my $workspace = Socialtext::Workspace->new(
+        name => $self->cgi->workspace_name || $self->hub->current_workspace->name,
+    );
+    my $account = $workspace->account;
+    $overrides{"ENV_primary_account"} = $account->name;
+    $overrides{"ENV_primary_account_id"} = $account->account_id;
 
     my $renderer = Socialtext::Gadget::Renderer->new(
         gadget => $gadget,
@@ -99,6 +110,7 @@ sub widget_setup_screen {
             account_id => $account->account_id,
             plugins => [$account->plugins_enabled],
         },
+        container => { id => -1 },
         pluggable => $self->hub->pluggable,
         gadget => $self->gadget_vars(
             $self->cgi->widget, $self->cgi->encoded_prefs,

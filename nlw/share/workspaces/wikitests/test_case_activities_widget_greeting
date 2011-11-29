@@ -3,6 +3,7 @@
 * Fixture: SocialWidgets
 
 | set | Greeting | What are you working on? |  |
+| set | wikiwygDiv | //div[contains(@class,'setupWikiwyg wikiwyg')] |
 | set | greet_grp | greeting_group_%%start_time%% |
 
 | create-group | %%greet_grp%% |  | %%username%% |
@@ -10,30 +11,30 @@
 | *Comment* | Test Case: Activities Widget Greeting Dashboard |  |
 | st-single-widget-in-dashboard | gallery-widget-Activities |  |
 | wait_for_text_present_ok | %%Greeting%% | 30000 |
-| wait_for_element_present_ok | //div[@class='mainWikiwyg setupWikiwyg wikiwyg'] | 30000 |
-| click_ok | //div[@class='mainWikiwyg setupWikiwyg wikiwyg'] |  |
-| wait_for_text_not_present_ok | %%Greeting%% | 10000 |
+| wait_for_element_present_ok | %%wikiwygDiv%% | 15000 |
+| click_ok | %%wikiwygDiv%% |  |
+| wait_for_text_not_present_ok | %%Greeting%% | 15000 |
 
 | *Comment* | Test Case: Activities Widget Greeting Signals |  |
 | open_ok | /st/signals/ |
 | wait_for_text_present_ok | %%Greeting%% | 30000 |
-| wait_for_element_present_ok | //div[@class='mainWikiwyg setupWikiwyg wikiwyg'] | 30000 |
-| click_ok | //div[@class='mainWikiwyg setupWikiwyg wikiwyg'] |  |
-| wait_for_text_not_present_ok | %%Greeting%% | 10000 |
+| wait_for_element_present_ok | %%wikiwygDiv%% | 15000 |
+| click_ok | %%wikiwygDiv%% |  |
+| wait_for_text_not_present_ok | %%Greeting%% | 15000 |
 
 | *Comment* | Test Case: Activities Widget Greeting profile widget |  |
 | open_ok | /st/profile |  |
 | wait_for_text_present_ok | %%Greeting%% | 30000 |
-| wait_for_element_present_ok | //div[@class='mainWikiwyg setupWikiwyg wikiwyg'] | 30000 |
-| click_ok | //div[@class='mainWikiwyg setupWikiwyg wikiwyg'] |  |
-| wait_for_text_not_present_ok | %%Greeting%% | 10000 |
+| wait_for_element_present_ok | %%wikiwygDiv%% | 15000 |
+| click_ok | %%wikiwygDiv%% |  |
+| wait_for_text_not_present_ok | %%Greeting%% | 15000 |
 
 | *Comment* | Test Case: Activities Widget Greeting group widget |  |
 | open_ok | /st/group/%%group_id%% |  |
 | wait_for_text_present_ok | %%Greeting%% | 30000 |
-| wait_for_element_present_ok | //div[@class='mainWikiwyg setupWikiwyg wikiwyg'] | 30000 |
-| click_ok | //div[@class='mainWikiwyg setupWikiwyg wikiwyg'] |  |
-| wait_for_text_not_present_ok | %%Greeting%% | 10000 |
+| wait_for_element_present_ok | %%wikiwygDiv%% | 15000 |
+| click_ok | %%wikiwygDiv%% |  |
+| wait_for_text_not_present_ok | %%Greeting%% | 15000 |
 
 | *Comment* | Test Case: Activities Widget Greeting TEARDOWN |  |
 | delete-group | %%group_id%% | Recklessly deleting |

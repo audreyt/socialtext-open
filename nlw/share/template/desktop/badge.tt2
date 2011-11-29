@@ -1,20 +1,19 @@
 [%- USE JSON -%]
 <html><head>
-    <link media="screen" href="/static/skin/s3/css/screen.css" type="text/css" rel="stylesheet" />
-  <!--[if gte IE 6]>
-    <link rel="stylesheet" type="text/css" href="/static/skin/s3/css/screen.ie.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="/static/skin/s3/css/screen.ie6.css" media="screen" />
-  <![endif]-->
-  <!--[if gte IE 7]>
-    <link rel="stylesheet" type="text/css" href="/static/skin/s3/css/screen.ie7.css" media="screen" />
-  <![endif]-->
+    <link rel="stylesheet" type="text/css" href="/data/accounts/[% user.primary_account_id %]/theme/style.css?[% app_version %]" />
+    [% INCLUDE 'element/js-adapt-fullscreen' %]
+    [% javascript = javascript || [] %] 
+    [% javascript.unshift("l10n-${loc_lang}.jgz") %]
+    [% javascript.unshift("socialtext-starfish.jgz") %]
+    [% FOR js IN javascript %]
+      <script type="text/javascript" charset="utf-8" src="/js/[% app_version %]/[% js %]"></script>
+    [% END %]
   <style><!--
     li { margin-bottom: 10px; }
     .target { white-space: nowrap; }
   --></style>
     <title>[% app_name %]</title>
 </head><body style="background: white; margin: 0px; font-size: 13px">
-    <script src="/static/skin/common/javascript/jquery-1.2.6.js"></script>
     <span tmp="div" id="flashcontent" style="
         width: 430px;
         height: 250px;
@@ -22,8 +21,8 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        margin-top: -125px;
-        margin-left: -215px;
+        margin-top: -25%;
+        margin-left: -25%;
     ">
 <ol id="getThings" style="display: none; text-align: left">
 
@@ -34,19 +33,15 @@
 <li>[% loc('desktop.download-and-run-installer=flash,air,target', getFlash, getAIR, target) %]</li>
 <li><i>[% loc('desktop.admin-privilege-needed-to-install=target', target) %]</i></li>
 <li class="getFlash" style="margin-bottom: 10px">[% loc('desktop.after-installation-restart-browser') %]</a></li>
-[% SET clickHere = '<a href="/" onclick="$(' _ "'#flashcontent').css('background', 'url(/static/skin/common/images/ajax-loader.gif) no-repeat center'); $('#getThings').hide(); location.replace(location.href); return false" _ '">' _ loc('desktop.click-here') _ '</a>' %]
+[% SET clickHere = '<a href="/" onclick="$(' _ "'#flashcontent').css('background', 'url(/static/images/ajax-loader.gif) no-repeat center'); $('#getThings').hide(); location.replace(location.href); return false" _ '">' _ loc('desktop.click-here') _ '</a>' %]
 <li class="getAIR" style="margin-bottom: 10px; display: none">[% loc('desktop.after-installation-click-to-launch-desktop=link', clickHere) %]</a></li>
 <li>[% loc('desktop.thank-you') %]</li>
 </ol>
 </span>
 
 <div class="buttons" style="position: absolute; right: 10px; bottom: 10px">
-        <ul style="float: left; padding: 10px;" class="widgetButton">
-          <li id="st-desktop-close" class="flexButton disabled">
-              <a href="#" id="st-desktop-cancellink" class="close genericOrangeButton" onclick="if (parent && parent.$) { parent.$.hideLightbox() }">[% loc('do.close') %]</a>
-          </li>
-        </ul>
-    </div>
+  <a href="#" id="st-desktop-cancellink" class="close button" onclick="if (parent && parent.st && parent.st.editor) { parent.st.editor.hideLightbox() }">[% loc('do.close') %]</a>
+</div>
 
 </body>
 <script>
@@ -166,9 +161,9 @@ $('.getFlash').show();
 $('#air-link').hide();
 
 $(function(){
+    $('.button').button();
     so.addVariable("airswfurl", '[% air_swf_url %]');
     so.write("flashcontent");
-    $('#st-desktop-close').removeClass('disabled');
     $('#getThings').show();
 });
 

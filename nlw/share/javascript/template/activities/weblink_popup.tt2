@@ -1,0 +1,20 @@
+<div class="weblinkPopup">
+ <p>[% loc("activities.enter-weblink-url-here") %]</p>
+
+ <p class="input">
+   <span>[% loc('signals.link-text:') %]</span>
+   <input name="label" class="label" type="text" />
+ </p>
+
+ <p class="input">
+   <span>[% loc('signals.link-destination:') %]*</span>
+   <input name="destination" class="destination" type="text" />
+ </p>
+
+ <div class="error" style="display:none;"></div>
+ <div class="buttons">
+  <a class="btn done" href="#">[% loc('do.ok') %]</a>
+  <a class="btn cancel" href="#">[% loc('do.cancel') %]</a>
+ </div>
+ <div style="clear:both;">&nbsp;</div>
+</div>

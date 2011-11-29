@@ -1,29 +1,46 @@
-| *Comment* | Test Case: Home |  |
+| *Comment* | Test Case: Home |  |  |
+| *Comment* | Test Case: Home Weblog |  |  |
 
-| *Comment* | Test Case: Home home is Weblog |  |
-| open_ok | /%%workspace%%/index.cgi?action=users_settings |  |
-| click_and_wait | link=Workspace Appearance |  |
+| set | wh_user | wh.user.%%start_time%%@david.socialtext.net |  |
+| set | wh_wiki | wh_wiki_%%start_time%% |  |
+| set | wh_acct | wh-account-%%start_time%% |  |
+| create-account | %%wh_acct%% |  |  |
+| st-admin | create-workspace --name %%wh_wiki%% -title %%wh_wiki%% --account %%wh_acct%% | was created |  |
+| create-user | %%wh_user%% | %%password%% | %%wh_acct%% |
+| st-admin | add-workspace-admin --email %%wh_user%% --workspace %%wh_wiki%% | now has the role |  |
+| st-logoutin | %%wh_user%% | %%password%% |  |
 
-| *Comment* | click the Weblog radio button |  |
-| click_ok | document.forms[1].homepage_is_weblog[1] |  |
-| type_ok | homepage_weblog | Home %%start_time%% Blog |
+| call | [st-spaces-accordion] | index=1 | section=Features |
+
+| *Comment* | Test Case: Home Weblog - set weblog Home %%start_time%% Blog |  |
+| wait_for_element_visible_ok | //input[@name="workspace.setting.homepage_weblog"] | 15000 |
+| type_ok | //input[@name="workspace.setting.homepage_weblog"] | Home %%start_time%% Blog |
 | click_and_wait | link=Save |  |
+| wait_for_text_present_ok | Saved | 15000 |
 
-TODO: when Selenium checks the weblog box, the weblog text area does not enable. ??
+| *Comment* | Test Case: Home Weblog - verify weblog Home %%start_time%% Blog |  |  |
+| open_ok | /%%wh_wiki%% |  |  |
+| wait_for_text_present_ok | Blog: |  |  |
+| text_like | qr/Blog:.+Home %%start_time%% Blog/ism |  |  |
 
-| wait_for_text_present_ok | Changes Saved | 30000 |
+| *Comment* | Test Case: Home - set Central Page |  |  |
 
-click_and_wait | link=%%title%% | |
-text_like | Weblog: Home %%start_time%% Blog | |
+| call | [st-spaces-accordion] | index=1 | section=Features |
 
-| *Comment* | Test Case: Home is Central Page |  |
-| click_and_wait | link=Settings |  |
-| click_and_wait | link=Workspace Appearance |  |
-| check_ok | document.forms[1].homepage_is_weblog[0] |  |
+| *Comment* | Test Case: Home - type X, then type Backspace to clear weblog |  |
+| wait_for_element_visible_ok | //input[@name="workspace.setting.homepage_weblog"] | 15000 |
+| type_ok | //input[@name="workspace.setting.homepage_weblog"] | X |
+| keyPress | //input[@name="workspace.setting.homepage_weblog"] | \008 |
 | click_and_wait | link=Save |  |
-| text_like | Changes Saved |  |
+| wait_for_text_present_ok | Saved | 15000 |
 
-| click_and_wait | link=%%title%% |  |
-| text_like | This is the home page for %%title%% |  |
+| *Comment* | Test Case: Home - verify Central Page |  |
+| open_ok | /%%wh_wiki%% |  |
+| text_like | Welcome to the %%wh_wiki%% workspace. |  |
+
+| st-process-jobs |  |  |
+| deactivate-user | %%wh_user%% |  |
+| delete-workspace | %%wh_wiki%% |  |
+| delete-account | %%wh_acct%% |  |
 
 | *Comment* | Test case: Home COMPLETED |  |

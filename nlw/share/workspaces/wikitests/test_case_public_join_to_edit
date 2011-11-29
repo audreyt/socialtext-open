@@ -8,6 +8,7 @@
 | st-config | set self_registration 1 |  |
 | st-config | set allow_network_invitation 1 |  |
 | st-admin | set-account-config --account "%%hostname%%" allow_invitation 1 | has been updated |
+
 | set | auth_w | public-auth-%%start_time%% |
 | st-admin | create-workspace --name %%auth_w%% --title "%%auth_w%% Title" |  |
 | st-admin | set-permissions --workspace %%auth_w%% --permissions public-join-to-edit | The permissions for the %%auth_w%% workspace have been changed to public-join-to-edit. |
@@ -15,24 +16,18 @@
 | *Comment* | Case: 1 Logged out user, non-member |  |
 
 | st-logout |  |  |
-| open_ok | /%%auth_w%%/index.cgi |  |
+| open_ok | /%%auth_w%%/ |  |
 | wait_for_element_visible_ok | st-page-titletext | 30000 |
 | text_like | st-page-titletext | %%auth_w%% Title |
 
 | *Comment* | Test Case: Public Join to Edit. Verify buttons and links page top |  |
-| wait_for_element_not_present_ok | st-edit-button-link | 30000 |
-| wait_for_element_not_present_ok | link=Comment | 30000 |
-| wait_for_element_not_present_ok | link=Add Tag | 30000 |
-| wait_for_element_not_present_ok | link=Upload Files | 30000 |
+| wait_for_element_not_present_ok | link=Edit | 15000 |
+| wait_for_element_not_present_ok | link=Comment | 15000 |
+| wait_for_element_not_present_ok | link=Add Tag | 15000 |
+| wait_for_element_not_present_ok | link=Upload Files | 15000 |
 | wait_for_element_visible_ok | link=Log in | 30000 |
-| text_like | globalNav | Log in |
-| wait_for_element_visible_ok | link=Join to edit | 30000 |
+| wait_for_element_visible_ok | link=Join to edit | 15000 |
 
-| *Comment* | Test Case: Public Join to Edit. Verify buttons and links page bottom |  |
-| text_like | footerGlobal | Log in |
-
-| *Comment* | Test Case: Public Join to Edit. Verify bottom buttons missing |  |
-| text_unlike | bottomButtons | Comment |
 
 TODO: Join To Edit, Register, See redirect, membership, and editable. Logout. See Join To Edit.
 TODO: test Join after just joining: Join. See dual Login/Membership page. Login. See editable.
@@ -40,58 +35,35 @@ TODO: test Join after just joining: Join. See dual Login/Membership page. Login.
 | *Comment* | Case 2: Logged in user, non-member |  |
 
 | st-admin | create-user --email nonmember_%%start_time%%@ken.socialtext.net --password %%password%% |  |
-| click_and_wait | link=Log in |  |
-| wait_for_element_visible_ok | username | 30000 |
-| wait_for_element_visible_ok | password | 30000 |
-| type_ok | username | nonmember_%%start_time%%@ken.socialtext.net |
-| type_ok | password | %%password%% |
-| click_and_wait | login_btn |  |
+| st-login | nonmember_%%start_time%%@ken.socialtext.net | %%password%% |
 
 | *Comment* | Test Case: Public Join to Edit. Logged-In, non-member, redirected but NOT GOING to see edit open after login. |  |
+
+| open_ok | /%%auth_w%%/ |  |
 | wait_for_element_visible_ok | st-page-titletext | 30000 |
 | text_like | st-page-titletext | %%auth_w%% Title |
-| wait_for_element_not_present_ok | st-edit-button-link | 30000 |
-| wait_for_element_not_present_ok | link=Comment | 30000 |
-| wait_for_element_not_present_ok | link=Add Tag | 30000 |
-| wait_for_element_not_present_ok | link=Upload Files | 30000 |
-| wait_for_element_visible_ok | link=Join to edit | 30000 |
-
-| *Comment* | Test Case: Public Join to Edit. Workspace settings ARE visible in public workspaces |  |
-| click_and_wait | link=Settings |  |
-| text_like | contentLeft | My Settings |
-| text_like | contentLeft | List All Users |
-| text_like | contentLeft | My Workspaces |
-| text_like | contentLeft | Unsubscribe |
-| text_like | contentLeft | Page Editing |
-| text_like | contentLeft | Screen Layout |
-| text_like | contentLeft | Your Notepad |
-| text_like | contentLeft | What's New |
-| text_like | contentLeft | Syndicate |
-| text_like | contentLeft | Watchlist |
-| text_like | contentLeft | Blogs |
-| text_unlike | contentLeft | Manage All Users |
-| text_unlike | contentLeft | Invite New Users |
+| wait_for_element_not_present_ok | link=Edit | 15000 |
+| wait_for_element_not_present_ok | link=Comment | 15000 |
+| wait_for_element_not_present_ok | link=Add Tag | 15000 |
+| wait_for_element_not_present_ok | link=Upload Files | 15000 |
+| wait_for_element_visible_ok | link=Join to edit | 15000 |
 
 TODO: Join. See immediate editable and membership.
-
-| *Comment* | Test Case: Public Join to Edit. logout, having already joined %%auth_w%%. Attempt to rejoin. |  |
 
 | *Comment* | Case 3: Logged out user, existing member |  |
 | st-admin | add-member --u %%username%% --w %%auth_w%% | now has the role of 'member' |
 
 | st-logout |  |  |
-| open_ok | /%%auth_w%%/index.cgi |  |
+| open_ok | /%%auth_w%%/ |  |
 | wait_for_element_visible_ok | link=Join to edit | 30000 |
-| click_and_wait | link=Join to edit | 30000 |
+| click_and_wait | link=Join to edit |  |
 | wait_for_element_visible_ok | username | 30000 |
-| wait_for_element_visible_ok | password | 30000 |
+| wait_for_element_visible_ok | password | 15000 |
 | type_ok | username | %%username%% |
 | type_ok | password | %%password%% |
 | click_and_wait | login_btn |  |
 
 | *Comment* | Test Case: Public Join to Edit. Member redirected to WS after login |  |
-
-| open_ok | /%%auth_w%%/index.cgi |  |
 
 | wait_for_element_visible_ok | link=Edit | 30000 |
 | wait_for_element_visible_ok | link=Comment | 30000 |
@@ -99,18 +71,18 @@ TODO: Join. See immediate editable and membership.
 | text_like | st-page-titletext | %%auth_w%% Title |
 
 | *Comment* | Case 4: Logged in user, existing member |  |
-| open_ok | / |  |
-| open_ok | /%%auth_w%%/index.cgi |  |
+| open_ok | /%%auth_w%%/ |  |
 | wait_for_element_visible_ok | link=Edit | 30000 |
-| wait_for_element_visible_ok | link=Comment | 30000 |
-| wait_for_element_visible_ok | st-page-titletext | 30000 |
+| wait_for_element_visible_ok | link=Comment | 15000 |
+| wait_for_element_visible_ok | st-page-titletext | 15000 |
 | text_like | st-page-titletext | %%auth_w%% Title |
+
 | st-logout |  |  |
-| open_ok | /%%auth_w%%/index.cgi |  |
+| open_ok | /%%auth_w%%/ |  |
 | wait_for_element_not_present_ok | link=Edit | 30000 |
 | wait_for_element_visible_ok | link=Join to edit | 30000 |
 
-| *Comment* | Test Case: Public Join to Edit Teardown |  |
+| *Comment* | Test Case: Public Join to Edit TEARDOWN |  |
 | st-process-jobs |  |  |
 | st-admin | delete-workspace -workspace %%auth_w%% --no-export | has been deleted |
 

@@ -29,14 +29,14 @@
 | open_ok | /%%ws_this_acct%%/ |  |
 | wait_for_element_visible_ok | st-wikinav-register | 30000 |
 | wait_for_element_visible_ok | link=Join to edit | 30000 |
-| wait_for_element_not_present_ok | st-edit-button-link | 5000 |
+| wait_for_element_not_present_ok | st-edit-button-link | 15000 |
 | click_and_wait | link=Join to edit |  |
 | wait_for_text_present_ok | Welcome to the %%ws_this_acct%% workspace | 30000 |
 | wait_for_element_present_ok | st-edit-button-link | 30000 |
 
 | *Comment* | Test Case: Restrict Self-Join Workspaces User can not see self-join workspace in another account |  |
 | open_ok | /%%ws_other_acct%%/ |  |
-| wait_for_element_not_present_ok | st-wikinav-register | 5000 |
+| wait_for_element_not_present_ok | st-wikinav-register | 15000 |
 | text_unlike | //body | Welcome to the %%ws_other_acct%% workspace |
 
 | *Comment* | Test Case: Restrict Self-Join Workspaces User added to account by one workspace can see another self-join workspace in that account |  |
@@ -45,11 +45,11 @@
 | wait_for_element_visible_ok | st-wikinav-register | 30000 |
 | wait_for_text_present_ok | Welcome to the %%ws_other_acct%% workspace | 30000 |
 | wait_for_element_visible_ok | link=Join to edit | 30000 |
-| wait_for_element_not_present_ok | st-edit-button-link | 5000 |
+| wait_for_element_not_present_ok | st-edit-button-link | 15000 |
 | click_and_wait | link=Join to edit |  |
 | open_ok | /%%ws_other_acct%%/ |  |
 | wait_for_element_visible_ok | st-edit-button-link | 30000 |
-| wait_for_element_not_present_ok | st-wikinav-register | 5000 |
+| wait_for_element_not_present_ok | st-wikinav-register | 15000 |
 | st-admin | remove-member --w %%ws_other_acct%% --e %%username%% | no longer has the role of 'member' |
 | st-admin | remove-member --w %%ws_other_acct_two%% --e %%username%% | no longer has the role of |
 
@@ -59,17 +59,17 @@
 | wait_for_element_visible_ok | st-wikinav-register | 30000 |
 | wait_for_text_present_ok | Welcome to the %%ws_other_acct%% workspace | 30000 |
 | wait_for_element_visible_ok | link=Join to edit | 30000 |
-| wait_for_element_not_present_ok | st-edit-button-link | 5000 |
+| wait_for_element_not_present_ok | st-edit-button-link | 15000 |
 | click_and_wait | link=Join to edit |  |
 | open_ok | /%%ws_other_acct%%/ |  |
 | wait_for_element_visible_ok | st-edit-button-link | 30000 |
-| wait_for_element_not_present_ok | st-wikinav-register | 5000 |
+| wait_for_element_not_present_ok | st-wikinav-register | 15000 |
 
 | *Comment* | Test Case: Restrict Self-Join Workspaces Not Logged In User can not see self-join workspace in any account |  |
 | st-logout |  |  |
 | open_ok | /%%ws_other_acct%%/ |  |
-| wait_for_text_present_ok | Log in to Socialtext | 30000 |
-| wait_for_element_not_present_ok | st-wikinav-register | 5000 |
+| wait_for_text_present_ok | Remember me on this computer | 30000 |
+| wait_for_element_not_present_ok | st-wikinav-register | 15000 |
 | text_unlike | //body | Welcome to the %%ws_other_acct%% workspace |
 
 | *Comment* | Test Case: Restrict Self-Join Workspaces TEARDOWN |  |

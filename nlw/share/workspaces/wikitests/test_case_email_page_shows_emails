@@ -5,8 +5,8 @@ Bug 1654: Email this page shows ldap usernames instead of email addresses
 | *Comment* | Test Case: Email page shows emails |  |
 
 | open_ok | /%%workspace%%/ |  |
-| click_ok | link=Email |  |
-| wait_for_element_visible_ok | st-email-lightbox | 30000 |
+| click_ok | //a[contains(@title,"Email this page")] |  |
+| wait_for_element_visible_ok | st-email-form | 10000 |
 
 | *Comment* | ... email should also appear in the "From" |  |
 | text_like | email_from | %%email%% |

@@ -1,0 +1,349 @@
+---
+# 3rd party support:
+'jquery-1.4.2.js':
+    parts:
+        - contrib/jquery-1.4.2.js
+'jquery-1.4.2.min.js':
+    parts:
+        - contrib/jquery-1.4.2.min.js
+'jquery-1.4.4.js':
+    parts:
+        - contrib/jquery-1.4.4.js
+'jquery-1.4.4.min.js':
+    parts:
+        - contrib/jquery-1.4.4.min.js
+'jquery-1.6.2.js':
+    parts:
+        - contrib/jquery-1.6.2.js
+'jquery-1.6.2.min.js':
+    parts:
+        - contrib/jquery-1.6.2.min.js
+'jquery.dataTables.min.js':
+    parts:
+        - contrib/jquery.dataTables.min.js
+'push-client.js':
+    parts:
+        - activities/push-client.js
+
+# IE thing
+'Selection.htc':
+    parts:
+        -
+            file: wikiwyg/Selection.htc
+            nocomment: 1
+
+# Socialtext files
+'socialtext-starfish.js':
+    compress: 1
+    parts:
+        - contrib/adapt.js
+        - contrib/jquery-1.6.2.js
+        - contrib/jquery-json-1.3.js
+        - contrib/jquery-ui-1.8.5.js
+        - contrib/jquery.ui.selectmenu.js
+        - contrib/jquery.ui.ipad.altfix.js
+        - contrib/jquery.tablesorter.js
+        - contrib/modernizr.js
+        - contrib/utf8.js
+        - contrib/css-beziers.js
+        - contrib/touchscroll.js
+        - {jemplate_runtime: jquery}
+        - JemplatePlugin/*.js
+        - Socialtext.js
+        - {coffee: Socialtext/Buttons.coffee}
+        - Socialtext/Dialog.js
+        - Socialtext/Search.js
+        - Socialtext/Email.js
+        - Socialtext/Attachments.js
+        - Socialtext/Display.js
+        - Socialtext/Listview.js
+        - socialtext-api.js
+        - socialtext-container.js
+        - jquery.dropdown.js
+        - jquery.uiDisable.js
+        - bubble.js
+        - like-indicator.js
+        - nav-list.js
+        - im.js
+        - jquery.html5Upload.js
+
+# Socialtext API
+'socialtext-api.js':
+    parts:
+        - Socialtext/Base.js
+        - Socialtext/Account.js
+        - Socialtext/Group.js
+        - Socialtext/UserAccountRole.js
+        - Socialtext/User.js
+        - Socialtext/Workspace.js
+        - Socialtext/Person.js
+        - Socialtext/Avatar.js
+        - Socialtext/Page.js
+        - {coffee: Socialtext/Editor.coffee}
+
+# Old relic of an editor for comments
+'socialtext-comments.js':
+    compress: 1
+    parts:
+        - comments/guiedit.js
+        - { jemplate: 'comments/guiedit.tt2' }
+
+'socialtext-container.js':
+    compress: 1
+    parts:
+        - { jemplate: 'template' }
+        - shindig-container-default.js
+        - container/drag-and-drop.js
+        - container/gadgets.js
+        - container/madlibs.js
+        - socialtext-activities.js
+        - shindig-inline.js
+        - container/top_content.js
+        - container/inline.js
+
+'socialtext-activities.js':
+    parts:
+        - contrib/jquery.timers.js
+        - socialtext-editor-light.js
+        - cookie.js
+        - activities/push-client.js
+        - activities/base.js
+        - activities/appdata.js
+        - activities/editor.js
+        - activities/event_list.js
+        - activities/widget.js
+        - activities/last_signal.js
+        - activities/network_dropdown.js
+'shindig-inline.js':
+    parts:
+        - contrib/shindig/core/util.js
+        - contrib/shindig/core.io/io.js
+        - contrib/shindig/opensocial-reference/opensocial.js
+        - contrib/shindig/opensocial-reference/container.js
+        - contrib/shindig/opensocial-reference/datarequest.js
+        - contrib/shindig/opensocial-reference/dataresponse.js
+        - contrib/shindig/opensocial-reference/environment.js
+        - contrib/shindig/opensocial-reference/idspec.js
+        - contrib/shindig/opensocial-reference/responseitem.js
+        - contrib/shindig/opensocial-current/restfulcontainer.js
+'dialog-%.js':
+    compress: 1
+    parts:
+        - { jemplate: "dialogs/%.tt2" }
+        - 'dialogs/%.js'
+    expand:
+        - opensocial-gallery
+        - add-update-content
+        - remove-content
+        - confirm
+        - save-layout
+        - simple
+        - activities-add-attachment
+        - activities-add-video
+        - activities-add-link
+        - activities-show-video
+        - activities-signalthis
+        - attachments-upload
+        - attachments-delete
+        - attachments-duplicate
+        - control-create-workspace
+        - control-create-group
+        - groups-leave
+        - groups-create
+        - groups-create-workspace
+        - groups-delete
+        - groups-save
+        - create-content
+        - page-email
+        - page-duplicate
+        - page-rename
+        - page-copy
+        - page-delete
+        - tag-queue
+'shindig-container-%.js':
+    compress: 1
+    parts:
+        - { shindig_feature: "%", type: 'container' }
+    expand: 
+        - default
+        - core
+        - ifpc
+        - pubsub
+        - rpc
+'shindig-gadget-%.js':
+    compress: 1
+    parts:
+        - { shindig_feature: "%", type: 'gadget' }
+    expand: 
+        - default
+        - analytics
+        - com.google.gadgets.analytics
+        - core.io
+        - core
+        - flash
+        - ifpc
+        - minimessage
+        - opensocial-0.6
+        - opensocial-0.7
+        - opensocial-current
+        - opensocial-reference
+        - opensocial-templates
+        - pubsub
+        - rpc
+        - setprefs
+        - settitle
+        - skins
+        - tabs
+        - test
+        - views
+'socialtext-editor-light.js':
+    compress: 1
+    parts:
+        - lookahead.js
+        - jquery.selectOverlap.js
+        - jquery.poll.js
+        - Class.js
+        - loc.js
+        - main.js
+        - contrib/rangy-core.js
+        - contrib/rangy-serializer.js
+        - contrib/rangy-init.js
+        - contrib/jquery.rangyinputs.js
+        - wikiwyg/lib/Wikiwyg.js
+        - wikiwyg-widgets.js
+        - wikiwyg/lib/Wikiwyg/Widgets.js
+        - wikiwyg/lib/Wikiwyg/Wikitext.js
+        - wikiwyg/lib/Wikiwyg/Wysiwyg.js
+'wikiwyg-widgets.js':
+    parts:
+        - { json: 'wikiwyg/Widgets.yaml', name: 'Wikiwyg.Widgets' }
+#'Widgets.coffee':
+#    parts:
+#        - json: 'wikiwyg/Widgets.yaml'
+#          name: 'Widgets'
+#          nocomment: true
+#          epilogue: >
+#              (window.Wikiwyg ||= {}).Widgets = Widgets if window?;
+#              module?.exports = Widgets
+'socialtext-editor.js':
+    parts:
+        - main.js
+        - contrib/rangy-core.js
+        - contrib/rangy-serializer.js
+        - contrib/rangy-init.js
+        - contrib/jquery.rangyinputs.js
+        - jemplate_wikiwyg.js
+        - jemplate_wikiwyg_edit.js
+        - wikiwyg/lib/Wikiwyg.js
+        - wikiwyg-widgets.js
+        - wikiwyg/lib/Wikiwyg/Widgets.js
+        - wikiwyg/lib/Wikiwyg/Toolbar.js
+        - wikiwyg/lib/Wikiwyg/Preview.js
+        - wikiwyg/lib/Wikiwyg/Wysiwyg.js
+        - wikiwyg/lib/Wikiwyg/HTML.js
+        - wikiwyg/lib/Wikiwyg/MessageCenter.js
+        - wikiwyg/lib/Wikiwyg/Wikitext.js
+        - wikiwyg/lib/Wikiwyg/DataValidator.js
+        - wikiwyg/wikiwyg.js
+        - wikiwyg/lib/Document/Emitter.js
+        - wikiwyg/lib/Document/Emitter/HTML.js
+        - wikiwyg/lib/Document/Parser.js
+        - wikiwyg/lib/Document/Parser/Wikitext.js
+'jemplate_wikiwyg.js':
+    parts:
+        - jemplate: wikiwyg/jemplate_wikiwyg
+        - jemplate: wikiwyg/jemplate
+'jemplate_wikiwyg_edit.js':
+    parts:
+        - widget_template: widget_edit.tt2
+          all: 1
+        - widget_template: widget_menu.tt2
+          target: insert_widget_menu
+'timestamp.js':
+    parts:
+        - template/timestamp.js
+'l10n-%.js':
+    compress: 1
+    parts:
+        - {l10n: '%'}
+    expand: 
+        - en
+        - zz
+        - zq
+        - zh_CN
+        #- fr_CA
+        - zh_TW
+        - xx
+        - xq
+
+'socialtext-gadget.js':
+    compress: 1
+    parts:
+        - contrib/jquery-1.4.4.min.js
+        - jquery.poll.js
+        - jquery.selectOverlap.js
+        - contrib/jquery-ui-1.8.5.js
+        - contrib/jquery.ui.selectmenu.js
+        - lookahead.js
+        - fades.js
+        - loc.js
+        - contrib/jquery-json-1.3.js
+        - {jemplate_runtime: jquery}
+        - {file: 'JemplatePlugin/*.js'}
+      # - madlibs.js
+        - contrib/jquery.timers.js
+      # - fields.js
+        - jquery.dropdown.js
+        - socialtext-api.js
+
+# jQuery Mobile (for OpenSocial Widgets)
+'socialtext-jqm.js':
+    compress: 1
+    parts:
+        - jquery-1.6.2.min.js
+        - {jemplate_runtime: jquery}
+        - contrib/jquery-ui-1.8.5.js
+        - contrib/jquery.mobile-1.0b2.min.js
+        - lookahead.js
+        - contrib/jquery.ui.ipad.altfix.js
+        - contrib/colorpicker/js/colorpicker.js
+        - bubble.js
+        - { jemplate: 'template' }
+        - like-indicator.js
+
+# jQuery Mobile (for Mobile UI)
+'socialtext-mobile.js':
+   compress: 1
+   parts:
+        - jquery-1.6.2.min.js
+        - coffee: mobile.coffee
+        - contrib/jquery.mobile-1.0b2.min.js
+        - loc.js
+        - Socialtext.js
+
+# jQuery Mobile (with gadgets)
+'socialtext-mobile-container.js':
+   compress: 1
+   parts:
+        - socialtext-mobile.js
+        - {jemplate_runtime: jquery}
+        - socialtext-container.js
+
+# Stand-alone container (for REST HTML)
+'socialtext-rest-container.js':
+   compress: 1
+   parts:
+        - jquery-1.6.2.min.js
+        - loc.js
+        - Socialtext.js
+        - {jemplate_runtime: jquery}
+        - socialtext-container.js
+
+# javascript needed for /console
+'socialtext-console.js':
+    compress: 1
+    parts:
+        - jquery-1.6.2.js
+        - loc.js
+        - Socialtext.js
+        - Socialtext/Email.js

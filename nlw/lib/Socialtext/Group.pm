@@ -680,6 +680,7 @@ sub to_hash {
         description        => $self->description,
         user_count         => $self->user_count,
         primary_account_id => $self->primary_account_id,
+        permission_set     => $self->permission_set,
     };
     if (!$opts{minimal}) {
         $hash = {
@@ -689,7 +690,6 @@ sub to_hash {
             created_by_user_id   => $self->created_by_user_id,
             created_by_username  => $self->creator->guess_real_name,
             primary_account_name => $self->primary_account->name,
-            permission_set       => $self->permission_set,
         };
     }
 

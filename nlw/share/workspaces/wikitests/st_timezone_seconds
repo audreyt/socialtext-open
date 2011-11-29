@@ -1,0 +1,9 @@
+| set_default | secbox | //input[@name='prefs.timezone.time_display_seconds'] |
+
+| open_ok | /st/settings |  |  |  |
+| wait_for_element_present_ok | %%secbox%% | 15000 |  |  |
+| check_ok | %%secbox%% |  |  |  |
+| is_checked_ok | %%secbox%% |  |  |  |
+| click_ok | link=Save |  |  |  |
+| wait_for_text_present_ok | Saved | 15000 |  |  |
+| is_checked_ok | %%secbox%% |  |  |  |

@@ -1,0 +1,34 @@
+[%# vim: set et sts=2 sw=2: %]
+<div id="st-copy-lightbox">
+  <form id="st-copy-form">
+    <input type="hidden" name="action" value="copy_to_workspace" />
+    <input type="hidden" name="page_name" value="[% page_title | html %]" />
+    <input type="hidden" name="json" value="1" />
+
+    <div>
+      [% loc('wiki.new') %]:
+      <select id="st-copy-workspace" name="target_workspace_id">
+        [% FOR ws = viewer.workspaces %]
+          [% NEXT IF ws.name == workspace.name %]
+          <option data-name="[% ws.name %]" value="[% ws.id %]">
+            [% ws.label %]
+          </option>
+        [% END %]
+      </select>
+    </div>
+
+    [% loc('page.new-name') %]:
+    <input value="[% page_title | html %]" type="text" id="st-copy-newname" name="new_title" size="34" />
+    <br/>
+
+    [% loc('tag.keep') %]:
+    <input type="checkbox" name="keep_categories" id="keep_categories" value="1" checked="true" />
+    <br />
+
+    [% loc('file.keep') %]:
+    <input type="checkbox" name="keep_attachments" id="keep_attachments" value="1" checked="true" />
+
+    <div class="error" id="st-copy-error"></div>
+  </form>
+</div>
+

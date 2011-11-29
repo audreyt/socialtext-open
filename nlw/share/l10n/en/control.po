@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Socialtext i18n\n"
-"PO-Revision-Date: 2011-03-16 23:29+0800\n"
+"PO-Revision-Date: 2011-11-07 18:19+0800\n"
 "Language-Team: Socialtext i18n team\n"
 "Last-Translator: Socialtext i18n team\n"
 "MIME-Version: 1.0\n"
@@ -190,6 +190,10 @@ msgstr "Add User to Workspace:"
 msgid "control.add-users"
 msgstr "Add Users"
 
+#: share/plugin/control/template/control/workspaces_new.html:40
+msgid "control.add-users-and-groups"
+msgstr "Add Users and Groups"
+
 #. (group.driver_group_name, group.group_id)
 #: share/plugin/control/template/control/group_add_to_account.html:5
 msgid "control.adding-group-to-account=group,group-id"
@@ -328,7 +332,7 @@ msgstr "Console"
 
 #: share/plugin/control/template/control/index.html:11
 msgid "control.console-link"
-msgstr "Appliance Technical Administrators can use the <a href='/console'>Console</a> to manage technical aspects of the appliance, such as network and backup settings."
+msgstr "Appliance Technical Administrators can use the <a href='/console'>Console</a> to manage technical aspects of the appliance, such as network and backup settings. Find administration documentation at the <a href='/help-adminguide'>Administrator's Guide</a>"
 
 #: share/plugin/control/template/control/wrapper:125
 msgid "control.contact-support"
@@ -425,6 +429,10 @@ msgstr "Custom server-wide permissions are in effect."
 msgid "control.custom-skins=name"
 msgstr "Custom Skins: %1"
 
+#: share/plugin/control/template/control/add_users.html:21
+msgid "control.data-file"
+msgstr "Data File"
+
 #: share/plugin/control/template/control/field_form:56
 msgid "control.data-source"
 msgstr "Data Source"
@@ -484,6 +492,10 @@ msgstr "Enable Invitation to Group"
 #: share/plugin/control/template/control/report.html:108
 msgid "control.ending-on-midnight-of"
 msgstr "ending on midnight of"
+
+#: share/plugin/control/template/control/accounts.html:54
+msgid "control.export-user-data"
+msgstr "Export User Data"
 
 #. (exportable_accounts)
 #: share/plugin/control/template/control/accounts.html:24
@@ -1021,6 +1033,10 @@ msgstr "Socialtext Control Panel"
 msgid "control.source=driver-name"
 msgstr "Source: %1"
 
+#: share/plugin/control/template/control/accounts.html:39
+msgid "control.standard-account"
+msgstr "Standard"
+
 #: share/plugin/control/template/control/group.html:43
 msgid "control.start-typing-account-name"
 msgstr "Start typing an Account's name"
@@ -1060,6 +1076,10 @@ msgstr "System Required User"
 #: share/plugin/control/template/control/index.html:22
 msgid "control.tabs"
 msgstr "Tabs"
+
+#: share/plugin/control/template/control/account.html:35
+msgid "control.theme"
+msgstr "Theme"
 
 #: share/plugin/control/template/control/workspace.html:25
 msgid "control.this-is-all-users-wiki-for-account:"
@@ -1163,6 +1183,10 @@ msgstr "User was removed from %*(%1,Account)"
 #: share/plugin/control/template/control/user.html:48
 msgid "control.user-requires-confirmation"
 msgstr "User requires confirmation"
+
+#: share/plugin/control/template/control/add_users.html:34
+msgid "control.user-restrictions"
+msgstr "Restrictions"
 
 #: share/plugin/control/share/javascript/workspaces_new.js:36 share/plugin/control/template/control/user.html:16
 msgid "control.username"
@@ -1365,6 +1389,10 @@ msgstr "Workspace name must be between 3 and 30 characters long, and must contai
 msgid "error.invalid-wiki-title"
 msgstr "Workspace title must be between 2 and 64 characters long and may not begin with a '-'."
 
+#: share/plugin/control/share/javascript/theme-account.coffee:70
+msgid "error.invalid=field,color"
+msgstr "%1 is not a legal color: %2"
+
 #: share/plugin/control/template/control/enumerate_groups:10
 msgid "error.no-groups-to-add"
 msgstr "No Groups to Add."
@@ -1419,6 +1447,10 @@ msgstr "Control Panel"
 msgid "nav.desktop"
 msgstr "Desktop"
 
+#: share/plugin/control/template/control/theme-preview:174
+msgid "nav.enterprise-social-software"
+msgstr "Enterprise Social Software"
+
 #: share/plugin/control/template/control/groups.html:4 share/plugin/control/template/control/index.html:29 share/plugin/control/template/control/workspace.html:180 share/plugin/control/template/control/workspaces_new.html:41 share/plugin/control/template/control/wrapper:90
 msgid "nav.groups"
 msgstr "Groups"
@@ -1450,6 +1482,10 @@ msgstr "Settings"
 #: share/plugin/control/template/control/wrapper:53
 msgid "nav.socialtext"
 msgstr "Socialtext"
+
+#: share/plugin/control/template/control/theme-preview:169
+msgid "nav.socialtext-logo"
+msgstr "Socialtext Logo"
 
 #: share/plugin/control/template/control/index.html:27
 msgid "nav.users"
@@ -1515,6 +1551,84 @@ msgstr "Usage Reports"
 #: share/plugin/control/template/control/report.html:100
 msgid "report.usage-ending-midnight-of:"
 msgstr "Usage ending midnight of:"
+
+msgid "info.background_color"
+msgstr "Background of main screen and pull-down menus."
+
+msgid "info.background_image"
+msgstr "Background image for the main screen."
+
+msgid "info.background_image_position"
+msgstr "Placement of background image relative to screen."
+
+msgid "info.background_image_tiling"
+msgstr "Specifies how background image should be repeated."
+
+msgid "info.background_link_color"
+msgstr "Color of hyperlinks in footer."
+
+msgid "info.body_font"
+msgstr "Font of body text."
+
+msgid "info.favicon_image"
+msgstr "Icon (in .ico format) for browser's URL bar and bookmarks."
+
+msgid "info.foreground_shade"
+msgstr "Brightness of footer and navigation menu text."
+
+msgid "info.header_color"
+msgstr "Background color of header area."
+
+msgid "info.header_font"
+msgstr "Font of heading text."
+
+msgid "info.header_image"
+msgstr "Background image for header area."
+
+msgid "info.header_image_position"
+msgstr "Placement of header image relative to screen."
+
+msgid "info.header_image_tiling"
+msgstr "Specifies how header image should be repeated."
+
+msgid "info.header_link_color"
+msgstr "Color of hyperlinks in header."
+
+msgid "info.logo_image"
+msgstr "Logo image (auto-scaled to 201x34 pixels max.)"
+
+msgid "info.primary_color"
+msgstr "Color of hyperlinks and button background."
+
+msgid "info.secondary_color"
+msgstr "Color of menu dividers."
+
+msgid "info.tertiary_color"
+msgstr "Color of button labels."
+
+#: share/plugin/control/template/control/theme-account.html:123
+msgid "theme.confirm-revert-to-default"
+msgstr "Do you really want to revert to the default theme? (This action cannot be undone.)"
+
+#: share/plugin/control/template/control/theme-account.html:3
+msgid "theme.customize-settings"
+msgstr "Customize Theme Settings"
+
+#: share/plugin/control/template/control/theme-account.html:46
+msgid "theme.link-to-original-image"
+msgstr "Link to original image (opens in new window)"
+
+#: share/plugin/control/template/control/theme-reset-account.html:2
+msgid "theme.reset-settings"
+msgstr "Reset Theme Settings"
+
+#: share/plugin/control/template/control/theme-account.html:130
+msgid "theme.reset-to-current?"
+msgstr "Discard changes and reset to the current theme setting?"
+
+#: share/plugin/control/template/control/theme-reset-account.html:14
+msgid "theme.revert-to-default?"
+msgstr "Discard changes and revert to default theme?"
 
 #: share/plugin/control/template/control/report.html:127
 msgid "time.1month"

@@ -1,47 +1,37 @@
-| *Comment* | Test Case: Public. Log out |  |
+| *Comment* | Test Case: Public. Log out explicitly |  |
 
 | st-config | set self_registration 1 |  |
 | st-config | set allow_network_invitation 1 |  |
 | st-admin | set-account-config --account "%%defaultaccount%%" allow_invitation 1 | has been updated |
-| click_and_wait | link=Log out |  |
-| set | auth_w | test-case-public-%%start_time%% |
+
+| st-logout |  |  |
 
 | *Comment* | Test Case: Public. Create a public workspace with no members |  |
-| st-admin | create-workspace --n %%auth_w%% --t "Test Case Public %%start_time%%" |  |
-| st-admin | set-permissions --w %%auth_w%% --p public |  |
+| set | pub_w | public-wiki-%%start_time%% |
+| st-admin | create-workspace --n %%pub_w%% --t "Test Case Public %%start_time%%" |  |
+| st-admin | set-permissions --w %%pub_w%% --p public |  |
 
 | *Comment* | Test Case: Public. Open Public workspace |  |
-| open_ok | /%%auth_w%%/index.cgi |  |
+| open_ok | /%%pub_w%%/ |  |
 
 | *Comment* | Test Case: Public. Verify buttons and links page top |  |
 | wait_for_element_visible_ok | link=Edit | 30000 |
-| wait_for_element_visible_ok | link=Comment | 30000 |
-| text_like | st-edit-button-link | Edit |
-| text_like | st-comment-button-link | Comment |
-| text_like | contentRight | Tag |
-| text_unlike | contentRight | Upload Files |
-
-| wait_for_element_visible_ok | link=Log in | 30000 |
-| text_like | globalNav | Log in |
-| wait_for_element_visible_ok | link=Register | 30000 |
-| text_like | globalNav | Register |
-
-| *Comment* | Test Case: Public Read Only. Verify buttons and links page bottom |  |
-| text_like | footerGlobal | Log in |
-| text_like | footerGlobal | Register |
-| text_like | bottomButtons | Edit |
-| text_like | bottomButtons | Comment |
+| wait_for_element_visible_ok | link=Comment | 15000 |
+| text_like | content | Add Tag |
+| text_unlike | content | Upload Files |
+| wait_for_element_visible_ok | link=Log in | 15000 |
+| wait_for_element_visible_ok | //a[@href='/nlw/register.html?redirect_to='] | 15000 |
 
 | *Comment* | Test Case: Public. Verify Guest can edit |  |
-| st-admin | update-page --w %%auth_w%% --e %%email%% --p "TC Public %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |
+| st-admin | update-page --w %%pub_w%% --e %%email%% --p "TC Public %%start_time%%" < %%wikitest_client_files%%wikitest.txt | has been created |
 
-| open_ok | /%%auth_w%%/?TC Public %%start_time%% |  |
+| open_ok | /%%pub_w%%/?TC Public %%start_time%% |  |
 | wait_for_element_visible_ok | st-edit-button-link | 30000 |
 | click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
 | st-page-save |  |  |
+
+| st-process-jobs |  |  |
 
 | *Comment* | Test Case: Public. Verify Created and Updated By |  |
 | wait_for_element_visible_ok | create-attribution | 30000 |
@@ -50,14 +40,12 @@
 | text_like | update-attribution | qr/Updated by\s+Guest User/i |
 
 | *Comment* | Test Case: Public. Verify central page is home page |  |
-| open_ok | /%%auth_w%%/index.cgi |  |
-| text_like | contentContainer | Test Case Public |
-| text_like | contentContainer | qr/Socialtext Workspaces contain pages/i |
-| click_and_wait | link=Settings |  |
-| text_like | errors-and-messages | To set your preferences for a workspace, you must be logged in. |
+| open_ok | /%%pub_w%%/ |  |
+| text_like | content | Test Case Public %%start_time%% |
+| text_like | content | qr/Socialtext Workspaces contain pages/i |
 
-| *Comment* | Test Case: Public Teardown |  |
+| *Comment* | Test Case: Public TEARDOWN |  |
 | st-process-jobs |  |  |
-| st-admin | delete-workspace --workspace %%auth_w%% --no-export | has been deleted |
+| delete-workspace | %%pub_w%% |  |
 
-| *Comment* | Test Case: Public COMPLETED |
+| *Comment* | Test Case: Public COMPLETED |  |

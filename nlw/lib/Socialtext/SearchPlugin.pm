@@ -174,9 +174,6 @@ sub search {
             scope => $scope,
         ),
         title => loc('search.results'),
-        unplug_uri => "?action=unplug;search_term=$template_args{search_term}",
-        unplug_phrase =>
-            loc('info.unplug-search'),
         Socialtext::Pageset->new(
             cgi => {$self->cgi->all},
             total_entries => $self->result_set->{hits},
@@ -314,6 +311,15 @@ sub _new_search {
         if (defined $row and keys %$row) {
             $cache{$key}++;
             push @results, $row;
+        }
+        elsif ( $hit->isa('Socialtext::Search::AttachmentHit') ) {
+            # We got a bad Solr hit, so reindex the page
+            require Socialtext::JobCreator;
+            Socialtext::JobCreator->index_page(
+                $hit->{page}, '',
+                page_job_class => 'Socialtext::Job::PageReIndex',
+                attachment_job_class => 'Socialtext::Job::AttachmentReIndex',
+            );
         }
     }
     Socialtext::Timer->Pause('hitrows');

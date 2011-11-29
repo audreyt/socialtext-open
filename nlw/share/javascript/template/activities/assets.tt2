@@ -1,0 +1,75 @@
+[% BLOCK more_assets %]
+    [% IF this.moreAssets %]
+    <div class="more">[% loc("explore.more") %]</div>
+    [% END %]
+[% END %]
+
+[% BLOCK count_title -%]
+    [%- IF asset.expanded;
+        loc("explore.click-to-collapse-mentions=count", asset.count);
+    ELSE;
+        IF asset.signal_ids.size && (asset.eventList.size + asset.signal_ids.size > 5);
+            loc("explore.click-to-expand-mentions=count,first-page", asset.count, asset.eventList.size || 5);
+        ELSE;
+            loc("explore.click-to-expand-mentions=count", asset.count);
+        END;
+    END -%]
+[%- END %]
+
+[% BLOCK asset %]
+    <div class="asset" id="[% id('asset' _ index)%]">
+        <div class="assetTitle">
+            <img class="icon" src="[% this.share %]/images/[% asset.class %].gif"/>
+            <a  class="count" title="[% INCLUDE count_title %]" href="#">[% asset.count %]</a>
+            <div class="arrow right">&#9658;</div>
+            <div class="arrow down" style="display:none">&#9660;</div>
+            <div class="expand">(<a title="[% INCLUDE count_title %]" href="#">[% loc("explore.mentions=count", asset.count) %]</a>)</div>
+
+            <div class="titleLink">
+                <a target="_blank" href="[% asset.href %]">[% asset.title || asset.href %]</a>
+            </div>
+            [% IF asset.class == 'weblink' && asset.title %]
+            <div class="hrefLink">
+                <a target="_blank" href="[% asset.href %]">[% asset.href %]</a>
+            </div>
+            [% END %]
+
+            <div class="assetTags">
+                [% FOR tag = asset.unique_tags %]
+                    <span style="color:[% tag.color %]" class="tag">
+                        #<a style="color:[% tag.color %]" href="javascript:Activities.ExploreFilters.setValue('tags', '[% tag.name %]');">[% tag.name %]</a>
+                    </span>
+                [% END %]
+            </div>
+
+            <div class="assetAvatars">
+                [% FOR user_id = asset.user_ids %]
+                    <a href="javascript:Activities.ExploreFilters.setValue('users', '[% user_id %]');">
+                        <img src="[% this.base_uri %]/data/people/[% user_id %]/small_photo"/>
+                    </a>
+                [% END %]
+            </div>
+        </div>
+
+        <div class="assetBody" style="display:none">
+            <div class="event_list"></div>
+            <div class="moreMentions" style="display:none">
+                <a href="#">[% loc('activities.more-mentions') %]</a>
+            </div>
+        </div>
+
+        <div class="clear"></div>
+    </div>
+
+    <div class="clear"></div>
+[% END %]
+
+<div id="[% id('messages') %]" class="messages"></div>
+<div class="assetList">
+[% FOR asset = assets %]
+    [% INCLUDE asset asset=asset index=loop.index %]
+[% END %]
+</div>
+
+<div class="moreAssets">[% INCLUDE more_assets %]</div>
+<img class="moreAssetsLoading" src="[% this.static_path %]/images/ajax-loader.gif"/>

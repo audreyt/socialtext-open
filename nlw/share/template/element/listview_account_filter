@@ -1,0 +1,28 @@
+[%# vim: set et sts=2 sw=2: %]
+[% IF accounts and ((accounts.size > 1) OR (account_groups.${accounts.0.account_id}.size > 0))%]
+  <span class="account-select-span">[% loc('nav.filter:') %] 
+  <select class="account-select" onchange="location.href='?[% predicate %];tag=[% tag | uri %];sortby=[% sort_by %];limit=[% limit %]'+this.value">
+  <option value=";account_id=all"[% IF people_selector == ';account_id=all' %] selected="selected"[% END %]>[% loc("group.all") %]</option> 
+  [% FOR iaccount = accounts %] 
+  <option  value=";account_id=[% iaccount.account_id %]"
+     [% IF people_selector == ";account_id=" _ iaccount.account_id %]
+    selected="selected"
+    [% END %]
+    >
+    [% SET user_count = iaccount.user_count %]
+    [% iaccount.name | html %] ([% loc("account.count=people",user_count) %])
+    </option>
+    [% FOR igroup = account_groups.${iaccount.account_id} %]
+        <option  value=";group_id=[% igroup.group_id %]"
+         [% IF people_selector == ";group_id=" _ igroup.group_id %]
+          selected="selected"
+         [% END %]
+        > 
+          [% SET user_count = igroup.user_count %]
+          &nbsp;...&nbsp;[% igroup.display_name | html %] ([% loc("account.count=people",user_count) %])
+        </option>
+    [% END %]
+  [% END %]
+  </select>
+  </span>
+[% END %]

@@ -19,45 +19,42 @@
 | open_ok | /?group/%%group_id%% |  |
 | st-send-signal-in-activities-widget | %%mysignal_2%% |  |
 
-| st_verify_text_in_activities_widget | activity_widget | %%mysignal_1%% |
-| st_verify_text_in_activities_widget | activity_widget | `qr/%%group_name%%.+By you.*minute.*ago\s*to/ism` |
-| st_verify_text_in_activities_widget | activity_widget | %%mysignal_2%% |
+| st-verify-text-in-activities-widget | %%mysignal_1%% |  |
+| st-verify-text-in-activities-widget | `qr/%%group_name%%.+By you.*minute.*ago/ism` |  |
+| st-verify-text-in-activities-widget | %%mysignal_2%% |  |
 
 | *Comment* | Test Case: Groups UI Signal from group home Verify Signal in Signal Page |  |
 
 | open_ok | /st/signals |  |
 | wait_for_text_present_ok | Colleagues | 30000 |
-| text_like | st-editing-tools-edit | Signals |
 
-| *Comment* | Test Case: Groups UI Signal from group home. Select within %%group_name%% |  |
-| wait_for_element_present_ok | //ul[@id='st-dropdown-2-list']/li[3]/a | 20000 |
-| click_ok | //ul[@id='st-dropdown-2-list']/li[3]/a |  |
+| *Comment* | Test Case: Groups UI Signal from group home. Select in %%group_name%% |  |
+| wait_for_element_visible_ok | //a[contains(@id,"expander")] | 30000 |
+| click_ok | //a[contains(@id,"expander")] |  |
+| wait_for_element_visible_ok | group-%%group_id%% | 15000 |
+| click_ok | group-%%group_id%% |  |
+| pause_ok | 2000 |  |
 
-| open_ok | /st/dashboard |  |
-| wait_for_text_present_ok | Welcome, New User | 30000 |
-| text_like | st-editing-tools-edit | Welcome |
+| open_ok | /?action=workspaces_listall |  |
+| wait_for_text_present_ok | All | 30000 |
 | open_ok | /st/signals |  |
 | wait_for_text_present_ok | Colleagues | 30000 |
-| text_like | st-editing-tools-edit | Signals |
 
-| st-name-widget | 1 | signals_widget |
-| st_verify_text_within_activities_widget | %%mysignal_1%% |  |
-| st_verify_text_within_activities_widget | `qr/%%group_name%%.+By you.*minute.*ago\s*to/ism` |  |
-| st_verify_text_within_activities_widget | %%mysignal_2%% |  |
+| st-verify-text-in-activities-widget | %%mysignal_1%% |
+| st-verify-text-in-activities-widget | `qr/%%group_name%%.+By you.*minute.*ago/ism` |
+| st-verify-text-in-activities-widget | %%mysignal_2%% |
 
 | *Comment* | Test Case: Groups UI Signal from group home - Disable signals, do not see signal option |  |
 | st-admin | disable-plugin --plugin signals --account %%group_acct%% |  |
 | open_ok | /?group/%%group_id%% |  |
 | st-name-widget | 3 | activity_widget |
 | text_unlike | //body | What are you working on? |
-| text_like | //body | `qr/within\s*%%group_name%%/` |
 
 | *Comment* | Test Case: Groups UI Signal from group home - Enable signals, see signal option |  |
 | st-admin | enable-plugin --plugin signals --all-accounts |  |
 | open_ok | /?group/%%group_id%% |  |
 | st-name-widget | 3 | activity_widget |
 | wait_for_text_present_ok | What are you working on? | 10000 |
-| text_like | //body | `qr/within\s*%%group_name%%/` |
 
 | *Comment* | Test Case: Groups UI Signal from group home - Login as non group member, do not see signal |  |
 | st-admin | add-member --workspace %%group_ws%% --email %%username%% |  |
@@ -65,22 +62,22 @@
 
 | open_ok | /st/signals |  |
 | wait_for_text_present_ok | Colleagues | 30000 |
-| text_like | st-editing-tools-edit | Signals |
 
-| *Comment* | Test Case: Groups UI Signal from group home. Select within All my groups |  |
-| wait_for_element_present_ok | //ul[@id='st-dropdown-2-list']/li[1]/a[contains(text(),'All my groups')] | 20000 |
-| click_ok | //ul[@id='st-dropdown-2-list']/li[1]/a[contains(text(),'All my groups')] |  |
+| *Comment* | Test Case: Groups UI Signal from group home. Select in All my groups |  |
+| wait_for_element_visible_ok | //a[contains(@id,"expander")] | 30000 |
+| click_ok | //a[contains(@id,"expander")] |  |
+| wait_for_element_visible_ok | network-all | 15000 |
+| click_ok | network-all |  |
+| pause_ok | 2000 |  |
 
-| open_ok | /st/dashboard |  |
-| wait_for_text_present_ok | Welcome, New User | 30000 |
-| text_like | st-editing-tools-edit | Welcome |
+| open_ok | /?action=workspaces_listall |  |
+| wait_for_text_present_ok | All | 30000 |
 | open_ok | /st/signals |  |
 | wait_for_text_present_ok | Colleagues | 30000 |
-| text_like | st-editing-tools-edit | Signals |
 
 | st-name-widget | 1 | signals_widget |
 | st_text_unlike_in_activities_widget | signals_widget | %%mysignal_1%% |
-| st_text_unlike_in_activities_widget | signals_widget | `qr/%%group_user_short%%.*minute.*ago\s*to\s*%%group_name%%/` |
+| st_text_unlike_in_activities_widget | signals_widget | `qr/%%group_user_short%%.*minute.*ago/` |
 | st_text_unlike_in_activities_widget | signals_widget | %%mysignal_2%% |
 
 | *Comment* | Test Case: Groups UI Signal from group home - Add member, see signal |  |
@@ -88,30 +85,30 @@
 
 | open_ok | /st/signals |  |
 | wait_for_text_present_ok | Colleagues | 30000 |
-| text_like | st-editing-tools-edit | Signals |
 
-| *Comment* | Test Case: Groups UI Signal from group home. Select within All my groups after Added |  |
-| wait_for_element_present_ok | //ul[@id='st-dropdown-2-list']/li[1]/a[contains(text(),'All my groups')] | 20000 |
-| click_ok | //ul[@id='st-dropdown-2-list']/li[1]/a[contains(text(),'All my groups')] |  |
+| *Comment* | Test Case: Groups UI Signal from group home. Select in All my groups after Added |  |
+| wait_for_element_visible_ok | //a[contains(@id,"expander")] | 30000 |
+| click_ok | //a[contains(@id,"expander")] |  |
+| wait_for_element_visible_ok | network-all | 15000 |
+| click_ok | network-all |  |
+| pause_ok | 2000 |  |
 
-| open_ok | /st/dashboard |  |
-| wait_for_text_present_ok | Welcome, New User | 30000 |
-| text_like | st-editing-tools-edit | Welcome |
+| open_ok | /?action=workspaces_listall |  |
+| wait_for_text_present_ok | All | 30000 |
 | open_ok | /st/signals |  |
 | wait_for_text_present_ok | Colleagues | 30000 |
-| text_like | st-editing-tools-edit | Signals |
 
 | *Comment* | Test Case: Groups UI Signal from group home. Use optional space in regex for IE |  |
-| st-name-widget | 1 | signals_widget |
-| st_verify_text_in_activities_widget | signals_widget | `qr/Showing.+signals.+from/` |
-| st_verify_text_in_activities_widget | signals_widget | %%mysignal_1%% |
-| st_verify_text_in_activities_widget | signals_widget | `qr/%%group_user_short%%.*minute.*ago\s*to\s*%%group_name%%/` |
-| st_verify_text_in_activities_widget | signals_widget | %%mysignal_2%% |
 
-| *Comment* | Test Case: Groups UI Signal from group home TEARDOWN |
+| st-verify-text-in-activities-widget | `qr/Showing.+signals.+from/` |
+| st-verify-text-in-activities-widget | %%mysignal_1%% |
+| st-verify-text-in-activities-widget | `qr/%%group_user_short%%.*minute.*ago/` |
+| st-verify-text-in-activities-widget | %%mysignal_2%% |
+
+| *Comment* | Test Case: Groups UI Signal from group home TEARDOWN |  |
 | st-process-jobs |  |  |
-| delete-group | %%group_id%% |
+| delete-group | %%group_id%% |  |
 | delete-workspace | %%group_ws%% | Recklessly |
 | delete-account | %%group_acct%% |  |
 
-| *Comment* | Test Case: Groups UI Signal from group home COMPLETED |
+| *Comment* | Test Case: Groups UI Signal from group home COMPLETED |  |

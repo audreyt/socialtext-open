@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Socialtext i18n\n"
-"PO-Revision-Date: 2011-05-19 02:19-0700\n"
+"PO-Revision-Date: 2011-11-02 16:04-0700\n"
 "Last-Translator: Socialtext i18n team\n"
 "Language-Team: Socialtext i18n team\n"
 "MIME-Version: 1.0\n"
@@ -59,7 +59,7 @@ msgstr "Remove"
 
 #: share/plugin/people/template/profile_links:21
 msgid "do.revert-to-default"
-msgstr "Revert to Default…"
+msgstr "Revert to Default..."
 
 #: share/plugin/people/share/widgets/profile_tags/widget.js:86
 msgid "error.add-profile-tag"
@@ -357,6 +357,10 @@ msgstr "Add this tag to someone"
 msgid "people.add-tag-to-user=name:"
 msgstr "Add tag \"%1\" to user:"
 
+#: share/plugin/people/share/javascript/dialogs/add-tag-to-person.js:6
+msgid "people.add=tag"
+msgstr "Add Tag \"%1\""
+
 #: share/plugin/people/share/people.js:31
 msgid "people.cancel-add-tag"
 msgstr "cancel"
@@ -415,9 +419,9 @@ msgstr "Profile"
 
 #: share/plugin/people/template/lite/people.html:7
 msgid "people.search"
-msgstr "Search People"
+msgstr "People"
 
-#: share/plugin/people/template/search_box_people:1
+#: share/plugin/people/template/lite/people.html:7
 msgid "people.search:"
 msgstr "Search People:"
 
@@ -453,6 +457,10 @@ msgstr "Stop following"
 #: share/plugin/people/share/template/all_people-prefs.xml:2
 msgid "people.tag-name"
 msgstr "Tag Name"
+
+#: share/plugin/people/share/javascript/dialogs/add-tag-to-person.tt2:4
+msgid "people.to-person:"
+msgstr "To person:"
 
 #: share/plugin/people/template/view/peoplelist:13
 msgid "people.tools"

@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Socialtext i18n\n"
-"PO-Revision-Date: 2011-06-28 09:47-0700\n"
+"PO-Revision-Date: 2011-11-17 19:04-0800\n"
 "Language-Team: Socialtext i18n team\n"
 "Last-Translator: Socialtext i18n team\n"
 "MIME-Version: 1.0\n"
@@ -93,7 +93,7 @@ msgstr "Blogs"
 
 #: share/skin/s3/template/element/settings/weblog_create:5
 msgid "blog.create"
-msgstr "Create A Blog"
+msgstr "Create Blog"
 
 #: share/skin/s3/template/view/weblog:78
 msgid "blog.edit"
@@ -247,6 +247,22 @@ msgstr "users can see pages without logging in."
 #: share/skin/s3/template/element/settings/workspaces_settings_features_section:43
 msgid "config.yes"
 msgstr "Yes"
+
+#: share/skin/s3/template/view/page/revision_compare:32
+msgid "diff.highlight"
+msgstr "Highlight"
+
+#: share/skin/s3/template/view/page/revision:34
+msgid "diff.html-view"
+msgstr "Source View"
+
+#: share/skin/s3/template/view/page/revision_compare:46
+msgid "diff.view"
+msgstr "View"
+
+#: share/skin/s3/template/view/page/revision_compare:39
+msgid "diff.wikitext"
+msgstr "Wikitext"
 
 #: share/skin/s3/javascript/lightbox/attachment.tt2:28 share/skin/s3/javascript/lightbox/email.tt2:28
 msgid "do.add"
@@ -651,7 +667,7 @@ msgstr "No page named '%1' exists"
 #. (loc("page.type-"+type)
 #: share/skin/s3/javascript/lightbox/create_content.js:73
 msgid "error.no-page=type,tag"
-msgstr "No %1 pages tagged '%2' could be found"
+msgstr "There are no pages tagged 'template' for the selected page type."
 
 #: share/skin/s3/javascript/lightbox/email.js:126
 msgid "error.no-recipient"
@@ -783,7 +799,7 @@ msgstr "Delete Attachment"
 
 #: share/skin/s3/template/view/attachmentslist:76
 msgid "file.delete-selected"
-msgstr "Delete Selected Attachments"
+msgstr "Delete Selected Files"
 
 #: share/skin/s3/javascript/template/attachment-listing.tt2:15 share/skin/s3/javascript/template/attachment-listing.tt2:16 share/skin/s3/template/element/page/display/attachments:34 share/skin/s3/template/element/page/display/attachments:37 share/skin/s3/template/element/page/display/attachments:38
 msgid "file.delete-this"
@@ -1480,7 +1496,7 @@ msgstr "My Watchlist"
 
 #: share/skin/s3/template/lite/workspace_list/my_workspaces:5 share/skin/s3/template/view/settings:41
 msgid "nav.my-wikis"
-msgstr "My Workspaces"
+msgstr "All My Workspaces"
 
 #: share/skin/s3/template/element/listview_tabs:5 share/skin/s3/template/layout/html:142 share/skin/s3/template/layout/user_frame:147 share/skin/s3/template/lite/subnav.html:14 share/skin/s3/template/lite/subnav.html:16 share/skin/s3/template/view/empty_watchlist:8 share/skin/s3/template/view/page/display:224
 msgid "nav.news"
@@ -1725,6 +1741,9 @@ msgstr "Duplicate of %1"
 msgid "page.edit"
 msgstr "Edit"
 
+msgid "page.edit-as-xhtml"
+msgstr "Edit"
+
 #. (page.title)
 #: share/skin/s3/template/lite/page/edit.html:2
 msgid "page.edit=title"
@@ -1811,7 +1830,7 @@ msgstr "%1 has opened this page for editing %2."
 
 #: share/skin/s3/template/element/listview_tabs:11 share/skin/s3/template/view/empty_watchlist:13
 msgid "page.orphaned"
-msgstr "Orphaned Pages"
+msgstr "Orphan Pages"
 
 #: share/skin/s3/template/view/page/display:77
 msgid "page.print"
@@ -1879,6 +1898,9 @@ msgstr "Spreadsheet"
 
 #: share/skin/s3/javascript/lightbox/create_content.js:9
 msgid "page.type-wiki"
+msgstr "Page"
+
+msgid "page.type-xhtml"
 msgstr "Page"
 
 #: share/skin/s3/template/view/page/display:96
@@ -1953,7 +1975,7 @@ msgstr "By:"
 
 #: share/skin/s3/template/view/page/revision_compare:32
 msgid "revision.color"
-msgstr "Color View (Unformatted)"
+msgstr "Wikitext View"
 
 #: share/skin/s3/template/view/page/revision_compare:49
 msgid "revision.compare"
@@ -2010,7 +2032,7 @@ msgstr "Tags:"
 
 #: share/skin/s3/template/view/page/revision_compare:34
 msgid "revision.view"
-msgstr "View Formatted"
+msgstr "Formatted View"
 
 #: share/skin/s3/template/view/listview:44 share/skin/s3/template/view/listview:57
 msgid "search.be-more-specific"
@@ -2044,7 +2066,7 @@ msgstr "The search you have entered is too general; %1 pages and/or attachments 
 
 #: share/skin/s3/javascript/s3.js:1074 share/skin/s3/javascript/s3.js:16
 msgid "sheet.untitled"
-msgstr "Untitled Spreadsheet"
+msgstr "Untitled Page"
 
 #: share/skin/s3/template/element/settings/workspaces_settings_skin_section:32
 msgid "skin.browse"
@@ -2393,15 +2415,23 @@ msgstr "Public workspaces"
 
 #: share/skin/s3/template/element/workspace_list/public_workspaces:5
 msgid "wiki.public:"
-msgstr "You have free access to view and contribute to any of these public wikis:"
+msgstr "Public workspaces on this server:"
 
 #: share/skin/s3/template/element/search_form:23
 msgid "wiki.search-all:"
 msgstr "Search My Workspaces:"
 
+#: share/skin/s3/template/element/search_form:23
+msgid "wiki.search-all"
+msgstr "My Workspaces"
+
 #: share/skin/s3/template/element/search_form:14 share/skin/s3/template/element/search_form:21
 msgid "wiki.search:"
 msgstr "Search This Workspace:"
+
+#: share/skin/s3/template/element/search_form:14 share/skin/s3/template/element/search_form:21
+msgid "wiki.search"
+msgstr "This Workspace"
 
 #: share/skin/s3/template/element/settings/workspaces_settings_features_section:35
 msgid "wiki.send-email-notifications?"

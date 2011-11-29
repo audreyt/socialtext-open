@@ -16,52 +16,36 @@ Set default values if they are not defined by the caller
 | set_default | test_string_esc | %%test_string%% |
 | set_default | test_id | string_use |
 
-| *Comment* | Make the strings unique |  |
-| set | test_string | %%test_string%% %%start_time%% |
-| set | test_string_esc | %%test_string_esc%% %%start_time%% |
-| set | test_id | %%test_id%%_%%start_time%% |
+| *Comment* | Make the strings unique |  |  |  |
+| set | test_string | %%test_string%% %%start_time%% |  |  |
+| set | test_string_esc | %%test_string_esc%% %%start_time%% |  |  |
+| set | test_id | %%test_id%%_%%start_time%% |  |  |
 
-| *Comment* | Test Case: String Use: new page |  |
-| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | %%test_string%% content |
-| type_ok | st-newpage-pagename-edit | %%test_string%% title |
-| click_ok | st-edit-mode-tagbutton |  |
+| *Comment* | Test Case: String Use: new page |  |  |  |
+
+| call | [st-edit-new-page] | ws=%%workspace%% | title=%%test_string%% title | content=%%test_string%% content |
 
 | *Comment* | Test Case: String Use: add tag 1 |  |
-| wait_for_element_visible_ok | st-tagqueue-field | 30000 |
-| type_ok | st-tagqueue-field | %%test_string%% tag 1 |
-| click_ok | st-tagqueue-addbutton |  |
-| wait_for_element_visible_ok | st-tagqueue-close | 30000 |
-| click_ok | st-tagqueue-close |  |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+| call | [st-tag-page] | tag_to_apply=%%test_string%% tag 1 |
 
 | *Comment* | Test Case: String Use: check tag 1 |  |
 | wait_for_element_visible_ok | st-page-titletext | 30000 |
 | text_like | st-page-titletext | %%test_string%% title |
-| text_like | contentContainer | %%test_string%% content |
+| text_like | st-page-content | %%test_string%% content |
 | wait_for_element_visible_ok | st-tags-listing | 30000 |
 | text_like | st-tags-listing | %%test_string%% tag 1 |
 
 | *Comment* | Test Case: String Use: add tag 2 |  |
-| wait_for_element_visible_ok | link=Add Tag | 30000 |
-| click_ok | link=Add Tag |  |
-| wait_for_element_visible_ok | st-tags-field | 30000 |
-| type_ok | st-tags-field | %%test_string%% tag 2 |
-| wait_for_element_visible_ok | st-tags-plusbutton-link | 30000 |
-| click_ok | st-tags-plusbutton-link |  |
+| open_ok | /%%workspace%%/%%test_string%%_title |  |
+| call | [st-tag-page] | tag_to_apply=%%test_string%% tag 2 |
 | wait_for_element_visible_ok | st-tags-listing | 30000 |
 | wait_for_element_visible_ok | link=%%test_string%% tag 2 | 30000 |
 | text_like | st-tags-listing | %%test_string%% tag 2 |
 
 | *Comment* | Test Case: String Use: delete tag 1 |  |
 | text_like | st-tags-listing | %%test_string%% tag 1 |
-| wait_for_element_visible_ok | //a[@class='delete_tag'] | 30000 |
-| click_ok | //a[@class='delete_tag'] |  |
+| wait_for_element_visible_ok | //a[@class='delete_icon'] | 30000 |
+| click_ok | //a[@class='delete_icon'] |  |
 | wait_for_text_not_present_ok | %%test_string%% tag 1 | 30000 |
 
 | *Comment* | Test Case: String Use: duplicate |  |
@@ -77,7 +61,7 @@ Set default values if they are not defined by the caller
 | open_ok | /%%workspace%%/index.cgi?%%test_id%%_dupe |  |
 | wait_for_element_visible_ok | st-page-titletext | 30000 |
 | text_like | st-page-titletext | %%test_string%% dupe |
-| text_like | contentContainer | %%test_string%% content |
+| text_like | st-page-content | %%test_string%% content |
 | text_like | st-tags-listing | %%test_string%% tag 2 |
 
 | *Comment* | Test Case: String Use: rename |  |
@@ -91,109 +75,100 @@ Set default values if they are not defined by the caller
 | open_ok | /%%workspace%%/index.cgi?%%test_id%%_rename |  |
 | wait_for_element_visible_ok | st-page-titletext | 30000 |
 | text_like | st-page-titletext | %%test_string%% rename |
-| text_like | contentContainer | %%test_string%% content |
+| text_like | st-page-content | %%test_string%% content |
 | text_like | st-tags-listing | %%test_string%% tag 2 |
 
 | *Comment* | Test Case: String Use: Comment on the rename page |  |
-| click_ok | st-comment-button-link |  |
+| click_ok | //li[@id="st-comment-button"]/a |  |
 | wait_for_element_visible_ok | comment | 30000 |
 | type_ok | comment | %%test_string%% comment |
-| click_ok | link=Save |  |
-| pause | 5000 | for comment to save |
+| st-click-pause | link=Save | 15000 |
 
 | *Comment* | Test Case: String Use: verify comment on the rename page |  |
 | open_ok | /%%workspace%%/index.cgi?%%test_id%%_rename |  |
-| wait_for_element_visible_ok | contentContainer | 30000 |
-| text_like | contentContainer | %%test_string%% comment |
-| text_like | contentContainer | qr/contributed\s+by/i |
+| wait_for_element_visible_ok | content | 30000 |
+| text_like | st-page-content | %%test_string%% comment |
+| text_like | st-page-content | qr/contributed\s+by/i |
 
 | *Comment* | Test Case: String Use: Roundtripping Link Text for a widget in the duplicate page |  |
 | *Comment* | The following test DOES NOT actually find errors that trash the UI because Selenium manages to "click" all the buttons even when the interface is completely bolluxed by nasty data in the page. |  |
 | open_ok | /%%workspace%%/index.cgi?%%test_id%%_dupe |  |
 | wait_for_element_visible_ok | st-edit-button-link | 30000 |
 | click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | `"%%test_string%%"{link: help [Socialtext Documentation]}` |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 30000 |
+| type_ok | //textarea[contains(@class,"cke_source")] | `"%%test_string%%"{link: help [Socialtext Documentation]}` |
 
 | *Comment* | Test Case: String Use: try the roundtrip |  |
-| wait_for_element_visible_ok | link=Rich Text | 30000 |
-| click_ok | link=Rich Text |  |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wysiwyg")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wysiwyg")] |  |
 | pause | 6000 | wait for the editor to load |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | link=Rich Text | 30000 |
-| click_ok | link=Rich Text |  |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wysiwyg")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wysiwyg")] |  |
 | pause | 6000 | wait for the editor to load |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
 | st-page-save |  |  |
 
 | *Comment* | Test Case: String Use: try opening for editing Rich Text mode |  |
 | click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | link=Rich Text | 30000 |
-| click_ok | link=Rich Text |  |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wysiwyg")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wysiwyg")] |  |
 | pause | 10000 | wait for the editor to load |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
 | st-page-save |  |  |
 
 | *Comment* | This regexp carefully tests for the page content being just the link text and no other garbage |  |
 | *Comment* | in the last line in st page maincontent. DO NOT CHANGE IT. |  |
-| text_like | contentContainer | qr/^\s*%%test_string_esc%%/m |
+| text_like | content | qr/^\s*%%test_string_esc%%/m |
 
-| *Comment* | Test Case: String Use: Your Notepad |  |
-| *Comment* | Your Notepad wants an existing page |  |
-| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | st-newpage-pagename-edit | %%test_string%% pad |
-| type_ok | wikiwyg_wikitext_textarea | %%test_string%% pad content |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+TUXTODO: Is Your Notepad gone for good?
 
-| *Comment* | Test Case: String Use: set Your Notepad |  |
-| open_ok | /%%workspace%%/?action=users_settings |  |
-| click_and_wait | link=Your Notepad |  |
-| wait_for_element_visible_ok | favorites__which_page | 30000 |
-| type_ok | favorites__which_page | %%test_string%% pad |
-| click_and_wait | link=Save |  |
+| *Comment* | Test Case: String Use: Your Notepad |  |  |  |
+| *Comment* | Your Notepad wants an existing page |  |  |  |
 
-| *Comment* | Test Case: String Use: verify Your Notepad |  |
-| open_ok | /%%workspace%%/?%%test_string%% pad |  |
-| wait_for_element_visible_ok | st-page-titletext | 30000 |
-| text_like | st-page-titletext | %%test_string%% pad |
-| text_like | contentContainer | %%test_string%% pad content |
+call | [st-edit-new-page] | ws=%%workspace%% | title=%%test_string%% pad | content=%%test_string%% pad content |
 
-| *Comment* | Test Case: String Use: try TOC |  |
-| open_ok | /%%workspace%%/index.cgi?%%test_id%%_rename |  |
-| wait_for_element_visible_ok | st-edit-button-link | 30000 |
-| click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | `{toc}` |
+| *Comment* | Test Case: String Use: set Your Notepad |  |  |  |
+
+open_ok | /%%workspace%%/?action=users_settings | |
+click_and_wait | link=Your Notepad | |
+wait_for_element_visible_ok | favorites__which_page | 30000 |
+type_ok | favorites__which_page | %%test_string%% pad |
+click_and_wait | link=Save | |
+
+| *Comment* | Test Case: String Use: verify Your Notepad |  |  |  |
+
+open_ok | /%%workspace%%/?%%test_string%% pad | |
+wait_for_element_visible_ok | st-page-titletext | 30000 |
+text_like | st-page-titletext | %%test_string%% pad |
+text_like | content | %%test_string%% pad content |
+
+| *Comment* | Test Case: String Use: try TOC |  |  |  |
+
+| call | [st-edit-no-save] | ws=%%workspace%% | page=%%test_id%%_rename | content=`{toc}` |
 
 | *Comment* | Test Case: String Use: try the TOC roundtrip |  |
-| wait_for_element_visible_ok | link=Rich Text | 30000 |
-| click_ok | link=Rich Text |  |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wysiwyg")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wysiwyg")] |  |
 | pause | 6000 | wait for the editor to load |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | link=Rich Text | 30000 |
-| click_ok | link=Rich Text |  |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wysiwyg")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wysiwyg")] |  |
 | pause | 6000 | wait for the editor to load |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
 | st-page-save |  |  |
 
 | *Comment* | Test Case: String Use: test for TOC blow up (If this fails under IE, that's okay) |  |
 | pause | 10000 |  |
-| text_like | contentContainer | qr/does not have any headers/ |
+| text_like | content | qr/does not have any headers/ |
 
 | *Comment* | Test Case: String Use: TEARDOWN |  |
 | st-process-jobs |  |  |
@@ -202,12 +177,11 @@ Set default values if they are not defined by the caller
 | st-admin | purge-page --w %%workspace%% --page %%test_id%%_rename | was purged |
 | st-admin | purge-page --w %%workspace%% --page %%test_id%%_title | was purged |
 
-| *Comment* | Test Case: String Use RETURNING |
+| *Comment* | Test Case: String Use RETURNING |  |
 
 ^ DONE_TESTING
 
 ^^ Possible TODO
-
 Use the string in Settings. Arbitrary nasty strings may not work in all places:
 
 * My Settings (first and last names)

@@ -1,7 +1,8 @@
+| *Comment* | Test Case: Friendly Name Setup |  |
+
 * Fixture: SocialWidgets
 
-| set | fname_user | fname_user_%%start_time%%@david.socialtext.net |  |
-| set | fname_user_regexp | fname_user_%%start_time%%\@david.socialtext.net |  |
+| *Comment* | Test Case: Friendly Name Setup set defaults |  |  |
 | set_default | fname | Bob_%%start_time%% |  |
 | set_default | fname_first_letter | B |  |
 | set_default | fname_prefix | Bob |  |
@@ -12,6 +13,10 @@
 | set_default | shared_name | Bob |  |
 | set_default | first_letters_after_shared | Bobe |  |
 | set_default | fname2 | Jack_%%start_time%% |  |
+
+| *Comment* | Test Case: Friendly Name Setup set values |  |  |
+| set | fname_user | fname_user_%%start_time%%@david.socialtext.net |  |
+| set | fname_user_regexp | fname_user_%%start_time%%\@david.socialtext.net |  |
 | set | fname_checker | fname_checker_%%start_time%%@david.socialtext.net |  |
 | set | fname_checker_regexp | fname_checker_%%start_time%%\@david.socialtext.net |  |
 | set | fname_acct | 1_fname_account_%%start_time%% |  |
@@ -21,25 +26,28 @@
 | set | fname_group_2 | fname_group_2_%%start_time%% |  |
 | set | fname_page | fname_page_%%start_time%% |  |
 | set | fname_tag | fname_tag_%%start_time%% |  |
+
+| *Comment* | Test Case: Friendly Name Setup create setup |  |  |
 | create-account | %%fname_acct%% |  |  |
 | set | fname_acct_id | %%account_id%% |  |
-| st-admin | create-workspace --name %%fname_wiki%% --title %%fname_wiki%% --account %%fname_acct%% | was created |  |
+| create-workspace | %%fname_wiki%% | %%fname_acct%% |  |
+| set | fname_wiki_id | %%workspace_id%% |  |
 | create-user | %%fname_user%% | %%password%% | %%fname_acct%% |
 | set | fname_user_id | %%user_id%% |  |
+
 | st-admin | add-workspace-admin --email %%fname_user%% --workspace %%fname_wiki%% | now has the role |  |
 | st-admin | invite-user --email %%fname_checker%% --workspace %%fname_wiki%% --from %%fname_user%% | has been sent |  |
 | st-admin | confirm-user --email %%fname_checker%% --password %%password%% |  |  |
 | st-admin | give-accounts-admin --email %%fname_checker%% | now has accounts |  |
+
 | create-group | %%fname_group%% | %%fname_acct%% | %%fname_user%% |
 | set | fname_group_id | %%group_id%% |  |
 | create-group | %%fname_group_2%% | %%fname_acct%% | %%fname_checker%% |
 | set | fname_group_2_id | %%group_id%% |  |
 | st-admin | add-member --email %%fname_checker%% --group %%fname_group_id%% | is now a member |  |
-| open_ok | /nlw/submit/logout |  |  |
-| st-login | %%fname_user%% | %%password%% |  |
 
-
-| *Comment* | Test Case: Friendly Name edit profile |  |
+| *Comment* | Test Case: Friendly Name Setup edit profile |  |
+| st-logoutin | %%fname_user%% | %%password%% |
 | open_ok | /st/edit_profile |  |
 | wait_for_element_visible_ok | field_preferred_name | 30000 |
 | type_ok | field_preferred_name | %%fname%% |
@@ -48,17 +56,17 @@
 | wait_for_element_visible_ok | update_profile | 30000 |
 | click_and_wait | update_profile | 30000 |
 | st-name-widget | 1 | profile_widget |
-| st-widget-title-like | profile_widget | Profile |
+| st-widget-title | profile_widget | Profile |
 | st-select-widget-frame | profile_widget |  |
 | wait_for_text_present_ok | %%fname%% | 30000 |
 | select-frame | relative=parent |  |
 
-| *Comment* | Test Case: Friendly Name check new user edit profile prompt |  |
+| *Comment* | Test Case: Friendly Name Setup check new user edit profile prompt |  |
 | open_ok | /st/dashboard |  |
 | wait_for_text_present_ok | Welcome %%fname%% | 30000 |
 | wait_for_element_not_present_ok | link=your profile | 30000 |
 
-| *Comment* | Test Case: Friendly Name edit profile more |  |
+| *Comment* | Test Case: Friendly Name Setup edit profile more |  |
 | open_ok | /st/edit_profile |  |
 | wait_for_element_visible_ok | field_first_name | 30000 |
 | type_ok | field_first_name | %%first_name%% |
@@ -67,29 +75,22 @@
 | wait_for_element_visible_ok | update_profile | 30000 |
 | click_and_wait | update_profile | 30000 |
 
-| *Comment* | Test Case: Friendly Name send Signal with user wafl |  |
-| http-user-pass | %%fname_user%% | %%password%% |
-| post-signal | {user: %%fname_user_id%%} |  |
-| pause | 3000 |  |
-| st_process_jobs | SignalIndex |  |
+| *Comment* | Test Case: Name Setup send Signal with user wafl |  |  |  |
+| http-user-pass | %%fname_user%% | %%password%% |  |  |
+| post-signal | {user: %%fname_user_id%%} |  |  |  |
+| pause | 3000 |  |  |  |
+| st_process_jobs | SignalIndex |  |  |  |
 
-| *Comment* | Test Case Friendly Name edit a page with user wafl |  |
-| open_ok | /%%fname_wiki%%/index.cgi?%%fname_page%% |  |
-| wait_for_element_visible_ok | st-create-content-savelink | 30000 |
-| click_and_wait | st-create-content-savelink |  |
-| wait_for_element_visible_ok | st-mode-wikitext-button | 30000 |
-| click_ok | st-mode-wikitext-button |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
-| type_ok | wikiwyg_wikitext_textarea | user wafl {user: %%fname_user%%} |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| click_and_wait | st-save-button-link |  |
+| *Comment* | Test Case Friendly Name Setup edit a page with user wafl |  |  |  |
 
-| *Comment* | Test Case Friendly Name comment on a page |  |
-| wait_for_element_visible_ok | st-comment-button-link | 30000 |
-| click_ok | st-comment-button-link |  |
+| call | [st-edit-new-page] | ws=%%fname_wiki%% | title=%%fname_page%% | content=user wafl {user: %%fname_user%%} |
+
+| *Comment* | Test Case Friendly Name Setup comment on a page |  |
+| wait_for_element_visible_ok | //li[@id="st-comment-button"]/a | 30000 |
+| click_ok | //li[@id="st-comment-button"]/a |  |
 | wait_for_element_visible_ok | //textarea[@name='comment'] | 30000 |
 | type_ok | //textarea[@name='comment'] | comment text |
-| wait_for_element_visible_ok | //a[@class='saveButton genericOrangeButton'] | 30000 |
-| click_ok | //a[@class='saveButton genericOrangeButton'] |  |
+| wait_for_element_visible_ok | link=Save | 30000 |
+| st-click-pause | link=Save | 6000 |
 | wait_for_element_not_present_ok | //textarea[@name='comment'] | 30000 |
-| wait_for_element_not_present_ok | //a[@class='saveButton genericOrangeButton'] | 30000 |
+| text_like | st-page-content | comment text |

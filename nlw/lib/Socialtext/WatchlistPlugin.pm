@@ -24,8 +24,12 @@ sub register {
     $registry->add( action     => 'watchlist' );
     $registry->add( action     => 'add_to_watchlist' );
     $registry->add( action     => 'remove_from_watchlist' );
-    $registry->add( preference => $self->watchlist_notify_frequency );
-    $registry->add( preference => $self->watchlist_links_only );
+
+    $self->_register_prefs($registry);
+}
+
+sub pref_names {
+    return qw(watchlist_notify_frequency watchlist_links_only);
 }
 
 sub init {
@@ -35,39 +39,64 @@ sub init {
 
 our $Default_notify_frequency_in_minutes = 1440;
 
+sub watchlist_notify_frequency_data {
+    my $self = shift;
+
+    return {
+        title => loc('watchlist.frequence-of-updates'),
+        default_setting => $Default_notify_frequency_in_minutes,
+        options => [
+            {setting => 0, display => __('time.never')},
+            {setting => 1, display => __('every.minute')},
+            {setting => 5, display => __('every.5minutes')},
+            {setting => 15, display => __('every.15minutes')},
+            {setting => 60, display => __('every.hour')},
+            {setting => 360, display => __('every.6hours')},
+            {setting => 1440, display => __('every.day')},
+            {setting => 4320, display => __('every.3days')},
+            {setting => 10080, display => __('every.week')},
+        ],
+    };
+}
+
 sub watchlist_notify_frequency {
     my $self = shift;
-    my $p    = $self->new_preference('watchlist_notify_frequency');
-    $p->query(__('watch.email-frequency?'));
+    
+    my $data = $self->watchlist_notify_frequency_data;
+    my $p = $self->new_preference('watchlist_notify_frequency');
+
+    $p->query($data->{title});
     $p->type('pulldown');
-    my $choices = [
-        0     => __('time.never'),
-        1     => __('every.minute'),
-        5     => __('every.5minutes'),
-        15    => __('every.15minutes'),
-        60    => __('every.hour'),
-        360   => __('every.6hours'),
-        1440  => __('every.day'),
-        4320  => __('every.3days'),
-        10080 => __('every.week'),
-    ];
-    $p->choices($choices);
-    $p->default($Default_notify_frequency_in_minutes);
+    $p->choices($self->_choices($data));
+    $p->default($data->{default_setting});
+
     return $p;
+}
+
+sub watchlist_links_only_data {
+    my $self = shift;
+
+    return {
+        title => loc('watchlist.digest-information'),
+        default_setting => 'expanded',
+        options => [
+            {setting => 'condensed', display => __('email.page-name-link-only')},
+            {setting => 'expanded', display => __('email.page-name-link-author-date')},
+        ],
+    };
 }
 
 sub watchlist_links_only {
     my $self = shift;
-    my $p    = $self->new_preference('watchlist_links_only');
-    $p->query(
-        __('email.page-digest-details?'));
+
+    my $data = $self->watchlist_links_only_data;
+    my $p = $self->new_preference('watchlist_links_only');
+
+    $p->query($data->{title});
     $p->type('radio');
-    my $choices = [
-        condensed => __('email.page-name-link-only'),
-        expanded  => __('email.page-name-link-author-date'),
-    ];
-    $p->choices($choices);
-    $p->default('expanded');
+    $p->choices($self->_choices($data));
+    $p->default($data->{default_setting});
+
     return $p;
 }
 
@@ -197,28 +226,7 @@ sub display_watchlist {
     );
 
     my @pages = $watchlist->pages;
-    if ( $#pages < 0 ) {
-        my $empty_message = loc("watch.empty=wiki",
-            $self->hub->current_workspace->title);
-        return $self->template_render(
-            template => 'view/empty_watchlist',
-            vars     => {
-                $self->hub->helpers->global_template_vars,
-                action        => 'display_watchlist',
-                title         => loc("nav.watchlist"),
-                empty_message => $empty_message,
-                feeds => $self->_feeds( $self->hub->current_workspace ),
-                enable_unplugged =>
-                    $self->hub->current_workspace->enable_unplugged,
-                unplug_uri    => "?action=unplug;watchlist=default",
-                unplug_phrase =>
-                    loc("info.unplug-watchlist"),
-            },
-        );
-    }
-    else {
-        return $self->watchlist_changes( \@pages );
-    }
+    return $self->watchlist_changes( \@pages );
 }
 
 sub _feeds {
@@ -270,14 +278,11 @@ sub watchlist_changes {
     return $self->display_results(
         \%sortdir,
         feeds         => $self->_feeds( $self->hub->current_workspace ),
-        unplug_uri    => "?action=unplug;watchlist=default",
-        unplug_phrase =>
-            "Click this button to save the pages you're "
-            . 'watching for offline use.',
         Socialtext::Pageset->new(
             cgi => {$self->cgi->all},
             total_entries => $self->result_set->{hits},
         )->template_vars(),
+        empty_include => 'view/empty_watchlist',
     );
 }
 

@@ -1,0 +1,55 @@
+<div>
+  <style>
+    .ws_title {
+        font-size: 110%;
+        font-weight: bold;
+        width: 98%;
+    }
+
+    div.ws_title {
+        background-color: #ddd;
+        font-style: italic;
+        padding: 5px;
+        margin: 5px 0;
+    }
+  </style>
+
+  <form id="create-workspace">
+    <div class="page1">
+      <div class="label">[% loc('groups.title:') %]</div>
+      <input type="input" id="new_workspace_title" class="ws_title"/>
+      <div class="hint">
+        [% IF permission == 'private' %]
+          [% loc('info.wiki-title') %]
+        [% ELSIF permission == 'self-join' %]
+          [% loc('groups.title-of-your-new-wiki-can-changed-later') %]
+          [% loc('groups.creating-self-join-wiki') %]
+        [% END %]
+      </div>
+    </div>
+
+    <div style="display:none" class="page2">
+      <div class="label">[% loc('groups.title:') %]</div>
+      <div id="new_workspace_title2" class="ws_title"></div>
+      <div class="hint">
+        [% IF permission == 'private' %]
+          [% loc('info.wiki-title') %]
+        [% ELSIF permission == 'self-join' %]
+          [% loc('groups.title-of-your-new-wiki-can-changed-later') %]
+          [% loc('groups.creating-self-join-wiki') %]
+        [% END %]
+      </div>
+
+      <br/>
+
+      <div class="label">[% loc('groups.url:') %]</div>
+      [% base_uri %]/ <input type="input" id="new_workspace_name" size="30" maxlength="30"/>
+      <div class="hint">
+        [% loc("info.wiki-id") %]
+        [% loc("info.valid-wiki-name") %]
+      </div>
+    </div>
+    <div class="error"></div>
+    <input class="hidden" type="submit"/>
+  </form>
+</div>

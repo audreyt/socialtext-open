@@ -7,10 +7,12 @@
 | *Comment* | Test Case: Friendly Name 1 check rich mobile interface |  |
 | open_ok | /nlw/submit/logout |  |
 | st-login | %%fname_checker%% | %%password%% |
+
 | open_ok | /st/m/signals |  |
 | wait_for_element_visible_ok | link=%%fname%% | 30000 |
 | text_like | //div[@class='metadata'][1] | %%fname%% |
 | text_like | //div[@class='signal_body'][1] | %%fname%% |
+
 | open_ok | /m/people?letter=%%fname_first_letter%% |  |
 | wait_for_element_visible_ok | link=%%fname%% | 30000 |
 | open_ok | /m/page/%%fname_wiki%%/%%fname_page%% |  |
@@ -27,21 +29,20 @@
 | wait_for_element_present_ok | link=%%fname%% | 30000 |
 
 | *Comment* | Test Case: Friendly Name 1 check wiki page and user wafl |  |
-| open_ok | /%%fname_wiki%%/index.cgi?%%fname_page%% |  |
+| open_ok | /%%fname_wiki%%/%%fname_page%% |  |
 | wait_for_text_present_ok | comment text | 30000 |
-| text_like | st-page-content | qr/user wafl.+%%fname%%.+contributed by.+%%fname%%/ |
-| text_like | create-attribution | qr/Created by.+%%fname%%/ |
+| text_like | st-page-content | qr/user wafl.+%%fname%%.+comment text.+contributed by.+%%fname%%/ |
 | text_like | update-attribution | qr/Updated by.+%%fname%%/ |
 
 | *Comment* | Test Case: Friendly Name 1 check Hcard popup |  |
-| wait_for_element_visible_ok | //span[@id='create-attribution']//a | 30000 |
-| MouseOver | //span[@id='create-attribution']//a |  |
+| wait_for_element_visible_ok | //span[@id='update-attribution']//a | 30000 |
+| MouseOver | //span[@id='update-attribution']//a |  |
 | wait_for_element_visible_ok | //div[@class='vcard'] | 30000 |
 | text_like | //div[@class='vcard'] | %%fname%% |
 
 | *Comment* | Test Case: Friendly Name 1 check revisions list |  |
-| wait_for_element_visible_ok | controls-right-revisions | 30000 |
-| click_and_wait | controls-right-revisions |  |
+| open_ok | /%%fname_wiki%%/%%fname_page%%?action=revision_list |  |
+| wait_for_text_present_ok | Compare Revisions | 30000 |
 | wait_for_element_visible_ok | link=%%fname%% | 30000 |
 
 | *Comment* | Test Case: Friendly Name 1 check people directory |  |
@@ -51,86 +52,87 @@
 | *Comment* | Test Case: Friendly Name 1 check group page |  |
 | open_ok | /st/group/%%fname_group_id%% |  |
 | st-name-widget | 1 | info_widget |
-| st-widget-title-like | info_widget | Information |
+| st-widget-title | info_widget | Information |
 | st-select-widget-frame | info_widget |  |
 | wait_for_element_present_ok | link=%%fname%% | 30000 |
 | select-frame | relative=parent |  |
 | st-name-widget | 3 | members_widget |
-| st-widget-title-like | members_widget | Membership |
+| st-widget-title | members_widget | Membership |
 | st-select-widget-frame | members_widget |  |
 | wait_for_element_present_ok | link=%%fname%% | 30000 |
 | select-frame | relative=parent |  |
 
 | *Comment* | Test Case: Friendly Name 1 check wiki members |  |
-| open_ok | /%%fname_wiki%%/?action=users_listall |  |
+| st-admin | add-workspace-admin --workspace %%fname_wiki%% --email %%fname_checker%% | now has the role |
+| open_ok | /st/settings/%%fname_wiki_id%%/prefs/manage |  |
 | wait_for_text_present_ok | %%fname%% | 30000 |
 
-| *Comment* | Test Case: Friendly Name check add user to group lookahead |  |
-| open_ok | /st/edit_group/%%fname_group_2_id%% |  |
-| st-name-widget | 3 | members_widget |
-| st-widget-title-like | members_widget | Members |
-| st-select-widget-frame | members_widget |  |
-| wait_for_element_visible_ok | lookahead | 30000 |
-| type_lookahead_ok | lookahead | %%fname_prefix%% |
-| select-frame | relative=parent |  |
-| wait_for_element_present_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%fname_suffix%%')] | 30000 |
+| *Comment* | Test Case: Friendly Name check add user to group lookahead |  |  |
+| open_ok | /st/edit_group/%%fname_group_2_id%% |  |  |
+| st-name-widget | 3 | members_widget |  |
+| st-widget-title | members_widget | Members |  |
+| st-select-widget-frame | members_widget |  |  |
+| wait_for_element_visible_ok | lookahead | 30000 |  |
 
-| *Comment* | Test Case: Friendly Name 1 check mention user in signal lookahead |  |
-| open_ok | /st/signals |  |
-| wait_for_element_visible_ok | //a[@title='Mention another person'] | 30000 |
-| click_ok | //a[@title='Mention another person'] |  |
-| wait_for_element_visible_ok | //div[@class='lookaheadDiv']/input | 30000 |
-| type_lookahead_ok | //div[@class='lookaheadDiv']/input | %%fname_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%fname_suffix%%')] | 30000 |
+| autocompleted-option-exists | lookahead | %%fname_prefix%% | %%fname%% |
 
-| *Comment* | Test Case: Friendly Name 1 check send private signal lookahead |  |
-| open_ok | /st/signals |  |
-| wait_for_element_visible_ok | //a[@title='Send a private message'] | 30000 |
-| click_ok | //a[@title='Send a private message'] |  |
-| wait_for_element_visible_ok | //div[@class='lookaheadDiv']/input | 30000 |
-| type_lookahead_ok | //div[@class='lookaheadDiv']/input | %%fname_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%fname_suffix%%')] | 30000 |
+| select-frame | relative=parent |  |  |
 
-| *Comment* | Test Case: Friendly Name 1 check send page by email lookahead |  |
-| open_ok | /%%fname_wiki%%/index.cgi?%%fname_page%% |  |
-| wait_for_element_visible_ok | st-pagetools-email | 30000 |
-| click_ok | st-pagetools-email |  |
-| wait_for_element_visible_ok | email_recipient | 30000 |
-| type_lookahead_ok | email_recipient | %%fname_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%fname_suffix%%')] | 30000 |
+| *Comment* | Test Case: Friendly Name 1 check mention user in signal lookahead |  |  |
+| open_ok | /st/signals |  |  |
+| wait_for_element_visible_ok | //a[@title='Mention another person'] | 30000 |  |
+| click_ok | //a[@title='Mention another person'] |  |  |
+| wait_for_element_visible_ok | //div[@class='lookaheadDiv']/input | 30000 |  |
 
-| *Comment* | Test Case: Friendly Name 1 check add user to group lookahead in Control Panel |  |
-| open_ok | /nlw/control/group/%%fname_group_2_id%% |  |
-| wait_for_element_visible_ok | addUserLookahead | 30000 |
-| type_lookahead_ok | addUserLookahead | %%fname_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%fname_suffix%%')] | 30000 |
+| autocompleted-option-exists | //div[@class='lookaheadDiv']/input | %%fname_prefix%% | %%fname%% |
 
-| *Comment* | Test Case: Friendly Name 1 check advanced lookahead functions in send page by email lookahead |  |
-| open_ok | /%%fname_wiki%%/index.cgi?%%fname_page%% |  |
-| wait_for_element_visible_ok | st-pagetools-email | 30000 |
-| click_ok | st-pagetools-email |  |
-| wait_for_element_visible_ok | email_recipient | 30000 |
-| type_lookahead_ok | email_recipient | %%first_name_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%last_name%%')] | 30000 |
-| open_ok | /%%fname_wiki%%/index.cgi?%%fname_page%% |  |
-| wait_for_element_visible_ok | st-pagetools-email | 30000 |
-| click_ok | st-pagetools-email |  |
-| wait_for_element_visible_ok | email_recipient | 30000 |
-| type_lookahead_ok | email_recipient | %%shared_name%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%fname_suffix%%')] | 30000 |
+| *Comment* | Test Case: Friendly Name 1 check send private signal lookahead |  |  |
+| open_ok | /st/signals |  |  |
+| wait_for_element_visible_ok | //a[@title='Send a private message'] | 30000 |  |
+| click_ok | //a[@title='Send a private message'] |  |  |
+| wait_for_element_visible_ok | //div[@class='lookaheadDiv']/input | 30000 |  |
 
-| type_lookahead_ok | email_recipient | %%first_letters_after_shared%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%last_name%%')] | 30000 |
+| autocompleted-option-exists | //div[@class='lookaheadDiv']/input | %%fname_prefix%% | %%fname%% |
 
-| *Comment* | Test Case: Friendly Name 1 check add this tag to someone |  |
-| tag_profile | %%fname_checker%% | %%fname_tag%% |
-| open_ok | ?action=people;tag=%%fname_tag%% |  |
-| wait_for_element_present_ok | link=Add this tag to someone | 30000 |
-| click_ok | link=Add this tag to someone |  |
-| wait_for_element_visible_ok | add_tag_person | 30000 |
-| type_lookahead_ok | add_tag_person | %%fname_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%fname_suffix%%')] | 30000 |
+| *Comment* | Test Case: Friendly Name 1 check send page by email lookahead |  |  |
+| open_ok | /%%fname_wiki%%/%%fname_page%% |  |  |
+| wait_for_element_present_ok | //a[@title='Email this page '] | 30000 |  |
+| click_ok | //a[@title='Email this page '] |  |  |
+| wait_for_element_visible_ok | email_recipient | 30000 |  |
 
-| include | [Test Case: Friendly Name Teardown] |
+| autocompleted-option-exists | email_recipient | %%fname_prefix%% | %%fname%% |
 
-| *Comment* | Test Case: Friendly Name 1 COMPLETED |
+| *Comment* | Test Case: Friendly Name 1 check add user to group lookahead in Control Panel |  |  |
+| open_ok | /nlw/control/group/%%fname_group_2_id%% |  |  |
+| wait_for_element_visible_ok | addUserLookahead | 30000 |  |
+
+| autocompleted-option-exists | addUserLookahead | %%fname_prefix%% | %%fname%% |
+
+| *Comment* | Test Case: Friendly Name 1 check advanced lookahead functions in send page by email lookahead |  |  |
+| open_ok | /%%fname_wiki%%/%%fname_page%% |  |  |
+| wait_for_element_present_ok | //a[@title='Email this page '] | 30000 |  |
+| click_ok | //a[@title='Email this page '] |  |  |
+| wait_for_element_visible_ok | email_recipient | 30000 |  |
+
+| autocompleted-option-exists | email_recipient | %%first_name_prefix%% | %%first_name%% %%last_name%% |
+
+| open_ok | /%%fname_wiki%%/%%fname_page%% |  |  |
+| wait_for_element_present_ok | //a[@title='Email this page '] | 30000 |  |
+| click_ok | //a[@title='Email this page '] |  |  |
+| wait_for_element_visible_ok | email_recipient | 30000 |  |
+
+| autocompleted-option-exists | email_recipient | %%shared_name%% | %%fname%% |
+| autocompleted-option-exists | email_recipient | %%first_letters_after_shared%% | %%first_name%% %%last_name%% |
+
+| *Comment* | Test Case: Friendly Name 1 check add this tag to someone |  |  |
+| tag_profile | %%fname_checker%% | %%fname_tag%% |  |
+| open_ok | ?action=people;tag=%%fname_tag%% |  |  |
+| wait_for_element_present_ok | link=Add this tag to someone | 30000 |  |
+| click_ok | link=Add this tag to someone |  |  |
+| wait_for_element_visible_ok | person_to_tag | 30000 |  |
+
+| autocompleted-option-exists | person_to_tag | %%fname_prefix%% | %%fname%% |
+
+| include | [Test Case: Friendly Name Teardown] |  |  |
+
+| *Comment* | Test Case: Friendly Name 1 COMPLETED |  |  |

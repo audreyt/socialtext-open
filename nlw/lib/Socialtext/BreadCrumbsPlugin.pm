@@ -65,8 +65,6 @@ sub breadcrumbs_list {
     $self->display_results(
         \%sortdir,
         display_title => loc('page.breadcrumbs'),
-        unplug_uri    => "?action=unplug;breadcrumbs=1",
-        unplug_phrase => loc('info.unplug-breadcrumbs'),
         hide_sort_widget => 1,
     );
 }

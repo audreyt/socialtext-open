@@ -1,0 +1,6 @@
+| *Comment* | st-edit-new-sheet: ws=%%ws%% title=%%title%% |  |
+
+| open_ok | /%%ws%%/?action=display;page_type=spreadsheet;page_name=Untitled%20Spreadsheet#edit |  |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
+| type_ok | st-newpage-pagename-edit | %%title%% |
+| wait_for_element_visible_ok | st-save-button-link | 10000 |

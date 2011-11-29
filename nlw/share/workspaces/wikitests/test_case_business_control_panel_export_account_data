@@ -30,14 +30,14 @@
 
 | *Comment* | Test case: Business Control Panel Export Account Data do the export |  |
 | open_ok | /nlw/control/account |  |
-| wait_for_element_visible_ok | //a[contains(text(),'Export user data for')] |  |
+| wait_for_element_visible_ok | //input[@type='submit' and contains(@value,'Export user data for')] |  |
 | chooseCancelOnNextConfirmation |  |  |
-| click_ok | //a[contains(text(),'Export user data for')] |  |
+| click_ok | //input[@type='submit' and contains(@value,'Export user data for')] |  |
 
 | *Comment* | Test case: Business Control Panel Account verify the export |  |
 | *Comment* | Test case: Business Control Panel Account should not leave Account page |  |
 | location_like | /nlw/control/account |  |
-| text_like | Socialtext Control Panel - Accounts |  |
+| text_like | Accounts |  |
 | text_like | Create New Account |  |
 
 | *Comment* | Test Cse: Business Control Panel Export Account Data TEARDOWN |  |

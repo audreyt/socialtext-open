@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Socialtext i18n\n"
-"PO-Revision-Date: 2011-05-13 00:08-0700\n"
+"PO-Revision-Date: 2011-11-07 18:19+0800\n"
 "Last-Translator: Socialtext i18n team\n"
 "Language-Team: Socialtext i18n team\n"
 "MIME-Version: 1.0\n"
@@ -189,6 +189,9 @@ msgstr "添加用户至工作区："
 msgid "control.add-users"
 msgstr "添加用户"
 
+msgid "control.add-users-and-groups"
+msgstr "添加用户和群组"
+
 #. (group.driver_group_name, group.group_id)
 #: share/plugin/control/template/control/group_add_to_account.html:5
 msgid "control.adding-group-to-account=group,group-id"
@@ -326,7 +329,7 @@ msgstr "设备管理"
 
 #: share/plugin/control/template/control/index.html:11
 msgid "control.console-link"
-msgstr "设备技术管理员可以使用 <a href='/console'>设备管理</a> 对设备的各技术方面进行管理，例如网络与对设置进行备份。"
+msgstr "设备技术管理员可以使用 <a href='/console'>设备管理</a> 对设备的各技术方面进行管理，例如网络与对设置进行备份。请访问 <a href='/help-adminguide'>管理员手册</a> 来取得详细说明。"
 
 #: share/plugin/control/template/control/wrapper:125
 msgid "control.contact-support"
@@ -423,6 +426,9 @@ msgstr "自定义服务器权限设置已生效。"
 msgid "control.custom-skins=name"
 msgstr "自定义视觉主题：%1"
 
+msgid "control.data-file"
+msgstr "数据文件"
+
 #: share/plugin/control/template/control/field_form:56
 msgid "control.data-source"
 msgstr "数据来源"
@@ -478,6 +484,9 @@ msgstr "开放邀请加入群组"
 
 msgid "control.ending-on-midnight-of"
 msgstr "至此日凌晨为止"
+
+msgid "control.export-user-data"
+msgstr "导出用户数据"
 
 #. (exportable_accounts)
 #: share/plugin/control/template/control/accounts.html:24
@@ -995,6 +1004,9 @@ msgstr "Socialtext 控制台"
 msgid "control.source=driver-name"
 msgstr "来源：%1"
 
+msgid "control.standard-account"
+msgstr "标准"
+
 msgid "control.start-typing-account-name"
 msgstr "开始键入一个帐户名称"
 
@@ -1030,6 +1042,9 @@ msgstr "系统用户"
 #: share/plugin/control/template/control/index.html:22
 msgid "control.tabs"
 msgstr "标签栏"
+
+msgid "control.theme"
+msgstr "主题"
 
 #: share/plugin/control/template/control/workspace.html:25
 msgid "control.this-is-all-users-wiki-for-account:"
@@ -1128,6 +1143,9 @@ msgstr "已从 %1 个帐户中移除用户"
 #: share/plugin/control/template/control/user.html:48
 msgid "control.user-requires-confirmation"
 msgstr "用户必要信息"
+
+msgid "control.user-restrictions"
+msgstr "限制"
 
 #: share/plugin/control/share/javascript/workspaces_new.js:36 share/plugin/control/template/control/user.html:16
 msgid "control.username"
@@ -1329,6 +1347,9 @@ msgstr "工作区名字必须介于3到30个字符长度，只能包含小写字
 msgid "error.invalid-wiki-title"
 msgstr "工作区题目必须介于2到64个字符长度，并不能以“-”开头。"
 
+msgid "error.invalid=field,color"
+msgstr "%1 不是合法的颜色：%2"
+
 #: share/plugin/control/template/control/enumerate_groups:10
 msgid "error.no-groups-to-add"
 msgstr "没有群组进行添加"
@@ -1362,10 +1383,64 @@ msgstr "工作区名字是必填字段"
 msgid "error.wiki-title-required"
 msgstr "工作区题目是必填字段"
 
+msgid "info.background_color"
+msgstr "主屏和下拉菜单的背景色。"
+
+msgid "info.background_image"
+msgstr "主屏的背景图像。"
+
+msgid "info.background_image_position"
+msgstr "背景图像相对于屏幕的位置。"
+
+msgid "info.background_image_tiling"
+msgstr "背景图像的重复方式。"
+
+msgid "info.background_link_color"
+msgstr "页脚处的链接颜色。"
+
+msgid "info.body_font"
+msgstr "正文的字体。"
+
+msgid "info.favicon_image"
+msgstr "供浏览器的地址栏和书签使用的图标（.ico格式）。"
+
+msgid "info.foreground_shade"
+msgstr "页脚和菜单字体颜色。"
+
+msgid "info.header_color"
+msgstr "页眉背景色。"
+
+msgid "info.header_font"
+msgstr "标题文本字体。"
+
+msgid "info.header_image"
+msgstr "页眉背景图像。"
+
+msgid "info.header_image_position"
+msgstr "页眉背景图像相对于屏幕的位置。"
+
+msgid "info.header_image_tiling"
+msgstr "页眉背景图像的重复方式。"
+
+msgid "info.header_link_color"
+msgstr "页眉链接颜色。"
+
+msgid "info.logo_image"
+msgstr "标识图片（自动缩放至最大201x34像素。）"
+
+msgid "info.primary_color"
+msgstr "链接颜色和按钮背景色。"
+
+msgid "info.secondary_color"
+msgstr "菜单分割线颜色。"
+
 #. (pager.first, pager.last, pager.total_entries)
 #: share/plugin/control/template/control/paging_controls:11
 msgid "info.showing=from,to,total"
 msgstr "显示第 %1 - %2 项，共 %3 项"
+
+msgid "info.tertiary_color"
+msgstr "按钮上的文字颜色。"
 
 #: share/plugin/control/share/javascript/lightbox/workspace-create.tt2:27 share/plugin/control/share/javascript/lightbox/workspace-create.tt2:33 share/plugin/control/template/control/workspace_invite.html:89
 msgid "info.wiki-title"
@@ -1382,6 +1457,9 @@ msgstr "控制台"
 #: share/plugin/control/template/control/wrapper:7
 msgid "nav.desktop"
 msgstr "桌面"
+
+msgid "nav.enterprise-social-software"
+msgstr "企业社会化软件"
 
 #: share/plugin/control/template/control/groups.html:4 share/plugin/control/template/control/index.html:29 share/plugin/control/template/control/workspace.html:180 share/plugin/control/template/control/workspaces_new.html:41 share/plugin/control/template/control/wrapper:90
 msgid "nav.groups"
@@ -1414,6 +1492,9 @@ msgstr "设置"
 #: share/plugin/control/template/control/wrapper:53
 msgid "nav.socialtext"
 msgstr "Socialtext"
+
+msgid "nav.socialtext-logo"
+msgstr "Socialtext 标志"
 
 #: share/plugin/control/template/control/index.html:27
 msgid "nav.users"
@@ -1479,6 +1560,24 @@ msgstr "使用报告"
 #: share/plugin/control/template/control/report.html:100
 msgid "report.usage-ending-midnight-of:"
 msgstr "凌晨使用停止："
+
+msgid "theme.confirm-revert-to-default"
+msgstr "您真的想恢复到默认主题吗? （此操作不可撤销。）"
+
+msgid "theme.customize-settings"
+msgstr "自定义主题设定"
+
+msgid "theme.link-to-original-image"
+msgstr "链接至原始图像(在新窗口打开)"
+
+msgid "theme.reset-settings"
+msgstr "重置主题设定"
+
+msgid "theme.reset-to-current?"
+msgstr "放弃更改并重置为当前的主题设定？"
+
+msgid "theme.revert-to-default?"
+msgstr "放弃更改并恢复到默认主题？"
 
 #: share/plugin/control/template/control/report.html:127
 msgid "time.1month"

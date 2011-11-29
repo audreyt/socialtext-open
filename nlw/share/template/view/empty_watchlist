@@ -1,0 +1,6 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[% USE decorate %]
+[% SET wlink = '<img src="' _ static_path _ '/images/icons/watch-black-15.png"/> ' _ loc('do.watch') %]
+<p>[% loc("watch.empty=wiki", hub.current_workspace.title) %]</p>
+<p>[% loc("info.watch-page=link", wlink) %] </p>

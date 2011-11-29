@@ -4,25 +4,28 @@
 | open_ok | /%%workspace%%/?Tag Page %%start_time%% |  |
 
 | *Comment* | Test Case: Tagging in the Editor validate that single quotes don't prevent page from saving |  |
-
+| wait_for_element_visible_ok | st-edit-button-link | 30000 |
 | click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | st-edit-mode-tagbutton | 30000 |
-| click_ok | st-edit-mode-tagbutton |  |
+| wait_for_element_visible_ok | cke_19 | 30000 |
+| MouseOver | cke_19 |  |
+| pause_ok | 2000 |  |
+| click_ok | cke_19 |  |
 | wait_for_element_visible_ok | st-tagqueue-field | 30000 |
 | type_ok | st-tagqueue-field | Foo's Blog single quote |
 | click_ok | st-tagqueue-addbutton |  |
+| wait_for_text_present_ok | Tags to apply: Foo's Blog single quote | 30000 |
 | type_ok | st-tagqueue-field | Foo"s Blog double quote |
 | click_ok | st-tagqueue-addbutton |  |
+| wait_for_text_present_ok | Tags to apply: Foo's Blog single quote, Foo"s Blog double quote | 10000 |
 | click_ok | st-tagqueue-close |  |
 
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| click_ok | st-save-button-link |  |
+| st-page-save |  |  |
 | wait_for_element_visible_ok | link=Foo's Blog single quote | 30000 |
 | text_like | link=Foo's Blog single quote | Foo's Blog single quote |
 | wait_for_element_visible_ok | link=Foo"s Blog double quote | 30000 |
 | text_like | link=Foo"s Blog double quote | Foo"s Blog double quote |
 
-| *Comment* | Test Case : Tagging in the Editor Teardown |
+| *Comment* | Test Case : Tagging in the Editor Teardown |  |
 | st-admin | purge-page --w %%workspace%% --p tag_page_%%start_time%% | was purged |
 
-| *Comment* | Test Case : Tagging in the Editor COMPLETED |
+| *Comment* | Test Case : Tagging in the Editor COMPLETED |  |

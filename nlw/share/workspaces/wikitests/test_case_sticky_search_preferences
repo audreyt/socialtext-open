@@ -28,13 +28,13 @@
 | wait_for_element_visible_ok | link=Titles | 30000 |
 | click_and_wait | link=Titles |  |
 | wait_for_element_visible_ok | link=Summaries | 30000 |
-| wait_for_element_not_present_ok | link=Titles | 5000 |
+| wait_for_element_not_present_ok | link=Titles | 15000 |
 
 | *Comment* | Test Case: Sticky Search Preferences. Does Titles view stick? |  |
 | st-search | workspace | Pages matching 'workspace' |
 | select_and_wait | sort-picker | label=Revisions |
 | wait_for_element_visible_ok | link=Summaries | 30000 |
-| wait_for_element_not_present_ok | link=Titles | 5000 |
+| wait_for_element_not_present_ok | link=Titles | 15000 |
 
 | *Comment* | Test Case: Sticky Search Preferences. Does Summaries view stick? |  |
 | click_and_wait | link=Summaries |  |
@@ -42,6 +42,6 @@
 | st-search | wiki | Pages matching 'wiki' |
 | select_and_wait | sort-picker | label=Date Last Edited |
 | wait_for_element_visible_ok | link=Titles | 30000 |
-| wait_for_element_not_present_ok | link=Summaries | 5000 |
+| wait_for_element_not_present_ok | link=Summaries | 15000 |
 
 | *Comment* | Test Case: Sticky Search Preferences COMPLETED |  |

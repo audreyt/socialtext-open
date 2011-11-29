@@ -25,7 +25,7 @@ Verify that Client-Side SSL Certificate authentication support works.
 | st-client-ssl | client-on                                              | %%test_username%% |
 | GET           | %%https%%/st/dashboard                                 |                   |
 | code-is       | 200                                                    |                   |
-| body-like     | Socialtext.email_address = "%%test_username%%"         |                   |
+| body-like     | "email_address":"%%test_username%%"                    |                   |
 | GET-json      | %%https%%/data/users/%%test_username%%                 |                   |
 | code-is       | 200                                                    |                   |
 

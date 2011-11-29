@@ -119,7 +119,8 @@ sub action {
         return 'display' if $last_match eq '/:ws/:pname';
     }
 
-    return $action || $self->_truly_default_action;
+    return $action if $action;
+    return $self->hub->current_user->is_guest ? 'display' : 'homepage';
 }
 
 sub page_name {
@@ -342,15 +343,6 @@ sub _get_raw {
       : defined $values[0]
         ? $values[0]
         : '';
-}
-
-sub _truly_default_action {
-    my $self = shift;
-
-    # A guest user can't have a personal homepage, says adina.
-    # I suspect they just can't have a watchlist. -- cwest
-    # TODO Get this finalized.
-    $self->hub->current_user->is_guest ? 'display' : 'homepage';
 }
 
 sub _clean_filter {

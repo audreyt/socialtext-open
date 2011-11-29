@@ -10,7 +10,7 @@
 
 | *Comment* | Test Case: What's New Pagination Explore UI |  |
 | open_ok | /%%pws%%/ |  |
-| click_ok | link=What's New |  |
+| select_and_wait | st-jump-to | label=What's New |
 | wait_for_element_visible_ok | link=2 | 30000 |
 | wait_for_element_visible_ok | link=3 | 30000 |
 | wait_for_element_visible_ok | link=Next | 30000 |
@@ -23,7 +23,7 @@
 | wait_for_element_visible_ok | link=3 | 30000 |
 | wait_for_element_visible_ok | link=1 |  |
 
-| *Comment* | Test Case: What's New Pagination - grid should be 5 links wide |
+| *Comment* | Test Case: What's New Pagination - grid should be 5 links wide |  |
 | wait_for_element_visible_ok | link=5 | 30000 |
 | click_ok | link=5 |  |
 | wait_for_element_visible_ok | link=4 | 30000 |
@@ -34,7 +34,7 @@
 | wait_for_element_visible_ok | link=5 | 30000 |
 | wait_for_element_visible_ok | link=7 | 30000 |
 
-| *Comment* | Test Case: What's New Pagination - Appearance when last is clicked |
+| *Comment* | Test Case: What's New Pagination - Appearance when last is clicked |  |
 | click_ok | link=Last |  |
 | wait_for_text_present_ok | Last | 30000 |
 | wait_for_text_present_ok | Next | 30000 |

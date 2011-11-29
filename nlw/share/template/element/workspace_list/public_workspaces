@@ -1,0 +1,13 @@
+[%# @COPYRIGHT@ -%]
+[%# vim: set et sts=2 sw=2: %]
+<div class="publicWorkspaces">
+[% IF public_workspaces AND (public_workspaces.size > 0)%]
+  [% target_att = 'target="' _ link_target _ '"' IF link_target %]
+  <p>[% loc('wiki.public:') %]</p>
+  <ul>
+    [% FOREACH ws IN public_workspaces %]
+      <li><a href="/[% ws.0 | html %]" [% target_att %]>[% ws.1 | html %]</a></li>
+    [% END %]
+  </ul>
+[% END %]
+</div>

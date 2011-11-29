@@ -1,9 +1,7 @@
+| *Comment* | Test Case: Clear Profile Fields - REMOVED run.ff and run.safari tags - retest in IE |  |
+| *Comment* | [Test Case: Edit Profile] and [Test Case: Verify Profile] should have run before Clear Profile Fields |  |
 
 * Fixture: SocialWidgets
-
-| *Comment* | Test Case: Clear Profile Fields - REMOVED run.ff and run.safari tags - retest in IE |  |
-
-| *Comment* | [Test Case: Edit Profile] and [Test Case: Verify Profile] should have run before Clear Profile Fields |  |
 
 | *Comment* | These values must match the one in [Test Case: Edit Profile] |  |
 | set | e_user | profile.editor@ken.socialtext.net |
@@ -13,24 +11,16 @@
 | st-admin | set-user-names --e %%e_user%% --f "%%fname%%" --m "%%mname%%" --l "%%lname%%" | updated |
 
 | *Comment* | Test Case: Clear Profile Fields. Access profile. |  |
-| open_ok | /nlw/submit/logout |  |
-| wait_for_element_visible_ok | username | 60000 |
-| wait_for_element_visible_ok | password | 60000 |
-| type_ok | username | %%e_user%% |
-| type_ok | password | %%password%% |
-| click_and_wait | login_btn |  |
+| st-logoutin | %%e_user%% | %%password%% |
 
 | *Comment* | Test Case: Clear Profile Fields. Verify old names |  |
 | open_ok | /st/profile |  |
-| st-name-widget | 1 | profile |
-| st-widget-title-like | profile | Profile |
-| st-select-widget-frame | profile |  |
+| st-widget-title | profile | Profile |
 | text_like | %%fname%% %%mname%% %%lname%% |  |
-| select-frame | relative=parent |  |
 
 | *Comment* | Test Case: Clear Profile Fields. Open for editing |  |
-| wait_for_element_visible_ok | link=(edit) | 30000 |
-| click_and_wait | link=(edit) |  |
+| wait_for_element_visible_ok | st-edit-profile | 30000 |
+| click_and_wait | st-edit-profile |  |
 
 | *Comment* | Test Case: Clear Profile Fields - Verify OLD values |  |
 | wait_for_element_visible_ok | first_name | 30000 |
@@ -41,24 +31,23 @@
 | verifyValue | middle_name | %%mname%% |
 
 | *Comment* | Test Case: Clear Profile Fields - Clear the name fields |  |
-| type_ok | first_name |  |
-| type_ok | middle_name |  |
-| type_ok | last_name |  |
-
+| type_ok | first_name | X |
+| keyPress | first_name | \008 |
+| type_ok | middle_name | Y |
+| keyPress | middle_name | \008 |
+| type_ok | last_name | Z |
+| keyPress | last_name | \008 |
+| type_ok | preferred_name | Z |
+| keyPress | preferred_name | \008 |
 | wait_for_element_visible_ok | update_profile | 30000 |
-| pause | 10000 | settling time |
 | click_and_wait | update_profile |  |
 
 | *Comment* | Test Case: Clear Profile Fields. Verify old names GONE |  |
 | open_ok | /st/profile |  |
-| st-name-widget | 1 | profile |
-| st-widget-title-like | profile | Profile |
-| st-select-widget-frame | profile |  |
+| st-widget-title | profile | Profile |
 | text_unlike | //body | %%fname%% %%mname%% %%lname%% |
 | text_unlike | //body | %%fname%% |
 | text_unlike | //body | %%mname%% |
 | text_unlike | //body | %%lname%% |
-| select-frame | relative=parent |  |
-
 
 | *Comment* | Test Case: Clear Profile Fields COMPLETED |  |

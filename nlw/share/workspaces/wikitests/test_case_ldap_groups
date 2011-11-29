@@ -1,8 +1,11 @@
-| *Comment* | Test Case: LDAP Groups |
+| *Comment* | Test Case: LDAP Groups |  |
+| *Comment* | XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX |  |
+| *Comment* | ONLY WORKS IN A PRISTINE LDAP ENVIRONMENT WHERE THE GROUPS HAVE NEVER BEEN CREATED |  |
+| *Comment* | XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX |  |
 
 * Fixture: SocialWidgets
 
-| *Comment* | Test Case: LDAP Groups Creates a group, exercises it, and tears down |
+| *Comment* | Test Case: LDAP Groups Creates a group, exercises it, and tears down |  |
 
 | st-admin | give-accounts-admin --u %%username%% |  |
 

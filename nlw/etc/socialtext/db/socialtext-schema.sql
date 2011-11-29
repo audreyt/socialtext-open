@@ -865,6 +865,11 @@ CREATE TABLE account_logo (
     logo bytea NOT NULL
 );
 
+CREATE TABLE account_theme_attachment (
+    account_id bigint NOT NULL,
+    attachment_id integer NOT NULL
+);
+
 CREATE SEQUENCE user_set_path_id_seq
     INCREMENT BY 1
     NO MINVALUE
@@ -1133,6 +1138,11 @@ CREATE TABLE group_photo (
     large bytea,
     small bytea
 );
+
+CREATE VIEW group_workspaces AS
+ SELECT DISTINCT user_set_path.from_set_id AS user_set_id, user_set_path.into_set_id AS workspace_set_id
+   FROM user_set_path
+  WHERE user_set_path.into_set_id >= B'00100000000000000000000000000001'::"bit"::integer AND user_set_path.into_set_id <= B'00110000000000000000000000000000'::"bit"::integer AND user_set_path.from_set_id >= B'00010000000000000000000000000001'::"bit"::integer AND user_set_path.from_set_id <= B'00100000000000000000000000000000'::"bit"::integer;
 
 CREATE TABLE groups (
     group_id bigint NOT NULL,
@@ -1414,11 +1424,11 @@ CREATE TABLE theme (
     theme_id integer NOT NULL,
     name text NOT NULL,
     header_color text NOT NULL,
-    header_image_id bigint NOT NULL,
+    header_image_id bigint,
     header_image_tiling text NOT NULL,
     header_image_position text NOT NULL,
     background_color text NOT NULL,
-    background_image_id bigint NOT NULL,
+    background_image_id bigint,
     background_image_tiling text NOT NULL,
     background_image_position text NOT NULL,
     primary_color text NOT NULL,
@@ -1426,7 +1436,12 @@ CREATE TABLE theme (
     tertiary_color text NOT NULL,
     header_font text NOT NULL,
     body_font text NOT NULL,
-    is_default boolean NOT NULL
+    is_default boolean NOT NULL,
+    foreground_shade text DEFAULT '' NOT NULL,
+    logo_image_id bigint,
+    favicon_image_id bigint,
+    header_link_color text DEFAULT '' NOT NULL,
+    background_link_color text DEFAULT '' NOT NULL
 );
 
 CREATE SEQUENCE theme_theme_id
@@ -1503,6 +1518,12 @@ CREATE TABLE user_set_include (
             CHECK (from_set_id <> into_set_id)
 );
 
+CREATE VIEW user_set_group_count AS
+ SELECT user_set_include.into_set_id AS user_set_id, count(DISTINCT user_set_include.from_set_id) AS group_count
+   FROM user_set_include
+  WHERE user_set_include.from_set_id >= B'00010000000000000000000000000001'::"bit"::integer AND user_set_include.from_set_id <= B'00100000000000000000000000000000'::"bit"::integer
+  GROUP BY user_set_include.into_set_id;
+
 CREATE VIEW user_set_include_tc AS
  SELECT DISTINCT user_set_path.from_set_id, user_set_path.into_set_id, user_set_path.role_id
    FROM user_set_path
@@ -1533,6 +1554,13 @@ UNION ALL
            FROM user_set_path path
       JOIN user_set_plugin plug ON path.into_set_id = plug.user_set_id;
 
+CREATE VIEW user_set_user_count AS
+ SELECT user_set_include.into_set_id AS user_set_id, count(DISTINCT user_set_include.from_set_id) AS user_count
+   FROM user_set_include
+   JOIN all_users ON all_users.user_id = user_set_include.from_set_id
+  WHERE user_set_include.from_set_id <= B'00010000000000000000000000000000'::"bit"::integer AND all_users.is_deleted = false
+  GROUP BY user_set_include.into_set_id;
+
 CREATE VIEW user_use_plugin AS
  SELECT user_set_path.from_set_id AS user_id, user_set_path.into_set_id AS user_set_id, user_set_plugin.plugin
    FROM user_set_path
@@ -1544,6 +1572,11 @@ CREATE TABLE user_workspace_pref (
     last_updated timestamptz DEFAULT now() NOT NULL,
     pref_blob text NOT NULL
 );
+
+CREATE VIEW user_workspaces AS
+ SELECT DISTINCT user_set_path.from_set_id AS user_set_id, user_set_path.into_set_id AS workspace_set_id
+   FROM user_set_path
+  WHERE user_set_path.into_set_id >= B'00100000000000000000000000000001'::"bit"::integer AND user_set_path.into_set_id <= B'00110000000000000000000000000000'::"bit"::integer AND user_set_path.from_set_id <= B'00010000000000000000000000000000'::"bit"::integer;
 
 CREATE VIEW users AS
  SELECT all_users.user_id, all_users.driver_key, all_users.driver_unique_id, all_users.driver_username, all_users.email_address, all_users.password, all_users.first_name, all_users.middle_name, all_users.last_name, all_users.cached_at, all_users.last_profile_update, all_users.is_profile_hidden, all_users.display_name, all_users.missing, all_users.private_external_id
@@ -1652,6 +1685,10 @@ ALTER TABLE ONLY "Workspace"
 ALTER TABLE ONLY account_logo
     ADD CONSTRAINT account_logo_pkey
             PRIMARY KEY (account_id);
+
+ALTER TABLE ONLY account_theme_attachment
+    ADD CONSTRAINT account_theme_attachment_pkey
+            PRIMARY KEY (account_id, attachment_id);
 
 ALTER TABLE ONLY attachment
     ADD CONSTRAINT attachment_pkey
@@ -2867,14 +2904,34 @@ ALTER TABLE ONLY tag_people__person_tags
             FOREIGN KEY (tag_id)
             REFERENCES person_tag(id) ON DELETE CASCADE;
 
+ALTER TABLE ONLY account_theme_attachment
+    ADD CONSTRAINT theme_attachment_account_id_fk
+            FOREIGN KEY (account_id)
+            REFERENCES "Account"(account_id) ON DELETE RESTRICT;
+
+ALTER TABLE ONLY account_theme_attachment
+    ADD CONSTRAINT theme_attachment_attachment_id_fk
+            FOREIGN KEY (attachment_id)
+            REFERENCES attachment(attachment_id) ON DELETE RESTRICT;
+
 ALTER TABLE ONLY theme
     ADD CONSTRAINT theme_background_image_fk
             FOREIGN KEY (background_image_id)
             REFERENCES attachment(attachment_id) ON DELETE RESTRICT;
 
 ALTER TABLE ONLY theme
+    ADD CONSTRAINT theme_favicon_image_fk
+            FOREIGN KEY (favicon_image_id)
+            REFERENCES attachment(attachment_id) ON DELETE RESTRICT;
+
+ALTER TABLE ONLY theme
     ADD CONSTRAINT theme_header_image_fk
             FOREIGN KEY (header_image_id)
+            REFERENCES attachment(attachment_id) ON DELETE RESTRICT;
+
+ALTER TABLE ONLY theme
+    ADD CONSTRAINT theme_logo_image_fk
+            FOREIGN KEY (logo_image_id)
             REFERENCES attachment(attachment_id) ON DELETE RESTRICT;
 
 ALTER TABLE ONLY topic_signal_link
@@ -3033,4 +3090,4 @@ ALTER TABLE ONLY "Workspace"
             REFERENCES all_users(user_id) ON DELETE RESTRICT;
 
 DELETE FROM "System" WHERE field = 'socialtext-schema-version';
-INSERT INTO "System" VALUES ('socialtext-schema-version', '148');
+INSERT INTO "System" VALUES ('socialtext-schema-version', '154');

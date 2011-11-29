@@ -41,8 +41,6 @@ sub register {
         'wafl.user' => 'user_name',
         priority    => 99,
     );
-
-    $class->add_content_type('wiki', __('page.type-wiki'));
 }
 
 sub user_name {

@@ -1,0 +1,207 @@
+body
+  font-family: $body_font
+  background: $lightest !important
+
+th
+  overflow: hidden
+
+.label
+  float: left
+  margin-left: 5px
+  display: block
+
+.wip
+  font-weight: normal
+  color: $red
+  margin-left: 5px
+  display: inline
+
+.black
+  background: $darker
+  height: 2px
+
+.gap
+  background: $darker
+  width: 1px
+
+.heading
+  vertical-align: baseline
+
+.odd
+  background: $lighter
+
+.ui-hover
+  background: $darker
+
+.card
+  border: 1px solid $light
+  margin-bottom: 10px
+  box-shadow: 2px 2px 2px $grey
+  -moz-box-shadow: 1px 1px 2px $grey
+  -webkit-box-shadow: 1px 1px 2px $grey
+  border-radius: 5px
+  -moz-border-radius: 5px
+  -webkit-border-radius: 5px
+  overflow: hidden
+  margin: 3px
+
+.bug
+  border: 1px solid $light
+  margin-bottom: 10px
+  box-shadow: 2px 2px 2px $grey
+  -moz-box-shadow: 1px 1px 2px $grey
+  -webkit-box-shadow: 1px 1px 2px $grey
+  border-radius: 5px
+  -moz-border-radius: 5px
+  -webkit-border-radius: 5px
+  overflow: hidden
+  margin: 3px
+  margin-left: 5%
+  width: 90%
+
+.text
+  overflow: hidden
+  font-size: 13px
+  max-height: 2.3em
+  pointer: cursor
+  display: block
+  text-decoration: none
+  color: $darkest
+  border-radius: 5px
+  -moz-border-radius: 5px
+  -webkit-border-radius: 5px
+  padding: 2px
+  &:hover
+    max-height: 100px
+    color: $primary_color
+    background: __UP_HoverBackground__ !important
+
+.content
+  vertical-align: top
+
+.stamps
+  text-align: right
+
+.stamp
+  font-weight: bold
+  margin-left: 2px
+  margin-right: 2px
+  font-size: 12px
+  display: inline-block
+
+.ui-draggable-dragging
+  z-index: 1000
+
+input.color, fieldset input.color.ui-input-text
+  font-family: Monaco, "Andale Mono", Consolas, "Droid Sans Mono", "Courier New", monospace !important
+  width: auto !important
+
+li
+  padding-right: 32px !important
+
+ul, a.ui-btn
+  max-width: 600px !important
+
+div
+  &.action
+    position: absolute
+    right: 0
+    margin-top: -38px
+  &.ui-block-a
+    padding-bottom: 5px
+  &.colorpicker
+    z-index: 100
+    left: 0 !important
+  &.ui-page-active
+    text-align: center
+  &.colorpicker_submit
+    color: $primary_contrast
+    border-radius: 4px
+    -moz-border-radius: 4px
+    -webkit-border-radius: 4px
+    background: url("/nlw/plugin/widgets/css/images/icons-18-white.png") no-repeat scroll 0 0 $primary_color !important
+    border: 3px solid $tertiary_color
+    background-position: -252px 50% !important
+    width: 20px
+    cursor: pointer
+    left: 212px !important
+  &.colorpicker_hex
+    left: 272px !important
+
+fieldset input.ui-input-text
+  width: 90% !important
+  display: inline-block
+
+.max-width-480px
+  label.ui-input-text, input.ui-input-text, div.ui-select
+    width: 100% !important
+    display: inline-block
+
+.min-width-480px
+  fieldset
+    input.ui-input-text
+      width: 90% !important
+      display: inline-block
+    nobr input.ui-input-text
+      width: 70% !important
+      display: inline-block
+  div.ui-select
+    width: 50%
+  label.ui-input-text, input.ui-input-text
+    width: 40% !important
+    display: inline-block
+
+input.color
+  font-size: 13px
+  margin-top: 4px
+  width: 70px !important
+
+#home
+  background: $lightest
+  div.ui-content
+    padding: 0px
+    background: $lightest
+
+.ui-body-c
+  text-shadow: none !important
+
+.st-suggestion-warning
+  font-size: 14px
+
+.lookaheadItem a
+  text-decoration: none
+  font-size: 15px
+
+a
+  &.save, &.action
+    font-size: 15px
+
+div
+  &.row
+    display: inline-block
+    width: 100%
+  &.sortable
+    display: inline-block
+    cursor: move
+    clear: both
+    width: 100%
+
+.ui-grid-a div
+  &.ui-block-a, &.ui-block-b
+    width: 49%
+
+.ui-grid-b div
+  &.ui-block-a, &.ui-block-b, &.ui-block-c
+    width: 33%
+
+.fullwidth
+  width: 100% !important
+
+body
+  input.ui-input-text
+    *line-height: 50% !important
+  div
+    &.ui-header a.ui-btn
+      *width: 50px !important
+    &.action
+      *margin-top: -7px !important

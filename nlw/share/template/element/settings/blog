@@ -1,0 +1,12 @@
+<h3>[% loc('blog.create') %]</h3>
+
+<div class="alpha grid_5 input-label">[% loc('blog.name') %]:</div>
+<div class="omega grid_15">
+  <input name="workspace.do.create_blog" type="text" />
+</div>
+<div class="clear"></div>
+
+<div class="prefix_5 alpha grid_15">[% loc('info.creating-blog') %]</div>
+<div class="clear"></div>
+
+<hr />

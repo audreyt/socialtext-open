@@ -1,0 +1,192 @@
+[%# vim: set et sts=2 sw=2: %]
+[% USE decorate %]
+
+[% BLOCK subtools %]
+  <li class="item" id="[% id %]">
+    <a class="collapsed" href="#">
+      [% name %] <span class="arrow">&#9658;</span>
+    </a>
+    <a class="expanded" href="#">
+      [% name %] <span class="arrow">&#9660;</span>
+    </a>
+    <ul class="subtools">
+      [% content %]
+    </ul>
+  </li>
+[% END %]
+
+[% BLOCK tools_item %]
+  <li class="item" id="[% id %]">
+    <a href="[% href || '#' %]" title="[% title || text%] [% onclick ? "onClick=\"$onclick\"" : '' %]"[% FOR kv = data %] data-[% kv.0 %]="[% kv.1 %]"[% END %]>[% text %]</a>
+  </li>
+[% END %]
+
+<div class="widget">
+  <div class="content">
+    <ul class="tools">
+      [% SET locked = page_locked_for_user %]
+
+      [% IF page.revisions && page.revisions > 0 %]
+        [% INCLUDE tools_item
+            id="controls-right-revisions"
+            href="?action=revision_list;page_name=$page.id"
+            text=loc('page.revisions=count', page.revisions)
+        %]
+      [% END %]
+
+      [% IF !locked && !page.is_spreadsheet && checker.check_permission('comment') %]
+        [% INCLUDE tools_item
+            id="st-comment-button"
+            href="#"
+            title=loc('info.comment')
+            text=loc('page.comment')
+        %]
+      [% END %]
+
+      [% IF locking_enabled && can_lock %]
+        [% IF page_locked %]
+          [% INCLUDE tools_item
+              id="st-admin-unlock-link"
+              href="/$current_workspace.name/?page_name=$page.id;action=unlock_page"
+              text=loc('page.locked')
+          %]
+        [% ELSE %]
+          [% INCLUDE tools_item
+              id="st-admin-lock-link"
+              href="/$current_workspace.name/?page_name=$page.id;action=lock_page"
+              text=loc('page.unlocked')
+          %]
+        [% END %]
+      [% END %]
+
+      [% FILTER decorate('page_menu') %]
+        [% INCLUDE tools_item
+            id="st-watchlist-indicator"
+            href="#"
+            data=[['watching', watching]]
+            text=watching ? loc('watch.stop') : loc('do.watch')
+        %]
+        [% IF plugins_enabled.grep("signals").size && plugins_enabled_for_current_workspace_account.grep("signals").size -%]
+          [% INCLUDE tools_item
+              id="st-signalthis-indicator"
+              href="#"
+              text=loc('page.signal-this!')
+          %]
+        [% END %]
+
+        [% WRAPPER subtools id="st-page-options" name=loc('nav.page-tools') %]
+          [% INCLUDE tools_item
+              id="st-pagetools-print"
+              href="JavaScript:window.print()"
+              title=loc('page.print')
+              text=loc('do.print')
+          %]
+          [% WRAPPER subtools id="st-email-menu" name=loc('do.email') %]
+            [% IF checker.check_permission('email_out') %]
+              [% INCLUDE tools_item
+                  id="st-pagetools-email"
+                  href="#"
+                  title=loc('info.email-page')
+                  text=loc('email.this-page')
+              %]
+            [% END %]
+
+            [% IF checker.check_permission('email_in')
+                && page.page_type != 'spreadsheet' %]
+              [% INCLUDE tools_item
+                  id="st-pagetools-emailtoworkspace"
+                  href="mailto:$wiki.email_address"
+                  title=wiki.email_address
+                  text=loc('email.to-this-wiki')
+              %]
+              [% IF !locked %]
+                [% SET title = page.title | html_encode %]
+                [% IF page.page_type == 'spreadsheet' %]
+                  [% INCLUDE tools_item
+                      id="st-pagetools-emailtopage"
+                      href="mailto:$wiki.email_address?subject=$title"
+                      title="To: $wiki.email_address / subject: $title"
+                      text=loc('email.to-this-page')
+                      onclick="alert(loc('error.email-spreadsheet')); return false;"
+                  %]
+                [% ELSE %]
+                  [% INCLUDE tools_item
+                      id="st-pagetools-emailtopage"
+                      href="mailto:$wiki.email_address?subject=$title"
+                      title="To: $wiki.email_address / subject: $title"
+                      text=loc('email.to-this-page')
+                  %]
+                [% END %]
+              [% END %]
+            [% END %]
+          [% END %]
+
+          [% WRAPPER subtools id="st-export-menu" name=loc('do.export') %]
+            [% USE encode_mailto %]
+            [% FILTER decorate('pageexport') %]
+            [% END %]
+            [% INCLUDE tools_item
+                id="st-pagetools-export-html"
+                href="/$current_workspace.name?action=display_html;page_name=$page.id"
+                target="_new"
+                text=loc('export.html')
+            %]
+
+            [% IF loc_lang != 'ja' %]
+              [% INCLUDE tools_item
+                  id="st-pagetools-export-pdf"
+                  href="/$current_workspace.name?action=pdf_export;page_selected=$page.id"
+                  target="_new"
+                  text=loc('export.pdf')
+              %]
+            [% END %]
+
+            [% INCLUDE tools_item
+                id="st-pagetools-export-word"
+                href="/$current_workspace.name?action=rtf_export;page_selected=$page.id"
+                target="_new"
+                text=loc('export.word')
+            %]
+
+            [% FOREACH tool = tools.keys %]
+              [% action = tools.$tool.0 %]
+              [% INCLUDE tools_item
+                  id="st-pagetools-export-word"
+                  href="/$current_workspace.name?action=$action;page_name=$page.id"
+                  target="_new"
+                  text=loc('export.word')
+              %]
+            [% END %]
+          [% END %]
+
+          [% IF checker.check_permission('edit') AND !locked %]
+            [% INCLUDE tools_item
+                id="st-pagetools-duplicate"
+                href="#"
+                text=loc('page.duplicate')
+            %]
+            [% INCLUDE tools_item
+                id="st-pagetools-rename"
+                href="#"
+                text=loc('page.rename')
+            %]
+          [% END %]
+          [% IF current_user_workspace_count > 1 AND !page_locked_for_user %]
+            [% INCLUDE tools_item
+                id="st-pagetools-copy"
+                href="#"
+                text=loc('page.copy')
+            %]
+          [% END %]
+          [% IF checker.check_permission('delete') AND !locked %]
+            [% INCLUDE tools_item
+                id="st-pagetools-delete"
+                href="#"
+                text=loc('page.delete')
+            %]
+          [% END %]
+        [% END %]
+      [% END %]
+    </ul>
+  </div>
+</div>

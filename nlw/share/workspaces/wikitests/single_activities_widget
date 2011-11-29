@@ -1,0 +1,7 @@
+| *Comment* | Single Activities widget for activity=%%activity%%, contributor=%%contributor%% |  |
+
+* Fixture: SocialWidgets
+
+| st-single-widget-in-dashboard | gallery-widget-Activities |  |
+
+| call | [activities-widget] | activity=%%activity%% | contributor=%%contributor%% |

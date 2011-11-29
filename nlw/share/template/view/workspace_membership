@@ -1,0 +1,60 @@
+[%# vim: set et sts=2 sw=2: %]
+[%# @COPYRIGHT@ -%]
+[% USE decorate %]
+[% WRAPPER $frame_name id="listPage" %]
+  [% INCLUDE element/page/navigation %]
+  <div id="contentContainer">
+    <div class="grid_24">
+      <h2 class="tableTitle" title="[% display_title | html %]">[% display_title | html %]</h2>
+    </div>
+    <div class="clear"></div>
+    <div class="grid_16">
+      <h3>[% loc('wiki.member-users') %]</h3>
+      <table class="dataTable fixed" id="users">
+      <tr>
+        <td colspan="2"></td>
+        <td style="padding-left: 0.5em">[% loc('user.role') %]</td>
+        <td style="padding-left: 0.5em">[% loc('user.last-edit') %]</td>
+      </tr>
+        [% FOREACH wuser = users %]
+          [% IF loop.count % 2 %]<tr class="oddRow">[% ELSE %]<tr>[% END %]
+            <td>[% wuser.username | decorate('user_photo') %]</td>
+            <td style="padding-left: 0.5em; vertical-align: middle">[% wuser.username | decorate('user_link') %]</td>
+            <td style="padding-left: 0.5em; vertical-align: middle"> [% wuser.role %] </td>
+            <td style="padding-left: 0.5em; vertical-align: middle">[% IF wuser.last_edit.name; PROCESS last_edit page=wuser.last_edit; END %]</td>
+          </tr>
+        [% END %]
+      </table>
+    </div>
+    <div class="grid_8">
+      <h3>[% loc('wiki.groups') %]</h3>
+      [% IF groups.size == 0 %]
+        <p>[% loc('wiki.no-member-groups') %]</p>
+      [% ELSE %]
+        <table class="dataTable fixed" id="groups">
+        <tr><td colspan="2"></td><td style="padding-left: 0.5em">[% loc('user.role') %]</td></tr>
+          [% FOREACH group = groups %]
+            [% IF loop.count % 2 %]<tr class="oddRow">[% ELSE %]<tr>[% END %]
+              <td> <img src="/data/groups/[% group.id %]/photo" /> </td>
+              <td style="padding-left: 0.5em; vertical-align: middle"> <a href="/st/group/[% group.id %]">[% group.name %]</a> </td>
+              <td style="padding-left: 0.5em; vertical-align: middle"> [% group.role %] </td>
+            </tr>
+          [% END %]
+        </table>
+      [% END %]
+    </div>
+    <div class="clear"></div>
+  </div>
+[% END %]
+
+[% BLOCK last_edit %]
+  [% IF page.page_type == 'spreadsheet' %]
+     <img class="pageType" src="[% static_path %]/images/icons/sheet-black-15.png" />
+  [% ELSE %]
+     <img class="pageType" src="[% static_path %]/images/icons/document-black-15.png" />
+  [% END %]
+  <a class="titleLink" href="/[% workspace.name %]/[% page.page_id %]">[% page.name | html %]</a>
+  [% loc('time.at') %]
+  <span class="last-updated-by">[% page.local_edit_time %].</span>
+[% END %]
+

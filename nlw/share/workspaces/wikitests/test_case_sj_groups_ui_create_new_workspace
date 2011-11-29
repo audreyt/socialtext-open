@@ -27,67 +27,66 @@
 | *Comment* | Test Case: SJ Groups UI Create New Workspace Get to Workspaces Widget |  |
 | open_ok | /?group/%%group_id%%/ |  |
 | st-name-widget | 2 | workspaces_widget |
-| st-widget-title-like | workspaces_widget | Workspaces |
+| st-widget-title | workspaces_widget | Workspaces |
 
 | *Comment* | Test Case: SJ Groups UI Create New Workspace Is the %%test_delete_ws%% workspace there? |  |
 | st-select-widget-frame | workspaces_widget |  |
 | text_like | //body | %%test_delete_ws_title%% |
-| wait_for_element_visible_ok | link=%%test_delete_ws_title%% | 30000 |
+| wait_for_element_visible_ok | link=%%test_delete_ws_title%% | 15000 |
 | select-frame | relative=parent |  |
 
 | *Comment* | Test Case: SJ Groups UI Create New Workspace open group for editing |  |
 | open_ok | /st/edit_group/%%group_id%% |  |
-| wait_for_text_present_ok | Edit Group: | 30000 |
 
 | st-name-widget | 1 | information_widget |
 | st-select-widget-frame | information_widget |  |
-| wait_for_text_present_ok | Self-Join | 30000 |
+| wait_for_text_present_ok | Self-Join | 15000 |
 | select-frame | relative=parent |  |
 
 | *Comment* | Test Case: SJ Groups UI Create New Workspace Get to Workspaces Widget |  |
 | st-name-widget | 2 | workspaces_widget |
-| st-widget-title-like | workspaces_widget | Workspaces |
+| st-widget-title | workspaces_widget | Workspaces |
 | st-select-widget-frame | workspaces_widget |  |
 
 | *Comment* | Test Case: SJ Groups UI Create New Workspace Get to Workspaces Widget check for %%group_ws%% |  |
 | text_like | //body | workspace |
 
 | *Comment* | Test Case: SJ Groups UI Create New Workspace Prepare new workspace |  |
-| wait_for_element_visible_ok | new_workspace | 30000 |
+| wait_for_element_visible_ok | new_workspace | 15000 |
 | click_ok | new_workspace |  |
 | select-frame | relative=parent |  |
 
 | *Comment* | Test Case: SJ Groups UI Create New Workspace fill in title and url |  |
-| wait_for_element_visible_ok | new-workspace-next | 30000 |
-| wait_for_element_visible_ok | new_workspace_title | 30000 |
+| wait_for_element_visible_ok | new-workspace-next | 15000 |
+| wait_for_element_visible_ok | new_workspace_title | 15000 |
 | type_ok | new_workspace_title | %%createme_ws_title%% |
 | click_ok | new-workspace-next |  |
-| wait_for_element_visible_ok | new-workspace-create | 30000 |
-| wait_for_element_visible_ok | new-workspace-cancel | 30000 |
-| wait_for_element_visible_ok | new_workspace_name | 30000 |
+| wait_for_element_visible_ok | new-workspace-create | 15000 |
+| wait_for_element_visible_ok | new-workspace-cancel | 15000 |
+| wait_for_element_visible_ok | new_workspace_name | 15000 |
 | type_ok | new_workspace_name | %%createme_ws_name%% |
 | click_ok | new-workspace-create |  |
 
 | *Comment* | Test Case: SJ Groups UI Create New Workspace Save - is the new workspace there? |  |
 | st-select-widget-frame | workspaces_widget |  |
-| wait_for_element_visible_ok | %%createme_ws_name%% | 30000 |
-| wait_for_text_present_ok | %%createme_ws_title%% | 30000 |
+| wait_for_element_visible_ok | %%createme_ws_name%% | 15000 |
+| wait_for_text_present_ok | %%createme_ws_title%% | 15000 |
 | select-frame | relative=parent |  |
-| wait_for_element_visible_ok | create-group | 30000 |
+| wait_for_element_visible_ok | create-group | 15000 |
 | click_and_wait | create-group |  |
 
 | *Comment* | Test Case: SJ Groups UI Create New Workspace Look for Workspace name in widget |  |
 | st-name-widget | 2 | workspaces_widget |
-| st-widget-title-like | workspaces_widget | Workspaces |
+| st-widget-title | workspaces_widget | Workspaces |
 | st-select-widget-frame | workspaces_widget |  |
 
 | *Comment* | Test Case: Groups UI Create New Workspace FAILS IN IE7 due to 3540 |  |
-| wait_for_element_visible_ok | link=%%createme_ws_title%% | 30000 |
+| wait_for_element_visible_ok | link=%%createme_ws_title%% | 15000 |
 | select-frame | relative=parent |  |
 
 | *Comment* | Test Case: SJ Groups UI Create New Workspace check /workspace-you-just-created URL |  |
 | open_ok | /%%createme_ws_name%%/ |  |
-| wait_for_element_visible_ok | st-edit-button-link | 30000 |
+| wait_for_element_visible_ok | st-edit-button-link | 15000 |
 
 | *Comment* | Test Case: SJ Groups UI Create New Workspace st-admin remove-member should fail for my user (belong's by group) |  |
 | *Comment* | Test Case: SJ Groups UI Create New Workspace st-admin remove-member - Fails due to {bz: 3518} - check removed |  |
@@ -100,28 +99,27 @@
 
 | *Comment* | Test Case: SJ Groups UI Create New Workspace check /workspace-you-just-created URL |  |
 | open_ok | /%%addme_ws%%/ |  |
-| wait_for_element_visible_ok | st-edit-button-link | 30000 |
+| wait_for_element_visible_ok | st-edit-button-link | 15000 |
 
 | *Comment* | Test Case: SJ Groups UI Create New Workspace select %%test_delete_ws%% for removal |  |
 | open_ok | /st/edit_group/%%group_id%% |  |
-| wait_for_text_present_ok | Edit Group: | 30000 |
 | st-name-widget | 2 | workspaces_widget |
-| st-widget-title-like | workspaces_widget | Workspaces |
+| st-widget-title | workspaces_widget | Workspaces |
 | st-select-widget-frame | workspaces_widget |  |
-| wait_for_element_visible_ok | %%delete_ws_id%% | 30000 |
+| wait_for_element_visible_ok | %%delete_ws_id%% | 15000 |
 | text_like | //body | %%test_delete_ws_title%% |
 | click_ok | %%delete_ws_id%% |  |
 | pause | 4000 | waiting for js to remove element. It's not disabled, but there, can't wait_for |
 | select-frame | relative=parent |  |
 
 | *Comment* | Test Case: SJ Groups UI Create New Workspace Now delete %%test_delete_ws%% from group |  |
-| wait_for_element_visible_ok | create-group | 30000 |
+| wait_for_element_visible_ok | create-group | 15000 |
 | click_and_wait | create-group |  |
 
 | *Comment* | Test Case: SJ Groups UI Create New Workspace Verify deleted %%test_delete_ws%% from group |  |
 | open_ok | /?group/%%group_id%%/ |  |
 | st-name-widget | 2 | workspaces_widget |
-| st-widget-title-like | workspaces_widget | Workspaces |
+| st-widget-title | workspaces_widget | Workspaces |
 | st-select-widget-frame | workspaces_widget |  |
 | text_unlike | //body | %%test_delete_ws%% |
 | text_unlike | //body | %%test_delete_ws_title%% |

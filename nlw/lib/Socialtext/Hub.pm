@@ -388,7 +388,6 @@ BEGIN {
             Socialtext::BreadCrumbsPlugin
             Socialtext::BugsPlugin
             Socialtext::CategoryPlugin
-            Socialtext::CommentUIPlugin
             Socialtext::DeletePagePlugin
             Socialtext::DevEnvPlugin
             Socialtext::DisplayPlugin
@@ -396,10 +395,8 @@ BEGIN {
             Socialtext::EditPlugin
             Socialtext::EmailNotifyPlugin
             Socialtext::EmailPageUIPlugin
-            Socialtext::FavoritesPlugin
             Socialtext::FetchRSSPlugin
             Socialtext::HitCounterPlugin
-            Socialtext::HomepagePlugin
             Socialtext::PageAnchorsPlugin
             Socialtext::PdfExportPlugin
             Socialtext::RecentChangesPlugin
@@ -409,7 +406,6 @@ BEGIN {
             Socialtext::ShortcutLinksPlugin
             Socialtext::GoogleSearchPlugin
             Socialtext::SyndicatePlugin
-            Socialtext::TiddlyPlugin
             Socialtext::TimeZonePlugin
             Socialtext::OpenIdPlugin
             Socialtext::UserPreferencesPlugin
@@ -417,14 +413,13 @@ BEGIN {
             Socialtext::WatchlistPlugin
             Socialtext::WeblogPlugin
             Socialtext::WeblogArchive
-            Socialtext::Wikiwyg::AnalyzerPlugin
             Socialtext::RtfExportPlugin
             Socialtext::WorkspacesUIPlugin
-            Socialtext::WorkspaceListPlugin
             Socialtext::PageActivityPlugin
             Socialtext::CodeSyntaxPlugin
             Socialtext::VideoPlugin
             Socialtext::WidgetPlugin
+            Socialtext::WorkspaceListPlugin
         ),
         # keep this last if you want pluggable plugins
         # to be able to override wafls, etc!

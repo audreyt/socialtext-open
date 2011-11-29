@@ -3,51 +3,35 @@
 | *Comment* | Test Case: Web Page Widget. Create the widget |  |
 | st-single-widget-in-dashboard | gallery-widget-Web Page |  |
 
-| *Comment* | Test Case: Web Page Widget. Configure the widget for socialtext.com |  |
+| *Comment* | Test Case: Web Page Widget. Configure the widget for parc.com |  |
 | st-name-widget | 1 | webpage |
-| st-widget-title-like | webpage | Web Page |
+| st-widget-title | webpage | Web Page |
 | st-widget-settings | webpage |  |
 | wait_for_element_visible_ok | //input[contains(@name,'title')] | 30000 |
 | type_ok | //input[contains(@name,'title')] | Web Page %%start_time%% |
 | wait_for_element_visible_ok | //input[contains(@name,'url')] | 30000 |
-| type_ok | //input[contains(@name,'url')] | `http://socialtext.com` |
-| wait_for_element_visible_ok | //input[contains(@name,'height')] | 30000 |
-| type_ok | //input[contains(@name,'height')] | 300 |
-| wait_for_element_visible_ok | st-savebutton-%%webpage%% | 30000 |
+| type_ok | //input[contains(@name,'url')] | `http://www.parc.com` |
+| wait_for_element_visible_ok | //input[contains(@name,'height')] | 4000 |
+| type_ok | //input[contains(@name,'height')] | 333 |
+| wait_for_element_visible_ok | st-savebutton-%%webpage%% | 4000 |
 | click_ok | st-savebutton-%%webpage%% |  |
 | wait_for_element_not_visible_ok | st-savebutton-%%webpage%% | 30000 |
 
-| *Comment* | Test Case: Web Page Widget. Verify the widget |  |
+| *Comment* | Test Case: Web Page Widget. Verify title |  |
 | wait_for_text_present_ok | Web Page %%start_time%% | 30000 |
-| st-widget-title-like | webpage | Web Page %%start_time%% |
-| wait_for_element_visible_ok | `xpath=(//iframe[@src='http://socialtext.com' and @scrolling='no'])` | 10000 |
+| st-widget-title | ignore | Web Page %%start_time%% |
 
-| *Comment* | Test Case: Web Page Widget. Verify divs. Don't use is_text_present, use divs, FF4 has trouble with text ! |
-| pause_ok | 15000 | I hate pause. Wait for the widget to load |
-| selectFrame | `xpath=(//iframe[@src='http://socialtext.com' and @scrolling='no'])` |  |
-| is_element_present_ok | //body | 10000 |
-| is_element_present_ok | //div[@class='primarymessaging'] | 5000 |
-| is_element_present_ok | //div[@id='sitenavigation'] | 5000 |
-| selectFrame | relative=parent |  |
+| *Comment* | Test Case: Web Page Widget. Verify content |  |
+| pause_ok | 10000 | I hate pause. Wait for the widget to load |
+| wait_for_element_present_ok | //img[@src="/images/parc-logo-x.gif"] | 4000 |
 
-| *Comment* | Test Case: Web Page Widget. Verify scrolling |  |
+| *Comment* | Test Case: Web Page Widget. Set and verify scrolling |  |
 | st-widget-settings | webpage |  |
 | wait_for_element_visible_ok | //select[@name='scrolling'] | 30000 |
 | select_ok | //select[@name='scrolling'] | label=Yes |
-| wait_for_element_visible_ok | st-savebutton-%%webpage%% | 30000 |
+| wait_for_element_visible_ok | st-savebutton-%%webpage%% | 4000 |
 | click_ok | st-savebutton-%%webpage%% |  |
-| wait_for_element_not_visible_ok | st-savebutton-%%webpage%% | 30000 |
-| wait_for_element_visible_ok | `xpath=(//iframe[@src='http://socialtext.com' and @scrolling='yes'])` | 10000 |
-
-| *Comment* | Test Case: Web Page Widget. Verify divs again. Don't use is_text_present, use divs, FF4 has trouble with text ! |
-| selectFrame | `xpath=(//iframe[@src='http://socialtext.com' and @scrolling='yes'])` |  |
-| is_element_present_ok | //body | 10000 |
-| is_element_present_ok | //div[@class='primarymessaging'] | 5000 |
-| is_element_present_ok | //div[@id='sitenavigation'] | 5000 |
-
-| *Comment* | Test Case: Web Page Widget. Verify content. These words might change in the future. |
-| is_element_present_ok | //div[@id='solution1']/h2[contains(text(),'Communicate')] | 5000 |
-| is_element_present_ok | //div[@id='sitenavigation']/a[contains(text(),'Home')] | 5000 |
-| selectFrame | relative=parent |  |
+| wait_for_element_not_visible_ok | st-savebutton-%%webpage%% | 10000 |
+| wait_for_element_visible_ok | `xpath=(//iframe[contains(@src,"www.parc.com") and @scrolling='yes'])` | 30000 |
 
 | *Comment* | Test Case: Web Page Widget COMPLETED |  |

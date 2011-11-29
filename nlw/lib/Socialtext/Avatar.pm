@@ -4,23 +4,23 @@ use Moose::Role;
 use DBD::Pg qw/:pg_types/;
 use File::Temp qw(tempfile);
 use File::Path qw/remove_tree/;
+use Socialtext::AppConfig;
 use Socialtext::Image;
 use Socialtext::File;
-use Socialtext::Skin;
 use Socialtext::SQL qw(:txn :exec get_dbh);
 use Socialtext::SQL::Builder qw(sql_insert sql_update);
 use Try::Tiny;
 use namespace::clean -except => 'meta';
 
-requires qw(cache table versions id_column id resize_spec default_skin);
+requires qw(cache table versions id_column id resize_spec);
 
 sub DefaultPhoto {
     my $class = shift;
     my $version = shift || die 'version required';
 
     # get the path to the image, on *disk*
-    my $skin = Socialtext::Skin->new( name => $class->default_skin );
-    my $dir = File::Spec->catfile($skin->skin_path, "images");
+    my $base_dir = Socialtext::AppConfig->code_base();
+    my $dir = File::Spec->catfile($base_dir, "images");
 
     my $default_arg = "default_$version";
     my $file = $class->$default_arg || die "no $default_arg!";

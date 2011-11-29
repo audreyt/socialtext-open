@@ -4,16 +4,8 @@
 use strict;
 use warnings;
 
+use Test::More;
 use Test::Socialtext;
-BEGIN {
-    unless ( eval { require Email::Send::Test; 1 } ) {
-        plan skip_all => 'These tests require Email::Send::Test to run.';
-    }
-    else {
-        plan tests => 27;
-    }
-}
-
 use Socialtext::User;
 use Socialtext::Workspace;
 
@@ -25,8 +17,8 @@ fixtures(qw( empty ));
 
 $Socialtext::EmailSender::Base::SendClass = 'Test';
 
-my $workspace = Socialtext::Workspace->new( name => 'empty' );
-my $current_user    = Socialtext::User->new( username => 'devnull1@socialtext.com' );
+my $workspace = Socialtext::Workspace->new(name => 'empty');
+my $current_user = Socialtext::User->new(username => 'devnull1@socialtext.com');
 
 Can_send_without_exception: {
     my $invitation = Socialtext::WorkspaceInvitation->new(
@@ -50,6 +42,7 @@ my @cases = ( { label        => 'non-appliance',
               },
               { label        => 'non-appliance has account',
                 is_appliance => 0,
+                no_emails    => 1,
                 username     => 'devnull8@socialtext.com',
                 tests        => [ qr/already have a Socialtext account/,
                                 ],
@@ -63,6 +56,7 @@ my @cases = ( { label        => 'non-appliance',
               },
               { label        => 'appliance has account',
                 is_appliance => 1,
+                no_emails    => 1,
                 username     => 'devnull9@socialtext.com',
                 tests        => [ qr/already have a Socialtext Appliance account/,
                                 ],
@@ -87,7 +81,8 @@ for my $c (@cases) {
     my $expected = 0;
     if( _confirm_user_if_neccessary( $c->{username} ) ) {
         $expected = 2;
-    } else {
+    }
+    elsif (!$c->{no_emails}) {
         $expected = 1;
     }
 
@@ -97,9 +92,12 @@ for my $c (@cases) {
 
     my @emails = Email::Send::Test->emails;
     is scalar @emails, $expected, "$expected email(s) were sent: $c->{label}";
-    for my $rx ( @{ $c->{tests} } ) {
-        like( $emails[0]->as_string, $rx,
-              "$c->{label} - email matches $rx" );
+
+    if (@emails) {
+        for my $rx ( @{ $c->{tests} } ) {
+            like( $emails[0]->as_string, $rx,
+                  "$c->{label} - email matches $rx" );
+        }
     }
 };
 
@@ -120,7 +118,7 @@ EOF
     my $invitation = Socialtext::WorkspaceInvitation->new(
         workspace  => $workspace,
         from_user  => $current_user,
-        invitee    => 'devnull9@socialtext.com',
+        invitee    => 'devnull10@socialtext.com',
         extra_text => $extra_text,
         viewer     => $viewer,
     );
@@ -193,3 +191,5 @@ sub _confirm_user_if_neccessary {
 
     return 0;
 }
+
+done_testing;

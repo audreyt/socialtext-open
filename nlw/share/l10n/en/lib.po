@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Socialtext i18n\n"
-"PO-Revision-Date: 2011-07-05 14:39-0700\n"
+"PO-Revision-Date: 2011-11-05 15:43-0700\n"
 "Language-Team: Socialtext i18n team\n"
 "Last-Translator: Socialtext i18n team\n"
 "MIME-Version: 1.0\n"
@@ -418,6 +418,10 @@ msgstr "Blog: %1 Atom"
 msgid "blog.blog"
 msgstr "Blog"
 
+#: lib/Socialtext/Handler/Settings.pm:506
+msgid "blog.create"
+msgstr "Create Blog"
+
 #. ($blog_tag)
 #: lib/Socialtext/WeblogPlugin.pm:183
 msgid "blog.first-post-body=tag"
@@ -446,6 +450,10 @@ msgstr "Navigation for: %1"
 msgid "blog.new"
 msgstr "Create New Blog"
 
+#: lib/Socialtext/WeblogPlugin.pm:55
+msgid "blog.number-of-posts-to-show"
+msgstr "Number of posts to show"
+
 #: lib/Socialtext/WeblogPlugin.pm:49
 msgid "blog.number-of-posts?"
 msgstr "How many posts should be displayed in blog view?"
@@ -464,6 +472,10 @@ msgstr "Recent Posts from %1 in workspace %2"
 #: lib/Socialtext/WeblogPlugin.pm:197
 msgid "blog.rss=blog"
 msgstr "Blog: %1 RSS"
+
+#: lib/Socialtext/WorkspacesUIPlugin.pm:116
+msgid "blog.weblog-sort-order"
+msgstr "Blog sort order"
 
 #: lib/Socialtext/Hub.pm:197
 msgid "bug.contact-support"
@@ -1071,9 +1083,29 @@ msgstr "Text color"
 msgid "do.add-users=group"
 msgstr "Add users to %1 group"
 
+#: lib/Socialtext/DisplayPlugin.pm:122 lib/Socialtext/DisplayPlugin.pm:154 lib/Socialtext/RecentChangesPlugin.pm:106 lib/Socialtext/WikiwygPlugin.pm:83 lib/Socialtext/WorkspacesUIPlugin.pm:107 lib/Socialtext/WorkspacesUIPlugin.pm:135 lib/Socialtext/WorkspacesUIPlugin.pm:93
+msgid "do.disabled"
+msgstr "disabled"
+
+#: lib/Socialtext/DisplayPlugin.pm:121 lib/Socialtext/DisplayPlugin.pm:153 lib/Socialtext/RecentChangesPlugin.pm:105 lib/Socialtext/WikiwygPlugin.pm:82 lib/Socialtext/WorkspacesUIPlugin.pm:106 lib/Socialtext/WorkspacesUIPlugin.pm:134 lib/Socialtext/WorkspacesUIPlugin.pm:92
+msgid "do.enabled"
+msgstr "enabled"
+
 #: lib/Socialtext/Pluggable/Plugin/SocialCalc.pm:50
 msgid "do.export-csv"
 msgstr "Export to CSV"
+
+#: lib/Socialtext/Pluggable/Plugin/Signals.pm:493 lib/Socialtext/Pluggable/Plugin/Signals.pm:503
+msgid "do.no"
+msgstr "No"
+
+#: lib/Socialtext/Gadgets/Container/AccountDashboard.pm:40
+msgid "do.theme"
+msgstr "Theme"
+
+#: lib/Socialtext/Pluggable/Plugin/Signals.pm:492 lib/Socialtext/Pluggable/Plugin/Signals.pm:502
+msgid "do.yes"
+msgstr "Yes"
 
 #: lib/Socialtext/Page.pm:1134
 msgid "edit.default-text"
@@ -1092,6 +1124,14 @@ msgstr "You can now login to the %1 workspace"
 #: lib/Socialtext/EmailReceiver/Base.pm:671
 msgid "email.date:"
 msgstr "Date:"
+
+#: lib/Socialtext/EmailNotifyPlugin.pm:96
+msgid "email.digest-information"
+msgstr "Email digest information"
+
+#: lib/Socialtext/EmailNotifyPlugin.pm:34
+msgid "email.frequency-of-updates"
+msgstr "Frequency of updates"
 
 #: lib/Socialtext/EmailNotifyPlugin.pm:29
 msgid "email.frequency?"
@@ -1131,6 +1171,10 @@ msgstr "Recent Changes In %1 Workspace"
 msgid "email.sent-from-socialtext-appliance"
 msgstr "This email was sent from the Socialtext Appliance."
 
+#: lib/Socialtext/Job/SignalMentionNotify.pm:59
+msgid "email.signal-mention-by=user"
+msgstr "Signal mention by %1"
+
 #: lib/Socialtext/User/Restrictions/email_confirmation.pm:78
 msgid "email.socialtext"
 msgstr "Socialtext"
@@ -1138,6 +1182,10 @@ msgstr "Socialtext"
 #: lib/Socialtext/User/Restrictions/email_confirmation.pm:77
 msgid "email.socialtext-appliance"
 msgstr "Socialtext Appliance"
+
+#: lib/Socialtext/EmailNotifyPlugin.pm:68
+msgid "email.sort-order-of-updates"
+msgstr "Sort order of updates"
 
 #. ($p->{name})
 #: lib/Socialtext/Account.pm:1118
@@ -1293,6 +1341,10 @@ msgstr "There was a problem changing password for user %1"
 msgid "error.change-profile-field-failed"
 msgstr "Unable to change profile field."
 
+#: lib/Socialtext/Gadgets/Gallery.pm:267
+msgid "error.changing-container-types"
+msgstr "Error changing container types"
+
 #: lib/Socialtext/Appliance/BackupCleanup.pm:29
 msgid "error.cleaning-not-implemented"
 msgstr "Cleaning is not implemented."
@@ -1340,6 +1392,10 @@ msgstr "Could not create account %1."
 #: lib/Socialtext/Handler/ControlPanel.pm:2333
 msgid "error.create=wiki"
 msgstr "Could not create workspace %1"
+
+#: lib/Socialtext/Handler/Settings.pm:74
+msgid "error.current-password-not-correct"
+msgstr "Current password not correct"
 
 #: lib/Socialtext/Appliance/PgRestore.pm:85
 msgid "error.date-must-be-in-iso8601-format"
@@ -1824,6 +1880,10 @@ msgstr "You must provide a name to create a new account."
 msgid "error.new-account-type-required"
 msgstr "You must provide an account type to change the type."
 
+#: lib/Socialtext/Handler/Settings.pm:77
+msgid "error.new-password-does-not-match"
+msgstr "New password does not match"
+
 #: lib/Socialtext/UserSettingsPlugin.pm:87
 msgid "error.new-password-mismatch"
 msgstr "New passwords do not match"
@@ -2282,6 +2342,10 @@ msgstr "You cannot remove a user from their primary account."
 msgid "error.removing-last-admin"
 msgstr "Can't remove privileges of the last admin"
 
+#: lib/Socialtext/Handler/Settings.pm:334 lib/Socialtext/Handler/Settings.pm:337
+msgid "error.removing-last-wiki-admin=user"
+msgstr "%1 could not be removed because a workspace requires at least one admin."
+
 #: lib/Socialtext/Hub.pm:189
 msgid "error.request"
 msgstr "There was an error with your request"
@@ -2333,6 +2397,10 @@ msgstr "%1 already has the role of '%2' in the %3 Account"
 #: lib/Socialtext/CLI.pm:1367
 msgid "error.role-exists=user,role,wiki"
 msgstr "%1 already has the role of '%2' in the %3 Workspace"
+
+#: lib/Socialtext/Handler/Settings.pm:135 lib/Socialtext/Handler/Settings.pm:315
+msgid "error.saving-settings"
+msgstr "Error when saving settings"
 
 #: lib/Socialtext/Appliance/Model/Setup.pm:356
 msgid "error.saving-system-time-to-hardware-clock"
@@ -2619,10 +2687,22 @@ msgstr "You must provide a workspace_id to this URI (%1)."
 msgid "error.wiki-name-required"
 msgstr "Workspace name is a required field."
 
+#: lib/Socialtext/Handler/Settings.pm:166 lib/Socialtext/Handler/Settings.pm:349
+msgid "error.wiki-not-authorized"
+msgstr "Not Authorized"
+
+#: lib/Socialtext/Handler/Settings.pm:165 lib/Socialtext/Handler/Settings.pm:348 lib/Socialtext/Handler/Settings.pm:384
+msgid "error.wiki-not-found"
+msgstr "Not Found"
+
 #. ($self->{uri})
 #: lib/Socialtext/Handler/ControlPanel.pm:1746
 msgid "error.wiki-required=uri"
 msgstr "You must provide a workspace to this URI (%1)"
+
+#: lib/Socialtext/Handler/Settings.pm:194
+msgid "error.wiki-requires-at-least-one-admin"
+msgstr "A workspace requires at least one admin."
 
 #: lib/Socialtext/Workspace.pm:611
 msgid "error.wiki-title-required"
@@ -2835,6 +2915,14 @@ msgstr "The value of this field will be updated from the external source when us
 msgid "info.forbidden-profile"
 msgstr "NOTE: You do not share a group with this person and cannot view their profile information."
 
+#: lib/Socialtext/WorkspacesUIPlugin.pm:59
+msgid "info.homepage-blog-data"
+msgstr "When users click on the title of a workspace, they go to the Central Page of the workspace. If you wish to use the name of a weblog instead, enter that name here."
+
+#: lib/Socialtext/WorkspacesUIPlugin.pm:59
+msgid "info.homepage-or-blog"
+msgstr "When users click on the title of a workspace, they go to the Central Page of the workspace. If you wish to use the name of a blog instead, enter that name here."
+
 #. ($wafl, $user->primary_account->name)
 #: lib/Socialtext/User/Restrictions/email_confirmation.pm:136
 msgid "info.just-joined=user,group!"
@@ -2966,6 +3054,10 @@ msgstr "Language Settings"
 #: lib/Socialtext/Pluggable/Plugin/Locales.pm:34
 msgid "loc.system-default=lang"
 msgstr "%1 (Default)"
+
+#: lib/Socialtext/Pluggable/Plugin/Locales.pm:43
+msgid "locales.display-language"
+msgstr "Display Language"
 
 #. ($address)
 #: lib/Socialtext/Handler/Authen.pm:531
@@ -3139,6 +3231,10 @@ msgstr "wants you to know about an edit of %1 in %2"
 msgid "page.deleted=name"
 msgstr "Deleted \"%1\""
 
+#: lib/Socialtext/WikiwygPlugin.pm:78
+msgid "page.double-click-to-edit"
+msgstr "Double-click to edit page"
+
 #. ($edit_summary, $page_link, $workspace->title)
 #: lib/Socialtext/Page.pm:405
 msgid "page.edited=summary,page,wiki"
@@ -3173,7 +3269,7 @@ msgstr "Workspace '%1' has no locked pages."
 
 #: lib/Socialtext/BacklinksPlugin.pm:106 lib/Socialtext/BacklinksPlugin.pm:80
 msgid "page.orphaned"
-msgstr "Orphaned Pages"
+msgstr "Orphan Pages"
 
 #. ($title, $hub->current_workspace()
 #: lib/Socialtext/CLI.pm:2678
@@ -3201,6 +3297,9 @@ msgstr "Spreadsheet"
 
 #: lib/Socialtext/Pluggable/Plugin/Default.pm:45
 msgid "page.type-wiki"
+msgstr "Page"
+
+msgid "page.type-xhtml"
 msgstr "Page"
 
 #. ($page->name, $workspace->title()
@@ -3490,6 +3589,10 @@ msgstr "%1 signalled"
 msgid "revision.compare=old,new"
 msgstr "Compare Revisions %1 and %2"
 
+#: lib/Socialtext/SyndicatePlugin.pm:144
+msgid "rss.number-of-posts-to-syndicate"
+msgstr "Number of posts to syndicate"
+
 #. ($workspace->title, $query{search_term})
 #: lib/Socialtext/SearchPlugin.pm:208
 msgid "search.atom=wiki,query"
@@ -3524,13 +3627,34 @@ msgstr "Search Results"
 msgid "search.rss=wiki,query"
 msgstr "%1 - RSS Search for %2"
 
+#: lib/Socialtext/Handler/Settings.pm:535
+msgid "settings.features"
+msgstr "Features"
+
+#: lib/Socialtext/Handler/Settings.pm:534
+msgid "settings.manage-users"
+msgstr "Manage Users"
+
+#: lib/Socialtext/RecentChangesPlugin.pm:74
+msgid "settings.number-of-items-to-show"
+msgstr "Number of items to show"
+
+#: lib/Socialtext/Handler/Settings.pm:131 lib/Socialtext/Handler/Settings.pm:318
+msgid "settings.saved"
+msgstr "Saved"
+
 #: lib/Socialtext/Page.pm:1133
 msgid "sheet.creating"
 msgstr "Creating a New Spreadsheet..."
 
 #: lib/Socialtext/DisplayPlugin.pm:68 lib/Socialtext/PageRevision.pm:412
 msgid "sheet.untitled"
-msgstr "Untitled Spreadsheet"
+msgstr "Untitled Page"
+
+#. ($sender->best_full_name)
+#: lib/Socialtext/Job/SignalMentionNotify.pm:59
+msgid "signal.mention-by=sender"
+msgstr "Signal mention by %1"
 
 #: lib/Socialtext/Pluggable/Plugin/Signals.pm:333
 msgid "signals.importing"
@@ -3554,6 +3678,14 @@ msgstr "Private message sent."
 msgid "signals.private-message-sent-to-you=sender:"
 msgstr "%1 sent you a private message:"
 
+#: lib/Socialtext/Pluggable/Plugin/Signals.pm:498
+msgid "signals.send-mentions-of-me-as-email"
+msgstr "Send Mentions of Me as Email"
+
+#: lib/Socialtext/Pluggable/Plugin/Signals.pm:488
+msgid "signals.send-private-signals-as-email"
+msgstr "Send Private Signals as Email"
+
 #. ($1)
 #: lib/Socialtext/Pluggable/Plugin/Signals.pm:653
 msgid "signals.tagged=tag"
@@ -3563,6 +3695,14 @@ msgstr "Signals tagged #%1"
 #: lib/Socialtext/Handler/ControlPanel.pm:2538
 msgid "sort.ascending=field"
 msgstr "Sort by %1 in ascending order"
+
+#: lib/Socialtext/WorkspacesUIPlugin.pm:121
+msgid "sort.by-create-time"
+msgstr "by create time"
+
+#: lib/Socialtext/WorkspacesUIPlugin.pm:120
+msgid "sort.by-last-updated-time"
+msgstr "by last updated time"
 
 #. (_field_display_name($field)
 #: lib/Socialtext/Handler/ControlPanel.pm:2539
@@ -3601,6 +3741,60 @@ msgstr "Deleted %*(%1,uploaded widget)"
 msgid "test.deleted-widgets=count"
 msgstr "Deleted %*(%1,widget)"
 
+msgid "theme.background_color"
+msgstr "Background Color"
+
+msgid "theme.background_image"
+msgstr "Background Image"
+
+msgid "theme.background_image_position"
+msgstr "Background Image Position"
+
+msgid "theme.background_image_tiling"
+msgstr "Background Image Tiling"
+
+msgid "theme.background_link_color"
+msgstr "Background Link Color"
+
+msgid "theme.body_font"
+msgstr "Body Font"
+
+msgid "theme.favicon_image"
+msgstr "Favicon Image"
+
+msgid "theme.foreground_shade"
+msgstr "Navigation Font Brightness"
+
+msgid "theme.header_color"
+msgstr "Header Color"
+
+msgid "theme.header_font"
+msgstr "Heading Font"
+
+msgid "theme.header_image"
+msgstr "Header Image"
+
+msgid "theme.header_image_position"
+msgstr "Header Image Position"
+
+msgid "theme.header_image_tiling"
+msgstr "Header Image Tiling"
+
+msgid "theme.header_link_color"
+msgstr "Header Link Color"
+
+msgid "theme.logo_image"
+msgstr "Logo Image"
+
+msgid "theme.primary_color"
+msgstr "Primary Color"
+
+msgid "theme.secondary_color"
+msgstr "Secondary Color"
+
+msgid "theme.tertiary_color"
+msgstr "Tertiary Color"
+
 #. ($self->hub->timezone->date_local( $_[0], dateonly => 1)
 #: lib/Socialtext/DisplayPlugin.pm:267
 msgid "time.at=date,time"
@@ -3611,15 +3805,31 @@ msgstr "%1 at %2"
 msgid "time.count=days"
 msgstr "%*(%1,day)"
 
+#: lib/Socialtext/TimeZonePlugin.pm:152
+msgid "time.date-format"
+msgstr "Date Format"
+
+#: lib/Socialtext/TimeZonePlugin.pm:113
+msgid "time.daylight-savings-summer"
+msgstr "Daylight Savings/Summer"
+
 #. (int($age / 86400)
 #: lib/Socialtext/PageRevision.pm:377
 msgid "time.days=count"
 msgstr "%1 days"
 
+#: lib/Socialtext/TimeZonePlugin.pm:228
+msgid "time.do-not-include-seconds"
+msgstr "Do not Include Seconds"
+
 #. (int($age / 3600)
 #: lib/Socialtext/PageRevision.pm:376
 msgid "time.hours=count"
 msgstr "%1 hours"
+
+#: lib/Socialtext/TimeZonePlugin.pm:227
+msgid "time.include-seconds-in-time-format"
+msgstr "Include Seconds in Time Format"
 
 #. (int($age / 60)
 #: lib/Socialtext/PageRevision.pm:375
@@ -3639,6 +3849,14 @@ msgstr "Never"
 #: lib/Socialtext/PageRevision.pm:374
 msgid "time.seconds=count"
 msgstr "%1 seconds"
+
+#: lib/Socialtext/TimeZonePlugin.pm:195
+msgid "time.time-format"
+msgstr "Time Format"
+
+#: lib/Socialtext/TimeZonePlugin.pm:81
+msgid "time.timezone"
+msgstr "Timezone"
 
 #. (int($age / 604800)
 #: lib/Socialtext/PageRevision.pm:378
@@ -3947,6 +4165,14 @@ msgstr "Watchlist update for %1 Workspace"
 msgid "watch.empty=wiki"
 msgstr "Your Watchlist in %1 is empty."
 
+#: lib/Socialtext/WatchlistPlugin.pm:80
+msgid "watchlist.digest-information"
+msgstr "Watchlist digest information"
+
+#: lib/Socialtext/WatchlistPlugin.pm:46
+msgid "watchlist.frequence-of-updates"
+msgstr "Frequence of updates"
+
 #. ($widget->{src})
 #: lib/Socialtext/Pluggable/Plugin/Widgets.pm:313
 msgid "widget.adding=src"
@@ -4033,6 +4259,10 @@ msgstr "User '%1' cannot lock a page."
 msgid "wiki.double-click-to-edit?"
 msgstr "Double-click to edit a page?"
 
+#: lib/Socialtext/WorkspacesUIPlugin.pm:102
+msgid "wiki.email-notifications"
+msgstr "Email Notifications"
+
 #: lib/Socialtext/WorkspacesUIPlugin.pm:662
 msgid "wiki.enabled-locking"
 msgstr "Page locking is enabled."
@@ -4088,6 +4318,22 @@ msgstr "%1 Group is not a member of this Workspace"
 msgid "wiki.notes-title"
 msgstr "Announcements and Links"
 
+#: lib/Socialtext/WorkspacesUIPlugin.pm:147
+msgid "wiki.only-registered-users"
+msgstr "Only Registered Users"
+
+#: lib/Socialtext/WorkspacesUIPlugin.pm:74
+msgid "wiki.placement-of-emailed-content"
+msgstr "Placement of emailed content"
+
+#: lib/Socialtext/RecentChangesPlugin.pm:101
+msgid "wiki.recent-changes-sidebar-widget"
+msgstr "What's New sidebar widget"
+
+#: lib/Socialtext/DisplayPlugin.pm:149
+msgid "wiki.recently-viewed-sidebar-widget"
+msgstr "Recently Viewed sidebar widget"
+
 #. ($group->driver_group_name)
 #: lib/Socialtext/Handler/ControlPanel.pm:1527
 msgid "wiki.removed=group"
@@ -4096,6 +4342,10 @@ msgstr "%1 Group has been removed from this Workspace"
 #: lib/Socialtext/BreadCrumbsPlugin.pm:33
 msgid "wiki.show-breadcrumbs-sidebox?"
 msgstr "Display \"Recently Viewed\" side pane box?"
+
+#: lib/Socialtext/DisplayPlugin.pm:117
+msgid "wiki.show-page-snippets-on-mouse-hover"
+msgstr "Show page snippets on mouse hover"
 
 #: lib/Socialtext/RecentChangesPlugin.pm:70
 msgid "wiki.show-sidebox?"
@@ -4113,6 +4363,10 @@ msgstr "How many pages to show in side pane box?"
 msgid "wiki.sidebox-number-of-changes?"
 msgstr "How many items from that time period should be displayed as a side box on pages?"
 
+#: lib/Socialtext/RecentChangesPlugin.pm:43
+msgid "wiki.timeframe-for-changes"
+msgstr "Timeframe for changes"
+
 #: lib/Socialtext/Workspace.pm:317
 msgid "wiki.top-page"
 msgstr "Top Page"
@@ -4125,3 +4379,6 @@ msgstr "Welcome"
 #: lib/Socialtext/User/Restrictions/email_confirmation.pm:62
 msgid "wiki.welcome-confirm=name"
 msgstr "Welcome to the %1 workspace - please confirm your email to join"
+
+msgid "xhtml.creating"
+msgstr "Creating a Page..."

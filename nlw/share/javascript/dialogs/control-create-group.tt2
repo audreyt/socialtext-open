@@ -1,0 +1,80 @@
+<form id="createGroup">
+    <div class="error"></div>
+    <table>
+        <tr>
+            [% IF ldap_drivers.size %]
+            <td rowspan="2">
+                <input checked="checked" id="st-radio-stdgroup"
+                       type="radio" name="driver_class" value="Default"/>
+            </td>
+            [% END %]
+            <td class="title">
+              [% loc('control.create-a-socialtext-group') %]</td>
+        </tr>
+        <tr colspan="2">
+            <td>
+                <span class="label">[% loc('control.name-of-group:') %]</span>
+                <input id="st-groupname" class="default_option" type="text"
+                       name="name"/>
+            </td>
+        </tr>
+
+        <tr colspan="2">
+            [% IF ldap_drivers.size %]
+            <td>&nbsp;</td>
+            [% END %]
+            <td>
+                <span class="label">
+                  [% loc('control.group-permissions:') %]</span>
+                <p>
+                  <input type="radio" name="permission_set" value="self-join"
+                         class="default_option" checked="checked" />
+                    [% loc('control.self-join-group') %]
+                    </p>
+                    <p>
+                  <input type="radio" name="permission_set" value="private"
+                         class="default_option"/>
+                    [% loc('control.private-group') %]
+                </p>
+            </td>
+        </tr>
+
+    [% IF ldap_drivers.size %]
+        <tr>
+            <td rowspan="4">
+                <input id="st-radio-ldapgroup" type="radio"
+                       name="driver_class" value="LDAP"/>
+            </td>
+            <td class="title">
+              [% loc('control.load-existing-group-from-ldap') %]</td>
+        </tr>
+        <tr>
+            <td style="font-style: italic">
+              [% loc("control.wait-for-ldap-group-refresh") %]</td>
+        </tr>
+        <tr>
+            <td>
+                <span class="label">[% loc('control.ldap-driver:') %]</class>
+                <select class="ldap_option"
+                        name="ldap_driver" disabled="disabled">
+                        <option value="">[% loc('groups.pick-driver') %]</option>
+                    [% FOR driver = ldap_drivers %]
+                        <option value="[% driver.driver_key %]">
+                            [% driver.driver_key %]
+                        </option>
+                    [% END %]
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="label">[% loc('control.group-name:') %]</span>
+                <select class="ldap_option" id="st-select-ldap-group"
+                        disabled="disabled" name="ldap_group">
+                </select>
+            </td>
+        </tr>
+    [% END %]
+    </table>
+    <input type="submit" class="hidden"/>
+</form>

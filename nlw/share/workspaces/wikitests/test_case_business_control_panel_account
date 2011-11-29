@@ -1,3 +1,4 @@
+TUXTODO: removed confirmation messages - may never get restored
 
 | *Comment* | Test case: Business Control Panel Account |  |
 
@@ -35,7 +36,7 @@
 
 | *Comment* | Test case: Business Control Panel Socialtext Account exists |  |
 | open_ok | /nlw/control/account |  |
-| text_like | st-display-mode-container | Accounts |
+| text_like | content | Accounts |
 | wait_for_element_visible_ok | st-search-by-name | 30000 |
 | type_ok | st-search-by-name | Socialtext |
 | wait_for_element_visible_ok | st-submit-search-by-name | 30000 |
@@ -49,7 +50,9 @@
 | wait_for_element_visible_ok | st-new-account-name | 30000 |
 | type_ok | st-new-account-name | %%new_acct%% |
 | click_and_wait | st-submit-new-account-submit |  |
-| text_like | The %%new_acct%% account has been created. |  |
+
+text_like | The %%new_acct%% account has been created. | |
+
 | st-admin | disable-plugin --p dashboard --acc "%%new_acct%%" |  |
 | st-admin | disable-plugin --p people --acc "%%new_acct%%" |  |
 | st-admin | disable-plugin --p signals --acc "%%new_acct%%" |  |
@@ -62,7 +65,6 @@
 | click_and_wait | st-submit-search-by-name |  |
 | wait_for_element_visible_ok | link=%%new_acct%% | 30000 |
 | click_and_wait | link=%%new_acct%% |  |
-| text_like | Custom Skins: Socialtext 3 default skin |  |
 | text_like | qr/Socialtext People\s+\(click to enable\)/ism |  |
 | text_like | qr/Socialtext Signals\s+\(click to enable\)/ism |  |
 | text_like | qr/Socialtext Dashboard\s+\(click to enable\)/ism |  |
@@ -72,11 +74,9 @@
 | wait_for_text_present_ok | Add Existing User: | 30000 |
 | wait_for_text_present_ok | Users (0) | 30000 |
 | wait_for_element_visible_ok | addUserLookahead | 30000 |
-| type_lookahead_ok | addUserLookahead | %%short_new%% |
-| wait_for_element_visible_ok | link=%%short_new%% | 5000 |
-| click_and_wait | link=%%short_new%% |  |
-| wait_for_text_present_ok | Users (1) | 5000 |
-| wait_for_element_visible_ok | link=%%new_acct_2%% | 5000 |
+| select-autocompleted-option-ok | addUserLookahead | %%short_new%% |
+| wait_for_text_present_ok | Users (1) | 15000 |
+| wait_for_element_visible_ok | link=%%new_acct_2%% | 15000 |
 
 | *Comment* | Test case: Business Control Panel Account plugin one at a time, click the confirmation, validate that plugin is enabled. |  |
 | click_ok | toggle_plugin_people |  |
@@ -106,13 +106,13 @@
 | wait_for_element_not_present_ok | toggle_plugin_dashboard |  |
 
 | *Comment* | Test case: Business Control Panel Account rename account |  |
-| wait_for_element_visible_ok | link=Rename Account | 5000 |
+| wait_for_element_visible_ok | link=Rename Account | 15000 |
 | click_and_wait | link=Rename Account |  |
 | wait_for_element_visible_ok | st-new-name | 10000 |
 | type_ok | st-new-name | newacct%%start_time%% |
 | click_and_wait | //input[@value='Rename'] |  |
 | text_like | newacct%%start_time%% account |  |
-| wait_for_element_visible_ok | link=Rename Account | 5000 |
+| wait_for_element_visible_ok | link=Rename Account | 15000 |
 | click_and_wait | link=Rename Account |  |
 | type_ok | st-new-name | %%new_acct%% |
 | click_and_wait | //input[@value='Rename'] |  |

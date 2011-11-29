@@ -1,0 +1,72 @@
+<div class="topContent">
+<ul id="[% id('tabs') %]" class="tabs">
+    [% FOR tab = tabs %]
+    <li class="[% tab %][% IF tab == action %] selected[% END %]">
+        [% IF tab == action %]
+            [% tabs.$tab.title %]
+        [% ELSE %]
+            <a href="#">[% tabs.$tab.title %]</a>
+        [% END %]
+    </li>
+    [% END %]
+</ul>
+<p class="meta" id="[% id('meta') %]">
+[% IF message %]
+    <strong>[% message %]</strong>
+[% ELSE %]
+    [% loc('widgets.most-active-in=noun,period', tabs.$action.noun, period) %]
+    [% IF tabs.$action.data.meta.account %]
+        [% loc('widgets.from-account') %] <strong>[% tabs.$action.data.meta.account.name %]</strong>
+    [%- END -%]
+    [%- IF context == 'workspace' && tabs.$action.data.meta.workspace -%]:
+        <a href="[% tabs.$action.data.meta.workspace.uri %]">[% tabs.$action.data.meta.workspace.title %]</a>
+    [% END %]
+    [% IF rotating %]<i>[% loc('widgets.rotate-is-on') %]</i>[% END %]
+[% END %]
+</p>
+
+<table id="[% id('stats') %]" class="stats">
+[% IF !rows.size %]
+    <tr><td><em>[% tabs.$action.none_message || 'None' %]</em></td></tr>
+[% END %]
+[% FOR row = rows %]
+    [% IF row.count %]
+    <tr class="[% loop.index % 2 ? 'odd' : 'even' %]">
+        <td class="icon">
+            [% IF row.is_spreadsheet %]
+                <img src="/static/skin/s3/images/sheetIcon.png" style="height:12px"/>
+            [% ELSIF row.is_person %]
+                <img src="/data/people/[% row.user_id %]/small_photo" style="height:27px"/>
+            [% ELSE %]
+                <img src="/static/skin/s3/images/docIcon.png" style="height:15px"/>
+            [% END %]
+        </td>
+        <td class="asset">
+            <div class="asset">
+                [% IF row.uri %]
+                    <a href="[% row.uri %]">
+                        [% row.title %]
+                    </a>
+                [% ELSE %]
+                    [% row.title %]
+                [% END %]
+                [% IF needsContext %]
+                    <div class="context">
+                        [% loc('activities.from') %] <a href="[% row.context_uri %]">[% row.context_title %]</a>
+                    </div>
+                [% END %]
+            </div>
+        </td>
+
+        <td class="count">[% row.count %]</td>
+
+        <td class="graph">
+            <div class="bar" style="width:[% 100 * (row.count / maxCount) %]%">
+                &nbsp;
+            </div>
+        </td>
+    </tr>
+    [% END %]
+[% END %]
+</table>
+</div>

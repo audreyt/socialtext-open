@@ -1,0 +1,9 @@
+| *Comment* | st-edit-fill-page: title=%%title%% content=%%content%% |  |
+
+| wait_for_element_visible_ok | st-newpage-pagename-edit | 30000 |
+| wait_for_element_present_ok | //a[contains(@class,"cke_button_wikitext")] | 10000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+| wait_for_element_present_ok | //textarea[contains(@class,"cke_source")] | 10000 |
+| pause_ok | 4000 |  |
+| type_ok | //textarea[contains(@class,"cke_source")] | %%content%% |
+| type_ok | st-newpage-pagename-edit | %%title%% |

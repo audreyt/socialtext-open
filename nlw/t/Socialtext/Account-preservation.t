@@ -191,7 +191,6 @@ sub _dump_workspace {
         email_notification_from_address
         email_notify_is_enabled
         email_weblog_dot_address
-        enable_unplugged
         external_links_open_new_window
         header_logo_link_uri
         homepage_is_dashboard

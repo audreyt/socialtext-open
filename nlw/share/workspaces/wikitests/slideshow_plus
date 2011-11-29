@@ -12,7 +12,7 @@ Visit in Firefox:
 
 | set_default | wiki | %%workspace%% | defaults to the test workspace |
 | set_default | wikititle | %%title%% | defaults to the test workspace |
-| set_default | pt | 5000 | defaults to five seconds |
+| set_default | pt | 15000 | defaults to five seconds |
 | set_default | popup | 8000 | cancel popups in 8 seconds |
 
 * Enable unplugged.
@@ -78,7 +78,7 @@ Visit in Firefox:
 * multipage PDF export dialog
 
 | open_ok | /%%wiki%%/?action=recent_changes |  |
-| clickAndWait | link=Recently Viewed |  |
+| click_and_wait | link=Recently Viewed |  |
 | check_ok | page_selected |  |
 | click_ok | st-listview-submit-pdfexport |  |
 | *Comment* | CANCEL PDF Export POPUP |  |

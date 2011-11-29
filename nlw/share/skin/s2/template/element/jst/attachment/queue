@@ -1,7 +1,0 @@
-&lt;span class="st-attachmentsqueue-listlabel">${ loc('Files To upload:') } &lt;/span>
-{var lastIndex = queue.length-1}
-{for file in queue}
- &lt;span class="st-attachmentsqueue-filelist-name">${file}&nbsp;</span>
- &lt;a href="#" onclick="javascript:window.EditQueue.remove_index(${file_index}); return false" title="${ loc('Remove [_1] from the queue', file) }" class="st-attachmentsqueue-filelist-delete">[x]&lt;/a>
-{if file_index != lastIndex}, {/if}
-{/for}

@@ -101,11 +101,11 @@
 | wait_for_element_visible_ok | link=%%base_user_name_srch%%06 | 30000 |
 | wait_for_element_visible_ok | link=%%base_user_name_srch%%07 | 30000 |
 | wait_for_element_visible_ok | link=%%base_user_name_srch%%20 | 30000 |
-| wait_for_element_not_present_ok | link=%%base_user_name_srch%%21 | 5000 |
-| wait_for_element_not_present_ok | link=%%base_user_name_srch%%41 | 5000 |
-| wait_for_element_visible_ok | mobile-paging-next | 5000 |
-| wait_for_element_not_present_ok | mobile-paging-previous | 5000 |
-| wait_for_element_not_present_ok | mobile-paging-first | 5000 |
+| wait_for_element_not_present_ok | link=%%base_user_name_srch%%21 | 15000 |
+| wait_for_element_not_present_ok | link=%%base_user_name_srch%%41 | 15000 |
+| wait_for_element_visible_ok | mobile-paging-next | 15000 |
+| wait_for_element_not_present_ok | mobile-paging-previous | 15000 |
+| wait_for_element_not_present_ok | mobile-paging-first | 15000 |
 
 
 | *Comment* | Test case: Miki People Search Pagination - Page Two |  |
@@ -114,23 +114,23 @@
 | wait_for_element_visible_ok | link=%%base_user_name_srch%%30 | 30000 |
 | wait_for_element_visible_ok | link=%%base_user_name_srch%%35 | 30000 |
 | wait_for_element_visible_ok | link=%%base_user_name_srch%%40 | 30000 |
-| wait_for_element_not_present_ok | link=%%base_user_name_srch%%41 | 5000 |
-| wait_for_element_visible_ok | mobile-paging-first | 5000 |
-| wait_for_element_visible_ok | mobile-paging-previous | 5000 |
-| wait_for_element_visible_ok | mobile-paging-next | 5000 |
+| wait_for_element_not_present_ok | link=%%base_user_name_srch%%41 | 15000 |
+| wait_for_element_visible_ok | mobile-paging-first | 15000 |
+| wait_for_element_visible_ok | mobile-paging-previous | 15000 |
+| wait_for_element_visible_ok | mobile-paging-next | 15000 |
 
 | *Comment* | Test case: Miki People Search Pagination - Page Three And Four |  |
 | click_and_pause | mobile-paging-next |  |
 | wait_for_element_visible_ok | link=%%base_user_name_srch%%41 | 30000 |
 | wait_for_element_not_present_ok | link=%%base_user_name_srch%%61 | 30000 |
-| wait_for_element_visible_ok | mobile-paging-first | 5000 |
-| wait_for_element_visible_ok | mobile-paging-previous | 5000 |
-| wait_for_element_visible_ok | mobile-paging-next | 5000 |
+| wait_for_element_visible_ok | mobile-paging-first | 15000 |
+| wait_for_element_visible_ok | mobile-paging-previous | 15000 |
+| wait_for_element_visible_ok | mobile-paging-next | 15000 |
 | click_and_pause | mobile-paging-next |  |
 | wait_for_element_visible_ok | link=%%base_user_name_srch%%61 | 30000 |
-| wait_for_element_visible_ok | mobile-paging-first | 5000 |
-| wait_for_element_visible_ok | mobile-paging-previous | 5000 |
-| wait_for_element_not_present_ok | mobile-paging-next | 5000 |
+| wait_for_element_visible_ok | mobile-paging-first | 15000 |
+| wait_for_element_visible_ok | mobile-paging-previous | 15000 |
+| wait_for_element_not_present_ok | mobile-paging-next | 15000 |
 | click_and_pause | mobile-paging-previous |  |
 
 | *Comment* | Test case: Miki People Search Pagination - Back to Page 2 |  |
@@ -140,9 +140,9 @@
 | wait_for_element_visible_ok | link=%%base_user_name_srch%%30 | 30000 |
 | wait_for_element_visible_ok | link=%%base_user_name_srch%%35 | 30000 |
 | wait_for_element_visible_ok | link=%%base_user_name_srch%%40 | 30000 |
-| wait_for_element_visible_ok | mobile-paging-first | 5000 |
-| wait_for_element_visible_ok | mobile-paging-previous | 5000 |
-| wait_for_element_visible_ok | mobile-paging-next | 5000 |
+| wait_for_element_visible_ok | mobile-paging-first | 15000 |
+| wait_for_element_visible_ok | mobile-paging-previous | 15000 |
+| wait_for_element_visible_ok | mobile-paging-next | 15000 |
 
 | *Comment* | Test case: Miki People Search Pagination - Back to page 1 |  |
 | click_and_pause | mobile-paging-previous |  |
@@ -151,11 +151,11 @@
 | wait_for_element_visible_ok | link=%%base_user_name_srch%%06 | 30000 |
 | wait_for_element_visible_ok | link=%%base_user_name_srch%%07 | 30000 |
 | wait_for_element_visible_ok | link=%%base_user_name_srch%%20 | 30000 |
-| wait_for_element_not_present_ok | link=%%base_user_name_srch%%21 | 5000 |
-| wait_for_element_not_present_ok | link=%%base_user_name_srch%%41 | 5000 |
-| wait_for_element_visible_ok | mobile-paging-next | 5000 |
-| wait_for_element_not_present_ok | mobile-paging-previous | 5000 |
-| wait_for_element_not_present_ok | mobile-paging-first | 5000 |
+| wait_for_element_not_present_ok | link=%%base_user_name_srch%%21 | 15000 |
+| wait_for_element_not_present_ok | link=%%base_user_name_srch%%41 | 15000 |
+| wait_for_element_visible_ok | mobile-paging-next | 15000 |
+| wait_for_element_not_present_ok | mobile-paging-previous | 15000 |
+| wait_for_element_not_present_ok | mobile-paging-first | 15000 |
 
 
 | *Comment* | Test case: Miki People Search Pagination - TEARDOWN |  |

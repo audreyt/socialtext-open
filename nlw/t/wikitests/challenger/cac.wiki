@@ -21,7 +21,7 @@ Verify that CAC authentication support works.
 | *Comment* | Check that the CAC credentials extractor works           |
 | GET       | %%https%%/st/dashboard                                   |
 | code-is   | 200                                                      |
-| body-like | Socialtext.username = "%%f_name%% %%m_name%% %%l_name%%" |
+| body-like | "username":"lita.ford.%%start_time%%@ken.socialtext.net" |
 
 | *Comment*     | CLEANUP: Reset the configuration                  |
 | st-config     | set credentials_extractors BasicAuth:Cookie:Guest |

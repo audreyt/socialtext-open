@@ -1,0 +1,19 @@
+<div class="videoPopup">
+    <form>
+        <p>[% loc("activities.enter-video-url-here") %]</p>
+
+        <div class="fieldTitle">[% loc('video.url:') %]*</div>
+        <div class="field">
+            <input name="video_url" class="video_url" type="text" value="[% params.video_url %]" />
+        </div>
+        <div class="clear"></div>
+
+        <div class="fieldTitle">[% loc('video.title:') %]</div>
+        <div class="field">
+            <input name="video_title" class="video_title" type="text" value="[% params.video_title %]" />
+        </div>
+        <div class="clear"></div>
+
+        <div class="error">&nbsp;</div>
+    </form>
+</div>

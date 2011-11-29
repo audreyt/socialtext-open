@@ -20,13 +20,17 @@
 | *Comment* | Test Case: User Groups in Global Nav Groups plugin is required for Groups |  |
 | st-admin | disable-plugin --plugin groups --all-accounts |  |
 | st-logoutin | %%not_group_member%% | %%password%% |
-| wait_for_element_not_present_ok | link=Groups | 30000 |
+
+TUXTODO: restore two tests if Groups button ever is made to disappear/appear
+wait_for_element_not_present_ok | link=Groups | 30000 |
+
 | st-admin | enable-plugin --plugin groups --all-accounts |  |
 
 | *Comment* | Test Case: User Groups in Global Nav People is required for Groups |  |
 | st-admin | disable-plugin --plugin people --all-accounts |  |
 | st-logoutin | %%not_group_member%% | %%password%% |
-| wait_for_element_not_present_ok | link=Groups | 30000 |
+
+wait_for_element_not_present_ok | link=Groups | 30000 |
 
 | *Comment* | Test Case: User Groups in Global Nav Add People INDIRECTLY |  |
 | st-admin | enable-plugin --plugin people --account %%grps_acct%% |  |

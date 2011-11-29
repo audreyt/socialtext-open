@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Socialtext i18n\n"
-"PO-Revision-Date: 2011-04-28 03:23+0800\n"
+"PO-Revision-Date: 2011-11-04 21:40+0800\n"
 "Last-Translator: Socialtext i18n team\n"
 "Language-Team: Socialtext i18n team\n"
 "MIME-Version: 1.0\n"
@@ -94,6 +94,9 @@ msgstr "重试"
 
 msgid "badge.upgrade"
 msgstr "点此更新"
+
+msgid "blog.name"
+msgstr "博客名称"
 
 #: share/template/bugs_content.html:5
 msgid "bug.application-error"
@@ -395,6 +398,9 @@ msgstr "企业社会化软件的领导者"
 msgid "email.login-with-email-address:"
 msgstr "使用您的电子邮件地址登录："
 
+msgid "email.lookahead-prompt"
+msgstr "输入电子邮件..."
+
 #: share/template/email/st/account-invitation.txt:10 share/template/email/st/group-invitation-body.html:23 share/template/email/st/group-invitation.txt:13 share/template/email/st/workspace-invitation-body.html:26 share/template/email/st/workspace-invitation.txt:10
 msgid "email.once-confirmed-you-will-receive-second-email-with-login-details"
 msgstr "一旦您确认了您的帐户，您将会收到包含登录信息的第二封电子邮件。"
@@ -487,6 +493,9 @@ msgstr "感谢您加入您公司的协作群组，该群组由 Socialtext 提供
 msgid "email.thanks"
 msgstr "感谢，"
 
+msgid "email.this-page"
+msgstr "... 此页面"
+
 #: share/template/email/email-address-confirmation-completed.html:19 share/template/email/email-address-confirmation-completed.txt:23 share/template/email/email-address-confirmation-completed.txt:6
 msgid "email.to-do-so-go-to-this-web-address:"
 msgstr "要这样做，请前往此网址："
@@ -506,6 +515,12 @@ msgstr "点击上方链接后，您即可立即开始与您的同事分享微博
 #: share/template/email/free50/account-invitation.txt:7
 msgid "email.to-start-click-above-link"
 msgstr "点击上方链接后，您即可立即开始与您的同事分享微博讯息，并利用社交网络和共笔工作区来增进彼此的工作。您也可以设置自己的个人主页。"
+
+msgid "email.to-this-page"
+msgstr "... 到此页面"
+
+msgid "email.to-this-wiki"
+msgstr "... 到此工作区"
 
 #. (escaped_timestamp)
 #: share/template/email/page-details.html:9 share/template/email/page-details.txt:9
@@ -612,6 +627,27 @@ msgstr "您必须使用外部ID来激活此帐户。"
 msgid "error.for-more-info-contact-sysadmin"
 msgstr "如需更多信息，请联系您的系统管理员。"
 
+msgid "error.invalid-email-addresses"
+msgstr "以下电子邮件地址无效。"
+
+msgid "error.invite-users-deleted"
+msgstr "以下用户由于已被删除而未被邀请。如果您想邀请用户，您首先需要取消删除他们。"
+
+msgid "error.invite-users-unregistered"
+msgstr "以下用户由于不是系统用户而未被邀请。"
+
+msgid "error.invite-users=domain-restriction"
+msgstr "以下用户由于电子邮件域与 %1 不符而未被邀请。"
+
+msgid "error.invite-users=invitation-filter"
+msgstr "以下用户由于电子邮件地址不符合工作区邀请过滤器“%1”而未被邀请。"
+
+msgid "error.invite-users=message"
+msgstr "尝试邀请以下用户时产生错误：%1"
+
+msgid "error.inviting-users"
+msgstr "邀请以下用户时出错。"
+
 #. (workspace_name)
 #: share/template/errors/login_to_edit:3
 msgid "error.login-to-edit=wiki"
@@ -642,6 +678,9 @@ msgstr "重新发送密码变更"
 #: share/template/errors/requires_confirmation:10
 msgid "error.resend-confirmation"
 msgstr "重新发送确认函"
+
+msgid "error.these-files-were-not-imported:"
+msgstr "这些文件未被导入："
 
 #: share/template/errors/unauthorized_workspace:3
 msgid "error.you-are-not-authorized-to-view-this-wiki"
@@ -765,6 +804,57 @@ msgstr "停止关注 %1。"
 #: share/template/data/events/page:23
 msgid "event.watch=page"
 msgstr "开始关注 %1。"
+
+msgid "example.hello"
+msgstr "你好"
+
+msgid "example.help"
+msgstr "帮助"
+
+msgid "heading.category"
+msgstr "类别"
+
+msgid "info.all-user-wiki=account"
+msgstr "注意: %1 帐户的所有用户都是此工作区的成员。"
+
+msgid "info.available-search-fields:"
+msgstr "您似乎正在尝试在搜索索引中搜索一个字段。可用字段如下："
+
+msgid "info.click-to-search"
+msgstr "点击该按钮执行您的搜索"
+
+msgid "info.creating-blog"
+msgstr "如果您提供的名字未以“博客”结尾, 系统将在您提供的名字后加上“博客”。点击“保存”后, 您将被直接带往博客页面。"
+
+msgid "info.improving-search"
+msgstr "随着我们继续开发搜索系统，您将可利用的选项以及使用时的界面将会改进。"
+
+msgid "info.invalid-search-field"
+msgstr "如果您尝试搜索一个不存在的字段（<tt>link:你好</tt>）或没有包含查询(<tt>link:</tt>)，您将看到此信息。"
+
+msgid "info.invite-users"
+msgstr "使用下面的字段搜索想要添加到该工作区的用户。然后点击“保存”进行添加。每个用户将会收到电子邮件通知。"
+
+msgid "info.reset-password-and-relogin"
+msgstr "新密码必须至少 6 个字符。設定之後，請使用您的电子邮件地址和新密码重新登录。"
+
+msgid "info.search-field-syntax"
+msgstr "您可以通过在查询中使用冒号分隔字段名称来搜索一个字段，像这样："
+
+msgid "info.skipped-import-files"
+msgstr "仅可从 ZIP/TGZ 文件中的 javascript/、css/ 和 images/ 路径导入文件。其他路径下的文件将不被导入。"
+
+msgid "info.watch-page=link"
+msgstr "請在您想要关注的页面上找到 %1 之后，点击它将页面添加到您的关注列表。"
+
+msgid "info.wiki-requires-registered"
+msgstr "只有系統內的注册用户可以被邀请到该工作区。"
+
+msgid "info.wiki=domain-restriction"
+msgstr "只有电子邮件地址属于“%1”域的用户可以被邀请到该工作区。"
+
+msgid "info.wiki=invitation-filter"
+msgstr "只有电子邮件地址符合“%1”模式的用户可以被邀请到该工作区。"
 
 #. (confirm_uri)
 #: share/template/email/st/account-invitation-body.html:22
@@ -1036,11 +1126,107 @@ msgstr "您已成功加入 %2 社群内的 %1 工作区。请点击"
 msgid "login.you-have-logged-out-of-socialtext"
 msgstr "您已成功登出 Socialtext。"
 
+msgid "nav.enterprise-social-software"
+msgstr "企业社会化软件"
+
+msgid "nav.jump-to=menu"
+msgstr "转到：%1"
+
+msgid "nav.page-tools"
+msgstr "工具..."
+
+msgid "nav.register"
+msgstr "注册"
+
+msgid "nav.select-prompt"
+msgstr "选择项目..."
+
+msgid "nav.socialtext-logo"
+msgstr "Socialtext 标志"
+
+msgid "nav.welcome=id,name"
+msgstr "欢迎 <a href=\"/st/profile/%1\">%2</a>"
+
+msgid "page.locked"
+msgstr "锁定"
+
+msgid "page.unlocked"
+msgstr "解锁"
+
 #: share/template/authen/element/choose_password_form:20
 msgid "password.choose:"
 msgstr "指定密码："
+
+msgid "password.current"
+msgstr "当前密码"
+
+msgid "password.new"
+msgstr "新密码"
+
+msgid "password.retype"
+msgstr "再次输入新密码"
+
+msgid "rss.error:"
+msgstr "出错："
+
+msgid "search.new"
+msgstr "新搜索"
+
+msgid "search.your-query-was=term"
+msgstr "您的查询为“%1”"
+
+msgid "settings.appearance"
+msgstr "外观"
+
+msgid "settings.features"
+msgstr "功能"
+
+msgid "settings.global-settings"
+msgstr "全局设定"
+
+msgid "settings.privacy"
+msgstr "隐私"
+
+msgid "settings.rss"
+msgstr "RSS"
+
+msgid "settings.user-settings"
+msgstr "用户设定"
+
+msgid "time.at"
+msgstr "于"
+
+msgid "user.last-edit"
+msgstr "前次编辑"
+
+msgid "wiki.email-address-to-invite"
+msgstr "要邀请的电子邮件地址"
+
+msgid "wiki.groups"
+msgstr "群组"
+
+msgid "wiki.member-groups"
+msgstr "成员群组"
+
+msgid "wiki.member-users"
+msgstr "成员用户"
+
+msgid "wiki.membership"
+msgstr "成员"
+
+msgid "wiki.no-member-groups"
+msgstr "没有群组是该工作区的成员"
+
+msgid "wiki.unsubscribe-this"
+msgstr "退订此工作区"
+
+msgid "wiki.users"
+msgstr "用户"
 
 #. (workspace_title)
 #: share/template/email/st/workspace-admin-invitation.txt:16
 msgid "wiki.visit-later=wiki"
 msgstr "您也可以在此工作区继续工作，稍后再转到“%1”。"
+
+msgid "wiki.wiki-title"
+msgstr "标题"

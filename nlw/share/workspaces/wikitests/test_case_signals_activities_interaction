@@ -42,7 +42,7 @@
 | st-admin | enable-plugin --plugin people --account %%secondaryacct%% |  |  |
 | st-admin | enable-plugin --plugin signals --account %%secondaryacct%% |  |  |
 
-| *Comment* | logoutin hangs in IE. Try explicit %%emainuser%% ... |
+| *Comment* | logoutin hangs in IE. Try explicit %%emainuser%% ... |  |  |
 
 | open_ok | /nlw/submit/logout |  |
 | open_ok | /challenge |  |
@@ -56,9 +56,9 @@
 | open_ok | /%%ws%%/index.cgi?Edit Summary Signal %%start_time%% |  |
 | wait_for_element_visible_ok | st-edit-button-link | 30000 |
 | click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 30000 |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
 | wait_for_element_present_ok | st-edit-summary-text-area | 30000 |
 | click_ok | st-edit-summary-text-area |  |
@@ -70,12 +70,12 @@
 | st-single-widget-in-dashboard | gallery-widget-Activities |  |
 | wait_for_text_present_ok | Activities | 30000 |
 | st-name-widget | 1 | signals_widget |
-| st-widget-title-like | signals_widget | Activities |
+| st-widget-title | signals_widget | Activities |
 
 | *Comment* | Test Case: Signals/Activities Interaction Signal, Mention, Reply, Edit Summaries, Delete |  |
-| st-send-signal-via-activities-widget | signals_widget | %%mainuser%% simple signals |
+| st-send-signal-in-activities-widget | %%mainuser%% simple signals |  |
 | open_ok | /st/dashboard |  |
-| st-send-signal-via-activities-widget | signals_widget | {user: %%efriend%%} mention |
+| st-send-signal-in-activities-widget | {user: %%efriend%%} mention |  |
 
 | *Comment* | Test Case:Signals/Activities Interaction Start following %%followed%% |  |
 | wait_for_element_visible_ok | link=People | 30000 |
@@ -86,12 +86,12 @@
 | click_and_wait | st-search-submit |  |
 | wait_for_element_visible_ok | link=%%followed%% | 30000 |
 | click_and_wait | link=%%followed%% |  |
-| wait_for_element_visible_ok | link=Follow this person | 30000 |
-| pause | 5000 | needed for IE7 |
-| click_ok | link=Follow this person |  |
-| wait_for_element_visible_ok | link=Stop following this person | 30000 |
+| wait_for_element_visible_ok | st-watchperson-indicator | 30000 |
+| pause | 15000 | needed for IE7 |
+| click_ok | st-watchperson-indicator |  |
+| wait_for_element_visible_ok | //button[@title='Stop following this person'] | 30000 |
 
-| *Comment* | logoutin hangs in IE. Try explicit %%efollowed%% ... |
+| *Comment* | logoutin hangs in IE. Try explicit %%efollowed%% ... |  |
 
 | open_ok | /nlw/submit/logout |  |
 | open_ok | /challenge |  |
@@ -105,19 +105,19 @@
 | st-single-widget-in-dashboard | gallery-widget-Activities |  |
 | wait_for_text_present_ok | Activities | 30000 |
 | st-name-widget | 1 | signals_widget |
-| st-widget-title-like | signals_widget | Activities |
+| st-widget-title | signals_widget | Activities |
 
 | *Comment* | Test Case: Signals/Activities Interaction %%efollowed%% Signal, Mention, Reply, Edit Summaries, Delete |  |
-| st-send-signal-via-activities-widget | signals_widget | %%followed%% simple signal |
+| st-send-signal-in-activities-widget | %%followed%% simple signal |  |
 | open_ok | /st/dashboard |  |
-| st-send-signal-via-activities-widget | signals_widget | {user: %%emainuser%%} mention from %%followed%% |
+| st-send-signal-in-activities-widget | {user: %%emainuser%%} mention from %%followed%% |  |
 | open_ok | /st/dashboard |  |
-| st-send-signal-via-activities-widget | signals_widget | d {user: %%emainuser%%} direct from %%followed%% |
+| st-send-signal-in-activities-widget | d {user: %%emainuser%%} direct from %%followed%% |  |
 
 | *Comment* | Wait for frame to appear before proceeding |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
 
-| *Comment* | logoutin hangs in IE. Try explicit %%efriend%% ... |
+| *Comment* | logoutin hangs in IE. Try explicit %%efriend%% ... |  |
 
 | open_ok | /nlw/submit/logout |  |
 | open_ok | /challenge |  |
@@ -132,17 +132,17 @@
 
 | st-single-widget-in-dashboard | gallery-widget-Activities |  |
 | st-name-widget | 1 | signals_widget |
-| st-widget-title-like | signals_widget | Activities |
-| st-send-signal-via-activities-widget | signals_widget | %%friend%% simple signal |
+| st-widget-title | signals_widget | Activities |
+| st-send-signal-in-activities-widget | %%friend%% simple signal |  |
 | open_ok | /st/dashboard |  |
-| st-send-signal-via-activities-widget | signals_widget | {user: %%emainuser%%} mention from %%friend%% |
+| st-send-signal-in-activities-widget | {user: %%emainuser%%} mention from %%friend%% |  |
 | open_ok | /st/dashboard |  |
-| st-send-signal-via-activities-widget | signals_widget | d {user: %%emainuser%%} direct from %%friend%% |
+| st-send-signal-in-activities-widget | d {user: %%emainuser%%} direct from %%friend%% |  |
 
 | *Comment* | Wait for frame to appear before proceeding |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
 
-| *Comment* | logoutin hangs in IE. Try explicit %%econversant%% ... |
+| *Comment* | logoutin hangs in IE. Try explicit %%econversant%% ... |  |
 
 | open_ok | /nlw/submit/logout |  |
 | open_ok | /challenge |  |
@@ -157,9 +157,9 @@
 | open_ok | /%%ws%%/index.cgi?Edit Summary Signal %%start_time%% |  |
 | wait_for_element_visible_ok | st-edit-button-link | 30000 |
 | click_ok | st-edit-button-link |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | 30000 |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 30000 |
+| click_ok | //a[contains(@class,"cke_button_wikitext")] |  |
+| wait_for_element_visible_ok | //textarea[contains(@class,"cke_source")] | 30000 |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
 | wait_for_element_present_ok | st-edit-summary-text-area | 30000 |
 | click_ok | st-edit-summary-text-area |  |
@@ -169,17 +169,17 @@
 
 | st-single-widget-in-dashboard | gallery-widget-Activities |  |
 | st-name-widget | 1 | signals_widget |
-| st-widget-title-like | signals_widget | Activities |
-| st-send-signal-via-activities-widget | signals_widget | %%conversant%% simple signal |
+| st-widget-title | signals_widget | Activities |
+| st-send-signal-in-activities-widget | %%conversant%% simple signal |  |
 | open_ok | /st/dashboard |  |
-| st-send-signal-via-activities-widget | signals_widget | {user: %%emainuser%%} mention from %%conversant%% |
+| st-send-signal-in-activities-widget | {user: %%emainuser%%} mention from %%conversant%% |  |
 | open_ok | /st/dashboard |  |
-| st-send-signal-via-activities-widget | signals_widget | d {user: %%emainuser%%} direct from %%conversant%% |
+| st-send-signal-in-activities-widget | d {user: %%emainuser%%} direct from %%conversant%% |  |
 
 | *Comment* | Wait for frame to appear before proceeding |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
+| wait_for_element_visible_ok | st-add-widget | 30000 |
 
-| *Comment* | logoutin hangs in IE. Try explicit %%esecond%% ... |
+| *Comment* | logoutin hangs in IE. Try explicit %%esecond%% ... |  |
 
 | open_ok | /nlw/submit/logout |  |
 | open_ok | /challenge |  |
@@ -193,12 +193,12 @@
 
 | st-single-widget-in-dashboard | gallery-widget-Activities |  |
 | st-name-widget | 1 | signals_widget |
-| st-widget-title-like | signals_widget | Activities |
-| st-send-signal-via-activities-widget | signals_widget | %%second%% simple signal |
+| st-widget-title | signals_widget | Activities |
+| st-send-signal-in-activities-widget | %%second%% simple signal |  |
 | open_ok | /st/dashboard |  |
-| st-send-signal-via-activities-widget | signals_widget | {user: %%emainuser%%} mention from %%second%% |
+| st-send-signal-in-activities-widget | {user: %%emainuser%%} mention from %%second%% |  |
 | open_ok | /st/dashboard |  |
-| st-send-signal-via-activities-widget | signals_widget | d {user: %%emainuser%%} direct from %%second%% |
+| st-send-signal-in-activities-widget | d {user: %%emainuser%%} direct from %%second%% |  |
 
 | *Comment* | Test Case: Signals/Activities Interaction TEARDOWN |  |
 | st-process-jobs |  |  |

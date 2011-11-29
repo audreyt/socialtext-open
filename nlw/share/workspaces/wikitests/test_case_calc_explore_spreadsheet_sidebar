@@ -1,130 +1,143 @@
 | *Comment* | STARTING Test Case: Calc Explore Spreadsheet Sidebar |  |
 
-| open_ok | %%workspace%%/index.cgi?action=display;page_type=spreadsheet;page_name=TC%20Hide%20Sidebar%20Spreadsheet1%20%%start_time%%#edit |  |
+| set | acct | tccx-%%start_time%% |
+| set | ws | tccx-%%start_time%% |
+| set | tcxx | `tccx-%%start_time%%@ken.socialtext.net` |
+
+| *Comment* | STARTING Test Case: Calc Explore Spreadsheet Sidebar needs a solo acct/user/ws |  |
+| create-account | %%acct%% |  |
+| st-admin | create-user --e %%tcxx%% --p %%password%% --account %%acct%% | created |
+| st-admin | create-workspace --name %%ws%% --title %%ws%% --account %%acct%% --empty | created |
+| st-admin | add-member --e %%tcxx%% --w %%ws%% | has the role |
+| st-logoutin | %%tcxx%% | %%password%% |
+
+| open_ok | /%%ws%%/?action=display;page_type=spreadsheet;page_name=TC%20Hide%20Sidebar%20Spreadsheet1%20%%start_time%%#edit |  |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
-| pause | 5000 | I hate pause; needed because save button appears before page is done loading |
+| pause_ok | 4000 |  |
 | st-page-save |  |  |
 
-| open_ok | %%workspace%%/index.cgi?action=display;page_type=spreadsheet;page_name=TC%20Hide%20Sidebar%20Spreadsheet2%20%%start_time%%#edit |  |
+| open_ok | /%%ws%%/?action=display;page_type=spreadsheet;page_name=TC%20Hide%20Sidebar%20Spreadsheet2%20%%start_time%%#edit |  |
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
-| pause | 5000 | I hate pause; needed because save button appears before page is done loading |
+| pause_ok | 4000 |  |
 | st-page-save |  |  |
 
 | *Comment* | Test Case: Explore Spreadsheet Sidebar sidebar should be open |  |
 
-| wait_for_element_visible_ok | st-page-boxes-toggle-link | 30000 |
-| wait_for_element_visible_ok | st-tags-listing | 30000 |
-| wait_for_element_visible_ok | st-attachment-listing | 30000 |
-| text_like | st-page-boxes-toggle-link | hide |
-| text_like | contentRight | There are no tags for this page. |
-| text_like | contentRight | There are no pages that link to this page yet. |
+| wait_for_element_visible_ok | st-page-boxes-hide-link | 30000 |
+| wait_for_element_visible_ok | st-tags-listing | 15000 |
+| wait_for_element_visible_ok | st-attachment-listing | 15000 |
+| text_like | st-page-boxes-hide-link | hide |
+| text_like | st-display-mode-widgets | There are no pages that link to this page yet. |
 
 | *Comment* | Test Case : Hide sidebar close the sidebar |  |
-| click_ok | st-page-boxes-toggle-link |  |
+| click_ok | st-page-boxes-hide-link |  |
 
 | *Comment* | Test Case : Hide sidebar sidebar should be closed |  |
-| wait_for_element_visible_ok | st-page-boxes-toggle-link | 30000 |
-| wait_for_element_not_visible_ok | st-tags-listing | 30000 |
-| wait_for_element_not_visible_ok | st-attachment-listing | 30000 |
-| text_like | st-page-boxes-toggle-link | show |
+| wait_for_element_visible_ok | st-page-boxes-show-link | 15000 |
+| wait_for_element_not_visible_ok | st-tags-listing | 15000 |
+| wait_for_element_not_visible_ok | st-attachment-listing | 15000 |
+| text_like | st-page-boxes-show-link | show |
 
 | *Comment* | Test Case : Hide sidebar open the sidebar |  |
-| click_ok | st-page-boxes-toggle-link |  |
+| click_ok | st-page-boxes-show-link |  |
 
 | *Comment* | Test Case : Hide sidebar sidebar should be open |  |
-| wait_for_element_visible_ok | st-page-boxes-toggle-link | 30000 |
-| wait_for_element_visible_ok | st-tags-listing | 30000 |
-| wait_for_element_visible_ok | st-attachment-listing | 30000 |
-| text_like | st-page-boxes-toggle-link | hide |
-| text_like | contentRight | There are no tags for this page. |
-| text_like | contentRight | There are no pages that link to this page yet. |
+| wait_for_element_visible_ok | st-page-boxes-hide-link | 15000 |
+| wait_for_element_visible_ok | st-tags-listing | 15000 |
+| wait_for_element_visible_ok | st-attachment-listing | 15000 |
+| text_like | st-page-boxes-hide-link | hide |
+| text_like | content | There are no pages that link to this page yet. |
 
 | *Comment* | Test Case : Hide sidebar close the sidebar navigate away |  |
-| click_ok | st-page-boxes-toggle-link |  |
-| open_ok | /%%workspace%%/?TC Hide Sidebar Spreadsheet1 %%start_time%% |  |
+| click_ok | st-page-boxes-hide-link |  |
+| open_ok | /%%ws%%/?TC Hide Sidebar Spreadsheet1 %%start_time%% |  |
 
 | *Comment* | Test Case : Hide sidebar sidebar should still be closed |  |
-| wait_for_element_visible_ok | st-page-boxes-toggle-link | 30000 |
-| wait_for_element_not_visible_ok | st-tags-listing | 30000 |
-| wait_for_element_not_visible_ok | st-attachment-listing | 30000 |
-| text_like | st-page-boxes-toggle-link | show |
+| wait_for_element_visible_ok | st-page-boxes-show-link | 30000 |
+| wait_for_element_not_visible_ok | st-tags-listing | 15000 |
+| wait_for_element_not_visible_ok | st-attachment-listing | 15000 |
+| text_like | st-page-boxes-show-link | show |
 
 | *Comment* | Test Case : Hide sidebar open the sidebar on Hide Sidebar 1 page |  |
-| click_ok | st-page-boxes-toggle-link |  |
+| click_ok | st-page-boxes-show-link |  |
 
 | *Comment* | Test Case : Hide sidebar sidebar should be open |  |
-| wait_for_element_visible_ok | st-page-boxes-toggle-link | 30000 |
-| wait_for_element_visible_ok | st-tags-listing | 30000 |
-| wait_for_element_visible_ok | st-attachment-listing | 30000 |
-| text_like | st-page-boxes-toggle-link | hide |
+| wait_for_element_visible_ok | st-page-boxes-hide-link | 15000 |
+| wait_for_element_visible_ok | st-tags-listing | 15000 |
+| wait_for_element_visible_ok | st-attachment-listing | 15000 |
+| text_like | st-page-boxes-hide-link | hide |
 
 | *Comment* | Test Case: Explore Spreadsheet Sidebar open the sidebar on the second page |  |
-| open_ok | /%%workspace%%/?TC Hide Sidebar Spreadsheet2 %%start_time%% |  |
+| open_ok | /%%ws%%/?TC Hide Sidebar Spreadsheet2 %%start_time%% |  |
 
 | *Comment* | Test Case: Explore Spreadsheet Sidebar sidebar should be open |  |
-| wait_for_element_visible_ok | st-page-boxes-toggle-link | 30000 |
-| wait_for_element_visible_ok | st-tags-listing | 30000 |
-| wait_for_element_visible_ok | st-attachment-listing | 30000 |
-| text_like | st-page-boxes-toggle-link | hide |
+| wait_for_element_visible_ok | st-page-boxes-hide-link | 30000 |
+| wait_for_element_visible_ok | st-tags-listing | 15000 |
+| wait_for_element_visible_ok | st-attachment-listing | 15000 |
+| text_like | st-page-boxes-hide-link | hide |
 
 | *Comment* | Test Case: Explore Spreadsheet Sidebar navigate to original page |  |
-| open_ok | /%%workspace%%/?TC Hide Sidebar Spreadsheet1 %%start_time%% |  |
+| open_ok | /%%ws%%/?TC Hide Sidebar Spreadsheet1 %%start_time%% |  |
 
-| *Comment* | Test Case: Explore Spreadsheet Sidebar sidebar should still be open |  |
-| wait_for_element_visible_ok | st-page-boxes-toggle-link | 30000 |
-| wait_for_element_visible_ok | st-tags-listing | 30000 |
-| wait_for_element_visible_ok | st-attachment-listing | 30000 |
-| text_like | st-page-boxes-toggle-link | hide |
+| *Comment* | Test Case: Explore Spreadsheet Sidebar sidebar should still be open |  |  |
+| wait_for_element_visible_ok | st-page-boxes-hide-link | 30000 |  |
+| wait_for_element_visible_ok | st-tags-listing | 15000 |  |
+| wait_for_element_visible_ok | st-attachment-listing | 15000 |  |
+| text_like | st-page-boxes-hide-link | hide |  |
 
-| *Comment* | Test Case: Calc Explore Spreadsheet Sidebar - what's new |
-| clickAndWait | link=Settings |  |
-| clickAndWait | //a[contains(@href,'action=preferences_settings;preferences_class_id=recent_changes')] |  |
-| select_ok | recent_changes__changes_depth | label=Last 24 hours |
-| check_ok | recent_changes__include_in_pages |  |
-| select_ok | recent_changes__sidebox_changes_depth | label=2 |
-| clickAndWait | link=Save |  |
+| *Comment* | Test Case: Calc Explore Spreadsheet Sidebar - what's new |  |  |
 
-| open_ok | /%%workspace%%/index.cgi?tc_hide_sidebar_spreadsheet2_%%start_time%% |  |
-| wait_for_element_present_ok | link=TC Hide Sidebar Spreadsheet1 %%start_time%% | 30000 |
-| wait_for_element_present_ok | link=TC Hide Sidebar Spreadsheet2 %%start_time%% | 30000 |
+| call | [st-spaces-accordion] | index=1 | section=Preferences |
 
-| *Comment* | Test Case: Calc Explore Spreadsheet Sidebar - uncheck what's new |
-| clickAndWait | link=Settings |  |
-| clickAndWait | //a[contains(@href,'action=preferences_settings;preferences_class_id=recent_changes')] |  |
-| uncheck_ok | recent_changes__include_in_pages |  |
-| clickAndWait | link=Save |  |
+| select_ok | //select[@name="prefs.recent_changes.changes_depth"] | label=Last 24 hours |
+| check_ok | //input[@type="checkbox" and @name="prefs.recent_changes.include_in_pages"] |  |
+| select_ok | //select[@name="prefs.recent_changes.sidebox_changes_depth"] | label=2 |
+| click_ok | link=Save |  |
+| wait_for_text_present_ok | Saved | 10000 |
 
-| open_ok | /%%workspace%%/?TC Hide Sidebar Spreadsheet2 %%start_time%% |  |
+| open_ok | /%%ws%%/index.cgi?tc_hide_sidebar_spreadsheet2_%%start_time%% |  |  |
+| wait_for_element_present_ok | link=TC Hide Sidebar Spreadsheet1 %%start_time%% | 30000 |  |
+| wait_for_element_present_ok | link=TC Hide Sidebar Spreadsheet2 %%start_time%% | 15000 |  |
 
-| *Comment* | sidebar element should be completely gone, not present |  |
-| open_ok | /%%workspace%%/?TC Hide Sidebar Spreadsheet2 %%start_time%% |  |
-| text_unlike | contentRight | What's New |
+| *Comment* | Test Case: Calc Explore Spreadsheet Sidebar - uncheck what's new |  |  |
 
-| *Comment* | Test Case: Calc Explore Spreadsheet Sidebar - check recently viewed |
-| clickAndWait | link=Settings |  |
-| clickAndWait | link=Screen Layout |  |
-| check_ok | display__include_breadcrumbs |  |
-| clickAndWait | link=Save |  |
+| call | [st-spaces-accordion] | index=1 | section=Preferences |
 
-| open_ok | /%%workspace%%/?TC Hide Sidebar Spreadsheet2 %%start_time%% |  |
-| wait_for_element_present_ok | link=TC Hide Sidebar Spreadsheet1 %%start_time%% | 30000 |
-| wait_for_element_present_ok | link=TC Hide Sidebar Spreadsheet2 %%start_time%% | 30000 |
+| uncheck_ok | //input[@type="checkbox" and @name="prefs.recent_changes.include_in_pages"] |  |
+| click_ok | link=Save |  |
+| wait_for_text_present_ok | Saved | 10000 |
 
-| clickAndWait | link=Settings |  |
-| clickAndWait | link=Screen Layout |  |
-| uncheck_ok | display__include_breadcrumbs |  |
-| clickAndWait | link=Save |  |
+| *Comment* | sidebar element should be completely gone, not present |  |  |
+| open_ok | /%%ws%%/?TC Hide Sidebar Spreadsheet2 %%start_time%% |  |  |
+| text_unlike | st-display-mode-widgets | What's New |  |
+| text_like | st-display-mode-widgets | Incoming Links |  |
 
-| open_ok | /%%workspace%%/?TC Hide Sidebar Spreadsheet2 %%start_time%% |  |
+| *Comment* | Test Case: Calc Explore Spreadsheet Sidebar - check recently viewed |  |  |
+
+| call | [st-spaces-accordion] | index=1 | section=Preferences |
+
+| check_ok | `//input[@name="prefs.display.include_breadcrumbs"]` |  |
+| click_ok | link=Save |  |
+| wait_for_text_present_ok | Saved | 10000 |
+
+| open_ok | /%%ws%%/?TC Hide Sidebar Spreadsheet2 %%start_time%% |  |  |
+| wait_for_element_present_ok | link=TC Hide Sidebar Spreadsheet1 %%start_time%% | 30000 |  |
+| wait_for_element_present_ok | link=TC Hide Sidebar Spreadsheet2 %%start_time%% | 15000 |  |
+
+| call | [st-spaces-accordion] | index=1 | section=Preferences |
+
+| uncheck_ok | `//input[@name="prefs.display.include_breadcrumbs"]` |  |
+| click_ok | link=Save |  |
+| wait_for_text_present_ok | Saved | 10000 |
+
+| open_ok | /%%ws%%/?TC Hide Sidebar Spreadsheet2 %%start_time%% |  |
 | wait_for_element_not_present_ok | link=TC Hide Sidebar Spreadsheet1 %%start_time%% | 30000 |
-| wait_for_element_not_present_ok | link=TC Hide Sidebar Spreadsheet2 %%start_time%% | 30000 |
+| wait_for_element_not_present_ok | link=TC Hide Sidebar Spreadsheet2 %%start_time%% | 15000 |
 
-| *Comment* | Test Case: Calc Explore Spreadsheet Sidebar Upload File |  |
-| *Comment* | Removed file upload tests since they are duplicates of other file upload tests |  |
-
-| *Comment* | Test Case: Explore Spreadsheet Sidebar Teardown |  |
-
-| st-admin | purge-page --w %%workspace%% --page tc_hide_sidebar_spreadsheet1_%%start_time%% | was purged |
-| st-admin | purge-page --w %%workspace%% --page tc_hide_sidebar_spreadsheet2_%%start_time%% | was purged |
+| *Comment* | Test Case: Explore Spreadsheet Sidebar TEARDOWN |  |
+| st-process-jobs |  |  |
+| delete-workspace | %%ws%% |  |
+| deactivate-user | %%tcxx%% |  |
+| delete-account | %%acct%% |  |
 
 | *Comment* | Test Case: Explore Spreadsheet Sidebar COMPLETED |  |

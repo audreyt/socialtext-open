@@ -1,0 +1,31 @@
+[%# vim: set et sts=2 sw=2: %]
+[% USE decorate %]
+[% MACRO username BLOCK %][% name | decorate('user_avatar') %][% END %]
+[% SET create_author = '<span class="st-username">' _ username(name=page.created.user_id) _ '</span>' %]
+[% SET create_date = '<span class="st-createdate">' _ (page.created.date) _ '</span>' %]
+[% SET update_author = '<span class="st-username">' _ username(name=page.updated.user_id) _ '</span>' %]
+[% SET update_date = '<span class="st-updatedate">' _ (page.updated.date) _ '</span>' %]
+
+<div id="st-page-attribution">
+  <div class="grid_23">
+    [% IF page.revisions && page.revisions > 0 %]
+      <span id="create-attribution">
+          [% loc('page.created=author,date', create_author, create_date) %]
+      </span>
+      <span id="update-attribution">
+          [% loc('page.updated=user,date', update_author, update_date) %]
+      </span>
+      <span id="statistics-attribution">
+          (<a class="revision" id="bottom-buttons-revisions" href="?action=revision_list;page_name=[% page.id %]">[% loc('page.count=revision', page.revisions) %]</a>,
+          [% loc('page.count=view', page.views) %])
+      </span>
+    [% END %]
+  </div>
+  <div class="grid_1">
+    [% IF feeds.rss %]
+      <a href="[% feeds.rss.page.url %]">
+          <img class="st-page-details-feed-icon" src="[% static_path %]/images/icons/rss.png" />
+      </a>
+    [% END %]
+  </div>
+</div>

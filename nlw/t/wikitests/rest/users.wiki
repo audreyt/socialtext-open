@@ -23,8 +23,6 @@ Test /data/users via the REST API
 | st-admin | show-account-config --account %%acct_a%%                                |
 | st-admin | enable-plugin --account %%acct_b%% --plugin signals                     |
 | st-admin | show-account-config --account %%acct_b%%                                |
-| st-admin | enable-plugin --account %%acct_c%% --plugin csskit                      |
-| st-admin | show-account-config --account %%acct_c%%                                |
 
 | comment | add user_a to workspace in acct_b, add user_b to ws in acct_c |
 | set              | ws1        | %%start_time%%ws1 |
@@ -39,7 +37,6 @@ Test /data/users via the REST API
 | code-is    | 200                    |                  |
 | comment | we should see signals enabled in both acct_a and acct_b, but should not see the test plugin |
 | body-like | qr/"account_name":"%%acct_a%%".+"plugins_enabled":\["people","signals","widgets"\]/ |
-| body-unlike | qr/csskit/ |
 
 | comment | we can't see the /data/users for other users unless we're an admin |
 | get         | /data/users/%%user_b%% | application/json |
@@ -56,12 +53,10 @@ Test /data/users via the REST API
 | body-like | %%user_b%%                             |                  |
 | body-like | %%acct_b%%                             |                  |
 | body-unlike | %%acct_c%%                             |                  |
-| body-unlike | qr/csskit/                             |                  |
 | st-admin  | give-accounts-admin --email %%user_a%% |                  |
 | get       | /data/users/%%user_b%%?all=1           | application/json |
 | code-is   | 200                                    |                  |
 | body-like | "email_address":"%%user_b%%"           |                  |
-| body-like | qr/csskit/                             |                  |
 | body-like | %%user_b%%                             |                  |
 | body-like | %%acct_b%%                             |                  |
 | body-like | %%acct_c%%                             |                  |
@@ -72,4 +67,3 @@ Test /data/users via the REST API
 | get            | /data/users/%%user_b%% | application/json |
 | code-is        | 200                    |                  |
 | body-like | qr/"account_name":"%%acct_b%%".+"plugins_enabled":\["people","signals","widgets"\]/ |
-| body-like | qr/"accounts":\[.*?\{.*?"account_name":"%%acct_c%%".+\["csskit"\]/ |

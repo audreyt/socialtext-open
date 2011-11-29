@@ -1,4 +1,4 @@
-| *Comment* | Test Case: Signals Search |
+| *Comment* | Test Case: Signals Search |  |
 
 * Fixture: SocialWidgets
 
@@ -15,7 +15,7 @@
 | create_user | %%a_username%% | %%password%% | %%defaultaccount%% | %%a_name%% |
 | create_user | %%z_username%% | %%password%% | %%defaultaccount%% | %%z_name%% |
 
-| st-logoutin | %%a_username%% | %%password%% |
+| st-logoutin | %%a_username%% | %%password%% |  |  |
 
 | *Comment* | Test Case: Signals Search. Send 2 signals %%a_username%% |  |
 | http-user-pass | %%a_username%% | %%password%% |
@@ -92,12 +92,10 @@
 | post-signal | MoreRelevant %%start_time%% %%start_time%% %%start_time%% |  |
 | pause | 3000 |  |
 | post-signal | LessRelevant %%start_time%% |  |
-| pause | 5000 |  |
+| pause | 15000 |  |
 
 | *Comment* | Test Case: Signals Search. Process Jobs |  |
 | st_process_jobs | SignalIndex |  |
-
-
 
 | *Comment* | Test Case: Signals Search. Relevance. Find a more relevant signal |  |
 | open_ok | /?signals |  |
@@ -122,8 +120,8 @@
 | st-name-widget | 1 | siggy |
 | st-select-widget-frame | siggy |  |
 | wait_for_text_present_ok | LessRelevant %%start_time%% | 30000 |
-| wait_for_element_visible_ok | //a[@class='hoverLink hideLink'] | 10000 |
-| click_ok | //a[@class='hoverLink hideLink'] |  |
+| wait_for_element_visible_ok | //a[@class='hideLink'] | 10000 |
+| click_ok | //a[@class='hideLink'] |  |
 | verifyConfirmation | Are you sure you want to delete this Signal?\nYou cannot undelete it. |  |
 | wait_for_text_not_present_ok | LessRelevant %%start_time%% | 10000 |
 | select_frame | relative=parent |  |
@@ -145,9 +143,9 @@
 | text_like | qr/MoreRelevant %%start_time%% %%start_time%% %%start_time%%.+%%start_time%% 12/ism |  |
 | wait_for_text_not_present_ok | LessRelevant %%start_time%% | 10000 |
 
-| *Comment* | Test Case: Signals Search. Search for Private Signal to %%z_username%% |
+| *Comment* | Test Case: Signals Search. Search for Private Signal to %%z_username%% |  |
 | http-user-pass | %%a_username%% | %%password%% |
-| post-signal | d {user: %%z_username%%} Private Signal %%start_time%% |
+| post-signal | d {user: %%z_username%%} Private Signal %%start_time%% |  |
 | st-process-jobs | SignalIndex |  |
 | open_ok | /?signals |  |
 | wait_for_element_visible_ok | st-search-action | 30000 |
@@ -179,4 +177,4 @@
 | text-like | //body | qr/MostRelevant.+MoreererRelevanter.+MoreRelevanter/ism |
 | text-like | //body | qr/MostRelevant.+MoreererRelevanter.+MoreRelevanter.+MoreRelevant %%start_time%% %%start_time%% %%start_time%%.+Lower Relevance %%start_time%%/ism |
 
-| *Comment* | Test Case: Signals Search COMPLETED |
+| *Comment* | Test Case: Signals Search COMPLETED |  |

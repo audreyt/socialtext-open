@@ -1,0 +1,10 @@
+[% MACRO widget_link(widget) BLOCK %]
+<a href="/st/dashboard?add_widget=1;gadget_id=[% widget.gadget_id %]" title="[% loc('widgets.install-this') %]">[% widget.title %]</a>
+[% END %]
+[%- SWITCH event.action -%]
+    [%- CASE "add" -%]
+        [%- loc('event.add-widget=user,widget,context',
+                actor, widget_link(event.context), event.context.description) -%]
+    [%- CASE "update" -%]
+        [%- loc('event.update-widget=actor,widget', actor, widget_link(event.context)) -%]
+[%- END -%]

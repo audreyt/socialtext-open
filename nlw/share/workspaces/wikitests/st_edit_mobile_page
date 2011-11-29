@@ -1,0 +1,6 @@
+| *Comment* | st-edit-mobile-page: value=%%value%% |  |
+
+| click_and_wait | link=Edit |  |
+| wait_for_element_visible_ok | edit_textarea | 10000 |
+| wait_for_element_visible_ok | link=Cancel | 10000 |
+| verifyValue | edit_textarea | %%value%% |

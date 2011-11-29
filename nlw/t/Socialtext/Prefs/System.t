@@ -12,9 +12,11 @@ use Socialtext::Prefs::System;
 fixtures('db');
 
 my $theme_keys = [ qw(background_color background_image_id
-    background_image_position background_image_tiling base_theme_id body_font
-    header_color header_font header_image_id header_image_position 
-    header_image_tiling primary_color secondary_color tertiary_color
+    background_image_position background_image_tiling background_link_color
+    base_theme_id body_font favicon_image_id foreground_shade header_color
+    header_font header_image_id header_image_position header_image_tiling
+    header_link_color logo_image_id primary_color secondary_color
+    tertiary_color
 ) ];
 
 instantiate: {

@@ -2,24 +2,16 @@
 
 * Fixture: SocialWidgets
 
-| *Comment* | Test Case: Wiki Page Widget |  |
+| *Comment* | Test Case: Wiki Page Widget |  |  |
 
-| open_ok | /%%workspace%%/index.cgi?action=new_page |  |
-| wait_for_element_visible_ok | link=Wiki Text | 30000 |
-| click_ok | link=Wiki Text |  |
-| wait_for_element_present_ok | st-newpage-pagename-edit |  |
-| wait_for_element_present_ok | wikiwyg_wikitext_textarea |  |
-| type_ok | st-newpage-pagename-edit | Wiki Page %%start_time%% |
-| type_ok | wikiwyg_wikitext_textarea | I have created a page called Wiki Page %%start_time%%. w00t. |
-| wait_for_element_visible_ok | st-save-button-link | 30000 |
-| st-page-save |  |  |
+| st-create-page | %%workspace%% | Wiki Page %%start_time%% | I have created a page called Wiki Page %%start_time%%. w00t. |
 
 | *Comment* | Test Case: Wiki Page Widget. Create the widget |  |
 | st-single-widget-in-dashboard | gallery-widget-Wiki Page |  |
 
 | *Comment* | Test Case: Wiki Page Widget. Load the widget |  |
 | st-name-widget | 1 | wikipage |
-| st-widget-title-like | wikipage | Wiki Page |
+| st-widget-title | wikipage | Wiki Page |
 
 | wait_for_element_visible_ok | workspace_name | 30000 |
 | wait_for_element_visible_ok | //input[contains(@name,'page_title')] | 30000 |
@@ -32,12 +24,13 @@
 | *Comment* | Test Case: Wiki Page Widget. Use the widget |  |
 | wait_for_text_present_ok | Wiki Page %%start_time%% | 30000 |
 | st-name-widget | 1 | wikipage |
-| st-widget-title-like | wikipage | Wiki Page %%start_time%% |
+| st-widget-title | wikipage | Wiki Page %%start_time%% |
 | wait_for_element_present_ok | link=Edit | 30000 |
 | wait_for_element_present_ok | link=View | 30000 |
 | wait_for_text_present_ok | I have created a page called Wiki Page %%start_time%%. w00t. | 30000 |
 
 | *Comment* | Test Case: Wiki Page TEARDOWN |  |
+| st-process-jobs |  |  |
 | st-admin | purge-page --workspace %%workspace%% --page wiki_page_%%start_time%% | was purged |
 
 | *Comment* | Test Case: Wiki Page Widget COMPLETED |  |

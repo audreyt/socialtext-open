@@ -1,0 +1,7 @@
+| *Comment* | st-save-and-check NO LONGER CHECKS content |  |
+| wait_for_element_visible_ok | st-save-button-link | 15000 |
+| click_ok | st-save-button-link |  |
+| pause_ok | 15000 | really let the page save |
+| wait_for_element_visible_ok | st-edit-button-link | 30000 |
+| wait_for_element_visible_ok | update-attribution | 10000 |
+| text_like | update-attribution | Updated by |

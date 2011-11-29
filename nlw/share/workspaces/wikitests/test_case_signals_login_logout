@@ -11,7 +11,7 @@
 | open_ok | /nlw/submit/logout |  |
 | wait_for_element_visible_ok | username | 30000 |
 | wait_for_element_visible_ok | password | 30000 |
-| text_like | Log in to Socialtext |  |
+| text_like | Remember me on this computer |  |
 
 | *Comment* | Test Case: Signals Login/Logout Empty email address: |  |
 | type_ok | username |  |
@@ -39,18 +39,18 @@
 | click_and_wait | link=I don't know my password. |  |
 | text_like | Socialtext password help |  |
 | type_ok | username | mr.poopypants |
-| click_and_wait | //input[@value='Submit'] |  |
+| click_and_wait | st-forgot-password-submit |  |
 | st-message | mr.poopypants is not registered as a user. Try a different entry? |  |
 
 | *Comment* | Test Case: Signals Login/Logout Forgotten password (good user): |  |
 | text_like | Socialtext password help |  |
 | type_ok | username | %%inout_user%% |
-| click_and_wait | //input[@value='Submit'] |  |
+| click_and_wait | st-forgot-password-submit |  |
 | st-message | An email with instructions on changing your password has been sent to %%inout_user%% |  |
 | st-force-confirmation | %%inout_user%% | %%password%% |
 
 | open_ok | / |  |
-| text_like | Log in to Socialtext |  |
+| text_like | Log in |  |
 
 | *Comment* | Test Case: Signals Login/Logout successful login: |  |
 | type_ok | username | %%inout_user%% |

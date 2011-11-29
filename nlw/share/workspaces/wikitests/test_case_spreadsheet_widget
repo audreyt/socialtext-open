@@ -1,3 +1,6 @@
+
+*On hold until title of Spreadsheet Widget is fixed*
+
 * Fixture: SocialWidgets
 
 | *Comment* | Test Case: Spreadsheet Widget |  |
@@ -11,7 +14,7 @@
 
 | *Comment* | Test Case: Spreadsheet Widget. Configure the widget |  |
 | st-name-widget | 1 | ss |
-| st-widget-title-like | ss | Spreadsheet Page |
+| st-widget-title | ss | Spreadsheet Page |
 
 | wait_for_element_visible_ok | workspace_name | 30000 |
 | select_ok | workspace_name | label=%%title%% |
@@ -29,7 +32,7 @@
 | *Comment* | Test Case: Spreadsheet Widget. Use the widget |  |
 | wait_for_text_present_ok | SW %%start_time%% | 30000 |
 | st-name-widget | 1 | ss |
-| st-widget-title-like | ss | SW %%start_time%% |
+| st-widget-title | ss | SW %%start_time%% |
 | select_frame_ok | //iframe |  |
 | wait_for_text_present_ok | View or Edit this spreadsheet | 10000 |
 | wait_for_text_present_ok | B2 | 10000 |

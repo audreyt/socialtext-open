@@ -31,51 +31,46 @@
 | wait_for_element_visible_ok | link=%%pageA%% | 30000 |
 | text_like | //body | qr/%%pageA%%.+%%pageL%%.+%%pageM%%.+%%pageN%%.+%%pageX%%/ |
 
+| pause_ok | 4000 |  |
 
 | *Comment* | Test Case: Sorting for Canadien Francais (Pages) - Test Sorting for Page in Watched List |  |
 | open_ok | /%%ws%%/%%pageA%% |  |
-| wait_for_element_visible_ok | link=Watch | 30000 |
 | st-watch-page | 1 |  |
 | st-is-watched | 1 |  |
 
-| open_ok | /%%ws%%/%%pageL%% |
-| wait_for_element_visible_ok | link=Watch | 30000 |
+| open_ok | /%%ws%%/%%pageL%% |  |
 | st-watch-page | 1 |  |
 | st-is-watched | 1 |  |
 
-| open_ok | /%%ws%%/%%pageM%% |
-| wait_for_element_visible_ok | link=Watch | 30000 |
+| open_ok | /%%ws%%/%%pageM%% |  |
 | st-watch-page | 1 |  |
 | st-is-watched | 1 |  |
 
-| open_ok | /%%ws%%/%%pageN%% |
-| wait_for_element_visible_ok | link=Watch | 30000 |
+| open_ok | /%%ws%%/%%pageN%% |  |
 | st-watch-page | 1 |  |
 | st-is-watched | 1 |  |
 
-| open_ok | /%%ws%%/%%pageX%% |
-| wait_for_element_visible_ok | link=Watch | 30000 |
+| open_ok | /%%ws%%/%%pageX%% |  |
 | st-watch-page | 1 |  |
 | st-is-watched | 1 |  |
 
-| wait_for_element_visible_ok | link=My Watchlist | 30000 |
-| click_and_wait | link=My Watchlist |  |
+| wait_for_element_visible_ok | st-jump-to | 15000 |
+| select_and_wait | st-jump-to | label=Watchlist |
 | wait_for_element_visible_ok | sort-picker | 30000 |
 | select_and_wait | sort-picker | label=Title |
-| wait_for_element_visible_ok | link=%%pageA%% | 30000 |
+| wait_for_element_visible_ok | link=%%pageA%% | 10000 |
 | text_like | //body | qr/%%pageA%%.+%%pageL%%.+%%pageM%%.+%%pageN%%.+%%pageX%%/ |
 
 | *Comment* | Test Case: Sorting for Canadien Francais (Pages) - Test Sorting for Page in All Pages |  |
-| wait_for_element_visible_ok | link=All Pages | 30000 |
-| click_and_wait | link=All Pages |  |
-| wait_for_element_visible_ok | sort-picker | 30000 |
+| select_and_wait | st-jump-to | label=All Pages |
+| wait_for_element_visible_ok | sort-picker | 10000 |
 | select_and_wait | sort-picker | label=Title |
 | text_like | //body | qr/%%pageA%%.+%%pageL%%.+%%pageM%%.+%%pageN%%.+%%pageX%%/ |
 
 | *Comment* | Test Case: Canadien Francais (Pages) TEARDOWN |  |
 | st-process-jobs |  |  |
 | deactivate-user | %%user%% |  |
-| st-admin | delete-workspace --no-export --w %%ws%% | has been deleted |
+| delete-workspace | %%ws%% |  |
 | delete-account | %%acct%% |  |
 
-| *Comment* | Test Case: Canadien Francais (Pages) COMPLETED |
+| *Comment* | Test Case: Canadien Francais (Pages) COMPLETED |  |

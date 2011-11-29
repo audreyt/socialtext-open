@@ -90,12 +90,14 @@ add_admin_user_as_workspace_admin: {
 # TEST: Remove WS Admin from WS
 remove_workspace_admin: {
     my $ws   = create_test_workspace();
+    my $user2 = create_test_user();
     my $user = create_test_user();
 
     my $username     = $user->username;
     my $display_name = $user->display_name;
     my $ws_name      = $ws->name;
 
+    $ws->add_user(user => $user2, role => $AdminRole);
     $ws->add_user(user => $user, role => $AdminRole);
     ok $ws->user_has_role(user => $user, role => $AdminRole),
         'User starts off as an Admin of the WS';

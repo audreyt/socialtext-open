@@ -5,18 +5,19 @@
 | wait_for_element_visible_ok | st-save-button-link | 30000 |
 
 | *Comment* | Test Case: Calc Tools: Export as HTML Must wait for the entire page to load before saving |  |
-| pause | 5000 | I hate pause |
+| pause | 15000 | I hate pause |
 
 | st-page-save |  |  |
 | wait_for_element_visible_ok | st-edit-button-link | 30000 |
 
 | *Comment* | Test Case: Calc Tools: Export as HTML Test Export |  |
-| open_ok | /%%workspace%%/index.cgi?action=display_html;page_name=export_HTML_Spreadsheet_%%start_time%% |  |
-| text_like | export_HTML_Spreadsheet_%%start_time%% |  |
+| wait_for_element_present_ok | link=Export as HTML | 30000 |
+| click_and_wait | link=Export as HTML |  |
+| wait_for_text_present_ok | A1 | 30000 |
 
 TODO: Put in some content and test for the content when that becomes possible
 
 | *Comment* | Test Case: Calc Tools: Export as HTML Teardown |  |
 | st-admin | purge-page --w %%workspace%% --page export_html_spreadsheet_%%start_time%% | was purged |
 
-| *Comment* | Test Case: Calc Tools: Export as HTML COMPLETED |
+| *Comment* | Test Case: Calc Tools: Export as HTML COMPLETED |  |

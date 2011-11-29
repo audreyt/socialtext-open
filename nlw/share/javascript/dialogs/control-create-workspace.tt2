@@ -1,0 +1,43 @@
+<div>
+  <style>
+    .ws_title {
+        font-size: 110%;
+        font-weight: bold;
+        width: 98%;
+    }
+
+    div.ws_title {
+        background-color: #ddd;
+        font-style: italic;
+        padding: 5px;
+        margin: 5px 0;
+    }
+
+  </style>
+
+  <form id="create-workspace">
+    <div class="page1">
+      <div class="label">[% loc('wiki.title:') %]</div>
+      <div class="error" id="title-error"></div>
+      <input type="input" id="new_workspace_title" class="ws_title"/>
+      <div class="hint">[% loc('info.wiki-title') %]</div>
+    </div>
+
+    <div style="display:none" class="page2">
+      <div class="label">[% loc('wiki.title:') %]</div>
+      <div id="new_workspace_title2" class="ws_title"></div>
+      <div class="hint">[% loc('info.wiki-title') %]</div>
+
+      <br/>
+
+      <div class="label">URL:</div>
+      <div class="error" id="name-error"></div>
+      [% base_uri %]/<input type="input" id="new_workspace_name"
+                            size="30" maxlength="30"/>
+      <div class="hint">
+          [% loc('control.about-wiki-id') %]
+      </div>
+    </div>
+    <input type="submit" class="hidden"/>
+  </form>
+</div>

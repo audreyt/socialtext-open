@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Socialtext i18n\n"
-"PO-Revision-Date: 2011-02-20 10:43+0800\n"
+"PO-Revision-Date: 2011-11-05 23:49+0800\n"
 "Last-Translator: Socialtext i18n team\n"
 "Language-Team: Socialtext i18n team\n"
 "MIME-Version: 1.0\n"
@@ -43,7 +43,7 @@ msgstr "Failed to load revision."
 
 #: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2171
 msgid "error.new-sheet-name-required"
-msgstr "Please provide a name for the new sheet."
+msgstr "Please provide a name for the new page."
 
 #: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:1346
 msgid "error.no-data-to-sum"
@@ -64,7 +64,7 @@ msgstr "Please select one of the options, or click cancel."
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:479
 msgid "error.sheet-contention:"
-msgstr "While you were editing, <span style=\"font-weight: bold\" id=\"st-contention-user\">XXX</span> saved a version of this sheet, and we are unable to reconcile the changes. Would you like to:"
+msgstr "While you were editing, <span style=\"font-weight: bold\" id=\"st-contention-user\">XXX</span> saved a version of this page, and we are unable to reconcile the changes. Would you like to:"
 
 #: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2183
 msgid "error.sheet-name-exists"
@@ -76,7 +76,7 @@ msgstr "<a id=\"st-newspreadsheet-duplicate-link\" href=\"#\" target=\"\">XXX</a
 
 #: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2098 share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2179
 msgid "error.sheet-title-too-long"
-msgstr "Spreadsheet title is too long. Please shorten the name and try again."
+msgstr "Page title is too long. Please shorten the name and try again."
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:41
 msgid "page.edit"
@@ -112,7 +112,7 @@ msgstr "Apply settings above to the current selection"
 
 #: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:194
 msgid "sc.apply-sheet-default"
-msgstr "Apply settings above as the sheet default"
+msgstr "Apply settings above as the page default"
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:235
 msgid "sc.apply-to-current-cell"
@@ -161,6 +161,10 @@ msgstr "Cell Comment"
 #: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:142 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:154 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:123 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:152
 msgid "sc.center"
 msgstr "Center"
+
+#: share/plugin/socialcalc/share/javascript/jemplate/save_progress:4
+msgid "sc.checking-for-edit-contention"
+msgstr "Checking for Edit Contention"
 
 #: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:68 share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:59
 msgid "sc.color"
@@ -226,11 +230,11 @@ msgstr "Editing:"
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:439
 msgid "sc.enter-sheet-name"
-msgstr "Enter a New Spreadsheet Name"
+msgstr "Enter a New Page Name"
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:440
 msgid "sc.enter-sheet-title"
-msgstr "Enter a meaningful and distinctive title for your spreadsheet."
+msgstr "Enter a meaningful and distinctive title for your page."
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:56
 msgid "sc.erase"
@@ -275,6 +279,10 @@ msgstr "Formats above will <b>apply</b> as the <b>default</b> for all cells."
 #: share/plugin/socialcalc/share/javascript/jemplate/advanced_format:170
 msgid "sc.formats-will-apply-to"
 msgstr "Formats above will <b>apply</b> to the"
+
+#: share/plugin/socialcalc/share/javascript/jemplate/save_progress:5
+msgid "sc.generating-sheet-content"
+msgstr "Generating Spreadsheet Content"
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:119
 msgid "sc.hidden"
@@ -431,7 +439,7 @@ msgstr "Range"
 
 #: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:2496
 msgid "sc.recalc-finished"
-msgstr "Data that this spreadsheet depends on has changed. When you save, these changes will be saved as well."
+msgstr "Data that this page depends on has changed. When you save, these changes will be saved as well."
 
 #: share/plugin/socialcalc/share/javascript/jemplate/sheet_settings:179
 msgid "sc.recalculation"
@@ -483,7 +491,7 @@ msgstr "Save As..."
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:480
 msgid "sc.save-as-new-revision"
-msgstr "Save as a new revision in the current sheet"
+msgstr "Save as a new revision in the current page"
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:14
 msgid "sc.save-changes"
@@ -503,19 +511,26 @@ msgstr "Save with a new name:"
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:455
 msgid "sc.save-with-suggested-name"
-msgstr "Save the spreadsheet with the name \"<span id=\"st-newspreadsheet-duplicate-suggest\">XXX</span>\""
+msgstr "Save the page with the name \"<span id=\"st-newspreadsheet-duplicate-suggest\">XXX</span>\""
+
+#: share/plugin/socialcalc/share/javascript/jemplate/save_progress:6
+msgid "sc.saving-sheet-content-kb"
+msgstr "Saving Spreadsheet Content (<span id=\"st-spreadsheet-save-progress-size\">?</span> kB)"
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:451
 msgid "sc.sheet-already-exists"
-msgstr "Spreadsheet Already Exists"
+msgstr "Page Already Exists"
+
+msgid "sc.sheet-save-progress"
+msgstr "Spreadsheet Save Progress"
 
 #: share/plugin/socialcalc/share/javascript/SocialCalc/Socialtext.js:1029 share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:214
 msgid "sc.sheet-settings"
-msgstr "Sheet Settings"
+msgstr "Spreadsheet Settings"
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:442
 msgid "sc.sheet-title:"
-msgstr "Spreadsheet Title:"
+msgstr "Page Title:"
 
 #: share/plugin/socialcalc/share/javascript/jemplate/edit_spreadsheet:16
 msgid "sc.show-preview"

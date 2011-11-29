@@ -34,7 +34,7 @@
 | st-logoutin | %%default_user%% | %%password%% |
 | open_ok | /st/dashboard |  |
 | st-name-widget | 4 | activities_widget |
-| st-widget-title-like | activities_widget | Activities |
+| st-widget-title | activities_widget | Activities |
 | st-text-unlike-in-activities-widget | activities_widget | %%signal1_text%% |
 | st-text-unlike-in-activities-widget | activities_widget | %%signal2_text%% |
 | st-text-unlike-in-activities-widget | activities_widget | %%signal3_text%% |
@@ -50,19 +50,16 @@
 | *Comment* | Test Case: Signals Workspace Privacy Rules test error when signaling to nonexistent workspace |  |
 | open_ok | /st/signals |  |
 | pause | 10000 | for JS to load |
-| wait_for_element_visible_ok | //div[@class='wikilink'] | 30000 |
-| click_ok | //div[@class='wikilink'] |  |
-| wait_for_element_visible_ok | //input[@name='workspace'] | 30000 |
-| type_ok | //input[@name='workspace'] | no_such_%%start_time%% |
-| wait_for_element_visible_ok | //input[@name='page'] | 30000 |
-| type_ok | //input[@name='page'] | no_such_%%start_time%% |
-| click_ok | //a[@class='btn done'] |  |
-| wait_for_text_present_ok | The workspace is not a valid workspace. You must supply a valid workspace for a page link. | 30000 |
+| wait_for_element_visible_ok | //a[@title='Insert Link'] | 30000 |
+| click_ok | //a[@title='Insert Link'] |  |
+| wait_for_element_visible_ok | wiki-link-workspace | 30000 |
+| type_ok | wiki-link-workspace | no_such_%%start_time%% |
+| click_ok | activities-add-link-ok |  |
+| wait_for_text_present_ok | You must specify a page. | 30000 |
 
+| *Comment* | Test Case: Signals Workspace Privacy Rules Basic Signal Reply missing (TODO) |  |
 
-| *Comment* | Test Case: Signals Workspace Privacy Rules Basic Signal Reply missing (TODO) |
-
-| *Comment* | Test Case: Signals Workspace Privacy Rules Basic (Reply button needs id) |
+| *Comment* | Test Case: Signals Workspace Privacy Rules Basic (Reply button needs id) |  |
 
 | *Comment* | Test Case: Signals Workspace Privacy Rules TEARDOWN |  |
 | st-process-jobs |  |  |
@@ -71,4 +68,4 @@
 | st-admin | deactivate-user --e %%default_user%% | has been removed |
 | delete-account | %%acct%% | Recklessly deleted |
 
-| *Comment* | Test Case: Signals Workspace Privacy Rules COMPLETED |
+| *Comment* | Test Case: Signals Workspace Privacy Rules COMPLETED |  |

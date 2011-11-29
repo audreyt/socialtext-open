@@ -1,0 +1,51 @@
+[% USE decorate %]
+[% USE JSON %]
+[% WRAPPER $frame_name title=container.title javascript=container.features %]
+[% ids = [] %]
+[% FOR g = container.gadgets; ids.push(g.instance_id); END %]
+<input id="widgetList" type="hidden" value="[% ids.join(',') %]"/>
+<input id="containerID" type="hidden" value="[% container.id %]"/>
+
+<script>
+    var containerID = "[% container.id %]";
+    loc.all_widgets();
+</script>
+
+<div class="notice" [% IF container.notice %]style="display:block"[% END %]>
+[% container.notice %]
+[% FILTER decorate('notice') %]
+[% END %]
+</div>
+
+[% INCLUDE $container.header_template IF container.header_template %]
+
+<div class="clear"></div>
+
+[% FILTER decorate('container_action_script', container.type) %]
+<div class="alpha grid_[% container.right_aligned.right %]" id="container_action_script" style="float: right;">
+</div>
+[% END %]
+
+[% FOR grid = container.grids %]
+    <div class="[% grid %] widgetColumn" id="col[% loop.index %]">
+        [% FILTER decorate('container_column_' _ loop.index _ '_end') %]
+        [% END %]
+    </div>
+[% END %]
+<div class="clear"></div>
+
+<script>
+    [%# Render the container with widgets %]
+    [% SET gadgets = container.gadgets; container.gadgets = [] %]
+    gadgets.container.setup(
+        [% container.json.replace('</script>', '</scr" + "ipt>') %]
+    );
+    [% FOR gadget = gadgets %]
+        [% SET json = gadget.json %]
+        gadgets.container.renderGadget(
+            [% json.replace('</script>', '</scr" + "ipt>') %]
+        );
+    [% END %]
+</script>
+
+[% END %]

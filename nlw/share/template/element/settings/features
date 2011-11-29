@@ -1,0 +1,71 @@
+[%# vim: set et sts=2 sw=2: %]
+<script type="text/javascript">
+jQuery(document).ready(function() {
+
+    jQuery('input[name="workspace.setting.homepage_weblog"]').lookahead({
+        url: '[%- space.rest_url -%]/tags',
+        requireMatch: true,
+        filterValue: function (val) {
+            return val + '.*(We)?blog$';
+        },
+        linkText: function (i) { return i.name }
+    });
+
+});
+</script>
+
+<h3>[% loc('settings.appearance') %]</h3>
+
+[% INCLUDE element/settings/setting_select
+   pref='workspace.setting.title'
+   option=prefs.workspaces_ui.title
+%]
+
+<div class="alpha grid_5 input-label">
+  [% prefs.workspaces_ui.homepage_weblog.title %]:
+</div>
+<div class="omega grid_15">
+  <input type="text" name="workspace.setting.homepage_weblog"
+    value="[% prefs.workspaces_ui.homepage_weblog.default_setting %]" />
+</div>
+<div class="clear"></div>
+
+<div class="prefix_5 alpha grid_15">
+  [% prefs.workspaces_ui.homepage_weblog.additional %]
+</div>
+<div class="clear"></div>
+
+<hr />
+
+<h3>[% loc('settings.features') %]</h3>
+
+[% INCLUDE element/settings/setting_select
+   pref='workspace.setting.incoming_email_placement'
+   option=prefs.workspaces_ui.incoming_email_placement
+%]
+
+[% INCLUDE element/settings/setting_select
+   pref='workspace.setting.email_notify_is_enabled'
+   option=prefs.workspaces_ui.email_notify_is_enabled
+%]
+
+[% INCLUDE element/settings/setting_select
+   pref='workspace.setting.sort_weblogs_by_create'
+   option=prefs.workspaces_ui.sort_weblogs_by_create
+%]
+
+<hr />
+
+<h3>[% loc('settings.privacy') %]</h3>
+
+[% INCLUDE element/settings/setting_select
+   pref='workspace.permission.guest_has_email_in'
+   option=prefs.workspaces_ui.guest_has_email_in
+%]
+
+[% INCLUDE element/settings/setting_select
+   pref='workspace.setting.allows_page_locking'
+   option=prefs.workspaces_ui.allows_page_locking
+%]
+
+<hr />

@@ -1,0 +1,11 @@
+| *Comment* | st-comment-on-page: ws=%%ws%% page=%%page%% comment=%%comment%% |  |
+
+| open_ok | /%%ws%%/?%%page%% |  |
+| wait_for_element_visible_ok | //li[@id="st-comment-button"]/a | 15000 |
+| click_ok | //li[@id="st-comment-button"]/a |  |
+| wait_for_element_visible_ok | //textarea[@name='comment'] | 15000 |
+| type_ok | //textarea[@name='comment'] | %%comment%% |
+| wait_for_element_visible_ok | link=Save | 15000 |
+| st-click-pause | link=Save | 15000 |
+| wait_for_element_not_present_ok | //textarea[@name='comment'] | 15000 |
+| text_like | st-page-content | contributed by |

@@ -1,0 +1,7 @@
+| *Comment* | st-edit-no-change: ws=%%ws%% title=%%title%% |  |
+
+| open_ok | /%%ws%%/%%title%% |  |
+| wait_for_element_visible_ok | st-edit-button-link | 30000 |
+| click_ok | st-edit-button-link |  |
+| wait_for_element_visible_ok | //a[contains(@class,"cke_button_wikitext")] | 10000 |
+| call | [st-save-and-check] | content=bugger |

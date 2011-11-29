@@ -1,86 +1,20 @@
 * Fixture: SocialWidgets
 
-| *Comment* | Test Case: Socialtext Gadgets |  |
-
-| set_timeout | 60000 | Widgets slow down open / a lot |
+| *Comment* | Test Case: Socialtext Gadgets uses [st-add-widget] |  |
 | st_empty_container |  |  |
 
-| *Comment* | Test Case: Socialtext Gadgets. All People Tags |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | //a[@id='gallery-widget-All People Tags'] | 30000 |
-| click_and_wait | //a[@id='gallery-widget-All People Tags'] |  |
-| wait_for_text_present_ok | All People Tags | 30000 |
-| text_like | contentContainer | All People Tags |
+| call | st-add-widget | widget=All People Tags | widget_Title=All People Tags |
+| call | st-add-widget | widget=Activities | widget_Title=Activities |
+| call | st-add-widget | widget=Active Content | widget_Title=Active Content |
+| call | st-add-widget | widget=Active People | widget_Title=Active People |
+| call | st-add-widget | widget=Workspaces | widget_Title=Workspaces |
+| call | st-add-widget | widget=Wiki Page | widget_Title=Wiki Page |
+| call | st-add-widget | widget=Image | widget_Title=Image |
+| call | st-add-widget | widget=RSS Viewer | widget_Title=Enterprise Social Software Blog |
+| call | st-add-widget | widget=Web Page | widget_Title=Web Page |
+| call | st-add-widget | widget=Spreadsheet Page | widget_Title=Spreadsheet Page |
+| call | st-add-widget | widget=Workspace Tags | widget_Title=Tags for help-en workspace |
+| call | st-add-widget | widget=Page Creator | widget_Title=Page Creator |
+| call | st-add-widget | widget=Page Tracker | widget_Title=Page Tracker |
 
-| *Comment* | Test Case: Socialtext Gadgets. Active Content |  |
-| open_ok | / |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | //a[@id='gallery-widget-Active Content'] | 30000 |
-| click_and_wait | //a[@id='gallery-widget-Active Content'] |  |
-| wait_for_text_present_ok | Active Content | 30000 |
-| text_like | contentContainer | Active Content |
-
-| open_ok | / |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | //a[@id='gallery-widget-Active People'] | 30000 |
-| click_and_wait | //a[@id='gallery-widget-Active People'] |  |
-| wait_for_text_present_ok | Active People | 30000 |
-| text_like | contentContainer | Active People |
-
-| open_ok | / |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | //a[@id='gallery-widget-Activities'] | 30000 |
-| click_and_wait | //a[@id='gallery-widget-Activities'] |  |
-| wait_for_text_present_ok | Activities | 30000 |
-| text_like | contentContainer | Activities |
-
-| *Comment* | Test Case: Socialtext Gadgets. Workspaces |  |
-| open_ok | / |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | //a[@id='gallery-widget-Workspaces'] | 30000 |
-| click_and_wait | //a[@id='gallery-widget-Workspaces'] |
-| wait_for_text_present_ok | Workspaces | 30000 |
-| text_like | contentContainer | Workspaces |
-
-| *Comment* | Test Case: Socialtext Gadgets. Wiki Page |  |
-| open_ok | / |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | //a[@id='gallery-widget-Wiki Page'] | 30000 |
-| click_and_wait | //a[@id='gallery-widget-Wiki Page'] |  |
-| wait_for_text_present_ok | Wiki Page | 30000 |
-| text_like | contentContainer | Wiki Page |
-
-| *Comment* | Test Case: Socialtext Gadgets. One Image |  |
-| open_ok | / |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | //a[@id='gallery-widget-Image'] | 30000 |
-| click_and_wait | //a[@id='gallery-widget-Image'] |  |
-| wait_for_text_present_ok | Image | 30000 |
-| text_like | contentContainer | Image |
-
-| *Comment* | Test Case: Socialtext Gadgets. RSS Viewer |  |
-| open_ok | / |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | //a[@id='gallery-widget-RSS Viewer'] | 30000 |
-| click_and_wait | //a[@id='gallery-widget-RSS Viewer'] |  |
-| wait_for_text_present_ok | Enterprise Social Software Blog | 30000 |
-| text_like | contentContainer | Enterprise Social Software Blog |
-
-| *Comment* | Test Case: Socialtext Gadgets. Workspace Tags |  |
-| open_ok | / |  |
-| wait_for_element_visible_ok | link=Add Widget | 30000 |
-| click_and_wait | link=Add Widget |  |
-| wait_for_element_visible_ok | //a[@id='gallery-widget-Workspace Tags'] | 30000 |
-| click_and_wait | //a[@id='gallery-widget-Workspace Tags'] |  |
-| wait_for_text_present_ok | Tags for | 30000 |
-| text_like | contentContainer | Tags for |
-
-| *Comment* | Test Case: Socialtext Gadgets COMPLETED |  |
+| *Comment* | Test Case: Socialtext Gadgets COMPLETED |  |  |

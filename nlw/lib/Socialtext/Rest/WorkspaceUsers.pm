@@ -130,7 +130,7 @@ sub _POST {
         }
     };
     
-    if ( my $e = Exception::Class->caught('Socialtext::Exception::DataValidation') ) {
+    if ( my $e = Exception::Class->caught() ) {
         warn $e;
         $rest->header(-status => HTTP_400_Bad_Request, -type => 'text/plain');
         return join( "\n", $e->messages );

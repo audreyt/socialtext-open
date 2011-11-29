@@ -2,9 +2,10 @@
 
 | set | new_acct | acct-wstest-%%start_time%% |
 | set | new_workspace | wksp-test%%start_time%% |
-| set | cli_user | cli_test%%start_time%%@ken.socialtext.net |
-| set | cli_user_prefix | cli |
+| set | cli_user | `bcpw_test%%start_time%%@ken.socialtext.net` |
+| set | cli_user_prefix | bcpw |
 | set | cli_user_suffix | test%%start_time%% |
+| set | cli_user_short | bcpw test%%start_time%% |
 
 | create-account | %%new_acct%% |  |
 | st-admin | create-workspace --empty --name %%new_workspace%% --title %%new_workspace%% --account '%%new_acct%%' |  |
@@ -36,23 +37,20 @@
 | click_and_wait | st-submit-search-by-name |  |
 | text_like | link=%%new_acct%% | %%new_acct%% |
 
-
-| *Comment* | Test case: Business Control Panel Workspace Create workspace |  |
-| open_ok | /nlw/control/workspace |  |
-| set | wstitle | wstitle_%%start_time%% |
-| wait_for_element_visible_ok | //input[@value='Create New Workspace'] | 30000 |
-| click_ok | //input[@value='Create New Workspace'] | 30000 |
-| wait_for_element_visible_ok | workspace_title | 30000 |
-| type_ok | workspace_title | %%wstitle%% |
-| wait_for_element_visible_ok | addUserLookahead | 30000 |
-| type-lookahead-ok | addUserLookahead | %%cli_user_prefix%% |
-| wait_for_element_visible_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%cli_user_suffix%%')] | 30000 |
-| click_ok | //div[@class='lookaheadItem']/a[contains(text(),'%%cli_user_suffix%%')] |  |
-| wait_for_element_visible_ok | link=%%cli_user%% | 30000 |
-| wait_for_element_visible_ok | userTable-dropdown-2-0 | 30000 |
-| select_ok | userTable-dropdown-2-0 | label=Admin |
-| pause | 8000 | nothing to reliably wait on |
-| verifyValue | userTable-dropdown-2-0 | admin |
+| *Comment* | Test case: Business Control Panel Workspace Create workspace |  |  |
+| open_ok | /nlw/control/workspace |  |  |
+| set | wstitle | wstitle_%%start_time%% |  |
+| wait_for_element_visible_ok | //input[@value='Create New Workspace'] | 30000 |  |
+| click_ok | //input[@value='Create New Workspace'] | 30000 |  |
+| wait_for_element_visible_ok | workspace_title | 30000 |  |
+| type_ok | workspace_title | %%wstitle%% |  |
+| wait_for_element_visible_ok | addUserLookahead | 30000 |  |
+| select-autocompleted-option-ok | addUserLookahead | %%cli_user_prefix%% | %%cli_user_short%% |
+| wait_for_element_visible_ok | link=%%cli_user%% | 30000 |  |
+| wait_for_element_visible_ok | userTable-dropdown-2-0 | 30000 |  |
+| select_ok | userTable-dropdown-2-0 | label=Admin |  |
+| pause | 8000 | nothing to reliably wait on |  |
+| verifyValue | userTable-dropdown-2-0 | admin |  |
 
 | wait_for_element_visible_ok | id=create | 30000 |
 | click_and_wait | id=create |  |

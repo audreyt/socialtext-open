@@ -1,0 +1,54 @@
+<a class="like-indicator [% className %]" href="#">[% text %]</a>
+
+[% BLOCK 'like-bubble' %]
+    <div class="like-bubble cols-[% columns.size %]">
+        <div class="like-filter [% onlyFollows ? 'colleagues' : 'all' %]">
+            <a class="colleagues" href="#">[% loc('like.people-i-follow') %]</a>
+            <a class="all" href="#">[% loc('like.all-people') %]</a>
+        </div>
+        <div class="like-count">
+            [% likeText %]
+        </div>
+        [% IF columns.size %]
+        <div class="likers">
+            [% FOR col = columns %]
+                <div class="liker-column">
+                    [% FOR liker = col %]
+                    <div class="liker">
+                        <a href="[% base_uri %]/st/profile/[% liker.user_id %]">
+                            <img class="photo" src="[% base_uri %]/data/people/[% liker.user_id %]/small_photo"/>
+                        </a>
+                        <a class="name" href="[% base_uri %]/st/profile/[% liker.user_id %]">
+                            [% liker.best_full_name %]
+                        </a>
+                    </div>
+                    <div class="clear"></div>
+                    [% END %]
+                </div>
+            [% END %]
+            <div class="clear"></div>
+        </div>
+        [% END %]
+
+        [% IF pages.size > 1 %]
+            <div class="paging">
+                [% loc('like.page:') %]
+                [% FOR page IN pages %] 
+                    [% IF page.current %]
+                        <span>[% page.num %]</span>
+                    [% ELSE %]
+                        <a class="page[% page.num %]" href="#">
+                            [% page.num %]
+                        </a>
+                    [% END %]
+                [% END %]
+            </div>
+        [% END %]
+
+        [% IF mutable %]
+        <div class="like-button">
+            <a class="like-indicator [% className %]" href="#" title="[% buttonText %]">[% buttonText %]</a>
+        </div>
+        [% END %]
+    </div>
+[% END %]

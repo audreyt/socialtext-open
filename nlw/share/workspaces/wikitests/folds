@@ -1,0 +1,307 @@
+| open_ok | /%%ws=%%/?%%thispage=%% |  |
+| click_ok | st-edit-button-link |  |
+| wait_for_element_visible_ok | link=Wiki Text | %%ignore=%% |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | %%ignore=%% |
+| type_ok | wikiwyg_wikitext_textarea | %%content=%% |
+| wait_for_element_visible_ok | st-save-button-link | %%ignore=%% |
+| st-page-save |  |  |
+
+| call | st-edit-this-page | ws=%%ws=%% | thispage=%%thispage=%% | content=%%content=%% |
+
+----
+
+| open_ok | /%%ws=%%/index.cgi?%%thispage=%% |  |
+| click_ok | st-edit-button-link |  |
+| wait_for_element_visible_ok | link=Wiki Text | %%ignore=%% |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | %%ignore=%% |
+| type_ok | wikiwyg_wikitext_textarea | %%content=%% |
+| wait_for_element_visible_ok | st-save-button-link | %%ignore=%% |
+| st-page-save |  |  |
+
+| call | st-edit-this-page | ws=%%ws=%% | thispage=%%thispage=%% | content=%%content=%% |
+
+----
+
+| open_ok | /%%ws=%%/?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | %%ignore=%% |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | %%ignore=%% |
+| type_ok | st-newpage-pagename-edit | %%title=%% |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | %%ignore=%% |
+| type_ok | wikiwyg_wikitext_textarea | %%content=%% |
+| wait_for_element_visible_ok | st-save-button-link | %%ignore=%% |
+| st-page-save |  |  |
+
+| call | st-edit-new-page | ws=%%ws=%% | title=%%title=%% | content=%%content=%% |
+
+----
+
+| open_ok | /%%ws=%%/?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | %%ignore=%% |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | %%ignore=%% |
+| type_ok | wikiwyg_wikitext_textarea | %%content=%% |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | %%ignore=%% |
+| type_ok | st-newpage-pagename-edit | %%title=%% |
+| wait_for_element_visible_ok | st-save-button-link | %%ignore=%% |
+| st-page-save |  |  |
+
+| call | st-edit-new-page | ws=%%ws=%% | content=%%content=%% | title=%%title=%% |
+
+----
+
+| open_ok | /%%ws=%%/index.cgi?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | %%ignore=%% |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | %%ignore=%% |
+| type_ok | wikiwyg_wikitext_textarea | %%content=%% |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | %%ignore=%% |
+| type_ok | st-newpage-pagename-edit | %%title=%% |
+| wait_for_element_visible_ok | st-save-button-link | %%ignore=%% |
+| st-page-save |  |  |
+
+| call | st-edit-new-page | ws=%%ws=%% | content=%%content=%% | title=%%title=%% |
+
+----
+
+| open_ok | /%%ws=%%/?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | %%ignore=%% |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | %%ignore=%% |
+| type_ok | st-newpage-pagename-edit | %%title=%% |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | %%ignore=%% |
+| type_ok | wikiwyg_wikitext_textarea | %%content=%% |
+| wait_for_element_visible_ok | st-save-button-link | %%ignore=%% |
+| st-page-save |  |  |
+
+| call | st-edit-new-page | ws=%%ws=%% | title=%%title=%% | content=%%content=%% |
+
+----
+
+| open_ok | /%%ws=%%/index.cgi?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | %%ignore=%% |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | %%ignore=%% |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | %%ignore=%% |
+| type_ok | st-newpage-pagename-edit | %%title=%% |
+| type_ok | wikiwyg_wikitext_textarea | %%content=%% |
+
+| call | st-edit-fill-page | ws=%%ws=%% | title=%%title=%% | content=%%content=%% |
+
+----
+
+| open_ok | /%%ws=%%/?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | %%ignore=%% |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | %%ignore=%% |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | %%ignore=%% |
+| type_ok | st-newpage-pagename-edit | %%title=%% |
+| type_ok | wikiwyg_wikitext_textarea | %%content=%% |
+
+| call | st-edit-fill-page | ws=%%ws=%% | title=%%title=%% | content=%%content=%% |
+
+----
+
+| open_ok | /%%ws=%%/?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | %%ignore=%% |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | %%ignore=%% |
+| type_ok | st-newpage-pagename-edit | %%title=%% |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | %%ignore=%% |
+| type_ok | wikiwyg_wikitext_textarea | %%content=%% |
+| wait_for_element_visible_ok | st-save-button-link | %%ignore=%% |
+| st-page-save |  |  |
+
+| call | st-edit-new-page | ws=%%ws=%% | title=%%title=%% | content=%%content=%% |
+
+----
+
+| open_ok | /%%ws=%%/?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | %%ignore=%% |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | %%ignore=%% |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | %%ignore=%% |
+| type_ok | st-newpage-pagename-edit | %%title=%% |
+| type_ok | wikiwyg_wikitext_textarea | %%content=%% |
+| wait_for_element_visible_ok | st-save-button-link | %%ignore=%% |
+| clickAndWait | st-save-button-link |  |
+
+| call | st-edit-new-page | ws=%%ws=%% | title=%%title=%% | content=%%content=%% |
+
+----
+
+| open_ok | /%%ws=%%/?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | %%ignore=%% |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | %%ignore=%% |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | %%ignore=%% |
+| type_ok | st-newpage-pagename-edit | %%title=%% |
+| type_ok | wikiwyg_wikitext_textarea | %%content=%% |
+| wait_for_element_visible_ok | st-save-button-link | %%ignore=%% |
+| st-page-save |  |  |
+
+| call | st-edit-new-page | ws=%%ws=%% | title=%%title=%% | content=%%content=%% |
+
+----
+
+| open_ok | /%%ws=%%/?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | %%ignore=%% |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_present_ok | st-newpage-pagename-edit | %%ignore=%% |
+| wait_for_element_present_ok | wikiwyg_wikitext_textarea | %%ignore=%% |
+| type_ok | st-newpage-pagename-edit | %%title=%% |
+| type_ok | wikiwyg_wikitext_textarea | %%content=%% |
+| wait_for_element_visible_ok | st-save-button-link | %%ignore=%% |
+| st-page-save |  |  |
+
+| call | st-edit-new-page | ws=%%ws=%% | title=%%title=%% | content=%%content=%% |
+
+----
+
+| open_ok | /%%ws=%%/?action=display;page_type=spreadsheet;page_name=Untitled%20Spreadsheet#edit |  |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | %%ignore=%% |
+| type_ok | st-newpage-pagename-edit | %%title=%% |
+| wait_for_element_visible_ok | st-save-button-link | %%ignore=%% |
+| st-page-save |  |  |
+
+| call | st-edit-new-sheet | ws=%%ws=%% | title=%%title=%% |  |
+
+----
+
+| open_ok | /%%ws=%%/?action=display;page_type=spreadsheet;page_name=Untitled%20Spreadsheet#edit |  |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | %%ignore=%% |
+| type_ok | st-newpage-pagename-edit | %%title=%% |
+| wait_for_element_visible_ok | st-save-button-link | %%ignore=%% |
+| click_ok | st-save-button-link |  |
+
+| call | st-edit-new-sheet | ws=%%ws=%% | title=%%title=%% |  |
+
+----
+
+| open_ok | /%%ws=%%/index.cgi?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | %%ignore=%% |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | %%ignore=%% |
+| type_ok | st-newpage-pagename-edit | %%title=%% |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | %%ignore=%% |
+| type_ok | wikiwyg_wikitext_textarea | %%content=%% |
+| wait_for_element_visible_ok | st-save-button-link | %%ignore=%% |
+| st-page-save |  |  |
+
+| call | st-edit-new-page | ws=%%ws=%% | title=%%title=%% | content=%%content=%% |
+
+----
+
+| open_ok | /%%ws=%%/index.cgi?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | %%ignore=%% |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | %%ignore=%% |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | %%ignore=%% |
+| type_ok | st-newpage-pagename-edit | %%title=%% |
+| type_ok | wikiwyg_wikitext_textarea | %%content=%% |
+| wait_for_element_visible_ok | st-save-button-link | %%ignore=%% |
+| clickAndWait | st-save-button-link |  |
+
+| call | st-edit-new-page | ws=%%ws=%% | title=%%title=%% | content=%%content=%% |
+
+----
+
+| open_ok | /%%ws=%%/index.cgi?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | %%ignore=%% |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | %%ignore=%% |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | %%ignore=%% |
+| type_ok | st-newpage-pagename-edit | %%title=%% |
+| type_ok | wikiwyg_wikitext_textarea | %%content=%% |
+| wait_for_element_visible_ok | st-save-button-link | %%ignore=%% |
+| st-page-save |  |  |
+
+| call | st-edit-new-page | ws=%%ws=%% | title=%%title=%% | content=%%content=%% |
+
+----
+
+| open_ok | /%%ws=%%/index.cgi?action=new_page |  |
+| wait_for_element_visible_ok | link=Wiki Text | %%ignore=%% |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_present_ok | st-newpage-pagename-edit | %%ignore=%% |
+| wait_for_element_present_ok | wikiwyg_wikitext_textarea | %%ignore=%% |
+| type_ok | st-newpage-pagename-edit | %%title=%% |
+| type_ok | wikiwyg_wikitext_textarea | %%content=%% |
+| wait_for_element_visible_ok | st-save-button-link | %%ignore=%% |
+| st-page-save |  |  |
+
+| call | st-edit-new-page | ws=%%ws=%% | title=%%title=%% | content=%%content=%% |
+
+----
+
+| click_and_wait | link=Edit |  |
+| wait_for_element_visible_ok | edit_textarea | %%ignore=%% |
+| wait_for_element_visible_ok | link=Cancel | %%ignore=%% |
+| verifyValue | edit_textarea | %%value=%% |
+
+| call | st-edit-mobile-page | value=%%value=%% |
+
+----
+
+| wait_for_element_visible_ok | link=Wiki Text | %%ignore=%% |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | %%ignore=%% |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | %%ignore=%% |
+| type_ok | st-newpage-pagename-edit | %%title=%% |
+| type_ok | wikiwyg_wikitext_textarea | %%content=%% |
+| wait_for_element_visible_ok | st-save-button-link | %%ignore=%% |
+| st-page-save |  |  |
+
+| call | st-edit-save-page | title=%%title=%% | content=%%content=%% |
+
+----
+
+| wait_for_element_visible_ok | link=Wiki Text | %%ignore=%% |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | %%ignore=%% |
+| type_ok | st-newpage-pagename-edit | %%title=%% |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | %%ignore=%% |
+| type_ok | wikiwyg_wikitext_textarea | %%content=%% |
+| wait_for_element_visible_ok | st-save-button-link | %%ignore=%% |
+| st-page-save |  |  |
+
+| call | st-edit-save-page | title=%%title=%% | content=%%content=%% |
+
+----
+
+| wait_for_element_visible_ok | link=Wiki Text | %%ignore=%% |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | %%ignore=%% |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | %%ignore=%% |
+| type_ok | wikiwyg_wikitext_textarea | %%content=%% |
+| type_ok | st-newpage-pagename-edit | %%title=%% |
+| wait_for_element_visible_ok | st-save-button-link | %%ignore=%% |
+| st-page-save |  |  |
+
+| call | st-edit-save-page | content=%%content=%% | title=%%title=%% |
+
+----
+
+| wait_for_element_visible_ok | link=Wiki Text | %%ignore=%% |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | %%ignore=%% |
+| type_ok | wikiwyg_wikitext_textarea | %%content=%% |
+| wait_for_element_visible_ok | st-newpage-pagename-edit | %%ignore=%% |
+| type_ok | st-newpage-pagename-edit | %%title=%% |
+| wait_for_element_visible_ok | st-save-button-link | %%ignore=%% |
+| st-page-save |  |  |
+
+| call | st-edit-save-page | content=%%content=%% | title=%%title=%% |
+
+----
+
+| wait_for_element_visible_ok | link=Wiki Text | %%ignore=%% |
+| click_ok | link=Wiki Text |  |
+| wait_for_element_visible_ok | wikiwyg_wikitext_textarea | %%ignore=%% |
+| type_ok | wikiwyg_wikitext_textarea | %%content=%% |
+| wait_for_element_visible_ok | st-save-button-link | %%ignore=%% |
+| st-page-save |  |  |
+
+| call | st-save-page | content=%%content=%% |

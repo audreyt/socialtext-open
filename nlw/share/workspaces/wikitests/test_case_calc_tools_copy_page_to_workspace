@@ -1,16 +1,18 @@
 | *Comment* | Test Case: Calc Tools: Copy Page to Workspace |
 
 | set | newspace | newspace-ss-%%start_time%% |
-| set | newtitle | Newspace %%start_time%% |
+| set | newspacetitle | Newspace %%start_time%% |
+| set | newpagetitle | New Copy Page Spreadsheet %%start_time%% |
+| set | newpagelocation | New%20Copy%20Page%20Spreadsheet%20%%start_time%% |
 
 | *Comment* | Test Case: Calc Tools: Copy Page to Workspace. Create a target workspace |  |
-| st-admin | create-workspace --empty --name %%newspace%% --title "%%newtitle%%" | was created |
+| st-admin | create-workspace --empty --name %%newspace%% --title "%%newspacetitle%%" | was created |
 | st-admin | add-member --email %%email%% --workspace %%newspace%% | now has the role of 'member' |
 
 | *Comment* | Test Case: Calc Tools: Copy Page to Workspace. Create a page and a tag to copy |  |
 | open_ok | /%%workspace%%/index.cgi?action=display;page_type=spreadsheet;page_name=Copy%20Page%20Spreadsheet%20%%start_time%%#edit |  |
-| wait_for_element_visible_ok | st-save-button-link |  |
-| pause | 5000 | I hate pause; needed for entire page load |
+| wait_for_element_visible_ok | st-save-button-link | 30000 |
+| pause | 15000 |  |
 | st-page-save |  |  |
 
 | *Comment* | Test Case: Calc Tools: Copy Page to Workspace. Add Tag |  |
@@ -28,23 +30,18 @@
 | wait_for_element_visible_ok | st-copy-workspace | 30000 |
 | wait_for_element_visible_ok | st-copy-newname | 30000 |
 | wait_for_element_visible_ok | st-copy-savelink | 30000 |
-| select_ok | st-copy-workspace | label=%%newtitle%% |
-| type_ok | st-copy-newname | New Copy Page Spreadsheet %%start_time%% |
-| click_ok | st-copy-savelink |  |
+| select_ok | st-copy-workspace | label=%%newspacetitle%% |
+| type_ok | st-copy-newname | %%newpagetitle%% |
+| click_and_wait | st-copy-savelink |  |
+| wait_for_text_present_ok | %%newpagetitle%% | 10000 |
 
-| *Comment* | Test Case: Calc Tools: Copy Page to Workspace. Should return to the same WS,
-NOT the target WS |  |
-| location_like | /%%workspace%%/copy_page_spreadsheet_%%start_time%% |  |
-| wait_for_element_visible_ok | contentRight | 30000 |
-| wait_for_element_visible_ok | link=Copy Spreadsheet Tag %%start_time%% | 30000 |
-
-| *Comment* | Test Case: Calc Tools: Copy Page to Workspace. Verify copy. |  |
-| open_ok | /%%newspace%%/?New Copy Page Spreadsheet %%start_time%% |  |
+| *Comment* | Test Case: Calc Tools: Copy Page to Workspace. transits to copy location |  |
+| location_like | /%%newspace%%/%%newpagelocation%% |  |
 | wait_for_element_visible_ok | link=Copy Spreadsheet Tag %%start_time%% | 30000 |
 | st_check_files_if_highperms | wikitest.jpg |  |
 
 | *Comment* | Test Case: Calc Tools: Copy Page to Workspace. Create new content. |  |
-| open_ok | /%%workspace%%/?Copy Page Spreadsheet %%start_time%% |  |
+| open_ok | /%%workspace%%/Copy Page Spreadsheet %%start_time%% |  |
 
 | *Comment* | Test Case: Calc Tools: Copy Page to Workspace. Add 2nd Tag |  |
 | wait_for_element_visible_ok | st-tags-addlink | 30000 |
@@ -60,14 +57,14 @@ NOT the target WS |  |
 | wait_for_element_visible_ok | st-copy-workspace | 30000 |
 | wait_for_element_visible_ok | st-copy-newname | 30000 |
 | wait_for_element_visible_ok | st-copy-savelink | 30000 |
-| select_ok | st-copy-workspace | label=%%newtitle%% |
+| select_ok | st-copy-workspace | label=%%newspacetitle%% |
 | type_ok | st-copy-newname | New Copy Page Spreadsheet %%start_time%% |
 | click_ok | st-copy-savelink |  |
 | text_like | st-copy-error | The new page name you selected, "New Copy Page Spreadsheet %%start_time%%", is already in use |
 | click_ok | st-copy-savelink |  |
 
 | *Comment* | Test Case: Calc Tools: Copy Page to Workspace. Verify overwrite by opening target wiki Dashboard and clicking What's New link to allow time for copy to complete |  |
-| open_ok | /%%newspace%%/index.cgi?action=recent_changes |  |
+| open_ok | /%%newspace%%/?action=recent_changes |  |
 | wait_for_element_visible_ok | link=New Copy Page Spreadsheet %%start_time%% |  |
 | click_ok | link=New Copy Page Spreadsheet %%start_time%% |  |
 | wait_for_element_visible_ok | link=Copy Spreadsheet Tag 2 %%start_time%% | 30000 |
@@ -75,6 +72,6 @@ NOT the target WS |  |
 | *Comment* | Test Case: Calc Tools: Copy Page to Workspace TEARDOWN |  |
 | st-process-jobs |  |  |
 | st-admin | purge-page --w %%workspace%% --page copy_page_spreadsheet_%%start_time%% | was purged |
-| st-admin | delete-workspace --workspace %%newspace%% --no-export | has been deleted |
+| delete-workspace | %%newspace%% |  |
 
-| *Comment* | Test Case: Calc Tools: Copy Page to Workspace COMPLETED |
+| *Comment* | Test Case: Calc Tools: Copy Page to Workspace COMPLETED |  |

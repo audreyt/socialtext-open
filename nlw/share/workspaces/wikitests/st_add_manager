@@ -1,10 +1,7 @@
-| wait_for_element_visible_ok | link=(edit) |  |
-| click_and_wait | link=(edit) |  |
-| wait_for_element_visible_ok | field_supervisor | 30000 |
-| type-lookahead-ok | xpath=//div[@id='field_supervisor']/input[@class='relationship'] | %%manager_short%% |
-| wait-for-element-present-ok | link=%%manager_short%% |  |
-| click-ok | link=%%manager_short%% |  |
-| wait_for_element_visible_ok | update_profile | 30000 |
-| pause | 5000 | settling time |
+| open_ok | /st/edit_profile |  |
+| wait_for_element_visible_ok | field_supervisor | 10000 |
+| select-autocompleted-option-ok | xpath=//div[@id='field_supervisor']/input[contains(@class, 'relationship')] | %%manager_short%% |
+| wait_for_element_visible_ok | update_profile | 15000 |
+| pause | 3000 | settling time |
 | click_and_wait | update_profile |  |
 | wait_for_element_visible_ok | link=%%manager_short%% | 30000 |

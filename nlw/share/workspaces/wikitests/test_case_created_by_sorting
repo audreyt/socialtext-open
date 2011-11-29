@@ -40,15 +40,15 @@
 
 | *Comment* | Test Case: Created By asc |  |
 | select_and_wait | sort-picker | label=Created By |
-| text_like | contentContainer | qr/%%page_2%%.+%%page_4%%.+%%page_1%%.+%%page_3%%/ |
+| text_like | content | qr/%%page_2%%.+%%page_4%%.+%%page_1%%.+%%page_3%%/ |
 
 | *Comment* | Test Case: Created By desc |  |
 | select_and_wait | sort-picker | label=Created By (↓) |
-| text_like | contentContainer | qr/%%page_3%%.+%%page_1%%.+%%page_4%%.+%%page_2%%/ |
+| text_like | content | qr/%%page_3%%.+%%page_1%%.+%%page_4%%.+%%page_2%%/ |
 
 | *Comment* | Test Case: Created By asc |  |
 | select_and_wait | sort-picker | label=Created By (↑) |
-| text_like | contentContainer | qr/%%page_2%%.+%%page_4%%.+%%page_1%%.+%%page_3%%/ |
+| text_like | content | qr/%%page_2%%.+%%page_4%%.+%%page_1%%.+%%page_3%%/ |
 
 | *Comment* | Test Case: Created By Sorting. TEARDOWN |  |
 

@@ -2,7 +2,7 @@
 
 * Fixture: SocialWidgets
 
-| set | ww_user | ww_user_%%start_time%%@david.socialtext.net |
+| set | ww_user | `ww_user_%%start_time%%@david.socialtext.net` |
 | st-admin | create-user --email %%ww_user%% --password %%password%% |  |
 | st-admin | create-workspace --empty --name workspacewidget-%%start_time%% --title "Workspace Widget %%start_time%%" |  |
 | st-admin | create-workspace --empty --name otherwiki-%%start_time%% --title "Other Wiki %%start_time%%" |  |
@@ -20,8 +20,9 @@
 | wait_for_element_visible_ok | link=Workspace Widget %%start_time%% | 30000 |
 
 | *Comment* | Test Case: Workspace Widget. link to wikis is hidden in Workspaces dropdown |  |
-| is_element_present_ok | contentContainer | link=Workspace Widget %%start_time%% |
-| is_element_present_ok | contentContainer | link=Other Wiki %%start_time%% |
+| pause_ok | 5000 |  |
+| is_element_present_ok | //div[@class='inlineWidget'] | link=Workspace Widget %%start_time%% |
+| is_element_present_ok | //div[@class='inlineWidget'] | link=Other Wiki %%start_time%% |
 
 | *Comment* | Test Case: Workspace Widget. Remove member, see if workspace is gone |  |
 | st-admin | remove-member --username %%ww_user%% --workspace workspacewidget-%%start_time%% | no longer has the role of 'member' |
@@ -29,20 +30,20 @@
 
 | *Comment* | Test Case: Workspace Widget. Navigate away, come back |  |
 | open_ok | /?action=workspaces_listall |  |
-| open_ok | /st/dashboard | 60000 |
+| open_ok | /st/dashboard |  |
 
 | *Comment* | Test Case: Workspace Widget. Does Workspaces Widget have the right content? |  |
 | wait_for_text_present_ok | changes | 30000 |
-| wait_for_text_present_ok | views | 30000 |
-| wait_for_element_visible_ok | link=new page | 30000 |
-| is_element_present_ok | contentContainer | link=Other Wiki %%start_time%% |
-| text_like | contentContainer | Other Wiki %%start_time%% |
-| text_unlike | contentContainer | Workspace Widget |
+| wait_for_text_present_ok | views | 15000 |
+| wait_for_element_visible_ok | link=new page | 15000 |
+| is_element_present_ok | content | link=Other Wiki %%start_time%% |
+| text_like | content | Other Wiki %%start_time%% |
+| text_unlike | content | Workspace Widget |
 
 | *Comment* | Test Case: Workspace Widget TEARDOWN |  |
 | st-process-jobs |  |  |
-| st-admin | delete-workspace --workspace workspacewidget-%%start_time%% --no-export | has been deleted |
-| st-admin | delete-workspace --workspace otherwiki-%%start_time%% --no-export | has been deleted |
 | st-admin | deactivate-user --email %%ww_user%% | removed |
+| delete-workspace | workspacewidget-%%start_time%% |  |
+| delete-workspace | workspace otherwiki-%%start_time%% |  |
 
 | *Comment* | Test Case: Workspace Widget COMPLETED |  |

@@ -1,0 +1,25 @@
+[% PROCESS activities/blocks.tt2 %]
+
+[% IF this.appdata.pluginsEnabled('signals') %]
+    <div class="signals" id="[% id('signals') %]">
+        [% INCLUDE activities/elements/signals.tt2 %]
+    </div>
+[% END %]
+
+<div class="filter_bar">[% INCLUDE activities/elements/filters.tt2 %]</div>
+<div id="[% id('messages') %]" class="messages"></div>
+
+<div class="loading-spinner" id="[% id('loading') %]">
+    <img id="[% id('spinner') %]" src="[% this.static_path %]/images/ajax-loader.gif"/>
+</div>
+
+<div class="event_list" id="[% id('event_list') %]"></div>
+
+<div class="more" id="[% id('more') %]">[% loc('activities.more') %]</div>
+
+<div id="[% id('select-offset') %]">
+    <a target="_blank" id="[% id('rss-feed') %]" class="rss-feed" style="float: right" href="[% this.base_uri %]/data/events[% this.appdata.getValue('feed') %]?[% this.appdata.getValue('action') %];accounts=[% this.appdata.getValue('network') %];accept=application%2Fatom%2Bxml"><img title="[% loc('widgets.rss-feed') %]" src='[% this.static_path %]/images/icons/rss.png' width="14" height="14"></a>
+    <span id="[% id('bookmarklet-tip') %]" style="color: #333; font-style: italic">
+    [% loc('bookmarklet.tip') %] <a onclick="window.open('/?action=signal_this', '_blank'); return false" href="javascript:(function(){var $c,$b,$s,$h=document.getElementsByTagName('head')[0];$b='[% this.base_uri %]/nlw/plugin/signals/';$c=document.createElement('LINK');$c.rel='stylesheet';$c.href=$b+'css/bookmarklet.css?_='+Math.random();$c.type='text/css';$h.appendChild($c);$s=document.createElement('SCRIPT');$s.type='text/javascript';$s.src=$b+'/javascript/bookmarklet.js?_='+Math.random();$h.appendChild($s)})()">[% loc('bookmarklet.signal-this!') %]</a> [% loc('bookmarklet.share-via-signals') %]
+    </span>
+</div>
