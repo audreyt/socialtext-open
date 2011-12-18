@@ -163,6 +163,7 @@ use HTML::PrettyPrinter ();
 use HTML::Scrubber ();
 use HTML::Tagset ();
 use HTML::Template ();
+use Alien::Tidyp ();
 use HTML::Tidy ();
 use HTML::Tiny ();
 use HTML::Truncate ();
