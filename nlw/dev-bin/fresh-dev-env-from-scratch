@@ -81,7 +81,9 @@ dev-bin/st-make-all @clean
 dev-bin/st-make-all @all
 
 # Build socialcalc because its makefile doesn't only build javascript
-(cd ../plugins/socialcalc && make)
+if [ -e ../plugins/socialcalc ]; then
+    (cd ../plugins/socialcalc && make)
+fi
 
 rm -f etc/socialtext/db/cache.*.sql
 dev-bin/make-test-fixture --home_dir $HOME --fixture clean
@@ -98,8 +100,10 @@ dev-bin/make-test-fixture --home_dir $HOME --fixture $FIXTURE
 # Setup robots.txt file to prevent dev-env heat death
 perl -le 'print "User-agent: *\nDisallow: /"' > ~/.nlw/root/docroot/robots.txt
 
+if [ -e ../plugins/socialcalc ]; then
 # Finish linking in external repos
 dev-bin/link-externals --all
+fi
 
 # Re-generate .po and .js files
 dev-bin/jsmake loc
@@ -117,6 +121,7 @@ else
     dev-bin/nlwctl stop
 fi
 
+if [ -e ../plugins/socialcalc ]; then
 
 bin/st-admin enable-plugin --all-accounts --plugin dashboard \
     --plugin signals --plugin groups --plugin push --plugin analytics
@@ -131,6 +136,8 @@ if [ $UPDATE_WIDGETS == 1 ]; then
     set -x
         bin/st-widgets update-gallery --force --verbose
     set +x
+fi
+
 fi
 
 if [ $STAGING == 1 ]; then

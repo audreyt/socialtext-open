@@ -47,7 +47,7 @@ if (-d './nlw') {
 elsif ($ENV{ST_CURRENT} && -d $ENV{ST_CURRENT}) {
     chdir "$ENV{ST_CURRENT}/nlw";
 }
-else {
+elsif (not -d "../nlw") {
     die "no ./nlw or ST_CURRENT env-var";
 }
 
