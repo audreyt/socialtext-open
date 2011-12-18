@@ -213,7 +213,7 @@ sub _subdirs_under {
     my $path = shift;
     my @dirs;
 
-    my $dirh = DirHandle->new($path);
+    my $dirh = DirHandle->new($path) or return;
     while (my $entry = $dirh->read) {
         next if ($entry =~ /^\./);
         next if ($entry eq 'debian');

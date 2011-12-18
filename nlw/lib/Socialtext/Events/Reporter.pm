@@ -11,7 +11,6 @@ use Socialtext::WikiText::Parser::Messages;
 use Socialtext::WikiText::Emitter::Messages::HTML;
 use Socialtext::Formatter::LinkDictionary;
 use Socialtext::UserSet qw/:const/;
-use Socialtext::Signal::Topic;
 use Socialtext::Permission qw/ST_READ_PERM/;
 use Socialtext::Role ();
 use Guard;
@@ -253,6 +252,8 @@ sub _extract_signal {
     my $self = shift;
     my $row = shift;
     return unless $row->{event_class} eq 'signal';
+
+    require Socialtext::Signal::Topic;
 
     my @topics_to_check;
 

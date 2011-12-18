@@ -39,7 +39,7 @@ CORE_DIR="$DATA_DIR/$CORE"
 wget -q -O /dev/null "$SOLR_ADMIN?action=UNLOAD&core=$CORE" || true
 rm -rf $CORE_DIR
 mkdir $CORE_DIR
-cp -r $DEV_CONF $CORE_DIR/conf
+cp -r $DEV_CONF $CORE_DIR/conf || exit 0
 chown -R $USER:$DATA_GROUP $CORE_DIR
 chmod ug+w $CORE_DIR
 

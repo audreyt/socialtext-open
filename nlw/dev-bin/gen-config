@@ -823,7 +823,7 @@ sub copy_static_files {
         _print_file_gen(@$pair);
         File::Path::mkpath( File::Basename::dirname( $pair->[1], 0, 0755 ) );
         File::Copy::copy(@$pair)
-            or die "Cannot copy $pair->[0] => $pair->[1]: $!";
+            or warn "Cannot copy $pair->[0] => $pair->[1]: $!";
     }
 }
 

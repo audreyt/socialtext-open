@@ -286,7 +286,7 @@ method part_to_text ($part) {
 }
 
 method _shindig_feature_to_text ($part) {
-    require Socialtext::Gadgets::Feature;
+    eval { require Socialtext::Gadgets::Feature } or return "//\n";
     my $feature = Socialtext::Gadgets::Feature->new(
         type => $part->{type},
         name => $part->{shindig_feature},

@@ -41,6 +41,7 @@ sub gadget_vars {
         $overrides{$key} = $val;
     }
 
+    require Socialtext::Gadgets::Gadget;
     my $gadget = Socialtext::Gadgets::Gadget->Fetch(src => $src);
     my $preferences = $gadget->preferences;
     for my $pref (@$preferences) {
@@ -65,6 +66,7 @@ sub gadget_vars {
     $overrides{"ENV_primary_account"} = $account->name;
     $overrides{"ENV_primary_account_id"} = $account->account_id;
 
+    require Socialtext::Gadget::Renderer;
     my $renderer = Socialtext::Gadget::Renderer->new(
         gadget => $gadget,
         view => 'page',
@@ -138,8 +140,6 @@ use base 'Socialtext::Formatter::WaflPhraseDiv';
 use Class::Field qw( const );
 use Socialtext::l10n 'loc';
 use Socialtext::Formatter::Phrase ();
-use Socialtext::Gadget::Renderer;
-use Socialtext::Gadgets::Gadget;
 
 const wafl_id => 'widget';
 const wafl_reference_parse => qr/^\s*([^\s#]+)(?:\s*#(\d+))?((?:\s+[^\s=]+=\S*)*)\s*$/;
