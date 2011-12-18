@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- this file was created by socialtext using the original Solr example config.  Here is the license from that config:
+-->
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<!--  
+ This is the Solr schema file. This file should be named "schema.xml" and
+ should be in the conf directory under the solr home
+ (i.e. ./solr/conf/schema.xml by default) 
+ or located where the classloader for the Solr webapp can find it.
+
+ This example schema is the recommended starting point for users.
+ It should be kept correct and concise, usable out-of-the-box.
+
+ For more information, on how to customize this file, please see
+ http://wiki.apache.org/solr/SchemaXml
+-->
+
+<schema name="socialtext" version="1.2">
+  <!-- attribute "name" is the name of this schema and is only used for display purposes.
+       Applications should change this to reflect the nature of the search collection.
+       version="1.1" is Solr's version number for the schema syntax and semantics.  It should
+       not normally be changed by applications.
+       1.0: multiValued attribute did not exist, all fields are multiValued by nature
+       1.1: multiValued attribute introduced, false by default -->
+
+  <types>
+    <!-- field type definitions. The "name" attribute is
+       just a label to be used by field definitions.  The "class"
+       attribute and any other attributes determine the real
+       behavior of the fieldType.
+         Class names starting with "solr" refer to java classes in the
+       org.apache.solr.analysis package.
+    -->
+
+    <!-- The StrField type is not analyzed, but indexed/stored verbatim.  
+       - StrField and TextField support an optional compressThreshold which
+       limits compression (if enabled in the derived fields) to values which
+       exceed a certain size (in characters).
+    -->
+    <fieldType name="string" class="solr.StrField" sortMissingLast="true" omitNorms="true" indexed="true"/>
+
+    <!-- boolean type: "true" or "false" -->
+    <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true" omitNorms="true" indexed="true"/>
+
+    <!-- The optional sortMissingLast and sortMissingFirst attributes are
+         currently supported on types that are sorted internally as strings.
+       - If sortMissingLast="true", then a sort on this field will cause documents
+         without the field to come after documents with the field,
+         regardless of the requested sort order (asc or desc).
+       - If sortMissingFirst="true", then a sort on this field will cause documents
+         without the field to come before documents with the field,
+         regardless of the requested sort order.
+       - If sortMissingLast="false" and sortMissingFirst="false" (the default),
+         then default lucene sorting will be used which places docs without the
+         field first in an ascending sort and last in a descending sort.
+    -->    
+
+
+    <!-- numeric field types that store and index the text
+         value verbatim (and hence don't support range queries, since the
+         lexicographic ordering isn't equal to the numeric ordering) -->
+    <fieldType name="integer" class="solr.IntField" omitNorms="true" indexed="true" stored="true"/>
+    <fieldType name="long" class="solr.LongField" omitNorms="true" indexed="true" stored="true"/>
+    <fieldType name="float" class="solr.FloatField" omitNorms="true" indexed="true" stored="true"/>
+    <fieldType name="double" class="solr.DoubleField" omitNorms="true" indexed="true" stored="true"/>
+
+
+    <!-- Numeric field types that manipulate the value into
+         a string value that isn't human-readable in its internal form,
+         but with a lexicographic ordering the same as the numeric ordering,
+         so that range queries work correctly. -->
+    <fieldType name="sint" class="solr.SortableIntField" sortMissingLast="true" omitNorms="true" indexed="true" stored="true"/>
+    <fieldType name="slong" class="solr.SortableLongField" sortMissingLast="true" omitNorms="true" indexed="true" stored="true"/>
+    <fieldType name="sfloat" class="solr.SortableFloatField" sortMissingLast="true" omitNorms="true" indexed="true" stored="true"/>
+    <fieldType name="sdouble" class="solr.SortableDoubleField" sortMissingLast="true" omitNorms="true" indexed="true" stored="true"/>
+
+
+    <!-- The format for this date field is of the form 1995-12-31T23:59:59Z, and
+         is a more restricted form of the canonical representation of dateTime
+         http://www.w3.org/TR/xmlschema-2/#dateTime    
+         The trailing "Z" designates UTC time and is mandatory.
+         Optional fractional seconds are allowed: 1995-12-31T23:59:59.999Z
+         All other components are mandatory.
+
+         Expressions can also be used to denote calculations that should be
+         performed relative to "NOW" to determine the value, ie...
+
+               NOW/HOUR
+                  ... Round to the start of the current hour
+               NOW-1DAY
+                  ... Exactly 1 day prior to now
+               NOW/DAY+6MONTHS+3DAYS
+                  ... 6 months and 3 days in the future from the start of
+                      the current day
+                      
+         Consult the DateField javadocs for more information.
+      -->
+    <fieldType name="date" class="solr.DateField" sortMissingLast="true" omitNorms="false" indexed="true" stored="true"/>
+
+
+    <!-- The "RandomSortField" is not used to store or search any
+         data.  You can declare fields of this type it in your schema
+         to generate psuedo-random orderings of your docs for sorting 
+         purposes.  The ordering is generated based on the field name 
+         and the version of the index, As long as the index version
+         remains unchanged, and the same field name is reused,
+         the ordering of the docs will be consistent.  
+         If you want differend psuedo-random orderings of documents,
+         for the same version of the index, use a dynamicField and
+         change the name
+     -->
+    <fieldType name="random" class="solr.RandomSortField" indexed="true" />
+
+    <!-- solr.TextField allows the specification of custom text analyzers
+         specified as a tokenizer and a list of token filters. Different
+         analyzers may be specified for indexing and querying.
+
+         The optional positionIncrementGap puts space between multiple fields of
+         this type on the same document, with the purpose of preventing false phrase
+         matching across fields.
+
+         For more info on customizing your analyzer chain, please see
+         http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters
+     -->
+
+    <!-- One can also specify an existing Analyzer class that has a
+         default constructor via the class attribute on the analyzer element
+    <fieldType name="text_greek" class="solr.TextField">
+      <analyzer class="org.apache.lucene.analysis.el.GreekAnalyzer"/>
+    </fieldType>
+    -->
+
+    <!-- full-text matched fields -->
+    <fieldType name="text" class="solr.TextField" positionIncrementGap="100" indexed="true" stored="true">
+        <!-- don't use synonyms for indexing -->
+      <analyzer type="index">
+        <!-- stash: we may want to consider using
+            HTMLStripWhitespaceTokenizerFactory here, or a variant that turns
+            href attributes into full-on links -->
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+        <filter class="solr.StandardFilterFactory" />
+        <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="1" catenateNumbers="1" catenateAll="1" splitOnCaseChange="1"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
+        <filter class="solr.EnglishPorterFilterFactory" protected="protwords.txt"/>
+        <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+      </analyzer>
+      <analyzer type="query">
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.StandardFilterFactory" />
+        <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="1" catenateNumbers="1" catenateAll="1" splitOnCaseChange="1"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
+        <filter class="solr.EnglishPorterFilterFactory" protected="protwords.txt"/>
+        <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+      </analyzer>
+    </fieldType>
+
+
+    <!-- Less flexible matching, but less false matches for tag-like things
+    use a small gap to make a composite tag (e.g. "foo bar") more likely to
+    match individual tags (e.g. "foo" and "bar") -->
+    <fieldType name="tag_text" class="solr.TextField" positionIncrementGap="5" indexed="true" stored="true" termVectors="true">
+      <analyzer>
+        <tokenizer class="solr.KeywordTokenizerFactory"/> <!-- no tokens -->
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.StandardFilterFactory" />
+        <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="1" catenateNumbers="1" catenateAll="1" splitOnCaseChange="1"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>
+        <filter class="solr.EnglishPorterFilterFactory" protected="protwords.txt"/>
+        <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+      </analyzer>
+    </fieldType>
+
+    <!-- A tag field that really does exact matching -->
+    <fieldType name="tag_text_exact" class="solr.TextField" positionIncrementGap="100" indexed="true" stored="false" termVectors="false">
+      <analyzer>
+        <tokenizer class="solr.KeywordTokenizerFactory"/> <!-- no tokens -->
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+    </fieldType>
+
+    <fieldType name="filename" class="solr.TextField" indexed="true" stored="true" omitNorms="false" termVectors="false">
+      <analyzer>
+        <tokenizer class="solr.PatternTokenizerFactory" pattern="\W+"/> <!-- non-word characters -->
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="1" catenateNumbers="1" catenateAll="1"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="filename-stopwords.txt"/>
+        <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+      </analyzer>
+    </fieldType>
+
+    <fieldType name="href" class="solr.TextField" indexed="true" stored="true" omitNorms="false" termVectors="false">
+      <analyzer>
+        <tokenizer class="solr.PatternTokenizerFactory" pattern="\W+"/> <!-- non-word characters -->
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+    </fieldType>
+
+    <!-- close-to-verbatim profile fields for use in things that don't stem
+          well (like usernames and contact info).  Intended to be sortable too.
+    -->
+    <fieldType name="profile_string" class="solr.TextField" sortMissingLast="true" indexed="true" stored="true" omitNorms="false" termVectors="true">
+      <analyzer>
+        <tokenizer class="solr.KeywordTokenizerFactory"/> <!-- no tokens -->
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="1" catenateNumbers="1" catenateAll="1"/>
+        <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+      </analyzer>
+    </fieldType>
+
+    <!-- Phonetic matching of things like names.
+    DoubleMetaphone is general enough to be used for most english words.
+    It doesn't make sense to store phonemes, so just match on them.
+    -->
+    <fieldType name="phonetic" class="solr.TextField" sortMissingLast="true" indexed="true" stored="false" omitNorms="true" termVectors="true">
+      <analyzer>
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.StandardFilterFactory" />
+        <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="1" catenateNumbers="1" catenateAll="1"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
+        <filter class="solr.EnglishPorterFilterFactory" protected="protwords.txt"/>
+        <!-- Phonetic filter will mix phonemes with original tokens unles inject="false" is present -->
+        <filter class="solr.PhoneticFilterFactory" encoder="DoubleMetaphone" inject="false" />
+        <!-- known issue in solr 1.3: doublemetaphone produces empty tokens -->
+        <filter class="solr.LengthFilterFactory" min="1" max="50" />
+        <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+      </analyzer>
+    </fieldType>
+
+    <!-- This is an example of using the KeywordTokenizer along
+         With various TokenFilterFactories to produce a sortable field
+         that does not include some properties of the source text
+      -->
+    <fieldType name="alpha_sort" class="solr.TextField" sortMissingLast="true" omitNorms="true" indexed="true" stored="false">
+      <analyzer>
+        <!-- KeywordTokenizer does no actual tokenizing, so the entire
+             input string is preserved as a single token
+          -->
+        <tokenizer class="solr.KeywordTokenizerFactory"/>
+        <!-- The LowerCase TokenFilter does what you expect, which can be
+             when you want your sorting to be case insensitive
+          -->
+        <filter class="solr.LowerCaseFilterFactory" />
+        <!-- The TrimFilter removes any leading or trailing whitespace -->
+        <filter class="solr.TrimFilterFactory" />
+        <!-- The PatternReplaceFilter gives you the flexibility to use
+             Java Regular expression to replace any sequence of characters
+             matching a pattern with an arbitrary replacement string, 
+             which may include back refrences to portions of the orriginal
+             string matched by the pattern.
+             
+             See the Java Regular Expression documentation for more
+             infomation on pattern and replacement string syntax.
+             
+             http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/package-summary.html
+          -->
+        <filter class="solr.PatternReplaceFilterFactory"
+            pattern="([^\p{Alnum}]+)" replacement="" replace="all"
+        />
+      </analyzer>
+    </fieldType>
+
+    <!-- since fields of this type are by default not stored or indexed, any data added to 
+         them will be ignored outright 
+     --> 
+    <fieldtype name="ignored" stored="false" indexed="false" class="solr.StrField" /> 
+
+ </types>
+
+
+ <fields>
+   <!-- Valid attributes for fields:
+     name: mandatory - the name for the field
+     type: mandatory - the name of a previously defined type from the <types> section
+     indexed: true if this field should be indexed (searchable or sortable)
+     stored: true if this field should be retrievable
+     compressed: [false] if this field should be stored using gzip compression
+       (this will only apply if the field type is compressable; among
+       the standard field types, only TextField and StrField are)
+     multiValued: true if this field may contain multiple values per document
+     omitNorms: (expert) set to true to omit the norms associated with
+       this field (this disables length normalization and index-time
+       boosting for the field, and saves some memory).  Only full-text
+       fields or fields that need an index-time boost need norms.
+     termVectors: [false] set to true to store the term vector for a given field.
+       When using MoreLikeThis, fields used for similarity should be stored for 
+       best performance.
+   -->
+
+   <!-- required fields, present in all documents -->
+
+   <field name="index_time" type="date" indexed="true" stored="true" default="NOW" multiValued="false"/>
+   <field name="id" type="string" required="true" /> 
+   <field name="w_title" type="alpha_sort" multiValued="false" indexed="true"/> <!-- used for sorting -->
+   <!-- document class -->
+   <field name="doctype" type="string" required="true" multiValued="false" />
+
+   <!-- common fields -->
+
+   <!-- workspace_id, shortened to help shrink query strings -->
+   <field name="w" type="long" />
+   <field name="title" type="text" />
+   <field name="plain_title" type="alpha_sort" multiValued="false" indexed="true"/> <!-- used for sorting -->
+   <field name="tag" type="tag_text" multiValued="true" />
+   <field name="tag_count" type="long" />
+   <field name="tag_exact" type="tag_text_exact" multiValued="true" />
+
+   <!-- likes -->
+   <field name="has_likes" type="boolean" />
+   <field name="like_count" type="slong" />
+   <field name="like" type="long" multiValued="true" />
+
+   <!-- page fields -->
+
+   <field name="pagetype" type="string" />
+   <field name="editor" type="long" />
+   <field name="date" type="date" />
+   <field name="revisions" type="slong" /> <!-- use a trie -->
+
+   <!-- signal fields -->
+   <field name="signal_key" type="string" stored="false" omitNorms="true" termVectors="false" multiValued="false"/>
+   <field name="a" type="long" multiValued="true"/> <!-- account id -->
+   <field name="g" type="long" multiValued="true"/> <!-- group id -->
+   <field name="pvt" type="boolean" />
+   <field name="is_question" type="boolean" />
+   <field name="dm_recip" type="long" />
+   <field name="reply_to" type="long" />
+   <field name="mention" type="long" multiValued="true"/>
+   <field name="link" type="href" multiValued="true"/>
+   <field name="link_page_key" type="string" multiValued="true"/>
+   <field name="link_w" type="string" multiValued="true"/>
+
+   <field name="annotation" type="string" multiValued="true"/>
+
+   <!-- page and signal fields -->
+   <field name="creator" type="long" />
+   <field name="creator_name" type="string" />
+   <field name="created" type="date" />
+
+   <!-- used to delete a page and its attachments.  Form is w+'__'+page_id -->
+   <field name="page_key" type="string" stored="false" omitNorms="true" termVectors="false" multiValued="false"/>
+
+   <!-- page/attachment/signal/sigattach body, indexed and compressed -->
+   <field name="body" type="text" compressed="true"/>
+
+   <!-- attachment fields -->
+   <field name="attach_id" type="string" indexed="false" />
+   <field name="filename" type="filename" />
+   <field name="filename_ext" type="string" />
+
+   <!-- group fields -->
+   <field name="group_key" type="string" stored="false" omitNorms="true" termVectors="false" multiValued="false"/>
+
+   <!-- person fields -->
+   <field name="person_key" type="string" stored="false" omitNorms="true" termVectors="false" multiValued="false"/>
+   <field name="name_asort" type="string" multiValued="false"/>
+   <!-- 
+       IF YOU ADD A FIELD HERE be sure to add the corresponding hidden definition
+   -->
+   <!-- general, full-text-indexed fields (e.g. location, company) -->
+   <dynamicField name="*_pf_t" type="text" multiValued="true" />
+   <!-- general, full-text-indexed fields for relationship names -->
+   <dynamicField name="*_pf_rt" type="text" multiValued="true" />
+   <!-- more restrictive indexing for where stemming doesn't make sense (e.g. phone numbers, first/last name): -->
+   <dynamicField name="*_pf_s" type="profile_string" multiValued="true" />
+   <!-- used for profile relationships, a user_id (e.g. manager) -->
+   <dynamicField name="*_pf_i" type="long" multiValued="true" />
+   <!-- used for hyperlinks (any field ending in _url or blog) -->
+   <dynamicField name="*_pf_h" type="href" multiValued="true" />
+
+   <!-- 
+        "pfh" = profile field that is hidden.
+        These are not put into "all"; should be one for each of the above "_pf" types
+   -->
+   <dynamicField name="*_pfh_t" type="text" multiValued="true" />
+   <dynamicField name="*_pfh_rt" type="text" multiValued="true" />
+   <dynamicField name="*_pfh_s" type="profile_string" multiValued="true" />
+   <dynamicField name="*_pfh_i" type="long" multiValued="true" />
+   <dynamicField name="*_pfh_h" type="href" multiValued="true" />
+
+   <!--
+        catchall field for phonetic matching.
+   -->
+   <field name="sounds_like" type="phonetic" multiValued="true" />
+
+   <!-- other derived fields, also note stored="false" -->
+   <dynamicField name="*_asort" type="alpha_sort" multiValued="true" />
+
+   <!-- uncomment the following to ignore any fields that don't already match an existing 
+        field name or dynamic field, rather than reporting them as an error. 
+        alternately, change the type="ignored" to some other type e.g. "text" if you want 
+        unknown fields indexed and/or stored by default --> 
+   <!--dynamicField name="*" type="ignored" /-->
+
+   <!-- 
+       catchall field, containing all other searchable text fields
+       (implemented via copyField further on in this schema.  Note
+       stored="false" so no need to compress
+   -->
+   <field name="all" type="text" stored="false" multiValued="true" />
+   <!-- Maybe should rename this to phone_all -->
+   <field name="phone" type="profile_string" stored="false" multiValued="true" />
+   
+ </fields>
+
+ <!-- Field to use to determine and enforce document uniqueness. 
+      Unless this field is marked with required="false", it will be a required field
+   -->
+ <uniqueKey>id</uniqueKey>
+
+ <!-- field for the QueryParser to use when an explicit fieldname is absent -->
+ <defaultSearchField>all</defaultSearchField>
+
+ <!-- SolrQueryParser configuration: defaultOperator="AND|OR" -->
+ <solrQueryParser defaultOperator="OR"/>
+
+   <!-- copyField commands copy one field to another at the time a document
+        is added to the index.  It's used either to index the same field differently,
+        or to add multiple fields to the same field for easier/faster searching.  -->
+
+   <copyField source="title" dest="plain_title"/>
+   <copyField source="title" dest="all"/>
+   <copyField source="body" dest="all"/>
+   <copyField source="tag" dest="all"/>
+   <copyField source="filename" dest="all"/>
+   <copyField source="*_pf_t" dest="all"/>
+   <copyField source="*_pf_rt" dest="all"/>
+   <copyField source="*_pf_s" dest="all"/>
+   <copyField source="*_phone_pf_s" dest="phone"/>
+   <copyField source="*_pf_h" dest="all"/>
+
+   <copyField source="name_pf_t" dest="sounds_like"/>
+   <copyField source="*_pf_rt" dest="sounds_like"/>
+
+   <copyField source="tag" dest="tag_exact"/>
+
+ <!-- Similarity is the scoring routine for each document vs. a query.
+      A custom similarity may be specified here, but the default is fine
+      for most applications.  -->
+ <!-- <similarity class="org.apache.lucene.search.DefaultSimilarity"/> -->
+ <!-- ... OR ...
+      Specify a SimilarityFactory class name implementation
+      allowing parameters to be used.
+ -->
+ <!--
+ <similarity class="com.example.solr.CustomSimilarityFactory">
+   <str name="paramkey">param value</str>
+ </similarity>
+ -->
+
+
+</schema>

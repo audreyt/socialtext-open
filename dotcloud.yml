@@ -1,3 +1,8 @@
+data:
+  type: postgresql
+search:
+  type: solr
+  approot: solr
 www:
   type: perl
   approot: nlw
